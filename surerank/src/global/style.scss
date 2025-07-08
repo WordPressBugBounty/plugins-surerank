@@ -53,11 +53,11 @@
 }
 
 /* Add your custom styles here */
-#wpcontent:has( #surerank-dashboard ) {
+#wpcontent:has( #surerank-root ) {
 	padding-left: 0;
 }
 
-#wpbody-content:has( #surerank-dashboard ) {
+#wpbody-content:has( #surerank-root ) {
 	padding-bottom: 0;
 }
 
@@ -65,7 +65,7 @@
 	display: none;
 }
 
-#surerank-dashboard * {
+#surerank-root * {
 	box-sizing: border-box;
 	font-family: Figtree, sans-serif;
 }

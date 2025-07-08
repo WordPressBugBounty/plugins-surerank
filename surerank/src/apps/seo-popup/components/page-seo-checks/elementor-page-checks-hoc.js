@@ -3,7 +3,7 @@ import {
 	useDispatch,
 	select as staticSelect,
 } from '@wordpress/data';
-import { useState, useCallback, useEffect } from '@wordpress/element';
+import { useState, useCallback, useEffect, Suspense } from '@wordpress/element';
 import { Alert } from '@bsf/force-ui';
 import { __ } from '@wordpress/i18n';
 import { PageChecks } from '..';
@@ -13,12 +13,14 @@ import {
 } from './analyzer/utils/elementor';
 import RefreshButtonPortal from '../refresh-button-portal';
 import { STORE_NAME } from '@/store/constants';
+import PageChecksListSkeleton from './page-checks-list-skeleton';
 
 const ElementorPageChecksHoc = () => {
 	const pageSeoChecks = useSelect(
 		( select ) => select( STORE_NAME ).getPageSeoChecks(),
 		[]
 	);
+	const { categorizedChecks } = pageSeoChecks;
 	const modalState = useSelect(
 		( select ) => select( STORE_NAME ).getModalState(),
 		[]
@@ -27,7 +29,12 @@ const ElementorPageChecksHoc = () => {
 		( select ) => select( STORE_NAME ).getRefreshCalled(),
 		[]
 	);
-	const { setPageSeoCheck, setRefreshCalled } = useDispatch( STORE_NAME );
+	const {
+		setPageSeoCheck,
+		setRefreshCalled,
+		ignorePageSeoCheck,
+		restorePageSeoCheck,
+	} = useDispatch( STORE_NAME );
 
 	const [ brokenLinkState, setBrokenLinkState ] = useState( {
 		isChecking: false,
@@ -35,6 +42,13 @@ const ElementorPageChecksHoc = () => {
 		brokenLinks: new Set(),
 		allLinks: [],
 	} );
+
+	const handleIgnoreCheck = ( checkId ) => {
+		ignorePageSeoCheck( checkId );
+	};
+	const handleRestoreCheck = ( checkId ) => {
+		restorePageSeoCheck( checkId );
+	};
 
 	const [ isRefreshing, setIsRefreshing ] = useState( false );
 	const isElementorEditor = isElementorActive();
@@ -102,16 +116,21 @@ const ElementorPageChecksHoc = () => {
 				</>
 			) }
 			<div className="flex-1 overflow-y-auto">
-				<PageChecks
-					pageSeoChecks={ {
-						...pageSeoChecks,
-						isCheckingLinks: brokenLinkState.isChecking,
-						linkCheckProgress: {
-							current: brokenLinkState.checkedLinks.size,
-							total: brokenLinkState.allLinks.length,
-						},
-					} }
-				/>
+				<Suspense fallback={ <PageChecksListSkeleton /> }>
+					<PageChecks
+						pageSeoChecks={ {
+							...pageSeoChecks,
+							...categorizedChecks,
+							isCheckingLinks: brokenLinkState.isChecking,
+							linkCheckProgress: {
+								current: brokenLinkState.checkedLinks.size,
+								total: brokenLinkState.allLinks.length,
+							},
+						} }
+						onIgnore={ handleIgnoreCheck }
+						onRestore={ handleRestoreCheck }
+					/>
+				</Suspense>
 			</div>
 		</div>
 	);

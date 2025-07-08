@@ -5,6 +5,7 @@ import {
 	useRef,
 	Fragment,
 	useMemo,
+	memo,
 } from '@wordpress/element';
 import {
 	withSelect,
@@ -266,5 +267,6 @@ export default compose(
 				dispatchStore.updateAppSettings( value ),
 		};
 	} ),
-	hocComponent
+	hocComponent,
+	memo,
 )( SeoModal );

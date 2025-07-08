@@ -175,4 +175,4 @@ const App = () => {
 	);
 };
 
-mountComponent( '#surerank-dashboard', <App /> );
+mountComponent( '#surerank-root', <App /> );

@@ -5,7 +5,7 @@ Tags: seo, wordpress seo, xml sitemap, schema, google search console
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 8.0
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -270,6 +270,10 @@ We don’t recommend running multiple SEO plugins at the same time to avoid conf
 = What if I want more advanced features? =
 SureRank Pro includes advanced tools like SERP research, content gap analysis, an outline builder, and more — all designed to help you create better content and rank higher in search results.
 
+= How can I report a security bug? =
+We take plugin security extremely seriously. If you discover a security vulnerability, please report it in a safe and responsible manner.
+You can report the issue through our [Bug Bounty Program](https://brainstormforce.com/bug-bounty-program/).
+
 
 == Contributors & Developers ==
 
@@ -289,6 +293,9 @@ Brainstorm Force
 
 
 == Changelog ==
+
+= 1.0.1 =
+* Improvement: Enhanced the performance of the SureRank SEO Popup on Elementor pages.
 
 = 1.0.0 =
 * Initial release

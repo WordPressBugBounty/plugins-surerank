@@ -50,6 +50,6 @@ class Onboarding {
 	 * @return void
 	 */
 	public function render_onboarding() {
-		echo '<div class="surerank-setting-page surerank-styles"><div id="surerank-dashboard"></div></div>';
+		echo '<div class="surerank-root surerank-setting-page surerank-styles"><div id="surerank-root"></div></div>';
 	}
 }

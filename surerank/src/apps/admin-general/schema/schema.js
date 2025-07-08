@@ -170,7 +170,7 @@ const Schema = () => {
 											}
 											variant="light"
 											placement="bottom"
-											tooltipPortalId="surerank-dashboard"
+											tooltipPortalId="surerank-root"
 											className="p-2 border border-solid border-border-subtle [&>svg>path]:stroke-border-subtle z-[99999]"
 											interactive
 											arrow

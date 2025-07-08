@@ -16,7 +16,7 @@
 }
 
 // Fix rem value for Bricks editor.
-html:has( #surerank-seo-popup ):has( #bricks-panel ) {
+html:has( #surerank-root ):has( #bricks-panel ) {
 	font-size: 100%;
 	font-size: 16px;
 	body {
@@ -27,14 +27,19 @@ html:has( #surerank-seo-popup ):has( #bricks-panel ) {
 	}
 }
 
-html:has( #surerank-seo-popup ) {
+html:has( #surerank-root ) {
 	font-size: 16px;
 }
 
-#surerank-seo-popup {
+#surerank-root {
 	* {
 		box-sizing: border-box;
 		font-family: Figtree, sans-serif;
+	}
+	input[type="checkbox"]:checked,
+	input[type="checkbox"]::before {
+		background-image: none;
+		border: none;
 	}
 }
 

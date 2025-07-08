@@ -104,7 +104,7 @@ const ContentAnalysis = () => {
 											'surerank'
 										) }
 									/>
-									<Select.Portal id="surerank-dashboard">
+									<Select.Portal id="surerank-root">
 										<Select.Options>
 											<Select.Option value="All">
 												{ __( 'All', 'surerank' ) }

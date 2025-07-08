@@ -56,17 +56,16 @@ if ( surerank_seo_popup.editor_type === 'classic' ) {
 }
 
 document.addEventListener( 'DOMContentLoaded', function () {
-	const node = document.querySelector( '#surerank-seo-popup' );
+	let node = document.querySelector( '#surerank-root' );
 
 	if ( ! node ) {
-		document.body.appendChild( document.createElement( 'div' ) ).id =
-			'surerank-seo-popup';
+		node = document.body.appendChild( document.createElement( 'div' ) );
+		node.id = 'surerank-root';
+		node.className = 'surerank-root';
 	}
 
 	setTimeout( function () {
-		const root = createRoot(
-			document.getElementById( 'surerank-seo-popup' )
-		);
+		const root = createRoot( node );
 		root.render( <Modal /> );
 	}, 1000 );
 } );

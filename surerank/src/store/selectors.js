@@ -55,8 +55,34 @@ export const getGlobalDefaults = ( state ) => state.globalDefaults;
 
 export const getAppSettings = ( state ) => state.appSettings;
 
-export const getPageSeoChecks = ( state ) => state.pageSeoChecks;
-
 export const getUnsavedMetaSettings = ( state ) => state.unsavedPostSeoMeta;
 
 export const getRefreshCalled = ( state ) => state.pageSeoChecks.refreshCalled;
+
+export const getCurrentPostIgnoredList = ( state ) => {
+	const postId =
+		state.pageSeoChecks?.postId ?? state?.variables?.post?.ID?.value;
+	if ( ! postId ) {
+		return [];
+	}
+	const ignoredList = state.pageSeoChecks.ignoredList || [];
+	return ignoredList;
+};
+
+export const getPageSeoChecks = ( state ) => state.pageSeoChecks;
+
+export const getSeoBarChecks = ( state, postId, checkType ) => {
+	if ( ! postId || ! checkType ) {
+		return {};
+	}
+
+	const checks = state.pageSeoChecks[ postId ]?.checks || {};
+	const sequence = state.pageSeoChecks[ postId ]?.sequence || [];
+	const error = state.pageSeoChecks[ postId ]?.error || null;
+
+	return {
+		checks,
+		sequence,
+		error,
+	};
+};

@@ -372,6 +372,7 @@ class Analyzer extends Api_Base {
 		if ( $cache_valid ) {
 			$post_checks = Get::post_meta( $post_id, 'surerank_seo_checks', true );
 			if ( ! empty( $post_checks ) ) {
+				$post_checks = $this->get_updated_ignored_check_list( $post_checks, $post_id, 'post' );
 				return rest_ensure_response(
 					[
 						'status'  => 'success',
@@ -383,6 +384,9 @@ class Analyzer extends Api_Base {
 		}
 
 		$post_checks = $this->run_checks( $post_id );
+		if ( ! is_wp_error( $post_checks ) ) {
+			$post_checks = $this->get_updated_ignored_check_list( $post_checks, $post_id, 'post' );
+		}
 
 		return rest_ensure_response(
 			[
@@ -428,6 +432,7 @@ class Analyzer extends Api_Base {
 		if ( $cache_valid ) {
 			$term_checks = Get::term_meta( $term_id, 'surerank_seo_checks', true );
 			if ( ! empty( $term_checks ) ) {
+				$term_checks = $this->get_updated_ignored_check_list( $term_checks, $term_id, 'taxonomy' );
 				return rest_ensure_response(
 					[
 						'status'  => 'success',
@@ -439,6 +444,10 @@ class Analyzer extends Api_Base {
 		}
 
 		$term_checks = $this->run_taxonomy_checks( $term_id );
+		if ( ! is_wp_error( $term_checks ) ) {
+			$term_checks = $this->get_updated_ignored_check_list( $term_checks, $term_id, 'taxonomy' );
+
+		}
 
 		return rest_ensure_response(
 			[
@@ -538,6 +547,28 @@ class Analyzer extends Api_Base {
 				'message' => __( 'Checks unignored.', 'surerank' ),
 			]
 		);
+	}
+
+	/**
+	 * Get ignored checks list.
+	 *
+	 * @param array<string, mixed> $post_checks List of post checks.
+	 * @param int                  $post_id Post or term ID.
+	 * @param string               $check_type Type of check, either 'post' or 'taxonomy'.
+	 * @return array<string, mixed>
+	 */
+	public function get_updated_ignored_check_list( $post_checks, $post_id, $check_type = 'post' ) {
+		$ignored_checks = $this->get_ignored_post_taxo_check( $post_id, $check_type );
+
+		if ( ! empty( $ignored_checks ) && is_array( $ignored_checks ) ) {
+			foreach ( $post_checks as $key => $check ) {
+				if ( in_array( $key, $ignored_checks, true ) ) {
+					$post_checks[ $key ]['ignore'] = true;
+				}
+			}
+		}
+
+		return $post_checks;
 	}
 
 	/**

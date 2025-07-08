@@ -9,9 +9,9 @@ const Tooltip = ( props ) => {
 	return (
 		<TooltipComponent
 			{ ...props }
-			tooltipPortalId="surerank-dashboard"
+			tooltipPortalId="surerank-root"
 			boundary={
-				document?.querySelector( '#surerank-dashboard' ) ||
+				document?.querySelector( '#surerank-root' ) ||
 				'clippingAncestors'
 			}
 		/>
@@ -40,7 +40,7 @@ const SeoPopupTooltip = ( props ) => {
 		<TooltipComponent
 			{ ...props }
 			className={ cn( 'z-[99999] max-w-95', props.className ) }
-			tooltipPortalId="surerank-seo-popup"
+			tooltipPortalId="surerank-root"
 			boundary={
 				document?.querySelector(
 					'#surerank-seo-popup-modal-container'

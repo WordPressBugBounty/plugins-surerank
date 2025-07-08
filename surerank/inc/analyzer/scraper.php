@@ -46,7 +46,7 @@ class Scraper {
 	 * @return string|WP_Error HTML content or error on failure.
 	 */
 	public function fetch( string $url ) {
-		$this->last_response = Requests::get( $url );
+		$this->last_response = Requests::get( $url, apply_filters( 'surerank_scraper_headers', [] ) );
 		if ( is_wp_error( $this->last_response ) ) {
 			return $this->last_response;
 		}

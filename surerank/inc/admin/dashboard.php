@@ -381,7 +381,7 @@ class Dashboard {
 	 */
 	public function render_dashboard() {
 		Update::option( 'surerank_site_seo_checks_score', 0 );
-		echo "<div class='surerank-setting-page surerank-styles'><div id='surerank-dashboard'></div></div>";
+		echo "<div class='surerank-root surerank-setting-page surerank-styles'><div id='surerank-root'></div></div>";
 	}
 
 	/**

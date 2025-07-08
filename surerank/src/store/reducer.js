@@ -54,12 +54,6 @@ const DEFAULT_STATE = {
 	// Page SEO checks start.
 	pageSeoChecks: {
 		initializing: true,
-		badChecks: [],
-		fairChecks: [],
-		suggestionChecks: [],
-		passedChecks: [],
-		ignoredChecks: [],
-		ignoredList: [],
 		isCheckingLinks: false,
 		linkCheckProgress: {
 			current: 0,
@@ -165,7 +159,7 @@ function reducer( state = DEFAULT_STATE, action ) {
 					refreshCalled: action.value,
 				},
 			};
-		case actionTypes.UPDATE_IGNORED_LIST:
+		case actionTypes.SET_CURRENT_POST_IGNORED_LIST:
 			return {
 				...state,
 				pageSeoChecks: {
@@ -173,12 +167,20 @@ function reducer( state = DEFAULT_STATE, action ) {
 					ignoredList: action.payload,
 				},
 			};
-		case actionTypes.UPDATE_IGNORED_CHECKS:
+		case actionTypes.SET_PAGE_SEO_CHECKS_BY_ID_AND_TYPE:
 			return {
 				...state,
 				pageSeoChecks: {
 					...state.pageSeoChecks,
-					ignoredChecks: action.payload,
+					[ action.payload.postId ]: {
+						checks: {
+							...state.pageSeoChecks[ action.payload.postId ]
+								?.checks,
+							...action.payload.checks,
+						},
+						sequence: action.payload.sequence,
+						error: action.payload.error,
+					},
 				},
 			};
 	}

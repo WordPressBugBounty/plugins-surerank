@@ -702,35 +702,59 @@ export const isURL = ( string ) => {
 
 export const formatSeoChecks = ( seoScore ) => {
 	if ( ! seoScore ) {
-		return { badChecks: [], fairChecks: [], passedChecks: [] };
+		return [];
 	}
 
-	const badChecks = [];
-	const fairChecks = [];
-	const passedChecks = [];
-	const suggestionChecks = [];
-
-	Object.entries( seoScore ).forEach( ( [ key, check ] ) => {
+	return Object.entries( seoScore ).map( ( [ key, check ] ) => {
 		const title = key
 			.replace( /_/g, ' ' )
 			.replace( /\b\w/g, ( c ) => c.toUpperCase() );
-		const formattedCheck = {
+		return {
+			...check,
 			id: key,
-			title: check.message || title,
-			data: check.description,
+			title: check?.message || title,
+			data: check?.description,
 			showImages: key === 'image_alt_text',
 		};
-
-		if ( check.status === 'error' ) {
-			badChecks.push( formattedCheck );
-		} else if ( check.status === 'warning' ) {
-			fairChecks.push( formattedCheck );
-		} else if ( check.status === 'suggestion' ) {
-			suggestionChecks.push( formattedCheck );
-		} else if ( check.status === 'success' ) {
-			passedChecks.push( formattedCheck );
-		}
 	} );
+};
 
-	return { badChecks, fairChecks, suggestionChecks, passedChecks };
+/**
+ * Get the categorized checks.
+ *
+ * @param {Array} checks      - The checks to categorize.
+ * @param {Array} ignoredList - The ignored list.
+ * @return {Object} - The categorized checks.
+ */
+export const getCategorizedChecks = ( checks, ignoredList = [] ) => {
+	return checks.filter( Boolean ).reduce(
+		( acc, check ) => {
+			// Check if the check is in the ignored list
+			if ( ignoredList.includes( check.id ) ) {
+				check.ignore = true;
+				acc.ignoredChecks.push( check );
+			} else {
+				// set the flag to false to show the check in the UI
+				check.ignore = false;
+
+				if ( check.status === 'error' ) {
+					acc.badChecks.push( check );
+				} else if ( check.status === 'warning' ) {
+					acc.fairChecks.push( check );
+				} else if ( check.status === 'suggestion' ) {
+					acc.suggestionChecks.push( check );
+				} else if ( check.status === 'success' ) {
+					acc.passedChecks.push( check );
+				}
+			}
+			return acc;
+		},
+		{
+			badChecks: [],
+			fairChecks: [],
+			suggestionChecks: [],
+			passedChecks: [],
+			ignoredChecks: [],
+		}
+	);
 };

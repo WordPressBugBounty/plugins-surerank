@@ -110,7 +110,7 @@ const HTML = memo( ( { settings, handleSwitchChange } ) => {
 						<Select.Button
 							label={ __( 'Shortcode', 'surerank' ) }
 						/>
-						<Select.Options dropdownPortalId="surerank-dashboard">
+						<Select.Options dropdownPortalId="surerank-root">
 							<Select.Option value="sure_rank_html_sitemap">
 								[sure_rank_html_sitemap]
 							</Select.Option>

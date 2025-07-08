@@ -89,4 +89,4 @@ const createRoutes = ( stepsConfig ) => {
 
 const router = createRoutes( ONBOARDING_STEPS_CONFIG );
 
-mountComponent( '#surerank-dashboard', <RouterProvider router={ router } /> );
+mountComponent( '#surerank-root', <RouterProvider router={ router } /> );

@@ -64,23 +64,12 @@ export const checkBrokenLinks = async (
 
 	// Final state update: mark checking as complete and update SEO checks
 	setBrokenLinkState( ( prev ) => {
-		const updatedChecks = {
-			badChecks: pageSeoChecks.badChecks.filter(
-				( c ) => c.id !== 'broken_links'
-			),
-			fairChecks: pageSeoChecks.fairChecks.filter(
-				( c ) => c.id !== 'broken_links'
-			),
-			suggestionChecks: pageSeoChecks.suggestionChecks.filter(
-				( c ) => c.id !== 'broken_links'
-			),
-			passedChecks: pageSeoChecks.passedChecks.filter(
-				( c ) => c.id !== 'broken_links'
-			),
-		};
+		const updatedChecks = [ ...pageSeoChecks ].filter(
+			( c ) => c.id !== 'broken_links'
+		);
 
 		if ( brokenLinksArray.length > 0 ) {
-			updatedChecks.badChecks.push( {
+			updatedChecks.push( {
 				id: 'broken_links',
 				title: __(
 					'One or more broken links found on the page.',
@@ -97,10 +86,7 @@ export const checkBrokenLinks = async (
 		}
 
 		// Update all SEO checks at once
-		setPageSeoCheck( 'badChecks', updatedChecks.badChecks );
-		setPageSeoCheck( 'fairChecks', updatedChecks.fairChecks );
-		setPageSeoCheck( 'suggestionChecks', updatedChecks.suggestionChecks );
-		setPageSeoCheck( 'passedChecks', updatedChecks.passedChecks );
+		setPageSeoCheck( 'checks', updatedChecks );
 		setPageSeoCheck( 'isCheckingLinks', false );
 		setPageSeoCheck( 'linkCheckProgress', {
 			current: totalLinks,
@@ -154,26 +140,12 @@ export const refreshPageChecks = async (
 			};
 		} );
 
-		const cleaned = {
-			badChecks: checks.badChecks.filter(
-				( c ) => c.id !== 'broken_links'
-			),
-			fairChecks: checks.fairChecks.filter(
-				( c ) => c.id !== 'broken_links'
-			),
-			suggestionChecks: checks.suggestionChecks.filter(
-				( c ) => c.id !== 'broken_links'
-			),
-			passedChecks: checks.passedChecks.filter(
-				( c ) => c.id !== 'broken_links'
-			),
-		};
+		const cleanedChecks = [ ...checks ].filter(
+			( c ) => c.id !== 'broken_links'
+		);
 
 		// Update pageSeoChecks with cleaned checks
-		setPageSeoCheck( 'badChecks', cleaned.badChecks );
-		setPageSeoCheck( 'fairChecks', cleaned.fairChecks );
-		setPageSeoCheck( 'suggestionChecks', cleaned.suggestionChecks );
-		setPageSeoCheck( 'passedChecks', cleaned.passedChecks );
+		setPageSeoCheck( 'checks', cleanedChecks );
 
 		if ( allLinks.length === 0 ) {
 			setPageSeoCheck( 'isCheckingLinks', false );
@@ -192,12 +164,7 @@ export const refreshPageChecks = async (
 				setBrokenLinkState,
 				setPageSeoCheck,
 				brokenLinkState,
-				{
-					badChecks: cleaned.badChecks,
-					fairChecks: cleaned.fairChecks,
-					passedChecks: cleaned.passedChecks,
-					suggestionChecks: cleaned.suggestionChecks,
-				}
+				cleanedChecks
 			);
 		}
 	} catch ( error ) {

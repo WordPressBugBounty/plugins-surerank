@@ -54,7 +54,7 @@ const ConditionSelect = ( {
 								}
 							} }
 						/>
-						<RuleSelectInput.Portal id="surerank-dashboard">
+						<RuleSelectInput.Portal id="surerank-root">
 							<RuleSelectInput.Options>
 								{ groupedOptions.map( ( group ) => (
 									<RuleSelectInput.OptionGroup

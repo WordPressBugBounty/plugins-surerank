@@ -11,6 +11,9 @@ import * as actions from './actions';
 import * as selectors from './selectors';
 import { STORE_NAME as storeName } from './constants';
 import setInitialState from './setInitialState';
+import controls from '@Store/controls';
+import * as resolvers from '@Store/resolvers';
+
 /**
  * Store definition for the viewport namespace.
  *
@@ -22,6 +25,8 @@ export const store = createReduxStore( storeName, {
 	reducer,
 	actions,
 	selectors,
+	controls,
+	resolvers,
 } );
 
 register( store );

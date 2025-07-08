@@ -35,7 +35,7 @@ const GlobalRemoveButton = ( {
 				offset={ 10 }
 				variant="dark"
 				title={ tooltip_label }
-				tooltipPortalId="surerank-dashboard"
+				tooltipPortalId="surerank-root"
 			>
 				{ button }
 			</Tooltip>

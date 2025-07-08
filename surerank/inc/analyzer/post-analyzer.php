@@ -358,8 +358,8 @@ class PostAnalyzer {
 		$links = $this->xpath ? $this->xpath->query( '//a[@href]' ) : new DOMNodeList();
 
 		$empty_message = [
-			'status'  => 'status',
-			'message' => __( 'No links found on the page.', 'surerank' ),
+			'status'  => 'success',
+			'message' => __( 'No broken links found on the page.', 'surerank' ),
 		];
 
 		if ( ! $links || $links->length === 0 ) {

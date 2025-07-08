@@ -1,7 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import { __ } from '@wordpress/i18n';
-import { useState, useEffect } from '@wordpress/element';
-import apiFetch from '@wordpress/api-fetch';
+import { useState, Suspense, memo } from '@wordpress/element';
 import {
 	Badge,
 	Skeleton,
@@ -12,26 +11,24 @@ import {
 } from '@bsf/force-ui';
 import { BarChart, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
-import './style.scss';
 import { SureRankFullLogo } from '@GlobalComponents/icons';
 import PageChecks from '@SeoPopup/components/page-seo-checks/page-checks';
-import { formatSeoChecks } from '@/functions/utils';
-import '../../store/store';
-import { useDispatch } from '@wordpress/data';
+import { useDispatch, useSuspenseSelect } from '@wordpress/data';
+import PageChecksListSkeleton from '@/apps/seo-popup/components/page-seo-checks/page-checks-list-skeleton';
 import { STORE_NAME } from '@Store/constants';
+import '@Store/store';
+import './style.scss';
 
-const SeoChecksDrawer = ( { open, setOpen, seoScore, pageTitle, postId } ) => {
-	const { setPageSeoCheck } = useDispatch( STORE_NAME );
-
-	useEffect( () => {
-		if ( open && postId ) {
-			// Set the post ID in the store using setPageSeoCheck
-			setPageSeoCheck( 'postId', parseInt( postId, 10 ) );
-			// Set the check type based on the page type
-			const isTaxonomy = window?.surerank_seo_bar?.type === 'taxonomy';
-			setPageSeoCheck( 'checkType', isTaxonomy ? 'taxonomy' : 'post' );
-		}
-	}, [ open, postId ] );
+const SeoChecksDrawer = ( {
+	open,
+	setOpen,
+	seoChecks,
+	errorMessage,
+	pageTitle,
+	postId,
+	postType,
+} ) => {
+	const { ignoreSeoBarCheck, restoreSeoBarCheck } = useDispatch( STORE_NAME );
 
 	const handleCloseClick = ( e ) => {
 		e.preventDefault();
@@ -39,7 +36,14 @@ const SeoChecksDrawer = ( { open, setOpen, seoScore, pageTitle, postId } ) => {
 		setOpen( false );
 	};
 
-	const pageSeoChecks = formatSeoChecks( seoScore );
+	const handleIgnoreClick = ( checkId ) => {
+		ignoreSeoBarCheck( checkId, postId, postType );
+	};
+
+	const handleRestoreClick = ( checkId ) => {
+		restoreSeoBarCheck( checkId, postId, postType );
+	};
+
 	return (
 		<Drawer
 			exitOnEsc
@@ -78,7 +82,7 @@ const SeoChecksDrawer = ( { open, setOpen, seoScore, pageTitle, postId } ) => {
 				</Drawer.Header>
 				<Drawer.Body className="overflow-x-hidden space-y-3 px-3">
 					<AnimatePresence>
-						{ ! seoScore ? (
+						{ ! seoChecks || errorMessage ? (
 							<motion.div
 								className="space-y-2 p-2"
 								initial={ { opacity: 0 } }
@@ -87,14 +91,21 @@ const SeoChecksDrawer = ( { open, setOpen, seoScore, pageTitle, postId } ) => {
 								transition={ { duration: 0.3 } }
 							>
 								<p className="m-0 text-text-secondary">
-									{ __(
-										'No SEO data available.',
-										'surerank'
-									) }
+									{ errorMessage ||
+										__(
+											'No SEO data available.',
+											'surerank'
+										) }
 								</p>
 							</motion.div>
 						) : (
-							<PageChecks pageSeoChecks={ pageSeoChecks } />
+							<Suspense fallback={ <PageChecksListSkeleton /> }>
+								<PageChecks
+									pageSeoChecks={ seoChecks }
+									onIgnore={ handleIgnoreClick }
+									onRestore={ handleRestoreClick }
+								/>
+							</Suspense>
 						) }
 					</AnimatePresence>
 				</Drawer.Body>
@@ -104,105 +115,28 @@ const SeoChecksDrawer = ( { open, setOpen, seoScore, pageTitle, postId } ) => {
 	);
 };
 
-const CustomBadge = ( { id, spanElement, forceRefresh = false } ) => {
-	const [ isLoading, setIsLoading ] = useState( true );
-	const [ seoScore, setSeoScore ] = useState( null );
+const CustomBadge = ( { id, spanElement, forceRefresh = null } ) => {
 	const [ drawerOpen, setDrawerOpen ] = useState( false );
-	const [ pageTitle, setPageTitle ] = useState( '' );
-	const [ error, setError ] = useState( null );
 
-	useEffect( () => {
-		if ( forceRefresh ) {
-			setIsLoading( true );
-			setSeoScore( null );
-			setError( null );
-		}
-	}, [ forceRefresh ] );
+	const isTaxonomy = window?.surerank_seo_bar?.type === 'taxonomy';
+	const { checks: seoChecks, error: errorMessage } = useSuspenseSelect(
+		( select ) =>
+			select( STORE_NAME )?.getSeoBarChecks(
+				id,
+				isTaxonomy ? 'taxonomy' : 'post',
+				forceRefresh
+			),
+		[]
+	);
 
-	useEffect( () => {
-		if ( ! id ) {
-			setIsLoading( false );
-			setError( __( 'No ID provided', 'surerank' ) );
-			return;
-		}
-
-		const fetchSeoScore = async () => {
-			try {
-				setIsLoading( true );
-				setError( null );
-
-				// Get page title from data-title attribute
-				const title =
-					spanElement?.getAttribute( 'data-title' ) ||
-					__( 'Untitled', 'surerank' );
-				setPageTitle( title );
-
-				// Fetch SEO score with timeout
-				const isTaxonomy =
-					window?.surerank_seo_bar?.type === 'taxonomy';
-				const apiPath = isTaxonomy
-					? `/surerank/v1/taxonomy-seo-checks?term_id=${ id }`
-					: `/surerank/v1/page-seo-checks?post_id=${ id }`;
-
-				// Add cache busting parameter for fresh data after quick edit
-				const cacheBuster = forceRefresh ? `&_t=${ Date.now() }` : '';
-
-				const controller = new AbortController();
-				const timeoutId = setTimeout( () => controller.abort(), 10000 ); // 10 second timeout
-
-				try {
-					const seoData = await apiFetch( {
-						path: apiPath + cacheBuster,
-						method: 'GET',
-						signal: controller.signal,
-					} );
-
-					clearTimeout( timeoutId );
-
-					if ( seoData && seoData.checks ) {
-						setSeoScore( seoData.checks );
-					} else {
-						setSeoScore( null );
-						setError( __( 'No SEO data found', 'surerank' ) );
-					}
-				} catch ( fetchError ) {
-					clearTimeout( timeoutId );
-					throw fetchError;
-				}
-			} catch ( err ) {
-				setSeoScore( null );
-				setPageTitle( __( 'Untitled', 'surerank' ) );
-
-				if ( err.name === 'AbortError' ) {
-					setError( __( 'Request timeout', 'surerank' ) );
-				} else {
-					setError(
-						err.message ||
-							__( 'Failed to fetch SEO data', 'surerank' )
-					);
-				}
-			} finally {
-				setIsLoading( false );
-			}
-		};
-
-		fetchSeoScore();
-	}, [ id, spanElement, forceRefresh ] );
+	const title =
+		spanElement?.getAttribute( 'data-title' ) ||
+		__( 'Untitled', 'surerank' );
 
 	const handleBadgeClick = () => {
 		setDrawerOpen( true );
 	};
 
-	if ( isLoading ) {
-		return (
-			<Skeleton
-				variant="rectangular"
-				className="w-full rounded-full h-6 max-w-32"
-			/>
-		);
-	}
-
-	const checks = seoScore ? Object.values( seoScore ) : [];
 	let badgeProps = {
 		icon: <BarChart />,
 		variant: 'green',
@@ -210,21 +144,19 @@ const CustomBadge = ( { id, spanElement, forceRefresh = false } ) => {
 		className: 'w-fit',
 	};
 
-	if ( error || ! seoScore ) {
+	if ( ! seoChecks || errorMessage ) {
 		badgeProps = {
 			...badgeProps,
 			variant: 'red',
-			label: error
-				? __( 'Error', 'surerank' )
-				: __( 'No Data', 'surerank' ),
+			label: errorMessage || __( 'No Data', 'surerank' ),
 		};
-	} else if ( checks.some( ( check ) => check.status === 'error' ) ) {
+	} else if ( seoChecks.badChecks.length > 0 ) {
 		badgeProps = {
 			...badgeProps,
 			variant: 'red',
 			label: __( 'Issues Detected', 'surerank' ),
 		};
-	} else if ( checks.some( ( check ) => check.status === 'warning' ) ) {
+	} else if ( seoChecks.fairChecks.length > 0 ) {
 		badgeProps = {
 			...badgeProps,
 			variant: 'yellow',
@@ -247,16 +179,29 @@ const CustomBadge = ( { id, spanElement, forceRefresh = false } ) => {
 			>
 				<Badge { ...badgeProps } />
 			</div>
-			<SeoChecksDrawer
-				open={ drawerOpen }
-				setOpen={ setDrawerOpen }
-				seoScore={ seoScore }
-				pageTitle={ pageTitle }
-				postId={ id }
-			/>
+			<Suspense
+				fallback={
+					<Skeleton
+						variant="rectangular"
+						className="w-full rounded-full h-6 max-w-32"
+					/>
+				}
+			>
+				<SeoChecksDrawer
+					open={ drawerOpen }
+					setOpen={ setDrawerOpen }
+					seoChecks={ seoChecks }
+					errorMessage={ errorMessage }
+					pageTitle={ title }
+					postId={ id }
+					postType={ isTaxonomy ? 'taxonomy' : 'post' }
+				/>
+			</Suspense>
 		</>
 	);
 };
+
+const CustomBadgeMemoized = memo( CustomBadge );
 
 // Store root instances to properly cleanup
 const rootInstances = new Map();
@@ -286,7 +231,7 @@ const renderBadge = ( span, forceRefresh = false ) => {
 		const root = createRoot( span );
 		rootInstances.set( span, root );
 		root.render(
-			<CustomBadge
+			<CustomBadgeMemoized
 				id={ id }
 				spanElement={ span }
 				forceRefresh={ forceRefresh }
@@ -301,7 +246,7 @@ const renderBadges = () => {
 		'span.surerank-page-score[data-id]'
 	);
 	spans.forEach( ( span ) => {
-		renderBadge( span, false );
+		renderBadge( span, null );
 	} );
 };
 
@@ -342,7 +287,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 							);
 							spans.forEach( ( span ) => {
 								if ( ! span.dataset.rendered ) {
-									renderBadge( span, true ); // Force refresh for new terms
+									renderBadge( span, Date.now() ); // Force refresh for new terms
 								}
 							} );
 						}
@@ -391,7 +336,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 					`span.surerank-page-score[data-id="${ termId }"]`
 				);
 				if ( span ) {
-					renderBadge( span, true );
+					renderBadge( span, Date.now() );
 				}
 			}, 3000 );
 
@@ -402,4 +347,4 @@ document.addEventListener( 'DOMContentLoaded', () => {
 	}
 } );
 
-export default CustomBadge;
+export default memo( CustomBadge );

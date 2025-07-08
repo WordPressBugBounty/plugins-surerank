@@ -160,7 +160,7 @@ const SocialProfiles = () => {
 								{ __( 'Add another profile', 'surerank' ) }
 							</Button>
 						</DropdownMenu.Trigger>
-						<DropdownMenu.Portal id="surerank-dashboard">
+						<DropdownMenu.Portal id="surerank-root">
 							<DropdownMenu.ContentWrapper>
 								<DropdownMenu.Content className="w-60">
 									<DropdownMenu.List>

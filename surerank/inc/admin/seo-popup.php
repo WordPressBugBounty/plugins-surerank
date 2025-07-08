@@ -56,7 +56,7 @@ class Seo_Popup {
 	 * @return void
 	 */
 	public function add_meta_box_trigger() {
-		echo '<span id="seo-popup"></span>';
+		echo '<span id="seo-popup" class="surerank-root"></span>';
 	}
 
 	/**

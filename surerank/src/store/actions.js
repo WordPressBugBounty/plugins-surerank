@@ -2,7 +2,7 @@ import { pick } from 'lodash';
 import { select } from '@wordpress/data';
 import { STORE_NAME } from './constants';
 import * as actionTypes from './action-types';
-import apiFetch from '@wordpress/api-fetch';
+import { getCategorizedChecks } from '@/functions/utils';
 /**
  * Returns an action object used in signalling that viewport queries have been
  * updated. Values are specified as an object of breakpoint query keys where
@@ -82,23 +82,19 @@ export function updateAppSettings( value ) {
 
 export const setPageSeoCheck = ( key, value ) => {
 	let payload = { [ key ]: value };
+
 	if ( key === 'checks' ) {
-		const filteredChecks = value.filter( Boolean );
-		// Filter critical, warning and passed checks.
-		const badChecks = filteredChecks.filter(
-			( check ) => check.status === 'error'
-		);
-		const fairChecks = filteredChecks.filter(
-			( check ) => check.status === 'warning'
-		);
-		const passedChecks = filteredChecks.filter(
-			( check ) => check.status === 'success'
-		);
-		const suggestionChecks = filteredChecks.filter(
-			( check ) => check.status === 'suggestion'
-		);
-		payload = { badChecks, fairChecks, suggestionChecks, passedChecks };
+		const state = select( STORE_NAME ).getState();
+		const ignoredList = state.pageSeoChecks?.ignoredList || [];
+
+		const categorizedChecks = getCategorizedChecks( value, ignoredList );
+
+		payload = {
+			checks: value,
+			categorizedChecks,
+		};
 	}
+
 	return {
 		type: actionTypes.SET_PAGE_SEO_CHECK,
 		payload,
@@ -123,56 +119,160 @@ export const setRefreshCalled = ( value ) => ( {
 	value,
 } );
 
-export const updateIgnoredList = ( payload ) => ( {
-	type: actionTypes.UPDATE_IGNORED_LIST,
+export const setCurrentPostIgnoredList = ( payload ) => ( {
+	type: actionTypes.SET_CURRENT_POST_IGNORED_LIST,
 	payload,
 } );
 
-export const updateIgnoredChecksObjects = ( payload ) => ( {
-	type: actionTypes.UPDATE_IGNORED_CHECKS,
-	payload,
-} );
+export function fetchFromAPI( payload ) {
+	return {
+		type: actionTypes.FETCH_FROM_API,
+		payload,
+	};
+}
 
-export const fetchIgnoredChecks =
-	( postId, checkType ) =>
-	async ( { dispatch } ) => {
-		try {
-			const data = await apiFetch( {
-				path: `surerank/v1/ignore-post-checks?post_id=${ postId }&check_type=${ checkType }`,
-				method: 'GET',
-			} );
-			dispatch( updateIgnoredList( data?.checks ) );
-		} catch ( error ) {
-			dispatch( updateIgnoredList( [] ) );
+export function* restoreIgnoreCheck( checkId, actionType ) {
+	const state = select( STORE_NAME ).getState();
+	const postId =
+		state.pageSeoChecks?.postId ||
+		state.variables?.post?.ID?.value ||
+		state.variables?.term?.ID?.value;
+	const checkType =
+		window?.surerank_seo_popup?.is_taxonomy === '1' ? 'taxonomy' : 'post';
+
+	try {
+		const data = yield fetchFromAPI( {
+			path: 'surerank/v1/ignore-post-checks',
+			method: actionType === 'ignore' ? 'POST' : 'DELETE',
+			data: { post_id: postId, id: checkId, check_type: checkType },
+		} );
+
+		// Update ignoredList with the array of IDs
+		yield setCurrentPostIgnoredList( data?.checks );
+
+		const { checks } = select( STORE_NAME ).getPageSeoChecks();
+		yield setPageSeoCheck( 'checks', checks );
+	} catch ( error ) {
+		// Silently fail for aborted requests
+	}
+}
+
+export function* ignorePageSeoCheck( checkId ) {
+	yield restoreIgnoreCheck( checkId, 'ignore' );
+}
+
+export function* restorePageSeoCheck( checkId ) {
+	yield restoreIgnoreCheck( checkId, 'restore' );
+}
+
+export const setPageSeoChecksByIdAndType = (
+	postId,
+	postType,
+	checks,
+	error = null
+) => {
+	const sequence = [];
+	// Filter checks and reorganize them
+	const categorizedChecks = checks.reduce(
+		( acc, check ) => {
+			// For preserving the order of the checks
+			sequence.push( check.id );
+
+			if ( check?.ignore ) {
+				acc.ignoredChecks.push( check );
+			} else {
+				// set the flag to false to show the check in the UI
+				check.ignore = false;
+
+				if ( check.status === 'error' ) {
+					acc.badChecks.push( check );
+				} else if ( check.status === 'warning' ) {
+					acc.fairChecks.push( check );
+				} else if ( check.status === 'suggestion' ) {
+					acc.suggestionChecks.push( check );
+				} else if ( check.status === 'success' ) {
+					acc.passedChecks.push( check );
+				}
+			}
+			return acc;
+		},
+		{
+			badChecks: [],
+			fairChecks: [],
+			suggestionChecks: [],
+			passedChecks: [],
+			ignoredChecks: [],
 		}
+	);
+
+	return {
+		type: actionTypes.SET_PAGE_SEO_CHECKS_BY_ID_AND_TYPE,
+		payload: {
+			postId,
+			postType,
+			checks: categorizedChecks,
+			sequence,
+			error,
+		},
 	};
+};
 
-export const ignoreCheck =
-	( postId, checkId, checkType ) =>
-	async ( { dispatch } ) => {
-		try {
-			const data = await apiFetch( {
-				path: 'surerank/v1/ignore-post-checks',
-				method: 'POST',
-				data: { post_id: postId, id: checkId, check_type: checkType },
-			} );
+function* handleSeoBarCheckIgnoreUpdate(
+	checkId,
+	postId,
+	postType,
+	method,
+	value
+) {
+	try {
+		const response = yield fetchFromAPI( {
+			path: 'surerank/v1/ignore-post-checks',
+			method,
+			data: { post_id: postId, id: checkId, check_type: postType },
+		} );
 
-			// Update ignoredList with the array of IDs
-			dispatch( updateIgnoredList( data?.checks ) );
-		} catch ( error ) {}
-	};
+		if ( response?.status !== 'success' ) {
+			throw new Error( response?.message );
+		}
 
-export const restoreCheck =
-	( postId, checkId, checkType ) =>
-	async ( { dispatch } ) => {
-		try {
-			const data = await apiFetch( {
-				path: 'surerank/v1/ignore-post-checks',
-				method: 'DELETE',
-				data: { post_id: postId, id: checkId, check_type: checkType },
-			} );
+		const { checks, sequence } = select( STORE_NAME ).getSeoBarChecks(
+			postId,
+			postType
+		);
+		const flatChecks = Object.values( checks )
+			.flat()
+			.map( ( check ) => {
+				if ( check.id === checkId ) {
+					check.ignore = value;
+				}
+				return check;
+			} )
+			.sort(
+				( a, b ) => sequence.indexOf( a.id ) - sequence.indexOf( b.id )
+			);
 
-			// Update ignoredList with the array of IDs
-			dispatch( updateIgnoredList( data?.checks ) );
-		} catch ( error ) {}
-	};
+		yield setPageSeoChecksByIdAndType( postId, postType, flatChecks );
+	} catch ( error ) {
+		// Silently fail for aborted requests
+	}
+}
+
+export function* ignoreSeoBarCheck( checkId, postId, postType ) {
+	yield handleSeoBarCheckIgnoreUpdate(
+		checkId,
+		postId,
+		postType,
+		'POST',
+		true
+	);
+}
+
+export function* restoreSeoBarCheck( checkId, postId, postType ) {
+	yield handleSeoBarCheckIgnoreUpdate(
+		checkId,
+		postId,
+		postType,
+		'DELETE',
+		false
+	);
+}

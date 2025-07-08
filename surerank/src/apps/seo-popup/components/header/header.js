@@ -1,7 +1,8 @@
 import { SureRankFullLogo } from '@/global/components/icons';
-import { Button } from '@bsf/force-ui';
+import { Button, Skeleton } from '@bsf/force-ui';
 import { X } from 'lucide-react';
 import PageSeoCheckStatusButton from './page-seo-check-status-button';
+import { Suspense } from '@wordpress/element';
 
 const Header = ( { onClose, onOpenChecks } ) => {
 	return (
@@ -10,7 +11,11 @@ const Header = ( { onClose, onOpenChecks } ) => {
 				<SureRankFullLogo className="w-32 h-5" />
 			</span>
 			<div className="inline-flex items-center justify-end gap-2">
-				<PageSeoCheckStatusButton onOpenChecks={ onOpenChecks } />
+				<Suspense
+					fallback={ <Skeleton className="size-[2.0625rem]" /> }
+				>
+					<PageSeoCheckStatusButton onOpenChecks={ onOpenChecks } />
+				</Suspense>
 				<Button
 					variant="ghost"
 					size="sm"

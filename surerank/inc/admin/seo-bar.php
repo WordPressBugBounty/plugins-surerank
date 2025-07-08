@@ -146,7 +146,7 @@ class Seo_Bar {
 		$post_title = get_the_title( $id );
 
 		if ( $column_name === 'surerank-data' ) {
-			echo '<span id="surerank-seo-popup-' . esc_attr( (string) $id ) . '" class="surerank-page-score" data-title="' . esc_attr( (string) $post_title ) . '" data-id="' . esc_attr( (string) $id ) . '"><div class="bg-gray-200 animate-pulse w-full h-6 rounded-full max-w-32"></div></span>';
+			echo '<span id="surerank-seo-popup-' . esc_attr( (string) $id ) . '" class="surerank-root surerank-page-score" data-title="' . esc_attr( (string) $post_title ) . '" data-id="' . esc_attr( (string) $id ) . '"><div class="bg-gray-200 animate-pulse w-full h-6 rounded-full max-w-32"></div></span>';
 		}
 	}
 
@@ -202,7 +202,7 @@ class Seo_Bar {
 		}
 
 		if ( $column_name === 'surerank-data' ) {
-			echo '<span id="surerank-seo-popup-' . esc_attr( (string) $term_id ) . '" class="surerank-page-score" data-title="' . esc_attr( (string) $term_title ) . '" data-id="' . esc_attr( (string) $term_id ) . '"><div class="bg-gray-200 animate-pulse w-full h-6 rounded-full max-w-32"></div></span>';
+			echo '<span id="surerank-seo-popup-' . esc_attr( (string) $term_id ) . '" class="surerank-root surerank-page-score" data-title="' . esc_attr( (string) $term_title ) . '" data-id="' . esc_attr( (string) $term_id ) . '"><div class="bg-gray-200 animate-pulse w-full h-6 rounded-full max-w-32"></div></span>';
 		}
 	}
 

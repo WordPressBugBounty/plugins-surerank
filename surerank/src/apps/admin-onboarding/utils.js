@@ -247,7 +247,7 @@ const SelectWithCustomSearch = forwardRef(
 					type="button"
 					ref={ ref }
 				/>
-				<Select.Portal id="surerank-dashboard">
+				<Select.Portal id="surerank-root">
 					<Select.Options>
 						{ selectOptions.length > 0 ? (
 							selectOptions.map( ( option ) => (
@@ -298,7 +298,7 @@ const SelectWithGroup = forwardRef(
 					type="button"
 					ref={ ref }
 				/>
-				<Select.Portal id="surerank-dashboard">
+				<Select.Portal id="surerank-root">
 					<Select.Options>
 						{ options.map( ( group, index ) => (
 							<Select.OptionGroup

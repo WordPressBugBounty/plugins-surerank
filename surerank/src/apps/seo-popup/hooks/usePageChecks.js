@@ -5,7 +5,7 @@ import {
 	useLayoutEffect,
 	useTransition,
 } from '@wordpress/element';
-import { useSelect, subscribe, useDispatch } from '@wordpress/data';
+import { subscribe, useDispatch, useSuspenseSelect } from '@wordpress/data';
 import { debounce, isEqual } from 'lodash';
 import {
 	checkImageAlt,
@@ -35,8 +35,12 @@ const usePageChecks = () => {
 		globalDefaults,
 		pageSeoChecks,
 		settingsLoaded,
-	} = useSelect( ( sel ) => {
+	} = useSuspenseSelect( ( sel ) => {
 		const selectors = sel( STORE_NAME );
+
+		// Calling this to trigger the resolver to fetch the ignored list.
+		selectors?.getCurrentPostIgnoredList();
+
 		return {
 			metaData: selectors?.getPostSeoMeta() || {},
 			variables: selectors?.getVariables() || {},
@@ -47,13 +51,13 @@ const usePageChecks = () => {
 		};
 	}, [] );
 
+	const { categorizedChecks = {}, initializing } = pageSeoChecks;
 	const {
-		badChecks,
-		fairChecks,
-		passedChecks,
-		suggestionChecks,
-		initializing,
-	} = pageSeoChecks;
+		badChecks = [],
+		fairChecks = [],
+		passedChecks = [],
+		suggestionChecks = [],
+	} = categorizedChecks;
 	const [ , startTransition ] = useTransition();
 
 	const lastSnapshot = useRef( { postContent: '', permalink: '' } );
@@ -207,13 +211,13 @@ const usePageChecks = () => {
 	] );
 
 	const status = useMemo( () => {
-		if ( badChecks.length > 0 ) {
+		if ( badChecks?.length > 0 ) {
 			return 'error';
 		}
-		if ( fairChecks.length > 0 ) {
+		if ( fairChecks?.length > 0 ) {
 			return 'warning';
 		}
-		if ( suggestionChecks.length > 0 ) {
+		if ( suggestionChecks?.length > 0 ) {
 			return 'suggestion';
 		}
 		return 'success';
@@ -222,7 +226,9 @@ const usePageChecks = () => {
 	const counts = useMemo( () => {
 		return {
 			errorAndWarnings:
-				badChecks.length + fairChecks.length + suggestionChecks.length,
+				badChecks?.length +
+				fairChecks?.length +
+				suggestionChecks?.length,
 		};
 	}, [ badChecks, fairChecks, suggestionChecks ] );
 
