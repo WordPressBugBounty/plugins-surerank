@@ -121,7 +121,7 @@ const UserDetails = () => {
 						websiteDetails.organization_type || 'Organization',
 					website_owner_phone:
 						websiteDetails.website_owner_phone || '',
-					website_logo: websiteDetails.website_logo?.url || 0,
+					website_logo: websiteDetails.website_logo?.url || '',
 					about_page: about_page ? parseInt( about_page ) : 0,
 					contact_page: contact_page ? parseInt( contact_page ) : 0,
 					social_profiles: socialProfilesURLs || [],

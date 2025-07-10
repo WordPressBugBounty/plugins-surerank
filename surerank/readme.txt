@@ -5,7 +5,7 @@ Tags: seo, wordpress seo, xml sitemap, schema, google search console
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 8.0
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -293,6 +293,9 @@ Brainstorm Force
 
 
 == Changelog ==
+
+= 1.0.2 =
+* Fix: Fixed an issue where the SureRank Onboarding details won't get saved in an edge case.
 
 = 1.0.1 =
 * Improvement: Enhanced the performance of the SureRank SEO Popup on Elementor pages.

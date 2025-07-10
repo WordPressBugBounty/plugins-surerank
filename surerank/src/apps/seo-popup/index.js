@@ -41,6 +41,7 @@ const insertRoot = () => {
 	if ( targetNode ) {
 		const rootContainer = document.createElement( 'span' );
 		rootContainer.id = 'seo-popup';
+		rootContainer.className = 'surerank-root';
 		targetNode.appendChild( rootContainer );
 		return rootContainer;
 	}
