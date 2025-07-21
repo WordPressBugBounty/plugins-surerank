@@ -4,7 +4,7 @@ import SaveButton from '../save-button';
 
 const Footer = ( { onClose } ) => {
 	return (
-		<div className="p-2 flex items-center justify-start gap-3">
+		<div className="flex items-center justify-start gap-3 p-3 pt-2">
 			<SaveButton />
 			<Button onClick={ onClose } variant="outline">
 				{ __( 'Close', 'surerank' ) }

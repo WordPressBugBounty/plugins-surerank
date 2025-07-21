@@ -3,15 +3,29 @@ import { Button, Skeleton, Text } from '@bsf/force-ui';
 import { ChartNoAxesColumnIncreasingIcon } from 'lucide-react';
 import { cn } from '@/functions/utils';
 import { _n, sprintf, __ } from '@wordpress/i18n';
-import { isElementorActive } from '../page-seo-checks/analyzer/utils/elementor';
+import { isPageBuilderActive } from '../page-seo-checks/analyzer/utils/page-builder';
 import { SeoPopupTooltip } from '@/apps/admin-components/tooltip';
-import { useDispatch } from '@wordpress/data';
-import { STORE_NAME } from '@Store/constants';
+import { useDispatch, useSelect } from '@wordpress/data';
+import { STORE_NAME } from '@/store/constants';
 
-const PageSeoCheckStatusButton = ( { onOpenChecks } ) => {
+const PageSeoCheckStatusButton = () => {
+	const { updateAppSettings } = useDispatch( STORE_NAME );
+	const appSettings = useSelect( ( select ) =>
+		select( STORE_NAME ).getAppSettings()
+	);
 	const { status, initializing, counts } = usePageChecks();
 	const { setPageSeoCheck } = useDispatch( STORE_NAME );
-	const isElementorEditor = isElementorActive();
+	const isPageBuilderEditor = isPageBuilderActive();
+
+	const handleNavigateToChecks = () => {
+		if ( appSettings.currentScreen === 'checks' ) {
+			return;
+		}
+		updateAppSettings( {
+			currentScreen: 'checks',
+			previousScreen: appSettings?.currentScreen,
+		} );
+	};
 
 	const handleOpenChecks = () => {
 		const isTaxonomy = window?.surerank_seo_popup?.is_taxonomy === '1';
@@ -19,11 +33,11 @@ const PageSeoCheckStatusButton = ( { onOpenChecks } ) => {
 		if ( isTaxonomy && window?.surerank_seo_popup?.term_id ) {
 			setPageSeoCheck( 'postId', window?.surerank_seo_popup?.term_id );
 		}
-		onOpenChecks();
+		handleNavigateToChecks();
 	};
 
-	if ( ! isElementorEditor && initializing ) {
-		return <Skeleton className="size-[2.0625rem]" />;
+	if ( ! isPageBuilderEditor && initializing ) {
+		return <Skeleton className="size-10 shrink-0" />;
 	}
 
 	return (
@@ -61,9 +75,11 @@ const PageSeoCheckStatusButton = ( { onOpenChecks } ) => {
 				variant="ghost"
 				size="sm"
 				onClick={ handleOpenChecks }
-				icon={ <ChartNoAxesColumnIncreasingIcon /> }
+				icon={
+					<ChartNoAxesColumnIncreasingIcon className="shrink-0" />
+				}
 				className={ cn(
-					'border-0.5 border-solid focus:[box-shadow:none] focus:outline-none',
+					'p-2 border-0.5 border-solid focus:[box-shadow:none] focus:outline-none [&_svg]:size-6 size-10',
 					status === 'error' &&
 						'bg-badge-background-red hover:bg-badge-background-red border-badge-border-red text-badge-color-red',
 					status === 'warning' &&

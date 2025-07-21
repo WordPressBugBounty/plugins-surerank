@@ -26,7 +26,7 @@ use SureRank\Inc\Traits\Get_Instance;
  *
  * Provides methods for generating XML for sitemap indexes and main sitemaps.
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class Utils {
 	use Get_Instance;
@@ -273,7 +273,7 @@ class Utils {
 	 * Outputs the stylesheet for the sitemap.
 	 *
 	 * @param string $stylesheet The stylesheet to output.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public static function output_stylesheet( $stylesheet ) {

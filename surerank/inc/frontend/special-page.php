@@ -24,7 +24,7 @@ use SureRank\Inc\Traits\Get_Instance;
  * Home Page SEO
  * This class will handle functionality to print meta_data in frontend for different requests.
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class Special_Page {
 
@@ -33,7 +33,7 @@ class Special_Page {
 	/**
 	 * Constructor
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 		add_filter( 'surerank_set_meta', [ $this, 'add_meta_data' ], 1, 1 );
@@ -43,7 +43,7 @@ class Special_Page {
 	 * Add meta data
 	 *
 	 * @param array<string, mixed> $meta Meta Data.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>
 	 */
 	public function add_meta_data( $meta ) {
@@ -62,7 +62,7 @@ class Special_Page {
 	 * Get the meta data for the homepage.
 	 *
 	 * @return array<string, mixed> Meta data for the homepage.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public static function get_meta_for_dynamic_homepage() {
 
@@ -110,7 +110,7 @@ class Special_Page {
 	 *
 	 * @param array<string, mixed> $meta Meta Data.
 	 * @return array<string, mixed> Meta data for static homepage.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	private function get_meta_for_static_homepage( $meta ) {
 		$auto_generated_og_image = $meta['auto_generated_og_image'] ?? '';

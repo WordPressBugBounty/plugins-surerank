@@ -9,7 +9,6 @@
 
 namespace SureRank\Inc\API;
 
-use SureRank\Inc\Analyzer\PostAnalyzer;
 use SureRank\Inc\Functions\Defaults;
 use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Helper;
@@ -119,7 +118,7 @@ class Post extends Api_Base {
 	 * Get post seo data
 	 *
 	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function get_post_seo_data( $request ) {
@@ -128,9 +127,9 @@ class Post extends Api_Base {
 		$post_type   = $request->get_param( 'post_type' );
 		$is_taxonomy = $request->get_param( 'is_taxonomy' );
 
-		$data = self::get_post_data_by_id( $post_id, $post_type, $is_taxonomy );
-		$data = self::decode_html_entities_recursive( $data );
-		Send_Json::success( $data );
+		$data        = self::get_post_data_by_id( $post_id, $post_type, $is_taxonomy );
+		$decode_data = Utils::decode_html_entities_recursive( $data ) ?? $data;
+		Send_Json::success( $decode_data );
 	}
 
 	/**
@@ -153,7 +152,7 @@ class Post extends Api_Base {
 	 * Update seo data
 	 *
 	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function update_post_seo_data( $request ) {
@@ -161,31 +160,7 @@ class Post extends Api_Base {
 		$post_id = $request->get_param( 'post_id' );
 		$data    = $request->get_param( 'metaData' );
 
-		$all_options = Defaults::get_instance()->get_post_defaults( false );
-
-		/** Getting post meta if exists, otherwise getting all options(defaults) */
-		$post_meta = Get::all_post_meta( $post_id );
-		if ( ! empty( $post_meta ) ) {
-			$data = array_merge( $post_meta, $data );
-		}
-
-		foreach ( $all_options as $option_name => $option_value ) {
-			$new_option_value = $option_value;
-			if ( is_array( $option_value ) ) {
-				if ( empty( $option_value ) ) {
-					$new_option_value[ $option_name ] = $data[ $option_name ] ?? [];
-				} else {
-					foreach ( $option_value as $key => $value ) {
-						$new_option_value[ $key ] = $data[ $key ] ?? $value;
-					}
-				}
-			} else {
-				if ( isset( $data[ $option_name ] ) ) {
-					$new_option_value = $data[ $option_name ] === '' ? false : $data[ $option_name ];
-				}
-			}
-			Update::post_meta( $post_id, 'surerank_settings_' . $option_name, $new_option_value );
-		}
+		self::update_post_meta_common( $post_id, $data );
 
 		if ( is_wp_error( $this->run_checks( $post_id ) ) ) {
 			Send_Json::error( [ 'message' => __( 'Error while running SEO Checks.', 'surerank' ) ] );
@@ -195,10 +170,36 @@ class Post extends Api_Base {
 	}
 
 	/**
+	 * Update post meta common
+	 * This function updates the post meta for a given post ID with the provided data.
+	 * It merges existing post meta with the new data, ensuring that all options are updated correctly.
+	 *
+	 * @param int                  $post_id Post ID.
+	 * @param array<string, mixed> $data Data to update.
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public static function update_post_meta_common( int $post_id, array $data ): void {
+		$all_options = Defaults::get_instance()->get_post_defaults( false );
+
+		/** Getting post meta if exists, otherwise getting all options(defaults) */
+		$post_meta = Get::all_post_meta( $post_id );
+		if ( ! empty( $post_meta ) ) {
+			$data = array_merge( $post_meta, $data );
+		}
+
+		$processed_options = Utils::process_option_values( $all_options, $data );
+
+		foreach ( $processed_options as $option_name => $new_option_value ) {
+			Update::post_meta( $post_id, 'surerank_settings_' . $option_name, $new_option_value );
+		}
+	}
+
+	/**
 	 * Get post types
 	 *
 	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function get_post_type_data( $request ) {
@@ -271,35 +272,6 @@ class Post extends Api_Base {
 			return new WP_Error( 'no_post', __( 'No post found.', 'surerank' ) );
 		}
 
-		return PostAnalyzer::get_instance()->run_checks( $post_id, $post );
-	}
-
-	/**
-	 * Recursively decode HTML entities in arrays, objects or strings.
-	 *
-	 * @param mixed $value Array, object, string or other.
-	 * @return mixed Decoded value of the same type.
-	 */
-	protected static function decode_html_entities_recursive( $value ) {
-		if ( is_array( $value ) ) {
-			foreach ( $value as $key => $item ) {
-				$value[ $key ] = self::decode_html_entities_recursive( $item );
-			}
-			return $value;
-		}
-
-		if ( is_object( $value ) ) {
-			foreach ( get_object_vars( $value ) as $prop => $item ) {
-				$value->{$prop} = self::decode_html_entities_recursive( $item );
-			}
-			return $value;
-		}
-
-		if ( is_string( $value ) ) {
-			return html_entity_decode( $value, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
-		}
-
-		// leave ints, bools, null, etc. untouched.
-		return $value;
+		return apply_filters( 'surerank_run_post_seo_checks', $post_id, $post );
 	}
 }

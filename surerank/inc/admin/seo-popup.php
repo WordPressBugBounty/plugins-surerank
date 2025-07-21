@@ -2,7 +2,7 @@
 /**
  * Post Popup
  *
- * @since X.X.X
+ * @since 1.0.0
  * @package surerank
  */
 
@@ -15,9 +15,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 use SureRank\Inc\Frontend\Crawl_Optimization;
 use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Update;
-use SureRank\Inc\Schema\Rules;
-use SureRank\Inc\Schema\Utils;
-use SureRank\Inc\Schema\Variables;
 use SureRank\Inc\Traits\Enqueue;
 use SureRank\Inc\Traits\Get_Instance;
 
@@ -25,7 +22,7 @@ use SureRank\Inc\Traits\Get_Instance;
  * Post Popup
  *
  * @method void wp_enqueue_scripts()
- * @since X.X.X
+ * @since 1.0.0
  */
 class Seo_Popup {
 
@@ -43,10 +40,6 @@ class Seo_Popup {
 		add_action( 'category_term_edit_form_top', [ $this, 'add_meta_box_trigger' ] );
 		add_action( 'created_category', [ $this, 'update_category_seo_values' ] );
 		add_action( 'edited_category', [ $this, 'update_category_seo_values' ] );
-		// Add meta box trigger in the Elementor editor.
-		add_action( 'elementor/editor/before_enqueue_scripts', [ $this, 'add_meta_box_trigger' ], 5 );
-		// Enqueue admin scripts in the Elementor editor.
-		add_action( 'elementor/editor/after_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ] );
 	}
 
 	/**
@@ -72,13 +65,7 @@ class Seo_Popup {
 
 		if ( function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
-			if ( ! $screen || empty( $screen->base ) || ! in_array( $screen->base, [ 'post', 'term' ], true ) ) {
-				return;
-			}
 		}
-
-		$term_data = [];
-		$post_data = [];
 
 		if ( class_exists( \Elementor\Plugin::class ) && \Elementor\Plugin::instance()->editor->is_edit_mode() ) {
 			$editor_type = 'elementor';
@@ -89,6 +76,13 @@ class Seo_Popup {
 		} else {
 			$editor_type = 'classic';
 		}
+
+		if ( $editor_type !== 'bricks' && ( ! $screen || empty( $screen->base ) || ! in_array( $screen->base, [ 'post', 'term' ], true ) ) ) {
+			return;
+		}
+
+		$term_data = [];
+		$post_data = [];
 
 		if ( ( $screen && 'post' === $screen->base ) || $editor_type === 'bricks' ) {
 			$post_data = [
@@ -138,18 +132,13 @@ class Seo_Popup {
 				'object_name' => 'seo_popup',
 				'data'        => array_merge(
 					[
-						'admin_assets_url'    => SURERANK_URL . 'inc/admin/assets',
-						'site_icon_url'       => get_site_icon_url( 16 ),
-						'editor_type'         => $editor_type,
-						'post_type'           => $post_type,
-						'is_taxonomy'         => $is_taxonomy,
-						'schema_rules'        => Rules::get_schema_rules_selections(),
-						'default_schemas'     => Utils::get_default_schemas(),
-						'schema_type_options' => Utils::get_schema_type_options(),
-						'schema_type_data'    => Utils::get_schema_type_data(),
-						'schema_variables'    => Variables::get_instance()->get_schema_variables(),
-						'description_length'  => Get::description_length(),
-						'title_length'        => Get::title_length(),
+						'admin_assets_url'   => SURERANK_URL . 'inc/admin/assets',
+						'site_icon_url'      => get_site_icon_url( 16 ),
+						'editor_type'        => $editor_type,
+						'post_type'          => $post_type,
+						'is_taxonomy'        => $is_taxonomy,
+						'description_length' => Get::description_length(),
+						'title_length'       => Get::title_length(),
 					],
 					$post_data,
 					$term_data

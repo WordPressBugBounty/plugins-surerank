@@ -22,7 +22,7 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 	const [ selectedType, setSelectedType ] = useState( '' );
 	const [ expandedSchemaId, setExpandedSchemaId ] = useState( null );
 
-	const defaultSchemasObject = surerank_seo_popup?.default_schemas || {};
+	const defaultSchemasObject = surerank_globals?.default_schemas || {};
 	const defaultSchemas = Object.entries( defaultSchemasObject ).map(
 		( [ id, schema ] ) => ( {
 			id,
@@ -34,12 +34,12 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 	const schemas = postMetaData.schemas
 		? postMetaData.schemas
 		: globalSchemas || {};
-	const schemaTypeData = surerank_seo_popup?.schema_type_data || {};
-	const schemaTypeOptions = surerank_seo_popup?.schema_type_options || {};
+	const schemaTypeData = surerank_globals?.schema_type_data || {};
+	const schemaTypeOptions = surerank_globals?.schema_type_options || {};
 
 	const variableSuggestions = useMemo(
 		() =>
-			Object.entries( surerank_seo_popup?.schema_variables || {} ).map(
+			Object.entries( surerank_globals?.schema_variables || {} ).map(
 				( [ value, label ] ) => ( {
 					value,
 					label,

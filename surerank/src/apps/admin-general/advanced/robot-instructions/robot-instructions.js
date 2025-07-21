@@ -1,7 +1,7 @@
 import PageContentWrapper from '@AdminComponents/page-content-wrapper';
 import { __, sprintf } from '@wordpress/i18n';
 import { motion } from 'framer-motion';
-import { useState, useEffect } from '@wordpress/element';
+import { useEffect, useCallback } from '@wordpress/element';
 // import FollowingTab from './following';
 // import ArchivingTab from './archiving';
 // import DirectiveTab from './directive';
@@ -12,6 +12,8 @@ import { POST_CONTENT_URL } from '@Global/constants/api';
 import { useLocation, createLazyRoute } from '@tanstack/react-router';
 import GeneratePageContent from '@Functions/page-content-generator';
 import { Skeleton } from '@bsf/force-ui';
+import { useDispatch, useSuspenseSelect } from '@wordpress/data';
+import { STORE_NAME } from '@AdminStore/constants';
 
 const PAGE_TITLE = {
 	indexing: __( 'No Index', 'surerank' ),
@@ -126,7 +128,17 @@ const getPageContent = ( options, settingsType = 'no_index' ) => {
 const RobotInstructions = () => {
 	const { pathname } = useLocation();
 	const slug = pathname.split( '/' ).pop();
-	const [ postContent, setPostContent ] = useState( null );
+
+	const { updateAppSettings } = useDispatch( STORE_NAME );
+	const { appSettings } = useSuspenseSelect( ( select ) => {
+		const { getAppSettings } = select( STORE_NAME );
+		return {
+			appSettings: getAppSettings(),
+		};
+	}, [] );
+
+	// Get post content from Redux store
+	const postContent = appSettings.post_content;
 
 	const renderTabComponent = () => {
 		switch ( slug ) {
@@ -154,21 +166,26 @@ const RobotInstructions = () => {
 		}
 	};
 
-	const fetchPostContent = async () => {
+	const fetchPostContent = useCallback( async () => {
 		try {
 			const response = await apiFetch( {
 				path: POST_CONTENT_URL,
 				method: 'GET',
 			} );
-			setPostContent( response.data );
+			// Store data in Redux store using updateAppSettings
+			updateAppSettings( { post_content: response.data } );
 		} catch ( error ) {
 			// eslint-disable-next-line no-console
 			console.error( 'Error fetching data:', error );
 		}
-	};
+	}, [ updateAppSettings ] );
+
 	useEffect( () => {
-		fetchPostContent();
-	}, [] );
+		// Only fetch if post content is not already in the store
+		if ( ! postContent ) {
+			fetchPostContent();
+		}
+	}, [ postContent, fetchPostContent ] );
 
 	return (
 		<PageContentWrapper

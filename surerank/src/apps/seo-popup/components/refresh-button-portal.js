@@ -1,5 +1,5 @@
 import { useState, useEffect, createPortal } from '@wordpress/element';
-import { RefreshButton } from './page-seo-checks/analyzer/utils/elementor';
+import { RefreshButton } from './page-seo-checks/analyzer/utils/page-builder';
 
 const RefreshButtonPortal = ( {
 	isRefreshing,

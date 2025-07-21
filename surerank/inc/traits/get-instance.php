@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Trait Get_Instance.
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 trait Get_Instance {
 

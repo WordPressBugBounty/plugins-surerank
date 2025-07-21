@@ -6,7 +6,7 @@
  * for custom sitemap functionality in SureRank.
  *
  * @package SureRank
- * @since X.X.X
+ * @since 1.0.0
  */
 
 namespace SureRank\Inc;
@@ -24,7 +24,7 @@ use SureRank\Inc\Traits\Get_Instance;
  * This class manages all the rewrite rules and query variable handling
  * for custom sitemap functionality in SureRank.
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class Routes {
 
@@ -32,7 +32,7 @@ class Routes {
 	/**
 	 * Register rewrite rules and query variables.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function __construct() {
@@ -43,7 +43,7 @@ class Routes {
 	/**
 	 * Register custom rewrite rules.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function register_rewrite_rules() {
@@ -53,7 +53,7 @@ class Routes {
 	/**
 	 * Register custom rewrite rules for the sitemap.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function sitemap_routes() {

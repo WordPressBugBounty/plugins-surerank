@@ -6,6 +6,9 @@ import {
 	Network,
 	Globe,
 	Share2,
+	ArrowLeftRight,
+	Grid,
+	Settings,
 } from 'lucide-react';
 import { __ } from '@wordpress/i18n';
 
@@ -18,9 +21,10 @@ import { PAGE_CONTENT as ARCHIVE_PAGES_PAGE_CONTENT } from '@/apps/admin-general
 import { PAGE_CONTENT as ADVANCED_PAGE_CONTENT } from '@AdminGeneral/general/home-page/advanced';
 import { PAGE_CONTENT as SOCIAL_ACCOUNTS_PAGE_CONTENT } from '@AdminGeneral/social/account/account';
 import { PAGE_CONTENT as TITLE_AND_DESCRIPTION_PAGE_CONTENT } from '@AdminGeneral/general/title-and-description/title-and-description';
+import { ENABLE_GOOGLE_CONSOLE, ENABLE_SCHEMAS } from '@Global/constants';
 
 /**
- * Common navigation configuration that can be used across both dashboard and general settings.
+ * Static navigation configuration - used for router setup and other non-component contexts
  * @return {Array} Navigation configuration
  */
 export const getNavLinks = () => {
@@ -51,11 +55,13 @@ export const getNavLinks = () => {
 					label: __( 'Meta Templates', 'surerank' ),
 					icon: Type,
 					pageContent: TITLE_AND_DESCRIPTION_PAGE_CONTENT,
+					migratable: true,
 				},
 				{
 					label: __( 'Social', 'surerank' ),
 					path: '/general/social',
 					icon: Share2,
+					migratable: true,
 					submenu: [
 						{
 							path: '/general/social',
@@ -83,6 +89,7 @@ export const getNavLinks = () => {
 					path: '/general/homepage',
 					label: __( 'Home Page', 'surerank' ),
 					icon: House,
+					migratable: true,
 					submenu: [
 						{
 							path: '/general/homepage',
@@ -103,6 +110,7 @@ export const getNavLinks = () => {
 					path: '/general/archive_pages',
 					label: __( 'Archive Pages', 'surerank' ),
 					icon: Paperclip,
+					migratable: true,
 					pageContent: ARCHIVE_PAGES_PAGE_CONTENT,
 				},
 			],
@@ -115,6 +123,7 @@ export const getNavLinks = () => {
 					path: '/advanced/robot_instructions',
 					label: __( 'Robot Instructions', 'surerank' ),
 					icon: Bot,
+					migratable: true,
 					submenu: [
 						{
 							path: '/advanced/robot_instructions/indexing',
@@ -135,28 +144,64 @@ export const getNavLinks = () => {
 					label: __( 'Sitemaps', 'surerank' ),
 					icon: Network,
 					pageContent: SITEMAPS_PAGE_CONTENT,
+					migratable: true,
 				},
+				...( ENABLE_SCHEMAS
+					? [
+							{
+								path: '/advanced/schema',
+								label: __( 'Schema', 'surerank' ),
+								icon: Globe,
+								migratable: false,
+							},
+					  ]
+					: [] ),
 				{
-					path: '/advanced/schema',
-					label: __( 'Schema', 'surerank' ),
-					icon: Globe,
+					path: '/advanced/features_management',
+					label: __( 'Features Management', 'surerank' ),
+					icon: Grid,
+					migratable: false,
 				},
 			],
 		},
+		...( ENABLE_GOOGLE_CONSOLE
+			? [
+					{
+						section: __( 'Search Console', 'surerank' ),
+						sectionId: 'search-console',
+						links: [
+							{
+								path: '/search-console',
+								label: __( 'Search Console', 'surerank' ),
+								icon: Network,
+								pageContent: [],
+								migratable: false,
+							},
+							{
+								label: __( 'Content Performance', 'surerank' ),
+								path: '/content-performance',
+								icon: House,
+								migratable: false,
+							},
+						],
+					},
+			  ]
+			: [] ),
 		{
-			section: __( 'Search Console', 'surerank' ),
-			sectionId: 'search-console',
+			section: __( 'Tools', 'surerank' ),
+			sectionId: 'tools',
 			links: [
 				{
-					path: '/search-console',
-					label: __( 'Search Console', 'surerank' ),
-					icon: Network,
-					pageContent: [],
+					path: '/tools/migrate',
+					label: __( 'Migrate to SureRank', 'surerank' ),
+					icon: ArrowLeftRight,
+					migratable: false,
 				},
 				{
-					label: __( 'Content Performance', 'surerank' ),
-					path: '/content-performance',
-					icon: House,
+					path: '/tools/miscellaneous',
+					label: __( 'Miscellaneous', 'surerank' ),
+					icon: Settings,
+					migratable: false,
 				},
 			],
 		},

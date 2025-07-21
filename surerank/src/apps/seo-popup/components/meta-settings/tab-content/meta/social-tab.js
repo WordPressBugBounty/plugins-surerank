@@ -158,7 +158,6 @@ const SocialTab = ( { postMetaData, updatePostMetaData, globalDefaults } ) => {
 				.first()
 				.toJSON();
 			updatePostMetaData( {
-				...postMetaData,
 				[ `${ activeTab }_image_url` ]: attachment.url,
 				[ `${ activeTab }_image_id` ]: attachment.id,
 			} );

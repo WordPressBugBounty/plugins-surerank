@@ -23,7 +23,7 @@ use SureRank\Inc\Traits\Get_Instance;
  * Twitter SEO
  * This class will handle functionality to print meta_data in the frontend for Twitter.
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class Twitter {
 
@@ -32,7 +32,7 @@ class Twitter {
 	/**
 	 * Constructor
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 		add_action( 'surerank_print_meta', [ $this, 'twitter_meta' ], 1, 1 );
@@ -42,7 +42,7 @@ class Twitter {
 	 * Prepare and add Twitter meta data.
 	 *
 	 * @param array<string, mixed> $meta_data Twitter meta data array.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function twitter_meta( $meta_data ) {
@@ -69,7 +69,7 @@ class Twitter {
 	 *
 	 * @param array<string, mixed> $meta_data Meta Data.
 	 * @param bool                 $same_as_facebook Whether to use Facebook meta as fallback.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	private function add_common_tags( $meta_data, $same_as_facebook ) {
@@ -102,7 +102,7 @@ class Twitter {
 	 * @param string               $facebook_key Facebook meta key.
 	 * @param string               $twitter_key Twitter meta key.
 	 * @param string|null          $fallback_key Optional fallback key.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return string
 	 */
 	private function get_twitter_value( $meta_data, $same_as_facebook, $facebook_key, $twitter_key, $fallback_key = null ) {
@@ -120,7 +120,7 @@ class Twitter {
 	/**
 	 * Get formatted Twitter creator.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return string
 	 */
 	private function get_formatted_twitter_creator() {
@@ -139,7 +139,7 @@ class Twitter {
 	/**
 	 * Get formatted Twitter site.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return string
 	 */
 	private function get_formatted_twitter_site() {
@@ -158,7 +158,7 @@ class Twitter {
 	 * Add product-specific Twitter tags.
 	 *
 	 * @param array<string, mixed> $meta_data Meta Data.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	private function add_product_tags( $meta_data ) {

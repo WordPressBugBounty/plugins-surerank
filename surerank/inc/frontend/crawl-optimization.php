@@ -4,7 +4,7 @@
  * This class is responsible for optimizing crawl settings by removing category bases in URLs
  * and managing rewrite rules for categories and product categories in WooCommerce.
  *
- * @since X.X.X
+ * @since 1.0.0
  * @package surerank
  */
 
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Crawl_Optimization
  * This class will handle functionality to crawl optimization settings.
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class Crawl_Optimization {
 
@@ -32,7 +32,7 @@ class Crawl_Optimization {
 	 * Constructor
 	 * Initializes the crawl optimization based on settings and adds necessary actions.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	protected function __construct() {
 
@@ -40,7 +40,7 @@ class Crawl_Optimization {
 		 * Filter to remove category base
 		 * We need to flush settings while using this filter
 		 *
-		 * @since X.X.X
+		 * @since 1.0.0
 		 */
 		if ( apply_filters( 'surerank_remove_category_base', false ) ) {
 			add_filter( 'query_vars', [ $this, 'add_custom_redirect_query_var' ] );
@@ -58,7 +58,7 @@ class Crawl_Optimization {
 		 * Filter to remove product category base
 		 * We need to flush settings while using this filter
 		 *
-		 * @since X.X.X
+		 * @since 1.0.0
 		 */
 		if ( Helper::wc_status() && apply_filters( 'surerank_remove_product_category_base', false ) ) {
 			add_action( 'created_product_cat', 'flush_rewrite_rules' );
@@ -85,7 +85,7 @@ class Crawl_Optimization {
 	 * @param object $term Term object.
 	 * @param string $taxonomy Taxonomy name.
 	 * @return string Modified term link.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public function remove_category_base_from_links( $termlink, $term, $taxonomy ) {
 		if ( 'category' !== $taxonomy ) {
@@ -106,7 +106,7 @@ class Crawl_Optimization {
 	 *
 	 * @param array<string, mixed> $query_vars Array of query variables.
 	 * @return array<string, mixed>|array<int, string> Modified query variables.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public function add_custom_redirect_query_var( $query_vars ) {
 		$query_vars[] = 'custom_category_redirect';
@@ -119,7 +119,7 @@ class Crawl_Optimization {
 	 *
 	 * @param array<string, mixed> $query_vars Array of query variables.
 	 * @return array<string, mixed>|array<int, string> Modified query variables.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public function handle_redirect_for_old_category( $query_vars ) {
 		if ( isset( $query_vars['custom_category_redirect'] ) ) {
@@ -136,7 +136,7 @@ class Crawl_Optimization {
 	 *
 	 * @param array<string, mixed> $rules Existing rewrite rules.
 	 * @return array<string, mixed> Modified rewrite rules.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public function add_rewrite_rules_for_categories( $rules ) {
 		$base          = get_option( 'category_base' );
@@ -189,7 +189,7 @@ class Crawl_Optimization {
 	 * @param object $term Term object.
 	 * @param string $taxonomy Taxonomy name.
 	 * @return string Modified term link.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public function surerank_remove_product_category_base( $termlink, $term, $taxonomy ) {
 		if ( 'product_cat' === $taxonomy ) {
@@ -203,7 +203,7 @@ class Crawl_Optimization {
 	 * Product Category Redirect
 	 * Redirects URLs containing the product category base to clean URLs.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function surerank_product_category_redirect() {
@@ -226,7 +226,7 @@ class Crawl_Optimization {
 	 * Generates rewrite rules for each category to allow cleaner URLs.
 	 *
 	 * @return array<string, mixed> Generated rewrite rules for categories.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	private function generate_clean_category_rules() {
 		$rewrite_rules = [];
@@ -248,7 +248,7 @@ class Crawl_Optimization {
 	 * @param string               $path Category path.
 	 * @param string               $prefix Blog prefix if applicable.
 	 * @return array<string, mixed> Modified rewrite rules.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	private function append_category_rewrite( $rules, $path, $prefix ) {
 		$rules[ "^{$prefix}({$path})/page/([0-9]{1,})/?$" ] = 'index.php?category_name=$matches[1]&paged=$matches[2]';

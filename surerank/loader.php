@@ -19,11 +19,11 @@ use SureRank\Inc\Admin\Seo_Bar;
 use SureRank\Inc\Admin\Seo_Popup;
 use SureRank\Inc\Admin\Update_Timestamp;
 use SureRank\Inc\Ajax\Ajax;
+use SureRank\Inc\Analytics\Analytics;
 use SureRank\Inc\Analyzer\PostAnalyzer;
 use SureRank\Inc\Analyzer\TermAnalyzer;
 use SureRank\Inc\API\Analyzer;
 use SureRank\Inc\API\Api_Init;
-use SureRank\Inc\Dashboard\Auth;
 use SureRank\Inc\Frontend\Archives;
 use SureRank\Inc\Frontend\Canonical;
 use SureRank\Inc\Frontend\Common;
@@ -44,18 +44,19 @@ use SureRank\Inc\Functions\Defaults;
 use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Functions\Update;
+use SureRank\Inc\GoogleSearchConsole\Auth;
 use SureRank\Inc\Lib\Surerank_Nps_Survey;
-use SureRank\Inc\Lib\Surerank_Utm_Analytics;
 use SureRank\Inc\Nps_Notice;
 use SureRank\Inc\Routes;
 use SureRank\Inc\Schema\Schemas;
+use SureRank\Inc\ThirdPartyPlugins\Bricks;
 use SureRank\Inc\ThirdPartyPlugins\CartFlows;
 use SureRank\Inc\ThirdPartyPlugins\Elementor;
 
 /**
  * Plugin_Loader
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class Loader {
 
@@ -64,7 +65,7 @@ class Loader {
 	 *
 	 * @access private
 	 * @var object Class Instance.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	private static $instance;
 
@@ -100,11 +101,13 @@ class Loader {
 		Seo_Bar::get_instance();
 		Attachment::get_instance();
 		Crawl_Optimization::get_instance();
-		Api_Init::get_instance();
 		Analyzer::get_instance();
 		CartFlows::get_instance();
 		PostAnalyzer::get_instance();
 		TermAnalyzer::get_instance();
+		Api_Init::get_instance();
+		Auth::get_instance();
+
 		if ( is_admin() ) {
 			Seo_Popup::get_instance();
 			Update_Timestamp::get_instance();
@@ -118,7 +121,6 @@ class Loader {
 				Elementor::get_instance();
 			}
 			Ajax::get_instance();
-			Auth::get_instance();
 		} else {
 			Single::get_instance();
 			Product::get_instance();
@@ -135,6 +137,9 @@ class Loader {
 			Meta_Data::get_instance();
 			Sitemap::get_instance();
 			Archives::get_instance();
+			if ( defined( 'BRICKS_VERSION' ) ) {
+				Bricks::get_instance();
+			}
 
 			/**
 			 * Commenting this since we will deal with bricks in the next release.
@@ -150,10 +155,6 @@ class Loader {
 			Surerank_Nps_Survey::get_instance();
 			Nps_Notice::get_instance();
 		}
-
-		if ( class_exists( 'SureRank\Inc\Lib\Surerank_Utm_Analytics' ) && ! apply_filters( 'surerank_disable_utm_analytics', false ) ) {
-			Surerank_Utm_Analytics::get_instance();
-		}
 	}
 
 	/**
@@ -164,12 +165,13 @@ class Loader {
 	 */
 	public function load_routes() {
 		Routes::get_instance();
+		Analytics::get_instance();
 	}
 
 	/**
 	 * Initiator
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return object initialized object of class.
 	 */
 	public static function get_instance() {
@@ -183,7 +185,7 @@ class Loader {
 	 * Autoload classes.
 	 *
 	 * @param string $class class name.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function autoload( $class ) {
@@ -217,7 +219,7 @@ class Loader {
 	 *      1. Global Languages /wp-content/languages/surerank/ folder
 	 *      2. Local directory /wp-content/plugins/surerank/languages/ folder
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function load_textdomain() {
@@ -252,7 +254,7 @@ class Loader {
 	/**
 	 * Activation Hook
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function activation() {
@@ -263,7 +265,7 @@ class Loader {
 	/**
 	 * Deactivation Hook
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function deactivation() {
@@ -273,7 +275,7 @@ class Loader {
 	/**
 	 * Flush if settings is updated
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function flush_rules() {
@@ -289,7 +291,7 @@ class Loader {
 	/**
 	 * Flush the setting on the shubdown
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function shutdown() {

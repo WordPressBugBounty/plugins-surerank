@@ -17,7 +17,7 @@ use WP_Error;
 /**
  * Update
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class Update {
 
@@ -29,7 +29,7 @@ class Update {
 	 * @param string                                             $meta_key   Meta key.
 	 * @param array<string, mixed>|array<int, string>|string|int $meta_value Meta value.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return bool|int
 	 */
 	public static function post_meta( $post_id, $meta_key, $meta_value ) {
@@ -44,7 +44,7 @@ class Update {
 	 * @param mixed $meta_key   Meta key.
 	 * @param mixed $meta_value Meta value.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return bool|int|WP_Error
 	 */
 	public static function term_meta( $term_id, $meta_key, $meta_value ) {
@@ -56,7 +56,7 @@ class Update {
 	 *
 	 * @param string $option_name Option name.
 	 * @param mixed  $option_value Option value.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return bool
 	 */
 	public static function option( $option_name, $option_value ) {
@@ -69,7 +69,7 @@ class Update {
 	 *
 	 * @param int                  $post_id Post ID.
 	 * @param array<string, mixed> $seo_checks SEO Checks.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return bool
 	 */
 	public static function post_seo_checks( $post_id, $seo_checks ) {
@@ -89,7 +89,7 @@ class Update {
 	 *
 	 * @param int                  $term_id Term ID.
 	 * @param array<string, mixed> $seo_checks SEO Checks.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return bool
 	 */
 	public static function taxonomy_seo_checks( $term_id, $seo_checks ) {

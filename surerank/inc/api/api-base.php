@@ -8,7 +8,6 @@
 
 namespace SureRank\Inc\API;
 
-use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Functions\Sanitize;
 use SureRank\Inc\Meta_Variables\Site;
@@ -91,7 +90,7 @@ abstract class Api_Base extends WP_REST_Controller {
 	/**
 	 * Get favicon image URL.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return string
 	 */
 	public function get_favicon() {
@@ -101,7 +100,7 @@ abstract class Api_Base extends WP_REST_Controller {
 	/**
 	 * Get site variables
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>
 	 */
 	public function get_site_variables() {
@@ -137,25 +136,11 @@ abstract class Api_Base extends WP_REST_Controller {
 	/**
 	 * Sanitize object data
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @param array<string, mixed>|array<int, string> $data Data to sanitize.
 	 * @return array<string, mixed>|array<int, string>
 	 */
 	public function sanitize_array_data( $data ) {
 		return Sanitize::array_deep( [ Sanitize::class, 'sanitize_with_placeholders' ], $data );
-	}
-
-	/**
-	 * Array merge $global_settings with $updated_settings
-	 *
-	 * @since X.X.X
-	 * @param array<string, mixed> $updated_settings Updated settings.
-	 * @return array<string, mixed>
-	 */
-	public function array_merge( $updated_settings ) {
-		$global_settings             = Get::option( SURERANK_SETTINGS, [], 'array' );
-		$updated_settings['updated'] = time();
-
-		return array_merge( $global_settings, $updated_settings );
 	}
 }

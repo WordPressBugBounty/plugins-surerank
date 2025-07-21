@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Trait Enqueue.
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 trait Enqueue {
 
@@ -46,7 +46,7 @@ trait Enqueue {
 	 * It will add action to enqueue scripts.
 	 * Further create a wp_enqueue_scripts() to enqueue scripts.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function enqueue_scripts() {
@@ -59,7 +59,7 @@ trait Enqueue {
 	 * It will add action to enqueue scripts in admin.
 	 * Further create a admin_enqueue_scripts() to enqueue admin scripts.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function enqueue_scripts_admin() {
@@ -81,7 +81,7 @@ trait Enqueue {
 	 * @param string                                  $version            Version of the script.
 	 *                                                                    Default is the plugin version.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function script_operations( $hook, $path, $dependency, $localization_array = [], $version = SURERANK_VERSION ) {
@@ -112,7 +112,7 @@ trait Enqueue {
 	 * @param array<string, mixed>|array<int, string> $dependency Array of dependencies required for this style.
 	 * @param string                                  $version   Version of the style.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function style_operations( $hook, $path, $dependency, $version = SURERANK_VERSION ) {
@@ -131,7 +131,7 @@ trait Enqueue {
 	 *                                  Example: [ 'hook' => 'example', 'object_name' => 'example', 'data' => $localized_data ].
 	 * @param array<string, mixed>|array<int, string> $script_dep       Array of dependencies required for this script.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function build_assets_operations( $handle, $localization_data = [], $script_dep = [] ) {
@@ -155,7 +155,7 @@ trait Enqueue {
 	/**
 	 * Enqueue vendor and common assets.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function enqueue_vendor_and_common_assets() {
@@ -199,7 +199,7 @@ trait Enqueue {
 	 * @param array<string, mixed>|array<int, string> $dependency Array of dependencies required for this script.
 	 * @param string                                  $version   Version of the script.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function register_script( $hook, $path, $dependency, $version = SURERANK_VERSION ) {
@@ -221,7 +221,7 @@ trait Enqueue {
 	 *
 	 * @param string $hook Hook name user wish to choose for new js file.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function enqueue_script( $hook ) {
@@ -239,7 +239,7 @@ trait Enqueue {
 	 * @param string                                  $object_name Name of the object to be used in js file.
 	 * @param array<string, mixed>|array<int, string> $data        Array of data to be localized.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function localize_script( $hook, $object_name, $data ) {
@@ -260,7 +260,7 @@ trait Enqueue {
 	 * @param array<string, mixed>|array<int, string> $dependency Array of dependencies required for this style.
 	 * @param string                                  $version    Version of the style.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function register_style( $hook, $path, $dependency, $version = SURERANK_VERSION ) {
@@ -281,7 +281,7 @@ trait Enqueue {
 	 *
 	 * @param string $hook Hook name user wish to choose for new css file.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function enqueue_style( $hook ) {
@@ -295,7 +295,7 @@ trait Enqueue {
 	 * It should be called from the function wp_enqueue_scripts() or admin_enqueue_scripts() created in the class.
 	 *
 	 * @param array<string, mixed>|array<int, string> $events Array of events for which nonce needs to be created.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>|array<int, string>
 	 */
 	public function create_nonces( $events ) {
@@ -314,7 +314,7 @@ trait Enqueue {
 	 * @param array<string, mixed>|array<int, string> $deps Additional dependencies.
 	 * @param array<string, mixed>|array<int, string> $localization_data Localization data.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	private function enqueue_files_with_deps( $name, $dir, $deps = [], $localization_data = [] ) {

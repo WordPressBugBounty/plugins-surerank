@@ -18,7 +18,7 @@ use SureRank\Inc\Traits\Get_Instance;
  * Crawl Optimization Utility Functions
  * Manages Crawl Optimization.
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class Utils {
 	use Get_Instance;
@@ -28,7 +28,7 @@ class Utils {
 	 * Determines if the blog prefix should be included in rewrite rules.
 	 *
 	 * @return string Blog prefix if needed, otherwise empty.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public static function get_blog_prefix() {
 		return is_multisite() && ! is_subdomain_install() && is_main_site() && strpos( get_option( 'permalink_structure' ), '/blog/' ) === 0 ? 'blog/' : '';
@@ -39,7 +39,7 @@ class Utils {
 	 * Retrieves all categories, including those that are empty.
 	 *
 	 * @return array<int, \WP_Term> List of category objects.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public static function get_all_categories() {
 		return get_categories( [ 'hide_empty' => false ] );
@@ -51,7 +51,7 @@ class Utils {
 	 *
 	 * @param object $category Category object.
 	 * @return string Path to the category.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public static function get_category_path( $category ) {
 		return $category instanceof \WP_Term && $category->parent ? self::get_parent_path( $category->parent ) : '';
@@ -63,7 +63,7 @@ class Utils {
 	 *
 	 * @param int $parent_id Parent category ID.
 	 * @return string Parent category path.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public static function get_parent_path( $parent_id ) {
 		$parent_path = get_category_parents( $parent_id, false, '/', true );

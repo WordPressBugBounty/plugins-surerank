@@ -13,10 +13,10 @@ use DOMXPath;
 use SureRank\Inc\Analyzer\Scraper;
 use SureRank\Inc\Analyzer\SeoAnalyzer;
 use SureRank\Inc\Analyzer\Utils;
-use SureRank\Inc\Dashboard\Controller;
 use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Requests;
 use SureRank\Inc\Functions\Update;
+use SureRank\Inc\GoogleSearchConsole\Controller;
 use SureRank\Inc\Traits\Get_Instance;
 use SureRank\Inc\Traits\Logger;
 use WP_Error;
@@ -960,9 +960,6 @@ class Analyzer extends Api_Base {
 	 * @return array<string, mixed>
 	 */
 	public function sitemaps(): array {
-		$settings = get_option( SURERANK_SETTINGS );
-		$sitemaps = $settings['enable_xml_sitemap'] ?? false;
-
 		$working_label     = __( 'XML sitemap is accessible to search engines.', 'surerank' );
 		$not_working_label = __( 'XML sitemap is not accessible to search engines.', 'surerank' );
 		$helptext          = [
@@ -978,15 +975,6 @@ class Analyzer extends Api_Base {
 
 			__( 'If you’ve connected tools like Google Search Console, you can also submit the sitemap there — but that’s optional. The key is to make sure it’s available and up to date so search engines can do their job properly.', 'surerank' ),
 		];
-
-		if ( ! $sitemaps ) {
-			return [
-				'exists'      => false,
-				'status'      => 'error',
-				'description' => $helptext,
-				'message'     => $not_working_label,
-			];
-		}
 
 		$sitemap_url = home_url( '/sitemap_index.xml' );
 		$sitemap     = Scraper::get_instance()->fetch( $sitemap_url );

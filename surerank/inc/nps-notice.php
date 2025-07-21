@@ -34,9 +34,7 @@ if ( ! class_exists( 'Nps_Notice' ) ) {
 		 * @since 1.0.0
 		 */
 		private static $allowed_screens = [
-			'dashboard',
 			'toplevel_page_surerank',
-			'surerank_page_surerank_settings',
 		];
 
 		/**

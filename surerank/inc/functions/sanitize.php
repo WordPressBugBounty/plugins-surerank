@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Sanitize
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class Sanitize {
 
@@ -26,7 +26,7 @@ class Sanitize {
 	 * @param string $value   Value to sanitize.
 	 * @param string $default Default value.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return string
 	 */
 	public static function text( $value, $default = '' ) {

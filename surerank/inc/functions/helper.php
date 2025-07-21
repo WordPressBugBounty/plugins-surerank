@@ -22,14 +22,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Helper
  * This class will handle all helper functions.
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class Helper {
 
 	/**
 	 * Check if classic editor is enabled.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return bool
 	 */
 	public static function is_classic_editor_active() {
@@ -44,7 +44,7 @@ class Helper {
 	/**
 	 * Get role names.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>
 	 */
 	public static function get_role_names() {
@@ -132,7 +132,7 @@ class Helper {
 	/**
 	 * Check if the current page is a WooCommerce product.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return bool
 	 */
 	public static function is_product() {
@@ -142,7 +142,7 @@ class Helper {
 	/**
 	 * Get website details
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>
 	 */
 	public static function website_details() {
@@ -161,7 +161,7 @@ class Helper {
 	/**
 	 * Check if the current page is a WooCommerce shop page.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return string
 	 */
 	public static function website_represents() {
@@ -174,7 +174,7 @@ class Helper {
 	/**
 	 * Get sitename
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return string
 	 */
 	public static function get_sitename() {
@@ -187,7 +187,7 @@ class Helper {
 	/**
 	 * Get sitename
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return string
 	 */
 	public static function get_admin_name() {
@@ -197,7 +197,7 @@ class Helper {
 	/**
 	 * Get admin email
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return string
 	 */
 	public static function get_admin_email() {
@@ -207,7 +207,7 @@ class Helper {
 	/**
 	 * Get current page number
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return string
 	 */
 	public static function get_paged_info() {
@@ -232,7 +232,7 @@ class Helper {
 	 *
 	 * @param int $page_num The current page number.
 	 * @param int $max_pages The total number of pages.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return string
 	 */
 	public static function format_paged_info( $page_num, $max_pages ) {
@@ -257,7 +257,7 @@ class Helper {
 	/**
 	 * Get logo
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>
 	 */
 	public static function get_logo() {
@@ -298,7 +298,7 @@ class Helper {
 	/**
 	 * Get logo
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return string
 	 */
 	public static function logo_uri() {
@@ -318,7 +318,7 @@ class Helper {
 	/**
 	 * Get website lead details
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>
 	 */
 	public static function get_website_lead_details() {
@@ -431,7 +431,7 @@ class Helper {
 	/**
 	 * Get website About Us page ID.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>|false
 	 */
 	public static function get_website_about_us() {
@@ -441,7 +441,7 @@ class Helper {
 	/**
 	 * Get website Contact Us page ID.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>|false
 	 */
 	public static function get_website_contact_us() {

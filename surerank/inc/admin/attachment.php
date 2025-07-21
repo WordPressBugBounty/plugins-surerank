@@ -22,7 +22,7 @@ use SureRank\Inc\Traits\Get_Instance;
  * Attachment Page SEO
  * This class will handle functionality to print meta_data in frontend for different requests.
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class Attachment {
 
@@ -31,7 +31,7 @@ class Attachment {
 	/**
 	 * Constructor
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 		add_action( 'wp', [ $this, 'template_redirect' ] );
@@ -41,7 +41,7 @@ class Attachment {
 	/**
 	 * Filter title
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function template_redirect() {
@@ -66,7 +66,7 @@ class Attachment {
 	 *
 	 * @param string $title Title.
 	 * @return string
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public function process_title( $title ) {
 		// Sanitize the title: remove hyphens, underscores & extra spaces.
@@ -85,7 +85,7 @@ class Attachment {
 	 *
 	 * @param int $post_id Post ID.
 	 * @return string
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public function get_attachment_title( $post_id ) {
 		Post::get_instance()->set_post( intval( $post_id ) );
@@ -121,7 +121,7 @@ class Attachment {
 	 * @param int  $post_id Post ID.
 	 * @param bool $bulk Bulk.
 	 * @return void
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public function generate_attachment_attributes( $post_id, $bulk = false ) {
 		if ( ! wp_attachment_is_image( $post_id ) ) {

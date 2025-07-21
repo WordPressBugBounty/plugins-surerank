@@ -4,11 +4,35 @@ import createAdminRouter, {
 	createChildRoute,
 } from '@Functions/router';
 import Dashboard from './dashboard';
-import { Toaster } from '@bsf/force-ui';
+import { Toaster, toast } from '@bsf/force-ui';
 import { getNavLinks } from '@Global/constants/nav-links';
 import { Navigate } from '@tanstack/react-router';
 import SidebarLayout from '@AdminComponents/layout/sidebar-layout';
 import SearchConsole from '../admin-search-console';
+import { ENABLE_GOOGLE_CONSOLE, ENABLE_SCHEMAS } from '@Global/constants';
+import { applyFilters } from '@wordpress/hooks';
+
+// Import all the components directly
+import TitleAndDescriptionRoute from '@AdminGeneral/general/title-and-description/title-and-description';
+import HomePageRoute from '@AdminGeneral/general/home-page/home-page';
+import ArchivePagesRoute from '@AdminGeneral/advanced/archive-pages/archive-pages';
+import SocialGeneralRoute from '@AdminGeneral/social/general/general';
+import FacebookRoute from '@AdminGeneral/social/facebook/facebook';
+import TwitterRoute from '@AdminGeneral/social/twitter/twitter';
+import AccountRoute from '@AdminGeneral/social/account/account';
+import RobotInstructionsRoute from '@AdminGeneral/advanced/robot-instructions/robot-instructions';
+import SitemapsRoute from '@AdminGeneral/advanced/sitemaps/sitemaps';
+import FeaturesManagementRoute from '@AdminGeneral/advanced/features-management/features-management';
+import ContentAnalysisRoute from '@AdminDashboard/content-analysis/content-analysis';
+import SiteSeoChecksRoute from '@AdminDashboard/site-seo-checks/site-seo-checks-main';
+import MigrationRoute from '@AdminGeneral/advanced/tools/migration';
+import MiscellaneousRoute from '@AdminGeneral/advanced/tools/miscellaneous';
+import SchemaRoute from '@AdminGeneral/schema/schema';
+
+// Define toast globally for PRO plugin.
+if ( window && ! window?.toast ) {
+	window.toast = toast;
+}
 
 // Routes
 const dashboardRoutes = [
@@ -22,99 +46,35 @@ const dashboardRoutes = [
 
 const generalAndAdvancedRoutes = [
 	// General routes
-	createRoute( '/general', {
-		loader: () =>
-			import(
-				'@AdminGeneral/general/title-and-description/title-and-description'
-			).then( ( module ) => module.LazyRoute ),
-	} ),
+	createRoute( '/general', TitleAndDescriptionRoute ),
 	createRoute( '/general/homepage', null, [
-		createChildRoute( '/', {
-			loader: () =>
-				import( '@AdminGeneral/general/home-page/home-page' ).then(
-					( module ) => module.LazyRoute
-				),
-		} ),
-		createChildRoute( '/social', {
-			loader: () =>
-				import( '@AdminGeneral/general/home-page/home-page' ).then(
-					( module ) => module.LazyRoute
-				),
-		} ),
-		createChildRoute( '/advanced', {
-			loader: () =>
-				import( '@AdminGeneral/general/home-page/home-page' ).then(
-					( module ) => module.LazyRoute
-				),
-		} ),
+		createChildRoute( '/', HomePageRoute ),
+		createChildRoute( '/social', HomePageRoute ),
+		createChildRoute( '/advanced', HomePageRoute ),
 	] ),
-	createChildRoute( '/general/archive_pages', {
-		loader: () =>
-			import( '@AdminGeneral/advanced/archive-pages/archive-pages' ).then(
-				( module ) => module.LazyRoute
-			),
-	} ),
+	createChildRoute( '/general/archive_pages', ArchivePagesRoute ),
 	createRoute( '/general/social', null, [
-		createChildRoute( '/', {
-			loader: () =>
-				import( '@AdminGeneral/social/general/general' ).then(
-					( module ) => module.LazyRoute
-				),
-		} ),
-		createChildRoute( '/facebook', {
-			loader: () =>
-				import( '@AdminGeneral/social/facebook/facebook' ).then(
-					( module ) => module.LazyRoute
-				),
-		} ),
-		createChildRoute( '/x', {
-			loader: () =>
-				import( '@AdminGeneral/social/twitter/twitter' ).then(
-					( module ) => module.LazyRoute
-				),
-		} ),
-		createChildRoute( '/accounts', {
-			loader: () =>
-				import( '@AdminGeneral/social/account/account' ).then(
-					( module ) => module.LazyRoute
-				),
-		} ),
+		createChildRoute( '/', SocialGeneralRoute ),
+		createChildRoute( '/facebook', FacebookRoute ),
+		createChildRoute( '/x', TwitterRoute ),
+		createChildRoute( '/accounts', AccountRoute ),
 	] ),
 
 	// Advanced routes
 	createRoute( '/advanced', null, [
 		createRoute( '/robot_instructions', null, [
-			createChildRoute( '/indexing', {
-				loader: () =>
-					import(
-						'@AdminGeneral/advanced/robot-instructions/robot-instructions'
-					).then( ( module ) => module.LazyRoute ),
-			} ),
-			createChildRoute( '/following', {
-				loader: () =>
-					import(
-						'@AdminGeneral/advanced/robot-instructions/robot-instructions'
-					).then( ( module ) => module.LazyRoute ),
-			} ),
-			createChildRoute( '/archiving', {
-				loader: () =>
-					import(
-						'@AdminGeneral/advanced/robot-instructions/robot-instructions'
-					).then( ( module ) => module.LazyRoute ),
-			} ),
+			createChildRoute( '/indexing', RobotInstructionsRoute ),
+			createChildRoute( '/following', RobotInstructionsRoute ),
+			createChildRoute( '/archiving', RobotInstructionsRoute ),
 		] ),
-		createChildRoute( '/sitemaps', {
-			loader: () =>
-				import( '@AdminGeneral/advanced/sitemaps/sitemaps' ).then(
-					( module ) => module.LazyRoute
-				),
-		} ),
-		createChildRoute( '/schema', {
-			loader: () =>
-				import( '@AdminGeneral/schema/schema' ).then(
-					( module ) => module.LazyRoute
-				),
-		} ),
+		createChildRoute( '/sitemaps', SitemapsRoute ),
+		// Conditionally include schema route
+		...( ENABLE_SCHEMAS && SchemaRoute
+			? [
+					createChildRoute( '/schema', SchemaRoute ),
+			  ]
+			: [] ),
+		createChildRoute( '/features_management', FeaturesManagementRoute ),
 	] ),
 ];
 
@@ -122,39 +82,43 @@ const searchConsoleRoutes = [
 	createRoute( '/search-console', SearchConsole, { navbarOnly: true } ),
 	createRoute(
 		'/content-performance',
-		{
-			loader: () =>
-				import(
-					'@AdminDashboard/content-analysis/content-analysis'
-				).then( ( module ) => module.LazyRoute ),
-		},
+		ContentAnalysisRoute,
 		{
 			navbarOnly: true,
 		}
 	),
+];
+
+const siteSeoAnalysisRoutes = [
 	createRoute(
 		'/site-seo-analysis',
-		{
-			loader: () =>
-				import(
-					'@AdminDashboard/site-seo-checks/site-seo-checks-main'
-				).then( ( module ) => module.LazyRoute ),
-		},
+		SiteSeoChecksRoute,
 		{
 			navbarOnly: true,
 		}
 	),
+];
+
+// Tools routes
+const toolsRoutes = [
+	createRoute( '/tools', null, [
+		createChildRoute( '/migrate', MigrationRoute ),
+		createChildRoute( '/miscellaneous', MiscellaneousRoute ),
+	] ),
 ];
 
 // Combine all routes
-export const routes = [
+export const routes = applyFilters( 'surerank-pro.routes', [
 	...dashboardRoutes,
 	...generalAndAdvancedRoutes,
-	...searchConsoleRoutes,
-];
+	...toolsRoutes,
+	...siteSeoAnalysisRoutes,
+	// Conditionally include search console routes
+	...( ENABLE_GOOGLE_CONSOLE ? searchConsoleRoutes : [] ),
+] );
 
 // Navigation Links
-const navLinks = getNavLinks();
+export const navLinks = applyFilters( 'surerank-pro.nav-links', getNavLinks() );
 
 // Create router using the original createAdminRouter but with custom layout
 const Router = createAdminRouter( {

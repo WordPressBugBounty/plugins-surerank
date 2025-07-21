@@ -45,7 +45,7 @@ class Site extends Variables {
 	 * Organization details.
 	 *
 	 * @var array<string, mixed>|null
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public $org_details = null;
 	/**
@@ -184,7 +184,7 @@ class Site extends Variables {
 	/**
 	 * Get search query
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return string
 	 */
 	public function get_search_query() {
@@ -197,7 +197,7 @@ class Site extends Variables {
 	/**
 	 * Get current date
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return string
 	 */
 	public function get_currentdate() {
@@ -207,7 +207,7 @@ class Site extends Variables {
 	/**
 	 * Get current day
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return string
 	 */
 	public function get_currentday() {
@@ -217,7 +217,7 @@ class Site extends Variables {
 	/**
 	 * Get current month
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return string
 	 */
 	public function get_currentmonth() {
@@ -227,7 +227,7 @@ class Site extends Variables {
 	/**
 	 * Get current year
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return string
 	 */
 	public function get_currentyear() {
@@ -237,7 +237,7 @@ class Site extends Variables {
 	/**
 	 * Get current time
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return string
 	 */
 	public function get_currenttime() {
@@ -247,7 +247,7 @@ class Site extends Variables {
 	/**
 	 * Get Organization Name (from the Schema fields).
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return string
 	 */
 	public function get_org_name() {
@@ -262,7 +262,7 @@ class Site extends Variables {
 	/**
 	 * Get organization logo
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return string
 	 */
 	public function get_org_logo() {
@@ -277,7 +277,7 @@ class Site extends Variables {
 	/**
 	 * Get organization URL
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return string
 	 */
 	public function get_org_url() {

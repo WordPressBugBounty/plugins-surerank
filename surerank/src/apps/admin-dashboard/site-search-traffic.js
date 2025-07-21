@@ -11,7 +11,13 @@ import {
 	Text,
 } from '@bsf/force-ui';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState, useMemo } from '@wordpress/element';
+import {
+	useEffect,
+	useState,
+	useMemo,
+	useCallback,
+	useRef,
+} from '@wordpress/element';
 import { ArrowUp, ArrowDown, LogOut } from 'lucide-react';
 import {
 	cn,
@@ -174,34 +180,42 @@ const EmptyState = ( {
 const SiteSearchTraffic = () => {
 	const { setSearchConsole, toggleSiteSelectorModal, setConfirmationModal } =
 		useDispatch( STORE_NAME );
-	const searchConsole = useSelect(
-		( select ) => select( STORE_NAME ).getSearchConsole(),
-		[]
-	);
+	const {
+		clicksData = [
+			{
+				label: __( 'Clicks', 'surerank' ),
+				value: null,
+				previous: null,
+				percentage: null,
+				percentageType: 'success',
+				color: 'bg-sky-500',
+			},
+			{
+				label: __( 'Impressions', 'surerank' ),
+				value: null,
+				previous: null,
+				percentage: null,
+				percentageType: 'success',
+				color: 'bg-background-brand',
+			},
+		],
+		authenticated,
+		hasSiteSelected,
+		selectedSite,
+		siteTraffic = [],
+		siteTrafficFetchComplete = false,
+	} = useSelect( ( select ) => select( STORE_NAME ).getSearchConsole(), [] );
 
-	const [ clicksData, setClicksData ] = useState( [
-		{
-			label: __( 'Clicks', 'surerank' ),
-			value: null,
-			previous: null,
-			percentage: null,
-			percentageType: 'success',
-			color: 'bg-sky-500',
-		},
-		{
-			label: __( 'Impressions', 'surerank' ),
-			value: null,
-			previous: null,
-			percentage: null,
-			percentageType: 'success',
-			color: 'bg-background-brand',
-		},
-	] );
 	const [ isLoading, setIsLoading ] = useState(
-		searchConsole.authenticated && searchConsole.hasSiteSelected
+		authenticated &&
+			hasSiteSelected &&
+			clicksData[ 0 ].value === null &&
+			siteTraffic.length === 0
 	);
 
-	const fetchClicksAndImpressions = async ( from, to ) => {
+	const previousSite = useRef( null ); // Track previous site, start with null
+
+	const fetchClicksAndImpressions = useCallback( async ( from, to ) => {
 		const formattedStartDate = formatToISOPreserveDate( from );
 		const formattedEndDate = formatToISOPreserveDate( to );
 
@@ -230,32 +244,34 @@ const SiteSearchTraffic = () => {
 				return percentage > 0 ? 'success' : 'danger';
 			};
 
-			setClicksData( [
-				{
-					...clicksData[ 0 ],
-					value: clicks?.current,
-					previous: clicks?.previous,
-					percentage: clicks?.percentage,
-					percentageType: getPercentageType( clicks?.percentage ),
-					color: 'bg-sky-500',
-				},
-				{
-					...clicksData[ 1 ],
-					label: __( 'Impressions', 'surerank' ),
-					value: impressions?.current,
-					percentage: impressions?.percentage,
-					previous: impressions?.previous,
-					percentageType: getPercentageType(
-						impressions?.percentage
-					),
-				},
-			] );
+			setSearchConsole( {
+				clicksData: [
+					{
+						label: __( 'Clicks', 'surerank' ),
+						value: clicks?.current,
+						previous: clicks?.previous,
+						percentage: clicks?.percentage,
+						percentageType: getPercentageType( clicks?.percentage ),
+						color: 'bg-sky-500',
+					},
+					{
+						label: __( 'Impressions', 'surerank' ),
+						value: impressions?.current,
+						percentage: impressions?.percentage,
+						previous: impressions?.previous,
+						percentageType: getPercentageType(
+							impressions?.percentage
+						),
+						color: 'bg-background-brand',
+					},
+				],
+			} );
 		} catch ( error ) {
 			toast.error( error.message );
 		}
-	};
+	}, [] );
 
-	const fetchSiteTraffic = async ( from, to ) => {
+	const fetchSiteTraffic = useCallback( async ( from, to ) => {
 		const formattedStartDate = formatToISOPreserveDate( from );
 		const formattedEndDate = formatToISOPreserveDate( to );
 
@@ -288,10 +304,10 @@ const SiteSearchTraffic = () => {
 		} catch ( error ) {
 			toast.error( error.message );
 		}
-	};
+	}, [] );
 
-	const initiateAPICalls = async () => {
-		if ( ! searchConsole.authenticated || ! searchConsole.selectedSite ) {
+	const initiateAPICalls = useCallback( async () => {
+		if ( ! authenticated || ! selectedSite ) {
 			return;
 		}
 		setIsLoading( true );
@@ -299,12 +315,20 @@ const SiteSearchTraffic = () => {
 		try {
 			await fetchClicksAndImpressions( from, to );
 			await fetchSiteTraffic( from, to );
+			setSearchConsole( {
+				siteTrafficFetchComplete: true,
+			} );
 		} catch ( error ) {
 			// do nothing
 		} finally {
 			setIsLoading( false );
 		}
-	};
+	}, [
+		authenticated,
+		selectedSite,
+		fetchClicksAndImpressions,
+		fetchSiteTraffic,
+	] );
 
 	const handleChangeSite = () => {
 		toggleSiteSelectorModal();
@@ -323,8 +347,32 @@ const SiteSearchTraffic = () => {
 		} );
 	};
 	useEffect( () => {
-		initiateAPICalls();
-	}, [ searchConsole.authenticated, searchConsole.selectedSite ] );
+		// Only fetch data when the site changes or on first load without data
+		if (
+			authenticated &&
+			selectedSite &&
+			previousSite.current !== selectedSite
+		) {
+			// Reset fetchComplete when site changes
+			if ( previousSite.current !== null ) {
+				setSearchConsole( {
+					siteTrafficFetchComplete: false,
+				} );
+			}
+
+			// Only fetch if we haven't completed a fetch for this session or if the site actually changed
+			if ( ! siteTrafficFetchComplete || previousSite.current !== null ) {
+				initiateAPICalls();
+			}
+			previousSite.current = selectedSite;
+		}
+	}, [
+		authenticated,
+		selectedSite,
+		initiateAPICalls,
+		siteTrafficFetchComplete,
+		setSearchConsole,
+	] );
 
 	const handleOpenAuthURL = () => {
 		window.open( authURL, '_self', 'noopener,noreferrer' );
@@ -332,7 +380,7 @@ const SiteSearchTraffic = () => {
 
 	const emptyStateProps = useMemo(
 		() =>
-			! searchConsole.authenticated
+			! authenticated
 				? {
 						imageSrc: `${ surerank_globals.admin_assets_url }/images/search-console.svg`,
 						title: __(
@@ -362,11 +410,11 @@ const SiteSearchTraffic = () => {
 						actionButtonText: __( 'Select a Site', 'surerank' ),
 						onClickActionBtn: toggleSiteSelectorModal,
 				  },
-		[ searchConsole.authenticated ]
+		[ authenticated ]
 	);
 
 	let renderContent = null;
-	if ( ! searchConsole.authenticated || ! searchConsole.hasSiteSelected ) {
+	if ( ! authenticated || ! hasSiteSelected ) {
 		renderContent = (
 			<EmptyState
 				imageSrc={ emptyStateProps.imageSrc }
@@ -380,12 +428,42 @@ const SiteSearchTraffic = () => {
 		renderContent = (
 			<Container className="p-1 rounded-lg bg-background-secondary gap-1 flex-wrap md:flex-nowrap">
 				<div className="w-full rounded-md bg-background-primary shadow-sm">
-					{ isLoading ? (
+					{ isLoading && (
 						<Skeleton
 							variant="rectangular"
 							className="w-full h-[288px]"
 						/>
-					) : (
+					) }
+					{ ! isLoading && siteTraffic.length === 0 && (
+						<Container
+							gap="md"
+							direction="column"
+							align="center"
+							justify="center"
+							className="h-[288px] p-8 gap-2"
+						>
+							<Text
+								size={ 14 }
+								weight={ 600 }
+								className="text-center"
+								color="primary"
+							>
+								{ __( 'No data available', 'surerank' ) }
+							</Text>
+							<Text
+								size={ 14 }
+								weight={ 400 }
+								color="tertiary"
+								className="text-center max-w-md"
+							>
+								{ __(
+									'Search Console data might take up to 30 days to appear for newly added sites. Please check back later.',
+									'surerank'
+								) }
+							</Text>
+						</Container>
+					) }
+					{ ! isLoading && siteTraffic.length > 0 && (
 						<LineChart
 							colors={ [
 								{
@@ -396,7 +474,7 @@ const SiteSearchTraffic = () => {
 								},
 							] }
 							yAxisFontColor={ [ '#4B3BED', '#38BDF8' ] }
-							data={ searchConsole?.siteTraffic }
+							data={ siteTraffic }
 							dataKeys={ [ 'impressions', 'clicks' ] }
 							showTooltip
 							showXAxis={ true }
@@ -463,7 +541,7 @@ const SiteSearchTraffic = () => {
 						tag="h4"
 						size="md"
 					/>
-					{ searchConsole?.selectedSite && (
+					{ selectedSite && (
 						<Text size={ 16 } weight={ 400 } color="secondary">
 							{ __( '(Last 90 days)', 'surerank' ) }
 						</Text>
@@ -475,7 +553,7 @@ const SiteSearchTraffic = () => {
 					align="center"
 					className="p-1"
 				>
-					{ searchConsole?.selectedSite && (
+					{ selectedSite && (
 						<span
 							role="button"
 							tabIndex={ 0 }
@@ -492,15 +570,13 @@ const SiteSearchTraffic = () => {
 						>
 							<Badge
 								size="md"
-								label={ updateURL(
-									searchConsole.selectedSite
-								) }
+								label={ updateURL( selectedSite ) }
 								className="cursor-pointer"
 							/>
 						</span>
 					) }
 
-					{ searchConsole?.authenticated && (
+					{ authenticated && (
 						<span
 							role="button"
 							tabIndex={ 0 }

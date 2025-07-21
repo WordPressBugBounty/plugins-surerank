@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Trait Enqueue.
  *
- * @since X.X.X`
+ * @since 1.0.0`
  */
 trait Logger {
 	use Get_Instance;

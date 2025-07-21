@@ -21,7 +21,7 @@ use SureRank\Inc\Traits\Get_Instance;
  * Product SEO
  * This class will handle functionality to print product-specific meta_data in the frontend.
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class Product {
 
@@ -31,14 +31,14 @@ class Product {
 	 * Meta Data
 	 *
 	 * @var array<string, mixed>|null $meta_data Product meta data.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	private $meta_data = null;
 
 	/**
 	 * Constructor
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 
@@ -54,7 +54,7 @@ class Product {
 	 * Get and set product-specific meta data
 	 *
 	 * @param array<string, mixed> $meta_data Meta Data.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>
 	 */
 	public function get_meta_data( $meta_data ) {
@@ -88,7 +88,7 @@ class Product {
 	 * Prepare product-specific meta data
 	 *
 	 * @param int $product_id Product ID.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>
 	 */
 	private function prepare_product_meta( $product_id ) {

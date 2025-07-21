@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Send JSON
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class Send_Json {
 
@@ -24,7 +24,7 @@ class Send_Json {
 	 *
 	 * @param array<string, mixed>|array<int, string> $data array of data to be send.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public static function success( $data = [] ) {
@@ -37,7 +37,7 @@ class Send_Json {
 	 *
 	 * @param array<string, mixed>|array<int, string> $data array of data to be send.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public static function error( $data = [] ) {
@@ -52,7 +52,7 @@ class Send_Json {
 	 * @param array<string, mixed>|array<int, string> $response required data.
 	 * @param array<string, mixed>|array<int, string> $data     array of data to be send.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public static function response( $response, $data = [] ) {

@@ -21,7 +21,7 @@ use SureRank\Inc\Traits\Get_Instance;
  * Common SEO
  * This class will handle functionality to print meta_data in frontend for different requests.
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class Common {
 
@@ -30,7 +30,7 @@ class Common {
 	/**
 	 * Constructor
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 		add_action( 'surerank_print_meta', [ $this, 'common_meta' ], 1, 1 );
@@ -41,7 +41,7 @@ class Common {
 	 * Add meta data
 	 *
 	 * @param array<string, mixed> $meta_data Meta Data.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function common_meta( $meta_data ) {
@@ -52,7 +52,7 @@ class Common {
 	 * Print the Page Description meta
 	 *
 	 * @param array<string, mixed> $meta_data Meta Data.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function print_page_description( $meta_data ) {
@@ -68,7 +68,7 @@ class Common {
 	 * Get the document title
 	 *
 	 * @param string $title Document Title.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return string $title
 	 */
 	public function get_document_title( $title ) {

@@ -16,7 +16,7 @@ const DisplayConditions = ( { schemaId } ) => {
 		return { metaSettings: getMetaSettings() };
 	}, [] );
 
-	const displayRules = surerank_admin_common?.schema_rules || {};
+	const displayRules = surerank_globals?.schema_rules || {};
 	const schemaSettings = metaSettings.schemas?.[ schemaId ] || {};
 
 	const groupedOptions = useMemo( () => {

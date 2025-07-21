@@ -30,7 +30,7 @@ class Variables {
 	 * @var array<string, mixed>|array<int, array<string, mixed>> $replacement_fields This array contains the smart tags like %title%, %description% etc.
 	 * Further we need to add all meta fields name wherever we want to replace the smart tags.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public static $replacement_fields = [
 		// Seo meta popup fields.
@@ -49,7 +49,7 @@ class Variables {
 	 * @param array<int|string, mixed> $data    array of strings which needs replacement.
 	 * @param int                      $post_id Post ID.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>
 	 */
 	public static function replace( $data, $post_id ) {
@@ -84,7 +84,7 @@ class Variables {
 	 * @param string $key    Key to search for.
 	 * @param int    $post_id Post ID.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return string
 	 */
 	public static function get_key_value( $key, $post_id = 0 ) {
@@ -112,7 +112,7 @@ class Variables {
 	 *
 	 * @param string $string String to search for chunks.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>|array<int, array<string, mixed>>
 	 */
 	public static function get_chunks( $string ) {
@@ -129,7 +129,7 @@ class Variables {
 	/**
 	 * Get available classes
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string,object>
 	 */
 	private static function get_classes() {

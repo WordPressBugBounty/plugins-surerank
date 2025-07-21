@@ -172,7 +172,7 @@ class Post extends Variables {
 	/**
 	 * Get publication date of current post.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return string
 	 */
 	public function get_published() {
@@ -187,7 +187,7 @@ class Post extends Variables {
 	/**
 	 * Get modified date of current post.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return string
 	 */
 	public function get_modified() {
@@ -202,7 +202,7 @@ class Post extends Variables {
 	/**
 	 * Get author name of current post.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return string
 	 */
 	public function get_author_name() {

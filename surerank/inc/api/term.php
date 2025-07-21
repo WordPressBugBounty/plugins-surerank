@@ -9,7 +9,6 @@
 
 namespace SureRank\Inc\API;
 
-use SureRank\Inc\Analyzer\TermAnalyzer;
 use SureRank\Inc\Functions\Defaults;
 use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Send_Json;
@@ -102,7 +101,7 @@ class Term extends Api_Base {
 	 * Get term seo data
 	 *
 	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function get_term_seo_data( $request ) {
@@ -125,10 +124,14 @@ class Term extends Api_Base {
 	 * @return array<string, mixed>
 	 */
 	public static function get_term_data_by_id( $term_id, $post_type, $is_taxonomy ) {
-		$all_options = Settings::format_array( Defaults::get_instance()->get_post_defaults( false ) );
+		$all_options            = Settings::format_array( Defaults::get_instance()->get_post_defaults( false ) );
+		$data                   = array_intersect_key( Settings::prep_term_meta( $term_id, $post_type, $is_taxonomy ), $all_options );
+		$decode_data            = Utils::decode_html_entities_recursive( $data ) ?? $data;
+		$global_defaults        = Settings::get();
+		$decode_global_defaults = Utils::decode_html_entities_recursive( $global_defaults ) ?? $global_defaults;
 		return [
-			'data'           => array_intersect_key( Settings::prep_term_meta( $term_id, $post_type, $is_taxonomy ), $all_options ),
-			'global_default' => Settings::get(),
+			'data'           => $decode_data,
+			'global_default' => $decode_global_defaults,
 		];
 	}
 
@@ -136,13 +139,31 @@ class Term extends Api_Base {
 	 * Update seo data
 	 *
 	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function update_term_seo_data( $request ) {
 
-		$term_id     = $request->get_param( 'term_id' );
-		$data        = $request->get_param( 'metaData' );
+		$term_id = $request->get_param( 'term_id' );
+		$data    = $request->get_param( 'metaData' );
+
+		self::update_term_meta_common( $term_id, $data );
+
+		if ( is_wp_error( $this->run_checks( $term_id ) ) ) {
+			Send_Json::error( [ 'message' => __( 'Error while running SEO Checks.', 'surerank' ) ] );
+		}
+
+		Send_Json::success( [ 'message' => __( 'Data updated', 'surerank' ) ] );
+	}
+
+	/**
+	 * Common method to process and update term meta data
+	 *
+	 * @param int                  $term_id Term ID to update.
+	 * @param array<string, mixed> $data Data to update.
+	 * @return void
+	 */
+	public static function update_term_meta_common( int $term_id, array $data ) {
 		$all_options = Defaults::get_instance()->get_post_defaults( false );
 		/** Getting post meta if exists, otherwise getting all options(defaults) */
 		$term_meta = Get::all_term_meta( $term_id );
@@ -150,31 +171,11 @@ class Term extends Api_Base {
 			$data = array_merge( $term_meta, $data );
 		}
 
-		foreach ( $all_options as $option_name => $option_value ) {
-			$new_option_value = $option_value;
-			if ( is_array( $option_value ) ) {
-				if ( empty( $option_value ) ) {
-					$new_option_value[ $option_name ] = $data[ $option_name ];
-				} else {
+		$processed_options = Utils::process_option_values( $all_options, $data );
 
-					foreach ( $option_value as $key => $value ) {
-						$new_option_value[ $key ] = $data[ $key ] ?? $value;
-					}
-				}
-			} else {
-				if ( isset( $data[ $option_name ] ) ) {
-					$new_option_value = $data[ $option_name ] === '' ? false : $data[ $option_name ];
-				}
-			}
-
+		foreach ( $processed_options as $option_name => $new_option_value ) {
 			Update::term_meta( $term_id, 'surerank_settings_' . $option_name, $new_option_value );
 		}
-
-		if ( is_wp_error( $this->run_checks( $term_id ) ) ) {
-			Send_Json::error( [ 'message' => __( 'Error while running SEO Checks.', 'surerank' ) ] );
-		}
-
-		Send_Json::success( [ 'message' => __( 'Data updated', 'surerank' ) ] );
 	}
 
 	/**
@@ -194,6 +195,6 @@ class Term extends Api_Base {
 			return new WP_Error( 'no_term', __( 'No term found.', 'surerank' ) );
 		}
 
-		return TermAnalyzer::get_instance()->run_checks( $term_id, $term );
+		return apply_filters( 'surerank_run_term_seo_checks', $term_id, $term );
 	}
 }

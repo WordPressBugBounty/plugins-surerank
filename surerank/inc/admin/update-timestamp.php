@@ -2,7 +2,7 @@
 /**
  * Update Timestamp
  *
- * @since X.X.X
+ * @since 1.0.0
  * @package surerank
  */
 
@@ -18,7 +18,7 @@ use SureRank\Inc\Traits\Get_Instance;
 /**
  * Update Timestamp
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class Update_Timestamp {
 
@@ -58,7 +58,7 @@ class Update_Timestamp {
 	/**
 	 * Update the timestamp option.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public static function timestamp_option() {

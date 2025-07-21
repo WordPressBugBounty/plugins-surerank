@@ -23,7 +23,7 @@ use SureRank\Inc\Traits\Get_Instance;
  * Taxonomy SEO
  * This class will handle functionality to print meta_data in frontend for taxonomy requests.
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class Taxonomy {
 
@@ -33,14 +33,14 @@ class Taxonomy {
 	 * Meta Data
 	 *
 	 * @var array<string, mixed>|null $meta_data Term meta data.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	private $meta_data = null;
 
 	/**
 	 * Constructor
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 		add_filter( 'surerank_set_meta', [ $this, 'get_meta_data' ], 1 );
@@ -50,7 +50,7 @@ class Taxonomy {
 	 * Add meta data
 	 *
 	 * @param array<string, mixed> $meta_data Meta Data.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>
 	 */
 	public function get_meta_data( $meta_data ) {

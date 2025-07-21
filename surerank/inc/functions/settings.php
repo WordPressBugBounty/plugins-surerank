@@ -22,7 +22,7 @@ use SureRank\Inc\Schema\Validator;
  * Default Values
  * This class will handle all default values.
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class Settings {
 	/**
@@ -30,7 +30,7 @@ class Settings {
 	 *
 	 * @param string $key Key to get the value.
 	 * @param bool   $merge_with_db_value Merge with db value.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return mixed
 	 */
 	public static function get( $key = '', $merge_with_db_value = true ) {
@@ -53,7 +53,7 @@ class Settings {
 	/**
 	 * Migrate default post values.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>
 	 */
 	public static function prepare_global_meta() {
@@ -108,7 +108,7 @@ class Settings {
 	 * @param string $setting_name Setting name.
 	 * @param bool   $merge_with_db_value Merge with db value.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>
 	 */
 	public static function get_meta_setting( $setting_name = '', $merge_with_db_value = true ) {
@@ -135,7 +135,7 @@ class Settings {
 	 * @param int                         $post_id Post ID.
 	 * @param bool                        $is_required_global_meta If global meta is required.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>
 	 */
 	public static function prepare_post_meta( $meta, $post_id = 0, $is_required_global_meta = false ) {
@@ -179,82 +179,9 @@ class Settings {
 	}
 
 	/**
-	 * Prepare term meta
-	 *
-	 * @param array<string, mixed>|string $meta Meta data or only 'default' string is passed.
-	 * @param int                         $term_id Term ID.
-	 * @param bool                        $is_required_global_meta If global meta is required.
-	 *
-	 * @since X.X.X
-	 * @return array<string, mixed>
-	 */
-	public static function prepare_term_meta( $meta, $term_id = 0, $is_required_global_meta = false ) {
-		// Load default term values.
-		$default_values = self::prepare_global_meta();
-
-		// If meta is 'default', set it to default term meta values.
-		if ( 'default' === $meta ) {
-			$meta = $default_values;
-		}
-
-		// Retrieve term-specific metadata from the database.
-		$term_meta = $term_id ? Get::term_meta( $term_id, SURERANK_SETTINGS, true ) : [];
-		$term_meta = is_array( $term_meta ) ? $term_meta : [];
-
-		// Merge term-specific metadata with defaults.
-		$meta = array_merge( $default_values, $term_meta );
-
-		// Retrieve global settings to use as fallbacks.
-		$global_values = Get::option( SURERANK_SETTINGS, [], 'array' );
-
-		// Set missing values using global and default values.
-		foreach ( $meta as $key => $value ) {
-			if ( ! empty( $value ) ) {
-				continue;
-			}
-
-			$title       = ! empty( $meta['page_title'] ) ? $meta['page_title'] : ( $global_values['page_title'] ?? $default_values['page_title'] );
-			$description = ! empty( $meta['page_description'] ) ? $meta['page_description'] : ( $global_values['page_description'] ?? $default_values['page_description'] );
-
-			switch ( $key ) {
-				case 'facebook_title':
-					$meta['facebook_title'] = $title;
-					break;
-
-				case 'twitter_title':
-					if ( ! empty( $meta['twitter_same_as_facebook'] ) ) {
-						$meta['twitter_title'] = $title;
-					}
-					break;
-
-				case 'facebook_description':
-					$meta['facebook_description'] = $description;
-					break;
-
-				case 'twitter_description':
-					if ( ! empty( $meta['twitter_same_as_facebook'] ) ) {
-						$meta['twitter_description'] = $description;
-					}
-					break;
-
-				case 'canonical_url':
-					$meta['canonical_url'] = self::get_term_url( $term_id );
-					break;
-
-				default:
-					// Use global value or default value as fallback if available.
-					$meta[ $key ] = $global_values[ $key ] ?? $default_values[ $key ] ?? $value;
-					break;
-			}
-		}
-
-		return $is_required_global_meta ? array_merge( [ 'default_global_meta' => $default_values ], $meta ) : $meta;
-	}
-
-	/**
 	 * Default values for the site meta variables.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>
 	 */
 	public static function post_meta() {
@@ -286,7 +213,7 @@ class Settings {
 	 *
 	 * @param string $key Key to get the value.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return mixed
 	 */
 	public static function default_values( $key = '' ) {
@@ -296,7 +223,7 @@ class Settings {
 	/**
 	 * Get post default values.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>
 	 */
 	public static function post_default_values() {
@@ -311,7 +238,7 @@ class Settings {
 	 * @param int    $post_id Post ID.
 	 * @param string $post_type Post type.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return mixed
 	 */
 	public static function default_post_values( $key = '', $post_id = 0, $post_type = '' ) {
@@ -355,7 +282,7 @@ class Settings {
 	 *
 	 * @param string $key Key to get the value.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return mixed
 	 */
 	public static function default_term_values( $key = '' ) {
@@ -434,7 +361,7 @@ class Settings {
 	 * Format array
 	 *
 	 * @param array<string, mixed> $array Array to format.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>
 	 */
 	public static function format_array( $array ) {
@@ -485,7 +412,7 @@ class Settings {
 		$default_values = self::format_array( Defaults::get_instance()->get_post_defaults( false ) );
 
 		// Getting the global settings.
-		$global_values = Get::option( SURERANK_SETTINGS, [], 'array' );
+		$global_values = Settings::get();
 
 		// remove empty values from $post_meta.
 		$post_meta = array_filter(
@@ -590,7 +517,7 @@ class Settings {
 		$default_values = self::format_array( Defaults::get_instance()->get_post_defaults( false ) );
 
 		// Getting the global settings.
-		$global_values = Get::option( SURERANK_SETTINGS, [], 'array' );
+		$global_values = Settings::get();
 
 		// remove empty values from $term_meta.
 		$term_meta = array_filter(

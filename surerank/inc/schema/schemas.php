@@ -11,6 +11,7 @@
 namespace SureRank\Inc\Schema;
 
 use SureRank\Inc\Functions\Get;
+use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Traits\Get_Instance;
 use WP_Post;
 use WP_Term;
@@ -44,13 +45,52 @@ class Schemas {
 	 */
 	public function __construct() {
 
+		if ( ! Settings::get( 'enable_schemas' ) ) {
+			return;
+		}
+
 		if ( ! apply_filters( 'surerank_print_schema', true ) ) {
 			return;
 		}
 
+		add_filter( 'surerank_api_controllers', [ $this, 'add_schemas_apis' ] );
+		add_filter( 'surerank_common_localization_vars', [ $this, 'add_localization_vars' ] );
 		add_action( 'surerank_print_meta', [ $this, 'print_schema_data' ], 10 );
 		add_action( 'wp', [ $this, 'set_schema_data' ], 1 );
 		Products::get_instance();
+	}
+
+	/**
+	 * Add GSC APIs to the API controllers.
+	 *
+	 * @since 1.1.0
+	 * @param array<int,string> $controllers List of API controllers.
+	 * @return array<int,string> Updated list of API controllers.
+	 */
+	public function add_schemas_apis( $controllers ) {
+		$controllers[] = '\SureRank\Inc\Schema\SchemasApi';
+		return $controllers;
+	}
+
+	/**
+	 * Add localisation variables
+	 *
+	 * @since 1.1.0
+	 * @param array<string, mixed> $variables Localisation variables.
+	 * @return array<string, mixed> Localisation variables.
+	 */
+	public function add_localization_vars( $variables ) {
+
+		return array_merge(
+			$variables,
+			[
+				'schema_rules'        => Rules::get_schema_rules_selections(),
+				'default_schemas'     => Utils::get_default_schemas(),
+				'schema_type_options' => Utils::get_schema_type_options(),
+				'schema_type_data'    => Utils::get_schema_type_data(),
+				'schema_variables'    => Variables::get_instance()->get_schema_variables(),
+			]
+		);
 	}
 
 	/**
@@ -183,8 +223,7 @@ class Schemas {
 	 */
 	public function get_global_schema() {
 
-		$global_schema = Get::option( 'surerank_settings' );
-
+		$global_schema = Settings::get();
 		$global_schema = $global_schema['schemas'] ?? Utils::get_default_schemas();
 
 		if ( ! empty( $global_schema ) ) {

@@ -22,6 +22,15 @@ class Helper {
 
 	use Get_Instance;
 
+	public const UNSUPPORTED_TAXONOMIES = [
+		'wp_theme',
+		'wp_template_part_area',
+		'link_category',
+		'nav_menu',
+		'post_format',
+		'mb-views-category',
+	];
+
 	/**
 	 * Constructor
 	 *
@@ -38,14 +47,7 @@ class Helper {
 	 * @since 1.0.0
 	 */
 	public function get_taxonomies( $args = [] ) {
-		$unsupported = [
-			'wp_theme',
-			'wp_template_part_area',
-			'link_category',
-			'nav_menu',
-			'post_format',
-			'mb-views-category',
-		];
+		$unsupported = self::UNSUPPORTED_TAXONOMIES;
 		$taxonomies  = get_taxonomies( $args, 'objects' );
 		if ( empty( $taxonomies ) ) {
 			return [];

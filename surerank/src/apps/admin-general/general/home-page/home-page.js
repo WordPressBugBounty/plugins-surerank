@@ -73,7 +73,7 @@ const HomePage = () => {
 		);
 		return (
 			<PageContentWrapper title={ __( 'Home Page', 'surerank' ) }>
-				<div className="flex flex-col items-start p-4 gap-2 bg-white shadow-sm rounded-[12px] order-1 flex-none flex-grow-0">
+				<div className="flex flex-col items-start p-4 gap-2 bg-white shadow-sm rounded-xl order-1 flex-none flex-grow-0">
 					<Alert
 						className="w-full"
 						variant="info"

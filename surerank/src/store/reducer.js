@@ -1,4 +1,5 @@
 import * as actionTypes from './action-types';
+import { applyFilters } from '@wordpress/hooks';
 /**
  * Reducer returning the viewport state, as keys of breakpoint queries with
  * boolean value representing whether query is matched.
@@ -40,13 +41,15 @@ const DEFAULT_STATE = {
 	},
 	// Editor dynamic variables end.
 
+	research: {},
+
 	// Default Values for the post meta start.
 	globalDefaults: {},
 	// Default Values for the post meta end.
 
 	// App settings start.
 	appSettings: {
-		currentScreen: 'settings',
+		currentScreen: 'optimize',
 		previousScreen: '',
 	},
 	// App settings end.
@@ -183,9 +186,17 @@ function reducer( state = DEFAULT_STATE, action ) {
 					},
 				},
 			};
+		default:
+			const proState = applyFilters(
+				'surerank-pro.seo-metabox-store',
+				state,
+				action
+			);
+			if ( ! proState ) {
+				return state;
+			}
+			return proState;
 	}
-
-	return state;
 }
 
 export default reducer;

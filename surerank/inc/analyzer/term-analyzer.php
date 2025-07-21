@@ -12,6 +12,7 @@ namespace SureRank\Inc\Analyzer;
 use SureRank\Inc\API\Admin;
 use SureRank\Inc\API\Term;
 use SureRank\Inc\Functions\Helper;
+use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Functions\Update;
 use SureRank\Inc\Traits\Get_Instance;
 use SureRank\Inc\Traits\Logger;
@@ -62,8 +63,12 @@ class TermAnalyzer {
 	 * Constructor.
 	 */
 	private function __construct() {
+		if ( ! Settings::get( 'enable_page_level_seo' ) ) {
+			return;
+		}
 		add_action( 'edited_term', [ $this, 'save_term' ], 10, 3 );
 		add_action( 'save_term', [ $this, 'save_term' ], 10, 3 );
+		add_filter( 'surerank_run_term_seo_checks', [ $this, 'run_checks' ], 10, 2 );
 	}
 
 	/**

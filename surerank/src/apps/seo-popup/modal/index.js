@@ -28,8 +28,14 @@ import {
 import { __ } from '@wordpress/i18n';
 import { ArrowLeftIcon } from 'lucide-react';
 import { fetchMetaSettings } from '@/functions/api';
-import ElementorPageChecksHoc from '../components/page-seo-checks/elementor-page-checks-hoc';
-import { isElementorActive } from '../components/page-seo-checks/analyzer/utils/elementor';
+import PageBuilderPageSeoChecksHoc from '../components/page-seo-checks/page-builder-page-checks-hoc';
+import { isPageBuilderActive } from '../components/page-seo-checks/analyzer/utils/page-builder';
+import { applyFilters } from '@wordpress/hooks';
+
+// Define toast globally for PRO plugin.
+if ( window && ! window?.toast ) {
+	window.toast = toast;
+}
 
 const animateVariants = {
 	open: {
@@ -40,11 +46,23 @@ const animateVariants = {
 	},
 };
 
+const TABS = applyFilters( 'surerank-pro.seo-popup-tabs', {
+	optimize: {
+		title: __( 'Optimize', 'surerank' ),
+		component: MetaSettings,
+	},
+	checks: {
+		title: __( 'Page SEO Checks', 'surerank' ),
+		component: PageChecksHoc,
+		pageBuilderComponent: PageBuilderPageSeoChecksHoc,
+	},
+} );
+
 const SCREENS = {
 	checks: {
 		title: __( 'Page SEO Checks', 'surerank' ),
 		component: PageChecksHoc,
-		elementorComponent: ElementorPageChecksHoc,
+		pageBuilderComponent: PageBuilderPageSeoChecksHoc,
 	},
 	settings: {
 		title: __( 'Settings', 'surerank' ),
@@ -148,27 +166,15 @@ const SeoModal = ( props ) => {
 		}, 100 );
 	}, [ updateModalState ] );
 
-	const openChecks = useCallback( () => {
-		const { currentScreen = '' } = appSettings;
-
-		if ( currentScreen === 'checks' ) {
-			return;
-		}
-
-		updateAppSettings( {
-			currentScreen: 'checks',
-			previousScreen: currentScreen,
-		} );
-	}, [ updateAppSettings, appSettings ] );
-
-	const isElementor = isElementorActive();
+	const isPageBuilder = isPageBuilderActive();
 
 	const RenderScreen = useMemo( () => {
-		const screen = SCREENS[ appSettings?.currentScreen ?? 'settings' ];
-		return isElementor
-			? screen?.elementorComponent || screen?.component
-			: screen?.component;
-	}, [ appSettings?.currentScreen, isElementor ] );
+		const screen = TABS[ appSettings?.currentScreen ?? 'optimize' ];
+		if ( isPageBuilder ) {
+			return screen?.pageBuilderComponent || screen?.component;
+		}
+		return screen?.component;
+	}, [ appSettings?.currentScreen, isPageBuilder ] );
 
 	return (
 		<Fragment>
@@ -178,47 +184,48 @@ const SeoModal = ( props ) => {
 					<motion.div
 						tabIndex="0"
 						id="surerank-seo-popup-modal-container"
-						className={ cn(
-							'fixed inset-y-0 right-0 lg:w-slide-over-container md:w-slide-over-container w-full z-[99999] bg-background-primary shadow-2xl p-3 flex flex-col gap-2'
-						) }
+						className="fixed inset-y-0 right-0 lg:w-slide-over-container md:w-slide-over-container w-full z-[99999] bg-background-primary shadow-2xl p-0 flex flex-col"
 						initial="closed"
 						animate="open"
 						exit="closed"
 						variants={ animateVariants }
 						transition={ { duration: 0.3 } }
 					>
-						<Header
-							onClose={ closeModal }
-							onOpenChecks={ openChecks }
-						/>
+						<Header onClose={ closeModal } />
 						{ appSettings?.previousScreen && (
 							<div className="space-y-2">
-								<div className="flex items-center justify-between gap-2 pr-3">
-									<div className="py-1 px-1.5">
-										<Button
-											onClick={ () =>
-												updateAppSettings( {
-													currentScreen:
-														appSettings.previousScreen,
-													previousScreen: '',
-												} )
-											}
-											variant="ghost"
-											size="sm"
-											icon={ <ArrowLeftIcon /> }
-										>
-											<Text size={ 14 } weight={ 600 }>
-												{
-													SCREENS[
-														appSettings
-															?.currentScreen
-													]?.title
+								<div className="flex items-center justify-between gap-2 px-4 pt-4">
+									<div>
+										{ appSettings.currentScreen ===
+											'checks' && (
+											<Button
+												onClick={ () =>
+													updateAppSettings( {
+														currentScreen:
+															appSettings.previousScreen,
+														previousScreen: '',
+													} )
 												}
-											</Text>
-										</Button>
+												variant="ghost"
+												size="sm"
+												icon={ <ArrowLeftIcon /> }
+											>
+												<Text
+													size={ 14 }
+													weight={ 600 }
+												>
+													{
+														SCREENS[
+															appSettings
+																?.currentScreen
+														]?.title
+													}
+												</Text>
+											</Button>
+										) }
 									</div>
 									{ appSettings.currentScreen === 'checks' &&
-										isElementor && (
+										isPageBuilder && (
 											<div className="refresh-button-container" />
 										) }
 								</div>
@@ -226,10 +233,16 @@ const SeoModal = ( props ) => {
 						) }
 
 						{ /* Modal Body */ }
-						<div className="flex-1 flex flex-col overflow-y-auto">
+						<div
+							className={ cn(
+								'flex-1 flex flex-col gap-6 overflow-y-auto px-4 pt-4 pb-0',
+								appSettings?.currentScreen !== 'optimize' &&
+									'pb-4'
+							) }
+						>
 							<RenderScreen />
 						</div>
-						{ appSettings?.currentScreen === 'settings' && (
+						{ appSettings?.currentScreen === 'optimize' && (
 							<Footer onClose={ closeModal } />
 						) }
 					</motion.div>
@@ -268,5 +281,5 @@ export default compose(
 		};
 	} ),
 	hocComponent,
-	memo,
+	memo
 )( SeoModal );

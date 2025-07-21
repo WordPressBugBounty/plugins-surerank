@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Validate
  * This class contains functions to validate the given value.
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class Validate {
 

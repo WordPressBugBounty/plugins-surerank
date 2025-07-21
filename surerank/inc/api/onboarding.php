@@ -163,18 +163,18 @@ class Onboarding extends Api_Base {
 	}
 
 	/**
-	 * Save Website Details
+	 * Update common onboarding data.
 	 *
-	 * @since X.X.X
-	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
-	 * @return void
+	 * @since 1.0.0
+	 * @param array<string, mixed> $data Onboarding data.
+	 * @return bool
 	 */
-	public function save_website_details( $request ) {
-		$data = $request->get_params();
-
+	public static function update_common_onboarding_data( $data ) {
 		if ( empty( $data ) ) {
-			Send_Json::error( [ 'message' => __( 'Invalid data provided', 'surerank' ) ] );
+			return false;
 		}
+
+		$instance = self::get_instance();
 
 		$defaults = [
 			'website_type'        => '',
@@ -198,17 +198,38 @@ class Onboarding extends Api_Base {
 
 		$settings = Settings::get();
 
-		$this->set_onboarding_data( $data, $settings );
-		$updated_onboarding = $this->process_onboarding_data( $data, $settings );
+		$instance->set_onboarding_data( $data, $settings );
+		$updated_onboarding = $instance->process_onboarding_data( $data, $settings );
 		$updated_settings   = Update::option( 'surerank_settings', $settings );
 
 		if ( $updated_onboarding && $updated_settings ) {
-			$this->set_schemas_pages( $data, $settings );
-
+			$instance->set_schemas_pages( $data, $settings );
 			Update_Timestamp::timestamp_option();
-			Update::option( 'surerank_onboarding_completed', true );
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Save Website Details
+	 *
+	 * @since 1.0.0
+	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
+	 * @return void
+	 */
+	public function save_website_details( $request ) {
+		$data = $request->get_params();
+
+		if ( empty( $data ) ) {
+			Send_Json::error( [ 'message' => __( 'Invalid data provided', 'surerank' ) ] );
+		}
+
+		if ( self::update_common_onboarding_data( $data ) ) {
 			Send_Json::success( [ 'message' => __( 'Settings updated successfully', 'surerank' ) ] );
 		}
+
+		Update::option( 'surerank_onboarding_completed', true );
 
 		Send_Json::error( [ 'message' => __( 'Failed to update settings', 'surerank' ) ] );
 	}
@@ -216,7 +237,7 @@ class Onboarding extends Api_Base {
 	/**
 	 * Set Schemas Pages
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @param array<string, mixed> $data Data.
 	 * @param array<string, mixed> $settings Settings.
 	 * @return void
@@ -229,7 +250,7 @@ class Onboarding extends Api_Base {
 	/**
 	 * Set About Page
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @param array<string, mixed> $data Data.
 	 * @param array<string, mixed> $settings Settings.
 	 * @return bool|int
@@ -255,7 +276,7 @@ class Onboarding extends Api_Base {
 	/**
 	 * Set Contact Page
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @param array<string, mixed> $data Data.
 	 * @param array<string, mixed> $settings Settings.
 	 * @return bool|int
@@ -281,7 +302,7 @@ class Onboarding extends Api_Base {
 	/**
 	 * Save Onboarding Data
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @param array<string, mixed> $data Data.
 	 * @return bool
 	 */
@@ -292,7 +313,7 @@ class Onboarding extends Api_Base {
 	/**
 	 * Set Website Details
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @param array<string, mixed> $data Data.
 	 * @param array<string, mixed> $settings Settings.
 	 * @return void
@@ -312,7 +333,7 @@ class Onboarding extends Api_Base {
 	/**
 	 * Update Schema Field
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @param array<string, mixed> $settings Settings.
 	 * @param string               $schema_type Schema type.
 	 * @param string               $field Field name.
@@ -336,7 +357,7 @@ class Onboarding extends Api_Base {
 	/**
 	 * Find Schema by Type
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @param array<string, mixed> $settings Settings array.
 	 * @param string               $type Schema type to find.
 	 * @return string|null Schema ID if found, null otherwise.
@@ -355,7 +376,7 @@ class Onboarding extends Api_Base {
 	/**
 	 * Person or Organization
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @param string $website_type Website type.
 	 * @return string
 	 */
@@ -366,7 +387,7 @@ class Onboarding extends Api_Base {
 	/**
 	 * Get Social Profile Keys
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>|array<int, array<string, mixed>>
 	 */
 	public static function get_social_profile_keys() {
@@ -376,7 +397,7 @@ class Onboarding extends Api_Base {
 	/**
 	 * Set Social Profiles
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>
 	 */
 	public static function social_profiles() {
@@ -442,7 +463,7 @@ class Onboarding extends Api_Base {
 	/**
 	 * Set Social Schema
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @param array<string, mixed> $data Data.
 	 * @param array<string, mixed> $settings Settings.
 	 * @return void
@@ -495,7 +516,7 @@ class Onboarding extends Api_Base {
 	 *
 	 * We need to store the facebook page url and twitter profile username in the settings array as per the new requirement.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @param array<string, mixed> $data Data.
 	 * @param array<string, mixed> $settings Settings.
 	 * @return void
@@ -508,7 +529,7 @@ class Onboarding extends Api_Base {
 	/**
 	 * Process Onboarding Data
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @param array<string, mixed> $data Data.
 	 * @param array<string, mixed> $settings Settings.
 	 * @return bool
@@ -531,7 +552,7 @@ class Onboarding extends Api_Base {
 	/**
 	 * Set Person or Organization.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @param array<string, mixed> $data Data.
 	 * @param array<string, mixed> $settings Settings.
 	 * @return void
@@ -554,7 +575,7 @@ class Onboarding extends Api_Base {
 	/**
 	 * Set Social Profiles
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @param array<string, mixed> $data Data.
 	 * @param array<string, mixed> $settings Settings.
 	 * @return void
@@ -567,7 +588,7 @@ class Onboarding extends Api_Base {
 	/**
 	 * Generate Lead
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @param array<string,string> $lead Website data.
 	 * @return void
 	 */

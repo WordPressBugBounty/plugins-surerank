@@ -10,6 +10,7 @@ import {
 	Container,
 	Checkbox,
 	Title,
+	toast,
 } from '@bsf/force-ui';
 import { __ } from '@wordpress/i18n';
 import { cn, editorValueToString, stringValueToFormatJSON } from './utils';
@@ -21,6 +22,39 @@ import { STORE_NAME } from '@AdminStore/constants';
 import { useDispatch, useSuspenseSelect } from '@wordpress/data';
 import { motion } from 'framer-motion';
 import { SaveSettingsButton } from '@/apps/admin-components/global-save-button';
+
+/**
+ * Collect field configurations from PAGE_CONTENT
+ * @param {Array} formJson - The form configuration array
+ */
+const collectFieldConfigurations = ( formJson ) => {
+	const globalFieldConfigMap = {};
+	if ( ! formJson || ! Array.isArray( formJson ) ) {
+		return;
+	}
+
+	const extractFields = ( content ) => {
+		if ( ! content || ! Array.isArray( content ) ) {
+			return;
+		}
+
+		content.forEach( ( item ) => {
+			if ( item.content && Array.isArray( item.content ) ) {
+				extractFields( item.content );
+			} else if ( item.storeKey && item.shouldReload ) {
+				globalFieldConfigMap[ item.storeKey ] = true;
+			}
+		} );
+	};
+
+	formJson.forEach( ( section ) => {
+		if ( section.content ) {
+			extractFields( section.content );
+		}
+	} );
+
+	return globalFieldConfigMap;
+};
 
 // Types
 /**
@@ -574,12 +608,31 @@ export const generateForm = (
 	formJson,
 	formValues,
 	setFormValues,
-	containerProps
+	containerProps,
+	unsavedSettings = {}
 ) => {
 	if ( ! formJson?.length ) {
 		return null;
 	}
 
+	const globalFieldConfigMap = collectFieldConfigurations( formJson );
+
+	// Define onSuccess callback for SaveSettingsButton
+	const onSuccess = () => {
+		toast.success( __( 'Settings saved successfully', 'surerank' ), {
+			description: __(
+				'To apply the new settings, the page will refresh automatically in 3 seconds.',
+				'surerank'
+			),
+		} );
+		setTimeout( () => {
+			window.location.reload();
+		}, 500 );
+	};
+
+	const shouldReload = Object.keys( unsavedSettings ).some(
+		( key ) => globalFieldConfigMap[ key ]
+	);
 	const renderedFields = formJson.map( ( section, index ) => (
 		<Container
 			key={ section.container?.id || `section-${ index }` }
@@ -604,7 +657,9 @@ export const generateForm = (
 					) }
 				</Fragment>
 			) ) }
-			<SaveSettingsButton />
+			<SaveSettingsButton
+				onSuccess={ shouldReload ? onSuccess : undefined }
+			/>
 		</Container>
 	) );
 
@@ -641,12 +696,21 @@ export const generateForm = (
 // Main Component
 const GeneratePageContent = ( { json } ) => {
 	const { setMetaSettings } = useDispatch( STORE_NAME );
-	const stateValue = useSuspenseSelect( ( select ) => {
-		const { getMetaSettings } = select( STORE_NAME );
-		return getMetaSettings();
+	const { stateValue, unsavedSettings } = useSuspenseSelect( ( select ) => {
+		const { getMetaSettings, getUnsavedSettings } = select( STORE_NAME );
+		return {
+			stateValue: getMetaSettings(),
+			unsavedSettings: getUnsavedSettings(),
+		};
 	}, [] );
 
-	return generateForm( json, stateValue, setMetaSettings );
+	return generateForm(
+		json,
+		stateValue,
+		setMetaSettings,
+		{},
+		unsavedSettings
+	);
 };
 
 export default GeneratePageContent;

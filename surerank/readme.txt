@@ -5,7 +5,7 @@ Tags: seo, wordpress seo, xml sitemap, schema, google search console
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 8.0
-Stable tag: 1.0.2
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -294,13 +294,21 @@ Brainstorm Force
 
 == Changelog ==
 
-= 1.0.2 =
+= 1.1.0 - 21-July-2025 =
+* New: Migration – Ability to migrate from the Rank Math SEO plugin to SureRank
+* New: Migration – Ability to migrate from the Yoast SEO plugin to SureRank
+* New: Ability to enable and disable features like Page-Level SEO Checks, Schema, Google Search Console, etc.
+* New: SEO Meta Box compatibility with the Bricks Page Builder
+* Improvement: Improved the performance of the frontend application for SureRank
+* Fix: Resolved an issue where some SEO Meta Box options were not saved in the correct format
+
+= 1.0.2 - 10-July-2025 =
 * Fix: Fixed an issue where the SureRank Onboarding details won't get saved in an edge case.
 
-= 1.0.1 =
+= 1.0.1 - 08-July-2025 =
 * Improvement: Enhanced the performance of the SureRank SEO Popup on Elementor pages.
 
-= 1.0.0 =
+= 1.0.0 - 01-July-2025 =
 * Initial release
 
 == Upgrade Notice ==

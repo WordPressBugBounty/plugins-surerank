@@ -1,21 +1,11 @@
 import { Suspense, useEffect, memo } from '@wordpress/element';
 import { FilePreview, Skeleton } from '@bsf/force-ui';
-import apiFetch from '@wordpress/api-fetch';
-import { addQueryArgs } from '@wordpress/url';
 import ErrorBoundary from './error-boundary';
-import { createResourcePromise } from '@/functions/utils';
+import { createResourcePromise } from '@Functions/utils';
+import { fetchImageDataByUrl } from '@Functions/api';
+
 // Create a resource cache for fetching image data
 const imageCache = new Map();
-
-const fetchImageDataByUrl = ( imageUrl ) => {
-	return apiFetch( {
-		path: addQueryArgs( '/wp/v2/media', {
-			search: imageUrl?.split( '/' )?.pop()?.split( '?' )?.[ 0 ] ?? '',
-			media_type: 'image',
-		} ),
-		method: 'GET',
-	} );
-};
 
 const fetchImageDataById = ( imageId ) => {
 	const image = wp.media.attachment( imageId );
@@ -63,8 +53,8 @@ const fetchImageData = ( { imageId = '', imageUrl = '' } ) => {
 			if ( imageUrl ) {
 				fetchImageDataByUrl( imageUrl )
 					.then( ( images ) => {
-						if ( images && images.length > 0 ) {
-							processById( images[ 0 ].id );
+						if ( images ) {
+							processById( images.id );
 						} else {
 							resolve( {} );
 						}

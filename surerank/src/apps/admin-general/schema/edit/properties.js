@@ -26,7 +26,7 @@ const Properties = ( { schema, type, handleFieldUpdate, schemaId } ) => {
 		schemas: metaSettingsObject.schemas || {},
 	};
 
-	const schemaTypeData = surerank_admin_common?.schema_type_data || {};
+	const schemaTypeData = surerank_globals?.schema_type_data || {};
 
 	const [ fields, setFields ] = useState( [] );
 
@@ -163,7 +163,7 @@ const Properties = ( { schema, type, handleFieldUpdate, schemaId } ) => {
 	}
 
 	const variableSuggestions = Object.entries(
-		surerank_admin_common?.schema_variables || {}
+		surerank_globals?.schema_variables || {}
 	).map( ( [ value, label ] ) => ( { value, label } ) );
 
 	// Function to render the field input based on field type

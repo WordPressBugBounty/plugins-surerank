@@ -9,6 +9,7 @@
 
 namespace SureRank\Inc\Admin;
 
+use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Traits\Enqueue;
 use SureRank\Inc\Traits\Get_Instance;
 
@@ -26,6 +27,9 @@ class Seo_Bar {
 	 * Constructor.
 	 */
 	public function __construct() {
+		if ( ! Settings::get( 'enable_page_level_seo' ) ) {
+			return;
+		}
 		$this->enqueue_scripts_admin();
 		add_action( 'admin_init', [ $this, 'setup_columns' ] );
 		add_action( 'admin_init', [ $this, 'setup_taxonomy_columns' ] );
@@ -34,7 +38,7 @@ class Seo_Bar {
 	/**
 	 * Override enqueue_scripts to prevent wp_enqueue_scripts action.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function enqueue_scripts() {
@@ -140,6 +144,11 @@ class Seo_Bar {
 	 */
 	public function column_content( $column_name, $id ) {
 		if ( ! $id ) {
+			return;
+		}
+
+		// Skip if the page is built with Bricks builder.
+		if ( get_post_meta( $id, '_bricks_page_content_2', true ) ) {
 			return;
 		}
 

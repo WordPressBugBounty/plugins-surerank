@@ -16,6 +16,7 @@ use SureRank\Inc\API\Admin;
 use SureRank\Inc\API\Post;
 use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Helper;
+use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Functions\Update;
 use SureRank\Inc\Traits\Get_Instance;
 use SureRank\Inc\Traits\Logger;
@@ -74,7 +75,11 @@ class PostAnalyzer {
 	 * Constructor.
 	 */
 	private function __construct() {
+		if ( ! Settings::get( 'enable_page_level_seo' ) ) {
+			return;
+		}
 		add_action( 'wp_after_insert_post', [ $this, 'save_post' ], 10, 2 );
+		add_filter( 'surerank_run_post_seo_checks', [ $this, 'run_checks' ], 10, 2 );
 	}
 
 	/**

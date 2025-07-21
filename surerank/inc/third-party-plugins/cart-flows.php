@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Modifies CartFlows funnel settings UI and prevents it from outputting robots meta.
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class CartFlows {
 

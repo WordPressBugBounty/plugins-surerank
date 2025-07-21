@@ -1,6 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import * as actionTypes from './actionTypes';
 import { getSettingsPageName } from '../functions/utils';
+import { applyFilters } from '@wordpress/hooks';
 
 /**
  * Reducer returning the viewport state, as keys of breakpoint queries with
@@ -170,6 +171,14 @@ const dataSettings = {
 		remove_custom_taxonomy_feeds: false, // true/false
 		remove_search_results_feed: false, // true/false
 		remove_atom_rdf_feeds: false, // true/false
+
+		// Disable features
+		enable_page_level_seo: true, // true/false
+		enable_google_console: true, // true/false
+		enable_schemas: true, // true/false
+
+		// Miscellaneous
+		surerank_analytics_optin: false, // true/false
 	},
 	/* Title and description End */
 	// Site Settings (Previously known as site variables)
@@ -288,10 +297,10 @@ const DEFAULT_STATE = {
 	// User data.
 	searchConsole: {
 		profile: surerank_admin_common?.google_console_user,
-		authenticated: surerank_admin_common.is_connected,
+		authenticated: surerank_admin_common.is_gsc_connected,
 		sites: [],
 		selectedSite: '',
-		hasSiteSelected: surerank_admin_common?.has_site_selected,
+		hasSiteSelected: surerank_admin_common?.has_gsc_site_selected,
 	},
 
 	siteSeoAnalysis: {
@@ -426,7 +435,15 @@ function reducer( state = DEFAULT_STATE, action ) {
 				unsavedSettings: {},
 			};
 		default:
-			return state;
+			const proState = applyFilters(
+				'surerank-pro.admin-store-reducer',
+				state,
+				action
+			);
+			if ( ! proState ) {
+				return state;
+			}
+			return proState;
 	}
 }
 

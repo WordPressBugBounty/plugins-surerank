@@ -22,7 +22,7 @@ use SureRank\Inc\Traits\Get_Instance;
  * Archives Meta Data
  * This class will handle functionality to print meta data for archives in frontend.
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class Archives {
 
@@ -31,7 +31,7 @@ class Archives {
 	/**
 	 * Constructor.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 		add_action( 'template_redirect', [ $this, 'redirect_to_home' ], 1, 1 );

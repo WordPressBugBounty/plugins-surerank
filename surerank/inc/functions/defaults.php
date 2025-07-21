@@ -20,7 +20,7 @@ use SureRank\Inc\Traits\Get_Instance;
  * Default Values
  * This class will handle all default values.
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class Defaults {
 
@@ -30,7 +30,7 @@ class Defaults {
 	 * Default values for the global - General.
 	 *
 	 * @var array<string, mixed>
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	private $global_general_defaults = [
 		'separator'                 => '-',
@@ -47,7 +47,19 @@ class Defaults {
 	 * Default values for the global - Homepage.
 	 *
 	 * @var array<string, mixed>
-	 * @since X.X.X
+	 * @since 1.0.0
+	 */
+	private $feature_management_defaults = [
+		'enable_page_level_seo' => true,
+		'enable_google_console' => true,
+		'enable_schemas'        => true,
+	];
+
+	/**
+	 * Default values for the global - Homepage.
+	 *
+	 * @var array<string, mixed>
+	 * @since 1.0.0
 	 */
 	private $global_homepage_defaults = [
 		'home_page_title'                 => '%site_name% - %tagline%',
@@ -68,7 +80,7 @@ class Defaults {
 	 * Default values for the global - Social.
 	 *
 	 * @var array<string, mixed>
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	private $global_social_defaults = [
 		'open_graph_tags'             => true,
@@ -90,7 +102,7 @@ class Defaults {
 	 * Default values for the global - Special Pages.
 	 *
 	 * @var array<string, mixed>
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	private $global_special_pages_defaults = [
 		'author_archive'               => false,
@@ -103,7 +115,7 @@ class Defaults {
 	 * Default values for the global - Advanced - Feeds.
 	 *
 	 * @var array<string, mixed>
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	private $global_advanced_feeds_default = [
 		'addlink_to_source_below_feed_entries' => true,
@@ -121,7 +133,7 @@ class Defaults {
 	 * Default values for the global - Advanced - Sitemaps.
 	 *
 	 * @var array<string, mixed>
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	private $global_advanced_sitemaps_default = [
 		'enable_xml_sitemap'        => true,
@@ -138,7 +150,7 @@ class Defaults {
 	 * Default values for the global - Advanced - Images.
 	 *
 	 * @var array<string, mixed>
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	private $global_advanced_images_defaults = [
 		'redirect_attachment_pages_to_post_parent' => true,
@@ -147,10 +159,20 @@ class Defaults {
 	];
 
 	/**
+	 * Default values for the global - Advanced - Miscellaneous.
+	 *
+	 * @var array<string, mixed>
+	 * @since 1.0.0
+	 */
+	private $global_advanced_miscellaneous_defaults = [
+		'surerank_analytics_optin' => false,
+	];
+
+	/**
 	 * Default values for the global - Advanced - Robots.
 	 *
 	 * @var array<string, mixed>
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	private $global_advanced_robots_default = [
 		'no_index'   => [
@@ -168,14 +190,14 @@ class Defaults {
 	 * Default values for the Post/CPT.
 	 *
 	 * @var array<string, mixed>
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	private $post_defaults = null;
 
 	/**
 	 * Constructor.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 		$this->post_defaults = [
@@ -215,7 +237,7 @@ class Defaults {
 	 *
 	 * @param string $key Key.
 	 * @return mixed
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public function get_global_defaults( $key = '' ) {
 
@@ -230,12 +252,14 @@ class Defaults {
 				// General Settings.
 				$this->global_general_defaults,
 				$this->global_homepage_defaults,
+				$this->feature_management_defaults,
 				$this->global_social_defaults,
 				$this->global_special_pages_defaults,
 				$this->global_advanced_feeds_default,
 				$this->global_advanced_sitemaps_default,
 				$this->global_advanced_robots_default,
 				$this->global_advanced_images_defaults,
+				$this->global_advanced_miscellaneous_defaults,
 				[
 					'schemas' => Utils::get_default_schemas(),
 				],
@@ -257,7 +281,7 @@ class Defaults {
 	 *
 	 * @param bool $flat Flat.
 	 * @return array<string, mixed>
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public function get_post_defaults( $flat = true ) {
 		$all_settings = [];
@@ -286,7 +310,7 @@ class Defaults {
 	 * Values for the Post/CPT meta keys.
 	 *
 	 * @return array<string, mixed>|array<int, array<string, mixed>>
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public function get_post_meta_keys() {
 		if ( empty( $this->post_defaults ) ) {
@@ -299,7 +323,7 @@ class Defaults {
 	 * Default values for the onboarding.
 	 *
 	 * @return array<string, mixed>
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public function get_onboarding_defaults() {
 		return apply_filters(

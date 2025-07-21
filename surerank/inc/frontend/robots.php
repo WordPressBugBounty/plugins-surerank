@@ -22,7 +22,7 @@ use SureRank\Inc\Traits\Get_Instance;
  * Home Page SEO
  * This class will handle functionality to print meta_data in frontend for different requests.
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class Robots {
 
@@ -31,7 +31,7 @@ class Robots {
 	/**
 	 * Constructor
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 		add_action( 'surerank_print_meta', [ $this, 'print_meta' ], 1 );
@@ -44,7 +44,7 @@ class Robots {
 	/**
 	 * Add meta data
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @param array<string, mixed> $robots_meta meta data.
 	 * @return void
 	 */
@@ -137,7 +137,7 @@ class Robots {
 	/**
 	 * Check of specified page type exists
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @param array<string, mixed> $types page types.
 	 * @return bool
 	 */

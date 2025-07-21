@@ -66,7 +66,7 @@ const MetaSettings = ( props ) => {
 
 	return (
 		<Fragment>
-			<div className="p-2">
+			<div>
 				<Tabs.Group
 					className="w-full"
 					size="md"

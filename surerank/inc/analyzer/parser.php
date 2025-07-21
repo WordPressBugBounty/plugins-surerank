@@ -39,6 +39,13 @@ class Parser {
 			$html = mb_convert_encoding( $html, 'UTF-8', 'auto' );
 		}
 
+		if ( ! $html ) {
+			return new WP_Error(
+				'parse_failed',
+				__( 'Failed to parse HTML.', 'surerank' )
+			);
+		}
+
 		$html = $this->pre_process_html( $html );
 
 		if ( ! $html ) {

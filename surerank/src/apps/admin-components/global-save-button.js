@@ -1,6 +1,6 @@
-import { useState } from '@wordpress/element';
+import { useRef, useState } from '@wordpress/element';
 import { Button, toast } from '@bsf/force-ui';
-import { LoaderCircle, Check } from 'lucide-react'; // Import icons
+import { LoaderCircle, Check } from 'lucide-react';
 import { __ } from '@wordpress/i18n';
 import { ADMIN_SETTINGS_URL } from '@/global/constants/api';
 import { STORE_NAME } from '@/admin-store/constants';
@@ -10,6 +10,7 @@ import { DotIcon } from '@/global/components/icons';
 
 const GlobalSaveButton = ( {
 	onClick,
+	onSuccess, // New prop for handling success callback
 	buttonTextInitial = __( 'Save', 'surerank' ),
 	icon,
 	disabled,
@@ -17,11 +18,13 @@ const GlobalSaveButton = ( {
 } ) => {
 	const [ buttonText, setButtonText ] = useState( buttonTextInitial );
 	const [ saving, setSaving ] = useState( false );
+	const saveCompleted = useRef( true );
 
 	const handleSaveClick = async () => {
-		if ( saving ) {
+		if ( saving || disabled || ! saveCompleted.current ) {
 			return;
 		}
+		saveCompleted.current = false; // Reset for next save
 		setSaving( true );
 		setButtonText( __( 'Saving..', 'surerank' ) );
 
@@ -30,19 +33,28 @@ const GlobalSaveButton = ( {
 			if ( ! response.success ) {
 				throw new Error( response.message );
 			}
-			// Show success message
-			toast.success( response.message );
-
-			//set button text to saved
 			setButtonText( __( 'Saved', 'surerank' ) );
 
-			// Reset button text after 1 second
-			setTimeout( () => {
-				setButtonText( buttonTextInitial );
-			}, 1000 );
+			if ( onSuccess && typeof onSuccess === 'function' ) {
+				await onSuccess( response );
+			} else {
+				toast.success(
+					__( 'Settings saved successfully.', 'surerank' )
+				);
+			}
+
+			// Return a promise that resolves after the button text reset
+			return new Promise( ( resolve ) => {
+				setTimeout( () => {
+					setButtonText( buttonTextInitial );
+					saveCompleted.current = true;
+					resolve( response );
+				}, 1000 );
+			} );
 		} catch ( error ) {
 			toast.error( error.message );
 			setButtonText( buttonTextInitial );
+			saveCompleted.current = true;
 		} finally {
 			setSaving( false );
 		}
@@ -62,19 +74,13 @@ const GlobalSaveButton = ( {
 	};
 
 	return (
-		<Button
-			onClick={ handleSaveClick }
-			loading={ saving }
-			icon={ getIcon() }
-			disabled={ disabled }
-			{ ...props }
-		>
+		<Button onClick={ handleSaveClick } icon={ getIcon() } { ...props }>
 			{ buttonText }
 		</Button>
 	);
 };
 
-export const SaveSettingsButton = () => {
+export const SaveSettingsButton = ( { onSuccess } ) => {
 	const { unsavedSettings } = useSelect( ( select ) => {
 		const { getUnsavedSettings } = select( STORE_NAME );
 		return {
@@ -93,10 +99,7 @@ export const SaveSettingsButton = () => {
 		} );
 
 		if ( response.success ) {
-			// Reset unsaved settings after successful save
-			setTimeout( () => {
-				resetUnsavedSettings();
-			}, 1000 );
+			resetUnsavedSettings();
 		}
 
 		return response;
@@ -107,6 +110,7 @@ export const SaveSettingsButton = () => {
 	return (
 		<GlobalSaveButton
 			onClick={ handleSave }
+			onSuccess={ onSuccess } // Pass the onSuccess callback
 			className={
 				! hasUnsavedSettings
 					? 'opacity-60 bg-background-brand cursor-not-allowed pointer-events-none'

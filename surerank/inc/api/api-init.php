@@ -45,9 +45,8 @@ class Api_Init {
 			'\SureRank\Inc\API\Install_Products',
 			'\SureRank\Inc\API\Term',
 			'\SureRank\Inc\API\Onboarding',
-			'\SureRank\Inc\API\Schemas',
-			'\SureRank\Inc\API\Dashboard',
 			'\SureRank\Inc\API\Analyzer',
+			'\SureRank\Inc\API\Migrations',
 		];
 
 		$controllers = apply_filters( 'surerank_api_controllers', $controllers );

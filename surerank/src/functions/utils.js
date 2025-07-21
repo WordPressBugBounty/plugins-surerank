@@ -165,7 +165,7 @@ export const editorValueToString = ( valueObj, optionValueKey = 'value' ) => {
  */
 export const stringValueToFormatJSON = (
 	stringContent,
-	options,
+	options = [],
 	optionValueKey = 'value',
 	mentionObjectStructure = {
 		type: 'mention',
@@ -209,8 +209,8 @@ export const stringValueToFormatJSON = (
 				type: 'linebreak',
 				version: 1,
 			} );
-		} else if ( item.startsWith( '%' ) && item.endsWith( '%' ) ) {
-			const option = options.find(
+		} else if ( item?.startsWith( '%' ) && item?.endsWith( '%' ) ) {
+			const option = options?.find(
 				( mentionItem ) => mentionItem[ optionValueKey ] === item.trim()
 			);
 			if ( option ) {

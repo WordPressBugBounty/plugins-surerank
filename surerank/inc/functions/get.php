@@ -16,42 +16,42 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Get
  * This class will handle all functions to get data from database.
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class Get {
 
 	/**
 	 * Default title length
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public const TITLE_LENGTH = 60;
 
 	/**
 	 * Default title min length
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public const TITLE_MIN_LENGTH = 50;
 
 	/**
 	 * Default description length
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public const DESCRIPTION_LENGTH = 160;
 
 	/**
 	 * Default description min length
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public const DESCRIPTION_MIN_LENGTH = 150;
 
 	/**
 	 * Default URL length
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public const URL_LENGTH = 90;
 
@@ -63,7 +63,7 @@ class Get {
 	 * @param string $meta_key Meta key.
 	 * @param bool   $single  Single or not.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return mixed
 	 */
 	public static function post_meta( $post_id, $meta_key, $single = true ) {
@@ -78,7 +78,7 @@ class Get {
 	 * @param string $meta_key Meta key.
 	 * @param bool   $single  Single or not.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return mixed
 	 */
 	public static function term_meta( $term_id, $meta_key, $single = true ) {
@@ -93,7 +93,7 @@ class Get {
 	 * @param string $meta_key Meta key.
 	 * @param bool   $single  Single or not.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return mixed
 	 */
 	public static function user_meta( $user_id, $meta_key, $single = true ) {
@@ -106,7 +106,7 @@ class Get {
 	 *
 	 * @param int $post_id Post ID.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return mixed
 	 */
 	public static function all_post_meta( $post_id ) {
@@ -128,7 +128,7 @@ class Get {
 	 *
 	 * @param int $term_id Term ID.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return mixed
 	 */
 	public static function all_term_meta( $term_id ) {
@@ -152,7 +152,7 @@ class Get {
 	 * @param mixed  $default     Default value.
 	 * @param string $format      Format.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return mixed
 	 */
 	public static function option( $option_name, $default = false, $format = 'string' ) {

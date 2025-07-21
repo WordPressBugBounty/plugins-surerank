@@ -21,7 +21,7 @@ use WP_Term;
  * Canonical URL
  * This class will handle functionality to print meta_data in frontend for different requests.
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class Canonical {
 
@@ -30,7 +30,7 @@ class Canonical {
 	/**
 	 * Constructor
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 		add_action( 'surerank_print_meta', [ $this, 'print_canonical_url' ], 1, 1 );
@@ -40,7 +40,7 @@ class Canonical {
 	 * Add meta data
 	 *
 	 * @param array<string, mixed> $meta_data Meta Data.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function print_canonical_url( $meta_data ) {
@@ -86,7 +86,7 @@ class Canonical {
 	 *
 	 * @param string $url Canonical URL.
 	 * @return void
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public function print_canonical( $url ) {
 		echo '<link rel="canonical" href="' . esc_url( $url ) . '">' . PHP_EOL;

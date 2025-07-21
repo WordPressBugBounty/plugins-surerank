@@ -26,7 +26,7 @@ use SureRank\Inc\Traits\Get_Instance;
  * Facebook SEO
  * This class will handle functionality to print meta_data in frontend for different requests.
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class Facebook {
 
@@ -192,7 +192,7 @@ class Facebook {
 	/**
 	 * Constructor
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 		add_action( 'surerank_print_meta', [ $this, 'open_graph_tags' ], 1, 1 );
@@ -270,7 +270,7 @@ class Facebook {
 	 * Add meta data
 	 *
 	 * @param array<string, mixed> $meta_data Meta Data.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function facebook_tags( $meta_data ) {
@@ -298,7 +298,7 @@ class Facebook {
 	 * Prepare facebook meta data.
 	 *
 	 * @param array<string, mixed> $meta_data facebook meta data will be array and will contain image, title and description.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function open_graph_tags( $meta_data ) {
@@ -322,7 +322,7 @@ class Facebook {
 	 * If it is not home page then get the post URL else get the site URL.
 	 *
 	 * @return string|false
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public function get_url() {
 		if ( is_home() ) {
@@ -355,7 +355,7 @@ class Facebook {
 	 * Add published and modified times to the global meta data.
 	 *
 	 * @param array<string, mixed> $global_meta Global Meta Data.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>
 	 */
 	private function add_times( $global_meta ) {
@@ -395,7 +395,7 @@ class Facebook {
 	 * Add common tags.
 	 *
 	 * @param array<string, mixed> $meta_data Meta Data.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	private function add_common_tags( $meta_data ) {
@@ -417,7 +417,7 @@ class Facebook {
 	 * Add dynamic tags.
 	 *
 	 * @param array<string, mixed> $meta_data Meta Data.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	private function add_dynamic_tags( $meta_data ) {
@@ -440,7 +440,7 @@ class Facebook {
 	 * Add product tags.
 	 *
 	 * @param array<string, mixed> $meta_data Meta Data.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	private function add_product_tags( $meta_data ) {

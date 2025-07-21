@@ -12,6 +12,24 @@ import * as selectors from './selectors';
 import controls from './controls';
 import resolvers from './resolvers';
 import { STORE_NAME as storeName } from './constants';
+import { applyFilters } from '@wordpress/hooks';
+
+const extendedActions = applyFilters(
+	'surerank-pro.admin-store-actions',
+	actions
+);
+const extendedSelectors = applyFilters(
+	'surerank-pro.admin-store-selectors',
+	selectors
+);
+const extendedControls = applyFilters(
+	'surerank-pro.admin-store-controls',
+	controls
+);
+const extendedResolvers = applyFilters(
+	'surerank-pro.admin-store-resolvers',
+	resolvers
+);
 
 /**
  * Store definition for the viewport namespace.
@@ -22,10 +40,10 @@ import { STORE_NAME as storeName } from './constants';
  */
 const store = createReduxStore( storeName, {
 	reducer,
-	actions,
-	selectors,
-	controls,
-	resolvers,
+	actions: extendedActions,
+	selectors: extendedSelectors,
+	controls: extendedControls,
+	resolvers: extendedResolvers,
 } );
 
 register( store );

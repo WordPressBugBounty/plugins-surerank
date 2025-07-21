@@ -77,3 +77,9 @@ export const SEARCH_ENGINE_PREVIEW_INFO_TEXT = (
 );
 
 export const MAX_EDITOR_INPUT_LENGTH = 500;
+
+export const ENABLE_PAGE_LEVEL_SEO =
+	window?.surerank_globals?.enable_page_level_seo ?? false;
+export const ENABLE_GOOGLE_CONSOLE =
+	window?.surerank_globals?.enable_google_console ?? false;
+export const ENABLE_SCHEMAS = window?.surerank_globals?.enable_schemas ?? false;

@@ -2,7 +2,7 @@
 /**
  * Seo Popup.
  *
- * @since X.X.X
+ * @since 1.0.0
  * @package surerank
  */
 
@@ -19,7 +19,7 @@ use SureRank\Inc\Traits\Get_Instance;
  * Seo Popup frontend.
  *
  * @method void admin_enqueue_scripts()
- * @since X.X.X
+ * @since 1.0.0
  */
 class Seo_Popup {
 

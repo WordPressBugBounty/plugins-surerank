@@ -84,7 +84,7 @@ class Image {
 	 *
 	 * @param array<string, mixed> $meta_data Meta Data.
 	 * @param string               $key       Meta key to populate.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function get( &$meta_data, $key ) {

@@ -150,7 +150,7 @@ class Admin extends Api_Base {
 	 *
 	 * @param int|null $post_id Post ID.
 	 * @param int|null $term_id Term ID.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, array<string, mixed>> Array of variable groups keyed by type (e.g., term, post, site).
 	 */
 	public function get_variables( $post_id = null, $term_id = null ) {
@@ -181,7 +181,7 @@ class Admin extends Api_Base {
 	/**
 	 * Get other data.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, string>
 	 */
 	public function get_other_data() {
@@ -197,18 +197,21 @@ class Admin extends Api_Base {
 	 * Get admin settings
 	 *
 	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function get_admin_settings( $request ) {
-		Send_Json::success( [ 'data' => Settings::get() ] );
+		$data                             = Settings::get();
+		$data['surerank_analytics_optin'] = Get::option( 'surerank_analytics_optin' ) === 'yes' ? true : false;
+		$decode_data                      = Utils::decode_html_entities_recursive( $data ) ?? $data;
+		Send_Json::success( [ 'data' => $decode_data ] );
 	}
 
 	/**
 	 * Update admin settings
 	 *
 	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function update_admin_settings( $request ) {
@@ -235,6 +238,8 @@ class Admin extends Api_Base {
 
 		$data = array_merge( $db_options, $data );
 
+		$data = $this->process_surerank_analytics_optin( $data );
+
 		if ( Update::option( SURERANK_SETTINGS, $data ) ) {
 			// Update global timestamp.
 			Update_Timestamp::timestamp_option();
@@ -244,10 +249,30 @@ class Admin extends Api_Base {
 	}
 
 	/**
+	 * Process surerank analytics optin
+	 *
+	 * @param array<string, mixed> $data Data.
+	 * @since 1.0.0
+	 * @return array<string, mixed>
+	 */
+	public function process_surerank_analytics_optin( $data ) {
+
+		if ( ! isset( $data['surerank_analytics_optin'] ) ) {
+			return $data;
+		}
+
+		$surerank_analytics_optin = $data['surerank_analytics_optin'] ? 'yes' : 'no';
+		Update::option( 'surerank_analytics_optin', $surerank_analytics_optin );
+		unset( $data['surerank_analytics_optin'] );
+
+		return $data;
+	}
+
+	/**
 	 * Get site settings
 	 *
 	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function get_site_settings( $request ) {
@@ -316,10 +341,10 @@ class Admin extends Api_Base {
 	 *
 	 * @param array<string, mixed> $data Data.
 	 * @param array<string, mixed> $settings Settings.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
-	private function process_onboarding_data( $data, &$settings ) {
+	public function process_onboarding_data( $data, &$settings ) {
 		Onboarding::get_instance()->set_social_schema( $data, $settings );
 	}
 }

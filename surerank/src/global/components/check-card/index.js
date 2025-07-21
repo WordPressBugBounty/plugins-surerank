@@ -6,6 +6,9 @@ import { Info, X } from 'lucide-react';
 import { SeoPopupTooltip } from '@/apps/admin-components/tooltip';
 import { ConfirmationDialog } from '@GlobalComponents/confirmation-dialog';
 import { useState } from '@wordpress/element';
+import { fetchImageDataByUrl } from '@/functions/api';
+
+const IMAGE_ID_CACHE = new Map();
 
 export const CheckCard = ( {
 	variant,
@@ -162,15 +165,52 @@ export const ImageGrid = ( { images } ) => {
 		return null;
 	}
 
+	const handleImageClick = async ( event, image ) => {
+		event?.preventDefault();
+
+		if ( IMAGE_ID_CACHE.has( image ) ) {
+			window.open(
+				`/wp-admin/upload.php?item=${ IMAGE_ID_CACHE.get( image ) }`,
+				'_blank',
+				'noopener noreferrer'
+			);
+			return;
+		}
+
+		try {
+			const results = await fetchImageDataByUrl( image );
+
+			if ( ! results ) {
+				throw new Error( 'No image found' );
+			}
+
+			const imageId = results?.id;
+			IMAGE_ID_CACHE.set( image, imageId );
+			window.open(
+				`/wp-admin/upload.php?item=${ imageId }`,
+				'_blank',
+				'noopener noreferrer'
+			);
+		} catch ( error ) {
+			// If we can't find the image, open the media library
+			window.open(
+				'/wp-admin/upload.php',
+				'_blank',
+				'noopener noreferrer'
+			);
+		}
+	};
+
 	return (
 		<div className="grid grid-cols-3 gap-2 mb-0.5">
 			{ images.map( ( image, index ) =>
 				isURL( image ) ? (
-					<a
-						className="inline-flex focus:outline-none focus:[box-shadow:none]"
-						href={ image }
-						target="_blank"
-						rel="noopener noreferrer"
+					<Button
+						variant="link"
+						className="inline-flex focus:outline-none focus:[box-shadow:none] p-0"
+						onClick={ ( event ) =>
+							handleImageClick( event, image )
+						}
 						key={ `${ image }-${ index }` }
 					>
 						<img
@@ -178,7 +218,7 @@ export const ImageGrid = ( { images } ) => {
 							alt={ image }
 							className="w-full h-36 object-cover rounded"
 						/>
-					</a>
+					</Button>
 				) : null
 			) }
 		</div>

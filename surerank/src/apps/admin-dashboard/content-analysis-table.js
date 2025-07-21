@@ -116,6 +116,7 @@ const ContentAnalysisTable = ( {
 		authenticated,
 		hasSiteSelected,
 		selectedSite,
+		contentPerformanceFetchComplete = false,
 	} = useSelect( ( select ) => select( STORE_NAME ).getSearchConsole() );
 	const [ loading, setLoading ] = useState(
 		authenticated && hasSiteSelected && contentPerformance.length === 0
@@ -128,7 +129,7 @@ const ContentAnalysisTable = ( {
 	const [ currentPage, setCurrentPage ] = useState( 1 );
 	const itemsPerPage = 20; // Show 20 results per page
 
-	const previousSite = useRef( selectedSite ); // Trackiing previous site here
+	const previousSite = useRef( null ); // Track previous site, start with null
 	// Reset currentPage when searchQuery or statusFilter changes
 	useEffect( () => {
 		setCurrentPage( 1 );
@@ -245,8 +246,8 @@ const ContentAnalysisTable = ( {
 			}
 			setSearchConsole( {
 				contentPerformance: response.data,
+				contentPerformanceFetchComplete: true,
 			} );
-			previousSite.current = selectedSite;
 		} catch ( error ) {
 			toast.error( error.message );
 			setException( {
@@ -261,10 +262,36 @@ const ContentAnalysisTable = ( {
 			setLoading( false );
 		}
 	}, [ authenticated, selectedSite ] );
-
 	useEffect( () => {
-		fetchContentPerformance();
-	}, [ authenticated, selectedSite, fetchContentPerformance ] );
+		// Only fetch data when the site changes or on first load without data
+		if (
+			authenticated &&
+			selectedSite &&
+			previousSite.current !== selectedSite
+		) {
+			// Reset fetchComplete when site changes
+			if ( previousSite.current !== null ) {
+				setSearchConsole( {
+					contentPerformanceFetchComplete: false,
+				} );
+			}
+
+			// Only fetch if we haven't completed a fetch for this session or if the site actually changed
+			if (
+				! contentPerformanceFetchComplete ||
+				previousSite.current !== null
+			) {
+				fetchContentPerformance();
+			}
+			previousSite.current = selectedSite;
+		}
+	}, [
+		authenticated,
+		selectedSite,
+		fetchContentPerformance,
+		contentPerformanceFetchComplete,
+		setSearchConsole,
+	] );
 
 	const handlePageChange = ( page ) => {
 		setCurrentPage( page );

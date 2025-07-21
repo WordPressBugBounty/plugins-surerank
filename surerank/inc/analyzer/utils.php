@@ -31,7 +31,28 @@ class Utils {
 
 		$dom = new DOMDocument();
 		libxml_use_internal_errors( true );
-		$dom->loadHTML( mb_convert_encoding( $rendered_content, 'HTML-ENTITIES', 'UTF-8' ) );
+
+		$encoded_content = mb_encode_numericentity(
+			htmlspecialchars_decode(
+				htmlentities( $rendered_content, ENT_NOQUOTES, 'UTF-8', false ),
+				ENT_NOQUOTES
+			),
+			[ 0x80, 0x10FFFF, 0, ~0 ],
+			/**
+			 * Conversion map for mb_encode_numericentity:
+			 * 0x80 (128) is the first non-ASCII Unicode code point.
+			 * 0x10FFFF (1,114,111) is the highest valid Unicode code point.
+			 * 0 is the bitmask for the first byte (no filtering).
+			 * ~0 is the bitmask to include all characters in the range.
+			 */
+			'UTF-8'
+		);
+
+		if ( empty( $encoded_content ) ) {
+			return null;
+		}
+
+		$dom->loadHTML( $encoded_content );
 		libxml_clear_errors();
 		return new DOMXPath( $dom );
 	}

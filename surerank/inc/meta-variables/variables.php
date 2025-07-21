@@ -38,7 +38,7 @@ class Variables {
 	/**
 	 * Constructor
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 	}
@@ -59,7 +59,7 @@ class Variables {
 	/**
 	 * Get values of all variables in a class
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>
 	 */
 	public function get_all_values() {
@@ -80,7 +80,7 @@ class Variables {
 	 *
 	 * @param string $key Key.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>
 	 */
 	public function get_key_value( $key ) {
@@ -102,7 +102,7 @@ class Variables {
 	 * @param array<string, mixed> $new_variables New variables.
 	 * @param string               $key           Key.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>
 	 */
 	public function create_new_variables( $new_variables, $key ) {
@@ -119,7 +119,7 @@ class Variables {
 	 *
 	 * @param string $key Key.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return mixed
 	 */
 	public function get_variable_value( $key ) {

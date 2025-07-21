@@ -5,7 +5,7 @@
  * This file handles the functionality to generate a description automatically for post/page/taxonomy.
  *
  * @package SureRank
- * @since X.X.X
+ * @since 1.0.0
  */
 
 namespace SureRank\Inc\Frontend;
@@ -22,7 +22,7 @@ use SureRank\Inc\Traits\Get_Instance;
  * Class Description
  * Handles functionality to auto-generate Open Graph description based on post content, post excerpt, or archive description.
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class Description {
 	use Get_Instance;

@@ -92,6 +92,7 @@ const SaveButton = () => {
 					: ''
 			}
 			icon={ hasUnsavedSettings ? <DotIcon /> : null }
+			disabled={ ! hasUnsavedSettings }
 		/>
 	);
 };

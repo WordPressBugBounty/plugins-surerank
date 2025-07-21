@@ -24,7 +24,7 @@ import { STORE_NAME } from '@Store/constants';
 import replacement from '@Functions/replacement';
 import { flat } from '@Functions/variables';
 import { getEditorData } from '@SeoPopup/modal';
-import { isElementorActive } from '../components/page-seo-checks/analyzer/utils/elementor';
+import { isPageBuilderActive } from '../components/page-seo-checks/analyzer/utils/page-builder';
 
 const usePageChecks = () => {
 	const { setPageSeoCheck } = useDispatch( STORE_NAME );
@@ -64,7 +64,7 @@ const usePageChecks = () => {
 	const lastMeta = useRef( metaData );
 
 	// Check if Elementor editor is active
-	const isElementorEditor = isElementorActive();
+	const isPageBuilderEditor = isPageBuilderActive();
 	// Resolve title and description with variable replacement
 	const variablesArray = useMemo( () => flat( variables ), [ variables ] );
 
@@ -157,14 +157,14 @@ const usePageChecks = () => {
 	};
 
 	useLayoutEffect( () => {
-		if ( isElementorEditor || ! settingsLoaded || ! initializing ) {
+		if ( isPageBuilderEditor || ! settingsLoaded || ! initializing ) {
 			return;
 		}
 
 		// Initialize checks on page load
 		start();
 	}, [
-		isElementorEditor,
+		isPageBuilderEditor,
 		initializing,
 		metaData,
 		resolvedTitle,
@@ -174,7 +174,7 @@ const usePageChecks = () => {
 	] );
 
 	useLayoutEffect( () => {
-		if ( isElementorEditor || ! settingsLoaded || initializing ) {
+		if ( isPageBuilderEditor || ! settingsLoaded || initializing ) {
 			return;
 		}
 		const updateChecks = debounce( async () => {
@@ -200,7 +200,7 @@ const usePageChecks = () => {
 			updateChecks.cancel();
 		};
 	}, [
-		isElementorEditor,
+		isPageBuilderEditor,
 		metaData,
 		resolvedTitle,
 		resolvedDescription,

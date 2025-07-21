@@ -47,7 +47,7 @@ const PageChecks = ( { pageSeoChecks = {}, onIgnore, onRestore } ) => {
 
 	return (
 		<motion.div
-			className="space-y-6 p-2 overflow-y-auto"
+			className="space-y-6 p-1"
 			initial={ { opacity: 0 } }
 			animate={ { opacity: 1 } }
 			exit={ { opacity: 0 } }

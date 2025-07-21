@@ -5,7 +5,7 @@
  * This file handles the functionality to print a custom feed on the frontend.
  *
  * @package SureRank
- * @since X.X.X
+ * @since 1.0.0
  */
 
 namespace SureRank\Inc\Frontend;
@@ -21,7 +21,7 @@ use SureRank\Inc\Traits\Get_Instance;
  * Class Feed
  * Handles functionality to print the custom feed in the frontend.
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class Feed {
 	use Get_Instance;
@@ -29,7 +29,7 @@ class Feed {
 	/**
 	 * Constructor
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 		add_filter( 'the_excerpt_rss', [ $this, 'custom_feed_content' ] );
@@ -42,7 +42,7 @@ class Feed {
 	 * Custom Feed Content
 	 *
 	 * @param string $content The content of the feed.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return string
 	 */
 	public function custom_feed_content( $content ) {
@@ -70,7 +70,7 @@ class Feed {
 	/**
 	 * Disable Feed Indexing
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function disable_feed_indexing() {
@@ -86,7 +86,7 @@ class Feed {
 	/**
 	 * Additional Settings
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function additional_settings() {
@@ -136,7 +136,7 @@ class Feed {
 	/**
 	 * Disable Feed and Redirect
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function disable_feed_and_redirect() {

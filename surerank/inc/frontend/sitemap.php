@@ -14,7 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Schema\Helper as Schema_Helper;
@@ -26,7 +25,7 @@ use WP_Query;
  * Sitemap
  * Handles functionality to generate various types of sitemaps.
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class Sitemap {
 
@@ -43,7 +42,7 @@ class Sitemap {
 	 *
 	 * Sets up the sitemap functionality if XML sitemaps are enabled in settings.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function __construct() {
@@ -68,7 +67,7 @@ class Sitemap {
 	 * Array of settings to flush rewrite rules on update settings
 	 *
 	 * @param array<string, mixed> $settings Existing settings to flush.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>
 	 */
 	public function flush_settings( $settings ) {
@@ -80,7 +79,7 @@ class Sitemap {
 	/**
 	 * Returns the sitemap slug.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return string
 	 */
 	public static function get_slug(): string {
@@ -90,7 +89,7 @@ class Sitemap {
 	/**
 	 * Redirects default WordPress sitemap requests to custom sitemap URLs.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function template_redirect() {
@@ -117,7 +116,7 @@ class Sitemap {
 	 * Parses custom query variables and triggers sitemap generation.
 	 *
 	 * @param \WP_Query $query Current query object.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function parse_query( \WP_Query $query ) {
@@ -153,7 +152,7 @@ class Sitemap {
 	 * @param string $type Sitemap type requested.
 	 * @param int    $page Current page number for paginated sitemaps.
 	 * @param int    $threshold Threshold for splitting sitemaps.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function generate_sitemap( string $type, int $page, $threshold ) {
@@ -322,7 +321,7 @@ class Sitemap {
 	 * @param string $type Post type or taxonomy.
 	 * @param int    $page Current page number.
 	 * @param int    $offset Number of posts to retrieve.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function generate_main_sitemap( string $type, int $page, int $offset = 1000 ) {
@@ -353,7 +352,7 @@ class Sitemap {
 	 * Outputs the sitemap index as XML.
 	 *
 	 * @param array<string, mixed>|array<int, string> $sitemap Sitemap index data.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function sitemapindex( array $sitemap ) {
@@ -365,7 +364,7 @@ class Sitemap {
 	 * Outputs the main sitemap as XML.
 	 *
 	 * @param array<string, mixed>|array<int, string> $sitemap Sitemap data for main sitemap.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function generate_main_sitemap_xml( array $sitemap ) {
@@ -440,7 +439,7 @@ class Sitemap {
 	 * @return array<string, mixed>|array<int, string>
 	 */
 	public function get_noindex_settings() {
-		$settings = Get::option( SURERANK_SETTINGS );
+		$settings = Settings::get();
 		return $settings['no_index'] ?? [];
 	}
 

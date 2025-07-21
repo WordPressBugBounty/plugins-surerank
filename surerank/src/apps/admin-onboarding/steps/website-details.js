@@ -38,7 +38,7 @@ const WebsiteDetails = () => {
 		useOnboardingState();
 
 	const organizationOptions = Object.values(
-		surerank_admin_common?.schema_type_options?.Organization || {}
+		surerank_globals?.schema_type_options?.Organization || {}
 	);
 
 	const [ formState, setFormState ] = useState( websiteDetails );

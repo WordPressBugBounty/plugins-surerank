@@ -2,7 +2,7 @@
 /**
  * Admin Dashboard
  *
- * @since X.X.X
+ * @since 1.0.0
  * @package surerank
  */
 
@@ -12,16 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+use SureRank\Inc\API\Migrations;
 use SureRank\Inc\API\Onboarding;
-use SureRank\Inc\Dashboard\Auth;
-use SureRank\Inc\Dashboard\Controller;
 use SureRank\Inc\Frontend\Sitemap;
 use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Helper;
+use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Functions\Update;
-use SureRank\Inc\Schema\Rules;
-use SureRank\Inc\Schema\Utils;
-use SureRank\Inc\Schema\Variables;
 use SureRank\Inc\Traits\Enqueue;
 use SureRank\Inc\Traits\Get_Instance;
 
@@ -29,7 +26,7 @@ use SureRank\Inc\Traits\Get_Instance;
  * Admin Dashboard
  *
  * @method void wp_enqueue_scripts()
- * @since X.X.X
+ * @since 1.0.0
  */
 class Dashboard {
 
@@ -105,11 +102,15 @@ class Dashboard {
 		wp_localize_script(
 			'jquery',
 			'surerank_globals',
-			array_merge(
-				[
-					'check_score' => $this->get_seo_score(),
-				],
-				$this->get_common_variables()
+			apply_filters(
+				'surerank_globals_localization_vars',
+				array_merge(
+					[
+						'check_score' => $this->get_seo_score(),
+					],
+					$this->get_common_variables(),
+					$this->get_disabled_settings(),
+				)
 			)
 		);
 	}
@@ -117,7 +118,7 @@ class Dashboard {
 	/**
 	 * Get SEO score.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return int
 	 */
 	public function get_seo_score() {
@@ -146,7 +147,7 @@ class Dashboard {
 	/**
 	 * Redirect to dashboard after plugin activation.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function redirect_to_dashboard() {
@@ -186,7 +187,7 @@ class Dashboard {
 	/**
 	 * Add menu page.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function add_menu_page() {
@@ -216,7 +217,7 @@ class Dashboard {
 	 * Register sub menus.
 	 *
 	 * @param string $menu_slug Menu slug.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function register_sub_menus( $menu_slug ) {
@@ -235,10 +236,17 @@ class Dashboard {
 				'id'         => 'surerank#/advanced',
 				'page_title' => __( 'Advanced', 'surerank' ),
 			],
-			[
+		];
+
+		if ( Settings::get( 'enable_google_console' ) ) {
+			$submenus[] = [
 				'id'         => 'surerank#/search-console',
-				'page_title' => __( 'Console', 'surerank' ),
-			],
+				'page_title' => __( 'Search Console', 'surerank' ),
+			];
+		}
+		$submenus[] = [
+			'id'         => 'surerank#/tools',
+			'page_title' => __( 'Tools', 'surerank' ),
 		];
 
 		// Register the submenus.
@@ -304,7 +312,7 @@ class Dashboard {
 	/**
 	 * Load common assets. which are required on all admin pages.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 *
 	 * @param string $page_id Page id.
 	 * @return void
@@ -324,21 +332,16 @@ class Dashboard {
 			[
 				'hook'        => $page_id,
 				'object_name' => 'admin_common',
-				'data'        => [
-					'schema_rules'               => Rules::get_schema_rules_selections(),
-					'default_schemas'            => Utils::get_default_schemas(),
-					'schema_type_options'        => Utils::get_schema_type_options(),
-					'schema_type_data'           => Utils::get_schema_type_data(),
-					'schema_variables'           => Variables::get_instance()->get_schema_variables(),
-					'social_profiles'            => Onboarding::social_profiles(),
-					'website_details'            => Helper::website_details(),
-					'is_connected'               => Controller::get_instance()->get_auth_status(),
-					'has_site_selected'          => ! empty( Auth::get_instance()->get_credentials( 'site_url' ) ),
-					'google_console_user'        => Controller::get_instance()->get_google_console_user_details(),
-					'sitemap_url'                => Sitemap::get_instance()->get_sitemap_url(),
-					'auth_url'                   => current_user_can( 'manage_options' ) ? Auth::get_auth_url() : '',
-					'onboarding_complete_status' => get_option( 'surerank_onboarding_completed', false ) ? 'yes' : 'no',
-				],
+				'data'        => apply_filters(
+					'surerank_dashboard_localization_vars',
+					[
+						'social_profiles'            => Onboarding::social_profiles(),
+						'website_details'            => Helper::website_details(),
+						'sitemap_url'                => Sitemap::get_instance()->get_sitemap_url(),
+						'onboarding_complete_status' => get_option( 'surerank_onboarding_completed', false ) ? 'yes' : 'no',
+						'plugins_for_migration'      => Migrations::get_instance()->get_available_plugins(),
+					]
+				),
 			]
 		);
 	}
@@ -346,30 +349,46 @@ class Dashboard {
 	/**
 	 * Get common admin assets variables.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>
 	 */
 	public function get_common_variables() {
-		return [
-			'_ajax_nonce'                => current_user_can( 'manage_options' ) ? wp_create_nonce( 'surerank_plugin' ) : '',
-			'admin_assets_url'           => SURERANK_URL . 'inc/admin/assets',
-			'version'                    => SURERANK_VERSION,
-			'help_link'                  => esc_url( 'https://surerank.com/docs/' ),
-			'support_link'               => esc_url( 'https://surerank.com/support/' ),
-			'rating_link'                => esc_url( 'https://wordpress.org/support/plugin/surerank/reviews/#new-post' ),
-			'community_link'             => esc_url( 'https://www.facebook.com/groups/surecrafted' ),
-			'pricing_link'               => esc_url( 'https://surerank.com/pricing/' ),
-			'privacy_policy_url'         => esc_url( 'https://surerank.com/privacy-policy/' ),
-			'surerank_url'               => esc_url( 'https://surerank.com' ),
-			'wp_dashboard_url'           => admin_url( 'admin.php' ),
-			'site_url'                   => site_url(),
-			'wp_general_settings_url'    => admin_url( 'options-general.php' ),
-			'url_length'                 => Get::url_length(),
-			'description_length'         => Get::description_length(),
-			'title_length'               => Get::title_length(),
-			'open_graph_tags'            => apply_filters( 'surerank_disable_open_graph_tags', false ),
-			'input_variable_suggestions' => $this->get_input_variable_suggestions(),
+		return apply_filters(
+			'surerank_common_localization_vars',
+			[
+				'_ajax_nonce'                => current_user_can( 'manage_options' ) ? wp_create_nonce( 'surerank_plugin' ) : '',
+				'admin_assets_url'           => SURERANK_URL . 'inc/admin/assets',
+				'version'                    => SURERANK_VERSION,
+				'help_link'                  => esc_url( 'https://surerank.com/docs/' ),
+				'support_link'               => esc_url( 'https://surerank.com/support/' ),
+				'rating_link'                => esc_url( 'https://wordpress.org/support/plugin/surerank/reviews/#new-post' ),
+				'community_link'             => esc_url( 'https://www.facebook.com/groups/surecrafted' ),
+				'pricing_link'               => esc_url( 'https://surerank.com/pricing/' ),
+				'privacy_policy_url'         => esc_url( 'https://surerank.com/privacy-policy/' ),
+				'surerank_url'               => esc_url( 'https://surerank.com' ),
+				'wp_dashboard_url'           => admin_url( 'admin.php' ),
+				'site_url'                   => site_url(),
+				'wp_general_settings_url'    => admin_url( 'options-general.php' ),
+				'url_length'                 => Get::url_length(),
+				'description_length'         => Get::description_length(),
+				'title_length'               => Get::title_length(),
+				'open_graph_tags'            => apply_filters( 'surerank_disable_open_graph_tags', false ),
+				'input_variable_suggestions' => $this->get_input_variable_suggestions(),
+			]
+		);
+	}
 
+	/**
+	 * Get disabled settings.
+	 *
+	 * @since 1.0.0
+	 * @return array<string, mixed>
+	 */
+	public function get_disabled_settings() {
+		return [
+			'enable_page_level_seo' => Settings::get( 'enable_page_level_seo' ),
+			'enable_google_console' => Settings::get( 'enable_google_console' ),
+			'enable_schemas'        => Settings::get( 'enable_schemas' ),
 		];
 	}
 
@@ -387,7 +406,7 @@ class Dashboard {
 	/**
 	 * Common CSS for admin pages.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function common_css() {
@@ -427,7 +446,7 @@ class Dashboard {
 	/**
 	 * Redirect to a specific admin page.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 *
 	 * @param string $page Page slug to redirect.
 	 * @param string $hash Optional hash fragment to append.
@@ -450,7 +469,7 @@ class Dashboard {
 	/**
 	 * Get input variable suggestions.
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 *
 	 * @return array<int, array<string,string>>
 	 */

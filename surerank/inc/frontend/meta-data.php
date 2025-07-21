@@ -25,7 +25,7 @@ use WP_Term;
  * Meta Data
  * This class will handle functionality to print meta_data in frontend for different requests.
  *
- * @since X.X.X
+ * @since 1.0.0
  */
 class Meta_Data {
 
@@ -35,14 +35,14 @@ class Meta_Data {
 	 * Meta Data
 	 *
 	 * @var array<string, mixed>|null $meta_data Post meta data.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	private $meta_data = null;
 
 	/**
 	 * Constructor
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 		add_action( 'wp_head', [ $this, 'print_meta_data' ], 2 );
@@ -52,7 +52,7 @@ class Meta_Data {
 	/**
 	 * Add meta data
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function print_meta_data() {
@@ -62,7 +62,7 @@ class Meta_Data {
 	/**
 	 * Add meta data
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function set_meta_data() {
@@ -75,7 +75,7 @@ class Meta_Data {
 	 * @param string       $attr_key meta attribute key.
 	 * @param string|false $attr_value meta attribute value.
 	 * @param string       $attr_type meta attribute type.
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function meta_html_template( $attr_key, $attr_value, $attr_type = 'name' ) {
@@ -93,7 +93,7 @@ class Meta_Data {
 	/**
 	 * Get Meta Data
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return array<string, mixed>|null
 	 */
 	public function get_meta_data() {
@@ -103,7 +103,7 @@ class Meta_Data {
 	/**
 	 * Set meta data
 	 *
-	 * @since X.X.X
+	 * @since 1.0.0
 	 * @return void
 	 */
 	private function set_meta() {

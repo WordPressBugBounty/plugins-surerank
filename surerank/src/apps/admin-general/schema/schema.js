@@ -33,8 +33,8 @@ const Schema = () => {
 
 	// console.log( 'schemaArray', schemaArray );
 
-	const schemaTypeOptions = surerank_admin_common?.schema_type_options || {};
-	const defaultSchemasObject = surerank_admin_common?.default_schemas || {};
+	const schemaTypeOptions = surerank_globals?.schema_type_options || {};
+	const defaultSchemasObject = surerank_globals?.default_schemas || {};
 	const defaultSchemas = Object.entries( defaultSchemasObject ).map(
 		( [ id, schema ] ) => ( {
 			id,
