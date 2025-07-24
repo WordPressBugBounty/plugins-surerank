@@ -5166,7 +5166,7 @@ msgstr "Metode importer tidak valid."
 #. translators: %s: importer class name
 #. translators: %s: importer class name.
 #: inc/api/migrations.php:306
-#: inc/api/migrations.php:581
+#: inc/api/migrations.php:604
 #, php-format
 msgid "Invalid importer class: %s does not implement ImporterInterface."
 msgstr "Kelas importer tidak valid: %s tidak mengimplementasikan ImporterInterface."
@@ -5205,38 +5205,38 @@ msgstr "Plugin tidak ditemukan."
 msgid "Plugin is already inactive."
 msgstr "Plugin sudah tidak aktif."
 
-#: inc/api/migrations.php:550
+#: inc/api/migrations.php:552
 msgid "Plugin deactivated successfully."
 msgstr "Plugin berhasil dinonaktifkan."
 
-#: inc/api/migrations.php:564
+#: inc/api/migrations.php:587
 msgid "Invalid plugin slug specified."
 msgstr "Slug plugin yang tidak valid ditentukan."
 
-#: inc/api/migrations.php:663
+#: inc/api/migrations.php:686
 msgid "No data found for this item."
 msgstr "Tidak ditemukan data untuk item ini."
 
-#: inc/api/migrations.php:669
+#: inc/api/migrations.php:692
 msgid "Detection failed."
 msgstr "Deteksi gagal."
 
-#: inc/api/migrations.php:676
+#: inc/api/migrations.php:699
 msgid "Invalid import response."
 msgstr "Respons impor tidak valid."
 
-#: inc/api/migrations.php:685
+#: inc/api/migrations.php:708
 msgid "Import failed."
 msgstr "Impor gagal."
 
 #. translators: %s: error message.
-#: inc/api/migrations.php:690
+#: inc/api/migrations.php:713
 #, php-format
 msgid "Error: %s"
 msgstr "Kesalahan: %s"
 
 #. translators: 1: imported count, 2: total count, 3: item type, 4: plugin name.
-#: inc/api/migrations.php:733
+#: inc/api/migrations.php:756
 #, php-format
 msgid "Imported %1$d of %2$d %3$s from %4$s."
 msgstr "Berhasil mengimpor %1$d dari %2$d %3$s dari %4$s."

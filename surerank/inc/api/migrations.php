@@ -545,9 +545,32 @@ class Migrations extends Api_Base {
 			return;
 		}
 
-		deactivate_plugins( (string) $plugin_path );
+		$to_be_deactivated_plugins = $this->get_associated_plugins( (string) $plugin_path );
+
+		deactivate_plugins( (array) $to_be_deactivated_plugins );
 
 		Send_Json::success( [ 'message' => __( 'Plugin deactivated successfully.', 'surerank' ) ] );
+	}
+
+	/**
+	 * Get associated plugins that should be deactivated along with the main plugin.
+	 * 
+	 * @param string $plugin_path The main plugin path.
+	 * @return array<string> List of associated plugin paths to deactivate.
+	 * @since 1.1.1
+	 */
+	private function get_associated_plugins( string $plugin_path ) {
+		$associated_plugins = [];
+		switch ( $plugin_path ) {
+			case 'seo-by-rank-math/rank-math.php':
+				$associated_plugins = [ 'seo-by-rank-math/rank-math.php', 'seo-by-rank-math-pro/rank-math-pro.php' ];
+				break;
+			case 'wordpress-seo/wp-seo.php':
+				$associated_plugins = [ 'wordpress-seo/wp-seo.php', 'wordpress-seo-premium/wp-seo-premium.php' ];
+				break;
+		}
+
+		return $associated_plugins;
 	}
 
 	/**

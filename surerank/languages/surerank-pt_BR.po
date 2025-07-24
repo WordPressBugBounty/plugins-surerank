@@ -5166,7 +5166,7 @@ msgstr "Métodos de importador inválidos."
 #. translators: %s: importer class name
 #. translators: %s: importer class name.
 #: inc/api/migrations.php:306
-#: inc/api/migrations.php:581
+#: inc/api/migrations.php:604
 #, php-format
 msgid "Invalid importer class: %s does not implement ImporterInterface."
 msgstr "Classe de importador inválida: %s não implementa ImporterInterface."
@@ -5205,38 +5205,38 @@ msgstr "Plugin não encontrado."
 msgid "Plugin is already inactive."
 msgstr "Plugin já está inativo."
 
-#: inc/api/migrations.php:550
+#: inc/api/migrations.php:552
 msgid "Plugin deactivated successfully."
 msgstr "Plugin desativado com sucesso."
 
-#: inc/api/migrations.php:564
+#: inc/api/migrations.php:587
 msgid "Invalid plugin slug specified."
 msgstr "Slug de plugin especificado inválido."
 
-#: inc/api/migrations.php:663
+#: inc/api/migrations.php:686
 msgid "No data found for this item."
 msgstr "Nenhum dado encontrado para este item."
 
-#: inc/api/migrations.php:669
+#: inc/api/migrations.php:692
 msgid "Detection failed."
 msgstr "Falha na detecção."
 
-#: inc/api/migrations.php:676
+#: inc/api/migrations.php:699
 msgid "Invalid import response."
 msgstr "Resposta de importação inválida."
 
-#: inc/api/migrations.php:685
+#: inc/api/migrations.php:708
 msgid "Import failed."
 msgstr "Falha na importação."
 
 #. translators: %s: error message.
-#: inc/api/migrations.php:690
+#: inc/api/migrations.php:713
 #, php-format
 msgid "Error: %s"
 msgstr "Erro: %s"
 
 #. translators: 1: imported count, 2: total count, 3: item type, 4: plugin name.
-#: inc/api/migrations.php:733
+#: inc/api/migrations.php:756
 #, php-format
 msgid "Imported %1$d of %2$d %3$s from %4$s."
 msgstr "Importado %1$d de %2$d %3$s de %4$s."

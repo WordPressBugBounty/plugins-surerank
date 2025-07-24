@@ -1,6 +1,9 @@
 import { SureRankFullLogo } from '@/global/components/icons';
 import { Button } from '@bsf/force-ui';
 import { X } from 'lucide-react';
+import { ENABLE_PAGE_LEVEL_SEO } from '@Global/constants';
+import PageSeoCheckStatusButton from '@SeoPopup/components/header/page-seo-check-status-button';
+import { isBricksBuilder } from '@SeoPopup/components/page-seo-checks/analyzer/utils/page-builder';
 
 import { applyFilters } from '@wordpress/hooks';
 
@@ -23,14 +26,21 @@ const Header = ( { onClose } ) => {
 				<ConditionalLogo />
 			</div>
 			<div className="flex items-center gap-2">{ SeoTabsComponent }</div>
-			<div className="flex items-center py-5 px-4">
-				<Button
-					variant="ghost"
-					size="sm"
-					onClick={ onClose }
-					className="p-0 text-icon-secondary hover:text-icon-primary hover:bg-transparent bg-transparent focus:outline-none"
-					icon={ <X /> }
-				/>
+			<div className="flex items-center gap-2">
+				<div className="flex items-center">
+					{ ! SeoTabsComponent &&
+						ENABLE_PAGE_LEVEL_SEO &&
+						! isBricksBuilder() && <PageSeoCheckStatusButton /> }
+				</div>
+				<div className="flex items-center py-1">
+					<Button
+						variant="ghost"
+						size="sm"
+						onClick={ onClose }
+						className="px-4 py-4 pl-2 text-icon-secondary hover:text-icon-primary hover:bg-transparent bg-transparent focus:outline-none focus:ring-0 focus:ring-offset-0"
+						icon={ <X /> }
+					/>
+				</div>
 			</div>
 		</div>
 	);

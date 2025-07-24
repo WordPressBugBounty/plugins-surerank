@@ -7,8 +7,9 @@ import { isPageBuilderActive } from '../page-seo-checks/analyzer/utils/page-buil
 import { SeoPopupTooltip } from '@/apps/admin-components/tooltip';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { STORE_NAME } from '@/store/constants';
+import { Suspense } from '@wordpress/element';
 
-const PageSeoCheckStatusButton = () => {
+const PageSeoCheckButton = () => {
 	const { updateAppSettings } = useDispatch( STORE_NAME );
 	const appSettings = useSelect( ( select ) =>
 		select( STORE_NAME ).getAppSettings()
@@ -89,6 +90,14 @@ const PageSeoCheckStatusButton = () => {
 				) }
 			/>
 		</SeoPopupTooltip>
+	);
+};
+
+const PageSeoCheckStatusButton = () => {
+	return (
+		<Suspense fallback={ <Skeleton className="size-10 shrink-0" /> }>
+			<PageSeoCheckButton />
+		</Suspense>
 	);
 };
 

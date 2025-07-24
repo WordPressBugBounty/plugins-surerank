@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: SureRank 1.1.0\n"
+"Project-Id-Version: SureRank 1.1.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/surerank\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-07-18T07:16:51+00:00\n"
+"POT-Creation-Date: 2025-07-24T06:13:39+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: surerank\n"
@@ -1373,7 +1373,7 @@ msgstr ""
 #. translators: %s: importer class name
 #. translators: %s: importer class name.
 #: inc/api/migrations.php:306
-#: inc/api/migrations.php:581
+#: inc/api/migrations.php:604
 #, php-format
 msgid "Invalid importer class: %s does not implement ImporterInterface."
 msgstr ""
@@ -1412,38 +1412,38 @@ msgstr ""
 msgid "Plugin is already inactive."
 msgstr ""
 
-#: inc/api/migrations.php:550
+#: inc/api/migrations.php:552
 msgid "Plugin deactivated successfully."
 msgstr ""
 
-#: inc/api/migrations.php:564
+#: inc/api/migrations.php:587
 msgid "Invalid plugin slug specified."
 msgstr ""
 
-#: inc/api/migrations.php:663
+#: inc/api/migrations.php:686
 msgid "No data found for this item."
 msgstr ""
 
-#: inc/api/migrations.php:669
+#: inc/api/migrations.php:692
 msgid "Detection failed."
 msgstr ""
 
-#: inc/api/migrations.php:676
+#: inc/api/migrations.php:699
 msgid "Invalid import response."
 msgstr ""
 
-#: inc/api/migrations.php:685
+#: inc/api/migrations.php:708
 msgid "Import failed."
 msgstr ""
 
 #. translators: %s: error message.
-#: inc/api/migrations.php:690
+#: inc/api/migrations.php:713
 #, php-format
 msgid "Error: %s"
 msgstr ""
 
 #. translators: 1: imported count, 2: total count, 3: item type, 4: plugin name.
-#: inc/api/migrations.php:733
+#: inc/api/migrations.php:756
 #, php-format
 msgid "Imported %1$d of %2$d %3$s from %4$s."
 msgstr ""
@@ -5614,6 +5614,46 @@ msgid "Open SureRank SEO"
 msgstr ""
 
 #: build/seo-popup/index.js:1
+msgid "Enter your focus keyword"
+msgstr ""
+
+#: build/seo-popup/index.js:1
+msgid "Upgrade to Pro"
+msgstr ""
+
+#: build/seo-popup/index.js:1
+msgid "These settings help search engines understand how to treat your page in search results. Enabling ‘No Index’ will prevent the page from appearing in search results. ‘No Follow’ tells search engines not to follow any links on the page, and ‘No Archive’ prevents search engines from storing a cached version of the page."
+msgstr ""
+
+#: build/seo-popup/index.js:1
+msgid "Canonical URL"
+msgstr ""
+
+#: build/seo-popup/index.js:1
+msgid "The Canonical URL tells search engines which version of a page should be indexed to avoid duplicate content issues. Leave blank to let SureRank set it automatically."
+msgstr ""
+
+#: build/seo-popup/index.js:1
+msgid "Schemas in Use"
+msgstr ""
+
+#: build/seo-popup/index.js:1
+msgid "No schemas configured."
+msgstr ""
+
+#: build/seo-popup/index.js:1
+msgid "Use Data from Facebook Tab"
+msgstr ""
+
+#: build/seo-popup/index.js:1
+msgid "Upload at least 600x315px image. Recommended size is 1200x630px."
+msgstr ""
+
+#: build/seo-popup/index.js:1
+msgid "Meta"
+msgstr ""
+
+#: build/seo-popup/index.js:1
 msgid "This page includes video(s) but no images."
 msgstr ""
 
@@ -5666,46 +5706,6 @@ msgstr[1] ""
 
 #: build/seo-popup/index.js:1
 msgid "All SEO checks passed. Click to see"
-msgstr ""
-
-#: build/seo-popup/index.js:1
-msgid "Enter your focus keyword"
-msgstr ""
-
-#: build/seo-popup/index.js:1
-msgid "Upgrade to Pro"
-msgstr ""
-
-#: build/seo-popup/index.js:1
-msgid "These settings help search engines understand how to treat your page in search results. Enabling ‘No Index’ will prevent the page from appearing in search results. ‘No Follow’ tells search engines not to follow any links on the page, and ‘No Archive’ prevents search engines from storing a cached version of the page."
-msgstr ""
-
-#: build/seo-popup/index.js:1
-msgid "Canonical URL"
-msgstr ""
-
-#: build/seo-popup/index.js:1
-msgid "The Canonical URL tells search engines which version of a page should be indexed to avoid duplicate content issues. Leave blank to let SureRank set it automatically."
-msgstr ""
-
-#: build/seo-popup/index.js:1
-msgid "Schemas in Use"
-msgstr ""
-
-#: build/seo-popup/index.js:1
-msgid "No schemas configured."
-msgstr ""
-
-#: build/seo-popup/index.js:1
-msgid "Use Data from Facebook Tab"
-msgstr ""
-
-#: build/seo-popup/index.js:1
-msgid "Upload at least 600x315px image. Recommended size is 1200x630px."
-msgstr ""
-
-#: build/seo-popup/index.js:1
-msgid "Meta"
 msgstr ""
 
 #: build/seo-popup/index.js:1
