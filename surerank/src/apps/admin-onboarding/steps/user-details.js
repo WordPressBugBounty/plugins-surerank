@@ -54,8 +54,8 @@ const inputFields = [
 				} }
 			/>
 		),
-		name: 'share_data',
-		value: 'share_data',
+		name: 'agree_to_terms',
+		value: 'agree_to_terms',
 		type: 'checkbox',
 		required: true,
 	},

@@ -5,7 +5,7 @@ Tags: seo, wordpress seo, xml sitemap, schema, google search console
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 8.0
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -125,10 +125,12 @@ With the SEO Metabox, you can easily set custom meta titles, descriptions, socia
 ### WooCommerce Integration ###
 SureRank integrates seamlessly with WooCommerce, providing SEO tools specifically designed for your online store. It helps optimize your product pages, categories, and other eCommerce elements to improve search visibility and drive more traffic to your store.
 
+### Migrate from Other SEO Plugins ###
+Switching to SureRank is seamless with the built-in Migration Tool. It allows you to easily migrate SEO data and settings from other popular SEO plugins, such as Rank Math, AIOSEO, or Yoast, without losing critical SEO information. This ensures a smooth transition while preserving your existing optimization efforts.
+
 
 ### Coming Soon Features ###
 
-- **Migrate from Other SEO Plugins** - Switching to SureRank is seamless with the built-in Migration Tool. It allows you to easily migrate SEO data and settings from other popular SEO plugins, such as Rank Math, AIOSEO, or Yoast, without losing critical SEO information. This ensures a smooth transition while preserving your existing optimization efforts.
 - **Import/Export SureRank Settings** - Simplify your SEO management with the ability to export and import SureRank settings. Whether you're setting up multiple sites, collaborating with team members, or sharing configurations with clients, this feature makes it easy to transfer SEO settings across websites quickly and accurately.
 
 
@@ -293,6 +295,10 @@ Brainstorm Force
 
 
 == Changelog ==
+
+= 1.1.2 - 29-July-2025 =
+* Improvement: Enhanced error handling and UI feedback for broken or slow-loading external links during Page SEO checks.
+* Fix: Resolved UI glitch in Dia Browser
 
 = 1.1.1 - 24-July-2025 =
 * Fix: Resolved an issue where migration to SureRank from the Rank Math SEO plugin triggered an error in a specific edge case.

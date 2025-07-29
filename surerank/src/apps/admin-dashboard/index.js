@@ -70,9 +70,7 @@ const generalAndAdvancedRoutes = [
 		createChildRoute( '/sitemaps', SitemapsRoute ),
 		// Conditionally include schema route
 		...( ENABLE_SCHEMAS && SchemaRoute
-			? [
-					createChildRoute( '/schema', SchemaRoute ),
-			  ]
+			? [ createChildRoute( '/schema', SchemaRoute ) ]
 			: [] ),
 		createChildRoute( '/features_management', FeaturesManagementRoute ),
 	] ),
@@ -80,23 +78,15 @@ const generalAndAdvancedRoutes = [
 
 const searchConsoleRoutes = [
 	createRoute( '/search-console', SearchConsole, { navbarOnly: true } ),
-	createRoute(
-		'/content-performance',
-		ContentAnalysisRoute,
-		{
-			navbarOnly: true,
-		}
-	),
+	createRoute( '/content-performance', ContentAnalysisRoute, {
+		navbarOnly: true,
+	} ),
 ];
 
 const siteSeoAnalysisRoutes = [
-	createRoute(
-		'/site-seo-analysis',
-		SiteSeoChecksRoute,
-		{
-			navbarOnly: true,
-		}
-	),
+	createRoute( '/site-seo-analysis', SiteSeoChecksRoute, {
+		navbarOnly: true,
+	} ),
 ];
 
 // Tools routes

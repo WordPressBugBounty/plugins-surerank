@@ -3,12 +3,98 @@ import { cn, isURL } from '@/functions/utils';
 import FixButton from '@GlobalComponents/fix-button';
 import { __ } from '@wordpress/i18n';
 import { Info, X } from 'lucide-react';
-import { SeoPopupTooltip } from '@/apps/admin-components/tooltip';
+import {
+	SeoPopupInfoTooltip,
+	SeoPopupTooltip,
+} from '@/apps/admin-components/tooltip';
 import { ConfirmationDialog } from '@GlobalComponents/confirmation-dialog';
-import { useState } from '@wordpress/element';
+import { Fragment, useState } from '@wordpress/element';
 import { fetchImageDataByUrl } from '@/functions/api';
 
 const IMAGE_ID_CACHE = new Map();
+
+const formatBrokenLinkTooltip = ( item ) => {
+	if ( ! item || typeof item !== 'object' ) {
+		return null;
+	}
+
+	const { status, details } = item;
+
+	// Create a more descriptive tooltip based on the error type
+	let tooltipContent = '';
+
+	if ( details ) {
+		tooltipContent += details;
+	}
+
+	// Add status-specific helpful information
+	if ( status === 404 ) {
+		tooltipContent +=
+			' ' + __( '(The page or resource was not found)', 'surerank' );
+	} else if ( status === 'http_request_failed' ) {
+		tooltipContent +=
+			' ' + __( '(Unable to connect to the URL)', 'surerank' );
+	} else if ( status === 403 ) {
+		tooltipContent +=
+			' ' + __( '(Access to this resource is forbidden)', 'surerank' );
+	} else if ( status === 500 ) {
+		tooltipContent += ' ' + __( '(Server error occurred)', 'surerank' );
+	} else if ( typeof status === 'number' && status >= 400 ) {
+		tooltipContent += ` ${ __( '(HTTP error', 'surerank' ) } ${ status })`;
+	}
+
+	return (
+		<div className="space-y-1">
+			<p className="m-0">
+				<b>{ __( 'Why is this link broken?', 'surerank' ) }</b>
+			</p>
+			<p className="m-0">{ tooltipContent }</p>
+			{ status && (
+				<p className="text-xs m-0">
+					<b>{ __( 'Status:', 'surerank' ) }</b> { status }
+				</p>
+			) }
+		</div>
+	);
+};
+
+const renderItem = ( item ) => {
+	const commonLinkProps = {
+		tag: 'a',
+		variant: 'link',
+		className:
+			'font-medium focus:outline-none focus:[box-shadow:none] [&>span]:px-0 break-all',
+		target: '_blank',
+		rel: 'noopener noreferrer',
+	};
+	if ( isURL( item ) ) {
+		return (
+			<li className="m-0 text-sm">
+				<Button { ...commonLinkProps } href={ item }>
+					{ item }
+				</Button>
+			</li>
+		);
+	} else if ( typeof item === 'object' && item?.url ) {
+		// For broken links or similar objects
+		return (
+			<li className="my-1 p-2 flex items-center justify-between gap-1.5 text-sm border border-dashed border-border-subtle rounded-md bg-background-secondary">
+				<Button { ...commonLinkProps } href={ item.url }>
+					{ item.url }
+				</Button>
+				<SeoPopupInfoTooltip
+					content={ formatBrokenLinkTooltip( item ) }
+					interactive
+				/>
+			</li>
+		);
+	}
+	return (
+		<li className="m-0 text-sm font-medium text-text-secondary list-none">
+			{ item }
+		</li>
+	);
+};
 
 export const CheckCard = ( {
 	variant,
@@ -23,7 +109,7 @@ export const CheckCard = ( {
 	showIgnoreButton = false,
 } ) => {
 	const [ showIgnoreDialog, setShowIgnoreDialog ] = useState( false );
-	const { data: descriptionData } = renderDescription( data );
+	const { data: descriptionData, listStyleClassName } = getData( data );
 	const handleIgnoreClick = () => {
 		setShowIgnoreDialog( true );
 	};
@@ -111,33 +197,17 @@ export const CheckCard = ( {
 				{ ! showImages &&
 					descriptionData &&
 					descriptionData.length > 0 && (
-						<ul className="list-disc list-inside ml-3 mr-0 mt-0 mb-0.5">
-							{ descriptionData.map( ( item, index ) =>
-								isURL( item ) ? (
-									<li
-										key={ `${ item }-${ index }` }
-										className="m-0 text-sm"
-									>
-										<Button
-											tag="a"
-											variant="link"
-											href={ item }
-											target="_blank"
-											rel="noopener noreferrer"
-											className="font-medium focus:outline-none focus:[box-shadow:none] [&>span]:px-0 break-all"
-										>
-											{ item }
-										</Button>
-									</li>
-								) : (
-									<li
-										key={ `${ item }-${ index }` }
-										className="m-0 text-sm font-medium text-text-secondary list-none"
-									>
-										{ item }
-									</li>
-								)
+						<ul
+							className={ cn(
+								'list-disc list-inside ml-3 mr-0 mt-0 mb-0.5',
+								listStyleClassName
 							) }
+						>
+							{ descriptionData.map( ( item, index ) => (
+								<Fragment key={ `${ item }-${ index }` }>
+									{ renderItem( item ) }
+								</Fragment>
+							) ) }
 						</ul>
 					) }
 			</div>
@@ -225,13 +295,14 @@ export const ImageGrid = ( { images } ) => {
 	);
 };
 
-export const renderDescription = ( descriptions ) => {
+export const getData = ( descriptions ) => {
 	if ( ! Array.isArray( descriptions ) || ! descriptions.length ) {
 		return { data: [] };
 	}
 
 	// Handle text or list descriptions only
 	const data = [];
+	let listStyleClassName = '';
 	descriptions.forEach( ( item ) => {
 		if ( typeof item === 'string' ) {
 			data.push( item );
@@ -241,13 +312,23 @@ export const renderDescription = ( descriptions ) => {
 			Array.isArray( item.list )
 		) {
 			data.push( ...item.list );
+			// For SEO-Bar broken links or similar objects
+			if ( item.list?.some( ( value ) => value?.url && value?.status ) ) {
+				listStyleClassName = 'list-none mx-0';
+			}
 		} else if (
 			item &&
 			typeof item === 'object' &&
-			! Array.isArray( item.list )
+			! Array.isArray( item?.list ) &&
+			typeof item?.list === 'object'
 		) {
 			data.push( ...Object.values( item.list ) );
+		} else {
+			// For any other object, just push it as is
+			// This could be a broken link object or similar
+			data.push( item );
+			listStyleClassName = 'list-none mx-0'; // Reset to none for non-list items
 		}
 	} );
-	return { data };
+	return { data, listStyleClassName };
 };

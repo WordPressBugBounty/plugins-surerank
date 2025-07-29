@@ -219,7 +219,7 @@ class Utils {
 	 *
 	 * @param array<string, mixed> $broken_links Broken links.
 	 * @param array<string>        $urls URLs.
-	 * @return array<string>
+	 * @return array<string, array<string, mixed>>
 	 */
 	public static function existing_broken_links( $broken_links, $urls ) {
 		$description           = $broken_links['description'] ?? [];
@@ -231,7 +231,27 @@ class Utils {
 			}
 		}
 
-		return array_intersect( $existing_broken_links, $urls );
+		$filtered_broken_links = [];
+
+		if ( is_array( $existing_broken_links ) ) {
+			foreach ( $existing_broken_links as $key => $existing_link ) {
+				if ( is_string( $existing_link ) ) {
+					if ( in_array( $existing_link, $urls, true ) ) {
+						$filtered_broken_links[ $key ] = [
+							'url'     => $existing_link,
+							'status'  => 'error',
+							'details' => __( 'The link is broken.', 'surerank' ),
+						];
+					}
+				} elseif ( is_array( $existing_link ) && isset( $existing_link['url'] ) ) {
+					if ( in_array( $existing_link['url'], $urls, true ) ) {
+						$filtered_broken_links[ $key ] = $existing_link;
+					}
+				}
+			}
+		}
+
+		return $filtered_broken_links;
 	}
 
 	/**

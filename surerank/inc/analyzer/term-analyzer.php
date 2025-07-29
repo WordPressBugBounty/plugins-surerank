@@ -93,7 +93,7 @@ class TermAnalyzer {
 		$response = $this->run_checks( $term_id, $term );
 
 		if ( isset( $response['status'] ) && 'error' === $response['status'] ) {
-			$this->log_error( $response['message'] );
+			self::log_error( $response['message'] );
 		}
 
 		Update::term_meta( $term_id, 'surerank_taxonomy_updated_at', time() );

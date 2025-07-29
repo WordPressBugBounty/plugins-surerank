@@ -108,7 +108,7 @@ class PostAnalyzer {
 		$response = $this->run_checks( $post_id, $post );
 
 		if ( isset( $response['status'] ) && 'error' === $response['status'] ) {
-			$this->log_error( $response['message'] );
+			self::log_error( $response['message'] );
 		}
 	}
 

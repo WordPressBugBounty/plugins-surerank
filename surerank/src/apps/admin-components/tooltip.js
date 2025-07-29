@@ -50,10 +50,16 @@ const SeoPopupTooltip = ( props ) => {
 	);
 };
 
-export const SeoPopupInfoTooltip = ( { content, ...rest } ) => {
+export const SeoPopupInfoTooltip = ( { content, className, ...rest } ) => {
 	return (
-		<SeoPopupTooltip content={ content } placement="top" arrow { ...rest }>
-			<Info className="size-4 !text-icon-secondary" />
+		<SeoPopupTooltip
+			className={ cn( 'z-[99999] max-w-95', className ) }
+			content={ content }
+			placement="top"
+			arrow
+			{ ...rest }
+		>
+			<Info className="shrink-0 size-4 !text-icon-secondary" />
 		</SeoPopupTooltip>
 	);
 };

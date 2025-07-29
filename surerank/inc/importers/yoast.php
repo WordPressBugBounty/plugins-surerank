@@ -157,7 +157,7 @@ class Yoast extends BaseImporter {
 				true
 			);
 		} catch ( Exception $e ) {
-			$this->log_error(
+			self::log_error(
 				sprintf(
 					/* translators: %d: post ID, %s: error message. */
 					__( 'Error importing meta-robots for post %1$d: %2$s', 'surerank' ),
@@ -199,7 +199,7 @@ class Yoast extends BaseImporter {
 				true
 			);
 		} catch ( Exception $e ) {
-			$this->log_error(
+			self::log_error(
 				sprintf(
 					/* translators: %d: term ID, %s: error message. */
 					__( 'Error importing meta-robots for term %1$d: %2$s', 'surerank' ),
@@ -365,7 +365,7 @@ class Yoast extends BaseImporter {
 				true
 			);
 		} catch ( Exception $e ) {
-			$this->log_error(
+			self::log_error(
 				sprintf(
 					/* translators: %s: error message. */
 					__( 'Error importing Yoast SEO global settings: %s', 'surerank' ),

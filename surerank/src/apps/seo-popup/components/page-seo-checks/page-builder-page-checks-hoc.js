@@ -106,7 +106,7 @@ const PageBuilderPageSeoChecksHoc = () => {
 				<>
 					<RefreshButtonPortal
 						isRefreshing={ isRefreshing }
-						isChecking={ brokenLinkState.isChecking }
+						isChecking={ pageSeoChecks.isCheckingLinks }
 						onClick={ handleRefreshWithBrokenLinks }
 					/>
 					<div className="p-2">
@@ -127,11 +127,7 @@ const PageBuilderPageSeoChecksHoc = () => {
 						pageSeoChecks={ {
 							...pageSeoChecks,
 							...categorizedChecks,
-							isCheckingLinks: brokenLinkState.isChecking,
-							linkCheckProgress: {
-								current: brokenLinkState.checkedLinks.size,
-								total: brokenLinkState.allLinks.length,
-							},
+							isCheckingLinks: pageSeoChecks.isCheckingLinks,
 						} }
 						onIgnore={ handleIgnoreCheck }
 						onRestore={ handleRestoreCheck }

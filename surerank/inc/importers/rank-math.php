@@ -165,7 +165,7 @@ class RankMath extends BaseImporter {
 				true
 			);
 		} catch ( Exception $e ) {
-			$this->log_error(
+			self::log_error(
 				sprintf(
 					/* translators: %s: error message. */
 					__( 'Error importing RankMath global settings: %s', 'surerank' ),
@@ -258,7 +258,7 @@ class RankMath extends BaseImporter {
 				true
 			);
 		} catch ( Exception $e ) {
-			$this->log_error(
+			self::log_error(
 				sprintf(
 					/* translators: 1: ID, 2: type, 3: error message. */
 					__( 'Error importing meta-robots for %2$s %1$d: %3$s', 'surerank' ),

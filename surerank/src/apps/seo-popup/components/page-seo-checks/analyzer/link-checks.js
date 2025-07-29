@@ -14,7 +14,17 @@ const getCacheBrokenLinks = ( links ) => {
 		return [];
 	}
 
-	return links.filter( ( url ) => ! cacheBrokenLinksResults.get( url ) );
+	const result = [];
+	for ( const url of links ) {
+		const cachedResult = cacheBrokenLinksResults.get( url );
+		if ( cachedResult?.broken ) {
+			result.push( {
+				url,
+				...cachedResult,
+			} );
+		}
+	}
+	return result;
 };
 
 const updateCache = ( links ) => {
@@ -94,44 +104,53 @@ export const checkLinks = async ( {
 		return resultFromCache;
 	}
 
-	const total = uniqueLinks.length;
-	let current = 0;
+	const total = links.length;
+	let current = links.length - uniqueLinks.length;
 
 	if ( typeof onProgress === 'function' ) {
 		onProgress( 'isCheckingLinks', true );
 		onProgress( 'linkCheckProgress', {
-			current: 0,
+			current,
 			total,
 		} );
 	}
 
-	await Promise.allSettled(
-		uniqueLinks.map( async ( url ) => {
-			try {
-				const result = await fetchBrokenLinkStatus( {
-					postId,
-					userAgent,
-					url,
-					allLinks: links,
-				} );
-				if ( ! result.success ) {
-					cacheBrokenLinksResults.set( url, false );
-				} else {
-					cacheBrokenLinksResults.set( url, true );
-				}
-			} catch ( error ) {
-				// If API fails, consider as broken
-				cacheBrokenLinksResults.set( url, false );
-			}
-			current++;
-			if ( typeof onProgress === 'function' ) {
-				onProgress( 'linkCheckProgress', {
-					current,
-					total,
-				} );
-			}
-		} )
-	);
+	// Process links sequentially to avoid overwhelming servers
+	for ( const url of uniqueLinks ) {
+		try {
+			const result = await fetchBrokenLinkStatus( {
+				postId,
+				userAgent,
+				url,
+				allLinks: links,
+			} );
+			const { success, ...rest } = result;
+			cacheBrokenLinksResults.set( url, {
+				broken: ! success,
+				...rest,
+			} );
+		} catch ( error ) {
+			// If API fails, consider as broken
+			cacheBrokenLinksResults.set( url, {
+				broken: true,
+				status: error?.data?.status ?? error?.code ?? 'error',
+				details: error.message,
+				message: __( 'Failed to check link', 'surerank' ),
+			} );
+		}
+		current++;
+		if ( typeof onProgress === 'function' ) {
+			onProgress( 'linkCheckProgress', {
+				current,
+				total,
+			} );
+		}
+
+		// Add small delay between requests to prevent rate limiting
+		if ( current < total ) {
+			await new Promise( ( resolve ) => setTimeout( resolve, 100 ) );
+		}
+	}
 	onProgress( 'isCheckingLinks', false );
 
 	return getCacheBrokenLinks( links );

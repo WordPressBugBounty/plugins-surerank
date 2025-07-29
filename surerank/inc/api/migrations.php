@@ -554,7 +554,7 @@ class Migrations extends Api_Base {
 
 	/**
 	 * Get associated plugins that should be deactivated along with the main plugin.
-	 * 
+	 *
 	 * @param string $plugin_path The main plugin path.
 	 * @return array<string> List of associated plugin paths to deactivate.
 	 * @since 1.1.1

@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: SureRank 1.1.1\n"
+"Project-Id-Version: SureRank 1.1.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/surerank\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-07-24T06:13:39+00:00\n"
+"POT-Creation-Date: 2025-07-29T07:53:26+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: surerank\n"
@@ -410,8 +410,8 @@ msgstr ""
 #: inc/analyzer/seo-analyzer.php:655
 #: inc/analyzer/seo-analyzer.php:780
 #: inc/analyzer/seo-analyzer.php:1056
-#: inc/api/analyzer.php:804
-#: inc/api/analyzer.php:834
+#: inc/api/analyzer.php:801
+#: inc/api/analyzer.php:831
 msgid "Why this matters:"
 msgstr ""
 
@@ -685,10 +685,10 @@ msgstr ""
 #: inc/analyzer/seo-analyzer.php:658
 #: inc/analyzer/seo-analyzer.php:735
 #: inc/analyzer/seo-analyzer.php:783
-#: inc/api/analyzer.php:746
-#: inc/api/analyzer.php:837
-#: inc/api/analyzer.php:882
-#: inc/api/analyzer.php:973
+#: inc/api/analyzer.php:743
+#: inc/api/analyzer.php:834
+#: inc/api/analyzer.php:879
+#: inc/api/analyzer.php:970
 msgid "What you can do:"
 msgstr ""
 
@@ -754,9 +754,9 @@ msgstr ""
 #: inc/analyzer/seo-analyzer.php:586
 #: inc/analyzer/seo-analyzer.php:623
 #: inc/analyzer/seo-analyzer.php:732
-#: inc/api/analyzer.php:743
-#: inc/api/analyzer.php:879
-#: inc/api/analyzer.php:970
+#: inc/api/analyzer.php:740
+#: inc/api/analyzer.php:876
+#: inc/api/analyzer.php:967
 msgid "Why it matters:"
 msgstr ""
 
@@ -1027,12 +1027,17 @@ msgstr ""
 msgid "Page URL is longer than %s characters and may affect SEO and readability."
 msgstr ""
 
-#: inc/analyzer/utils.php:247
+#: inc/analyzer/utils.php:243
+#: inc/api/analyzer.php:1291
+msgid "The link is broken."
+msgstr ""
+
+#: inc/analyzer/utils.php:267
 #: build/seo-popup/index.js:1
 msgid "Open Graph tags are not present on the page."
 msgstr ""
 
-#: inc/analyzer/utils.php:253
+#: inc/analyzer/utils.php:273
 #: build/seo-popup/index.js:1
 msgid "Open Graph tags are present on the page."
 msgstr ""
@@ -1049,259 +1054,259 @@ msgstr ""
 msgid "Settings updated"
 msgstr ""
 
-#: inc/api/analyzer.php:269
-#: inc/api/analyzer.php:299
-#: inc/api/analyzer.php:324
+#: inc/api/analyzer.php:266
+#: inc/api/analyzer.php:296
+#: inc/api/analyzer.php:321
 msgid "Type of check to delete. Can be \"post\" or \"taxonomy\"."
 msgstr ""
 
-#: inc/api/analyzer.php:344
+#: inc/api/analyzer.php:341
 msgid "Post ID is required."
 msgstr ""
 
-#: inc/api/analyzer.php:354
+#: inc/api/analyzer.php:351
 msgid "Invalid Post ID."
 msgstr ""
 
-#: inc/api/analyzer.php:379
+#: inc/api/analyzer.php:376
 msgid "SEO checks retrieved from cache."
 msgstr ""
 
-#: inc/api/analyzer.php:394
+#: inc/api/analyzer.php:391
 msgid "SEO checks completed."
 msgstr ""
 
-#: inc/api/analyzer.php:413
+#: inc/api/analyzer.php:410
 msgid "Taxonomy and term ID are required."
 msgstr ""
 
-#: inc/api/analyzer.php:439
+#: inc/api/analyzer.php:436
 msgid "Taxonomy SEO checks retrieved from cache."
 msgstr ""
 
-#: inc/api/analyzer.php:455
+#: inc/api/analyzer.php:452
 msgid "Taxonomy SEO checks found."
 msgstr ""
 
-#: inc/api/analyzer.php:510
+#: inc/api/analyzer.php:507
 msgid "Checks ignored."
 msgstr ""
 
-#: inc/api/analyzer.php:547
+#: inc/api/analyzer.php:544
 msgid "Checks unignored."
 msgstr ""
 
-#: inc/api/analyzer.php:632
+#: inc/api/analyzer.php:629
 msgid "Check ignored for post."
 msgstr ""
 
-#: inc/api/analyzer.php:660
+#: inc/api/analyzer.php:657
 msgid "Check unignored for post."
 msgstr ""
 
-#: inc/api/analyzer.php:683
+#: inc/api/analyzer.php:680
 msgid "Ignored checks retrieved."
 msgstr ""
 
-#: inc/api/analyzer.php:736
+#: inc/api/analyzer.php:733
 msgid "Google Search Console is connected."
 msgstr ""
 
-#: inc/api/analyzer.php:737
+#: inc/api/analyzer.php:734
 msgid "Google Search Console is not connected."
 msgstr ""
 
-#: inc/api/analyzer.php:740
+#: inc/api/analyzer.php:737
 msgid "Google Search Console is a free tool that shows how your site is doing in Google search — how many people are finding it, what they’re searching for, and which pages are getting the most attention."
 msgstr ""
 
-#: inc/api/analyzer.php:741
+#: inc/api/analyzer.php:738
 msgid "Connecting Search Console to your site doesn’t change anything on the front end — but it gives you a behind-the-scenes view of what’s working. SureRank uses this connection to show useful insights directly in your dashboard."
 msgstr ""
 
-#: inc/api/analyzer.php:765
+#: inc/api/analyzer.php:762
 msgid "SEO plugins help manage how your site appears in search engines. They control important things like titles, meta descriptions, canonical tags, and structured data. "
 msgstr ""
 
-#: inc/api/analyzer.php:789
+#: inc/api/analyzer.php:786
 msgid "No other SEO plugin detected on the site."
 msgstr ""
 
-#: inc/api/analyzer.php:793
+#: inc/api/analyzer.php:790
 msgid "More than one SEO plugin detected on the site."
 msgstr ""
 
 #. translators: %s is the list of active plugins
-#: inc/api/analyzer.php:796
+#: inc/api/analyzer.php:793
 #, php-format
 msgid "Another SEO plugin, %s, detected on the site."
 msgstr ""
 
 #. translators: %s is the list of active plugins
-#: inc/api/analyzer.php:800
+#: inc/api/analyzer.php:797
 #, php-format
 msgid "Currently active plugins : %s"
 msgstr ""
 
-#: inc/api/analyzer.php:801
+#: inc/api/analyzer.php:798
 msgid "But here’s something many site owners don’t realize — using more than one SEO plugin at the same time can lead to issues."
 msgstr ""
 
-#: inc/api/analyzer.php:805
+#: inc/api/analyzer.php:802
 msgid "Most SEO plugins try to manage the same parts of your site. When two plugins do this together, they can send mixed signals to search engines. This might affect how your content is indexed or shown in results. It also makes it harder to know which tool is changing what."
 msgstr ""
 
-#: inc/api/analyzer.php:807
+#: inc/api/analyzer.php:804
 msgid "What to keep in mind:"
 msgstr ""
 
-#: inc/api/analyzer.php:808
+#: inc/api/analyzer.php:805
 msgid "Keeping just one SEO plugin active ensures your settings stay clean and consistent. It’s easier to manage, avoids conflicts, and helps search engines read your site clearly."
 msgstr ""
 
-#: inc/api/analyzer.php:810
+#: inc/api/analyzer.php:807
 msgid "SureRank is designed to handle everything you need in one place — so there’s no need for multiple plugins doing the same job."
 msgstr ""
 
-#: inc/api/analyzer.php:829
+#: inc/api/analyzer.php:826
 msgid "Site tagline is set in WordPress settings."
 msgstr ""
 
-#: inc/api/analyzer.php:829
+#: inc/api/analyzer.php:826
 msgid "Site tagline is not set in WordPress settings."
 msgstr ""
 
-#: inc/api/analyzer.php:831
+#: inc/api/analyzer.php:828
 msgid "Your site tagline is a simple line that helps explain what your website is about. It often shows up in the browser tab, homepage, or in search snippets — depending on your theme or SEO settings."
 msgstr ""
 
-#: inc/api/analyzer.php:832
+#: inc/api/analyzer.php:829
 msgid "Leaving it blank, using a default message like “Just another WordPress site,” or writing something unclear doesn’t help people or search engines understand your site."
 msgstr ""
 
-#: inc/api/analyzer.php:835
+#: inc/api/analyzer.php:832
 msgid "A good tagline can instantly tell visitors what your site offers — and make it more appealing in search results. Think of it like a mini pitch that follows your site name."
 msgstr ""
 
-#: inc/api/analyzer.php:838
+#: inc/api/analyzer.php:835
 msgid "Write one short sentence that describes your site’s purpose or audience. For example: "
 msgstr ""
 
-#: inc/api/analyzer.php:839
+#: inc/api/analyzer.php:836
 msgid "“Simple budgeting tools for everyday people”"
 msgstr ""
 
-#: inc/api/analyzer.php:840
+#: inc/api/analyzer.php:837
 msgid "“Home workouts and fitness tips that fit your schedule”"
 msgstr ""
 
-#: inc/api/analyzer.php:841
+#: inc/api/analyzer.php:838
 msgid "Keep it short, specific, and friendly. You can change it from the WordPress settings."
 msgstr ""
 
 #. translators: %s is the URL of the surerank settings page
-#: inc/api/analyzer.php:845
-#: inc/api/analyzer.php:857
+#: inc/api/analyzer.php:842
+#: inc/api/analyzer.php:854
 #, php-format
 msgid "Set the site tagline on <a href=\"%s\">General settings page</a>."
 msgstr ""
 
-#: inc/api/analyzer.php:854
+#: inc/api/analyzer.php:851
 msgid "The site tagline needs to be present to provide a quick, clear summary of the website’s purpose. This enhances both branding and search engine understanding."
 msgstr ""
 
-#: inc/api/analyzer.php:872
+#: inc/api/analyzer.php:869
 msgid "Robots.txt file is accessible."
 msgstr ""
 
-#: inc/api/analyzer.php:873
+#: inc/api/analyzer.php:870
 msgid "Robots.txt file is not accessible."
 msgstr ""
 
-#: inc/api/analyzer.php:875
+#: inc/api/analyzer.php:872
 msgid "Your site uses a small file called robots.txt to guide search engines on where they can and can’t go. It’s like a set of instructions that says, “You’re welcome to look here — but please don’t touch this part.”"
 msgstr ""
 
-#: inc/api/analyzer.php:877
+#: inc/api/analyzer.php:874
 msgid "Most of the time, WordPress creates this automatically. But if the file is missing or misconfigured, search engines might avoid pages they’re actually allowed to visit — or worse, miss important content altogether."
 msgstr ""
 
-#: inc/api/analyzer.php:880
+#: inc/api/analyzer.php:877
 msgid "Without a robots.txt file, search engines may not crawl your site properly, or they might spend too much time on pages that don’t matter. With a working file, your site can be explored more efficiently."
 msgstr ""
 
-#: inc/api/analyzer.php:883
+#: inc/api/analyzer.php:880
 msgid "Check if your robots.txt file is available by visiting yourdomain.com/robots.txt in your browser. If it opens and lists some basic rules (even if you don’t understand them), that means it’s active. "
 msgstr ""
 
-#: inc/api/analyzer.php:885
+#: inc/api/analyzer.php:882
 msgid "SureRank takes care of this by default — so if it’s missing, we’ll help you fix it easily."
 msgstr ""
 
-#: inc/api/analyzer.php:917
+#: inc/api/analyzer.php:914
 msgid "Search engine visibility is not blocked in WordPress settings."
 msgstr ""
 
-#: inc/api/analyzer.php:918
+#: inc/api/analyzer.php:915
 msgid "Search engine visibility is blocked in WordPress settings."
 msgstr ""
 
-#: inc/api/analyzer.php:920
+#: inc/api/analyzer.php:917
 msgid "Search engine visibility settings need to be enabled. The “Discourage search engines from indexing this site” option in WordPress settings must remain unchecked to allow normal crawling and indexing."
 msgstr ""
 
 #. translators: %s is the URL of the surerank settings page
-#: inc/api/analyzer.php:923
+#: inc/api/analyzer.php:920
 #, php-format
 msgid "Set the search engine visibility on <a href=\"%s\">WordPress Reading settings page</a>."
 msgstr ""
 
-#: inc/api/analyzer.php:963
+#: inc/api/analyzer.php:960
 msgid "XML sitemap is accessible to search engines."
 msgstr ""
 
-#: inc/api/analyzer.php:964
+#: inc/api/analyzer.php:961
 msgid "XML sitemap is not accessible to search engines."
 msgstr ""
 
-#: inc/api/analyzer.php:966
+#: inc/api/analyzer.php:963
 msgid "A sitemap is like a guide or map that helps search engines explore your website more efficiently. It lists out the important pages on your site and gives search engines a clear path to follow — like a floor plan showing where everything is. This way, nothing important gets missed."
 msgstr ""
 
-#: inc/api/analyzer.php:968
+#: inc/api/analyzer.php:965
 msgid "Think of it like this: if your website was a story, the sitemap would be the chapter list — helping Google and other search engines jump to the right sections. It doesn’t change how your site looks to visitors, but it makes a big difference in how your site is discovered and understood behind the scenes."
 msgstr ""
 
-#: inc/api/analyzer.php:971
+#: inc/api/analyzer.php:968
 msgid "Without a sitemap, search engines might miss some of your pages or take longer to find new ones. That can slow down how quickly your updates appear in search results. With a sitemap, they get a clear overview of your content and can index it faster and more accurately — which can help improve visibility."
 msgstr ""
 
-#: inc/api/analyzer.php:974
+#: inc/api/analyzer.php:971
 msgid "Check that your sitemap is active and accessible. You can usually visit it at a link like yourdomain.com/sitemap.xml. If it opens and shows a list of links (even if it looks a bit technical), that means it’s working."
 msgstr ""
 
-#: inc/api/analyzer.php:976
+#: inc/api/analyzer.php:973
 msgid "If you’ve connected tools like Google Search Console, you can also submit the sitemap there — but that’s optional. The key is to make sure it’s available and up to date so search engines can do their job properly."
 msgstr ""
 
-#: inc/api/analyzer.php:1043
+#: inc/api/analyzer.php:1040
 msgid "Post not found"
 msgstr ""
 
-#: inc/api/analyzer.php:1062
-#: inc/api/analyzer.php:1074
+#: inc/api/analyzer.php:1063
+#: inc/api/analyzer.php:1077
 msgid "Link is broken"
 msgstr ""
 
-#: inc/api/analyzer.php:1083
+#: inc/api/analyzer.php:1087
 msgid "Link is not broken"
 msgstr ""
 
-#: inc/api/analyzer.php:1290
+#: inc/api/analyzer.php:1311
 msgid "These broken links were found on the page: "
 msgstr ""
 
-#: inc/api/analyzer.php:1295
+#: inc/api/analyzer.php:1316
 #: build/seo-popup/index.js:1
 msgid "One or more broken links found on the page."
 msgstr ""
@@ -1819,25 +1824,21 @@ msgstr ""
 msgid "No general settings to import for term %d."
 msgstr ""
 
-#. translators: %d: post ID.
 #: inc/importers/yoast.php:287
 #, php-format
 msgid "Social metadata imported for post %d."
 msgstr ""
 
-#. translators: %d: post ID.
 #: inc/importers/yoast.php:287
 #, php-format
 msgid "No social metadata to import for post %d."
 msgstr ""
 
-#. translators: %d: post ID.
 #: inc/importers/yoast.php:316
 #, php-format
 msgid "Social metadata imported for term %d."
 msgstr ""
 
-#. translators: %d: post ID.
 #: inc/importers/yoast.php:316
 #, php-format
 msgid "No social metadata to import for term %d."
@@ -4056,6 +4057,48 @@ msgstr ""
 #: build/admin-dashboard/index.js:1
 #: build/admin-seo-bar/index.js:1
 #: build/seo-popup/index.js:1
+msgid "(The page or resource was not found)"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-seo-bar/index.js:1
+#: build/seo-popup/index.js:1
+msgid "(Unable to connect to the URL)"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-seo-bar/index.js:1
+#: build/seo-popup/index.js:1
+msgid "(Access to this resource is forbidden)"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-seo-bar/index.js:1
+#: build/seo-popup/index.js:1
+msgid "(Server error occurred)"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-seo-bar/index.js:1
+#: build/seo-popup/index.js:1
+msgid "(HTTP error"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-seo-bar/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Why is this link broken?"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-seo-bar/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Status:"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-seo-bar/index.js:1
+#: build/seo-popup/index.js:1
 msgid "Ignore this check"
 msgstr ""
 
@@ -5691,6 +5734,10 @@ msgstr ""
 
 #: build/seo-popup/index.js:1
 msgid "These broken links were found on the page:"
+msgstr ""
+
+#: build/seo-popup/index.js:1
+msgid "Failed to check link"
 msgstr ""
 
 #: build/seo-popup/index.js:1

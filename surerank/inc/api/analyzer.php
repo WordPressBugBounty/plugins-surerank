@@ -159,11 +159,8 @@ class Analyzer extends Api_Base {
 				'permission_callback' => [ $this, 'validate_permission' ],
 				'args'                => [
 					'url'        => [
-						'type'              => 'string',
-						'validate_callback' => static function ( $param, $request, $key ) {
-							return filter_var( $param, FILTER_VALIDATE_URL );
-						},
-						'required'          => true,
+						'type'     => 'string',
+						'required' => true,
 					],
 					'user_agent' => [
 						'type'     => 'string',
@@ -1045,33 +1042,40 @@ class Analyzer extends Api_Base {
 			);
 		}
 
-		$response = Requests::head(
+		$response = Requests::get(
 			$url,
-			[
-				'user-agent' => $user_agent,
-			]
+			apply_filters(
+				'surerank_broken_link_request_args',
+				[
+					'limit_response_size' => 1,
+					'timeout'             => 10, // phpcs:ignore WordPressVIPMinimum.Performance.RemoteRequestTimeout.timeout_timeout
+				]
+			)
 		);
 
 		if ( is_wp_error( $response ) ) {
 
-			$this->save_broken_links( $url, $post_id, $urls );
+			$this->save_broken_links( $url, $post_id, $urls, 500, $response->get_error_message() );
 			$this->log_error( 'Link is broken: ' . $url . ' with Error: ' . $response->get_error_message() );
 			return rest_ensure_response(
 				[
 					'success' => false,
 					'message' => __( 'Link is broken', 'surerank' ),
+					'status'  => $response->get_error_code(),
+					'details' => $response->get_error_message(),
 				]
 			);
 		}
 
-		$status_code = wp_remote_retrieve_response_code( $response );
+		$status_code = (int) wp_remote_retrieve_response_code( $response );
 		if ( $status_code >= 400 ) {
-			$this->save_broken_links( $url, $post_id, $urls );
+			$this->save_broken_links( $url, $post_id, $urls, $status_code, wp_remote_retrieve_response_message( $response ) );
 			$this->log_error( 'Link is broken: ' . $url . ' with status code: ' . $status_code );
 			return rest_ensure_response(
 				[
 					'success' => false,
 					'message' => __( 'Link is broken', 'surerank' ),
+					'details' => wp_remote_retrieve_response_message( $response ),
 					'status'  => $status_code,
 				]
 			);
@@ -1271,16 +1275,33 @@ class Analyzer extends Api_Base {
 	 * @param string        $url URL.
 	 * @param int           $post_id Post ID.
 	 * @param array<string> $urls URLs.
+	 * @param int|null      $status_code HTTP status code.
+	 * @param int|string    $error_message Error message.
 	 * @return bool
 	 */
-	private function save_broken_links( string $url, int $post_id, array $urls ) {
+	private function save_broken_links( string $url, int $post_id, array $urls, $status_code = null, $error_message = null ) {
 		$seo_checks   = Get::post_meta( $post_id, SURERANK_SEO_CHECKS, true );
 		$broken_links = $seo_checks['broken_links'] ?? [];
 
 		$existing_broken_links = Utils::existing_broken_links( $broken_links, $urls );
 
-		if ( ! in_array( $url, $existing_broken_links ) ) {
-			array_push( $existing_broken_links, $url );
+		$broken_link_details = [
+			'url'     => $url,
+			'status'  => $status_code,
+			'details' => $error_message ? $error_message : __( 'The link is broken.', 'surerank' ),
+		];
+
+		$url_found = false;
+		foreach ( $existing_broken_links as $key => $existing_link ) {
+			if ( is_array( $existing_link ) && isset( $existing_link['url'] ) && $existing_link['url'] === $url ) {
+				$existing_broken_links[ $key ] = $broken_link_details;
+				$url_found                     = true;
+				break;
+			}
+		}
+
+		if ( ! $url_found ) {
+			$existing_broken_links[] = $broken_link_details;
 		}
 
 		$final_array                 = [];

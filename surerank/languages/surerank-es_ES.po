@@ -302,79 +302,79 @@ msgstr "No se encontraron datos"
 msgid "Settings updated"
 msgstr "Configuraciones actualizadas"
 
-#: inc/api/analyzer.php:736
+#: inc/api/analyzer.php:733
 msgid "Google Search Console is connected."
 msgstr "Google Search Console está conectado."
 
-#: inc/api/analyzer.php:737
+#: inc/api/analyzer.php:734
 msgid "Google Search Console is not connected."
 msgstr "Google Search Console no está conectado."
 
-#: inc/api/analyzer.php:789
+#: inc/api/analyzer.php:786
 msgid "No other SEO plugin detected on the site."
 msgstr "No se detectó ningún otro plugin SEO en el sitio."
 
-#: inc/api/analyzer.php:793
+#: inc/api/analyzer.php:790
 msgid "More than one SEO plugin detected on the site."
 msgstr "Se detectaron más de un plugin SEO en el sitio."
 
-#: inc/api/analyzer.php:829
+#: inc/api/analyzer.php:826
 msgid "Site tagline is set in WordPress settings."
 msgstr "El eslogan del sitio está configurado en la configuración de WordPress."
 
-#: inc/api/analyzer.php:829
+#: inc/api/analyzer.php:826
 msgid "Site tagline is not set in WordPress settings."
 msgstr "El eslogan del sitio no está configurado en la configuración de WordPress."
 
-#: inc/api/analyzer.php:854
+#: inc/api/analyzer.php:851
 msgid "The site tagline needs to be present to provide a quick, clear summary of the website’s purpose. This enhances both branding and search engine understanding."
 msgstr "El eslogan del sitio debe estar presente para proporcionar un resumen rápido y claro del propósito del sitio web. Esto mejora tanto la marca como la comprensión del motor de búsqueda."
 
 #. translators: %s is the URL of the surerank settings page
-#: inc/api/analyzer.php:845
-#: inc/api/analyzer.php:857
+#: inc/api/analyzer.php:842
+#: inc/api/analyzer.php:854
 #, php-format
 msgid "Set the site tagline on <a href=\"%s\">General settings page</a>."
 msgstr "Establezca el eslogan del sitio en <a href=\"%s\">la página de configuración general</a>."
 
-#: inc/api/analyzer.php:872
+#: inc/api/analyzer.php:869
 msgid "Robots.txt file is accessible."
 msgstr "El archivo Robots.txt es accesible."
 
-#: inc/api/analyzer.php:873
+#: inc/api/analyzer.php:870
 msgid "Robots.txt file is not accessible."
 msgstr "El archivo Robots.txt no es accesible."
 
-#: inc/api/analyzer.php:917
+#: inc/api/analyzer.php:914
 msgid "Search engine visibility is not blocked in WordPress settings."
 msgstr "La visibilidad del motor de búsqueda no está bloqueada en la configuración de WordPress."
 
-#: inc/api/analyzer.php:918
+#: inc/api/analyzer.php:915
 msgid "Search engine visibility is blocked in WordPress settings."
 msgstr "La visibilidad del motor de búsqueda está bloqueada en la configuración de WordPress."
 
-#: inc/api/analyzer.php:920
+#: inc/api/analyzer.php:917
 msgid "Search engine visibility settings need to be enabled. The “Discourage search engines from indexing this site” option in WordPress settings must remain unchecked to allow normal crawling and indexing."
 msgstr "Se deben habilitar las configuraciones de visibilidad del motor de búsqueda. La opción “Desalentar a los motores de búsqueda de indexar este sitio” en la configuración de WordPress debe permanecer desmarcada para permitir un rastreo e indexación normales."
 
-#: inc/api/analyzer.php:963
+#: inc/api/analyzer.php:960
 msgid "XML sitemap is accessible to search engines."
 msgstr "El mapa del sitio XML es accesible para los motores de búsqueda."
 
-#: inc/api/analyzer.php:964
+#: inc/api/analyzer.php:961
 msgid "XML sitemap is not accessible to search engines."
 msgstr "El mapa del sitio XML no es accesible para los motores de búsqueda."
 
-#: inc/api/analyzer.php:1043
+#: inc/api/analyzer.php:1040
 msgid "Post not found"
 msgstr "Publicación no encontrada"
 
-#: inc/api/analyzer.php:1062
-#: inc/api/analyzer.php:1074
+#: inc/api/analyzer.php:1063
+#: inc/api/analyzer.php:1077
 msgid "Link is broken"
 msgstr "El enlace está roto"
 
-#: inc/api/analyzer.php:1083
+#: inc/api/analyzer.php:1087
 msgid "Link is not broken"
 msgstr "El enlace no está roto"
 
@@ -2999,11 +2999,11 @@ msgstr "La URL de la página es corta y amigable para SEO."
 msgid "Page URL is longer than %s characters and may affect SEO and readability."
 msgstr "La URL de la página es más larga que %s caracteres y puede afectar el SEO y la legibilidad."
 
-#: inc/api/analyzer.php:1290
+#: inc/api/analyzer.php:1311
 msgid "These broken links were found on the page: "
 msgstr "Se encontraron estos enlaces rotos en la página:"
 
-#: inc/api/analyzer.php:1295
+#: inc/api/analyzer.php:1316
 #: build/seo-popup/index.js:1
 msgid "One or more broken links found on the page."
 msgstr "Se encontró uno o más enlaces rotos en la página."
@@ -3034,12 +3034,12 @@ msgstr "El título del motor de búsqueda está presente y tiene menos de %1$d c
 msgid "Search engine description is present and under %1$d characters."
 msgstr "La descripción del motor de búsqueda está presente y tiene menos de %1$d caracteres."
 
-#: inc/analyzer/utils.php:253
+#: inc/analyzer/utils.php:273
 #: build/seo-popup/index.js:1
 msgid "Open Graph tags are present on the page."
 msgstr "Las etiquetas Open Graph están presentes en la página."
 
-#: inc/analyzer/utils.php:247
+#: inc/analyzer/utils.php:267
 #: build/seo-popup/index.js:1
 msgid "Open Graph tags are not present on the page."
 msgstr "Las etiquetas Open Graph no están presentes en la página."
@@ -4025,31 +4025,31 @@ msgstr "Comencemos"
 msgid "Invalid term ID or term object."
 msgstr "ID de término o objeto de término no válido."
 
-#: inc/api/analyzer.php:344
+#: inc/api/analyzer.php:341
 msgid "Post ID is required."
 msgstr "Se requiere ID de publicación."
 
-#: inc/api/analyzer.php:354
+#: inc/api/analyzer.php:351
 msgid "Invalid Post ID."
 msgstr "ID de publicación no válido."
 
-#: inc/api/analyzer.php:379
+#: inc/api/analyzer.php:376
 msgid "SEO checks retrieved from cache."
 msgstr "Comprobaciones SEO recuperadas de la caché."
 
-#: inc/api/analyzer.php:394
+#: inc/api/analyzer.php:391
 msgid "SEO checks completed."
 msgstr "Comprobaciones SEO completadas."
 
-#: inc/api/analyzer.php:413
+#: inc/api/analyzer.php:410
 msgid "Taxonomy and term ID are required."
 msgstr "Se requieren taxonomía e ID de término."
 
-#: inc/api/analyzer.php:439
+#: inc/api/analyzer.php:436
 msgid "Taxonomy SEO checks retrieved from cache."
 msgstr "Comprobaciones SEO de la taxonomía recuperadas de la caché."
 
-#: inc/api/analyzer.php:455
+#: inc/api/analyzer.php:452
 msgid "Taxonomy SEO checks found."
 msgstr "Se encontraron comprobaciones SEO de la taxonomía."
 
@@ -4102,7 +4102,7 @@ msgid "Search engine description of the home page is present and under 160 chara
 msgstr "La descripción del motor de búsqueda de la página de inicio está presente y tiene menos de 160 caracteres."
 
 #. translators: %s is the URL of the surerank settings page
-#: inc/api/analyzer.php:923
+#: inc/api/analyzer.php:920
 #, php-format
 msgid "Set the search engine visibility on <a href=\"%s\">WordPress Reading settings page</a>."
 msgstr "Configura la visibilidad del motor de búsqueda en la <a href=\"%s\">página de configuración de lectura de WordPress</a>."
@@ -4465,8 +4465,8 @@ msgstr "Esto suele ser lo primero que alguien ve antes de visitar tu sitio. Un t
 #: inc/analyzer/seo-analyzer.php:655
 #: inc/analyzer/seo-analyzer.php:780
 #: inc/analyzer/seo-analyzer.php:1056
-#: inc/api/analyzer.php:804
-#: inc/api/analyzer.php:834
+#: inc/api/analyzer.php:801
+#: inc/api/analyzer.php:831
 msgid "Why this matters:"
 msgstr "Por qué esto importa:"
 
@@ -4673,10 +4673,10 @@ msgstr "Si los motores de búsqueda ven múltiples versiones de la misma página
 #: inc/analyzer/seo-analyzer.php:658
 #: inc/analyzer/seo-analyzer.php:735
 #: inc/analyzer/seo-analyzer.php:783
-#: inc/api/analyzer.php:746
-#: inc/api/analyzer.php:837
-#: inc/api/analyzer.php:882
-#: inc/api/analyzer.php:973
+#: inc/api/analyzer.php:743
+#: inc/api/analyzer.php:834
+#: inc/api/analyzer.php:879
+#: inc/api/analyzer.php:970
 msgid "What you can do:"
 msgstr "Lo que puede hacer:"
 
@@ -4715,9 +4715,9 @@ msgstr "Esto puede suceder si su página de inicio fue movida, eliminada o confi
 #: inc/analyzer/seo-analyzer.php:586
 #: inc/analyzer/seo-analyzer.php:623
 #: inc/analyzer/seo-analyzer.php:732
-#: inc/api/analyzer.php:743
-#: inc/api/analyzer.php:879
-#: inc/api/analyzer.php:970
+#: inc/api/analyzer.php:740
+#: inc/api/analyzer.php:876
+#: inc/api/analyzer.php:967
 msgid "Why it matters:"
 msgstr "Por qué es importante:"
 
@@ -4841,135 +4841,135 @@ msgstr "Dónde añadirlo:"
 msgid "When uploading or editing images in WordPress, you’ll see an “ALT text” field in the media settings. Fill this out for each image on your homepage."
 msgstr "Al subir o editar imágenes en WordPress, verás un campo de \"texto ALT\" en la configuración de medios. Rellénalo para cada imagen en tu página de inicio."
 
-#: inc/api/analyzer.php:269
-#: inc/api/analyzer.php:299
-#: inc/api/analyzer.php:324
+#: inc/api/analyzer.php:266
+#: inc/api/analyzer.php:296
+#: inc/api/analyzer.php:321
 msgid "Type of check to delete. Can be \"post\" or \"taxonomy\"."
 msgstr "Tipo de verificación para eliminar. Puede ser \"post\" o \"taxonomy\"."
 
-#: inc/api/analyzer.php:510
+#: inc/api/analyzer.php:507
 msgid "Checks ignored."
 msgstr "Verificaciones ignoradas."
 
-#: inc/api/analyzer.php:547
+#: inc/api/analyzer.php:544
 msgid "Checks unignored."
 msgstr "Verificaciones no ignoradas."
 
-#: inc/api/analyzer.php:632
+#: inc/api/analyzer.php:629
 msgid "Check ignored for post."
 msgstr "Verificación ignorada para el post."
 
-#: inc/api/analyzer.php:660
+#: inc/api/analyzer.php:657
 msgid "Check unignored for post."
 msgstr "Verificación no ignorada para el post."
 
-#: inc/api/analyzer.php:683
+#: inc/api/analyzer.php:680
 msgid "Ignored checks retrieved."
 msgstr "Verificaciones ignoradas recuperadas."
 
-#: inc/api/analyzer.php:740
+#: inc/api/analyzer.php:737
 msgid "Google Search Console is a free tool that shows how your site is doing in Google search — how many people are finding it, what they’re searching for, and which pages are getting the most attention."
 msgstr "Google Search Console es una herramienta gratuita que muestra cómo está funcionando tu sitio en la búsqueda de Google: cuántas personas lo encuentran, qué buscan y qué páginas reciben más atención."
 
-#: inc/api/analyzer.php:741
+#: inc/api/analyzer.php:738
 msgid "Connecting Search Console to your site doesn’t change anything on the front end — but it gives you a behind-the-scenes view of what’s working. SureRank uses this connection to show useful insights directly in your dashboard."
 msgstr "Conectar Search Console a tu sitio no cambia nada en el front-end, pero te da una vista detrás de escena de lo que está funcionando. SureRank usa esta conexión para mostrar información útil directamente en tu panel de control."
 
-#: inc/api/analyzer.php:765
+#: inc/api/analyzer.php:762
 msgid "SEO plugins help manage how your site appears in search engines. They control important things like titles, meta descriptions, canonical tags, and structured data. "
 msgstr "Los plugins de SEO ayudan a gestionar cómo aparece tu sitio en los motores de búsqueda. Controlan cosas importantes como títulos, meta descripciones, etiquetas canónicas y datos estructurados."
 
 #. translators: %s is the list of active plugins
-#: inc/api/analyzer.php:800
+#: inc/api/analyzer.php:797
 #, php-format
 msgid "Currently active plugins : %s"
 msgstr "Plugins activos actualmente: %s"
 
-#: inc/api/analyzer.php:801
+#: inc/api/analyzer.php:798
 msgid "But here’s something many site owners don’t realize — using more than one SEO plugin at the same time can lead to issues."
 msgstr "Pero aquí hay algo que muchos propietarios de sitios no se dan cuenta: usar más de un plugin de SEO al mismo tiempo puede causar problemas."
 
-#: inc/api/analyzer.php:805
+#: inc/api/analyzer.php:802
 msgid "Most SEO plugins try to manage the same parts of your site. When two plugins do this together, they can send mixed signals to search engines. This might affect how your content is indexed or shown in results. It also makes it harder to know which tool is changing what."
 msgstr "La mayoría de los plugins de SEO intentan gestionar las mismas partes de tu sitio. Cuando dos plugins hacen esto juntos, pueden enviar señales contradictorias a los motores de búsqueda. Esto podría afectar cómo se indexa o muestra tu contenido en los resultados. También dificulta saber qué herramienta está cambiando qué."
 
-#: inc/api/analyzer.php:807
+#: inc/api/analyzer.php:804
 msgid "What to keep in mind:"
 msgstr "Qué tener en cuenta:"
 
-#: inc/api/analyzer.php:808
+#: inc/api/analyzer.php:805
 msgid "Keeping just one SEO plugin active ensures your settings stay clean and consistent. It’s easier to manage, avoids conflicts, and helps search engines read your site clearly."
 msgstr "Mantener activo solo un plugin SEO asegura que tus configuraciones se mantengan limpias y consistentes. Es más fácil de gestionar, evita conflictos y ayuda a los motores de búsqueda a leer tu sitio claramente."
 
-#: inc/api/analyzer.php:810
+#: inc/api/analyzer.php:807
 msgid "SureRank is designed to handle everything you need in one place — so there’s no need for multiple plugins doing the same job."
 msgstr "SureRank está diseñado para manejar todo lo que necesitas en un solo lugar, por lo que no es necesario tener múltiples plugins haciendo el mismo trabajo."
 
-#: inc/api/analyzer.php:831
+#: inc/api/analyzer.php:828
 msgid "Your site tagline is a simple line that helps explain what your website is about. It often shows up in the browser tab, homepage, or in search snippets — depending on your theme or SEO settings."
 msgstr "El eslogan de tu sitio es una línea simple que ayuda a explicar de qué trata tu sitio web. A menudo aparece en la pestaña del navegador, en la página principal o en fragmentos de búsqueda, dependiendo de tu tema o configuraciones SEO."
 
-#: inc/api/analyzer.php:832
+#: inc/api/analyzer.php:829
 msgid "Leaving it blank, using a default message like “Just another WordPress site,” or writing something unclear doesn’t help people or search engines understand your site."
 msgstr "Dejarlo en blanco, usar un mensaje predeterminado como “Just another WordPress site” o escribir algo poco claro no ayuda a las personas ni a los motores de búsqueda a entender tu sitio."
 
-#: inc/api/analyzer.php:835
+#: inc/api/analyzer.php:832
 msgid "A good tagline can instantly tell visitors what your site offers — and make it more appealing in search results. Think of it like a mini pitch that follows your site name."
 msgstr "Un buen eslogan puede decir instantáneamente a los visitantes qué ofrece tu sitio y hacerlo más atractivo en los resultados de búsqueda. Piénsalo como un mini discurso que sigue al nombre de tu sitio."
 
-#: inc/api/analyzer.php:838
+#: inc/api/analyzer.php:835
 msgid "Write one short sentence that describes your site’s purpose or audience. For example: "
 msgstr "Escribe una oración corta que describa el propósito o la audiencia de tu sitio. Por ejemplo:"
 
-#: inc/api/analyzer.php:839
+#: inc/api/analyzer.php:836
 msgid "“Simple budgeting tools for everyday people”"
 msgstr "“Herramientas simples de presupuesto para personas comunes”"
 
-#: inc/api/analyzer.php:840
+#: inc/api/analyzer.php:837
 msgid "“Home workouts and fitness tips that fit your schedule”"
 msgstr "“Entrenamientos en casa y consejos de fitness que se adaptan a tu horario”"
 
-#: inc/api/analyzer.php:841
+#: inc/api/analyzer.php:838
 msgid "Keep it short, specific, and friendly. You can change it from the WordPress settings."
 msgstr "Mantenlo corto, específico y amigable. Puedes cambiarlo desde las configuraciones de WordPress."
 
-#: inc/api/analyzer.php:875
+#: inc/api/analyzer.php:872
 msgid "Your site uses a small file called robots.txt to guide search engines on where they can and can’t go. It’s like a set of instructions that says, “You’re welcome to look here — but please don’t touch this part.”"
 msgstr "Tu sitio usa un archivo pequeño llamado robots.txt para guiar a los motores de búsqueda sobre dónde pueden y no pueden ir. Es como un conjunto de instrucciones que dice: “Puedes mirar aquí, pero por favor no toques esta parte.”"
 
-#: inc/api/analyzer.php:877
+#: inc/api/analyzer.php:874
 msgid "Most of the time, WordPress creates this automatically. But if the file is missing or misconfigured, search engines might avoid pages they’re actually allowed to visit — or worse, miss important content altogether."
 msgstr "La mayoría de las veces, WordPress lo crea automáticamente. Pero si el archivo falta o está mal configurado, los motores de búsqueda podrían evitar páginas que en realidad pueden visitar o, peor aún, perder contenido importante por completo."
 
-#: inc/api/analyzer.php:880
+#: inc/api/analyzer.php:877
 msgid "Without a robots.txt file, search engines may not crawl your site properly, or they might spend too much time on pages that don’t matter. With a working file, your site can be explored more efficiently."
 msgstr "Sin un archivo robots.txt, los motores de búsqueda pueden no rastrear tu sitio correctamente o podrían gastar demasiado tiempo en páginas que no importan. Con un archivo funcionando, tu sitio puede ser explorado más eficientemente."
 
-#: inc/api/analyzer.php:883
+#: inc/api/analyzer.php:880
 msgid "Check if your robots.txt file is available by visiting yourdomain.com/robots.txt in your browser. If it opens and lists some basic rules (even if you don’t understand them), that means it’s active. "
 msgstr "Verifica si tu archivo robots.txt está disponible visitando tudominio.com/robots.txt en tu navegador. Si se abre y lista algunas reglas básicas (aunque no las entiendas), eso significa que está activo."
 
-#: inc/api/analyzer.php:885
+#: inc/api/analyzer.php:882
 msgid "SureRank takes care of this by default — so if it’s missing, we’ll help you fix it easily."
 msgstr "SureRank se encarga de esto por defecto, así que si falta, te ayudaremos a arreglarlo fácilmente."
 
-#: inc/api/analyzer.php:966
+#: inc/api/analyzer.php:963
 msgid "A sitemap is like a guide or map that helps search engines explore your website more efficiently. It lists out the important pages on your site and gives search engines a clear path to follow — like a floor plan showing where everything is. This way, nothing important gets missed."
 msgstr "Un sitemap es como una guía o mapa que ayuda a los motores de búsqueda a explorar tu sitio web de manera más eficiente. Enumera las páginas importantes de tu sitio y les da a los motores de búsqueda un camino claro a seguir, como un plano que muestra dónde está todo. De esta manera, nada importante se pierde."
 
-#: inc/api/analyzer.php:968
+#: inc/api/analyzer.php:965
 msgid "Think of it like this: if your website was a story, the sitemap would be the chapter list — helping Google and other search engines jump to the right sections. It doesn’t change how your site looks to visitors, but it makes a big difference in how your site is discovered and understood behind the scenes."
 msgstr "Piénsalo así: si tu sitio web fuera una historia, el sitemap sería la lista de capítulos, ayudando a Google y otros motores de búsqueda a saltar a las secciones correctas. No cambia cómo se ve tu sitio para los visitantes, pero hace una gran diferencia en cómo se descubre y entiende tu sitio detrás de escena."
 
-#: inc/api/analyzer.php:971
+#: inc/api/analyzer.php:968
 msgid "Without a sitemap, search engines might miss some of your pages or take longer to find new ones. That can slow down how quickly your updates appear in search results. With a sitemap, they get a clear overview of your content and can index it faster and more accurately — which can help improve visibility."
 msgstr "Sin un sitemap, los motores de búsqueda podrían perderse algunas de tus páginas o tardar más en encontrar las nuevas. Eso puede ralentizar la rapidez con que tus actualizaciones aparecen en los resultados de búsqueda. Con un sitemap, obtienen una visión clara de tu contenido y pueden indexarlo más rápido y con mayor precisión, lo que puede ayudar a mejorar la visibilidad."
 
-#: inc/api/analyzer.php:974
+#: inc/api/analyzer.php:971
 msgid "Check that your sitemap is active and accessible. You can usually visit it at a link like yourdomain.com/sitemap.xml. If it opens and shows a list of links (even if it looks a bit technical), that means it’s working."
 msgstr "Verifica que tu sitemap esté activo y accesible. Normalmente puedes visitarlo en un enlace como tudominio.com/sitemap.xml. Si se abre y muestra una lista de enlaces (aunque parezca un poco técnico), eso significa que está funcionando."
 
-#: inc/api/analyzer.php:976
+#: inc/api/analyzer.php:973
 msgid "If you’ve connected tools like Google Search Console, you can also submit the sitemap there — but that’s optional. The key is to make sure it’s available and up to date so search engines can do their job properly."
 msgstr "Si has conectado herramientas como Google Search Console, también puedes enviar el sitemap allí, pero eso es opcional. Lo importante es asegurarte de que esté disponible y actualizado para que los motores de búsqueda puedan hacer su trabajo correctamente."
 
@@ -5105,7 +5105,7 @@ msgid "Site does not correctly redirect between www and non-www versions."
 msgstr "El sitio no redirige correctamente entre las versiones con y sin www."
 
 #. translators: %s is the list of active plugins
-#: inc/api/analyzer.php:796
+#: inc/api/analyzer.php:793
 #, php-format
 msgid "Another SEO plugin, %s, detected on the site."
 msgstr "Se detectó otro plugin SEO, %s, en el sitio."
@@ -5453,25 +5453,21 @@ msgstr "Configuraciones generales importadas para el término %d."
 msgid "No general settings to import for term %d."
 msgstr "No hay configuraciones generales para importar para el término %d."
 
-#. translators: %d: post ID.
 #: inc/importers/yoast.php:287
 #, php-format
 msgid "Social metadata imported for post %d."
 msgstr "Metadatos sociales importados para la publicación %d."
 
-#. translators: %d: post ID.
 #: inc/importers/yoast.php:287
 #, php-format
 msgid "No social metadata to import for post %d."
 msgstr "No hay metadatos sociales para importar para la publicación %d."
 
-#. translators: %d: post ID.
 #: inc/importers/yoast.php:316
 #, php-format
 msgid "Social metadata imported for term %d."
 msgstr "Metadatos sociales importados para el término %d."
 
-#. translators: %d: post ID.
 #: inc/importers/yoast.php:316
 #, php-format
 msgid "No social metadata to import for term %d."
@@ -5722,3 +5718,54 @@ msgstr "Configuraciones y preferencias adicionales para SureRank."
 #: build/admin-dashboard/index.js:1
 msgid "Done"
 msgstr "Hecho"
+
+#: inc/analyzer/utils.php:243
+#: inc/api/analyzer.php:1291
+msgid "The link is broken."
+msgstr "El enlace está roto."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-seo-bar/index.js:1
+#: build/seo-popup/index.js:1
+msgid "(The page or resource was not found)"
+msgstr "(No se encontró la página o recurso)"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-seo-bar/index.js:1
+#: build/seo-popup/index.js:1
+msgid "(Unable to connect to the URL)"
+msgstr "(No se puede conectar a la URL)"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-seo-bar/index.js:1
+#: build/seo-popup/index.js:1
+msgid "(Access to this resource is forbidden)"
+msgstr "(El acceso a este recurso está prohibido)"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-seo-bar/index.js:1
+#: build/seo-popup/index.js:1
+msgid "(Server error occurred)"
+msgstr "(Ocurrió un error en el servidor)"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-seo-bar/index.js:1
+#: build/seo-popup/index.js:1
+msgid "(HTTP error"
+msgstr "(Error HTTP"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-seo-bar/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Why is this link broken?"
+msgstr "¿Por qué está roto este enlace?"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-seo-bar/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Status:"
+msgstr "Estado:"
+
+#: build/seo-popup/index.js:1
+msgid "Failed to check link"
+msgstr "Error al verificar el enlace"

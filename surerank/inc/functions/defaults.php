@@ -333,7 +333,7 @@ class Defaults {
 				'last_name'           => '',
 				'email'               => '',
 				'subscribe'           => false,
-				'share_data'          => false,
+				'agree_to_terms'      => false,
 				'website_type'        => [],
 				'website_name'        => '',
 				'website_owner_name'  => '',

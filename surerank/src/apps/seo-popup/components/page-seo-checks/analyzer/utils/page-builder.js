@@ -133,7 +133,7 @@ export const refreshPageChecks = async (
 			} );
 
 			return {
-				isChecking: allLinks.length > 0,
+				isChecking: false,
 				checkedLinks: new Set(),
 				brokenLinks: cleanedBrokenLinks,
 				allLinks,

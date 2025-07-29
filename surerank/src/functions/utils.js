@@ -688,9 +688,13 @@ export const decodeHtmlEntities = ( text ) => {
  * @return {boolean} - True if the string is a valid URL, otherwise false
  */
 export const isURL = ( string ) => {
-	const urlPattern =
-		/^(https?:\/\/)?((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|localhost|\d{1,3}(\.\d{1,3}){3})(:\d+)?(\/[-a-z\d%_.~+]*)*(\?[;&a-z\d%_.~+=-]*)?(\#[-a-z\d_]*)?$/i;
-	return urlPattern.test( string );
+	try {
+		const urlPattern =
+			/^(https?:\/\/)?((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|localhost|\d{1,3}(\.\d{1,3}){3})(:\d+)?(\/[-a-z\d%_.~+]*)*(\?[;&a-z\d%_.~+=-]*)?(\#[-a-z\d_]*)?(\s.*)?$/i;
+		return urlPattern.test( string );
+	} catch ( error ) {
+		return false;
+	}
 };
 
 /**
