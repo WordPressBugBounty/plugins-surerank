@@ -141,17 +141,27 @@ class Title {
 		} elseif ( is_tag() ) {
 			$title = __( 'Tag: ', 'surerank' ) . $title;
 		} elseif ( is_author() ) {
-			$title = __( 'Author: ', 'surerank' ) . get_the_author();
-			$title = $this->add_site_name( $title );
-		} elseif ( is_date() ) {
-			if ( is_day() ) {
-				$title = __( 'Day Archives: ', 'surerank' ) . get_the_date();
-			} elseif ( is_month() ) {
-				$title = __( 'Month Archives: ', 'surerank' ) . get_the_date( 'F Y' );
-			} elseif ( is_year() ) {
-				$title = __( 'Year Archives: ', 'surerank' ) . get_the_date( 'Y' );
+			if ( empty( $title ) ) {
+				// Use default format.
+				$title = __( 'Author: ', 'surerank' ) . get_the_author();
 			}
-			$title = $this->add_site_name( $title );
+			if ( empty( $this->meta_data['page_title'] ) ) {
+				$title = $this->add_site_name( $title );
+			}
+		} elseif ( is_date() ) {
+			if ( empty( $title ) ) {
+				// Use default format.
+				if ( is_day() ) {
+					$title = __( 'Day Archives: ', 'surerank' ) . get_the_date();
+				} elseif ( is_month() ) {
+					$title = __( 'Month Archives: ', 'surerank' ) . get_the_date( 'F Y' );
+				} elseif ( is_year() ) {
+					$title = __( 'Year Archives: ', 'surerank' ) . get_the_date( 'Y' );
+				}
+			}
+			if ( empty( $this->meta_data['page_title'] ) ) {
+				$title = $this->add_site_name( $title );
+			}
 		} elseif ( is_tax() ) {
 			$term = \get_queried_object();
 			if ( $term instanceof WP_Term ) {

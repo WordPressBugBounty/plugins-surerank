@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use SureRank\Inc\Functions\Get;
+use SureRank\Inc\Functions\Sanitize;
 use SureRank\Inc\Meta_Variables\Post;
 use SureRank\Inc\Traits\Get_Instance;
 
@@ -154,6 +155,9 @@ class Description {
 				'section',
 			]
 		);
+
+		// This sanitize all the shortcodes.
+		$description = Sanitize::sanitize_shortcode( $description );
 
 		// This will remove all the tags and replace them with a space.
 		$description = preg_replace( '#<(' . implode( '|', $remove_tags ) . ')[^>]*>.*?</\1>#si', ' ', (string) $description );

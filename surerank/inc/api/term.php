@@ -51,50 +51,8 @@ class Term extends Api_Base {
 	 * @return void
 	 */
 	public function register_routes() {
-		register_rest_route(
-			$this->get_api_namespace(),
-			self::TERM_SEO_DATA,
-			[
-				'methods'             => WP_REST_Server::READABLE, // GET Term Seo Data.
-				'callback'            => [ $this, 'get_term_seo_data' ],
-				'permission_callback' => [ $this, 'validate_permission' ],
-				'args'                => [
-					'term_id'   => [
-						'type'              => 'integer',
-						'required'          => true,
-						'sanitize_callback' => 'absint',
-					],
-					'post_type' => [
-						'type'              => 'string',
-						'required'          => true,
-						'sanitize_callback' => 'sanitize_text_field',
-					],
-				],
-			]
-		);
-
-		register_rest_route(
-			$this->get_api_namespace(),
-			self::TERM_SEO_DATA,
-			[
-				'methods'             => WP_REST_Server::CREATABLE, // Update Term Seo Data.
-				'callback'            => [ $this, 'update_term_seo_data' ],
-				'permission_callback' => [ $this, 'validate_permission' ],
-				'args'                => [
-					'term_id'  => [
-						'type'              => 'integer',
-						'required'          => true,
-						'sanitize_callback' => 'absint',
-					],
-					'metaData' => [
-						'type'              => 'object',
-						'required'          => true,
-						'sanitize_callback' => [ $this, 'sanitize_array_data' ],
-					],
-				],
-
-			]
-		);
+		$namespace = $this->get_api_namespace();
+		$this->register_all_term_routes( $namespace );
 	}
 
 	/**
@@ -196,5 +154,94 @@ class Term extends Api_Base {
 		}
 
 		return apply_filters( 'surerank_run_term_seo_checks', $term_id, $term );
+	}
+
+	/**
+	 * Register all term routes
+	 *
+	 * @param string $namespace The API namespace.
+	 * @return void
+	 */
+	private function register_all_term_routes( $namespace ) {
+		$this->register_get_term_seo_data_route( $namespace );
+		$this->register_update_term_seo_data_route( $namespace );
+	}
+
+	/**
+	 * Register get term SEO data route
+	 *
+	 * @param string $namespace The API namespace.
+	 * @return void
+	 */
+	private function register_get_term_seo_data_route( $namespace ) {
+		register_rest_route(
+			$namespace,
+			self::TERM_SEO_DATA,
+			[
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'get_term_seo_data' ],
+				'permission_callback' => [ $this, 'validate_permission' ],
+				'args'                => $this->get_term_seo_data_args(),
+			]
+		);
+	}
+
+	/**
+	 * Register update term SEO data route
+	 *
+	 * @param string $namespace The API namespace.
+	 * @return void
+	 */
+	private function register_update_term_seo_data_route( $namespace ) {
+		register_rest_route(
+			$namespace,
+			self::TERM_SEO_DATA,
+			[
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => [ $this, 'update_term_seo_data' ],
+				'permission_callback' => [ $this, 'validate_permission' ],
+				'args'                => $this->get_update_term_seo_data_args(),
+			]
+		);
+	}
+
+	/**
+	 * Get term SEO data arguments
+	 *
+	 * @return array<string, array<string, mixed>>
+	 */
+	private function get_term_seo_data_args() {
+		return [
+			'term_id'   => [
+				'type'              => 'integer',
+				'required'          => true,
+				'sanitize_callback' => 'absint',
+			],
+			'post_type' => [
+				'type'              => 'string',
+				'required'          => true,
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+		];
+	}
+
+	/**
+	 * Get update term SEO data arguments
+	 *
+	 * @return array<string, array<string, mixed>>
+	 */
+	private function get_update_term_seo_data_args() {
+		return [
+			'term_id'  => [
+				'type'              => 'integer',
+				'required'          => true,
+				'sanitize_callback' => 'absint',
+			],
+			'metaData' => [
+				'type'              => 'object',
+				'required'          => true,
+				'sanitize_callback' => [ $this, 'sanitize_array_data' ],
+			],
+		];
 	}
 }

@@ -34,3 +34,8 @@ define( 'SURERANK_SEO_CHECKS_LAST_UPDATED', 'surerank_seo_checks_last_updated' )
  * Global post meta settings.
  */
 define( 'SURERANK_TAXONOMY_UPDATED_AT', 'surerank_taxonomy_updated_at' );
+
+/**
+ * Robots.txt content option.
+ */
+define( 'SURERANK_ROBOTS_TXT_CONTENT', 'surerank_robots_txt_content' );

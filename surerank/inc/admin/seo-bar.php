@@ -110,7 +110,7 @@ class Seo_Bar {
 		$new_columns   = [];
 		$target_column = apply_filters( 'surerank_seo_bar_column_position_post', 5 );
 		$custom_column = [
-			'surerank-data' => __( 'Page SEO Checks', 'surerank' ),
+			'surerank-data' => __( 'SEO Checks', 'surerank' ),
 		];
 
 		return array_slice( $columns, 0, $target_column, true ) + $custom_column + array_slice( $columns, $target_column, null, true );
@@ -130,7 +130,7 @@ class Seo_Bar {
 		$new_columns   = [];
 		$target_column = apply_filters( 'surerank_seo_bar_column_position_taxonomy', 4 );
 		$custom_column = [
-			'surerank-data' => __( 'Taxonomy SEO Checks', 'surerank' ),
+			'surerank-data' => __( 'SEO Checks', 'surerank' ),
 		];
 		return array_slice( $columns, 0, $target_column, true ) + $custom_column + array_slice( $columns, $target_column, null, true );
 	}

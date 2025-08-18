@@ -111,12 +111,13 @@ class Schemas {
 
 		foreach ( $schemas as $schema ) {
 			if ( Validator::validate_schema_rules( $schema ) ) { // Validate schema rules.
-				$type   = $schema['fields']['@type'] ?? $schema['type'] ?? 'Thing';
-				$fields = Data::get_schema_type( $schema );
+				$type         = $schema['fields']['@type'] ?? $schema['type'] ?? 'Thing';
+				$schema_class = Utils::get_schema_types()[ $schema['type'] ] ?? null;
 
-				$renderer = new Schema_Render( $type, $fields, new Render( new Data() ) );
-
-				$rendered[] = $renderer->render();
+				if ( $schema_class && class_exists( $schema_class ) ) {
+					$schema_instance = $schema_class::get_instance();
+					$rendered[]      = $schema_instance->render_schema( $schema, new Render( new Data() ) );
+				}
 			}
 		}
 

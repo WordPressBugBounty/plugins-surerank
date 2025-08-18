@@ -10,6 +10,7 @@ import {
 import { ConfirmationDialog } from '@GlobalComponents/confirmation-dialog';
 import { Fragment, useState } from '@wordpress/element';
 import { fetchImageDataByUrl } from '@/functions/api';
+import DOMPurify from 'dompurify';
 
 const IMAGE_ID_CACHE = new Map();
 
@@ -43,12 +44,18 @@ const formatBrokenLinkTooltip = ( item ) => {
 		tooltipContent += ` ${ __( '(HTTP error', 'surerank' ) } ${ status })`;
 	}
 
+	// Sanitize the content to prevent XSS attacks
+	const purifiedContent = DOMPurify.sanitize( tooltipContent );
+
 	return (
 		<div className="space-y-1">
 			<p className="m-0">
 				<b>{ __( 'Why is this link broken?', 'surerank' ) }</b>
 			</p>
-			<p className="m-0">{ tooltipContent }</p>
+			<p
+				className="m-0"
+				dangerouslySetInnerHTML={ { __html: purifiedContent } }
+			/>
 			{ status && (
 				<p className="text-xs m-0">
 					<b>{ __( 'Status:', 'surerank' ) }</b> { status }
@@ -85,6 +92,11 @@ const renderItem = ( item ) => {
 				<SeoPopupInfoTooltip
 					content={ formatBrokenLinkTooltip( item ) }
 					interactive
+					placement="top-start"
+					offset={ {
+						alignmentAxis: -10,
+						mainAxis: 8,
+					} }
 				/>
 			</li>
 		);
@@ -144,7 +156,7 @@ export const CheckCard = ( {
 							showRestoreButton ? 'text-badge-color-disabled' : ''
 						) }
 					/>
-					<div className="flex items-center">
+					<div className="flex items-center mt-px">
 						<Label
 							size="xs"
 							className="space-x-1 text-sm text-text-secondary inline"

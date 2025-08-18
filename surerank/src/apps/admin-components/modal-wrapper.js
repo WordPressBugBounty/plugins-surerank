@@ -1,3 +1,4 @@
+import { cn } from '@/functions/utils';
 import { Container } from '@bsf/force-ui';
 
 const ModalWrapper = ( {
@@ -15,7 +16,11 @@ const ModalWrapper = ( {
 		<>
 			{ /* Modal content */ }
 			<Container
-				className={ `absolute top-[30%] left-1/2 z-50 -translate-x-1/2 -translate-y-1/2 w-full ${ maxWidth } ${ className }` }
+				className={ cn(
+					'absolute top-[30%] left-1/2 z-50 -translate-x-1/2 -translate-y-1/2 w-full',
+					maxWidth,
+					className
+				) }
 				justify="center"
 				align="center"
 				{ ...props }

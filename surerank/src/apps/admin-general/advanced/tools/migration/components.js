@@ -37,7 +37,7 @@ export const ResumeMigration = ( { onResume, onStartOver, onCancel } ) => {
 	);
 };
 
-export const MigrateDone = () => {
+export const MigrateDone = ( { hideAcknowledge = false } ) => {
 	const handleAcknowledge = () => {
 		window.location.reload();
 	};
@@ -91,14 +91,16 @@ export const MigrateDone = () => {
 					</div>
 				) ) }
 			</div>
-			<Button
-				variant="primary"
-				className="w-fit"
-				size="sm"
-				onClick={ handleAcknowledge }
-			>
-				{ __( 'Done', 'surerank' ) }
-			</Button>
+			{ ! hideAcknowledge && (
+				<Button
+					variant="primary"
+					className="w-fit"
+					size="sm"
+					onClick={ handleAcknowledge }
+				>
+					{ __( 'Done', 'surerank' ) }
+				</Button>
+			) }
 		</div>
 	);
 };

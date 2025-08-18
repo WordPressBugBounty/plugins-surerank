@@ -39,6 +39,22 @@ abstract class Base {
 	abstract public function schema_data();
 
 	/**
+	 * Render schema data with dynamic content
+	 *
+	 * @param array<string, mixed> $schema Schema configuration.
+	 * @param Render               $renderer Variable renderer instance.
+	 * @return array<string, mixed> Rendered schema data.
+	 * @since 1.2.0
+	 */
+	public function render_schema( $schema, $renderer ) {
+		$fields = Data::get_schema_type( $schema );
+		$type   = $schema['fields']['@type'] ?? $schema['type'] ?? 'Thing';
+
+		$schema_render = new Schema_Render( $type, $fields, $renderer );
+		return $schema_render->render();
+	}
+
+	/**
 	 * Get schema type options.
 	 *
 	 * @return array<string, mixed>

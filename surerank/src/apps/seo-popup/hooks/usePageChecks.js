@@ -229,8 +229,12 @@ const usePageChecks = () => {
 				badChecks?.length +
 				fairChecks?.length +
 				suggestionChecks?.length,
+			success: passedChecks?.length,
+			error: badChecks?.length,
+			warning: fairChecks?.length,
+			suggestion: suggestionChecks?.length,
 		};
-	}, [ badChecks, fairChecks, suggestionChecks ] );
+	}, [ badChecks, fairChecks, suggestionChecks, passedChecks ] );
 
 	return {
 		status,

@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Provides shared functionality for importers.
  */
-abstract class BaseImporter implements ImporterInterface {
+abstract class BaseImporter implements Importer {
 
 	/**
 	 * Post types supported by the importer.

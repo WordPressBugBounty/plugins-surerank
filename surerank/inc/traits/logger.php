@@ -1,9 +1,9 @@
 <?php
 /**
- * Enqueue
+ * Logger.
  *
- * @package surerank
- * @since 0.0.1
+ * @package surerank;
+ * @since 1.2.0
  */
 
 namespace SureRank\Inc\Traits;
@@ -13,23 +13,34 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Trait Enqueue.
+ * Logger
  *
  * @since 1.0.0`
  */
 trait Logger {
-	use Get_Instance;
 
 	/**
-	 * Logger
+	 * Log an error message to the WordPress debug log.
 	 *
-	 * @since 0.0.1
-	 * @param string $message The message to log.
+	 * @param string $message The error message to log.
+	 * @param string $type    The type of log message. Can be 'log', 'error', or 'warning'.
+	 *
 	 * @return void
 	 */
-	public static function log_error( $message ) {
+	public static function log( string $message, string $type = 'log' ) {
 		if ( defined( 'SURERANK_DEBUG' ) && SURERANK_DEBUG ) {
-			error_log( '[SureRank Error] ' . $message ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( $message ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+		}
+
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			if ( 'log' === $type ) {
+				\WP_CLI::log( $message );
+			} elseif ( 'error' === $type ) {
+				\WP_CLI::error( $message );
+			} else {
+				\WP_CLI::warning( $message );
+			}
 		}
 	}
+
 }

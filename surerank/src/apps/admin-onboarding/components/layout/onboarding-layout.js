@@ -5,6 +5,7 @@ import { Outlet, useLocation } from '@tanstack/react-router';
 import { ONBOARDING_STEPS_CONFIG } from '@Onboarding/index';
 import { OnboardingProvider } from '@Onboarding/store';
 import ExitButton from '@Onboarding/components/exit-button';
+import TanStackRouterDevtools from '@/apps/admin-components/tanstack-router-dev-tools';
 
 const OnboardingLayout = () => {
 	const currentStepURL = useLocation( {
@@ -84,6 +85,7 @@ const OnboardingLayout = () => {
 					</div>
 				</div>
 			</OnboardingProvider>
+			<TanStackRouterDevtools />
 		</>
 	);
 };

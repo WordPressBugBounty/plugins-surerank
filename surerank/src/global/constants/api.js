@@ -8,3 +8,4 @@ export const POST_SEO_DATA_URL = '/surerank/v1/post-seo-data';
 export const GET_POSTS_BY_QUERY_URL = '/surerank/v1/posts';
 export const GET_INSTALLED_PLUGINS_AND_THEMES_URL =
 	'/surerank/v1/installed-plugins-and-themes';
+export const ROBOTS_TXT_URL = '/surerank/v1/robots-txt';

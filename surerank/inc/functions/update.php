@@ -56,12 +56,13 @@ class Update {
 	 *
 	 * @param string $option_name Option name.
 	 * @param mixed  $option_value Option value.
+	 * @param bool   $autoload     Whether to autoload the option.
 	 * @since 1.0.0
 	 * @return bool
 	 */
-	public static function option( $option_name, $option_value ) {
+	public static function option( $option_name, $option_value, $autoload = false ) {
 		// Update the option.
-		return update_option( $option_name, $option_value );
+		return update_option( $option_name, $option_value, $autoload );
 	}
 
 	/**

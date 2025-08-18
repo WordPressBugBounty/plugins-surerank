@@ -9,7 +9,10 @@ import {
 	ArrowLeftRight,
 	Grid,
 	Settings,
+	FileText,
+	// ArrowUpDown,
 } from 'lucide-react';
+import { applyFilters } from '@wordpress/hooks';
 import { __ } from '@wordpress/i18n';
 
 // Page contents
@@ -21,7 +24,12 @@ import { PAGE_CONTENT as ARCHIVE_PAGES_PAGE_CONTENT } from '@/apps/admin-general
 import { PAGE_CONTENT as ADVANCED_PAGE_CONTENT } from '@AdminGeneral/general/home-page/advanced';
 import { PAGE_CONTENT as SOCIAL_ACCOUNTS_PAGE_CONTENT } from '@AdminGeneral/social/account/account';
 import { PAGE_CONTENT as TITLE_AND_DESCRIPTION_PAGE_CONTENT } from '@AdminGeneral/general/title-and-description/title-and-description';
-import { ENABLE_GOOGLE_CONSOLE, ENABLE_SCHEMAS } from '@Global/constants';
+import { PAGE_CONTENT as ROBOTS_TXT_PAGE_CONTENT } from '@AdminGeneral/advanced/tools/robots-txt-editor/robots-txt-editor';
+import {
+	ENABLE_GOOGLE_CONSOLE,
+	ENABLE_SCHEMAS,
+	ENABLE_MIGRATION,
+} from '@Global/constants';
 
 /**
  * Static navigation configuration - used for router setup and other non-component contexts
@@ -157,9 +165,10 @@ export const getNavLinks = () => {
 					  ]
 					: [] ),
 				{
-					path: '/advanced/features_management',
-					label: __( 'Features Management', 'surerank' ),
-					icon: Grid,
+					path: '/advanced/robots-txt-editor',
+					label: __( 'Robots.txt Editor', 'surerank' ),
+					icon: FileText,
+					pageContent: ROBOTS_TXT_PAGE_CONTENT,
 					migratable: false,
 				},
 			],
@@ -192,11 +201,27 @@ export const getNavLinks = () => {
 			sectionId: 'tools',
 			links: [
 				{
-					path: '/tools/migrate',
-					label: __( 'Migrate to SureRank', 'surerank' ),
-					icon: ArrowLeftRight,
+					path: '/tools/manage-features',
+					label: __( 'Manage Features', 'surerank' ),
+					icon: Grid,
 					migratable: false,
 				},
+				// {
+				// 	path: '/tools/import-export',
+				// 	label: __( 'Import/Export', 'surerank' ),
+				// 	icon: ArrowUpDown,
+				// 	migratable: false,
+				// },
+				...( ENABLE_MIGRATION
+					? [
+							{
+								path: '/tools/migrate',
+								label: __( 'Migrate to SureRank', 'surerank' ),
+								icon: ArrowLeftRight,
+								migratable: false,
+							},
+					  ]
+					: [] ),
 				{
 					path: '/tools/miscellaneous',
 					label: __( 'Miscellaneous', 'surerank' ),
@@ -207,5 +232,5 @@ export const getNavLinks = () => {
 		},
 	];
 
-	return links;
+	return applyFilters( 'surerank-pro.nav-links', links );
 };

@@ -55,6 +55,8 @@ class Parser {
 			);
 		}
 
+		$html = $this->pre_process_html( $html );
+
 		$success = $dom->loadHTML(
 			'<?xml encoding="UTF-8">' . $html,
 			LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOBLANKS | LIBXML_NONET
@@ -76,9 +78,9 @@ class Parser {
 	 * Pre-process HTML to replace & with &amp; and add doctype.
 	 *
 	 * @param string $html The raw HTML content.
-	 * @return string|null Pre-processed HTML.
+	 * @return string Pre-processed HTML.
 	 */
-	private function pre_process_html( string $html ) {
+	private function pre_process_html( $html ) {
 
 		if ( ! $html ) {
 			return '';
@@ -91,6 +93,6 @@ class Parser {
 		}
 
 		// Remove handlers and attributes that can cause issues for examples: onerror, onclick, etc.
-		return preg_replace( '/\s+on[a-z]+="[^"]*"/i', '', (string) $html );
+		return (string) preg_replace( '/\s+on[a-z]+="[^"]*"/i', '', (string) $html );
 	}
 }

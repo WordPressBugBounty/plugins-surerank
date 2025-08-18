@@ -130,6 +130,35 @@ class Helper {
 	}
 
 	/**
+	 * Get public taxonomies.
+	 *
+	 * @since 1.2.0
+	 * @return array<string, mixed>
+	 */
+	public static function get_public_taxonomies() {
+		$args = [
+			'public'  => true,
+			'show_ui' => true,
+		];
+
+		$output   = 'objects';
+		$operator = 'and';
+
+		$taxonomies = get_taxonomies( $args, $output, $operator );
+
+		$unsupported = [
+			'wp_theme',
+			'wp_template_part_area',
+			'link_category',
+			'nav_menu',
+			'post_format',
+			'mb-views-category',
+		];
+
+		return array_diff_key( $taxonomies, array_flip( $unsupported ) );
+	}
+
+	/**
 	 * Check if the current page is a WooCommerce product.
 	 *
 	 * @since 1.0.0
@@ -339,44 +368,17 @@ class Helper {
 	 * @return mixed
 	 */
 	public static function replacement( $key, $value, $variables ) {
-		if ( empty( $value ) || ! is_string( $value ) ) {
+		if ( ! self::is_replaceable_value( $value ) ) {
 			return $value;
 		}
-		$post_keys = Post::get_instance()->variables;
-		$site_keys = Site::get_instance()->variables;
-		$term_keys = Term::get_instance()->variables;
-
-		$dynamic_keys = array_keys( array_merge( $post_keys, $site_keys, $term_keys ) );
 
 		$chunks = self::extract_variables( $value );
-
-		$replacement_array = [];
-		foreach ( $chunks as $chunk ) {
-			if ( ! isset( $replacement_array[ $chunk ] ) ) {
-				if ( in_array( $chunk, $dynamic_keys ) ) {
-					if ( isset( $variables['post'][ $chunk ]['value'] ) ) {
-						$replacement_array[ $chunk ] = $variables['post'][ $chunk ]['value'];
-					} elseif ( isset( $variables['term'][ $chunk ]['value'] ) ) {
-						$replacement_array[ $chunk ] = $variables['term'][ $chunk ]['value'];
-					} elseif ( isset( $variables['site'][ $chunk ]['value'] ) ) {
-						$replacement_array[ $chunk ] = $variables['site'][ $chunk ]['value'];
-					} else {
-						$replacement_array[ $chunk ] = '';
-					}
-				} else {
-					$replacement_array[ $chunk ] = '';
-				}
-			}
+		if ( empty( $chunks ) ) {
+			return $value;
 		}
 
-		return preg_replace_callback(
-			'/%([^%\s]+)%/',
-			static function ( $matches ) use ( $replacement_array ) {
-				$value = $matches[1];
-				return $replacement_array[ $value ] ?? '';
-			},
-			$value
-		);
+		$replacement_array = self::build_replacement_array( $chunks, $variables );
+		return self::apply_replacements( $value, $replacement_array );
 	}
 
 	/**
@@ -447,4 +449,144 @@ class Helper {
 	public static function get_website_contact_us() {
 		return self::get_page_id_by_title( 'contact' );
 	}
+
+	/**
+	 * Retrieves robots.txt data and search engine visibility settings.
+	 *
+	 * This method fetches the robots.txt content stored in the plugin option,
+	 * retrieves the current "Search engine visibility" setting from WordPress,
+	 * checks if a physical robots.txt file exists in the site root, and returns
+	 * its contents if present.
+	 *
+	 * @since 1.2.0
+	 *
+	 * @return array<string, mixed> {
+	 *     @type string $robots_txt_content       The robots.txt content saved in the plugin option.
+	 *     @type int    $search_engine_visibility The 'blog_public' option value (1 = visible to search engines, 0 = hidden).
+	 *     @type bool   $robots_file_exists       Whether a physical robots.txt file exists in the site root.
+	 *     @type string $robot_file_content       The content of the physical robots.txt file, if it exists.
+	 * }
+	 */
+	public static function get_robots_data() {
+		global $wp_filesystem;
+
+		if ( empty( $wp_filesystem ) ) {
+			require_once ABSPATH . '/wp-admin/includes/file.php';
+			WP_Filesystem();
+		}
+
+		$public = get_option( 'blog_public' );
+
+		$robots_file_exists = false;
+		$robot_file_content = '';
+
+		if ( $wp_filesystem->exists( ABSPATH . 'robots.txt' ) ) {
+			$robots_file_exists = true;
+			$robot_file_content = $wp_filesystem->get_contents( ABSPATH . 'robots.txt' );
+		}
+
+		return [
+			'robots_txt_content'       => Get::option( SURERANK_ROBOTS_TXT_CONTENT, '' ),
+			'search_engine_visibility' => $public,
+			'robots_file_exists'       => $robots_file_exists,
+			'robot_file_content'       => $robot_file_content,
+		];
+	}
+
+	/**
+	 * Check if a value can be replaced.
+	 *
+	 * @param mixed $value The value to check.
+	 * @return bool True if replaceable.
+	 */
+	private static function is_replaceable_value( $value ): bool {
+		return ! empty( $value ) && is_string( $value );
+	}
+
+	/**
+	 * Build replacement array for chunks.
+	 *
+	 * @param array<string>        $chunks    Variable chunks.
+	 * @param array<string, mixed> $variables Available variables.
+	 * @return array<string, string> Replacement array.
+	 */
+	private static function build_replacement_array( array $chunks, array $variables ): array {
+		$dynamic_keys      = self::get_dynamic_keys();
+		$replacement_array = [];
+
+		foreach ( $chunks as $chunk ) {
+			if ( ! isset( $replacement_array[ $chunk ] ) ) {
+				$replacement_array[ $chunk ] = self::get_replacement_value( $chunk, $variables, $dynamic_keys );
+			}
+		}
+
+		return $replacement_array;
+	}
+
+	/**
+	 * Get all dynamic keys.
+	 *
+	 * @return array<string> Dynamic keys.
+	 */
+	private static function get_dynamic_keys(): array {
+		$post_keys = Post::get_instance()->variables;
+		$site_keys = Site::get_instance()->variables;
+		$term_keys = Term::get_instance()->variables;
+
+		return array_keys( array_merge( $post_keys, $site_keys, $term_keys ) );
+	}
+
+	/**
+	 * Get replacement value for a chunk.
+	 *
+	 * @param string               $chunk        The chunk to replace.
+	 * @param array<string, mixed> $variables    Available variables.
+	 * @param array<string>        $dynamic_keys Dynamic keys list.
+	 * @return string Replacement value.
+	 */
+	private static function get_replacement_value( string $chunk, array $variables, array $dynamic_keys ): string {
+		if ( ! in_array( $chunk, $dynamic_keys, true ) ) {
+			return '';
+		}
+
+		$sources = [ 'post', 'term', 'site' ];
+		foreach ( $sources as $source ) {
+			$value = self::get_variable_value( $variables, $source, $chunk );
+			if ( '' !== $value ) {
+				return $value;
+			}
+		}
+
+		return '';
+	}
+
+	/**
+	 * Get variable value from source.
+	 *
+	 * @param array<string, mixed> $variables Variables array.
+	 * @param string               $source    Source type.
+	 * @param string               $chunk     Variable chunk.
+	 * @return string Variable value or empty string.
+	 */
+	private static function get_variable_value( array $variables, string $source, string $chunk ): string {
+		return $variables[ $source ][ $chunk ]['value'] ?? '';
+	}
+
+	/**
+	 * Apply replacements to value.
+	 *
+	 * @param string                $value             Original value.
+	 * @param array<string, string> $replacement_array Replacements.
+	 * @return string Replaced value.
+	 */
+	private static function apply_replacements( string $value, array $replacement_array ): string {
+		return preg_replace_callback(
+			'/%([^%\s]+)%/',
+			static function ( $matches ) use ( $replacement_array ) {
+				return $replacement_array[ $matches[1] ] ?? '';
+			},
+			$value
+		) ?? $value;
+	}
+
 }

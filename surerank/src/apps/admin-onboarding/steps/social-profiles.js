@@ -14,6 +14,7 @@ import {
 	YelpIcon,
 	WhatsAppIcon,
 	TelegramIcon,
+	BlueSkyIcon,
 } from '../icons';
 import { Button, DropdownMenu, Title } from '@bsf/force-ui';
 import { PlusIcon, LinkIcon } from 'lucide-react';
@@ -36,6 +37,7 @@ const iconMap = {
 	whatsapp: WhatsAppIcon,
 	telegram: TelegramIcon,
 	link: LinkIcon,
+	bluesky: BlueSkyIcon,
 };
 
 const socialProfiles = surerank_admin_common?.social_profiles

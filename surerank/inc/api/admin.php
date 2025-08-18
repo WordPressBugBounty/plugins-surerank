@@ -64,62 +64,8 @@ class Admin extends Api_Base {
 	 * @return void
 	 */
 	public function register_routes() {
-		register_rest_route(
-			$this->get_api_namespace(),
-			self::EDITOR,
-			[
-				'methods'             => WP_REST_Server::READABLE, // GET Editor Data.
-				'callback'            => [ $this, 'get_initials' ],
-				'permission_callback' => [ $this, 'validate_permission' ],
-				'args'                => [
-					'post_id' => [
-						'type'              => 'integer',
-						'sanitize_callback' => 'absint',
-					],
-					'term_id' => [
-						'type'              => 'integer',
-						'sanitize_callback' => 'absint',
-					],
-				],
-			]
-		);
-
-		register_rest_route(
-			$this->get_api_namespace(),
-			self::ADMIN_SETTINGS,
-			[
-				'methods'             => WP_REST_Server::READABLE, // GET Admin Settings.
-				'callback'            => [ $this, 'get_admin_settings' ],
-				'permission_callback' => [ $this, 'validate_permission' ],
-			]
-		);
-
-		register_rest_route(
-			$this->get_api_namespace(),
-			self::ADMIN_SETTINGS,
-			[
-				'methods'             => WP_REST_Server::CREATABLE, // Update Admin Settings.
-				'callback'            => [ $this, 'update_admin_settings' ],
-				'permission_callback' => [ $this, 'validate_permission' ],
-				'args'                => [
-					'data' => [
-						'type'              => 'object',
-						'required'          => true,
-						'sanitize_callback' => [ $this, 'sanitize_array_data' ],
-					],
-				],
-			]
-		);
-
-		register_rest_route(
-			$this->get_api_namespace(),
-			self::SITE_SETTINGS,
-			[
-				'methods'             => WP_REST_Server::READABLE, // Get Site Settings.
-				'callback'            => [ $this, 'get_site_settings' ],
-				'permission_callback' => [ $this, 'validate_permission' ],
-			]
-		);
+		$namespace = $this->get_api_namespace();
+		$this->register_all_admin_routes( $namespace );
 	}
 
 	/**
@@ -220,28 +166,20 @@ class Admin extends Api_Base {
 			Send_Json::error( [ 'message' => __( 'No data found', 'surerank' ) ] );
 		}
 
+		// Allow pro plugin to handle extended meta templates toggle detection BEFORE getting any settings.
+		do_action( 'surerank_admin_settings_before_processing', $data );
+
 		$db_options = Settings::get();
 
 		$updated_options = $this->get_updated_options( $data, $db_options );
 
 		Helper::update_flush_rules( $updated_options );
 
-		if ( is_array( $updated_options ) && array_intersect( [ 'social_profiles', 'facebook_page_url', 'twitter_profile_username' ], $updated_options ) ) {
-			$data['social_profiles']['facebook'] = $data['facebook_page_url'] ?? '';
-
-			if ( ! empty( $data['twitter_profile_username'] ) ) {
-				$data['social_profiles']['twitter'] = str_replace( '@', '', $data['twitter_profile_username'] );
-			}
-
-			$this->process_onboarding_data( $data, $data );
-		}
-
+		$data = $this->process_social_profile_updates( $data, $updated_options );
 		$data = array_merge( $db_options, $data );
-
 		$data = $this->process_surerank_analytics_optin( $data );
 
 		if ( Update::option( SURERANK_SETTINGS, $data ) ) {
-			// Update global timestamp.
 			Update_Timestamp::timestamp_option();
 		}
 
@@ -276,29 +214,7 @@ class Admin extends Api_Base {
 	 * @return void
 	 */
 	public function get_site_settings( $request ) {
-		$data = [];
-
-		// Get site variables.
-		$data['site'] = $this->get_site_variables();
-
-		$show_option   = Get::option( 'show_on_front' );
-		$page_on_front = Get::option( 'page_on_front' );
-		$home_page_id  = intval( $page_on_front );
-
-		// Check if WooCommerce is active.
-		$data['is_wc_active'] = class_exists( 'WooCommerce' );
-
-		// Get the id if the home page is set to a page. and get edit page url.
-		if ( 'page' === $show_option ) {
-			if ( ! empty( $page_on_front ) && ( is_string( $page_on_front ) || is_int( $page_on_front ) ) ) {
-				$data['home_page_id']       = $home_page_id;
-				$page_url                   = get_edit_post_link( $home_page_id );
-				$data['home_page_edit_url'] = '' !== $page_url && is_string( $page_url ) ? html_entity_decode( $page_url, ENT_QUOTES | ENT_HTML5, 'UTF-8' ) : '';
-			}
-		}
-		$data['home_page_featured_image'] = get_the_post_thumbnail_url( $home_page_id, 'full' ) ? get_the_post_thumbnail_url( $home_page_id, 'full' ) : false;
-		$data['home_page_static']         = $show_option;
-
+		$data = $this->prepare_site_settings_data();
 		Send_Json::success( [ 'data' => $data ] );
 	}
 
@@ -346,5 +262,256 @@ class Admin extends Api_Base {
 	 */
 	public function process_onboarding_data( $data, &$settings ) {
 		Onboarding::get_instance()->set_social_schema( $data, $settings );
+	}
+
+	/**
+	 * Register all admin routes
+	 *
+	 * @param string $namespace The API namespace.
+	 * @return void
+	 */
+	private function register_all_admin_routes( $namespace ) {
+		$this->register_editor_route( $namespace );
+		$this->register_admin_settings_routes( $namespace );
+		$this->register_site_settings_route( $namespace );
+	}
+
+	/**
+	 * Register editor route
+	 *
+	 * @param string $namespace The API namespace.
+	 * @return void
+	 */
+	private function register_editor_route( $namespace ) {
+		register_rest_route(
+			$namespace,
+			self::EDITOR,
+			[
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'get_initials' ],
+				'permission_callback' => [ $this, 'validate_permission' ],
+				'args'                => $this->get_editor_args(),
+			]
+		);
+	}
+
+	/**
+	 * Register admin settings routes
+	 *
+	 * @param string $namespace The API namespace.
+	 * @return void
+	 */
+	private function register_admin_settings_routes( $namespace ) {
+		$this->register_get_admin_settings_route( $namespace );
+		$this->register_update_admin_settings_route( $namespace );
+	}
+
+	/**
+	 * Register get admin settings route
+	 *
+	 * @param string $namespace The API namespace.
+	 * @return void
+	 */
+	private function register_get_admin_settings_route( $namespace ) {
+		register_rest_route(
+			$namespace,
+			self::ADMIN_SETTINGS,
+			[
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'get_admin_settings' ],
+				'permission_callback' => [ $this, 'validate_permission' ],
+			]
+		);
+	}
+
+	/**
+	 * Register update admin settings route
+	 *
+	 * @param string $namespace The API namespace.
+	 * @return void
+	 */
+	private function register_update_admin_settings_route( $namespace ) {
+		register_rest_route(
+			$namespace,
+			self::ADMIN_SETTINGS,
+			[
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => [ $this, 'update_admin_settings' ],
+				'permission_callback' => [ $this, 'validate_permission' ],
+				'args'                => $this->get_admin_settings_update_args(),
+			]
+		);
+	}
+
+	/**
+	 * Register site settings route
+	 *
+	 * @param string $namespace The API namespace.
+	 * @return void
+	 */
+	private function register_site_settings_route( $namespace ) {
+		register_rest_route(
+			$namespace,
+			self::SITE_SETTINGS,
+			[
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'get_site_settings' ],
+				'permission_callback' => [ $this, 'validate_permission' ],
+			]
+		);
+	}
+
+	/**
+	 * Get editor route arguments
+	 *
+	 * @return array<string, array<string, mixed>>
+	 */
+	private function get_editor_args() {
+		return [
+			'post_id' => [
+				'type'              => 'integer',
+				'sanitize_callback' => 'absint',
+			],
+			'term_id' => [
+				'type'              => 'integer',
+				'sanitize_callback' => 'absint',
+			],
+		];
+	}
+
+	/**
+	 * Get admin settings update arguments
+	 *
+	 * @return array<string, array<string, mixed>>
+	 */
+	private function get_admin_settings_update_args() {
+		return [
+			'data' => [
+				'type'              => 'object',
+				'required'          => true,
+				'sanitize_callback' => [ $this, 'sanitize_array_data' ],
+			],
+		];
+	}
+
+	/**
+	 * Process social profile updates
+	 *
+	 * @param array<string, mixed> $data Data.
+	 * @param array<string>        $updated_options Updated options.
+	 * @return array<string, mixed>
+	 */
+	private function process_social_profile_updates( $data, $updated_options ) {
+		if ( $this->should_update_social_profiles( $updated_options ) ) {
+			$data = $this->update_social_profile_data( $data );
+			$this->process_onboarding_data( $data, $data );
+		}
+		return $data;
+	}
+
+	/**
+	 * Check if social profiles should be updated
+	 *
+	 * @param array<string> $updated_options Updated options.
+	 * @return bool
+	 */
+	private function should_update_social_profiles( $updated_options ) {
+		return is_array( $updated_options ) && array_intersect(
+			[ 'social_profiles', 'facebook_page_url', 'twitter_profile_username' ],
+			$updated_options
+		);
+	}
+
+	/**
+	 * Update social profile data
+	 *
+	 * @param array<string, mixed> $data Data.
+	 * @return array<string, mixed>
+	 */
+	private function update_social_profile_data( $data ) {
+		$data['social_profiles']['facebook'] = $data['facebook_page_url'] ?? '';
+
+		if ( ! empty( $data['twitter_profile_username'] ) ) {
+			$data['social_profiles']['twitter'] = str_replace( '@', '', $data['twitter_profile_username'] );
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Prepare site settings data
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function prepare_site_settings_data() {
+		$data = [];
+
+		$data['site']         = $this->get_site_variables();
+		$data['is_wc_active'] = class_exists( 'WooCommerce' );
+
+		$home_page_data = $this->get_home_page_data();
+		return array_merge( $data, $home_page_data );
+	}
+
+	/**
+	 * Get home page data
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function get_home_page_data() {
+		$show_option   = Get::option( 'show_on_front' );
+		$page_on_front = Get::option( 'page_on_front' );
+		$home_page_id  = intval( $page_on_front );
+
+		$featured_image = get_the_post_thumbnail_url( $home_page_id, 'full' );
+		$data           = [
+			'home_page_static'         => $show_option,
+			'home_page_featured_image' => $featured_image ? $featured_image : false,
+		];
+
+		if ( $this->is_static_home_page( $show_option, $page_on_front ) ) {
+			$data = array_merge( $data, $this->get_static_home_page_data( $home_page_id ) );
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Check if home page is static
+	 *
+	 * @param string $show_option Show on front option.
+	 * @param mixed  $page_on_front Page on front ID.
+	 * @return bool
+	 */
+	private function is_static_home_page( $show_option, $page_on_front ) {
+		return 'page' === $show_option &&
+			! empty( $page_on_front ) &&
+			( is_string( $page_on_front ) || is_int( $page_on_front ) );
+	}
+
+	/**
+	 * Get static home page data
+	 *
+	 * @param int $home_page_id Home page ID.
+	 * @return array<string, mixed>
+	 */
+	private function get_static_home_page_data( $home_page_id ) {
+		$page_url = get_edit_post_link( $home_page_id );
+		return [
+			'home_page_id'       => $home_page_id,
+			'home_page_edit_url' => $this->sanitize_edit_url( $page_url ),
+		];
+	}
+
+	/**
+	 * Sanitize edit URL
+	 *
+	 * @param mixed $page_url Page URL.
+	 * @return string
+	 */
+	private function sanitize_edit_url( $page_url ) {
+		return '' !== $page_url && is_string( $page_url )
+			? html_entity_decode( $page_url, ENT_QUOTES | ENT_HTML5, 'UTF-8' )
+			: '';
 	}
 }

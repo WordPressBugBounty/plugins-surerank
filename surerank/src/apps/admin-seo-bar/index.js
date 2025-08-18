@@ -76,7 +76,7 @@ const SeoChecksDrawer = ( {
 						>
 							{ pageTitle +
 								' - ' +
-								__( 'Page SEO Checks', 'surerank' ) }
+								__( 'SEO Checks', 'surerank' ) }
 						</Text>
 					</Container>
 				</Drawer.Header>

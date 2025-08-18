@@ -13,8 +13,6 @@ namespace SureRank\Inc\Schema;
 use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Schema\Types\Product;
 use SureRank\Inc\Traits\Get_Instance;
-use WC_Product_Variable;
-use WC_Product_Variation;
 
 /**
  * Products
@@ -210,131 +208,301 @@ class Products {
 	 * @param \WC_Product $product WooCommerce product object.
 	 * @return array<string, mixed> Product data for schema.
 	 */
-	private function get_product_data( $product ) {
-		$price          = $product->get_price();
-		$price_with_tax = wc_get_price_including_tax( $product, [ 'price' => $price ] );
+	private function get_product_data( $product ): array {
+		$basic_data     = $this->get_basic_product_data( $product );
+		$sale_dates     = $this->calculate_sale_dates( $product );
+		$variation_data = $this->get_variation_data( $product );
+		$stock_data     = $this->get_stock_data( $product );
+		$image_data     = $this->get_product_image_dimensions( $product );
 
-		$sale_from = $product->get_date_on_sale_from()
-			? gmdate( 'Y-m-d', $product->get_date_on_sale_from()->getTimestamp() )
-			: '';
+		$product_data = array_merge(
+			$basic_data,
+			$sale_dates,
+			$variation_data['pricing'],
+			$stock_data,
+			[
+				'image'             => $image_data['image'],
+				'image_width'       => $image_data['image_width'],
+				'image_height'      => $image_data['image_height'],
+				'description'       => $product->get_description(),
+				'short_description' => $product->get_short_description(),
+			]
+		);
 
-		$today   = gmdate( 'Y-m-d' );
-		$sale_to = gmdate( 'Y-m-d', wc_string_to_timestamp( '+1 month' ) );
+		return $this->merge_variant_data( $product_data, $variation_data['variant'] );
+	}
+
+	/**
+	 * Get basic product data.
+	 *
+	 * @param \WC_Product $product WooCommerce product object.
+	 * @return array<string, mixed> Basic product data.
+	 */
+	private function get_basic_product_data( \WC_Product $product ): array {
+		$price = $product->get_price();
+
+		return [
+			'price'          => $price,
+			'price_with_tax' => wc_get_price_including_tax( $product, [ 'price' => $price ] ),
+			'sku'            => $product->get_sku(),
+			'currency'       => get_woocommerce_currency(),
+			'rating'         => $product->get_average_rating(),
+			'review_count'   => $product->get_review_count(),
+		];
+	}
+
+	/**
+	 * Calculate sale dates for the product.
+	 *
+	 * @param \WC_Product $product WooCommerce product object.
+	 * @return array<string, string> Sale date information.
+	 */
+	private function calculate_sale_dates( \WC_Product $product ): array {
+		$sale_from = $this->get_sale_from_date( $product );
+		$sale_to   = $this->get_sale_to_date( $product, $sale_from );
+
+		return [
+			'sale_from' => $sale_from,
+			'sale_to'   => $sale_to,
+		];
+	}
+
+	/**
+	 * Get sale from date.
+	 *
+	 * @param \WC_Product $product WooCommerce product object.
+	 * @return string Sale from date.
+	 */
+	private function get_sale_from_date( \WC_Product $product ): string {
+		$date_on_sale_from = $product->get_date_on_sale_from();
+		return $date_on_sale_from ? gmdate( 'Y-m-d', $date_on_sale_from->getTimestamp() ) : '';
+	}
+
+	/**
+	 * Get sale to date.
+	 *
+	 * @param \WC_Product $product WooCommerce product object.
+	 * @param string      $sale_from Sale from date.
+	 * @return string Sale to date.
+	 */
+	private function get_sale_to_date( \WC_Product $product, string $sale_from ): string {
+		$today = gmdate( 'Y-m-d' );
 
 		if ( $product->is_on_sale() && $product->get_date_on_sale_to() ) {
-			$sale_to = gmdate( 'Y-m-d', $product->get_date_on_sale_to()->getTimestamp() );
-		} elseif ( $sale_from > $today ) {
-			$sale_to = gmdate( 'Y-m-d', wc_string_to_timestamp( $sale_from ) - DAY_IN_SECONDS );
-		} elseif ( $sale_from === $today ) {
-			$sale_to = $today;
+			return gmdate( 'Y-m-d', $product->get_date_on_sale_to()->getTimestamp() );
 		}
 
-		$low_price    = '';
-		$high_price   = '';
-		$offer_count  = 0;
-		$variant_data = [];
+		if ( $sale_from > $today ) {
+			return gmdate( 'Y-m-d', wc_string_to_timestamp( $sale_from ) - DAY_IN_SECONDS );
+		}
 
-		// Here we are checking if the product is variable product and if it is then we are getting the variation data.
-		if ( $product->is_type( 'variable' ) && $product instanceof WC_Product_Variable ) {
-			$low_price              = wc_get_price_including_tax( $product, [ 'price' => $product->get_variation_price( 'min', false ) ] );
-			$high_price             = wc_get_price_including_tax( $product, [ 'price' => $product->get_variation_price( 'max', false ) ] );
-			$offer_count            = count( $product->get_children() );
-			$variations             = $product->get_available_variations();
-			$variation_descriptions = [];
+		if ( $sale_from === $today ) {
+			return $today;
+		}
 
-			if ( ! empty( $variations ) && is_array( $variations ) ) {
-				$default_variation = $variations[0] ?? [];
+		return gmdate( 'Y-m-d', wc_string_to_timestamp( '+1 month' ) );
+	}
 
-				$variation_id           = null;
-				$variation_descriptions = '';
+	/**
+	 * Get variation data for variable products.
+	 *
+	 * @param \WC_Product $product WooCommerce product object.
+	 * @return array{pricing: array<string, mixed>, variant: array<string, mixed>} Variation data.
+	 */
+	private function get_variation_data( \WC_Product $product ): array {
+		if ( ! $product->is_type( 'variable' ) || ! $product instanceof \WC_Product_Variable ) {
+			return [
+				'pricing' => [
+					'low_price'   => '',
+					'high_price'  => '',
+					'offer_count' => 0,
+				],
+				'variant' => [],
+			];
+		}
 
-				if ( is_array( $default_variation ) ) {
-					if ( isset( $default_variation['variation_id'] ) ) {
-						$variation_id = $default_variation['variation_id'];
-					}
+		return $this->process_variable_product( $product );
+	}
 
-					if ( isset( $default_variation['variation_description'] ) ) {
-						$variation_descriptions = $default_variation['variation_description'];
-					}
-				}
+	/**
+	 * Process variable product data.
+	 *
+	 * @param \WC_Product_Variable $product Variable product.
+	 * @return array{pricing: array<string, mixed>, variant: array<string, mixed>} Processed data.
+	 */
+	private function process_variable_product( \WC_Product_Variable $product ): array {
+		$pricing_data = $this->get_variable_pricing_data( $product );
+		$variant_data = $this->get_default_variant_data( $product );
 
-				if ( $variation_id ) {
-					$variation_obj = wc_get_product( $variation_id );
+		return [
+			'pricing' => $pricing_data,
+			'variant' => $variant_data,
+		];
+	}
 
-					if ( $variation_obj && $variation_obj instanceof WC_Product_Variation ) {
-						$attributes = $variation_obj->get_attributes();
+	/**
+	 * Get variable product pricing data.
+	 *
+	 * @param \WC_Product_Variable $product Variable product.
+	 * @return array<string, mixed> Pricing data.
+	 */
+	private function get_variable_pricing_data( \WC_Product_Variable $product ): array {
+		return [
+			'low_price'   => wc_get_price_including_tax( $product, [ 'price' => $product->get_variation_price( 'min', false ) ] ),
+			'high_price'  => wc_get_price_including_tax( $product, [ 'price' => $product->get_variation_price( 'max', false ) ] ),
+			'offer_count' => count( $product->get_children() ),
+		];
+	}
 
-						$size  = '';
-						$color = '';
+	/**
+	 * Get default variant data.
+	 *
+	 * @param \WC_Product_Variable $product Variable product.
+	 * @return array<string, mixed> Default variant data.
+	 */
+	private function get_default_variant_data( \WC_Product_Variable $product ): array {
+		$variations = $product->get_available_variations();
+		if ( empty( $variations ) || ! is_array( $variations ) ) {
+			return [];
+		}
 
-						foreach ( $attributes as $attribute_name => $attribute_value ) {
-							$taxonomy = str_replace( 'attribute_', '', $attribute_name );
+		$default_variation = $variations[0] ?? [];
+		if ( ! is_array( $default_variation ) ) {
+			return [];
+		}
 
-							if ( strpos( $taxonomy, 'size' ) !== false ) {
-								$size = $attribute_value;
-							} elseif ( strpos( $taxonomy, 'color' ) !== false || strpos( $taxonomy, 'colour' ) !== false ) {
-								$color = $attribute_value;
-							}
-						}
+		$variation_id = $default_variation['variation_id'] ?? null;
+		if ( ! $variation_id ) {
+			return [];
+		}
 
-						// get variation image and fallback to product image.
-						$variation_image_id  = $variation_obj->get_image_id() ? $variation_obj->get_image_id() : $product->get_image_id();
-						$variation_image     = wp_get_attachment_image_src( (int) $variation_image_id, 'single-post-thumbnail' );
-						$variation_image_url = $variation_image ? $variation_image[0] : '';
+		return $this->build_variant_data( $variation_id, $default_variation, $product );
+	}
 
-						// check stock status.
-						$statuses   = $this->get_stock_status_mapping();
-						$var_status = strtolower( $variation_obj->get_stock_status() );
-						$var_stock  = 'https://schema.org/' . ( $statuses[ $var_status ] ?? 'InStock' );
+	/**
+	 * Build variant data from variation.
+	 *
+	 * @param int                  $variation_id Variation ID.
+	 * @param array<string, mixed> $default_variation Default variation data.
+	 * @param \WC_Product          $parent_product Parent product.
+	 * @return array<string, mixed> Variant data.
+	 */
+	private function build_variant_data( int $variation_id, array $default_variation, \WC_Product $parent_product ): array {
+		$variation_obj = wc_get_product( $variation_id );
+		if ( ! $variation_obj || ! $variation_obj instanceof \WC_Product_Variation ) {
+			return [];
+		}
 
-						// populate variant data.
-						$variant_data = [
-							'sku'           => $variation_obj->get_sku(),
-							'name'          => $variation_obj->get_name(),
-							'url'           => $variation_obj->get_permalink(),
-							'image'         => $variation_image_url,
-							'size'          => $size,
-							'color'         => $color,
-							'description'   => $variation_descriptions,
-							'sale_price'    => $variation_obj->get_sale_price() ? wc_get_price_including_tax( $variation_obj, [ 'price' => $variation_obj->get_sale_price() ] ) : '',
-							'regular_price' => wc_get_price_including_tax( $variation_obj, [ 'price' => $variation_obj->get_regular_price() ] ),
-							'stock'         => $var_stock,
-						];
-					}
-				}
+		$attributes = $this->extract_variant_attributes( $variation_obj );
+		$image_data = $this->get_variant_image( $variation_obj, $parent_product );
+		$stock_data = $this->get_variant_stock( $variation_obj );
+
+		return [
+			'sku'           => $variation_obj->get_sku(),
+			'name'          => $variation_obj->get_name(),
+			'url'           => $variation_obj->get_permalink(),
+			'image'         => $image_data,
+			'size'          => $attributes['size'],
+			'color'         => $attributes['color'],
+			'description'   => $default_variation['variation_description'] ?? '',
+			'sale_price'    => $this->get_variant_sale_price( $variation_obj ),
+			'regular_price' => wc_get_price_including_tax( $variation_obj, [ 'price' => $variation_obj->get_regular_price() ] ),
+			'stock'         => $stock_data,
+		];
+	}
+
+	/**
+	 * Extract variant attributes.
+	 *
+	 * @param \WC_Product_Variation $variation Variation object.
+	 * @return array{size: string, color: string} Extracted attributes.
+	 */
+	private function extract_variant_attributes( \WC_Product_Variation $variation ): array {
+		$attributes = $variation->get_attributes();
+		$size       = '';
+		$color      = '';
+
+		foreach ( $attributes as $attribute_name => $attribute_value ) {
+			$taxonomy = str_replace( 'attribute_', '', $attribute_name );
+
+			if ( strpos( $taxonomy, 'size' ) !== false ) {
+				$size = $attribute_value;
+			} elseif ( strpos( $taxonomy, 'color' ) !== false || strpos( $taxonomy, 'colour' ) !== false ) {
+				$color = $attribute_value;
 			}
 		}
 
+		return [
+			'size'  => $size,
+			'color' => $color,
+		];
+	}
+
+	/**
+	 * Get variant image.
+	 *
+	 * @param \WC_Product_Variation $variation Variation object.
+	 * @param \WC_Product           $parent_product Parent product.
+	 * @return string Image URL.
+	 */
+	private function get_variant_image( \WC_Product_Variation $variation, \WC_Product $parent_product ): string {
+		$image_id = $variation->get_image_id() ? $parent_product->get_image_id() : 0;
+		$image    = wp_get_attachment_image_src( (int) $image_id, 'single-post-thumbnail' );
+		return $image ? $image[0] : '';
+	}
+
+	/**
+	 * Get variant stock status.
+	 *
+	 * @param \WC_Product_Variation $variation Variation object.
+	 * @return string Stock status URL.
+	 */
+	private function get_variant_stock( \WC_Product_Variation $variation ): string {
+		$statuses = $this->get_stock_status_mapping();
+		$status   = strtolower( $variation->get_stock_status() );
+		return 'https://schema.org/' . ( $statuses[ $status ] ?? 'InStock' );
+	}
+
+	/**
+	 * Get variant sale price.
+	 *
+	 * @param \WC_Product_Variation $variation Variation object.
+	 * @return string Sale price.
+	 */
+	private function get_variant_sale_price( \WC_Product_Variation $variation ): string {
+		$sale_price = $variation->get_sale_price();
+		return $sale_price ? (string) wc_get_price_including_tax( $variation, [ 'price' => $sale_price ] ) : '';
+	}
+
+	/**
+	 * Get stock data for product.
+	 *
+	 * @param \WC_Product $product Product object.
+	 * @return array<string, string> Stock data.
+	 */
+	private function get_stock_data( \WC_Product $product ): array {
 		$statuses = $this->get_stock_status_mapping();
 		$status   = strtolower( $product->get_stock_status() );
-		$stock    = 'https://schema.org/' . ( $statuses[ $status ] ?? 'InStock' );
 
-		$image_data = $this->get_product_image_dimensions( $product );
-
-		$product_data = [
-			'price'             => $price,
-			'price_with_tax'    => $price_with_tax,
-			'low_price'         => $low_price,
-			'high_price'        => $high_price,
-			'offer_count'       => $offer_count,
-			'sale_from'         => $sale_from,
-			'sale_to'           => $sale_to,
-			'sku'               => $product->get_sku(),
-			'stock'             => $stock,
-			'currency'          => get_woocommerce_currency(),
-			'rating'            => $product->get_average_rating(),
-			'review_count'      => $product->get_review_count(),
-			'image'             => $image_data['image'],
-			'image_width'       => $image_data['image_width'],
-			'image_height'      => $image_data['image_height'],
-			'description'       => $product->get_description(),
-			'short_description' => $product->get_short_description(),
+		return [
+			'stock' => 'https://schema.org/' . ( $statuses[ $status ] ?? 'InStock' ),
 		];
+	}
 
-		if ( ! empty( $variant_data ) ) {
-			foreach ( $variant_data as $key => $value ) {
-				$product_data[ 'variant_' . $key ] = $value ?? '';
-			}
+	/**
+	 * Merge variant data into product data.
+	 *
+	 * @param array<string, mixed> $product_data Base product data.
+	 * @param array<string, mixed> $variant_data Variant data.
+	 * @return array<string, mixed> Merged data.
+	 */
+	private function merge_variant_data( array $product_data, array $variant_data ): array {
+		if ( empty( $variant_data ) ) {
+			return $product_data;
+		}
+
+		foreach ( $variant_data as $key => $value ) {
+			$product_data[ 'variant_' . $key ] = $value ?? '';
 		}
 
 		return $product_data;
@@ -352,7 +520,7 @@ class Products {
 		$product_image_url = $image_data[0] ?? '';
 
 		if ( empty( $product_image_url ) ) {
-			$surerank_settings = get_post_meta( $product->get_id(), 'surerank_settings', true );
+			$surerank_settings = get_post_meta( $product->get_id(), SURERANK_SETTINGS, true );
 			$product_image_url = $surerank_settings['facebook_image_url'] ?? '';
 		}
 

@@ -8,7 +8,7 @@ const SearchConsolePopup = ( { isOpen = true } ) => {
 	}
 
 	return (
-		<ModalWrapper isOpen={ isOpen }>
+		<ModalWrapper isOpen={ isOpen } className="top-[40%]">
 			<div className="bg-background-primary rounded-lg shadow-2xl w-full p-5 pointer-events-auto border-0.5 border-solid border-border-subtle">
 				<div className="flex flex-col items-center w-full">
 					<img
@@ -20,7 +20,7 @@ const SearchConsolePopup = ( { isOpen = true } ) => {
 					<div className="flex flex-col text-left space-y-1">
 						<Text size={ 18 } weight={ 600 } lineHeight={ 28 }>
 							{ __(
-								"Let's Connect to Search Console!",
+								'Let’s connect to Search Console to Optimize further!',
 								'surerank'
 							) }
 						</Text>
@@ -49,7 +49,7 @@ const SearchConsolePopup = ( { isOpen = true } ) => {
 							) }
 						>
 							{ __(
-								'What is Google Search Console and how does SureRank use it?',
+								'Learn More about Google Search Console.',
 								'surerank'
 							) }
 						</Text>
@@ -70,7 +70,7 @@ const SearchConsolePopup = ( { isOpen = true } ) => {
 							}
 						>
 							{ __(
-								'Connect to Search Console Now',
+								'Connect to Search Console - It’s Free',
 								'surerank'
 							) }
 						</Button>

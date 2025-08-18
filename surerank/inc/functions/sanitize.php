@@ -93,4 +93,23 @@ class Sanitize {
 		}
 		return sanitize_text_field( $text );
 	}
+
+	/**
+	 * Sanitize shortcode
+	 *
+	 * @since 1.2.0
+	 * @param string $text The text to sanitize.
+	 * @return string The sanitized text.
+	 */
+	public static function sanitize_shortcode( $text ) {
+		if ( empty( $text ) ) {
+			return '';
+		}
+
+		if ( ! is_string( $text ) ) {
+			return $text;
+		}
+
+		return do_shortcode( $text );
+	}
 }

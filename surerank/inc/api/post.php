@@ -57,61 +57,8 @@ class Post extends Api_Base {
 	 * @return void
 	 */
 	public function register_routes() {
-		register_rest_route(
-			$this->get_api_namespace(),
-			self::POST_SEO_DATA,
-			[
-				'methods'             => WP_REST_Server::READABLE, // GET Post Seo Data.
-				'callback'            => [ $this, 'get_post_seo_data' ],
-				'permission_callback' => [ $this, 'validate_permission' ],
-				'args'                => [
-					'post_id'   => [
-						'type'              => 'integer',
-						'required'          => true,
-						'sanitize_callback' => 'absint',
-					],
-					'post_type' => [
-						'type'              => 'string',
-						'required'          => true,
-						'sanitize_callback' => 'sanitize_text_field',
-					],
-				],
-			]
-		);
-
-		register_rest_route(
-			$this->get_api_namespace(),
-			self::POST_SEO_DATA,
-			[
-				'methods'             => WP_REST_Server::CREATABLE,
-				'callback'            => [ $this, 'update_post_seo_data' ],
-				'permission_callback' => [ $this, 'validate_permission' ],
-				'args'                => [
-					'post_id'  => [
-						'type'              => 'integer',
-						'required'          => true,
-						'sanitize_callback' => 'absint',
-					],
-					'metaData' => [
-						'type'              => 'object',
-						'required'          => true,
-						'sanitize_callback' => [ $this, 'sanitize_array_data' ],
-					],
-				],
-
-			]
-		);
-
-		register_rest_route(
-			$this->get_api_namespace(),
-			self::POST_CONTENT,
-			[
-				'methods'             => WP_REST_Server::READABLE, // Get Post Content.
-				'callback'            => [ $this, 'get_post_type_data' ],
-				'permission_callback' => [ $this, 'validate_permission' ],
-
-			]
-		);
+		$namespace = $this->get_api_namespace();
+		$this->register_all_post_routes( $namespace );
 	}
 
 	/**
@@ -203,55 +150,7 @@ class Post extends Api_Base {
 	 * @return void
 	 */
 	public function get_post_type_data( $request ) {
-
-		$data           = [];
-		$settings       = Settings::get();
-		$author_archive = $settings['author_archive'] ?? false;
-		$date_archive   = $settings['date_archive'] ?? false;
-
-		// Get all post types.
-		$post_types = \get_post_types( [ 'public' => true ], 'objects' );
-		if ( ! empty( $post_types ) && is_array( $post_types ) ) {
-			// Get key and label.
-			$data['post_types'] = array_map(
-				static function ( $post_type ) {
-					return ! empty( $post_type->label ) ? $post_type->label : '';
-				},
-				$post_types
-			);
-		}
-
-		// Get all taxonomies.
-		$taxonomies = \get_taxonomies( [ 'public' => true ], 'objects' );
-		if ( ! empty( $taxonomies ) && is_array( $taxonomies ) ) {
-			// Get key and label.
-			$data['taxonomies'] = array_map(
-				static function ( $taxonomy ) {
-					return $taxonomy->label;
-				},
-				$taxonomies
-			);
-		}
-
-		$archives = [];
-
-		if ( $author_archive ) {
-			$archives['author'] = __( 'Author pages', 'surerank' );
-		}
-		if ( $date_archive ) {
-			$archives['date'] = __( 'Date archives', 'surerank' );
-		}
-
-		$archives['search'] = __( 'Search pages', 'surerank' );
-
-		$data['archives'] = $archives;
-
-		// Get user roles.
-		$roles = Helper::get_role_names();
-		if ( ! empty( $roles ) ) {
-			$data['roles'] = $roles;
-		}
-
+		$data = $this->prepare_post_type_data();
 		Send_Json::success( [ 'data' => $data ] );
 	}
 
@@ -273,5 +172,190 @@ class Post extends Api_Base {
 		}
 
 		return apply_filters( 'surerank_run_post_seo_checks', $post_id, $post );
+	}
+
+	/**
+	 * Register all post routes
+	 *
+	 * @param string $namespace The API namespace.
+	 * @return void
+	 */
+	private function register_all_post_routes( $namespace ) {
+		$this->register_get_post_seo_data_route( $namespace );
+		$this->register_update_post_seo_data_route( $namespace );
+		$this->register_post_content_route( $namespace );
+	}
+
+	/**
+	 * Register get post SEO data route
+	 *
+	 * @param string $namespace The API namespace.
+	 * @return void
+	 */
+	private function register_get_post_seo_data_route( $namespace ) {
+		register_rest_route(
+			$namespace,
+			self::POST_SEO_DATA,
+			[
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'get_post_seo_data' ],
+				'permission_callback' => [ $this, 'validate_permission' ],
+				'args'                => $this->get_post_seo_data_args(),
+			]
+		);
+	}
+
+	/**
+	 * Register update post SEO data route
+	 *
+	 * @param string $namespace The API namespace.
+	 * @return void
+	 */
+	private function register_update_post_seo_data_route( $namespace ) {
+		register_rest_route(
+			$namespace,
+			self::POST_SEO_DATA,
+			[
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => [ $this, 'update_post_seo_data' ],
+				'permission_callback' => [ $this, 'validate_permission' ],
+				'args'                => $this->get_update_post_seo_data_args(),
+			]
+		);
+	}
+
+	/**
+	 * Register post content route
+	 *
+	 * @param string $namespace The API namespace.
+	 * @return void
+	 */
+	private function register_post_content_route( $namespace ) {
+		register_rest_route(
+			$namespace,
+			self::POST_CONTENT,
+			[
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'get_post_type_data' ],
+				'permission_callback' => [ $this, 'validate_permission' ],
+			]
+		);
+	}
+
+	/**
+	 * Get post SEO data arguments
+	 *
+	 * @return array<string, array<string, mixed>>
+	 */
+	private function get_post_seo_data_args() {
+		return [
+			'post_id'   => [
+				'type'              => 'integer',
+				'required'          => true,
+				'sanitize_callback' => 'absint',
+			],
+			'post_type' => [
+				'type'              => 'string',
+				'required'          => true,
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+		];
+	}
+
+	/**
+	 * Get update post SEO data arguments
+	 *
+	 * @return array<string, array<string, mixed>>
+	 */
+	private function get_update_post_seo_data_args() {
+		return [
+			'post_id'  => [
+				'type'              => 'integer',
+				'required'          => true,
+				'sanitize_callback' => 'absint',
+			],
+			'metaData' => [
+				'type'              => 'object',
+				'required'          => true,
+				'sanitize_callback' => [ $this, 'sanitize_array_data' ],
+			],
+		];
+	}
+
+	/**
+	 * Prepare post type data
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function prepare_post_type_data() {
+		$data     = [];
+		$settings = Settings::get();
+
+		$data['post_types'] = $this->get_formatted_post_types();
+		$data['taxonomies'] = $this->get_formatted_taxonomies();
+		$data['archives']   = $this->build_archives_list( $settings );
+		$data['roles']      = Helper::get_role_names();
+
+		return array_filter( $data );
+	}
+
+	/**
+	 * Get formatted post types
+	 *
+	 * @return array<string, string>
+	 */
+	private function get_formatted_post_types() {
+		$post_types = \get_post_types( [ 'public' => true ], 'objects' );
+		if ( empty( $post_types ) || ! is_array( $post_types ) ) {
+			return [];
+		}
+
+		return array_map(
+			static function ( $post_type ) {
+				return ! empty( $post_type->label ) ? $post_type->label : '';
+			},
+			$post_types
+		);
+	}
+
+	/**
+	 * Get formatted taxonomies
+	 *
+	 * @return array<string, string>
+	 */
+	private function get_formatted_taxonomies() {
+		$taxonomies = \get_taxonomies( [ 'public' => true ], 'objects' );
+		if ( empty( $taxonomies ) || ! is_array( $taxonomies ) ) {
+			return [];
+		}
+
+		return array_map(
+			static function ( $taxonomy ) {
+				return $taxonomy->label;
+			},
+			$taxonomies
+		);
+	}
+
+	/**
+	 * Build archives list
+	 *
+	 * @param array<string, mixed> $settings Settings array.
+	 * @return array<string, string>
+	 */
+	private function build_archives_list( $settings ) {
+		$archives = [];
+
+		if ( $settings['author_archive'] ?? false ) {
+			$archives['author'] = __( 'Author pages', 'surerank' );
+		}
+
+		if ( $settings['date_archive'] ?? false ) {
+			$archives['date'] = __( 'Date archives', 'surerank' );
+		}
+
+		$archives['search'] = __( 'Search pages', 'surerank' );
+
+		return $archives;
 	}
 }

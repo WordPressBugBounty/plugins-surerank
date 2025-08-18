@@ -7,7 +7,7 @@ import {
 	Globe,
 	Rss,
 	GitFork,
-	ArrowLeftRight,
+	// ArrowLeftRight,
 } from 'lucide-react';
 import { __ } from '@wordpress/i18n';
 import {
@@ -100,16 +100,16 @@ export const quickLinks = [
 		icon: GitFork,
 		link: '/advanced/schema',
 	},
-	{
-		label: __( 'Import/Export', 'surerank' ),
-		description: __(
-			'Transfer SEO settings or backup configurations with ease.',
-			'surerank'
-		),
-		icon: ArrowLeftRight,
-		disabled: true,
-		badge: __( 'Planned', 'surerank' ),
-	},
+	// {
+	// 	label: __( '/ExporImportt', 'surerank' ),
+	// 	description: __(
+	// 		'Transfer SEO settings or backup configurations with ease.',
+	// 		'surerank'
+	// 	),
+	// 	icon: ArrowLeftRight,
+	// 	disabled: true,
+	// 	badge: __( 'Planned', 'surerank' ),
+	// },
 ];
 
 export const dashboard_plugins_sequence = [

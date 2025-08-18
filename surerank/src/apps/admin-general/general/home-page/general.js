@@ -127,7 +127,7 @@ const HomePageGeneralSettings = () => {
 				{ /* Input */ }
 				<EditorInput
 					ref={ descriptionEditor }
-					className="!min-h-32 [&+div]:items-start [&+div]:pt-1"
+					className="[&+div]:items-start [&+div]:pt-1"
 					by="label"
 					trigger="@"
 					defaultValue={ stringValueToFormatJSON(

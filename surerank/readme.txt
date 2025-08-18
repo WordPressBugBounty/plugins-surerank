@@ -5,7 +5,7 @@ Tags: seo, wordpress seo, xml sitemap, schema, google search console
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 8.0
-Stable tag: 1.1.2
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -128,11 +128,8 @@ SureRank integrates seamlessly with WooCommerce, providing SEO tools specificall
 ### Migrate from Other SEO Plugins ###
 Switching to SureRank is seamless with the built-in Migration Tool. It allows you to easily migrate SEO data and settings from other popular SEO plugins, such as Rank Math, AIOSEO, or Yoast, without losing critical SEO information. This ensures a smooth transition while preserving your existing optimization efforts.
 
-
-### Coming Soon Features ###
-
-- **Import/Export SureRank Settings** - Simplify your SEO management with the ability to export and import SureRank settings. Whether you're setting up multiple sites, collaborating with team members, or sharing configurations with clients, this feature makes it easy to transfer SEO settings across websites quickly and accurately.
-
+### Import/Export SureRank Settings ###
+Simplify your SEO management with the ability to export and import SureRank settings. Whether you're setting up multiple sites, collaborating with team members, or sharing configurations with clients, this feature makes it easy to transfer SEO settings across websites quickly and accurately.
 
 ## SureRank Pro Version Features ##
 
@@ -295,6 +292,15 @@ Brainstorm Force
 
 
 == Changelog ==
+
+= 1.2.0 - 18-August-2025 =
+* New: Added the ability to edit the robots.txt file via the SureRank Robots Settings Editor.
+* Improvement: Enhanced code quality and UI/UX.
+* Improvement: Added the option to enable or disable the Migration feature.
+* Improvement: Added the ability to migrate from third-party plugins to SureRank directly within the onboarding flow.
+* Improvement: Implemented caching for the sitemap XML and its related sync feature, resulting in faster sitemap rendering.
+* Fix: Resolved an issue where broken links were not displaying the correct status.
+* Fix: Resolved an issue with meta descriptions on websites using the Avada theme where a shortcode was used on the homepage.
 
 = 1.1.2 - 29-July-2025 =
 * Improvement: Enhanced error handling and UI feedback for broken or slow-loading external links during Page SEO checks.

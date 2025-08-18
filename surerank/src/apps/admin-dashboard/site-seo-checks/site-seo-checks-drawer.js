@@ -9,8 +9,19 @@ import {
 import FixButton from '@GlobalComponents/fix-button';
 import DOMPurify from 'dompurify';
 import { LockIcon } from 'lucide-react';
-import { isURL } from '@/functions/utils';
+import { cn, isURL } from '@/functions/utils';
 import { ImageGrid } from '@/global/components/check-card';
+
+/**
+ * Checks if the given HTML string does NOT start with an <h6> tag.
+ * @param {string} html - The HTML string to check.
+ * @return {boolean} True if the string does not start with an <h6> tag, otherwise false.
+ */
+const shouldWrapInParagraph = ( html ) => {
+	const trimmed = html.trim();
+	// Regex to match opening <h6> tag, case-insensitive, possibly with attributes
+	return ! /^<h6\b[^>]*>/i.test( trimmed );
+};
 
 const SiteSeoChecksDrawer = () => {
 	// Using suspense version inside Suspense boundary
@@ -42,7 +53,7 @@ const SiteSeoChecksDrawer = () => {
 					if ( isURL( item ) ) {
 						return (
 							<li
-								className="m-0 text-text-primary mb-[2px]"
+								className="m-0 text-text-primary mb-0.5"
 								key={ item }
 							>
 								<Button
@@ -60,7 +71,7 @@ const SiteSeoChecksDrawer = () => {
 					}
 					return (
 						<li
-							className="m-0 text-text-primary mb-[2px]"
+							className="m-0 text-text-primary mb-0.5"
 							key={ item }
 							dangerouslySetInnerHTML={ {
 								__html: DOMPurify.sanitize( item ),
@@ -116,12 +127,31 @@ const SiteSeoChecksDrawer = () => {
 							return null;
 						}
 
+						const purifiedItem = DOMPurify.sanitize( item );
+						const itemClassName =
+							'm-0 text-text-primary text-sm font-normal [&_a]:no-underline [&_a]:ring-0';
+
+						if ( shouldWrapInParagraph( purifiedItem ) ) {
+							return (
+								<p
+									key={ idx }
+									className={ itemClassName }
+									dangerouslySetInnerHTML={ {
+										__html: purifiedItem,
+									} }
+								/>
+							);
+						}
+
 						return (
-							<p
-								className="m-0 text-text-primary text-sm font-normal [&_a]:no-underline [&_a]:ring-0"
+							<div
 								key={ idx }
+								className={ cn(
+									itemClassName,
+									'[&_h6]:mt-2.5'
+								) }
 								dangerouslySetInnerHTML={ {
-									__html: DOMPurify.sanitize( item ),
+									__html: purifiedItem,
 								} }
 							/>
 						);

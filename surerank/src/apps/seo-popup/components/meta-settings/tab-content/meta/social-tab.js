@@ -1,9 +1,16 @@
 import { __, sprintf } from '@wordpress/i18n';
 import { useSelect } from '@wordpress/data';
 import { motion } from 'framer-motion';
-import { Accordion, Label, Input, EditorInput, Switch } from '@bsf/force-ui';
+import {
+	Accordion,
+	Label,
+	Input,
+	EditorInput,
+	Switch,
+	Button,
+} from '@bsf/force-ui';
 import { useCallback, useRef, useState } from '@wordpress/element';
-import { Facebook, Info } from 'lucide-react';
+import { Facebook, Info, RefreshCcw } from 'lucide-react';
 import SocialPreview from '@GlobalComponents/social-preview';
 import { STORE_NAME } from '@Store/constants';
 import {
@@ -164,6 +171,17 @@ const SocialTab = ( { postMetaData, updatePostMetaData, globalDefaults } ) => {
 		} );
 
 		mediaUploader.open();
+	};
+
+	const handleClearFacebookCache = () => {
+		const url =
+			window?.wp?.data?.select( 'core/editor' )?.getPermalink() ||
+			variables?.term?.permalink?.value;
+
+		window.open(
+			`https://developers.facebook.com/tools/debug/?q=${ url }`,
+			'_blank'
+		);
 	};
 
 	return (
@@ -342,7 +360,7 @@ const SocialTab = ( { postMetaData, updatePostMetaData, globalDefaults } ) => {
 											{ /* Input */ }
 											<EditorInput
 												ref={ descriptionEditor }
-												className="!min-h-32 [&+div]:items-start [&+div]:pt-1"
+												className="[&+div]:items-start [&+div]:pt-1"
 												by="label"
 												defaultValue={ stringValueToFormatJSON(
 													postMetaData?.[
@@ -378,15 +396,41 @@ const SocialTab = ( { postMetaData, updatePostMetaData, globalDefaults } ) => {
 								) }
 								<div className="p-2 space-y-2">
 									{ /* Label */ }
-									<Label tag="span" size="sm">
-										{ sprintf(
-											// Translators: %s: Facebook or Twitter
-											__( '%s Preview', 'surerank' ),
-											tabSlug === 'facebook'
-												? 'Facebook'
-												: 'X'
+									<div className="flex items-center justify-between">
+										<Label tag="span" size="sm">
+											{ sprintf(
+												// Translators: %s: Facebook or Twitter
+												__( '%s Preview', 'surerank' ),
+												tabSlug === 'facebook'
+													? 'Facebook'
+													: 'X'
+											) }
+										</Label>
+										{ tabSlug === 'facebook' && (
+											<SeoPopupTooltip
+												content={ __(
+													"Click to update Facebook's share preview cache. This will update the preview with the latest content.",
+													'surerank'
+												) }
+												placement="top-end"
+												offset={ {
+													alignmentAxis: '0',
+													mainAxis: '8',
+												} }
+												arrow
+											>
+												<Button
+													size="sm"
+													className="p-0.5"
+													onClick={
+														handleClearFacebookCache
+													}
+													icon={ <RefreshCcw /> }
+													variant="ghost"
+												/>
+											</SeoPopupTooltip>
 										) }
-									</Label>
+									</div>
 									{ /* Preview */ }
 									<SocialPreview
 										type={ tabSlug }

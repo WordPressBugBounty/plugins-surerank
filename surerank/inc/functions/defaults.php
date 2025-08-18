@@ -53,6 +53,7 @@ class Defaults {
 		'enable_page_level_seo' => true,
 		'enable_google_console' => true,
 		'enable_schemas'        => true,
+		'enable_migration'      => true,
 	];
 
 	/**
@@ -201,12 +202,12 @@ class Defaults {
 	 */
 	public function __construct() {
 		$this->post_defaults = [
-			'general'         => $this->global_general_defaults,
+			'general'         => $this->get_general_defaults(),
 			'post_no_index'   => '',
 			'post_no_follow'  => '',
 			'post_no_archive' => '',
 			'social'          => array_merge(
-				$this->global_social_defaults,
+				$this->get_social_defaults(),
 				[
 					// Facebook.
 					'facebook_title'           => '',
@@ -250,16 +251,16 @@ class Defaults {
 			'surerank_global_defaults',
 			array_merge(
 				// General Settings.
-				$this->global_general_defaults,
-				$this->global_homepage_defaults,
-				$this->feature_management_defaults,
-				$this->global_social_defaults,
-				$this->global_special_pages_defaults,
-				$this->global_advanced_feeds_default,
-				$this->global_advanced_sitemaps_default,
-				$this->global_advanced_robots_default,
-				$this->global_advanced_images_defaults,
-				$this->global_advanced_miscellaneous_defaults,
+				$this->get_general_defaults(),
+				$this->get_homepage_defaults(),
+				$this->get_social_defaults(),
+				$this->feature_management_defaults(),
+				$this->get_special_pages_defaults(),
+				$this->get_feeds_defaults(),
+				$this->get_sitemap_defaults(),
+				$this->get_robots_defaults(),
+				$this->get_images_defaults(),
+				$this->get_advanced_miscellaneous_defaults(),
 				[
 					'schemas' => Utils::get_default_schemas(),
 				],
@@ -359,5 +360,105 @@ class Defaults {
 				],
 			],
 		);
+	}
+
+	/**
+	 * Get general defaults with filter.
+	 *
+	 * @return array<string, mixed>
+	 * @since 1.2.0
+	 */
+	private function get_general_defaults() {
+		return apply_filters( 'surerank_general_defaults', $this->global_general_defaults );
+	}
+
+	/**
+	 * Get homepage defaults with filter.
+	 *
+	 * @return array<string, mixed>
+	 * @since 1.2.0
+	 */
+	private function get_homepage_defaults() {
+		return apply_filters( 'surerank_homepage_defaults', $this->global_homepage_defaults );
+	}
+
+	/**
+	 * Get social defaults with filter.
+	 *
+	 * @return array<string, mixed>
+	 * @since 1.2.0
+	 */
+	private function get_social_defaults() {
+		return apply_filters( 'surerank_social_defaults', $this->global_social_defaults );
+	}
+
+	/**
+	 * Get feature management defaults with filter.
+	 *
+	 * @return array<string, mixed>
+	 * @since 1.2.0
+	 */
+	private function feature_management_defaults() {
+		return apply_filters( 'surerank_feature_management_defaults', $this->feature_management_defaults );
+	}
+
+	/**
+	 * Get special pages defaults with filter.
+	 *
+	 * @return array<string, mixed>
+	 * @since 1.2.0
+	 */
+	private function get_special_pages_defaults() {
+		return apply_filters( 'surerank_special_pages_defaults', $this->global_special_pages_defaults );
+	}
+
+	/**
+	 * Get feeds defaults with filter.
+	 *
+	 * @return array<string, mixed>
+	 * @since 1.2.0
+	 */
+	private function get_feeds_defaults() {
+		return apply_filters( 'surerank_feeds_defaults', $this->global_advanced_feeds_default );
+	}
+
+	/**
+	 * Get sitemap defaults with filter.
+	 *
+	 * @return array<string, mixed>
+	 * @since 1.2.0
+	 */
+	private function get_sitemap_defaults() {
+		return apply_filters( 'surerank_sitemap_defaults', $this->global_advanced_sitemaps_default );
+	}
+
+	/**
+	 * Get robots defaults with filter.
+	 *
+	 * @return array<string, mixed>
+	 * @since 1.2.0
+	 */
+	private function get_robots_defaults() {
+		return apply_filters( 'surerank_robots_defaults', $this->global_advanced_robots_default );
+	}
+
+	/**
+	 * Get images defaults with filter.
+	 *
+	 * @return array<string, mixed>
+	 * @since 1.2.0
+	 */
+	private function get_images_defaults() {
+		return apply_filters( 'surerank_images_defaults', $this->global_advanced_images_defaults );
+	}
+
+	/**
+	 * Get advanced miscellaneous defaults with filter.
+	 *
+	 * @return array<string, mixed>
+	 * @since 1.2.0
+	 */
+	private function get_advanced_miscellaneous_defaults() {
+		return apply_filters( 'surerank_advanced_miscellaneous_defaults', $this->global_advanced_miscellaneous_defaults );
 	}
 }

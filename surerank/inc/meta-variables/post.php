@@ -56,37 +56,41 @@ class Post extends Variables {
 	 */
 	public function __construct() {
 		$this->variables = [
-			'ID'          => [
+			'ID'            => [
 				'label'       => __( 'ID', 'surerank' ),
 				'description' => __( 'The unique identifier for a post.', 'surerank' ),
 			],
-			'title'       => [
+			'title'         => [
 				'label'       => __( 'Post Title', 'surerank' ),
 				'description' => __( 'The title of the post.', 'surerank' ),
 			],
-			'excerpt'     => [
+			'excerpt'       => [
 				'label'       => __( 'Excerpt', 'surerank' ),
 				'description' => __( 'The excerpt of the post.', 'surerank' ),
 			],
-			'content'     => [
+			'content'       => [
 				'label'       => __( 'Content', 'surerank' ),
 				'description' => __( 'The content of the post.', 'surerank' ),
 			],
-			'permalink'   => [
+			'permalink'     => [
 				'label'       => __( 'Permalink', 'surerank' ),
 				'description' => __( 'The permalink of the site.', 'surerank' ),
 			],
-			'published'   => [
+			'published'     => [
 				'label'       => __( 'Date Published', 'surerank' ),
 				'description' => __( 'Publication date of the current post/page OR specified date on date archives', 'surerank' ),
 			],
-			'modified'    => [
+			'modified'      => [
 				'label'       => __( 'Date Modified', 'surerank' ),
 				'description' => __( 'Last modification date of the current post/page', 'surerank' ),
 			],
-			'author_name' => [
+			'author_name'   => [
 				'label'       => __( 'Author Name', 'surerank' ),
 				'description' => __( 'The name of the author of the current post/page', 'surerank' ),
+			],
+			'archive_title' => [
+				'label'       => __( 'Archive Title', 'surerank' ),
+				'description' => __( 'The title of the current archive. Example "Day/Month/Year Archives: " or "Author Archives: "', 'surerank' ),
 			],
 		];
 	}
@@ -226,6 +230,32 @@ class Post extends Variables {
 			$name = get_the_author_meta( 'display_name', $user_id );
 		}
 		return $name;
+	}
+
+	/**
+	 * Get archive title prefix for author and date archives only.
+	 * This function is relevant only for author and date archives and for SureRank Pro.
+	 *
+	 * @since 1.2.0
+	 * @return string
+	 */
+	public function get_archive_title() {
+		if ( is_author() ) {
+			return __( 'Author: ', 'surerank' ) . get_the_author();
+		}
+		if ( is_date() ) {
+			if ( is_day() ) {
+				return __( 'Day Archives: ', 'surerank' ) . get_the_date();
+			}
+			if ( is_month() ) {
+				return __( 'Month Archives: ', 'surerank' ) . get_the_date( 'F Y' );
+			}
+			if ( is_year() ) {
+				return __( 'Year Archives: ', 'surerank' ) . get_the_date( 'Y' );
+			}
+		}
+
+		return '';
 	}
 
 }

@@ -137,3 +137,15 @@ export const fetchImageDataByUrl = async ( imageUrl ) => {
 
 	return null;
 };
+
+/**
+ * Get migrated data for onboarding steps after migration done successfully.
+ *
+ * @return {Promise<Object>} A promise that resolves to the migrated data.
+ */
+export const getMigratedData = () => {
+	return apiFetch( {
+		path: `/surerank/v1/migrated-data`,
+		method: 'GET',
+	} );
+};

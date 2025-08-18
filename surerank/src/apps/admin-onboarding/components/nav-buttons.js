@@ -46,49 +46,54 @@ const StepNavButtons = ( {
 		useNavigateStep();
 	const [ , dispatch ] = useOnboardingState();
 
-	const handleClick = ( callback, key ) => async () => {
-		if ( typeof callback === 'function' ) {
-			try {
-				await callback( setIsLoading );
-			} catch ( error ) {
-				// Return if error is thrown from the callback.
-				// Errors are mainly from form validation.
-				if ( 'cause' in error && error.cause === 'form-validation' ) {
+	const handleClick =
+		( callback, key, disableNavigation = false ) =>
+		async () => {
+			if ( typeof callback === 'function' ) {
+				try {
+					await callback( setIsLoading );
+				} catch ( error ) {
+					// Return if error is thrown from the callback.
+					// Errors are mainly from form validation.
+					if (
+						'cause' in error &&
+						error.cause === 'form-validation'
+					) {
+						return;
+					}
+
+					toast.error(
+						error?.message ?? __( 'An error occurred', 'surerank' )
+					);
 					return;
 				}
+			}
 
-				toast.error(
-					error?.message ?? __( 'An error occurred', 'surerank' )
-				);
+			setIsLoading( {
+				...isLoading,
+				[ key ]: false,
+			} );
+
+			if ( ! previousStep || disableNavigation ) {
 				return;
 			}
-		}
 
-		setIsLoading( {
-			...isLoading,
-			[ key ]: false,
-		} );
-
-		if ( ! previousStep ) {
-			return;
-		}
-
-		switch ( key ) {
-			case 'back':
-				previousStep();
-				break;
-			case 'skip':
-				nextStep();
-				break;
-			case 'next':
-				const lastStepPath = ONBOARDING_STEPS_CONFIG.at( -1 ).path;
-				if ( nextStepPath === lastStepPath ) {
-					dispatch( { currentStep: lastStepPath } );
-				}
-				nextStep();
-				break;
-		}
-	};
+			switch ( key ) {
+				case 'back':
+					previousStep();
+					break;
+				case 'skip':
+					nextStep();
+					break;
+				case 'next':
+					const lastStepPath = ONBOARDING_STEPS_CONFIG.at( -1 ).path;
+					if ( nextStepPath === lastStepPath ) {
+						dispatch( { currentStep: lastStepPath } );
+					}
+					nextStep();
+					break;
+			}
+		};
 
 	const getIcon = ( key ) => {
 		if ( isLoading[ key ] ) {
@@ -113,8 +118,9 @@ const StepNavButtons = ( {
 
 		const propsConfig = BUTTON_PROPS[ key ];
 
-		const { onClick, ...rest } = btnProps;
-		const onClickHandler = handleClick( onClick, key );
+		const { onClick, disableNavigation = false, ...rest } = btnProps;
+		const onClickHandler = handleClick( onClick, key, disableNavigation );
+		const classNames = cn( propsConfig?.className, btnProps?.className );
 
 		return {
 			...baseProps,
@@ -123,6 +129,7 @@ const StepNavButtons = ( {
 			disabled: isLoading[ key ],
 			loading: isLoading[ key ],
 			...rest,
+			className: classNames,
 		};
 	};
 

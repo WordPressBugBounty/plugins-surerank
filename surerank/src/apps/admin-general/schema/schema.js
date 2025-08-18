@@ -1,4 +1,4 @@
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect, useState, useMemo } from '@wordpress/element';
 import PageContentWrapper from '@AdminComponents/page-content-wrapper';
 import { __ } from '@wordpress/i18n';
 import { Button, Container, Table, Tooltip } from '@bsf/force-ui';
@@ -7,10 +7,45 @@ import { useSuspenseSelect, useDispatch } from '@wordpress/data';
 import { STORE_NAME } from '@AdminStore/constants';
 import EditSchema from './edit';
 import { Edit, Trash } from 'lucide-react';
-import { generateUUID } from '@AdminComponents/schema-utils/utils';
+import {
+	generateUUID,
+	isSchemaTypeValid,
+} from '@AdminComponents/schema-utils/utils';
 import Modal from './modal';
 import { SaveSettingsButton } from '@/apps/admin-components/global-save-button';
 import { createLazyRoute } from '@tanstack/react-router';
+
+// Schema categories
+const SCHEMA_CATEGORIES = {
+	global: { value: 'global', label: __( 'Global Level', 'surerank' ) },
+	content: { value: 'content', label: __( 'Content Level', 'surerank' ) },
+};
+
+// Schema categorization mapping
+const SCHEMA_CATEGORY_MAP = {
+	WebSite: 'global',
+	WebPage: 'global',
+	Organization: 'global',
+	SearchAction: 'global',
+	Person: 'global',
+	BreadcrumbList: 'content',
+	Article: 'content',
+	Product: 'content',
+	Dataset: 'content',
+	FAQ: 'content',
+	'Fact Check': 'content',
+	HowTo: 'content',
+	Movie: 'content',
+	'Podcast Episode': 'content',
+	Book: 'content',
+	Course: 'content',
+	Event: 'content',
+	'Job Posting': 'content',
+	Recipe: 'content',
+	Service: 'content',
+	'Software app': 'content',
+	Video: 'content',
+};
 
 const Schema = () => {
 	const { metaSettings } = useSuspenseSelect( ( select ) => {
@@ -31,9 +66,39 @@ const Schema = () => {
 		} )
 	);
 
-	// console.log( 'schemaArray', schemaArray );
-
 	const schemaTypeOptions = surerank_globals?.schema_type_options || {};
+	const schemaTypeData = surerank_globals?.schema_type_data || {};
+
+	// Categorize schemas using useMemo and reduce, filtering out schemas not in schemaTypeData
+	const categorizedSchemas = useMemo( () => {
+		return schemaArray
+			.filter( ( schema ) => {
+				// Only include schemas that exist in schemaTypeData
+				return isSchemaTypeValid( schema?.title );
+			} )
+			.reduce(
+				( acc, schema ) => {
+					const type = schema?.type;
+					const category =
+						SCHEMA_CATEGORY_MAP[ type ] ||
+						SCHEMA_CATEGORIES.content.value; // Default to content level
+
+					if ( ! acc[ category ] ) {
+						acc[ category ] = [];
+					}
+					acc[ category ].push( schema );
+					return acc;
+				},
+				{
+					[ SCHEMA_CATEGORIES.global.value ]: [],
+					[ SCHEMA_CATEGORIES.content.value ]: [],
+				}
+			);
+	}, [ schemaArray, schemaTypeData ] );
+
+	// console.log( 'Schema Array:', schemaArray );
+
+	// console.log( 'schemaArray', schemaArray );
 	const defaultSchemasObject = surerank_globals?.default_schemas || {};
 	const defaultSchemas = Object.entries( defaultSchemasObject ).map(
 		( [ id, schema ] ) => ( {
@@ -100,41 +165,46 @@ const Schema = () => {
 		invalidateResolutionForStoreSelector( 'getMetaSettings', [] );
 	}, [] );
 
-	return showEditSchema ? (
-		<EditSchema
-			schema={ selectedSchema }
-			type={ selectedType }
-			onBack={ handleBackToSchemas }
-			setMetaSetting={ setMetaSetting }
-			schemaId={ uniqueId }
-			metaSettings={ metaSettings }
-		/>
-	) : (
-		<PageContentWrapper
-			title={ __( 'Schema', 'surerank' ) }
-			description={ __(
-				'Adds structured data to your content so search engines can better understand and present it. Most fields are already filled in to make setup easier and help your site show up better in search results.',
-				'surerank'
-			) }
+	// Render table for a specific category
+	const renderSchemaTable = ( schemas, title ) => (
+		<div
+			key={ title }
+			className="[&>div]:border-0 [&>div]:overflow-visible"
 		>
-			<div className="flex flex-col items-start p-4 gap-2 bg-white shadow-sm rounded-xl">
-				<Table className="w-full">
-					<Table.Head>
-						<Table.HeadCell>
-							{ __( 'Schema Title', 'surerank' ) }
-						</Table.HeadCell>
-						<Table.HeadCell>
-							{ __( 'Schema Type', 'surerank' ) }
-						</Table.HeadCell>
-						<Table.HeadCell className="w-14">
-							<span className="sr-only">
-								{ __( 'Actions', 'surerank' ) }
-							</span>
-						</Table.HeadCell>
-					</Table.Head>
-					<Table.Body>
-						{ schemaArray.map( ( schema ) => (
-							<Table.Row key={ schema.id }>
+			<h3 className="text-base font-semibold mb-4 text-text-primary">
+				{ title }
+			</h3>
+			<Table className="w-full">
+				<Table.Head className="border-0 [clip-path:inset(0_0_0_0_round_6px)]">
+					<Table.HeadCell>
+						{ __( 'Schema Title', 'surerank' ) }
+					</Table.HeadCell>
+					<Table.HeadCell>
+						{ __( 'Schema Type', 'surerank' ) }
+					</Table.HeadCell>
+					<Table.HeadCell className="text-right">
+						{ __( 'Actions', 'surerank' ) }
+					</Table.HeadCell>
+				</Table.Head>
+				<Table.Body>
+					{ schemas.length === 0 ? (
+						<Table.Row>
+							<Table.Cell
+								colSpan={ 3 }
+								className="text-center text-gray-500 py-4"
+							>
+								{ __(
+									'No schemas found in this category.',
+									'surerank'
+								) }
+							</Table.Cell>
+						</Table.Row>
+					) : (
+						schemas.map( ( schema ) => (
+							<Table.Row
+								key={ schema.id }
+								className="last:!border-b-0.5 last:border-x-0 last:border-t-0 last:border-solid last:border-border-subtle"
+							>
 								<Table.Cell className="p-3">
 									<span className="text-sm">
 										{ schema?.fields?.schema_name ||
@@ -223,9 +293,39 @@ const Schema = () => {
 									</div>
 								</Table.Cell>
 							</Table.Row>
-						) ) }
-					</Table.Body>
-				</Table>
+						) )
+					) }
+				</Table.Body>
+			</Table>
+		</div>
+	);
+
+	return showEditSchema ? (
+		<EditSchema
+			schema={ selectedSchema }
+			type={ selectedType }
+			onBack={ handleBackToSchemas }
+			setMetaSetting={ setMetaSetting }
+			schemaId={ uniqueId }
+			metaSettings={ metaSettings }
+		/>
+	) : (
+		<PageContentWrapper
+			title={ __( 'Schema', 'surerank' ) }
+			description={ __(
+				'Adds structured data to your content so search engines can better understand and present it. Most fields are already filled in to make setup easier and help your site show up better in search results.',
+				'surerank'
+			) }
+		>
+			<div className="flex flex-col items-start p-4 gap-6 bg-white shadow-sm rounded-xl">
+				{ renderSchemaTable(
+					categorizedSchemas[ SCHEMA_CATEGORIES.global.value ],
+					SCHEMA_CATEGORIES.global.label
+				) }
+				{ renderSchemaTable(
+					categorizedSchemas[ SCHEMA_CATEGORIES.content.value ],
+					SCHEMA_CATEGORIES.content.label
+				) }
 				<Container className="py-2 px-0" gap="sm">
 					<SaveSettingsButton />
 					<Modal

@@ -83,3 +83,5 @@ export const ENABLE_PAGE_LEVEL_SEO =
 export const ENABLE_GOOGLE_CONSOLE =
 	window?.surerank_globals?.enable_google_console ?? false;
 export const ENABLE_SCHEMAS = window?.surerank_globals?.enable_schemas ?? false;
+export const ENABLE_MIGRATION =
+	window?.surerank_globals?.enable_migration ?? false;

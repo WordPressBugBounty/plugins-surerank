@@ -6,10 +6,12 @@ import { cn } from '@Functions/utils';
 import {
 	renderFieldCommon,
 	renderCloneableField,
+	renderCloneableGroupField,
 } from '@AdminComponents/schema-utils/render-helper';
 import {
 	noFieldsAlert,
 	generateUUID,
+	isSchemaTypeValid,
 } from '@AdminComponents/schema-utils/utils';
 import Modal from '@/apps/admin-general/schema/modal';
 import { SeoPopupTooltip } from '@AdminComponents/tooltip';
@@ -21,6 +23,7 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 	const [ selectedSchema, setSelectedSchema ] = useState( '' );
 	const [ selectedType, setSelectedType ] = useState( '' );
 	const [ expandedSchemaId, setExpandedSchemaId ] = useState( null );
+	const [ fieldItemIds, setFieldItemIds ] = useState( {} );
 
 	const defaultSchemasObject = surerank_globals?.default_schemas || {};
 	const defaultSchemas = Object.entries( defaultSchemasObject ).map(
@@ -51,7 +54,25 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 	const processFields = ( fieldsData ) =>
 		fieldsData.reduce( ( acc, field ) => {
 			if ( field.type === 'Group' && field.fields ) {
-				acc[ field.id ] = processFields( field.fields );
+				if ( field.cloneable ) {
+					// For cloneable groups, create an array with one default item
+					const defaultItem = {};
+					field.fields.forEach( ( subField ) => {
+						if ( subField.type === 'Group' && subField.fields ) {
+							// Handle nested groups recursively
+							defaultItem[ subField.id ] = processFields(
+								subField.fields
+							);
+						} else {
+							defaultItem[ subField.id ] =
+								subField.std !== undefined ? subField.std : '';
+						}
+					} );
+					acc[ field.id ] = [ defaultItem ];
+				} else {
+					// For non-cloneable groups, process recursively
+					acc[ field.id ] = processFields( field.fields );
+				}
 			} else if ( field.std !== undefined ) {
 				acc[ field.id ] = field.std;
 			}
@@ -174,7 +195,14 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 	};
 
 	const renderSchemaFields = ( schemaId ) => {
-		const schemaFields = schemaTypeData[ schemas[ schemaId ]?.title ] || [];
+		const schemaTitle = schemas[ schemaId ]?.title;
+
+		// Check if schema type is valid first
+		if ( ! isSchemaTypeValid( schemaTitle ) ) {
+			return noFieldsAlert;
+		}
+
+		const schemaFields = schemaTypeData[ schemaTitle ] || [];
 
 		if (
 			schemaFields.length === 0 ||
@@ -221,33 +249,69 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 					</div>
 
 					{ /* Field render */ }
-					{ field.cloneable ? (
-						<div className="flex items-center gap-1.5 w-full">
-							{ renderCloneableField( {
-								field,
-								schemaType: schemas[ schemaId ].type,
-								getFieldValue: ( fldId ) =>
-									getFieldValue( schemaId, fldId ),
-								onFieldChange: ( fldId, newVal ) =>
-									onFieldChange( schemaId, fldId, newVal ),
-								variableSuggestions,
-								renderAsGroupComponent: true,
-							} ) }
-						</div>
-					) : (
-						<div className="flex items-center gap-1.5 w-full">
-							{ renderFieldCommon( {
-								field,
-								schemaType: schemas[ schemaId ].type,
-								getFieldValue: ( fldId ) =>
-									getFieldValue( schemaId, fldId ),
-								onFieldChange: ( fldId, newVal ) =>
-									onFieldChange( schemaId, fldId, newVal ),
-								variableSuggestions,
-								renderAsGroupComponent: true,
-							} ) }
-						</div>
-					) }
+					{ ( () => {
+						if ( field.type === 'Group' && field.cloneable ) {
+							return (
+								<div className="flex flex-col w-full">
+									{ renderCloneableGroupField( {
+										field,
+										schemaId,
+										getFieldValue: ( fieldId ) =>
+											getFieldValue( schemaId, fieldId ),
+										onFieldChange: ( fieldId, newVal ) =>
+											onFieldChange(
+												schemaId,
+												fieldId,
+												newVal
+											),
+										variableSuggestions,
+										fieldItemIds,
+										setFieldItemIds,
+									} ) }
+								</div>
+							);
+						}
+
+						if ( field.cloneable ) {
+							return (
+								<div className="flex items-center gap-1.5 w-full">
+									{ renderCloneableField( {
+										field,
+										schemaType: schemas[ schemaId ].type,
+										getFieldValue: ( fldId ) =>
+											getFieldValue( schemaId, fldId ),
+										onFieldChange: ( fldId, newVal ) =>
+											onFieldChange(
+												schemaId,
+												fldId,
+												newVal
+											),
+										variableSuggestions,
+										renderAsGroupComponent: true,
+									} ) }
+								</div>
+							);
+						}
+
+						return (
+							<div className="flex items-center gap-1.5 w-full">
+								{ renderFieldCommon( {
+									field,
+									schemaType: schemas[ schemaId ].type,
+									getFieldValue: ( fldId ) =>
+										getFieldValue( schemaId, fldId ),
+									onFieldChange: ( fldId, newVal ) =>
+										onFieldChange(
+											schemaId,
+											fldId,
+											newVal
+										),
+									variableSuggestions,
+									renderAsGroupComponent: true,
+								} ) }
+							</div>
+						);
+					} )() }
 				</div>
 			);
 		} );
@@ -272,8 +336,12 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 						className="w-full space-y-1"
 						autoClose={ false }
 					>
-						{ Object.entries( schemas ).map(
-							( [ schemaId, schema ] ) => {
+						{ Object.entries( schemas )
+							.filter( ( [ , schema ] ) => {
+								// Only show schemas that exist in schemaTypeData
+								return isSchemaTypeValid( schema?.title );
+							} )
+							.map( ( [ schemaId, schema ] ) => {
 								return (
 									<Accordion.Item
 										key={ schemaId }
@@ -320,8 +388,7 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 										</Accordion.Content>
 									</Accordion.Item>
 								);
-							}
-						) }
+							} ) }
 					</Accordion>
 				) : (
 					<Alert

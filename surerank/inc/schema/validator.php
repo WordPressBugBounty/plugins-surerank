@@ -128,14 +128,52 @@ class Validator {
 	 */
 	private static function matches_current_context( $rule, $post_type, $is_taxonomy = false, $post_id = 0 ) {
 		$rule_parts = explode( '|', $rule );
+		$rule_type  = $rule_parts[0];
 
-		switch ( $rule_parts[0] ) {
+		// Check basic rules first.
+		$basic_result = self::check_basic_rules( $rule_type, $is_taxonomy );
+		if ( $basic_result !== null ) {
+			return $basic_result;
+		}
+
+		// Check special page rules.
+		$special_result = self::check_special_rules( $rule_type, $is_taxonomy );
+		if ( $special_result !== null ) {
+			return $special_result;
+		}
+
+		// Check post type specific rules.
+		return self::check_post_type_specific_rules( $rule_type, $rule_parts, $post_type, $post_id );
+	}
+
+	/**
+	 * Check basic rules.
+	 *
+	 * @param string $rule_type Rule type.
+	 * @param bool   $is_taxonomy Is taxonomy.
+	 * @return bool|null Result or null if not applicable.
+	 */
+	private static function check_basic_rules( string $rule_type, bool $is_taxonomy ) {
+		switch ( $rule_type ) {
 			case 'basic-global':
-				return true; // Always true for global rule.
+				return true;
 			case 'basic-singulars':
 				return is_singular() || ! $is_taxonomy;
 			case 'basic-archives':
 				return is_archive() || $is_taxonomy;
+		}
+		return null;
+	}
+
+	/**
+	 * Check special page rules.
+	 *
+	 * @param string $rule_type Rule type.
+	 * @param bool   $is_taxonomy Is taxonomy.
+	 * @return bool|null Result or null if not applicable.
+	 */
+	private static function check_special_rules( string $rule_type, bool $is_taxonomy ) {
+		switch ( $rule_type ) {
 			case 'special-404':
 				return is_404();
 			case 'special-search':
@@ -148,6 +186,21 @@ class Validator {
 				return is_date() || $is_taxonomy;
 			case 'special-author':
 				return is_author() || $is_taxonomy;
+		}
+		return null;
+	}
+
+	/**
+	 * Check post type specific rules.
+	 *
+	 * @param string                                  $rule_type Rule type.
+	 * @param array<string, mixed>|array<int, string> $rule_parts Rule parts.
+	 * @param string                                  $post_type Post type.
+	 * @param int                                     $post_id Post ID.
+	 * @return bool Result.
+	 */
+	private static function check_post_type_specific_rules( string $rule_type, array $rule_parts, string $post_type, int $post_id ): bool {
+		switch ( $rule_type ) {
 			case 'post':
 				return self::handle_post_type_rules( $rule_parts, $post_type, 'post' );
 			case 'page':
@@ -157,7 +210,7 @@ class Validator {
 			case 'product':
 				return self::handle_product_rules( $rule_parts, $post_type );
 			default:
-				if ( post_type_exists( $rule_parts[0] ) ) {
+				if ( post_type_exists( $rule_type ) ) {
 					return self::handle_custom_post_type_rules( $rule_parts, $post_type );
 				}
 				return false;
@@ -309,62 +362,137 @@ class Validator {
 	 * @param int    $post_id Post ID is from api request.
 	 * @return bool True if the specific item matches, false otherwise.
 	 */
-	private static function matches_specific_item( $specific, $post_type, $post_id ) {
-		global $post;
+	private static function matches_specific_item( $specific, $post_type, $post_id ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+		$parsed_item = self::parse_specific_item( $specific );
+		if ( ! $parsed_item ) {
+			return false;
+		}
 
-		$post_type_array = [ 'post', 'page', 'product' ];
-		$specific_parts  = explode( '-', $specific );
+		$type = $parsed_item['type'];
+		$id   = $parsed_item['id'];
+
+		if ( self::is_post_type( $type ) ) {
+			return self::matches_post_type_item( $id, $post_id );
+		}
+
+		if ( 'tax' === $type ) {
+			return self::matches_taxonomy_item( $id, $parsed_item['parts'], $post_id );
+		}
+
+		return false;
+	}
+
+	/**
+	 * Parse specific item string into components.
+	 *
+	 * @param string $specific Specific item string.
+	 * @return array{type: string, id: int, parts: array<int, string>}|false Array with type, id, and parts or false if invalid.
+	 */
+	private static function parse_specific_item( string $specific ) {
+		$specific_parts = explode( '-', $specific );
 
 		if ( count( $specific_parts ) < 2 ) {
 			return false;
 		}
 
-		$type = $specific_parts[0];
-		$id   = (int) $specific_parts[1];
+		return [
+			'type'  => $specific_parts[0],
+			'id'    => (int) $specific_parts[1],
+			'parts' => $specific_parts,
+		];
+	}
 
-		if ( in_array( $type, $post_type_array, true ) ) {
-			if ( isset( $post ) ) {
-				return (int) $id === $post->ID;
-			}
-			if ( ! empty( $post_id ) ) {
-				return (int) $id === $post_id;
-			}
+	/**
+	 * Check if type is a valid post type.
+	 *
+	 * @param string $type Type to check.
+	 * @return bool True if valid post type.
+	 */
+	private static function is_post_type( string $type ) {
+		$post_type_array = [ 'post', 'page', 'product' ];
+		return in_array( $type, $post_type_array, true );
+	}
+
+	/**
+	 * Check if post type item matches.
+	 *
+	 * @param int $id Item ID.
+	 * @param int $post_id Post ID from request.
+	 * @return bool True if matches.
+	 */
+	private static function matches_post_type_item( int $id, int $post_id ) {
+		global $post;
+
+		if ( isset( $post ) ) {
+			return (int) $id === $post->ID;
 		}
 
-		if ( 'tax' === $type ) {
-			// if type is tax, and if we have a second part = single, we are checking if the post has the term.
-			if ( isset( $specific_parts[2] ) && 'single' === $specific_parts[2] ) {
-
-				$term = get_term( $id );
-
-				if ( ! $term ) {
-					return false;
-				}
-
-				if ( isset( $term->taxonomy ) && isset( $term->term_id ) ) {
-					$post_check_id = is_singular() ? $post->ID : $post_id;
-					if ( $post_check_id && has_term( $id, $term->taxonomy, $post_check_id ) ) {
-						return (int) $id === $term->term_id;
-					}
-				}
-				return false;
-			}
-
-			// here we are checking if the post is a taxonomy with the id. if there is no queried object we will use $post_id.
-			if ( is_tax() || is_category() || is_tag() ) {
-				$queried_object = get_queried_object();
-				if ( $queried_object && isset( $queried_object->term_id ) ) {
-					return (int) $id === (int) $queried_object->term_id;
-				}
-			}
-
-			// here we are returning true if the id is the same as the post id. for example tax-25, tax is already checked above, and $id we are checking below.
-			if ( $id === $post_id ) {
-				return true;
-			}
+		if ( ! empty( $post_id ) ) {
+			return (int) $id === $post_id;
 		}
 
 		return false;
+	}
+
+	/**
+	 * Check if taxonomy item matches.
+	 *
+	 * @param int                $id Term ID.
+	 * @param array<int, string> $parts Specific parts array.
+	 * @param int                $post_id Post ID from request.
+	 * @return bool True if matches.
+	 */
+	private static function matches_taxonomy_item( int $id, array $parts, int $post_id ): bool {
+		// Check if post has the term (single context).
+		if ( isset( $parts[2] ) && 'single' === $parts[2] ) {
+			return self::post_has_term( $id, $post_id );
+		}
+
+		// Check if on taxonomy archive page.
+		if ( self::is_taxonomy_archive( $id ) ) {
+			return true;
+		}
+
+		// Direct ID match.
+		return $id === $post_id;
+	}
+
+	/**
+	 * Check if post has specific term.
+	 *
+	 * @param int $term_id Term ID.
+	 * @param int $post_id Post ID.
+	 * @return bool True if post has term.
+	 */
+	private static function post_has_term( int $term_id, int $post_id ) {
+		global $post;
+
+		$term = get_term( $term_id );
+		if ( ! $term instanceof \WP_Term ) {
+			return false;
+		}
+
+		$post_check_id = is_singular() ? $post->ID : $post_id;
+		if ( ! $post_check_id ) {
+			return false;
+		}
+
+		return has_term( $term_id, $term->taxonomy, $post_check_id ) && (int) $term_id === $term->term_id;
+	}
+
+	/**
+	 * Check if current page is taxonomy archive with specific ID.
+	 *
+	 * @param int $term_id Term ID to check.
+	 * @return bool True if on matching taxonomy archive.
+	 */
+	private static function is_taxonomy_archive( int $term_id ) {
+		if ( ! ( is_tax() || is_category() || is_tag() ) ) {
+			return false;
+		}
+
+		$queried_object = get_queried_object();
+		return $queried_object instanceof \WP_Term && $term_id === $queried_object->term_id;
 	}
 
 }

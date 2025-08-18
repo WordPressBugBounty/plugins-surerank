@@ -28,8 +28,8 @@ const websiteTypes = [
 		value: 'community',
 	},
 	{
-		label: __( 'Webshop', 'surerank' ),
-		value: 'webshop',
+		label: __( 'E-commerce Store', 'surerank' ),
+		value: 'ecommerce',
 	},
 ];
 
@@ -175,7 +175,7 @@ const WebsiteDetails = () => {
 			conditionalValues: [
 				'business',
 				'organization',
-				'webshop',
+				'ecommerce',
 				'community',
 			],
 		},
@@ -188,7 +188,7 @@ const WebsiteDetails = () => {
 			conditionalValues: [
 				'business',
 				'organization',
-				'webshop',
+				'ecommerce',
 				'community',
 			],
 		},
@@ -213,7 +213,7 @@ const WebsiteDetails = () => {
 			width: 'full',
 			accept: 'image/*',
 			description: __(
-				'Image needs to be 112×112 px or larger.',
+				'Recommended Logo size 112 X 112 or more, PNG / JPG format',
 				'surerank'
 			),
 		},

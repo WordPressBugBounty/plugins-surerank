@@ -200,7 +200,7 @@ class Onboarding extends Api_Base {
 
 		$instance->set_onboarding_data( $data, $settings );
 		$updated_onboarding = $instance->process_onboarding_data( $data, $settings );
-		$updated_settings   = Update::option( 'surerank_settings', $settings );
+		$updated_settings   = Update::option( SURERANK_SETTINGS, $settings );
 
 		if ( $updated_onboarding && $updated_settings ) {
 			$instance->set_schemas_pages( $data, $settings );
@@ -455,6 +455,11 @@ class Onboarding extends Api_Base {
 					'label'       => 'Yelp',
 					'id'          => 'yelp',
 					'placeholder' => 'https://www.yelp.com/biz/business-name-location',
+				],
+				[
+					'label'       => 'BlueSky',
+					'id'          => 'bluesky',
+					'placeholder' => 'https://bsky.app/profile/username',
 				],
 			]
 		);

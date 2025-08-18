@@ -176,6 +176,7 @@ const dataSettings = {
 		enable_page_level_seo: true, // true/false
 		enable_google_console: true, // true/false
 		enable_schemas: true, // true/false
+		enable_migration: true, // true/false
 
 		// Miscellaneous
 		surerank_analytics_optin: false, // true/false
@@ -314,7 +315,13 @@ const DEFAULT_STATE = {
 	unsavedSettings: {},
 };
 
-function reducer( state = DEFAULT_STATE, action ) {
+function reducer(
+	state = applyFilters(
+		'surerank-pro.admin-store-reducer-default-state',
+		DEFAULT_STATE
+	),
+	action
+) {
 	switch ( action.type ) {
 		case 'UPDATE_APP_SETTINGS':
 			return {

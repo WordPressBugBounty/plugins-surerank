@@ -609,7 +609,8 @@ export const generateForm = (
 	formValues,
 	setFormValues,
 	containerProps,
-	unsavedSettings = {}
+	unsavedSettings = {},
+	hideGlobalSaveButton = false
 ) => {
 	if ( ! formJson?.length ) {
 		return null;
@@ -657,9 +658,11 @@ export const generateForm = (
 					) }
 				</Fragment>
 			) ) }
-			<SaveSettingsButton
-				onSuccess={ shouldReload ? onSuccess : undefined }
-			/>
+			{ ! hideGlobalSaveButton && (
+				<SaveSettingsButton
+					onSuccess={ shouldReload ? onSuccess : undefined }
+				/>
+			) }
 		</Container>
 	) );
 
@@ -694,7 +697,7 @@ export const generateForm = (
 };
 
 // Main Component
-const GeneratePageContent = ( { json } ) => {
+const GeneratePageContent = ( { json, hideGlobalSaveButton = false } ) => {
 	const { setMetaSettings } = useDispatch( STORE_NAME );
 	const { stateValue, unsavedSettings } = useSuspenseSelect( ( select ) => {
 		const { getMetaSettings, getUnsavedSettings } = select( STORE_NAME );
@@ -709,7 +712,8 @@ const GeneratePageContent = ( { json } ) => {
 		stateValue,
 		setMetaSettings,
 		{},
-		unsavedSettings
+		unsavedSettings,
+		hideGlobalSaveButton
 	);
 };
 

@@ -1,5 +1,5 @@
 import { useCallback, memo } from '@wordpress/element';
-import { Container, Label, Input } from '@bsf/force-ui';
+import { Container, Label, Input, Text } from '@bsf/force-ui';
 import { Image } from 'lucide-react'; // Import Trash icon
 import { __ } from '@wordpress/i18n';
 import { useDispatch, useSuspenseSelect } from '@wordpress/data';
@@ -78,6 +78,21 @@ const ImageTab = memo( () => {
 							size="md"
 							onClick={ openMediaLibrary }
 						/>
+						<Text color="help">
+							{ __(
+								'Recommended size: 1200 x 630 px. Use JPG or PNG format for best results.',
+								'surerank'
+							) }{ ' ' }
+							<Text
+								as="a"
+								href="https://surerank.com/docs/general-settings/"
+								target="_blank"
+								rel="noopener noreferrer"
+								color="help"
+							>
+								{ __( 'Learn more', 'surerank' ) }
+							</Text>
+						</Text>
 						<MediaPreview
 							imageUrl={ settings.fallback_image }
 							onRemove={ removeImage }

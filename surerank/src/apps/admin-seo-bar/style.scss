@@ -2,10 +2,6 @@
 @import "../../global/tailwind.scss";
 
 @layer utilities {
-	body * {
-		@apply font-sans;
-	}
-
 	hr {
 		@apply border-t border-b-0 border-x-0 border-solid border-border-subtle;
 	}
@@ -25,4 +21,13 @@ th.column-surerank-data {
 
 #surerank-root {
 	@apply relative z-[9999999];
+}
+
+.surerank-root *,
+.surerank-root *::before,
+.surerank-root *::after,
+[id^="surerank"] *,
+[id^="surerank"] *::before,
+[id^="surerank"] *::after {
+	@apply font-sans;
 }

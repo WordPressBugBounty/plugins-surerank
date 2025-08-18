@@ -55,22 +55,7 @@ class Utils {
 		$processed_options = [];
 
 		foreach ( $all_options as $option_name => $option_value ) {
-			$new_option_value = [];
-			if ( is_array( $option_value ) ) {
-				if ( empty( $option_value ) ) {
-					$new_option_value[ $option_name ] = $data[ $option_name ] ?? $option_value;
-				} else {
-					foreach ( $option_value as $key => $value ) {
-						if ( isset( $data[ $key ] ) ) {
-							$new_option_value[ $key ] = $data[ $key ] !== '' ? $data[ $key ] : $value;
-						}
-					}
-				}
-			} else {
-				if ( isset( $data[ $option_name ] ) ) {
-					$new_option_value = $data[ $option_name ] === '' ? false : $data[ $option_name ];
-				}
-			}
+			$new_option_value = self::process_single_option_value( $option_name, $option_value, $data );
 
 			if ( ! empty( $new_option_value ) ) {
 				$processed_options[ $option_name ] = $new_option_value;
@@ -78,5 +63,59 @@ class Utils {
 		}
 
 		return $processed_options;
+	}
+
+	/**
+	 * Process a single option value
+	 *
+	 * @param string               $option_name Option name.
+	 * @param mixed                $option_value Option value.
+	 * @param array<string, mixed> $data Data to process.
+	 * @return mixed Processed option value.
+	 */
+	private static function process_single_option_value( string $option_name, $option_value, array $data ) {
+		if ( is_array( $option_value ) ) {
+			return self::process_array_option_value( $option_name, $option_value, $data );
+		}
+
+		return self::process_scalar_option_value( $option_name, $data );
+	}
+
+	/**
+	 * Process array option value
+	 *
+	 * @param string               $option_name Option name.
+	 * @param array<string, mixed> $option_value Option value.
+	 * @param array<string, mixed> $data Data to process.
+	 * @return array<string, mixed>
+	 */
+	private static function process_array_option_value( string $option_name, array $option_value, array $data ): array {
+		if ( empty( $option_value ) ) {
+			return [ $option_name => $data[ $option_name ] ?? $option_value ];
+		}
+
+		$new_option_value = [];
+		foreach ( $option_value as $key => $value ) {
+			if ( isset( $data[ $key ] ) ) {
+				$new_option_value[ $key ] = $data[ $key ] !== '' ? $data[ $key ] : $value;
+			}
+		}
+
+		return $new_option_value;
+	}
+
+	/**
+	 * Process scalar option value
+	 *
+	 * @param string               $option_name Option name.
+	 * @param array<string, mixed> $data Data to process.
+	 * @return mixed
+	 */
+	private static function process_scalar_option_value( string $option_name, array $data ) {
+		if ( ! isset( $data[ $option_name ] ) ) {
+			return null;
+		}
+
+		return $data[ $option_name ] === '' ? false : $data[ $option_name ];
 	}
 }

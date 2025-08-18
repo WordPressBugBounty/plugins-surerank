@@ -130,16 +130,16 @@ class SeoAnalyzer {
 			__( "Your homepage title is one of the most important signals you can give to search engines — and to people. It’s the main clickable headline that appears in search results. Think of it like your site/'s headline on Google.", 'surerank' ),
 			__( 'This is often the first thing someone sees before they visit your site. A well-crafted title tells them what your site is about and encourages them to click. It also helps search engines understand what your homepage represents.', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'Why this matters:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'Why this matters:', 'surerank' ) ),
 			__( 'Your SEO title is a key part of how search engines decide what your homepage is about. It also sets expectations for visitors. If your title is missing or unclear, it can reduce your visibility or cause users to scroll past your site.', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'What you can include:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'What you can include:', 'surerank' ) ),
 			__( 'Mention your site or brand name and a clear description of what it offers. You don’t need to be fancy — just accurate and helpful.', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'Example:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'Example:', 'surerank' ) ),
 			__( '“Bright Bakes – Easy Baking Recipes for Everyone”', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'Where to add this:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'Where to add this:', 'surerank' ) ),
 			sprintf(
 				/* translators: %s is the URL of the surerank settings page */
 				__( "If your homepage is a static page, this <a href='%s' target='_blank'>link</a> will navigate you to the relevant page.", 'surerank' ),
@@ -202,18 +202,18 @@ class SeoAnalyzer {
 			__( 'Your homepage description is like a one-sentence pitch that appears below your homepage title in search results. It’s a quick summary that helps people decide whether to visit your site.', 'surerank' ),
 			__( 'It’s like a one-sentence pitch — short, clear, and focused on what your site offers. This is your chance to make a strong first impression.', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'Why this matters:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'Why this matters:', 'surerank' ) ),
 			__( 'A good description tells Google and your potential visitors what your homepage is about. It can directly influence how many people click through to your site. When written well, it improves visibility and makes your search result more appealing.', 'surerank' ),
 
 			sprintf( '<b> %s </b>', __( 'To keep things clear and visible, try to keep your homepage description between 150 to 160 characters. That’s usually enough to say something meaningful, without getting cut off in search results.</b>', 'surerank' ) ),
 
-			sprintf( '<b> %s </b>', __( 'What to write:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'What to write:', 'surerank' ) ),
 			__( 'Think about how you’d describe your site to someone who’s never seen it before. What is it about? Who is it for? What can they expect when they visit?', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'Example:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'Example:', 'surerank' ) ),
 			__( '“Discover simple, healthy meals that you can cook at home — even if you’re just getting started.”', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'Where to add this:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'Where to add this:', 'surerank' ) ),
 			sprintf(
 				/* translators: %s is the URL of the surerank settings page */
 				__( "If your homepage is a static page, this <a href='%s' target='_blank'>link</a> will navigate you to the relevant page.", 'surerank' ),
@@ -280,15 +280,15 @@ class SeoAnalyzer {
 			__( 'The H1 heading is usually the main title that appears visually on your homepage. It tells both visitors and search engines what the page is all about.', 'surerank' ),
 			__( 'Think of it like the front cover of a book. It should quickly explain what someone has landed on, and help guide their next step.', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'Why this matters:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'Why this matters:', 'surerank' ) ),
 			__( 'Search engines look at the H1 to understand the main topic of a page. Visitors use it to quickly decide whether they’re in the right place. If it’s missing or unclear, your site may feel incomplete or hard to understand.', 'surerank' ),
 
 			__( 'Every page should have just one H1 — especially the homepage. Using multiple H1s can confuse search engines and reduce the clarity of your site’s structure.', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'What makes a good H1:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'What makes a good H1:', 'surerank' ) ),
 			__( 'It should be clear, specific, and match what your site is about. Avoid vague or generic text. A short sentence or phrase that describes what you do works best.', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'Example:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'Example:', 'surerank' ) ),
 			__( '“Helping You Learn to Code from Scratch”', 'surerank' ),
 			__( '“Creative Interior Design for Modern Spaces”', 'surerank' ),
 		];
@@ -324,13 +324,13 @@ class SeoAnalyzer {
 			__( 'H2 headings act like section titles that break your homepage into clear parts. Think of them as signposts that guide visitors through your content. Instead of reading everything line by line, people scan — and H2s help them quickly spot what matters most.', 'surerank' ),
 			__( 'Search engines also pay attention to these subheadings. They use them to understand the structure of your page and what each section is about.', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'Why this matters:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'Why this matters:', 'surerank' ) ),
 			__( 'Subheadings make your content easier to scan for humans and easier to understand for search engines. A homepage without any H2s can feel flat and confusing. Just a few well-placed H2s can give your content more structure and impact.', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'What to write:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'What to write:', 'surerank' ) ),
 			__( 'Each H2 should introduce a new section — like your services, your process, your values, or key offerings. Keep them short and helpful.', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'Examples:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'Examples:', 'surerank' ) ),
 			__( 'What We Do', 'surerank' ),
 			__( 'How It Works', 'surerank' ),
 			__( 'Trusted by 100+ Clients', 'surerank' ),
@@ -423,10 +423,10 @@ class SeoAnalyzer {
 			__( 'Your homepage is usually the first place visitors land. From here, they should be able to quickly jump to the most important parts of your site — whether that’s a service page, your blog, or a contact form.', 'surerank' ),
 			__( 'Internal links help people find what they need and help search engines understand the structure of your site. They also pass link value (or “SEO juice”) from your homepage to other key pages.', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'Why this matters:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'Why this matters:', 'surerank' ) ),
 			__( 'Without internal links, your homepage becomes a dead end. Visitors might not explore further, and search engines won’t know which pages matter most.', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'What to link to:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'What to link to:', 'surerank' ) ),
 			__( 'Include links to things like: ', 'surerank' ),
 			__( 'About or Team page', 'surerank' ),
 			__( 'Services or product pages', 'surerank' ),
@@ -434,7 +434,7 @@ class SeoAnalyzer {
 			__( 'Contact or booking page', 'surerank' ),
 			__( 'You can do this with buttons, menus, or even simple text links.', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'Where to add them:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'Where to add them:', 'surerank' ) ),
 			__( 'Edit your homepage and look for natural spots to add links — like under short introductions, in feature sections, or at the end of content blocks.', 'surerank' ),
 		];
 
@@ -489,10 +489,10 @@ class SeoAnalyzer {
 			__( 'Sometimes, your homepage can be accessed through more than one URL — for example, with or without a trailing slash, or with tracking parameters like ?ref=newsletter. A canonical tag tells search engines which version is the “main” one.', 'surerank' ),
 			__( 'This helps avoid confusion and ensures that all ranking signals point to the correct version of your homepage.', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'Why this matters:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'Why this matters:', 'surerank' ) ),
 			__( 'If search engines see multiple versions of the same page, they may treat them as duplicates. That can split your SEO value and reduce your visibility in search results. A canonical tag keeps everything focused and clear.', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'What you can do:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'What you can do:', 'surerank' ) ),
 			__( 'Add a canonical tag to your homepage that points to your preferred URL (e.g., https://example.com/). This tells search engines, “This is the official version to index.”', 'surerank' ),
 		];
 
@@ -528,11 +528,11 @@ class SeoAnalyzer {
 			__( 'For your website to appear in search results, your homepage must be allowed to be indexed. Indexing simply means giving search engines permission to include your page in their listings.', 'surerank' ),
 			__( 'Sometimes indexing gets turned off by accident — during site setup, through theme settings, or by certain plugins. When that happens, your homepage becomes invisible to search engines, even if the rest of your site is working fine.', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'Why this matters:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'Why this matters:', 'surerank' ) ),
 			__( 'Your homepage is the front door to your website. It’s usually the first page people find when they search for your brand or business. If indexing is blocked, search engines can’t list it — which means potential visitors may never reach your site at all.', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'What you can do:', 'surerank' ) ),
-			__( 'Check if your homepage is set to allow indexing. You can do this by reviewing your page’s SEO settings, your site’s global visibility settings, or the “Search Appearance” options in your SEO plugin.', 'surerank' ),
+			sprintf( '<h6> %s </h6>', __( 'What you can do:', 'surerank' ) ),
+			__( 'You can do this by reviewing your page\'s SEO settings, your site\'s global visibility settings, or the Advanced settings of the homepage in the SureRank plugin.', 'surerank' ),
 
 			__( 'Once indexing is enabled, search engines will be able to include your homepage in search results — helping more people discover what you offer.', 'surerank' ),
 		];
@@ -583,10 +583,10 @@ class SeoAnalyzer {
 			__( 'Your homepage is the front door to your website — it’s often the first page people see, and the one search engines visit first. If your homepage doesn’t load or returns an error, both visitors and search engines may have trouble accessing your content.', 'surerank' ),
 			__( 'This can happen if your homepage was moved, deleted, or misconfigured — especially if your homepage is set to display your latest posts or a custom page.', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'Why it matters:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'Why it matters:', 'surerank' ) ),
 			__( "If your homepage isn’t reachable, it can affect how your entire site is crawled, indexed, and understood by search engines. It's also the first impression for your visitors — so it needs to be available and working.", 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'What you can do:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'What you can do:', 'surerank' ) ),
 			__( "Open your homepage in a browser and make sure it loads without errors. In WordPress, go to Settings → Reading and check that the right homepage is selected. If you're using a static page, ensure that page still exists and is published.", 'surerank' ),
 		];
 
@@ -620,10 +620,10 @@ class SeoAnalyzer {
 			__( 'A secure connection means your website uses HTTPS — the little padlock icon next to your site’s address in a browser. This shows visitors (and search engines) that your site is safe and their information is protected.', 'surerank' ),
 			__( 'Having a secure site isn’t just about safety — it’s also a trust signal. Search engines are more likely to rank secure sites higher, and modern browsers may even warn visitors when a site is not using HTTPS.', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'Why it matters:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'Why it matters:', 'surerank' ) ),
 			__( 'Security is important for everyone — even if your site doesn’t collect sensitive info. Using HTTPS protects your visitors and boosts your site’s credibility with search engines and users alike.', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'What you can do:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'What you can do:', 'surerank' ) ),
 			__( 'Make sure your website uses HTTPS and shows a padlock icon in the address bar. You can enable HTTPS with an SSL certificate — many hosting providers offer this for free. Once set up, your connection will be secure, and your site will appear safer to both search engines and people.', 'surerank' ),
 		];
 
@@ -652,10 +652,10 @@ class SeoAnalyzer {
 			__( 'When someone shares your homepage on social media or messaging apps, platforms try to pull a title, description, and image. Without Open Graph tags, they may choose random content — or display nothing at all.', 'surerank' ),
 			__( 'Open Graph tags let you decide exactly what people see when your homepage is shared.', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'Why this matters:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'Why this matters:', 'surerank' ) ),
 			__( 'A good preview makes your site more clickable and professional. A missing or messy preview can make it harder for people to trust or engage with your content.', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'What you can do:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'What you can do:', 'surerank' ) ),
 			__( 'Add Open Graph tags that define: ', 'surerank' ),
 			__( 'A short title for your homepage', 'surerank' ),
 			__( 'A brief description', 'surerank' ),
@@ -729,10 +729,10 @@ class SeoAnalyzer {
 		$helptext          = [
 			__( 'Think of schema as a little “cheat sheet” your homepage shares with search engines. It quietly tells them what kind of content your homepage contains — like whether it\'s a website, a blog, or something else. This extra detail helps search engines understand your page better and sometimes display richer information in search results.', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'Why it matters:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'Why it matters:', 'surerank' ) ),
 			__( 'Search engines don’t just look at text — they look for signals. Schema gives them those signals. With it, your homepage can show up more clearly and attractively in search results, with added details like a breadcrumb path or your site name.', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'What you can do:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'What you can do:', 'surerank' ) ),
 			__( 'Make sure your homepage includes basic structured data like WebPage schema. It helps search engines recognize your homepage as a core part of your site.', 'surerank' ),
 
 			__( 'You don’t have to add anything manually — SureRank handles this in the background, as long as the feature is active and enabled.', 'surerank' ),
@@ -777,10 +777,10 @@ class SeoAnalyzer {
 			__( 'Your website can usually be visited in two ways: https://example.com and https://www.example.com.', 'surerank' ),
 			__( 'Both may work, but unless one redirects to the other, search engines treat them as separate websites — even though they look the same.', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'Why this matters:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'Why this matters:', 'surerank' ) ),
 			__( 'If your site runs under both versions without redirection, it creates duplicate versions of every page. That splits your SEO value and may confuse search engines about which version to prioritize.', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'What you can do:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'What you can do:', 'surerank' ) ),
 			__( 'Pick your preferred domain (with or without www) and set up a redirect so all visitors and search engines are sent to that version. This makes your SEO stronger and avoids unnecessary duplication.', 'surerank' ),
 		];
 
@@ -1053,17 +1053,17 @@ class SeoAnalyzer {
 			__( 'ALT (alternative) text is a short description added to each image. It helps with accessibility for users using screen readers, and it helps search engines understand what the image is about. That can help your content appear in image search results too.', 'surerank' ),
 			[ 'list' => $list ],
 			[ 'img' => 'true' ],
-			sprintf( '<b> %s </b>', __( 'Why this matters:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'Why this matters:', 'surerank' ) ),
 			__( 'ALT text improves accessibility, makes your site more inclusive, and helps with SEO. It’s especially important on your homepage, where your most important content and images usually live.', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'What to write:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'What to write:', 'surerank' ) ),
 			__( 'Just describe what the image is about. If it’s decorative, you can skip it — but for key images, write a short, clear summary.', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'Examples:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'Examples:', 'surerank' ) ),
 			__( 'Woman doing yoga in a sunny room', 'surerank' ),
 			__( 'Handmade ceramic mug on a wooden table', 'surerank' ),
 
-			sprintf( '<b> %s </b>', __( 'Where to add it:', 'surerank' ) ),
+			sprintf( '<h6> %s </h6>', __( 'Where to add it:', 'surerank' ) ),
 			__( 'When uploading or editing images in WordPress, you’ll see an “ALT text” field in the media settings. Fill this out for each image on your homepage.', 'surerank' ),
 		];
 	}

@@ -1,4 +1,4 @@
-import { __ } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 import {
 	format as format_date,
 	startOfDay,
@@ -761,4 +761,24 @@ export const getCategorizedChecks = ( checks, ignoredList = [] ) => {
 			ignoredChecks: [],
 		}
 	);
+};
+
+export const getSeoCheckLabel = ( type, counts ) => {
+	if ( type === 'error' ) {
+		return sprintf(
+			// translators: %1$s is the number of issues detected, %2$s is the word "Issue".
+			'%1$s %2$s Detected',
+			counts,
+			_n( 'Issue', 'Issues', counts, 'surerank' )
+		);
+	}
+	if ( type === 'warning' ) {
+		return sprintf(
+			// translators: %1$s is the number of issues detected, %2$s is the word "Issue".
+			'%1$s %2$s Detected',
+			counts,
+			_n( 'Warning', 'Warnings', counts, 'surerank' )
+		);
+	}
+	return __( 'SEO is Optimized', 'surerank' );
 };

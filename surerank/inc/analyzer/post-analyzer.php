@@ -108,7 +108,7 @@ class PostAnalyzer {
 		$response = $this->run_checks( $post_id, $post );
 
 		if ( isset( $response['status'] ) && 'error' === $response['status'] ) {
-			self::log_error( $response['message'] );
+			self::log( $response['message'] );
 		}
 	}
 
@@ -219,40 +219,128 @@ class PostAnalyzer {
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function check_image_alt_text() {
-		$images = $this->xpath ? $this->xpath->query( '//img' ) : new DOMNodeList();
-
-		if ( ! $images || $images->length === 0 ) {
+	private function check_image_alt_text(): array {
+		$images = $this->get_images();
+		if ( empty( $images ) ) {
 			return [];
 		}
 
-		$total              = $images->length;
-		$missing_alt        = 0;
-		$missing_alt_images = [];
+		$analysis = $this->analyze_images( $images );
+		return $this->build_image_alt_response( $analysis );
+	}
+
+	/**
+	 * Get all images from the content.
+	 *
+	 * @return \DOMNodeList<\DOMNode>|null List of image elements.
+	 */
+	private function get_images(): ?\DOMNodeList {
+		$result = $this->xpath ? $this->xpath->query( '//img' ) : null;
+		return $result === false ? null : $result;
+	}
+
+	/**
+	 * Analyze images for alt text attributes.
+	 *
+	 * @param \DOMNodeList<\DOMNode> $images List of image elements.
+	 * @return array{total: int, missing_alt: int, missing_alt_images: array<string>} Analysis results.
+	 */
+	private function analyze_images( $images ): array {
+		$analysis = [
+			'total'              => $images->length,
+			'missing_alt'        => 0,
+			'missing_alt_images' => [],
+		];
 
 		foreach ( $images as $img ) {
-			if ( $img instanceof DOMElement ) {
-				$src = $img->hasAttribute( 'src' ) ? $img->getAttribute( 'src' ) : '';
-				if ( ! $img->hasAttribute( 'alt' ) || empty( trim( $img->getAttribute( 'alt' ) ) ) ) {
-					$missing_alt++;
-					if ( $src ) {
-						$missing_alt_images[] = $src;
-					}
+			if ( $this->is_missing_alt_text( $img ) ) {
+				$analysis['missing_alt']++;
+				$src = $this->get_image_src( $img );
+				if ( $src ) {
+					$analysis['missing_alt_images'][] = $src;
 				}
 			}
 		}
 
-		$exists       = $total > 0;
-		$is_optimized = $exists && $missing_alt === 0;
+		return $analysis;
+	}
 
-		$message = $exists && $is_optimized ? __( 'All images on this page have alt text attributes.', 'surerank' ) : __( 'One or more images on this page are missing alt text attributes.', 'surerank' );
+	/**
+	 * Check if an image element is missing alt text.
+	 *
+	 * @param \DOMNode $img Image element.
+	 * @return bool True if missing alt text.
+	 */
+	private function is_missing_alt_text( \DOMNode $img ): bool {
+		if ( ! $img instanceof \DOMElement ) {
+			return false;
+		}
+
+		return ! $img->hasAttribute( 'alt' ) || empty( trim( $img->getAttribute( 'alt' ) ) );
+	}
+
+	/**
+	 * Get the src attribute from an image element.
+	 *
+	 * @param \DOMNode $img Image element.
+	 * @return string Image source URL or empty string.
+	 */
+	private function get_image_src( \DOMNode $img ): string {
+		if ( ! $img instanceof \DOMElement ) {
+			return '';
+		}
+
+		return $img->hasAttribute( 'src' ) ? $img->getAttribute( 'src' ) : '';
+	}
+
+	/**
+	 * Build the response array for image alt text analysis.
+	 *
+	 * @param array{total: int, missing_alt: int, missing_alt_images: array<string>} $analysis Analysis results.
+	 * @return array<string, mixed> Response array.
+	 */
+	private function build_image_alt_response( array $analysis ): array {
+		$exists       = $analysis['total'] > 0;
+		$is_optimized = $exists && $analysis['missing_alt'] === 0;
+		$status       = $this->get_alt_text_status( $exists, $is_optimized );
+		$message      = $this->get_alt_text_message( $exists, $is_optimized );
 
 		return [
-			'status'      => $exists ? ( $is_optimized ? 'success' : 'warning' ) : 'warning',
-			'description' => $this->build_image_description( $exists, $total, $missing_alt, $missing_alt_images ),
+			'status'      => $status,
+			'description' => $this->build_image_description( $exists, $analysis['total'], $analysis['missing_alt'], $analysis['missing_alt_images'] ),
 			'message'     => $message,
-			'show_images' => $exists && $missing_alt > 0,
+			'show_images' => $exists && $analysis['missing_alt'] > 0,
 		];
+	}
+
+	/**
+	 * Get the status for alt text analysis.
+	 *
+	 * @param bool $exists Whether images exist.
+	 * @param bool $is_optimized Whether all images have alt text.
+	 * @return string Status string.
+	 */
+	private function get_alt_text_status( bool $exists, bool $is_optimized ): string {
+		if ( ! $exists ) {
+			return 'warning';
+		}
+
+		return $is_optimized ? 'success' : 'warning';
+	}
+
+	/**
+	 * Get the message for alt text analysis.
+	 *
+	 * @param bool $exists Whether images exist.
+	 * @param bool $is_optimized Whether all images have alt text.
+	 * @return string Message string.
+	 */
+	private function get_alt_text_message( bool $exists, bool $is_optimized ): string {
+		if ( $exists && $is_optimized ) {
+			return __( 'All images on this page have alt text attributes.', 'surerank' );
+		}
+
+		return __( 'One or more images on this page are missing alt text attributes.', 'surerank' );
 	}
 
 	/**
@@ -264,27 +352,60 @@ class PostAnalyzer {
 	 * @param array<string> $missing_alt_images Images missing alt text.
 	 * @return array<int, array<string, array<int, string>>|string>
 	 */
-	private function build_image_description( bool $exists, int $total, int $missing_alt, array $missing_alt_images ) {
-		$descriptions = [];
-
+	private function build_image_description( bool $exists, int $total, int $missing_alt, array $missing_alt_images ): array {
 		if ( ! $exists ) {
-			$descriptions[] = __( 'The page does not contain any images.', 'surerank' );
-			$descriptions[] = __( 'Add images to improve the post/page\'s visual appeal and SEO.', 'surerank' );
-		} else {
-			if ( $missing_alt === 0 ) {
-				$descriptions[] = __( 'Images on the post/page have alt text attributes', 'surerank' );
-			} else {
-				if ( ! empty( $missing_alt_images ) ) {
-					$list = [];
-					foreach ( array_unique( $missing_alt_images ) as $image ) {
-						$list[] = esc_html( $image );
-					}
-					$descriptions[]['list'] = $list;
-				}
-			}
+			return $this->get_no_images_description();
 		}
 
-		return $descriptions;
+		if ( $missing_alt === 0 ) {
+			return $this->get_optimized_images_description();
+		}
+
+		return $this->get_missing_alt_description( $missing_alt_images );
+	}
+
+	/**
+	 * Get description for pages with no images.
+	 *
+	 * @return array<int, string> Description array.
+	 */
+	private function get_no_images_description(): array {
+		return [
+			__( 'The page does not contain any images.', 'surerank' ),
+			__( 'Add images to improve the post/page\'s visual appeal and SEO.', 'surerank' ),
+		];
+	}
+
+	/**
+	 * Get description for pages with optimized images.
+	 *
+	 * @return array<int, string> Description array.
+	 */
+	private function get_optimized_images_description(): array {
+		return [
+			__( 'Images on the post/page have alt text attributes', 'surerank' ),
+		];
+	}
+
+	/**
+	 * Get description for pages with missing alt text.
+	 *
+	 * @param array<string> $missing_alt_images Images missing alt text.
+	 * @return array<int, array<string, array<int, string>>> Description array.
+	 */
+	private function get_missing_alt_description( array $missing_alt_images ): array {
+		if ( empty( $missing_alt_images ) ) {
+			return [];
+		}
+
+		$list = [];
+		foreach ( array_unique( $missing_alt_images ) as $image ) {
+			$list[] = esc_html( $image );
+		}
+
+		return [
+			[ 'list' => $list ],
+		];
 	}
 
 	/**

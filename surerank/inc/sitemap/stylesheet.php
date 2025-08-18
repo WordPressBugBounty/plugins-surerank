@@ -159,7 +159,11 @@ class Stylesheet {
 					<div class="sitemap-content">
 						<xsl:choose>
 							<xsl:when test="s:sitemapindex">
-								<p class="sitemap-count" style="font-size: 16px;"> This XML Sitemap Index file contains <b><xsl:value-of select="count(s:sitemapindex/s:sitemap)" /> sitemaps.</b></p>
+								<p class="sitemap-count" style="font-size: 16px;"> This XML Sitemap Index file contains <b><xsl:value-of select="count(s:sitemapindex/s:sitemap)" /> 
+								<xsl:choose>
+									<xsl:when test="count(s:sitemapindex/s:sitemap) = 1"> sitemap</xsl:when>
+									<xsl:otherwise> sitemaps</xsl:otherwise>
+								</xsl:choose>.</b></p>
 								<table>
 									<thead>
 										<tr>

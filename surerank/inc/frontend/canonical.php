@@ -33,6 +33,8 @@ class Canonical {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
+		remove_action( 'wp_head', 'rel_canonical' );
+		remove_action( 'wp_head', 'index_rel_link' );
 		add_action( 'surerank_print_meta', [ $this, 'print_canonical_url' ], 1, 1 );
 	}
 

@@ -143,16 +143,19 @@ class Utils {
 	 *
 	 * @return array<string, mixed> Schema type class mappings.
 	 */
-	private static function get_schema_types() {
-		return [
-			'WebSite'        => WebSite::class,
-			'WebPage'        => WebPage::class,
-			'Organization'   => Organization::class,
-			'BreadcrumbList' => BreadcrumbList::class,
-			'Article'        => Article::class,
-			'SearchAction'   => Search_Action::class,
-			'Person'         => Person::class,
-		];
+	public static function get_schema_types() {
+		return apply_filters(
+			'surerank_schema_types',
+			[
+				'WebSite'        => WebSite::class,
+				'WebPage'        => WebPage::class,
+				'Organization'   => Organization::class,
+				'BreadcrumbList' => BreadcrumbList::class,
+				'Article'        => Article::class,
+				'SearchAction'   => Search_Action::class,
+				'Person'         => Person::class,
+			]
+		);
 	}
 
 	/**

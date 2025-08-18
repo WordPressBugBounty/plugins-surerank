@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Settings;
+use SureRank\Inc\Sitemap\Xml_Sitemap;
 use SureRank\Inc\Traits\Get_Instance;
 
 /**
@@ -36,9 +37,7 @@ class Robots {
 	public function __construct() {
 		add_action( 'surerank_print_meta', [ $this, 'print_meta' ], 1 );
 		remove_all_filters( 'wp_robots' );
-		if ( ! empty( Settings::get( 'enable_xml_sitemap' ) ) ) {
-			add_filter( 'robots_txt', [ $this, 'generate_custom_robots_txt' ], 10, 2 ); //phpcs:ignore WordPressVIPMinimum.Hooks.RestrictedHooks.robots_txt
-		}
+		add_filter( 'robots_txt', [ $this, 'generate_custom_robots_txt' ], 10, 2 ); //phpcs:ignore WordPressVIPMinimum.Hooks.RestrictedHooks.robots_txt
 	}
 
 	/**
@@ -115,59 +114,115 @@ class Robots {
 	 * Generates a custom robots.txt content with an updated Sitemap directive.
 	 *
 	 * @since 0.0.1
+	 * @since 1.2.0
 	 * @param string $output The current robots.txt output.
 	 * @param bool   $public Whether the site is public and should be indexed.
 	 * @return string Updated robots.txt content with the Sitemap directive added or modified.
 	 */
 	public function generate_custom_robots_txt( $output, $public ) {
 
-		$sitemap_url       = home_url( Sitemap::get_slug() );
-		$sitemap_directive = "Sitemap: {$sitemap_url}" . PHP_EOL;
-
-		if ( preg_match( '/^sitemap:\s.*$/im', $output ) ) {
-			$output = preg_replace( '/^sitemap:\s.*$/im', $sitemap_directive, $output );
-		} else {
-			// Append the Sitemap directive to the output if none exists.
-			$output .= PHP_EOL . $sitemap_directive;
+		if ( ! $public ) {
+			return $output;
 		}
 
-		return (string) $output;
+		$custom_content = Get::option( SURERANK_ROBOTS_TXT_CONTENT, '' );
+
+		if ( ! empty( $custom_content ) ) {
+			return $custom_content;
+		}
+
+		if ( ! empty( Settings::get( 'enable_xml_sitemap' ) ) ) {
+			$sitemap_url       = home_url( Xml_Sitemap::get_slug() );
+			$sitemap_directive = "Sitemap: {$sitemap_url}" . PHP_EOL;
+
+			if ( preg_match( '/^sitemap:\s.*$/im', $output ) ) {
+				$output = preg_replace( '/^sitemap:\s.*$/im', $sitemap_directive, $output );
+			} else {
+				// Append the Sitemap directive to the output if none exists.
+				$output .= PHP_EOL . $sitemap_directive;
+			}
+
+			return (string) $output;
+		}
+		return $output;
 	}
 
 	/**
 	 * Check of specified page type exists
 	 *
 	 * @since 1.0.0
-	 * @param array<string, mixed> $types page types.
+	 * @param array<int, string> $types page types.
 	 * @return bool
 	 */
-	public function is_specified_page_type( $types = [] ) {
+	public function is_specified_page_type( $types = [] ): bool {
 		foreach ( $types as $type ) {
-
-			/**
-			 * No-indexing for empty taxonomies.
-			 */
-			if ( is_archive() && ! empty( get_queried_object() ) ) {
-				$taxonomy = get_queried_object();
-				if ( isset( $taxonomy->count ) && $taxonomy->count === 0 ) {
-					return true;
-				}
+			if ( $this->is_empty_taxonomy() ) {
+				return true;
 			}
 
-			if (
-				( 'post_tag' === $type && is_tag() ) ||
-				( 'author' === $type && is_author() ) ||
-				( 'date' === $type && is_date() ) ||
-				( 'post_format' === $type && is_tax( 'post_format' ) ) ||
-				( 'category' === $type && is_category() ) ||
-				( 'search' === $type && is_search() ) ||
-				( 'archive' === $type && is_archive() ) || // General archive page.
-				( post_type_exists( $type ) && is_singular( $type ) ) || // Custom post types.
-				( taxonomy_exists( $type ) && is_tax( $type ) ) // Custom taxonomies.
-			) {
+			if ( $this->matches_page_type( $type ) ) {
 				return true;
 			}
 		}
+		return false;
+	}
+
+	/**
+	 * Check if current page is an empty taxonomy archive.
+	 *
+	 * @since 1.0.0
+	 * @return bool
+	 */
+	private function is_empty_taxonomy() {
+		if ( ! is_archive() ) {
+			return false;
+		}
+
+		$taxonomy = get_queried_object();
+		if ( ! $taxonomy instanceof \WP_Term ) {
+			return false;
+		}
+
+		return $taxonomy->count === 0;
+	}
+
+	/**
+	 * Check if the current page matches the specified type.
+	 *
+	 * @since 1.0.0
+	 * @param string $type The page type to check.
+	 * @return bool
+	 */
+	private function matches_page_type( string $type ) {
+		$type_checks = [
+			'post_tag' => 'is_tag',
+			'author'   => 'is_author',
+			'date'     => 'is_date',
+			'category' => 'is_category',
+			'search'   => 'is_search',
+			'archive'  => 'is_archive',
+		];
+
+		// Check standard page types.
+		if ( isset( $type_checks[ $type ] ) && call_user_func( $type_checks[ $type ] ) ) {
+			return true;
+		}
+
+		// Check post format.
+		if ( 'post_format' === $type && is_tax( 'post_format' ) ) {
+			return true;
+		}
+
+		// Check custom post types.
+		if ( post_type_exists( $type ) && is_singular( $type ) ) {
+			return true;
+		}
+
+		// Check custom taxonomies.
+		if ( taxonomy_exists( $type ) && is_tax( $type ) ) {
+			return true;
+		}
+
 		return false;
 	}
 

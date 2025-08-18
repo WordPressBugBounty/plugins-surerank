@@ -165,7 +165,7 @@ class RankMath extends BaseImporter {
 				true
 			);
 		} catch ( Exception $e ) {
-			self::log_error(
+			self::log(
 				sprintf(
 					/* translators: %s: error message. */
 					__( 'Error importing RankMath global settings: %s', 'surerank' ),
@@ -258,7 +258,7 @@ class RankMath extends BaseImporter {
 				true
 			);
 		} catch ( Exception $e ) {
-			self::log_error(
+			self::log(
 				sprintf(
 					/* translators: 1: ID, 2: type, 3: error message. */
 					__( 'Error importing meta-robots for %2$s %1$d: %3$s', 'surerank' ),
@@ -383,51 +383,156 @@ class RankMath extends BaseImporter {
 	 * @return void
 	 */
 	private function update_robot_settings( $robot_keys_mapping ): void {
-		$robot_data = [
+		$extended_mapping = $this->extend_robot_keys_mapping( $robot_keys_mapping );
+
+		foreach ( $extended_mapping as $rankmath_key => $surerank_key ) {
+			$this->process_robot_setting( $rankmath_key, $surerank_key );
+		}
+	}
+
+	/**
+	 * Extend robot keys mapping with post types and taxonomies.
+	 *
+	 * @param array<string, array<int, string>> $robot_keys_mapping Initial mapping.
+	 * @return array<string, array<int, string>> Extended mapping.
+	 */
+	private function extend_robot_keys_mapping( array $robot_keys_mapping ): array {
+		// Add post types to mapping.
+		foreach ( $this->post_types as $post_type ) {
+			$robot_keys_mapping = $this->add_post_type_mapping( $robot_keys_mapping, $post_type );
+		}
+
+		// Add taxonomies to mapping.
+		foreach ( $this->taxonomies as $taxonomy ) {
+			$robot_keys_mapping = $this->add_taxonomy_mapping( $robot_keys_mapping, $taxonomy );
+		}
+
+		return $robot_keys_mapping;
+	}
+
+	/**
+	 * Add post type to robot keys mapping.
+	 *
+	 * @param array<string, array<int, string>> $mapping Current mapping.
+	 * @param string                            $post_type Post type.
+	 * @return array<string, array<int, string>> Updated mapping.
+	 */
+	private function add_post_type_mapping( array $mapping, string $post_type ): array {
+		$custom_robots                 = "pt_{$post_type}_robots";
+		$custom_robots_key             = "pt_{$post_type}_custom_robots";
+		$mapping[ $custom_robots_key ] = [ $custom_robots, $post_type ];
+		return $mapping;
+	}
+
+	/**
+	 * Add taxonomy to robot keys mapping.
+	 *
+	 * @param array<string, array<int, string>> $mapping Current mapping.
+	 * @param \WP_Taxonomy                      $taxonomy Taxonomy object.
+	 * @return array<string, array<int, string>> Updated mapping.
+	 */
+	private function add_taxonomy_mapping( array $mapping, \WP_Taxonomy $taxonomy ): array {
+		$custom_robots                 = "tax_{$taxonomy->name}_robots";
+		$custom_robots_key             = "tax_{$taxonomy->name}_custom_robots";
+		$mapping[ $custom_robots_key ] = [ $custom_robots, $taxonomy->name ];
+		return $mapping;
+	}
+
+	/**
+	 * Process a single robot setting.
+	 *
+	 * @param string             $rankmath_key RankMath key.
+	 * @param array<int, string> $surerank_key SureRank key data.
+	 * @return void
+	 */
+	private function process_robot_setting( string $rankmath_key, array $surerank_key ): void {
+		$robot_rules = $this->get_robot_rules( $rankmath_key, $surerank_key[0] );
+
+		if ( empty( $robot_rules ) ) {
+			return;
+		}
+
+		$this->apply_robot_rules( $robot_rules, $surerank_key[1] );
+	}
+
+	/**
+	 * Get robot rules for a specific key.
+	 *
+	 * @param string $rankmath_key RankMath key.
+	 * @param string $rules_key    Rules key.
+	 * @return array<string, string> Robot rules.
+	 */
+	private function get_robot_rules( string $rankmath_key, string $rules_key ): array {
+		$is_custom = $this->is_custom_robot_setting( $rankmath_key );
+		$rules     = $is_custom ? ( $this->source_settings[ $rules_key ] ?? [] ) : $this->rank_math_global_robots;
+
+		if ( $is_custom ) {
+			$rules = RankMathConstants::get_mapped_robots( $rules );
+		}
+
+		return $rules;
+	}
+
+	/**
+	 * Check if a robot setting is custom.
+	 *
+	 * @param string $rankmath_key RankMath key.
+	 * @return bool True if custom.
+	 */
+	private function is_custom_robot_setting( string $rankmath_key ): bool {
+		return isset( $this->source_settings[ $rankmath_key ] ) && 'on' === $this->source_settings[ $rankmath_key ];
+	}
+
+	/**
+	 * Apply robot rules.
+	 *
+	 * @param array<string, string> $robot_rules Robot rules.
+	 * @param string                $target      Target (post type or taxonomy).
+	 * @return void
+	 */
+	private function apply_robot_rules( array $robot_rules, string $target ): void {
+		$robot_data = $this->get_robot_data_mapping();
+
+		foreach ( $robot_rules as $key => $value ) {
+			if ( ! isset( $robot_data[ $key ] ) ) {
+				continue;
+			}
+
+			$this->update_robot_setting( $robot_data[ $key ], $target, $value );
+		}
+	}
+
+	/**
+	 * Get robot data mapping.
+	 *
+	 * @return array<string, string> Robot data mapping.
+	 */
+	private function get_robot_data_mapping(): array {
+		return [
 			'noindex'   => 'no_index',
 			'nofollow'  => 'no_follow',
 			'noarchive' => 'no_archive',
 		];
-		$post_types = $this->post_types;
-		foreach ( $post_types as $post_type ) {
-			$custom_robots                            = "pt_{$post_type}_robots";
-			$custom_robots_key                        = 'pt_' . $post_type . '_custom_robots';
-			$robot_keys_mapping[ $custom_robots_key ] = [ $custom_robots, $post_type ];
-		}
-		$taxonomies = $this->taxonomies;
-		foreach ( $taxonomies as $taxonomy ) {
-			$custom_robots                            = "tax_{$taxonomy->name}_robots";
-			$custom_robots_key                        = 'tax_' . $taxonomy->name . '_custom_robots';
-			$robot_keys_mapping[ $custom_robots_key ] = [ $custom_robots, $taxonomy->name ];
-		}
+	}
 
-		foreach ( $robot_keys_mapping as $rankmath_key => $surerank_key ) {
-			$first       = $surerank_key[0];
-			$second      = $surerank_key[1];
-			$is_custom   = isset( $this->source_settings[ $rankmath_key ] ) && 'on' === $this->source_settings[ $rankmath_key ];
-			$robot_rules = $is_custom ? ( $this->source_settings[ $first ] ?? [] ) : $this->rank_math_global_robots;
+	/**
+	 * Update a single robot setting.
+	 *
+	 * @param string $surerank_robot_key SureRank robot key.
+	 * @param string $target             Target (post type or taxonomy).
+	 * @param string $value              Value ('yes' or 'no').
+	 * @return void
+	 */
+	private function update_robot_setting( string $surerank_robot_key, string $target, string $value ): void {
+		$current_settings = $this->surerank_settings[ $surerank_robot_key ] ?? [];
+		$is_present       = in_array( $target, $current_settings, true );
 
-			if ( $is_custom ) {
-				$robot_rules = RankMathConstants::get_mapped_robots( $robot_rules );
-			}
-
-			if ( empty( $robot_rules ) ) {
-				continue;
-			}
-
-			foreach ( $robot_rules as $key => $value ) {
-				if ( ! isset( $robot_data[ $key ] ) ) {
-					continue;
-				}
-				$surerank_robot_key = $robot_data[ $key ];
-				$in_array           = in_array( $second, $this->surerank_settings[ $surerank_robot_key ], true );
-
-				if ( 'yes' === $value && ! $in_array ) {
-					$this->surerank_settings[ $surerank_robot_key ][] = $second;
-				} elseif ( 'no' === $value && $in_array ) {
-					$this->surerank_settings[ $surerank_robot_key ] = array_values( array_diff( $this->surerank_settings[ $surerank_robot_key ], [ $second ] ) );
-				}
-			}
+		if ( 'yes' === $value && ! $is_present ) {
+			$this->surerank_settings[ $surerank_robot_key ][] = $target;
+		} elseif ( 'no' === $value && $is_present ) {
+			$this->surerank_settings[ $surerank_robot_key ] = array_values(
+				array_diff( $current_settings, [ $target ] )
+			);
 		}
 	}
 

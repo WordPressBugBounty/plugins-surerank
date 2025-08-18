@@ -114,39 +114,9 @@ class Yoast extends BaseImporter {
 	 * @return array{success: bool, message: string}
 	 */
 	public function import_post_meta_robots( int $post_id ): array {
-		$robot_data = $this->yoast_global_robots;
-
 		try {
-			// Archive setting.
-			if ( ! empty( $this->source_meta['_yoast_wpseo_meta-robots-adv'] )
-				&& is_array( $this->source_meta['_yoast_wpseo_meta-robots-adv'] )
-				&& ! empty( $this->source_meta['_yoast_wpseo_meta-robots-adv'][0] )
-				&& is_string( $this->source_meta['_yoast_wpseo_meta-robots-adv'][0] )
-				&& str_contains( $this->source_meta['_yoast_wpseo_meta-robots-adv'][0], 'noarchive' ) ) {
-				$robot_data['noarchive'] = 'yes';
-			}
-
-			// Follow setting.
-			if ( ! empty( $this->source_meta['_yoast_wpseo_meta-robots-nofollow'] ) ) {
-				$robot_data['nofollow'] = 'yes';
-			}
-
-			// Index setting.
-			$robot_index = $this->source_meta['_yoast_wpseo_meta-robots-noindex'] ?? null;
-
-			if ( null === $robot_index ) {
-				$meta_key = "noindex-{$this->type}";
-				if ( ! empty( $this->source_meta[ $meta_key ] ) ) {
-					$robot_data['noindex'] = 'yes';
-				}
-			} elseif ( is_array( $robot_index ) && ! empty( $robot_index[0] ) && '1' === $robot_index[0] ) {
-				$robot_data['noindex'] = 'yes';
-			}
-
-			// Apply settings.
-			foreach ( $robot_data as $key => $value ) {
-				$this->default_surerank_meta[ YoastConstants::ROBOTS_MAPPING[ $key ] ] = $value;
-			}
+			$robot_data = $this->collect_post_robot_data();
+			$this->apply_robot_settings( $robot_data );
 
 			return ImporterUtils::build_response(
 				sprintf(
@@ -157,7 +127,7 @@ class Yoast extends BaseImporter {
 				true
 			);
 		} catch ( Exception $e ) {
-			self::log_error(
+			self::log(
 				sprintf(
 					/* translators: %d: post ID, %s: error message. */
 					__( 'Error importing meta-robots for post %1$d: %2$s', 'surerank' ),
@@ -199,7 +169,7 @@ class Yoast extends BaseImporter {
 				true
 			);
 		} catch ( Exception $e ) {
-			self::log_error(
+			self::log(
 				sprintf(
 					/* translators: %d: term ID, %s: error message. */
 					__( 'Error importing meta-robots for term %1$d: %2$s', 'surerank' ),
@@ -365,7 +335,7 @@ class Yoast extends BaseImporter {
 				true
 			);
 		} catch ( Exception $e ) {
-			self::log_error(
+			self::log(
 				sprintf(
 					/* translators: %s: error message. */
 					__( 'Error importing Yoast SEO global settings: %s', 'surerank' ),
@@ -430,6 +400,109 @@ class Yoast extends BaseImporter {
 	 */
 	protected function get_excluded_meta_keys(): array {
 		return YoastConstants::EXCLUDED_META_KEYS;
+	}
+
+	/**
+	 * Collect robot data for a post.
+	 *
+	 * @return array<string, string> Robot data.
+	 */
+	private function collect_post_robot_data(): array {
+		$robot_data = $this->yoast_global_robots;
+
+		// Check noarchive setting.
+		if ( $this->should_set_noarchive() ) {
+			$robot_data['noarchive'] = 'yes';
+		}
+
+		// Check nofollow setting.
+		if ( $this->should_set_nofollow() ) {
+			$robot_data['nofollow'] = 'yes';
+		}
+
+		// Check noindex setting.
+		if ( $this->should_set_noindex() ) {
+			$robot_data['noindex'] = 'yes';
+		}
+
+		return $robot_data;
+	}
+
+	/**
+	 * Check if noarchive should be set.
+	 *
+	 * @return bool True if noarchive should be set.
+	 */
+	private function should_set_noarchive(): bool {
+		$adv_robots = $this->source_meta['_yoast_wpseo_meta-robots-adv'] ?? null;
+
+		if ( ! is_array( $adv_robots ) || empty( $adv_robots[0] ) ) {
+			return false;
+		}
+
+		if ( ! is_string( $adv_robots[0] ) ) {
+			return false;
+		}
+
+		return str_contains( $adv_robots[0], 'noarchive' );
+	}
+
+	/**
+	 * Check if nofollow should be set.
+	 *
+	 * @return bool True if nofollow should be set.
+	 */
+	private function should_set_nofollow(): bool {
+		return ! empty( $this->source_meta['_yoast_wpseo_meta-robots-nofollow'] );
+	}
+
+	/**
+	 * Check if noindex should be set.
+	 *
+	 * @return bool True if noindex should be set.
+	 */
+	private function should_set_noindex(): bool {
+		$robot_index = $this->source_meta['_yoast_wpseo_meta-robots-noindex'] ?? null;
+
+		// If robot_index is not set, check type-specific noindex.
+		if ( null === $robot_index ) {
+			return $this->check_type_specific_noindex();
+		}
+
+		// Check if robot_index indicates noindex.
+		return $this->is_noindex_value( $robot_index );
+	}
+
+	/**
+	 * Check type-specific noindex setting.
+	 *
+	 * @return bool True if type-specific noindex is set.
+	 */
+	private function check_type_specific_noindex(): bool {
+		$meta_key = "noindex-{$this->type}";
+		return ! empty( $this->source_meta[ $meta_key ] );
+	}
+
+	/**
+	 * Check if a value indicates noindex.
+	 *
+	 * @param mixed $robot_index The robot index value.
+	 * @return bool True if value indicates noindex.
+	 */
+	private function is_noindex_value( $robot_index ): bool {
+		return is_array( $robot_index ) && ! empty( $robot_index[0] ) && '1' === $robot_index[0];
+	}
+
+	/**
+	 * Apply robot settings to default meta.
+	 *
+	 * @param array<string, string> $robot_data Robot data to apply.
+	 * @return void
+	 */
+	private function apply_robot_settings( array $robot_data ): void {
+		foreach ( $robot_data as $key => $value ) {
+			$this->default_surerank_meta[ YoastConstants::ROBOTS_MAPPING[ $key ] ] = $value;
+		}
 	}
 
 	/**

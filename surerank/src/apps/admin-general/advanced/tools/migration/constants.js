@@ -9,13 +9,23 @@ export const PAGE_DESCRIPTION = __(
 
 export const PLUGIN_OPTIONS = Object.entries(
 	surerank_admin_common?.plugins_for_migration ?? {}
-).map( ( [ slug, name ] ) => ( { slug, name } ) );
+).map( ( [ slug, data ] ) => ( {
+	slug,
+	name: data.name,
+	active: !! data.active,
+} ) );
+const MIGRATED_PLUGINS = Object.keys(
+	surerank_admin_common?.migration_completed_plugins ?? {}
+);
+export const ACTIVE_MIGRATED_PLUGINS = PLUGIN_OPTIONS.filter(
+	( plugin ) => plugin.active
+).filter( ( { slug } ) => MIGRATED_PLUGINS.includes( slug ) );
 
 // Get parent items from navLinks excluding Schema
-const navLinks = getNavLinks();
+
 export const MIGRATED_ITEMS = [
 	...new Set(
-		navLinks.flatMap( ( section ) =>
+		getNavLinks().flatMap( ( section ) =>
 			section.links
 				.filter( ( link ) => link.migratable )
 				.map( ( link ) => link.label )

@@ -31,125 +31,18 @@ class Rules {
 	 * @return array<string, mixed> The array of location selection options.
 	 * @since 1.0.0
 	 */
-	public static function get_schema_rules_selections( $consider_type = false ) {
-		$args = [
-			'public'   => true,
-			'_builtin' => true,
-		];
+	public static function get_schema_rules_selections( $consider_type = false ): array {
+		$post_types        = self::get_filtered_post_types();
+		$selection_options = self::initialize_selection_options( $consider_type );
 
-		$post_types = get_post_types( $args, 'objects' );
-		$post_types = array_filter( $post_types, static fn( $pt ) => $pt instanceof \WP_Post_Type );
-		unset( $post_types['attachment'] );
+		// Add WooCommerce product types if available.
+		self::add_woocommerce_options( $selection_options );
 
-		$args['_builtin'] = false;
-		$custom_post_type = get_post_types( $args, 'objects' );
-		$custom_post_type = array_filter( $custom_post_type, static fn( $pt ) => $pt instanceof \WP_Post_Type );
+		// Add taxonomy-based options.
+		self::add_taxonomy_options( $selection_options, $post_types, $consider_type );
 
-		$post_types = apply_filters( 'surerank_location_rule_post_types', array_merge( $post_types, $custom_post_type ) );
-
-		$special_pages = [
-			'special-404'    => __( '404 Page', 'surerank' ),
-			'special-search' => __( 'Search Page', 'surerank' ),
-			'special-blog'   => __( 'Blog / Posts Page', 'surerank' ),
-			'special-front'  => __( 'Front Page', 'surerank' ),
-			'special-date'   => __( 'Date Archive', 'surerank' ),
-			'special-author' => __( 'Author Archive', 'surerank' ),
-		];
-
-		if ( class_exists( 'WooCommerce' ) ) {
-			$special_pages['special-woo-shop'] = __( 'WooCommerce Shop Page', 'surerank' );
-		}
-
-		if ( 'single' === $consider_type ) {
-			$global_val = [
-				'basic-global'    => __( 'Entire Website', 'surerank' ),
-				'basic-singulars' => __( 'All Singulars', 'surerank' ),
-			];
-		} elseif ( 'archive' === $consider_type ) {
-			$global_val = [
-				'basic-global'   => __( 'Entire Website', 'surerank' ),
-				'basic-archives' => __( 'All Archives', 'surerank' ),
-			];
-		} else {
-			$global_val = [
-				'basic-global'    => __( 'Entire Website', 'surerank' ),
-				'basic-singulars' => __( 'All Singulars', 'surerank' ),
-				'basic-archives'  => __( 'All Archives', 'surerank' ),
-			];
-		}
-
-		if ( 'single' === $consider_type ) {
-			$selection_options = [
-				'basic' => [
-					'label' => __( 'Basic', 'surerank' ),
-					'value' => $global_val,
-				],
-			];
-		} else {
-			$selection_options = [
-				'basic'         => [
-					'label' => __( 'Basic', 'surerank' ),
-					'value' => $global_val,
-				],
-				'special-pages' => [
-					'label' => __( 'Special Pages', 'surerank' ),
-					'value' => $special_pages,
-				],
-			];
-		}
-
-		$args = [
-			'public' => true,
-		];
-
-		if ( class_exists( 'WooCommerce' ) ) {
-			$product_types = wc_get_product_types();
-
-			$product_type_options = [];
-			foreach ( $product_types as $type_key => $type_label ) {
-				$product_type_options[ 'product-type|' . $type_key ] = $type_label;
-			}
-
-			if ( ! empty( $product_type_options ) ) {
-				$selection_options['product-types'] = [
-					'label' => __( 'Product Types', 'surerank' ),
-					'value' => $product_type_options,
-				];
-			}
-		}
-
-		$taxonomies = get_taxonomies( $args, 'objects' );
-		$taxonomies = array_filter( $taxonomies, static fn( $tax ) => $tax instanceof \WP_Taxonomy );
-
-		if ( ! empty( $taxonomies ) ) {
-			foreach ( $taxonomies as $taxonomy ) {
-				foreach ( $post_types as $post_type ) {
-					$post_opt = self::get_post_target_rule_options( $post_type, $taxonomy, $consider_type );
-
-					if ( isset( $selection_options[ $post_opt['post_key'] ] ) ) {
-						if ( ! empty( $post_opt['value'] ) && is_array( $post_opt['value'] ) ) {
-							foreach ( $post_opt['value'] as $key => $value ) {
-								if ( ! in_array( $value, $selection_options[ $post_opt['post_key'] ]['value'], true ) ) {
-									$selection_options[ $post_opt['post_key'] ]['value'][ $key ] = $value;
-								}
-							}
-						}
-					} else {
-						$selection_options[ $post_opt['post_key'] ] = [
-							'label' => $post_opt['label'],
-							'value' => $post_opt['value'],
-						];
-					}
-				}
-			}
-		}
-
-		$selection_options['specific-target'] = [
-			'label' => __( 'Specific Target', 'surerank' ),
-			'value' => [
-				'specifics' => __( 'Specific Pages / Posts / Taxonomies, etc.', 'surerank' ),
-			],
-		];
+		// Add specific target option.
+		$selection_options['specific-target'] = self::get_specific_target_option();
 
 		return apply_filters( 'surerank_display_on_list', $selection_options );
 	}
@@ -201,6 +94,254 @@ class Rules {
 			'post_key' => $post_key,
 			'label'    => $post_label,
 			'value'    => $post_option,
+		];
+	}
+
+	/**
+	 * Get filtered post types.
+	 *
+	 * @return array<string, \WP_Post_Type> Filtered post types.
+	 */
+	private static function get_filtered_post_types(): array {
+		// Get built-in post types.
+		$builtin_types = self::get_post_types_by_builtin( true );
+		unset( $builtin_types['attachment'] );
+
+		// Get custom post types.
+		$custom_types = self::get_post_types_by_builtin( false );
+
+		// Merge and apply filter.
+		$post_types = array_merge( $builtin_types, $custom_types );
+		return apply_filters( 'surerank_location_rule_post_types', $post_types );
+	}
+
+	/**
+	 * Get post types by builtin status.
+	 *
+	 * @param bool $builtin Whether to get builtin types.
+	 * @return array<string, \WP_Post_Type> Post types.
+	 */
+	private static function get_post_types_by_builtin( bool $builtin ): array {
+		$args = [
+			'public'   => true,
+			'_builtin' => $builtin,
+		];
+
+		$post_types = get_post_types( $args, 'objects' );
+		return array_filter( $post_types, static fn( $pt ) => $pt instanceof \WP_Post_Type );
+	}
+
+	/**
+	 * Initialize selection options based on consider type.
+	 *
+	 * @param mixed $consider_type Consider type.
+	 * @return array<string, mixed> Initial selection options.
+	 */
+	private static function initialize_selection_options( $consider_type ): array {
+		$global_val   = self::get_global_values( $consider_type );
+		$basic_option = [
+			'basic' => [
+				'label' => __( 'Basic', 'surerank' ),
+				'value' => $global_val,
+			],
+		];
+
+		if ( 'single' === $consider_type ) {
+			return $basic_option;
+		}
+
+		return array_merge(
+			$basic_option,
+			[
+				'special-pages' => [
+					'label' => __( 'Special Pages', 'surerank' ),
+					'value' => self::get_special_pages(),
+				],
+			]
+		);
+	}
+
+	/**
+	 * Get global values based on consider type.
+	 *
+	 * @param mixed $consider_type Consider type.
+	 * @return array<string, string> Global values.
+	 */
+	private static function get_global_values( $consider_type ): array {
+		$values = [
+			'basic-global' => __( 'Entire Website', 'surerank' ),
+		];
+
+		if ( 'single' === $consider_type ) {
+			$values['basic-singulars'] = __( 'All Singulars', 'surerank' );
+		} elseif ( 'archive' === $consider_type ) {
+			$values['basic-archives'] = __( 'All Archives', 'surerank' );
+		} else {
+			$values['basic-singulars'] = __( 'All Singulars', 'surerank' );
+			$values['basic-archives']  = __( 'All Archives', 'surerank' );
+		}
+
+		return $values;
+	}
+
+	/**
+	 * Get special pages.
+	 *
+	 * @return array<string, string> Special pages.
+	 */
+	private static function get_special_pages(): array {
+		$special_pages = [
+			'special-404'    => __( '404 Page', 'surerank' ),
+			'special-search' => __( 'Search Page', 'surerank' ),
+			'special-blog'   => __( 'Blog / Posts Page', 'surerank' ),
+			'special-front'  => __( 'Front Page', 'surerank' ),
+			'special-date'   => __( 'Date Archive', 'surerank' ),
+			'special-author' => __( 'Author Archive', 'surerank' ),
+		];
+
+		if ( class_exists( 'WooCommerce' ) ) {
+			$special_pages['special-woo-shop'] = __( 'WooCommerce Shop Page', 'surerank' );
+		}
+
+		return $special_pages;
+	}
+
+	/**
+	 * Add WooCommerce options.
+	 *
+	 * @param array<string, mixed> $selection_options Selection options.
+	 * @return void
+	 */
+	private static function add_woocommerce_options( array &$selection_options ): void {
+		if ( ! class_exists( 'WooCommerce' ) ) {
+			return;
+		}
+
+		$product_type_options = self::get_product_type_options();
+		if ( ! empty( $product_type_options ) ) {
+			$selection_options['product-types'] = [
+				'label' => __( 'Product Types', 'surerank' ),
+				'value' => $product_type_options,
+			];
+		}
+	}
+
+	/**
+	 * Get product type options.
+	 *
+	 * @return array<string, string> Product type options.
+	 */
+	private static function get_product_type_options(): array {
+		$product_types = wc_get_product_types();
+		$options       = [];
+
+		foreach ( $product_types as $type_key => $type_label ) {
+			$options[ 'product-type|' . $type_key ] = $type_label;
+		}
+
+		return $options;
+	}
+
+	/**
+	 * Add taxonomy options.
+	 *
+	 * @param array<string, mixed>         $selection_options Selection options.
+	 * @param array<string, \WP_Post_Type> $post_types Post types.
+	 * @param mixed                        $consider_type Consider type.
+	 * @return void
+	 */
+	private static function add_taxonomy_options( array &$selection_options, array $post_types, $consider_type ): void {
+		$taxonomies = self::get_public_taxonomies();
+		if ( empty( $taxonomies ) ) {
+			return;
+		}
+
+		foreach ( $taxonomies as $taxonomy ) {
+			self::process_taxonomy_for_post_types( $selection_options, $taxonomy, $post_types, $consider_type );
+		}
+	}
+
+	/**
+	 * Get public taxonomies.
+	 *
+	 * @return array<string, \WP_Taxonomy> Public taxonomies.
+	 */
+	private static function get_public_taxonomies(): array {
+		$taxonomies = get_taxonomies( [ 'public' => true ], 'objects' );
+		return array_filter( $taxonomies, static fn( $tax ) => $tax instanceof \WP_Taxonomy );
+	}
+
+	/**
+	 * Process taxonomy for all post types.
+	 *
+	 * @param array<string, mixed>         $selection_options Selection options.
+	 * @param \WP_Taxonomy                 $taxonomy Taxonomy.
+	 * @param array<string, \WP_Post_Type> $post_types Post types.
+	 * @param mixed                        $consider_type Consider type.
+	 * @return void
+	 */
+	private static function process_taxonomy_for_post_types( array &$selection_options, \WP_Taxonomy $taxonomy, array $post_types, $consider_type ): void {
+		foreach ( $post_types as $post_type ) {
+			$post_opt = self::get_post_target_rule_options( $post_type, $taxonomy, $consider_type );
+			if ( empty( $post_opt ) ) {
+				continue;
+			}
+
+			self::merge_post_option( $selection_options, $post_opt );
+		}
+	}
+
+	/**
+	 * Merge post option into selection options.
+	 *
+	 * @param array<string, mixed> $selection_options Selection options.
+	 * @param array<string, mixed> $post_opt Post option.
+	 * @return void
+	 */
+	private static function merge_post_option( array &$selection_options, array $post_opt ): void {
+		$key = $post_opt['post_key'];
+
+		if ( ! isset( $selection_options[ $key ] ) ) {
+			$selection_options[ $key ] = [
+				'label' => $post_opt['label'],
+				'value' => $post_opt['value'],
+			];
+			return;
+		}
+
+		self::merge_option_values( $selection_options[ $key ]['value'], $post_opt['value'] );
+	}
+
+	/**
+	 * Merge option values.
+	 *
+	 * @param array<string, mixed> $existing_values Existing values.
+	 * @param mixed                $new_values New values.
+	 * @return void
+	 */
+	private static function merge_option_values( array &$existing_values, $new_values ): void {
+		if ( ! is_array( $new_values ) || empty( $new_values ) ) {
+			return;
+		}
+
+		foreach ( $new_values as $key => $value ) {
+			if ( ! in_array( $value, $existing_values, true ) ) {
+				$existing_values[ $key ] = $value;
+			}
+		}
+	}
+
+	/**
+	 * Get specific target option.
+	 *
+	 * @return array<string, mixed> Specific target option.
+	 */
+	private static function get_specific_target_option(): array {
+		return [
+			'label' => __( 'Specific Target', 'surerank' ),
+			'value' => [
+				'specifics' => __( 'Specific Pages / Posts / Taxonomies, etc.', 'surerank' ),
+			],
 		];
 	}
 }

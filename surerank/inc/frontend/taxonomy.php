@@ -68,7 +68,8 @@ class Taxonomy {
 		}
 
 		$term_id         = intval( $term->term_id );
-		$this->meta_data = Variables::replace( Validate::array( Settings::prep_term_meta( $term_id ) ), $term_id );
+		$taxonomy        = $term->taxonomy ?? '';
+		$this->meta_data = Variables::replace( Validate::array( Settings::prep_term_meta( $term_id, $taxonomy, true ) ), $term_id );
 
 		return $this->meta_data;
 	}

@@ -10,6 +10,378 @@ const STYLES_OVERRIDE_FOR_EDITOR_INPUT = {
 	wordBreak: 'break-all',
 };
 
+// Common function to render cloneable group fields with stable ID management
+export const renderCloneableGroupField = ( {
+	field,
+	schemaId,
+	getFieldValue,
+	onFieldChange,
+	variableSuggestions,
+	fieldItemIds,
+	setFieldItemIds,
+	renderHelpTextFunction = null,
+} ) => {
+	let existingValues = getFieldValue( field.id ) || [];
+
+	// Ensure existingValues is always an array
+	if ( ! Array.isArray( existingValues ) ) {
+		if ( typeof existingValues === 'object' && existingValues !== null ) {
+			existingValues = Object.values( existingValues );
+		} else {
+			existingValues = [];
+		}
+	}
+
+	// Ensure at least one empty item exists
+	if ( existingValues.length === 0 ) {
+		const defaultItem = {};
+		field.fields.forEach( ( subField ) => {
+			if ( subField.type === 'Group' && subField.fields ) {
+				const nestedGroup = {};
+				subField.fields.forEach( ( nestedField ) => {
+					nestedGroup[ nestedField.id ] = nestedField.std || '';
+				} );
+				defaultItem[ subField.id ] = nestedGroup;
+			} else {
+				defaultItem[ subField.id ] = subField.std || '';
+			}
+		} );
+		existingValues = [ defaultItem ];
+	}
+
+	// Ensure all nested groups have their required fields (like @type)
+	existingValues = existingValues.map( ( item ) => {
+		const updatedItem = { ...item };
+		field.fields.forEach( ( subField ) => {
+			if ( subField.type === 'Group' && subField.fields ) {
+				// Make sure the nested group exists
+				if (
+					! updatedItem[ subField.id ] ||
+					typeof updatedItem[ subField.id ] !== 'object'
+				) {
+					updatedItem[ subField.id ] = {};
+				}
+
+				// Ensure all required fields exist in the nested group
+				subField.fields.forEach( ( nestedField ) => {
+					if (
+						nestedField.required &&
+						updatedItem[ subField.id ][ nestedField.id ] ===
+							undefined
+					) {
+						updatedItem[ subField.id ][ nestedField.id ] =
+							nestedField.std || '';
+					}
+				} );
+			}
+		} );
+		return updatedItem;
+	} );
+
+	// Generate stable IDs for this field's items
+	const fieldKey = `${ schemaId }-${ field.id }`;
+	if (
+		! fieldItemIds[ fieldKey ] ||
+		fieldItemIds[ fieldKey ].length !== existingValues.length
+	) {
+		const newIds = existingValues.map(
+			( _, index ) =>
+				fieldItemIds[ fieldKey ]?.[ index ] ||
+				`item-${ Date.now() }-${ index }-${ Math.random()
+					.toString( 36 )
+					.substr( 2, 9 ) }`
+		);
+		setFieldItemIds( ( prev ) => ( {
+			...prev,
+			[ fieldKey ]: newIds,
+		} ) );
+	}
+
+	const currentIds = fieldItemIds[ fieldKey ] || [];
+	const itemsWithIds = existingValues.map( ( item, index ) => ( {
+		...item,
+		_id: currentIds[ index ] || `temp-${ index }`,
+	} ) );
+
+	const handleAddNewItem = () => {
+		const newItem = {};
+		field.fields.forEach( ( subField ) => {
+			if ( subField.type === 'Group' && subField.fields ) {
+				const nestedGroup = {};
+				subField.fields.forEach( ( nestedField ) => {
+					nestedGroup[ nestedField.id ] = nestedField.std || '';
+				} );
+				newItem[ subField.id ] = nestedGroup;
+			} else {
+				newItem[ subField.id ] = subField.std || '';
+			}
+		} );
+
+		const updatedValues = [ ...existingValues, newItem ];
+		const newId = `item-${ Date.now() }-${
+			existingValues.length
+		}-${ Math.random().toString( 36 ).substr( 2, 9 ) }`;
+
+		setFieldItemIds( ( prev ) => ( {
+			...prev,
+			[ fieldKey ]: [ ...( prev[ fieldKey ] || [] ), newId ],
+		} ) );
+
+		onFieldChange( field.id, updatedValues );
+	};
+
+	const handleRemoveItem = ( index ) => {
+		const updatedValues = existingValues.filter( ( _, i ) => i !== index );
+		const updatedIds = currentIds.filter( ( _, i ) => i !== index );
+
+		setFieldItemIds( ( prev ) => ( {
+			...prev,
+			[ fieldKey ]: updatedIds,
+		} ) );
+
+		onFieldChange( field.id, updatedValues );
+	};
+
+	const handleItemFieldChange = ( itemIndex, fieldId, value ) => {
+		const updatedValues = [ ...existingValues ];
+		updatedValues[ itemIndex ] = {
+			...updatedValues[ itemIndex ],
+			[ fieldId ]: value,
+		};
+		onFieldChange( field.id, updatedValues );
+	};
+
+	return (
+		<>
+			{ itemsWithIds.map( ( item, index ) => (
+				<div
+					key={ item._id }
+					className="border border-gray-200 rounded-lg mb-4 space-y-3"
+				>
+					<div className="flex items-center justify-between">
+						<Text
+							size={ 14 }
+							lineHeight={ 20 }
+							weight={ 500 }
+							className="text-text-primary"
+						>
+							{ field.cloneItemHeading || `Item ${ index + 1 }` }
+						</Text>
+						{ itemsWithIds.length > 1 && (
+							<Button
+								variant="ghost"
+								size="sm"
+								onClick={ () => handleRemoveItem( index ) }
+								icon={
+									<Trash
+										strokeWidth={ 1.5 }
+										className="text-icon-secondary"
+									/>
+								}
+							/>
+						) }
+					</div>
+
+					{ field.fields.map( ( subField ) => {
+						if ( subField.hidden || subField.type === 'Hidden' ) {
+							return null;
+						}
+
+						// Handle nested Group fields
+						if ( subField.type === 'Group' && subField.fields ) {
+							return (
+								<div
+									key={ subField.id }
+									className="space-y-1.5"
+								>
+									<div className="flex items-center justify-start gap-1.5 w-full">
+										<Label
+											tag="span"
+											size="sm"
+											className="space-x-0.5"
+											required={ subField.required }
+										>
+											{ subField.label }
+										</Label>
+										{ subField.tooltip && (
+											<SeoPopupTooltip
+												content={ subField.tooltip }
+												placement="top"
+												arrow
+												className="z-[99999]"
+											>
+												<Info
+													className="size-4 text-icon-secondary"
+													title={ subField.tooltip }
+												/>
+											</SeoPopupTooltip>
+										) }
+									</div>
+									{ subField.fields.map( ( nestedField ) => {
+										if (
+											nestedField.hidden ||
+											nestedField.type === 'Hidden'
+										) {
+											return null;
+										}
+
+										return (
+											<div
+												key={ nestedField.id }
+												className="space-y-1.5"
+											>
+												<div className="flex items-center justify-start gap-1.5 w-full">
+													<Label
+														tag="span"
+														size="sm"
+														className="space-x-0.5"
+														required={
+															nestedField.required
+														}
+													>
+														{ nestedField.label }
+													</Label>
+													{ nestedField.tooltip && (
+														<SeoPopupTooltip
+															content={
+																nestedField.tooltip
+															}
+															placement="top"
+															arrow
+															className="z-[99999]"
+														>
+															<Info
+																className="size-4 text-icon-secondary"
+																title={
+																	nestedField.tooltip
+																}
+															/>
+														</SeoPopupTooltip>
+													) }
+												</div>
+												<div className="flex items-center justify-start gap-1.5 w-full">
+													{ renderFieldCommon( {
+														field: {
+															...nestedField,
+															id: nestedField.id,
+														},
+														getFieldValue: () => {
+															const groupValue =
+																item[
+																	subField.id
+																] || {};
+															return (
+																groupValue[
+																	nestedField
+																		.id
+																] ||
+																nestedField.std ||
+																''
+															);
+														},
+														onFieldChange: (
+															fieldId,
+															value
+														) => {
+															const currentGroupValue =
+																item[
+																	subField.id
+																] || {};
+															const updatedGroupValue =
+																{
+																	...currentGroupValue,
+																	[ fieldId ]:
+																		value,
+																};
+															handleItemFieldChange(
+																index,
+																subField.id,
+																updatedGroupValue
+															);
+														},
+														variableSuggestions,
+														renderAsGroupComponent: false,
+													} ) }
+												</div>
+												{ renderHelpTextFunction &&
+													renderHelpTextFunction(
+														nestedField
+													) }
+											</div>
+										);
+									} ) }
+									{ renderHelpTextFunction &&
+										renderHelpTextFunction( subField ) }
+								</div>
+							);
+						}
+
+						return (
+							<div key={ subField.id } className="space-y-1.5">
+								<div className="flex items-center justify-start gap-1.5 w-full">
+									<Label
+										tag="span"
+										size="sm"
+										className="space-x-0.5"
+										required={ subField.required }
+									>
+										{ subField.label }
+									</Label>
+									{ subField.tooltip && (
+										<SeoPopupTooltip
+											content={ subField.tooltip }
+											placement="top"
+											arrow
+											className="z-[99999]"
+										>
+											<Info
+												className="size-4 text-icon-secondary"
+												title={ subField.tooltip }
+											/>
+										</SeoPopupTooltip>
+									) }
+								</div>
+								<div className="flex items-center justify-start gap-1.5 w-full">
+									{ renderFieldCommon( {
+										field: {
+											...subField,
+											id: subField.id,
+										},
+										getFieldValue: () =>
+											item[ subField.id ] ||
+											subField.std ||
+											'',
+										onFieldChange: ( fieldId, value ) =>
+											handleItemFieldChange(
+												index,
+												fieldId,
+												value
+											),
+										variableSuggestions,
+										renderAsGroupComponent: false,
+									} ) }
+								</div>
+								{ renderHelpTextFunction &&
+									renderHelpTextFunction( subField ) }
+							</div>
+						);
+					} ) }
+				</div>
+			) ) }
+
+			<Button
+				variant="outline"
+				className="w-fit"
+				size="sm"
+				onClick={ handleAddNewItem }
+				icon={ <Plus /> }
+			>
+				{ __( 'Add New', 'surerank' ) }
+			</Button>
+		</>
+	);
+};
+
 // Add the GroupFieldRenderer component
 export const GroupFieldRenderer = ( {
 	field,

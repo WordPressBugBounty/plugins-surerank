@@ -14,11 +14,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use SureRank\Inc\API\Migrations;
 use SureRank\Inc\API\Onboarding;
-use SureRank\Inc\Frontend\Sitemap;
 use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Functions\Update;
+use SureRank\Inc\Import_Export\Settings_Exporter;
+use SureRank\Inc\Sitemap\Xml_Sitemap;
 use SureRank\Inc\Traits\Enqueue;
 use SureRank\Inc\Traits\Get_Instance;
 
@@ -106,7 +107,8 @@ class Dashboard {
 				'surerank_globals_localization_vars',
 				array_merge(
 					[
-						'check_score' => $this->get_seo_score(),
+						'check_score'      => $this->get_seo_score(),
+						'exporter_options' => Settings_Exporter::get_instance()->get_categories(),
 					],
 					$this->get_common_variables(),
 					$this->get_disabled_settings(),
@@ -229,7 +231,7 @@ class Dashboard {
 				'page_title' => __( 'Dashboard', 'surerank' ),
 			],
 			[
-				'id'         => 'surerank#/general',
+				'id'         => apply_filters( 'surerank_general_menu_url', 'surerank#/general' ),
 				'page_title' => __( 'General', 'surerank' ),
 			],
 			[
@@ -248,6 +250,7 @@ class Dashboard {
 			'id'         => 'surerank#/tools',
 			'page_title' => __( 'Tools', 'surerank' ),
 		];
+		$submenus   = apply_filters( 'surerank_wp_admin_submenus', $submenus );
 
 		// Register the submenus.
 		foreach ( $submenus as $submenu ) {
@@ -335,11 +338,16 @@ class Dashboard {
 				'data'        => apply_filters(
 					'surerank_dashboard_localization_vars',
 					[
-						'social_profiles'            => Onboarding::social_profiles(),
-						'website_details'            => Helper::website_details(),
-						'sitemap_url'                => Sitemap::get_instance()->get_sitemap_url(),
-						'onboarding_complete_status' => get_option( 'surerank_onboarding_completed', false ) ? 'yes' : 'no',
-						'plugins_for_migration'      => Migrations::get_instance()->get_available_plugins(),
+						'social_profiles'             => Onboarding::social_profiles(),
+						'website_details'             => Helper::website_details(),
+						'sitemap_url'                 => Xml_Sitemap::get_instance()->get_sitemap_url(),
+						'onboarding_complete_status'  => get_option( 'surerank_onboarding_completed', false ) ? 'yes' : 'no',
+						'plugins_for_migration'       => Migrations::get_instance()->get_available_plugins(),
+						'migration_ever_completed'    => Migrations::has_migration_ever_completed(),
+						'migration_completed_plugins' => Migrations::get_completed_migrations(),
+						'active_cache_plugins'        => Migrations::is_cache_plugin_active(),
+						'robots_data'                 => Helper::get_robots_data(),
+						'wp_reading_settings_url'     => admin_url( 'options-reading.php' ),
 					]
 				),
 			]
@@ -389,6 +397,7 @@ class Dashboard {
 			'enable_page_level_seo' => Settings::get( 'enable_page_level_seo' ),
 			'enable_google_console' => Settings::get( 'enable_google_console' ),
 			'enable_schemas'        => Settings::get( 'enable_schemas' ),
+			'enable_migration'      => Settings::get( 'enable_migration' ),
 		];
 	}
 
@@ -474,103 +483,106 @@ class Dashboard {
 	 * @return array<int, array<string,string>>
 	 */
 	private function get_input_variable_suggestions() {
-		return [
+		return apply_filters(
+			'surerank_input_variable_suggestions',
 			[
-				'label'       => __( 'Site Name', 'surerank' ),
-				'value'       => '%site_name%',
-				'description' => __( 'The name of the site.', 'surerank' ),
-			],
-			[
-				'label'       => __( 'Tagline', 'surerank' ),
-				'value'       => '%tagline%',
-				'description' => __( 'The tagline of the site.', 'surerank' ),
-			],
-			[
-				'label'       => __( 'Term Title', 'surerank' ),
-				'value'       => '%term_title%',
-				'description' => __( 'The name of the term.', 'surerank' ),
-			],
-			[
-				'label'       => __( 'Post Title', 'surerank' ),
-				'value'       => '%title%',
-				'description' => __( 'The title of the post.', 'surerank' ),
-			],
-			[
-				'label'       => __( 'Post Excerpt', 'surerank' ),
-				'value'       => '%excerpt%',
-				'description' => __( 'The excerpt of the post.', 'surerank' ),
-			],
-			[
-				'label'       => __( 'Post Content', 'surerank' ),
-				'value'       => '%content%',
-				'description' => __( 'The content of the post.', 'surerank' ),
-			],
-			[
-				'label'       => __( 'Term Description', 'surerank' ),
-				'value'       => '%term_description%',
-				'description' => __( 'The description of the term.', 'surerank' ),
-			],
-			[
-				'label'       => __( 'Date Published', 'surerank' ),
-				'value'       => '%published%',
-				'description' => __( 'Publication date of the current post/page OR specified date on date archives', 'surerank' ),
-			],
-			[
-				'label'       => __( 'Date Modified', 'surerank' ),
-				'value'       => '%modified%',
-				'description' => __( 'Last modification date of the current post/page', 'surerank' ),
-			],
-			[
-				'label'       => __( 'Post URL', 'surerank' ),
-				'value'       => '%permalink%',
-				'description' => __( 'URL of the current post/page', 'surerank' ),
-			],
-			[
-				'label'       => __( 'Current Date', 'surerank' ),
-				'value'       => '%currentdate%',
-				'description' => __( 'Current server date', 'surerank' ),
-			],
-			[
-				'label'       => __( 'Current Day', 'surerank' ),
-				'value'       => '%currentday%',
-				'description' => __( 'Current server day', 'surerank' ),
-			],
-			[
-				'label'       => __( 'Current Month', 'surerank' ),
-				'value'       => '%currentmonth%',
-				'description' => __( 'Current server month', 'surerank' ),
-			],
-			[
-				'label'       => __( 'Current Year', 'surerank' ),
-				'value'       => '%currentyear%',
-				'description' => __( 'Current server year', 'surerank' ),
-			],
-			[
-				'label'       => __( 'Current Time', 'surerank' ),
-				'value'       => '%currenttime%',
-				'description' => __( 'Current server time', 'surerank' ),
-			],
-			[
-				'label'       => __( 'Organization Name', 'surerank' ),
-				'value'       => '%org_name%',
-				'description' => __( 'The Organization Name added in Local SEO Settings.', 'surerank' ),
-			],
-			[
-				'label'       => __( 'Organization Logo', 'surerank' ),
-				'value'       => '%org_logo%',
-				'description' => __( 'Organization Logo added in Local SEO Settings.', 'surerank' ),
-			],
-			[
-				'label'       => __( 'Organization URL', 'surerank' ),
-				'value'       => '%org_url%',
-				'description' => __( 'Organization URL added in Local SEO Settings.', 'surerank' ),
-			],
-			[
-				'label'       => __( 'Post Author Name', 'surerank' ),
-				'value'       => '%author_name%',
-				'description' => __( "Display author's nicename of the current post, page or author archive.", 'surerank' ),
-			],
-		];
+				[
+					'label'       => __( 'Site Name', 'surerank' ),
+					'value'       => '%site_name%',
+					'description' => __( 'The name of the site.', 'surerank' ),
+				],
+				[
+					'label'       => __( 'Tagline', 'surerank' ),
+					'value'       => '%tagline%',
+					'description' => __( 'The tagline of the site.', 'surerank' ),
+				],
+				[
+					'label'       => __( 'Term Title', 'surerank' ),
+					'value'       => '%term_title%',
+					'description' => __( 'The name of the term.', 'surerank' ),
+				],
+				[
+					'label'       => __( 'Post Title', 'surerank' ),
+					'value'       => '%title%',
+					'description' => __( 'The title of the post.', 'surerank' ),
+				],
+				[
+					'label'       => __( 'Post Excerpt', 'surerank' ),
+					'value'       => '%excerpt%',
+					'description' => __( 'The excerpt of the post.', 'surerank' ),
+				],
+				[
+					'label'       => __( 'Post Content', 'surerank' ),
+					'value'       => '%content%',
+					'description' => __( 'The content of the post.', 'surerank' ),
+				],
+				[
+					'label'       => __( 'Term Description', 'surerank' ),
+					'value'       => '%term_description%',
+					'description' => __( 'The description of the term.', 'surerank' ),
+				],
+				[
+					'label'       => __( 'Date Published', 'surerank' ),
+					'value'       => '%published%',
+					'description' => __( 'Publication date of the current post/page OR specified date on date archives', 'surerank' ),
+				],
+				[
+					'label'       => __( 'Date Modified', 'surerank' ),
+					'value'       => '%modified%',
+					'description' => __( 'Last modification date of the current post/page', 'surerank' ),
+				],
+				[
+					'label'       => __( 'Post URL', 'surerank' ),
+					'value'       => '%permalink%',
+					'description' => __( 'URL of the current post/page', 'surerank' ),
+				],
+				[
+					'label'       => __( 'Current Date', 'surerank' ),
+					'value'       => '%currentdate%',
+					'description' => __( 'Current server date', 'surerank' ),
+				],
+				[
+					'label'       => __( 'Current Day', 'surerank' ),
+					'value'       => '%currentday%',
+					'description' => __( 'Current server day', 'surerank' ),
+				],
+				[
+					'label'       => __( 'Current Month', 'surerank' ),
+					'value'       => '%currentmonth%',
+					'description' => __( 'Current server month', 'surerank' ),
+				],
+				[
+					'label'       => __( 'Current Year', 'surerank' ),
+					'value'       => '%currentyear%',
+					'description' => __( 'Current server year', 'surerank' ),
+				],
+				[
+					'label'       => __( 'Current Time', 'surerank' ),
+					'value'       => '%currenttime%',
+					'description' => __( 'Current server time', 'surerank' ),
+				],
+				[
+					'label'       => __( 'Organization Name', 'surerank' ),
+					'value'       => '%org_name%',
+					'description' => __( 'The Organization Name added in Local SEO Settings.', 'surerank' ),
+				],
+				[
+					'label'       => __( 'Organization Logo', 'surerank' ),
+					'value'       => '%org_logo%',
+					'description' => __( 'Organization Logo added in Local SEO Settings.', 'surerank' ),
+				],
+				[
+					'label'       => __( 'Organization URL', 'surerank' ),
+					'value'       => '%org_url%',
+					'description' => __( 'Organization URL added in Local SEO Settings.', 'surerank' ),
+				],
+				[
+					'label'       => __( 'Post Author Name', 'surerank' ),
+					'value'       => '%author_name%',
+					'description' => __( "Display author's nicename of the current post, page or author archive.", 'surerank' ),
+				],
+			]
+		);
 	}
 
 }

@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use SureRank\Inc\Frontend\Sitemap;
+use SureRank\Inc\Sitemap\Xml_Sitemap;
 use SureRank\Inc\Traits\Get_Instance;
 
 /**
@@ -37,7 +37,7 @@ class Routes {
 	 */
 	public function __construct() {
 		// Add rewrite rules.
-		add_action( 'init', [ $this, 'register_rewrite_rules' ] );
+		add_action( 'init', [ $this, 'register_rewrite_rules' ], 1 );
 	}
 
 	/**
@@ -61,23 +61,36 @@ class Routes {
 		global $wp_rewrite;
 
 		// Add default rewrite rules.
-		add_rewrite_rule( '^' . Sitemap::get_slug() . '$', 'index.php?surerank_sitemap=1', 'top' );
-		add_rewrite_rule( '^([a-z]+)-stylesheet\.xsl$', 'index.php?type=$matches[1]', 'top' );
+		add_rewrite_rule( '^' . Xml_Sitemap::get_slug() . '$', 'index.php?surerank_sitemap=1', 'top' );
+		add_rewrite_rule( '^([a-z]+)-stylesheet\.xsl$', 'index.php?surerank_sitemap_type=$matches[1]', 'top' );
+		// Handle prefixed sitemap URLs (cpt- and tax-).
+		$cpt_prefix = Xml_Sitemap::get_post_type_prefix();
+		$tax_prefix = Xml_Sitemap::get_taxonomy_prefix();
+
 		add_rewrite_rule(
-			'^(post|page|attachment|post-tag|author|category|product-category)-sitemap([0-9]+)?\.xml$',
-			'index.php?surerank_sitemap=$matches[1]&page=$matches[2]',
+			'^(' . $cpt_prefix . '|' . $tax_prefix . ')-([a-z0-9_-]+)-sitemap-([0-9]+)?\.xml$',
+			'index.php?surerank_sitemap=$matches[2]&surerank_prefix=$matches[1]&surerank_sitemap_page=$matches[3]',
 			'top'
 		);
 
+		// Legacy support for built-in types without prefixes.
 		add_rewrite_rule(
-			'^([a-z0-9_-]+)-sitemap([0-9]+)?\.xml$',
-			'index.php?surerank_sitemap=$matches[1]&page=$matches[2]',
+			'^(post|page|attachment|post-tag|author|category|product-category)-sitemap-([0-9]+)?\.xml$',
+			'index.php?surerank_sitemap=$matches[1]&surerank_sitemap_page=$matches[2]',
+			'top'
+		);
+
+		// Generic fallback for any type without prefix (legacy support).
+		add_rewrite_rule(
+			'^([a-z0-9_-]+)-sitemap-([0-9]+)?\.xml$',
+			'index.php?surerank_sitemap=$matches[1]&surerank_sitemap_page=$matches[2]',
 			'top'
 		);
 
 		$wp->add_query_var( 'surerank_sitemap' );
-		$wp->add_query_var( 'type' );
-		$wp->add_query_var( 'page' );
+		$wp->add_query_var( 'surerank_prefix' );
+		$wp->add_query_var( 'surerank_sitemap_type' );
+		$wp->add_query_var( 'surerank_sitemap_page' );
 	}
 
 }

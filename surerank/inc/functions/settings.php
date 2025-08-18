@@ -414,6 +414,17 @@ class Settings {
 		// Getting the global settings.
 		$global_values = Settings::get();
 
+		// Get CPT/taxonomy level defaults (extended meta templates) via filter.
+		// This allows pro plugin to conditionally add extended meta templates.
+		$extended_meta_values = apply_filters(
+			'surerank_prep_post_meta_extended_values',
+			[],
+			$post_type,
+			$is_taxonomy,
+			$global_values,
+			$post_id
+		);
+
 		// remove empty values from $post_meta.
 		$post_meta = array_filter(
 			$post_meta,
@@ -422,8 +433,9 @@ class Settings {
 			}
 		);
 
-		// Current post meta to match the defaults.
-		$meta = array_merge( $default_values, $global_values, $post_meta );
+		// Current post meta to match the defaults with 3-level hierarchy:
+		// 1. Base defaults -> 2. Global settings -> 3. CPT/Taxonomy defaults -> 4. Post meta.
+		$meta = array_merge( $default_values, $global_values, $extended_meta_values, $post_meta );
 
 		// Prepare schemas for the current post.
 		if ( ! empty( $post_type ) ) {
@@ -519,6 +531,17 @@ class Settings {
 		// Getting the global settings.
 		$global_values = Settings::get();
 
+		// Get taxonomy level defaults (extended meta templates) via filter.
+		// This allows pro plugin to conditionally add extended meta templates.
+		$extended_meta_values = apply_filters(
+			'surerank_prep_term_meta_extended_values',
+			[],
+			$post_type,
+			$is_taxonomy,
+			$global_values,
+			$term_id
+		);
+
 		// remove empty values from $term_meta.
 		$term_meta = array_filter(
 			$term_meta,
@@ -527,8 +550,9 @@ class Settings {
 			}
 		);
 
-		// Current post meta to match the defaults.
-		$meta = array_merge( $default_values, $global_values, $term_meta );
+		// Current term meta to match the defaults with 3-level hierarchy:
+		// 1. Base defaults -> 2. Global settings -> 3. Taxonomy defaults -> 4. Term meta.
+		$meta = array_merge( $default_values, $global_values, $extended_meta_values, $term_meta );
 
 		$meta['page_description']        = str_replace( '%content%', '%term_description%', $meta['page_description'] );
 		$meta['auto_description']        = self::get_description( $term_id, $meta, $global_values, 'taxonomy' );

@@ -8,6 +8,7 @@ import {
 	renderCloneableField,
 	GroupFieldRenderer,
 	renderHelpText,
+	renderCloneableGroupField,
 } from '@AdminComponents/schema-utils/render-helper';
 import { noFieldsAlert } from '@AdminComponents/schema-utils/utils';
 import { SeoPopupTooltip } from '@AdminComponents/tooltip';
@@ -15,6 +16,7 @@ import { SeoPopupTooltip } from '@AdminComponents/tooltip';
 const Properties = ( { schema, type, handleFieldUpdate, schemaId } ) => {
 	const { setMetaSetting } = useDispatch( STORE_NAME );
 	const [ schemaType, setSchemaType ] = useState( type );
+	const [ fieldItemIds, setFieldItemIds ] = useState( {} );
 	const { metaSettingsObject } = useSuspenseSelect( ( select ) => {
 		const { getMetaSettings } = select( STORE_NAME );
 		return {
@@ -34,7 +36,31 @@ const Properties = ( { schema, type, handleFieldUpdate, schemaId } ) => {
 	const processFields = ( fieldsData ) => {
 		return fieldsData.reduce( ( acc, field ) => {
 			if ( field.type === 'Group' && field.fields ) {
-				acc[ field.id ] = processFields( field.fields );
+				if ( field.cloneable ) {
+					// For cloneable groups, create an array with one default item
+					const defaultItem = {};
+					field.fields.forEach( ( subField ) => {
+						if ( subField.type === 'Group' && subField.fields ) {
+							// Handle nested groups recursively
+							// Create an object with all required fields properly initialized
+							const nestedGroup = {};
+							subField.fields.forEach( ( nestedField ) => {
+								nestedGroup[ nestedField.id ] =
+									nestedField.std !== undefined
+										? nestedField.std
+										: '';
+							} );
+							defaultItem[ subField.id ] = nestedGroup;
+						} else {
+							defaultItem[ subField.id ] =
+								subField.std !== undefined ? subField.std : '';
+						}
+					} );
+					acc[ field.id ] = [ defaultItem ];
+				} else {
+					// For non-cloneable groups, process recursively
+					acc[ field.id ] = processFields( field.fields );
+				}
 			} else {
 				acc[ field.id ] = field.std !== undefined ? field.std : '';
 			}
@@ -168,6 +194,24 @@ const Properties = ( { schema, type, handleFieldUpdate, schemaId } ) => {
 
 	// Function to render the field input based on field type
 	const renderFieldInput = ( field ) => {
+		// Handle cloneable Group fields (like FAQ items)
+		if ( field.type === 'Group' && field.cloneable ) {
+			return (
+				<div className="flex flex-col w-full">
+					{ renderCloneableGroupField( {
+						field,
+						schemaId,
+						getFieldValue,
+						onFieldChange,
+						variableSuggestions,
+						fieldItemIds,
+						setFieldItemIds,
+						renderHelpTextFunction: renderHelpText,
+					} ) }
+				</div>
+			);
+		}
+
 		if ( field.type === 'Group' ) {
 			return (
 				<GroupFieldRenderer

@@ -99,10 +99,40 @@ class Special_Page {
 			'post_no_index'        => in_array( 'noindex', $robots ) ? 'yes' : 'no',
 			'post_no_follow'       => in_array( 'nofollow', $robots ) ? 'yes' : 'no',
 			'post_no_archive'      => in_array( 'noarchive', $robots ) ? 'yes' : 'no',
-			'canonical_url'        => $page_meta['canonical_url'] ?? '',
+			'canonical_url'        => self::get_canonical_url( $page_meta ),
 		];
 
 		return Variables::replace( $page_meta, (int) get_the_ID() );
+	}
+
+	/**
+	 * Get the page id.
+	 *
+	 * @return int Page id.
+	 * @since x.x.x
+	 */
+	public static function get_page_id() {
+		if ( is_home() && ! is_front_page() && Get::option( 'page_for_posts' ) ) {
+			return Get::option( 'page_for_posts' );
+		}
+
+		return (int) get_the_ID();
+	}
+
+	/**
+	 * Get the canonical url.
+	 *
+	 * @param array<string, mixed> $meta Meta data.
+	 * @return string Canonical url.
+	 * @since x.x.x
+	 */
+	public static function get_canonical_url( $meta ) {
+
+		if ( is_home() && is_front_page() ) {
+			return get_home_url();
+		}
+
+		return $meta['canonical_url'] ?? '';
 	}
 
 	/**
@@ -126,10 +156,10 @@ class Special_Page {
 			'post_no_index'        => $meta['post_no_index'] ?? 'no',
 			'post_no_follow'       => $meta['post_no_follow'] ?? 'no',
 			'post_no_archive'      => $meta['post_no_archive'] ?? 'no',
-			'canonical_url'        => $meta['canonical_url'] ?? '',
+			'canonical_url'        => self::get_canonical_url( $meta ),
 		];
 
-		$post_meta = Variables::replace( Validate::array( Settings::prep_post_meta( intval( get_the_ID() ) ) ), intval( get_the_ID() ) );
+		$post_meta = Variables::replace( Validate::array( Settings::prep_post_meta( intval( self::get_page_id() ) ) ), intval( self::get_page_id() ) );
 		return array_merge( $meta, $post_meta );
 	}
 }

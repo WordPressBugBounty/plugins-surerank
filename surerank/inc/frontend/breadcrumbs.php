@@ -50,26 +50,95 @@ class Breadcrumbs {
 	 *
 	 * @return void
 	 */
-	private function generate() {
+	private function generate(): void {
 		$this->maybe_add_home_crumb();
+		$this->add_page_specific_crumbs();
+	}
 
-		if ( is_category() ) {
-			$this->add_category_crumbs();
-		} elseif ( is_tag() ) {
-			$this->add_tag_crumbs();
-		} elseif ( is_tax() ) {
-			$this->add_tax_crumbs();
-		} elseif ( is_singular() ) {
-			$this->add_singular_crumbs();
-		} elseif ( is_author() ) {
-			$this->add_author_crumbs();
-		} elseif ( is_date() ) {
-			$this->add_date_crumbs();
-		} elseif ( is_search() ) {
-			$this->add_crumb( 'Search results for: ' . get_search_query(), '' );
-		} elseif ( is_404() ) {
-			$this->add_crumb( '404 Not Found', '' );
+	/**
+	 * Add page-specific breadcrumbs based on current page type.
+	 *
+	 * @return void
+	 */
+	private function add_page_specific_crumbs(): void {
+		$crumb_handler = $this->get_crumb_handler();
+		if ( $crumb_handler ) {
+			$crumb_handler();
 		}
+	}
+
+	/**
+	 * Get the appropriate crumb handler for the current page.
+	 *
+	 * @return mixed The crumb handler callback or null.
+	 */
+	private function get_crumb_handler() {
+		$handlers = $this->get_crumb_handlers();
+
+		foreach ( $handlers as $condition => $handler ) {
+			if ( $this->check_page_condition( $condition ) ) {
+				return $handler;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get all crumb handlers mapped to their conditions.
+	 *
+	 * @return array<string, array<int, $this|string>> Map of conditions to handlers.
+	 */
+	private function get_crumb_handlers(): array {
+		return [
+			'category'  => [ $this, 'add_category_crumbs' ],
+			'tag'       => [ $this, 'add_tag_crumbs' ],
+			'tax'       => [ $this, 'add_tax_crumbs' ],
+			'singular'  => [ $this, 'add_singular_crumbs' ],
+			'author'    => [ $this, 'add_author_crumbs' ],
+			'date'      => [ $this, 'add_date_crumbs' ],
+			'search'    => [ $this, 'add_search_crumb' ],
+			'not_found' => [ $this, 'add_404_crumb' ],
+		];
+	}
+
+	/**
+	 * Check if a page condition is met.
+	 *
+	 * @param string $condition The condition to check.
+	 * @return bool True if condition is met.
+	 */
+	private function check_page_condition( string $condition ): bool {
+		$checks = [
+			'category'  => 'is_category',
+			'tag'       => 'is_tag',
+			'tax'       => 'is_tax',
+			'singular'  => 'is_singular',
+			'author'    => 'is_author',
+			'date'      => 'is_date',
+			'search'    => 'is_search',
+			'not_found' => 'is_404',
+		];
+
+		return isset( $checks[ $condition ] ) && call_user_func( $checks[ $condition ] );
+	}
+
+	/**
+	 * Add search results breadcrumb.
+	 *
+	 * @return void
+	 */
+	private function add_search_crumb(): void {
+		$this->add_crumb( 'Search results for: ' . get_search_query(), '' );
+	}
+
+	/**
+	 * Add 404 page breadcrumb.
+	 *
+	 * @return void
+	 */
+	private function add_404_crumb(): void {
+		$this->add_crumb( '404 Not Found', '' );
 	}
 
 	/**
@@ -118,49 +187,116 @@ class Breadcrumbs {
 	 */
 	private function add_singular_crumbs() {
 		global $post;
-		if ( $post instanceof WP_Post ) {
-
-			$post_type = $post->post_type;
-
-			if ( ! $post_type ) {
-				return;
-			}
-
-			$post_type_obj = get_post_type_object( $post->post_type );
-
-			if ( 'product' === $post->post_type ) {
-				if ( function_exists( 'wc_get_page_id' ) && get_permalink( wc_get_page_id( 'shop' ) ) ) {
-					$this->add_crumb( 'Shop', get_permalink( wc_get_page_id( 'shop' ) ) );
-				}
-
-				$this->add_product_terms_crumbs( $post );
-			} else {
-				if ( $post_type_obj && ! in_array( $post_type, [ 'post', 'page', 'product' ], true ) ) {
-					$archive_link = get_post_type_archive_link( $post_type );
-					if ( ! empty( $archive_link ) ) {
-						$this->add_crumb( $post_type_obj->labels->singular_name, $archive_link );
-					}
-				}
-
-				if ( is_post_type_hierarchical( $post_type ) ) {
-					$this->add_post_hierarchy_crumbs( $post );
-				} else {
-					$taxonomy = $this->get_primary_taxonomy( $post_type );
-
-					if ( ! empty( $taxonomy ) ) {
-						$terms = get_the_terms( $post->ID, $taxonomy );
-
-						if ( is_array( $terms ) && ! empty( $terms ) ) {
-							$primary_term = $terms[0];
-							$this->add_term_hierarchy_crumbs( $primary_term, $taxonomy );
-						}
-					}
-				}
-			}
-
-			// add the post/product title.
-			$this->add_crumb( get_the_title( $post ), get_permalink( $post ) );
+		if ( ! ( $post instanceof WP_Post ) || ! $post->post_type ) {
+			return;
 		}
+
+		$this->add_post_type_breadcrumbs( $post );
+		$this->add_crumb( get_the_title( $post ), get_permalink( $post ) );
+	}
+
+	/**
+	 * Add post type specific breadcrumbs.
+	 *
+	 * @param WP_Post $post Post object.
+	 * @return void
+	 */
+	private function add_post_type_breadcrumbs( WP_Post $post ): void {
+		if ( 'product' === $post->post_type ) {
+			$this->add_product_breadcrumbs( $post );
+			return;
+		}
+
+		$this->add_custom_post_type_archive_crumb( $post );
+		$this->add_post_hierarchy_or_taxonomy_crumbs( $post );
+	}
+
+	/**
+	 * Add product specific breadcrumbs.
+	 *
+	 * @param WP_Post $post Post object.
+	 * @return void
+	 */
+	private function add_product_breadcrumbs( WP_Post $post ): void {
+		$this->add_shop_crumb();
+		$this->add_product_terms_crumbs( $post );
+	}
+
+	/**
+	 * Add shop breadcrumb if WooCommerce is active.
+	 *
+	 * @return void
+	 */
+	private function add_shop_crumb(): void {
+		if ( ! function_exists( 'wc_get_page_id' ) ) {
+			return;
+		}
+
+		$shop_page_id   = wc_get_page_id( 'shop' );
+		$shop_permalink = get_permalink( $shop_page_id );
+
+		if ( $shop_permalink ) {
+			$this->add_crumb( 'Shop', $shop_permalink );
+		}
+	}
+
+	/**
+	 * Add custom post type archive crumb.
+	 *
+	 * @param WP_Post $post Post object.
+	 * @return void
+	 */
+	private function add_custom_post_type_archive_crumb( WP_Post $post ): void {
+		$excluded_types = [ 'post', 'page', 'product' ];
+		if ( in_array( $post->post_type, $excluded_types, true ) ) {
+			return;
+		}
+
+		$post_type_obj = get_post_type_object( $post->post_type );
+		if ( ! $post_type_obj ) {
+			return;
+		}
+
+		$archive_link = get_post_type_archive_link( $post->post_type );
+		if ( $archive_link ) {
+			$this->add_crumb( $post_type_obj->labels->singular_name, $archive_link );
+		}
+	}
+
+	/**
+	 * Add post hierarchy or taxonomy breadcrumbs.
+	 *
+	 * @param WP_Post $post Post object.
+	 * @return void
+	 */
+	private function add_post_hierarchy_or_taxonomy_crumbs( WP_Post $post ): void {
+		if ( is_post_type_hierarchical( $post->post_type ) ) {
+			$this->add_post_hierarchy_crumbs( $post );
+			return;
+		}
+
+		$this->add_primary_taxonomy_crumbs( $post );
+	}
+
+	/**
+	 * Add primary taxonomy breadcrumbs.
+	 *
+	 * @param WP_Post $post Post object.
+	 * @return void
+	 */
+	private function add_primary_taxonomy_crumbs( WP_Post $post ): void {
+		$taxonomy = $this->get_primary_taxonomy( $post->post_type );
+		if ( empty( $taxonomy ) ) {
+			return;
+		}
+
+		$terms = get_the_terms( $post->ID, $taxonomy );
+		if ( ! is_array( $terms ) || empty( $terms ) ) {
+			return;
+		}
+
+		$primary_term = $terms[0];
+		$this->add_term_hierarchy_crumbs( $primary_term, $taxonomy );
 	}
 
 	/**

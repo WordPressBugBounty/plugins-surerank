@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: SureRank 1.1.2\n"
+"Project-Id-Version: SureRank 1.2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/surerank\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-07-29T07:53:26+00:00\n"
+"POT-Creation-Date: 2025-08-15T12:13:55+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: surerank\n"
@@ -17,8 +17,8 @@ msgstr ""
 #. Plugin Name of the plugin
 #. Author of the plugin
 #: surerank.php
-#: inc/admin/dashboard.php:202
-#: inc/admin/dashboard.php:203
+#: inc/admin/dashboard.php:204
+#: inc/admin/dashboard.php:205
 #: inc/nps-notice.php:90
 msgid "SureRank"
 msgstr ""
@@ -38,219 +38,320 @@ msgstr ""
 msgid "https://surerank.com/"
 msgstr ""
 
-#: inc/admin/dashboard.php:229
+#: inc/admin/bulk-actions.php:68
+msgid "SureRank Settings"
+msgstr ""
+
+#: inc/admin/bulk-actions.php:69
+msgid "Set to index"
+msgstr ""
+
+#: inc/admin/bulk-actions.php:70
+msgid "Set to noindex"
+msgstr ""
+
+#: inc/admin/bulk-actions.php:71
+msgid "Set to follow"
+msgstr ""
+
+#: inc/admin/bulk-actions.php:72
+msgid "Set to nofollow"
+msgstr ""
+
+#: inc/admin/bulk-actions.php:73
+msgid "Set to archive"
+msgstr ""
+
+#: inc/admin/bulk-actions.php:74
+msgid "Set to noarchive"
+msgstr ""
+
+#: inc/admin/bulk-actions.php:170
+msgid "set to index"
+msgstr ""
+
+#: inc/admin/bulk-actions.php:171
+msgid "set to noindex"
+msgstr ""
+
+#: inc/admin/bulk-actions.php:172
+msgid "set to follow"
+msgstr ""
+
+#: inc/admin/bulk-actions.php:173
+msgid "set to nofollow"
+msgstr ""
+
+#: inc/admin/bulk-actions.php:174
+msgid "set to archive"
+msgstr ""
+
+#: inc/admin/bulk-actions.php:175
+msgid "set to noarchive"
+msgstr ""
+
+#. translators: %1$d: number of items updated, %2$s: action performed
+#: inc/admin/bulk-actions.php:186
+#, php-format
+msgid "%1$d item %2$s."
+msgid_plural "%1$d items %2$s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/admin/bulk-edit.php:66
+msgid "SURERANK SETTINGS"
+msgstr ""
+
+#: inc/admin/bulk-edit.php:69
+msgid "No Index -"
+msgstr ""
+
+#: inc/admin/bulk-edit.php:71
+#: inc/admin/bulk-edit.php:79
+#: inc/admin/bulk-edit.php:87
+msgid "— No Change —"
+msgstr ""
+
+#: inc/admin/bulk-edit.php:72
+#: inc/admin/bulk-edit.php:80
+#: inc/admin/bulk-edit.php:88
+#: inc/schema/types/article.php:195
+msgid "Yes"
+msgstr ""
+
+#: inc/admin/bulk-edit.php:73
+#: inc/admin/bulk-edit.php:81
+#: inc/admin/bulk-edit.php:89
+#: inc/schema/types/article.php:196
+msgid "No"
+msgstr ""
+
+#: inc/admin/bulk-edit.php:77
+msgid "No Follow -"
+msgstr ""
+
+#: inc/admin/bulk-edit.php:85
+msgid "No Archive -"
+msgstr ""
+
+#: inc/admin/dashboard.php:231
 #: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
 msgid "Dashboard"
 msgstr ""
 
-#: inc/admin/dashboard.php:233
+#: inc/admin/dashboard.php:235
 #: inc/schema/types/organization.php:178
 #: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
 #: build/seo-popup/index.js:1
 msgid "General"
 msgstr ""
 
-#: inc/admin/dashboard.php:237
+#: inc/admin/dashboard.php:239
 #: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Advanced"
 msgstr ""
 
-#: inc/admin/dashboard.php:244
+#: inc/admin/dashboard.php:246
 #: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
 msgid "Search Console"
 msgstr ""
 
-#: inc/admin/dashboard.php:249
+#: inc/admin/dashboard.php:251
 #: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
 msgid "Tools"
 msgstr ""
 
-#: inc/admin/dashboard.php:479
+#: inc/admin/dashboard.php:490
 #: inc/meta-variables/site.php:68
 #: build/admin-dashboard/index.js:1
 msgid "Site Name"
 msgstr ""
 
-#: inc/admin/dashboard.php:481
+#: inc/admin/dashboard.php:492
 msgid "The name of the site."
 msgstr ""
 
-#: inc/admin/dashboard.php:484
+#: inc/admin/dashboard.php:495
 #: build/admin-dashboard/index.js:1
 msgid "Tagline"
 msgstr ""
 
-#: inc/admin/dashboard.php:486
+#: inc/admin/dashboard.php:497
 #: inc/meta-variables/site.php:65
 msgid "The tagline of the site."
 msgstr ""
 
-#: inc/admin/dashboard.php:489
+#: inc/admin/dashboard.php:500
 msgid "Term Title"
 msgstr ""
 
-#: inc/admin/dashboard.php:491
+#: inc/admin/dashboard.php:502
 #: inc/meta-variables/term.php:62
 msgid "The name of the term."
 msgstr ""
 
-#: inc/admin/dashboard.php:494
+#: inc/admin/dashboard.php:505
 #: inc/meta-variables/post.php:64
 #: inc/schema/variables.php:82
 #: build/admin-dashboard/index.js:1
 msgid "Post Title"
 msgstr ""
 
-#: inc/admin/dashboard.php:496
+#: inc/admin/dashboard.php:507
 #: inc/meta-variables/post.php:65
 msgid "The title of the post."
 msgstr ""
 
-#: inc/admin/dashboard.php:499
+#: inc/admin/dashboard.php:510
 #: inc/schema/variables.php:84
 msgid "Post Excerpt"
 msgstr ""
 
-#: inc/admin/dashboard.php:501
+#: inc/admin/dashboard.php:512
 #: inc/meta-variables/post.php:69
 msgid "The excerpt of the post."
 msgstr ""
 
-#: inc/admin/dashboard.php:504
+#: inc/admin/dashboard.php:515
 #: inc/schema/variables.php:85
 msgid "Post Content"
 msgstr ""
 
-#: inc/admin/dashboard.php:506
+#: inc/admin/dashboard.php:517
 #: inc/meta-variables/post.php:73
 msgid "The content of the post."
 msgstr ""
 
-#: inc/admin/dashboard.php:509
+#: inc/admin/dashboard.php:520
 #: inc/schema/variables.php:114
 msgid "Term Description"
 msgstr ""
 
-#: inc/admin/dashboard.php:511
+#: inc/admin/dashboard.php:522
 #: inc/meta-variables/term.php:66
 msgid "The description of the term."
 msgstr ""
 
-#: inc/admin/dashboard.php:514
+#: inc/admin/dashboard.php:525
 #: inc/meta-variables/post.php:80
 msgid "Date Published"
 msgstr ""
 
-#: inc/admin/dashboard.php:516
+#: inc/admin/dashboard.php:527
 #: inc/meta-variables/post.php:81
 msgid "Publication date of the current post/page OR specified date on date archives"
 msgstr ""
 
-#: inc/admin/dashboard.php:519
+#: inc/admin/dashboard.php:530
 #: inc/meta-variables/post.php:84
 msgid "Date Modified"
 msgstr ""
 
-#: inc/admin/dashboard.php:521
+#: inc/admin/dashboard.php:532
 #: inc/meta-variables/post.php:85
 msgid "Last modification date of the current post/page"
 msgstr ""
 
-#: inc/admin/dashboard.php:524
+#: inc/admin/dashboard.php:535
 #: inc/schema/variables.php:86
 msgid "Post URL"
 msgstr ""
 
-#: inc/admin/dashboard.php:526
+#: inc/admin/dashboard.php:537
 msgid "URL of the current post/page"
 msgstr ""
 
-#: inc/admin/dashboard.php:529
+#: inc/admin/dashboard.php:540
 #: inc/meta-variables/site.php:84
 msgid "Current Date"
 msgstr ""
 
-#: inc/admin/dashboard.php:531
+#: inc/admin/dashboard.php:542
 #: inc/meta-variables/site.php:85
 msgid "Current server date"
 msgstr ""
 
-#: inc/admin/dashboard.php:534
+#: inc/admin/dashboard.php:545
 #: inc/meta-variables/site.php:88
 msgid "Current Day"
 msgstr ""
 
-#: inc/admin/dashboard.php:536
+#: inc/admin/dashboard.php:547
 #: inc/meta-variables/site.php:89
 msgid "Current server day"
 msgstr ""
 
-#: inc/admin/dashboard.php:539
+#: inc/admin/dashboard.php:550
 #: inc/meta-variables/site.php:92
 msgid "Current Month"
 msgstr ""
 
-#: inc/admin/dashboard.php:541
+#: inc/admin/dashboard.php:552
 #: inc/meta-variables/site.php:93
 msgid "Current server month"
 msgstr ""
 
-#: inc/admin/dashboard.php:544
+#: inc/admin/dashboard.php:555
 #: inc/meta-variables/site.php:96
 msgid "Current Year"
 msgstr ""
 
-#: inc/admin/dashboard.php:546
+#: inc/admin/dashboard.php:557
 #: inc/meta-variables/site.php:97
 msgid "Current server year"
 msgstr ""
 
-#: inc/admin/dashboard.php:549
+#: inc/admin/dashboard.php:560
 #: inc/meta-variables/site.php:100
 msgid "Current Time"
 msgstr ""
 
-#: inc/admin/dashboard.php:551
+#: inc/admin/dashboard.php:562
 #: inc/meta-variables/site.php:101
 msgid "Current server time"
 msgstr ""
 
-#: inc/admin/dashboard.php:554
+#: inc/admin/dashboard.php:565
 #: inc/meta-variables/site.php:104
 msgid "Organization Name"
 msgstr ""
 
-#: inc/admin/dashboard.php:556
+#: inc/admin/dashboard.php:567
 #: inc/meta-variables/site.php:105
 msgid "The Organization Name added in Local SEO Settings."
 msgstr ""
 
-#: inc/admin/dashboard.php:559
+#: inc/admin/dashboard.php:570
 #: inc/meta-variables/site.php:108
 msgid "Organization Logo"
 msgstr ""
 
-#: inc/admin/dashboard.php:561
+#: inc/admin/dashboard.php:572
 #: inc/meta-variables/site.php:109
 msgid "Organization Logo added in Local SEO Settings."
 msgstr ""
 
-#: inc/admin/dashboard.php:564
+#: inc/admin/dashboard.php:575
 #: inc/meta-variables/site.php:112
 msgid "Organization URL"
 msgstr ""
 
-#: inc/admin/dashboard.php:566
+#: inc/admin/dashboard.php:577
 #: inc/meta-variables/site.php:113
 msgid "Organization URL added in Local SEO Settings."
 msgstr ""
 
-#: inc/admin/dashboard.php:569
+#: inc/admin/dashboard.php:580
 msgid "Post Author Name"
 msgstr ""
 
-#: inc/admin/dashboard.php:571
+#: inc/admin/dashboard.php:582
 msgid "Display author's nicename of the current post, page or author archive."
 msgstr ""
 
@@ -260,13 +361,9 @@ msgid "Onboarding"
 msgstr ""
 
 #: inc/admin/seo-bar.php:113
-#: build/admin-seo-bar/index.js:1
-#: build/seo-popup/index.js:1
-msgid "Page SEO Checks"
-msgstr ""
-
 #: inc/admin/seo-bar.php:133
-msgid "Taxonomy SEO Checks"
+#: build/admin-seo-bar/index.js:1
+msgid "SEO Checks"
 msgstr ""
 
 #: inc/ajax/ajax.php:47
@@ -299,7 +396,7 @@ msgid "Theme activated successfully."
 msgstr ""
 
 #: inc/analyzer/parser.php:45
-#: inc/analyzer/parser.php:68
+#: inc/analyzer/parser.php:70
 msgid "Failed to parse HTML."
 msgstr ""
 
@@ -321,57 +418,57 @@ msgstr ""
 msgid "Page contains at least one subheading."
 msgstr ""
 
-#: inc/analyzer/post-analyzer.php:248
+#: inc/analyzer/post-analyzer.php:340
 #: build/seo-popup/index.js:1
 msgid "All images on this page have alt text attributes."
 msgstr ""
 
-#: inc/analyzer/post-analyzer.php:248
+#: inc/analyzer/post-analyzer.php:343
 #: build/seo-popup/index.js:1
 msgid "One or more images on this page are missing alt text attributes."
 msgstr ""
 
-#: inc/analyzer/post-analyzer.php:271
+#: inc/analyzer/post-analyzer.php:374
 msgid "The page does not contain any images."
 msgstr ""
 
-#: inc/analyzer/post-analyzer.php:272
+#: inc/analyzer/post-analyzer.php:375
 msgid "Add images to improve the post/page's visual appeal and SEO."
 msgstr ""
 
-#: inc/analyzer/post-analyzer.php:275
+#: inc/analyzer/post-analyzer.php:386
 msgid "Images on the post/page have alt text attributes"
 msgstr ""
 
-#: inc/analyzer/post-analyzer.php:303
+#: inc/analyzer/post-analyzer.php:424
 #: build/seo-popup/index.js:1
 msgid "This page includes images or videos to enhance content."
 msgstr ""
 
-#: inc/analyzer/post-analyzer.php:303
+#: inc/analyzer/post-analyzer.php:424
 #: build/seo-popup/index.js:1
 msgid "No images or videos found on this page."
 msgstr ""
 
-#: inc/analyzer/post-analyzer.php:322
+#: inc/analyzer/post-analyzer.php:443
 msgid "No links found on the page."
 msgstr ""
 
-#: inc/analyzer/post-analyzer.php:328
+#: inc/analyzer/post-analyzer.php:449
 msgid "Links are present on the page."
 msgstr ""
 
-#: inc/analyzer/post-analyzer.php:341
+#: inc/analyzer/post-analyzer.php:462
 #: inc/analyzer/term-analyzer.php:171
 msgid "No canonical URL provided."
 msgstr ""
 
-#: inc/analyzer/post-analyzer.php:349
+#: inc/analyzer/post-analyzer.php:470
 #: inc/analyzer/term-analyzer.php:179
 msgid "No permalink provided."
 msgstr ""
 
-#: inc/analyzer/post-analyzer.php:367
+#: inc/analyzer/post-analyzer.php:488
 #: build/seo-popup/index.js:1
 msgid "No broken links found on the page."
 msgstr ""
@@ -410,8 +507,8 @@ msgstr ""
 #: inc/analyzer/seo-analyzer.php:655
 #: inc/analyzer/seo-analyzer.php:780
 #: inc/analyzer/seo-analyzer.php:1056
-#: inc/api/analyzer.php:801
-#: inc/api/analyzer.php:831
+#: inc/api/analyzer.php:501
+#: inc/api/analyzer.php:531
 msgid "Why this matters:"
 msgstr ""
 
@@ -685,10 +782,10 @@ msgstr ""
 #: inc/analyzer/seo-analyzer.php:658
 #: inc/analyzer/seo-analyzer.php:735
 #: inc/analyzer/seo-analyzer.php:783
-#: inc/api/analyzer.php:743
-#: inc/api/analyzer.php:834
-#: inc/api/analyzer.php:879
-#: inc/api/analyzer.php:970
+#: inc/api/analyzer.php:443
+#: inc/api/analyzer.php:534
+#: inc/api/analyzer.php:572
+#: inc/api/analyzer.php:663
 msgid "What you can do:"
 msgstr ""
 
@@ -719,7 +816,7 @@ msgid "Your homepage is the front door to your website. It’s usually the first
 msgstr ""
 
 #: inc/analyzer/seo-analyzer.php:535
-msgid "Check if your homepage is set to allow indexing. You can do this by reviewing your page’s SEO settings, your site’s global visibility settings, or the “Search Appearance” options in your SEO plugin."
+msgid "You can do this by reviewing your page's SEO settings, your site's global visibility settings, or the Advanced settings of the homepage in the SureRank plugin."
 msgstr ""
 
 #: inc/analyzer/seo-analyzer.php:537
@@ -754,9 +851,9 @@ msgstr ""
 #: inc/analyzer/seo-analyzer.php:586
 #: inc/analyzer/seo-analyzer.php:623
 #: inc/analyzer/seo-analyzer.php:732
-#: inc/api/analyzer.php:740
-#: inc/api/analyzer.php:876
-#: inc/api/analyzer.php:967
+#: inc/api/analyzer.php:440
+#: inc/api/analyzer.php:569
+#: inc/api/analyzer.php:660
 msgid "Why it matters:"
 msgstr ""
 
@@ -1028,7 +1125,7 @@ msgid "Page URL is longer than %s characters and may affect SEO and readability.
 msgstr ""
 
 #: inc/analyzer/utils.php:243
-#: inc/api/analyzer.php:1291
+#: inc/api/analyzer.php:1274
 msgid "The link is broken."
 msgstr ""
 
@@ -1042,273 +1139,267 @@ msgstr ""
 msgid "Open Graph tags are present on the page."
 msgstr ""
 
-#: inc/api/admin.php:137
+#: inc/api/admin.php:83
 msgid "Post id or term id is required"
 msgstr ""
 
-#: inc/api/admin.php:220
+#: inc/api/admin.php:166
 msgid "No data found"
 msgstr ""
 
-#: inc/api/admin.php:248
+#: inc/api/admin.php:186
 msgid "Settings updated"
 msgstr ""
 
-#: inc/api/analyzer.php:266
-#: inc/api/analyzer.php:296
-#: inc/api/analyzer.php:321
-msgid "Type of check to delete. Can be \"post\" or \"taxonomy\"."
-msgstr ""
-
-#: inc/api/analyzer.php:341
-msgid "Post ID is required."
-msgstr ""
-
-#: inc/api/analyzer.php:351
+#: inc/api/analyzer.php:122
 msgid "Invalid Post ID."
 msgstr ""
 
-#: inc/api/analyzer.php:376
-msgid "SEO checks retrieved from cache."
-msgstr ""
-
-#: inc/api/analyzer.php:391
-msgid "SEO checks completed."
-msgstr ""
-
-#: inc/api/analyzer.php:410
+#: inc/api/analyzer.php:145
 msgid "Taxonomy and term ID are required."
 msgstr ""
 
-#: inc/api/analyzer.php:436
-msgid "Taxonomy SEO checks retrieved from cache."
-msgstr ""
-
-#: inc/api/analyzer.php:452
-msgid "Taxonomy SEO checks found."
-msgstr ""
-
-#: inc/api/analyzer.php:507
+#: inc/api/analyzer.php:207
 msgid "Checks ignored."
 msgstr ""
 
-#: inc/api/analyzer.php:544
+#: inc/api/analyzer.php:244
 msgid "Checks unignored."
 msgstr ""
 
-#: inc/api/analyzer.php:629
+#: inc/api/analyzer.php:329
 msgid "Check ignored for post."
 msgstr ""
 
-#: inc/api/analyzer.php:657
+#: inc/api/analyzer.php:357
 msgid "Check unignored for post."
 msgstr ""
 
-#: inc/api/analyzer.php:680
+#: inc/api/analyzer.php:380
 msgid "Ignored checks retrieved."
 msgstr ""
 
-#: inc/api/analyzer.php:733
+#: inc/api/analyzer.php:433
 msgid "Google Search Console is connected."
 msgstr ""
 
-#: inc/api/analyzer.php:734
+#: inc/api/analyzer.php:434
 msgid "Google Search Console is not connected."
 msgstr ""
 
-#: inc/api/analyzer.php:737
+#: inc/api/analyzer.php:437
 msgid "Google Search Console is a free tool that shows how your site is doing in Google search — how many people are finding it, what they’re searching for, and which pages are getting the most attention."
 msgstr ""
 
-#: inc/api/analyzer.php:738
+#: inc/api/analyzer.php:438
 msgid "Connecting Search Console to your site doesn’t change anything on the front end — but it gives you a behind-the-scenes view of what’s working. SureRank uses this connection to show useful insights directly in your dashboard."
 msgstr ""
 
-#: inc/api/analyzer.php:762
+#: inc/api/analyzer.php:462
 msgid "SEO plugins help manage how your site appears in search engines. They control important things like titles, meta descriptions, canonical tags, and structured data. "
 msgstr ""
 
-#: inc/api/analyzer.php:786
+#: inc/api/analyzer.php:486
 msgid "No other SEO plugin detected on the site."
 msgstr ""
 
-#: inc/api/analyzer.php:790
+#: inc/api/analyzer.php:490
 msgid "More than one SEO plugin detected on the site."
 msgstr ""
 
 #. translators: %s is the list of active plugins
-#: inc/api/analyzer.php:793
+#: inc/api/analyzer.php:493
 #, php-format
 msgid "Another SEO plugin, %s, detected on the site."
 msgstr ""
 
 #. translators: %s is the list of active plugins
-#: inc/api/analyzer.php:797
+#: inc/api/analyzer.php:497
 #, php-format
 msgid "Currently active plugins : %s"
 msgstr ""
 
-#: inc/api/analyzer.php:798
+#: inc/api/analyzer.php:498
 msgid "But here’s something many site owners don’t realize — using more than one SEO plugin at the same time can lead to issues."
 msgstr ""
 
-#: inc/api/analyzer.php:802
+#: inc/api/analyzer.php:502
 msgid "Most SEO plugins try to manage the same parts of your site. When two plugins do this together, they can send mixed signals to search engines. This might affect how your content is indexed or shown in results. It also makes it harder to know which tool is changing what."
 msgstr ""
 
-#: inc/api/analyzer.php:804
+#: inc/api/analyzer.php:504
 msgid "What to keep in mind:"
 msgstr ""
 
-#: inc/api/analyzer.php:805
+#: inc/api/analyzer.php:505
 msgid "Keeping just one SEO plugin active ensures your settings stay clean and consistent. It’s easier to manage, avoids conflicts, and helps search engines read your site clearly."
 msgstr ""
 
-#: inc/api/analyzer.php:807
+#: inc/api/analyzer.php:507
 msgid "SureRank is designed to handle everything you need in one place — so there’s no need for multiple plugins doing the same job."
 msgstr ""
 
-#: inc/api/analyzer.php:826
+#: inc/api/analyzer.php:526
 msgid "Site tagline is set in WordPress settings."
 msgstr ""
 
-#: inc/api/analyzer.php:826
+#: inc/api/analyzer.php:526
 msgid "Site tagline is not set in WordPress settings."
 msgstr ""
 
-#: inc/api/analyzer.php:828
+#: inc/api/analyzer.php:528
 msgid "Your site tagline is a simple line that helps explain what your website is about. It often shows up in the browser tab, homepage, or in search snippets — depending on your theme or SEO settings."
 msgstr ""
 
-#: inc/api/analyzer.php:829
+#: inc/api/analyzer.php:529
 msgid "Leaving it blank, using a default message like “Just another WordPress site,” or writing something unclear doesn’t help people or search engines understand your site."
 msgstr ""
 
-#: inc/api/analyzer.php:832
+#: inc/api/analyzer.php:532
 msgid "A good tagline can instantly tell visitors what your site offers — and make it more appealing in search results. Think of it like a mini pitch that follows your site name."
 msgstr ""
 
-#: inc/api/analyzer.php:835
+#: inc/api/analyzer.php:535
 msgid "Write one short sentence that describes your site’s purpose or audience. For example: "
 msgstr ""
 
-#: inc/api/analyzer.php:836
+#: inc/api/analyzer.php:536
 msgid "“Simple budgeting tools for everyday people”"
 msgstr ""
 
-#: inc/api/analyzer.php:837
+#: inc/api/analyzer.php:537
 msgid "“Home workouts and fitness tips that fit your schedule”"
 msgstr ""
 
-#: inc/api/analyzer.php:838
+#: inc/api/analyzer.php:538
 msgid "Keep it short, specific, and friendly. You can change it from the WordPress settings."
 msgstr ""
 
 #. translators: %s is the URL of the surerank settings page
-#: inc/api/analyzer.php:842
-#: inc/api/analyzer.php:854
+#: inc/api/analyzer.php:542
 #, php-format
 msgid "Set the site tagline on <a href=\"%s\">General settings page</a>."
 msgstr ""
 
-#: inc/api/analyzer.php:851
-msgid "The site tagline needs to be present to provide a quick, clear summary of the website’s purpose. This enhances both branding and search engine understanding."
-msgstr ""
-
-#: inc/api/analyzer.php:869
+#: inc/api/analyzer.php:562
 msgid "Robots.txt file is accessible."
 msgstr ""
 
-#: inc/api/analyzer.php:870
+#: inc/api/analyzer.php:563
 msgid "Robots.txt file is not accessible."
 msgstr ""
 
-#: inc/api/analyzer.php:872
+#: inc/api/analyzer.php:565
 msgid "Your site uses a small file called robots.txt to guide search engines on where they can and can’t go. It’s like a set of instructions that says, “You’re welcome to look here — but please don’t touch this part.”"
 msgstr ""
 
-#: inc/api/analyzer.php:874
+#: inc/api/analyzer.php:567
 msgid "Most of the time, WordPress creates this automatically. But if the file is missing or misconfigured, search engines might avoid pages they’re actually allowed to visit — or worse, miss important content altogether."
 msgstr ""
 
-#: inc/api/analyzer.php:877
+#: inc/api/analyzer.php:570
 msgid "Without a robots.txt file, search engines may not crawl your site properly, or they might spend too much time on pages that don’t matter. With a working file, your site can be explored more efficiently."
 msgstr ""
 
-#: inc/api/analyzer.php:880
+#: inc/api/analyzer.php:573
 msgid "Check if your robots.txt file is available by visiting yourdomain.com/robots.txt in your browser. If it opens and lists some basic rules (even if you don’t understand them), that means it’s active. "
 msgstr ""
 
-#: inc/api/analyzer.php:882
+#: inc/api/analyzer.php:575
 msgid "SureRank takes care of this by default — so if it’s missing, we’ll help you fix it easily."
 msgstr ""
 
-#: inc/api/analyzer.php:914
+#: inc/api/analyzer.php:607
 msgid "Search engine visibility is not blocked in WordPress settings."
 msgstr ""
 
-#: inc/api/analyzer.php:915
+#: inc/api/analyzer.php:608
 msgid "Search engine visibility is blocked in WordPress settings."
 msgstr ""
 
-#: inc/api/analyzer.php:917
+#: inc/api/analyzer.php:610
 msgid "Search engine visibility settings need to be enabled. The “Discourage search engines from indexing this site” option in WordPress settings must remain unchecked to allow normal crawling and indexing."
 msgstr ""
 
 #. translators: %s is the URL of the surerank settings page
-#: inc/api/analyzer.php:920
+#: inc/api/analyzer.php:613
 #, php-format
 msgid "Set the search engine visibility on <a href=\"%s\">WordPress Reading settings page</a>."
 msgstr ""
 
-#: inc/api/analyzer.php:960
+#: inc/api/analyzer.php:653
 msgid "XML sitemap is accessible to search engines."
 msgstr ""
 
-#: inc/api/analyzer.php:961
+#: inc/api/analyzer.php:654
 msgid "XML sitemap is not accessible to search engines."
 msgstr ""
 
-#: inc/api/analyzer.php:963
+#: inc/api/analyzer.php:656
 msgid "A sitemap is like a guide or map that helps search engines explore your website more efficiently. It lists out the important pages on your site and gives search engines a clear path to follow — like a floor plan showing where everything is. This way, nothing important gets missed."
 msgstr ""
 
-#: inc/api/analyzer.php:965
+#: inc/api/analyzer.php:658
 msgid "Think of it like this: if your website was a story, the sitemap would be the chapter list — helping Google and other search engines jump to the right sections. It doesn’t change how your site looks to visitors, but it makes a big difference in how your site is discovered and understood behind the scenes."
 msgstr ""
 
-#: inc/api/analyzer.php:968
+#: inc/api/analyzer.php:661
 msgid "Without a sitemap, search engines might miss some of your pages or take longer to find new ones. That can slow down how quickly your updates appear in search results. With a sitemap, they get a clear overview of your content and can index it faster and more accurately — which can help improve visibility."
 msgstr ""
 
-#: inc/api/analyzer.php:971
+#: inc/api/analyzer.php:664
 msgid "Check that your sitemap is active and accessible. You can usually visit it at a link like yourdomain.com/sitemap.xml. If it opens and shows a list of links (even if it looks a bit technical), that means it’s working."
 msgstr ""
 
-#: inc/api/analyzer.php:973
+#: inc/api/analyzer.php:666
 msgid "If you’ve connected tools like Google Search Console, you can also submit the sitemap there — but that’s optional. The key is to make sure it’s available and up to date so search engines can do their job properly."
 msgstr ""
 
-#: inc/api/analyzer.php:1040
+#: inc/api/analyzer.php:728
 msgid "Post not found"
 msgstr ""
 
-#: inc/api/analyzer.php:1063
-#: inc/api/analyzer.php:1077
-msgid "Link is broken"
-msgstr ""
-
-#: inc/api/analyzer.php:1087
+#: inc/api/analyzer.php:745
 msgid "Link is not broken"
 msgstr ""
 
-#: inc/api/analyzer.php:1311
+#: inc/api/analyzer.php:1294
 msgid "These broken links were found on the page: "
 msgstr ""
 
-#: inc/api/analyzer.php:1316
+#: inc/api/analyzer.php:1299
 #: build/seo-popup/index.js:1
 msgid "One or more broken links found on the page."
+msgstr ""
+
+#: inc/api/analyzer.php:1501
+#: inc/api/analyzer.php:1524
+msgid "Type of check to delete. Can be \"post\" or \"taxonomy\"."
+msgstr ""
+
+#: inc/api/analyzer.php:1537
+msgid "Post ID is required."
+msgstr ""
+
+#: inc/api/analyzer.php:1590
+msgid "SEO checks retrieved from cache."
+msgstr ""
+
+#: inc/api/analyzer.php:1613
+msgid "SEO checks completed."
+msgstr ""
+
+#: inc/api/analyzer.php:1652
+msgid "Taxonomy SEO checks retrieved from cache."
+msgstr ""
+
+#: inc/api/analyzer.php:1675
+msgid "Taxonomy SEO checks found."
+msgstr ""
+
+#: inc/api/analyzer.php:1730
+#: inc/api/analyzer.php:1753
+msgid "Link is broken"
 msgstr ""
 
 #: inc/api/api-base.php:62
@@ -1327,128 +1418,276 @@ msgstr ""
 msgid "Sample Post"
 msgstr ""
 
-#: inc/api/migrations.php:92
-#: inc/api/migrations.php:145
+#. translators: %s: Error message from export failure
+#: inc/api/import-export-settings.php:99
+#, php-format
+msgid "Export failed: %s"
+msgstr ""
+
+#. translators: %s: Error message from import operation
+#: inc/api/import-export-settings.php:135
+#, php-format
+msgid "Import failed: %s"
+msgstr ""
+
+#: inc/api/migrations.php:104
+#: inc/api/migrations.php:157
 msgid "Plugin slug to migrate from (e.g. rankmath)."
 msgstr ""
 
-#: inc/api/migrations.php:98
+#: inc/api/migrations.php:110
 msgid "Post IDs to migrate."
 msgstr ""
 
-#: inc/api/migrations.php:105
-#: inc/api/migrations.php:158
+#: inc/api/migrations.php:117
+#: inc/api/migrations.php:170
 msgid "Whether to clean up source data after import."
 msgstr ""
 
-#: inc/api/migrations.php:118
-#: inc/api/migrations.php:171
+#: inc/api/migrations.php:130
+#: inc/api/migrations.php:183
 msgid "Page number for pagination."
 msgstr ""
 
-#: inc/api/migrations.php:123
+#: inc/api/migrations.php:135
 msgid "Plugin slug to filter posts by (e.g. rankmath)."
 msgstr ""
 
-#: inc/api/migrations.php:151
+#: inc/api/migrations.php:163
 msgid "Term IDs to migrate."
 msgstr ""
 
-#: inc/api/migrations.php:177
+#: inc/api/migrations.php:189
 msgid "Plugin slug to filter terms by (e.g. rankmath)."
 msgstr ""
 
-#: inc/api/migrations.php:197
+#: inc/api/migrations.php:209
 msgid "Plugin slug to migrate global settings from (e.g. rankmath, yoast)."
 msgstr ""
 
-#: inc/api/migrations.php:204
+#: inc/api/migrations.php:216
 msgid "Whether to clean up source global data after import."
 msgstr ""
 
-#: inc/api/migrations.php:222
+#: inc/api/migrations.php:234
 msgid "Plugin slug to deactivate."
 msgstr ""
 
-#: inc/api/migrations.php:245
-#: inc/api/migrations.php:271
+#: inc/api/migrations.php:253
+msgid "Plugin slug that was migrated from."
+msgstr ""
+
+#: inc/api/migrations.php:303
+#: inc/api/migrations.php:329
 msgid "Invalid importer methods."
 msgstr ""
 
 #. translators: %s: importer class name
 #. translators: %s: importer class name.
-#: inc/api/migrations.php:306
-#: inc/api/migrations.php:604
+#: inc/api/migrations.php:364
+#: inc/api/migrations.php:1030
 #, php-format
-msgid "Invalid importer class: %s does not implement ImporterInterface."
+msgid "Invalid importer class: %s does not implement Importer."
 msgstr ""
 
-#: inc/api/migrations.php:319
+#: inc/api/migrations.php:377
 msgid "Invalid response from importer."
 msgstr ""
 
 #. translators: 1: import status, 2: plugin name
-#: inc/api/migrations.php:337
+#: inc/api/migrations.php:395
 #, php-format
 msgid "Global settings %1$s from %2$s."
 msgstr ""
 
-#: inc/api/migrations.php:338
+#: inc/api/migrations.php:396
 msgid "imported successfully"
 msgstr ""
 
-#: inc/api/migrations.php:338
+#: inc/api/migrations.php:396
 msgid "failed to import"
 msgstr ""
 
-#: inc/api/migrations.php:417
+#: inc/api/migrations.php:475
 msgid "No public taxonomies found."
 msgstr ""
 
-#: inc/api/migrations.php:534
+#: inc/api/migrations.php:595
 msgid "You do not have permission to deactivate plugins."
 msgstr ""
 
-#: inc/api/migrations.php:540
+#: inc/api/migrations.php:601
 msgid "Plugin not found."
 msgstr ""
 
-#: inc/api/migrations.php:544
+#: inc/api/migrations.php:605
 msgid "Plugin is already inactive."
 msgstr ""
 
-#: inc/api/migrations.php:552
+#: inc/api/migrations.php:613
 msgid "Plugin deactivated successfully."
 msgstr ""
 
-#: inc/api/migrations.php:587
+#: inc/api/migrations.php:627
+msgid "Invalid plugin slug."
+msgstr ""
+
+#. translators: %s: plugin slug.
+#: inc/api/migrations.php:637
+#, php-format
+msgid "Migration from %s marked as completed successfully."
+msgstr ""
+
+#: inc/api/migrations.php:737
+msgid "WP Rocket"
+msgstr ""
+
+#: inc/api/migrations.php:743
+msgid "FlyingPress"
+msgstr ""
+
+#: inc/api/migrations.php:749
+msgid "NitroPack"
+msgstr ""
+
+#: inc/api/migrations.php:755
+msgid "WP-Optimize Premium"
+msgstr ""
+
+#: inc/api/migrations.php:761
+msgid "Swift Performance"
+msgstr ""
+
+#: inc/api/migrations.php:769
+msgid "LiteSpeed Cache"
+msgstr ""
+
+#: inc/api/migrations.php:775
+msgid "W3 Total Cache"
+msgstr ""
+
+#: inc/api/migrations.php:781
+msgid "WP Super Cache"
+msgstr ""
+
+#: inc/api/migrations.php:787
+msgid "WP Fastest Cache"
+msgstr ""
+
+#: inc/api/migrations.php:793
+msgid "WP-Optimize"
+msgstr ""
+
+#: inc/api/migrations.php:799
+msgid "Breeze"
+msgstr ""
+
+#: inc/api/migrations.php:805
+msgid "Cache Enabler"
+msgstr ""
+
+#: inc/api/migrations.php:811
+msgid "Comet Cache"
+msgstr ""
+
+#: inc/api/migrations.php:817
+msgid "Swift Performance Lite"
+msgstr ""
+
+#: inc/api/migrations.php:825
+msgid "Redis Object Cache"
+msgstr ""
+
+#: inc/api/migrations.php:833
+msgid "Hummingbird Performance"
+msgstr ""
+
+#: inc/api/migrations.php:839
+msgid "Autoptimize"
+msgstr ""
+
+#: inc/api/migrations.php:845
+msgid "SiteGround Speed Optimizer"
+msgstr ""
+
+#: inc/api/migrations.php:851
+msgid "Cloudflare"
+msgstr ""
+
+#: inc/api/migrations.php:857
+msgid "Hyper Cache"
+msgstr ""
+
+#: inc/api/migrations.php:863
+msgid "Perfmatters"
+msgstr ""
+
+#: inc/api/migrations.php:871
+msgid "SpeedyCache"
+msgstr ""
+
+#: inc/api/migrations.php:877
+msgid "Docket Cache"
+msgstr ""
+
+#: inc/api/migrations.php:883
+msgid "10Web Booster"
+msgstr ""
+
+#: inc/api/migrations.php:889
+msgid "Super Page Cache"
+msgstr ""
+
+#: inc/api/migrations.php:895
+msgid "WP REST Cache"
+msgstr ""
+
+#: inc/api/migrations.php:901
+msgid "Cache Control"
+msgstr ""
+
+#: inc/api/migrations.php:909
+msgid "Aruba HiSpeed Cache"
+msgstr ""
+
+#: inc/api/migrations.php:915
+msgid "atec Cache APCu"
+msgstr ""
+
+#. translators: 1: detection method, 2: detection value
+#: inc/api/migrations.php:951
+#, php-format
+msgid "Detected via %1$s: %2$s"
+msgstr ""
+
+#: inc/api/migrations.php:1013
 msgid "Invalid plugin slug specified."
 msgstr ""
 
-#: inc/api/migrations.php:686
+#: inc/api/migrations.php:1112
 msgid "No data found for this item."
 msgstr ""
 
-#: inc/api/migrations.php:692
+#: inc/api/migrations.php:1118
 msgid "Detection failed."
 msgstr ""
 
-#: inc/api/migrations.php:699
+#: inc/api/migrations.php:1125
 msgid "Invalid import response."
 msgstr ""
 
-#: inc/api/migrations.php:708
+#: inc/api/migrations.php:1134
 msgid "Import failed."
 msgstr ""
 
 #. translators: %s: error message.
-#: inc/api/migrations.php:713
+#: inc/api/migrations.php:1139
 #, php-format
 msgid "Error: %s"
 msgstr ""
 
 #. translators: 1: imported count, 2: total count, 3: item type, 4: plugin name.
-#: inc/api/migrations.php:756
+#: inc/api/migrations.php:1182
 #, php-format
 msgid "Imported %1$d of %2$d %3$s from %4$s."
 msgstr ""
@@ -1489,49 +1728,91 @@ msgstr ""
 msgid "Failed to update settings"
 msgstr ""
 
-#: inc/api/post.php:166
-#: inc/api/term.php:153
+#: inc/api/post.php:113
+#: inc/api/term.php:111
 msgid "Error while running SEO Checks."
 msgstr ""
 
-#: inc/api/post.php:169
-#: inc/api/term.php:156
+#: inc/api/post.php:116
+#: inc/api/term.php:114
 msgid "Data updated"
 msgstr ""
 
-#: inc/api/post.php:239
-msgid "Author pages"
-msgstr ""
-
-#: inc/api/post.php:242
-msgid "Date archives"
-msgstr ""
-
-#: inc/api/post.php:245
-msgid "Search pages"
-msgstr ""
-
-#: inc/api/post.php:266
+#: inc/api/post.php:165
 msgid "No post ID provided."
 msgstr ""
 
-#: inc/api/post.php:272
+#: inc/api/post.php:171
 msgid "No post found."
 msgstr ""
 
-#: inc/api/term.php:189
+#: inc/api/post.php:350
+msgid "Author pages"
+msgstr ""
+
+#: inc/api/post.php:354
+msgid "Date archives"
+msgstr ""
+
+#: inc/api/post.php:357
+msgid "Search pages"
+msgstr ""
+
+#: inc/api/sitemap.php:67
+msgid "Sitemap cache generation has started."
+msgstr ""
+
+#: inc/api/sitemap.php:68
+msgid "This may take up to 5 minutes, please wait before checking the sitemap."
+msgstr ""
+
+#. translators: %s: Error message
+#: inc/api/sitemap.php:77
+#, php-format
+msgid "Failed to start cache generation: %s"
+msgstr ""
+
+#: inc/api/term.php:147
 msgid "No term ID provided."
 msgstr ""
 
-#: inc/api/term.php:195
+#: inc/api/term.php:153
 msgid "No term found."
 msgstr ""
 
-#: inc/frontend/description.php:184
-msgid "Welcome to "
+#: inc/batch-process/cleanup.php:45
+msgid "Cleanup Process is completed."
+msgstr ""
+
+#: inc/batch-process/sync-posts.php:82
+msgid "No posts found for processing."
+msgstr ""
+
+#. translators: %d: number of posts
+#: inc/batch-process/sync-posts.php:91
+#, php-format
+msgid "JSON generation completed for %d posts."
+msgstr ""
+
+#: inc/batch-process/sync-taxonomies.php:79
+msgid "No terms found for processing."
+msgstr ""
+
+#. translators: %d: number of terms.
+#: inc/batch-process/sync-taxonomies.php:88
+#, php-format
+msgid "JSON generation completed for %d terms."
+msgstr ""
+
+#: inc/cli/cli.php:46
+msgid "SureRank Cache generated successfully"
 msgstr ""
 
 #: inc/frontend/description.php:188
+msgid "Welcome to "
+msgstr ""
+
+#: inc/frontend/description.php:192
 msgid "Latest posts from "
 msgstr ""
 
@@ -1551,34 +1832,38 @@ msgstr ""
 msgid "Tag: "
 msgstr ""
 
-#: inc/frontend/title.php:144
+#: inc/frontend/title.php:146
+#: inc/meta-variables/post.php:244
 msgid "Author: "
 msgstr ""
 
-#: inc/frontend/title.php:148
+#: inc/frontend/title.php:155
+#: inc/meta-variables/post.php:248
 msgid "Day Archives: "
 msgstr ""
 
-#: inc/frontend/title.php:150
+#: inc/frontend/title.php:157
+#: inc/meta-variables/post.php:251
 msgid "Month Archives: "
 msgstr ""
 
-#: inc/frontend/title.php:152
+#: inc/frontend/title.php:159
+#: inc/meta-variables/post.php:254
 msgid "Year Archives: "
 msgstr ""
 
 #. translators: %s: Search query
-#: inc/frontend/title.php:176
+#: inc/frontend/title.php:186
 #, php-format
 msgid "Search Results for: %s"
 msgstr ""
 
 #. translators: %s: Search query
-#: inc/frontend/title.php:176
+#: inc/frontend/title.php:186
 msgid "No query"
 msgstr ""
 
-#: inc/frontend/title.php:191
+#: inc/frontend/title.php:201
 msgid "404: Page not found"
 msgstr ""
 
@@ -1590,8 +1875,28 @@ msgstr ""
 msgid "Out of Stock"
 msgstr ""
 
+#: inc/functions/cron.php:56
+msgid "Every 6 hours"
+msgstr ""
+
+#: inc/functions/cron.php:70
+msgid "Sitemap generation cron job scheduled."
+msgstr ""
+
+#: inc/functions/cron.php:84
+msgid "Sitemap generation cron job unscheduled."
+msgstr ""
+
+#: inc/functions/cron.php:96
+msgid "Starting sitemap generation via cron job."
+msgstr ""
+
+#: inc/functions/cron.php:100
+msgid "Sitemap generation cron job completed."
+msgstr ""
+
 #. translators: %s: page number, %s: total pages
-#: inc/functions/helper.php:244
+#: inc/functions/helper.php:273
 #, php-format
 msgid " - Page %1$s of %2$s"
 msgstr ""
@@ -1610,6 +1915,320 @@ msgstr ""
 
 #: inc/google-search-console/google-console.php:105
 msgid "Unknown error"
+msgstr ""
+
+#: inc/import-export/settings-exporter.php:134
+msgid "No categories specified for export."
+msgstr ""
+
+#: inc/import-export/settings-exporter.php:163
+msgid "No settings found to export for the selected categories."
+msgstr ""
+
+#. translators: %d: number of categories exported
+#: inc/import-export/settings-exporter.php:171
+#, php-format
+msgid "Successfully exported settings for %d categories."
+msgstr ""
+
+#: inc/import-export/settings-exporter.php:227
+msgid "General Settings"
+msgstr ""
+
+#: inc/import-export/settings-exporter.php:228
+msgid "Advanced Settings"
+msgstr ""
+
+#: inc/import-export/settings-exporter.php:229
+msgid "Social Media Settings"
+msgstr ""
+
+#: inc/import-export/settings-exporter.php:230
+msgid "Schema Settings"
+msgstr ""
+
+#: inc/import-export/settings-exporter.php:231
+msgid "Required Resources"
+msgstr ""
+
+#: inc/import-export/settings-exporter.php:293
+#: inc/import-export/utils.php:443
+msgid "Invalid image URL."
+msgstr ""
+
+#: inc/import-export/settings-exporter.php:319
+msgid "Invalid image format."
+msgstr ""
+
+#: inc/import-export/settings-exporter.php:340
+msgid "Image converted to base64 successfully."
+msgstr ""
+
+#. translators: %s: Error message from wp_remote_get
+#: inc/import-export/settings-exporter.php:368
+#, php-format
+msgid "Failed to fetch image: %s"
+msgstr ""
+
+#. translators: %d: HTTP response status code
+#: inc/import-export/settings-exporter.php:376
+#, php-format
+msgid "Failed to fetch image. HTTP status: %d"
+msgstr ""
+
+#: inc/import-export/settings-exporter.php:383
+msgid "Fetched image is empty."
+msgstr ""
+
+#: inc/import-export/settings-exporter.php:414
+msgid "Image URL is not in uploads directory."
+msgstr ""
+
+#: inc/import-export/settings-exporter.php:423
+msgid "Image file does not exist."
+msgstr ""
+
+#: inc/import-export/settings-exporter.php:429
+msgid "Image file is not readable."
+msgstr ""
+
+#: inc/import-export/settings-exporter.php:437
+msgid "Failed to read image file."
+msgstr ""
+
+#. translators: %s: Category name that was skipped during import
+#: inc/import-export/settings-importer.php:149
+#, php-format
+msgid "Skipped invalid category: %s"
+msgstr ""
+
+#. translators: %s: Category name with no valid setting keys
+#: inc/import-export/settings-importer.php:181
+#, php-format
+msgid "No valid setting keys found for category: %s"
+msgstr ""
+
+#. translators: %s: Option name that was skipped during import
+#: inc/import-export/settings-importer.php:196
+#, php-format
+msgid "Skipped invalid option: %s"
+msgstr ""
+
+#. translators: %s: Option name that was skipped because it already exists
+#: inc/import-export/settings-importer.php:205
+#, php-format
+msgid "Skipped existing option: %s"
+msgstr ""
+
+#. translators: %s: Setting key name for which an image was downloaded and processed
+#: inc/import-export/settings-importer.php:221
+#, php-format
+msgid "Downloaded and processed image for: %s"
+msgstr ""
+
+#: inc/import-export/settings-importer.php:260
+msgid "Failed to save imported settings to database."
+msgstr ""
+
+#. translators: %d: Number of settings that were successfully imported
+#: inc/import-export/settings-importer.php:331
+#, php-format
+msgid "Successfully imported %d settings."
+msgstr ""
+
+#: inc/import-export/settings-importer.php:335
+msgid "No settings were imported."
+msgstr ""
+
+#: inc/import-export/utils.php:161
+msgid "Invalid file data."
+msgstr ""
+
+#: inc/import-export/utils.php:162
+msgid "File data must be an array."
+msgstr ""
+
+#: inc/import-export/utils.php:171
+msgid "The uploaded file exceeds the maximum file size."
+msgstr ""
+
+#: inc/import-export/utils.php:174
+msgid "The uploaded file was only partially uploaded."
+msgstr ""
+
+#: inc/import-export/utils.php:177
+msgid "No file was uploaded."
+msgstr ""
+
+#: inc/import-export/utils.php:180
+msgid "File upload failed."
+msgstr ""
+
+#: inc/import-export/utils.php:186
+msgid "File name is missing."
+msgstr ""
+
+#: inc/import-export/utils.php:190
+msgid "Temporary file path is missing."
+msgstr ""
+
+#: inc/import-export/utils.php:197
+msgid "Only JSON files are allowed."
+msgstr ""
+
+#. translators: %s: Maximum file size limit
+#: inc/import-export/utils.php:206
+#, php-format
+msgid "File size exceeds maximum limit of %s."
+msgstr ""
+
+#: inc/import-export/utils.php:214
+msgid "File validation failed."
+msgstr ""
+
+#: inc/import-export/utils.php:221
+msgid "File is valid."
+msgstr ""
+
+#: inc/import-export/utils.php:235
+msgid "Invalid JSON data."
+msgstr ""
+
+#: inc/import-export/utils.php:236
+msgid "JSON data must be a non-empty string."
+msgstr ""
+
+#: inc/import-export/utils.php:245
+msgid "Invalid JSON format."
+msgstr ""
+
+#: inc/import-export/utils.php:252
+msgid "JSON is valid."
+msgstr ""
+
+#: inc/import-export/utils.php:272
+msgid "Invalid settings data format."
+msgstr ""
+
+#: inc/import-export/utils.php:273
+msgid "Settings data must be an array."
+msgstr ""
+
+#: inc/import-export/utils.php:279
+msgid "Invalid plugin identifier. This file does not contain SureRank settings."
+msgstr ""
+
+#: inc/import-export/utils.php:283
+msgid "Missing or invalid settings data."
+msgstr ""
+
+#: inc/import-export/utils.php:297
+msgid "Import data validation failed."
+msgstr ""
+
+#: inc/import-export/utils.php:304
+msgid "Import data is valid."
+msgstr ""
+
+#: inc/import-export/utils.php:319
+msgid "Version compatible."
+msgstr ""
+
+#: inc/import-export/utils.php:380
+msgid "Invalid file path."
+msgstr ""
+
+#: inc/import-export/utils.php:386
+msgid "File does not exist."
+msgstr ""
+
+#: inc/import-export/utils.php:392
+msgid "File is not readable."
+msgstr ""
+
+#: inc/import-export/utils.php:400
+msgid "Failed to read file content."
+msgstr ""
+
+#: inc/import-export/utils.php:450
+#: inc/import-export/utils.php:830
+msgid "WordPress media functions are not available."
+msgstr ""
+
+#. translators: %s: Upload directory error message
+#: inc/import-export/utils.php:459
+#: inc/import-export/utils.php:839
+#, php-format
+msgid "Upload directory error: %s"
+msgstr ""
+
+#. translators: %s: Error message from wp_remote_get
+#: inc/import-export/utils.php:475
+#, php-format
+msgid "Failed to download image: %s"
+msgstr ""
+
+#. translators: %d: HTTP response status code
+#: inc/import-export/utils.php:483
+#, php-format
+msgid "Failed to download image. HTTP status: %d"
+msgstr ""
+
+#: inc/import-export/utils.php:490
+msgid "Downloaded image is empty."
+msgstr ""
+
+#: inc/import-export/utils.php:502
+msgid "Invalid image URL format."
+msgstr ""
+
+#: inc/import-export/utils.php:521
+msgid "Using existing downloaded image from media library."
+msgstr ""
+
+#: inc/import-export/utils.php:542
+msgid "Failed to save downloaded image."
+msgstr ""
+
+#: inc/import-export/utils.php:563
+#: inc/import-export/utils.php:963
+msgid "Failed to create attachment."
+msgstr ""
+
+#. translators: %s: Error message from attachment creation
+#: inc/import-export/utils.php:566
+#: inc/import-export/utils.php:966
+#, php-format
+msgid "Failed to create attachment: %s"
+msgstr ""
+
+#: inc/import-export/utils.php:582
+#: inc/import-export/utils.php:989
+msgid "Failed to get attachment URL."
+msgstr ""
+
+#: inc/import-export/utils.php:594
+msgid "Image downloaded and saved successfully."
+msgstr ""
+
+#: inc/import-export/utils.php:823
+msgid "Invalid base64 image data format."
+msgstr ""
+
+#: inc/import-export/utils.php:877
+msgid "Failed to decode base64 image data."
+msgstr ""
+
+#: inc/import-export/utils.php:897
+msgid "Using existing image from media library."
+msgstr ""
+
+#: inc/import-export/utils.php:939
+msgid "Failed to save image from base64 data."
+msgstr ""
+
+#: inc/import-export/utils.php:1001
+msgid "Image saved from base64 data successfully."
 msgstr ""
 
 #. translators: 1: plugin name, 2: post ID.
@@ -1777,83 +2396,87 @@ msgid "No Yoast SEO data found for term %d."
 msgstr ""
 
 #. translators: %d: post ID.
-#: inc/importers/yoast.php:154
+#: inc/importers/yoast.php:124
 #, php-format
 msgid "Meta-robots imported for post %d."
 msgstr ""
 
 #. translators: %d: post ID, %s: error message.
-#: inc/importers/yoast.php:163
+#: inc/importers/yoast.php:133
 #, php-format
 msgid "Error importing meta-robots for post %1$d: %2$s"
 msgstr ""
 
 #. translators: %d: term ID.
-#: inc/importers/yoast.php:196
+#: inc/importers/yoast.php:166
 #, php-format
 msgid "Meta-robots imported for term %d."
 msgstr ""
 
 #. translators: %d: term ID, %s: error message.
-#: inc/importers/yoast.php:205
+#: inc/importers/yoast.php:175
 #, php-format
 msgid "Error importing meta-robots for term %1$d: %2$s"
 msgstr ""
 
 #. translators: %d: post ID.
-#: inc/importers/yoast.php:229
+#: inc/importers/yoast.php:199
 #, php-format
 msgid "General settings imported for post %d."
 msgstr ""
 
 #. translators: %d: post ID.
-#: inc/importers/yoast.php:229
+#: inc/importers/yoast.php:199
 #, php-format
 msgid "No general settings to import for post %d."
 msgstr ""
 
 #. translators: %d: term ID.
-#: inc/importers/yoast.php:257
+#: inc/importers/yoast.php:227
 #, php-format
 msgid "General settings imported for term %d."
 msgstr ""
 
 #. translators: %d: term ID.
-#: inc/importers/yoast.php:257
+#: inc/importers/yoast.php:227
 #, php-format
 msgid "No general settings to import for term %d."
 msgstr ""
 
-#: inc/importers/yoast.php:287
+#. translators: %d: post ID.
+#: inc/importers/yoast.php:257
 #, php-format
 msgid "Social metadata imported for post %d."
 msgstr ""
 
-#: inc/importers/yoast.php:287
+#. translators: %d: post ID.
+#: inc/importers/yoast.php:257
 #, php-format
 msgid "No social metadata to import for post %d."
 msgstr ""
 
-#: inc/importers/yoast.php:316
+#. translators: %d: post ID.
+#: inc/importers/yoast.php:286
 #, php-format
 msgid "Social metadata imported for term %d."
 msgstr ""
 
-#: inc/importers/yoast.php:316
+#. translators: %d: post ID.
+#: inc/importers/yoast.php:286
 #, php-format
 msgid "No social metadata to import for term %d."
 msgstr ""
 
-#: inc/importers/yoast.php:347
+#: inc/importers/yoast.php:317
 msgid "No Yoast SEO global settings found to import."
 msgstr ""
 
-#: inc/importers/yoast.php:364
+#: inc/importers/yoast.php:334
 msgid "Yoast SEO global settings imported successfully."
 msgstr ""
 
 #. translators: %s: error message.
-#: inc/importers/yoast.php:371
+#: inc/importers/yoast.php:341
 #, php-format
 msgid "Error importing Yoast SEO global settings: %s"
 msgstr ""
@@ -1890,6 +2513,14 @@ msgstr ""
 
 #: inc/meta-variables/post.php:89
 msgid "The name of the author of the current post/page"
+msgstr ""
+
+#: inc/meta-variables/post.php:92
+msgid "Archive Title"
+msgstr ""
+
+#: inc/meta-variables/post.php:93
+msgid "The title of the current archive. Example \"Day/Month/Year Archives: \" or \"Author Archives: \""
 msgstr ""
 
 #: inc/meta-variables/site.php:60
@@ -1992,7 +2623,7 @@ msgid "Image"
 msgstr ""
 
 #: inc/schema/helper.php:109
-#: inc/schema/products.php:145
+#: inc/schema/products.php:143
 #: inc/schema/types/product.php:135
 msgid "Product Image"
 msgstr ""
@@ -2364,183 +2995,180 @@ msgstr ""
 msgid "Identify the main entity being described on the page, such as an article, product, or event. This helps search engines understand the primary focus of the page through structured data."
 msgstr ""
 
-#: inc/schema/products.php:133
+#: inc/schema/products.php:131
 msgid "Product Price"
 msgstr ""
 
-#: inc/schema/products.php:134
+#: inc/schema/products.php:132
 msgid "Product Price Including Tax"
 msgstr ""
 
-#: inc/schema/products.php:135
+#: inc/schema/products.php:133
 msgid "Product Low Price (variable product)"
 msgstr ""
 
-#: inc/schema/products.php:136
+#: inc/schema/products.php:134
 msgid "Product High Price (variable product)"
 msgstr ""
 
-#: inc/schema/products.php:137
+#: inc/schema/products.php:135
 msgid "Product Offer Count (variable product)"
 msgstr ""
 
-#: inc/schema/products.php:138
+#: inc/schema/products.php:136
 msgid "Product Sale Price Date \"From\""
 msgstr ""
 
-#: inc/schema/products.php:139
+#: inc/schema/products.php:137
 msgid "Product Sale Price Date \"To\""
 msgstr ""
 
-#: inc/schema/products.php:140
+#: inc/schema/products.php:138
 msgid "Product SKU"
 msgstr ""
 
-#: inc/schema/products.php:141
+#: inc/schema/products.php:139
 msgid "Product Stock Status"
 msgstr ""
 
-#: inc/schema/products.php:142
+#: inc/schema/products.php:140
 msgid "Product Currency"
 msgstr ""
 
-#: inc/schema/products.php:143
+#: inc/schema/products.php:141
 msgid "Product Rating Value"
 msgstr ""
 
-#: inc/schema/products.php:144
+#: inc/schema/products.php:142
 msgid "Product Review Count"
 msgstr ""
 
-#: inc/schema/products.php:146
+#: inc/schema/products.php:144
 msgid "Product Image Width"
 msgstr ""
 
-#: inc/schema/products.php:147
+#: inc/schema/products.php:145
 msgid "Product Image Height"
 msgstr ""
 
-#: inc/schema/products.php:148
+#: inc/schema/products.php:146
 msgid "Product Description"
 msgstr ""
 
-#: inc/schema/products.php:149
+#: inc/schema/products.php:147
 msgid "Product Variant SKU"
 msgstr ""
 
-#: inc/schema/products.php:150
+#: inc/schema/products.php:148
 msgid "Product Variant Name"
 msgstr ""
 
-#: inc/schema/products.php:151
+#: inc/schema/products.php:149
 msgid "Product Variant URL"
 msgstr ""
 
-#: inc/schema/products.php:152
+#: inc/schema/products.php:150
 msgid "Product Variant Image"
 msgstr ""
 
-#: inc/schema/products.php:153
+#: inc/schema/products.php:151
 msgid "Product Variant Size"
 msgstr ""
 
-#: inc/schema/products.php:154
+#: inc/schema/products.php:152
 msgid "Product Variant Color"
 msgstr ""
 
-#: inc/schema/products.php:155
+#: inc/schema/products.php:153
 msgid "Product Variant Description"
 msgstr ""
 
-#: inc/schema/products.php:156
+#: inc/schema/products.php:154
 msgid "Product Variant Sale Price"
 msgstr ""
 
-#: inc/schema/products.php:157
+#: inc/schema/products.php:155
 msgid "Product Variant Regular Price"
 msgstr ""
 
-#: inc/schema/products.php:158
+#: inc/schema/products.php:156
 msgid "Product Variant Stock Status"
 msgstr ""
 
-#: inc/schema/rules.php:51
-msgid "404 Page"
-msgstr ""
-
-#: inc/schema/rules.php:52
-msgid "Search Page"
-msgstr ""
-
-#: inc/schema/rules.php:53
-msgid "Blog / Posts Page"
-msgstr ""
-
-#: inc/schema/rules.php:54
-msgid "Front Page"
-msgstr ""
-
-#: inc/schema/rules.php:55
-msgid "Date Archive"
-msgstr ""
-
-#: inc/schema/rules.php:56
-msgid "Author Archive"
-msgstr ""
-
-#: inc/schema/rules.php:60
-msgid "WooCommerce Shop Page"
-msgstr ""
-
-#: inc/schema/rules.php:65
-#: inc/schema/rules.php:70
-#: inc/schema/rules.php:75
-msgid "Entire Website"
-msgstr ""
-
-#: inc/schema/rules.php:66
-#: inc/schema/rules.php:76
-msgid "All Singulars"
-msgstr ""
-
-#: inc/schema/rules.php:71
-#: inc/schema/rules.php:77
-msgid "All Archives"
-msgstr ""
-
-#: inc/schema/rules.php:84
-#: inc/schema/rules.php:91
-msgid "Basic"
-msgstr ""
-
-#: inc/schema/rules.php:95
-msgid "Special Pages"
-msgstr ""
-
-#: inc/schema/rules.php:115
-msgid "Product Types"
-msgstr ""
-
-#: inc/schema/rules.php:148
-msgid "Specific Target"
-msgstr ""
-
-#: inc/schema/rules.php:150
-msgid "Specific Pages / Posts / Taxonomies, etc."
-msgstr ""
-
 #. translators: %s: Post type label
-#: inc/schema/rules.php:179
+#: inc/schema/rules.php:72
 #, php-format
 msgid "All %s"
 msgstr ""
 
 #. translators: %s: Post type label
 #. translators: %s: Taxonomy label
-#: inc/schema/rules.php:185
-#: inc/schema/rules.php:194
+#: inc/schema/rules.php:78
+#: inc/schema/rules.php:87
 #, php-format
 msgid "All %s Archive"
+msgstr ""
+
+#: inc/schema/rules.php:144
+msgid "Basic"
+msgstr ""
+
+#: inc/schema/rules.php:157
+msgid "Special Pages"
+msgstr ""
+
+#: inc/schema/rules.php:172
+msgid "Entire Website"
+msgstr ""
+
+#: inc/schema/rules.php:176
+#: inc/schema/rules.php:180
+msgid "All Singulars"
+msgstr ""
+
+#: inc/schema/rules.php:178
+#: inc/schema/rules.php:181
+msgid "All Archives"
+msgstr ""
+
+#: inc/schema/rules.php:194
+msgid "404 Page"
+msgstr ""
+
+#: inc/schema/rules.php:195
+msgid "Search Page"
+msgstr ""
+
+#: inc/schema/rules.php:196
+msgid "Blog / Posts Page"
+msgstr ""
+
+#: inc/schema/rules.php:197
+msgid "Front Page"
+msgstr ""
+
+#: inc/schema/rules.php:198
+msgid "Date Archive"
+msgstr ""
+
+#: inc/schema/rules.php:199
+msgid "Author Archive"
+msgstr ""
+
+#: inc/schema/rules.php:203
+msgid "WooCommerce Shop Page"
+msgstr ""
+
+#: inc/schema/rules.php:223
+msgid "Product Types"
+msgstr ""
+
+#: inc/schema/rules.php:341
+msgid "Specific Target"
+msgstr ""
+
+#: inc/schema/rules.php:343
+msgid "Specific Pages / Posts / Taxonomies, etc."
 msgstr ""
 
 #: inc/schema/types/article.php:66
@@ -2653,14 +3281,6 @@ msgstr ""
 
 #: inc/schema/types/article.php:191
 msgid "Whether the dataset is accessible without payment."
-msgstr ""
-
-#: inc/schema/types/article.php:195
-msgid "Yes"
-msgstr ""
-
-#: inc/schema/types/article.php:196
-msgid "No"
 msgstr ""
 
 #: inc/schema/types/article.php:202
@@ -3954,8 +4574,19 @@ msgstr ""
 msgid "This setting is managed by the SureRank plugin, so you don’t need to configure indexing rules for funnels here."
 msgstr ""
 
-#: loader.php:317
+#: loader.php:277
 msgid "Rate our plugin"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#, js-format
+msgid "%s will be deactivated after migration. Uncheck to keep it active."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "The plugin"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
@@ -3977,6 +4608,195 @@ msgid "No Date"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/admin-seo-bar/index.js:1
+#: build/bricks/index.js:1
+#: build/elementor/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Issue"
+msgid_plural "Issues"
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/admin-seo-bar/index.js:1
+#: build/bricks/index.js:1
+#: build/elementor/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Warning"
+msgid_plural "Warnings"
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/admin-seo-bar/index.js:1
+#: build/bricks/index.js:1
+#: build/elementor/index.js:1
+#: build/seo-popup/index.js:1
+msgid "SEO is Optimized"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Site Facebook Page"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Provide the full URL of your official Facebook Page. This URL will be used in your site’s structured data under the Schema → Organization → SameAs field to associate your brand with its verified social profile."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Author Facebook Page"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Enter the URL of your default Facebook author page. It will be used in structured data when a post doesn’t have a specific author profile set - useful for multi-author sites."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Facebook"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Control how your pages appear when shared on Facebook. Set attribution and preview settings here."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Type @ to view variable suggestions"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Settings saved successfully"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "To apply the new settings, the page will refresh automatically in 3 seconds."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Migrate"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Simplify your SEO management by migrating your settings from a plugin to SureRank, ensuring a seamless transition and consistent optimization across your website."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Schema"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Robot Instructions"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "These settings help search engines understand how to treat your home page in search results. Enabling ‘No Index’ will prevent the home page from appearing in search results. ‘No Follow’ tells search engines not to follow any links on the page, and ‘No Archive’ prevents search engines from storing a cached version of the page. These settings apply only to your website’s home page."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "No Index"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Prevents search engines from listing your home page in search results."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "No Follow"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Tells search engines not to follow any links on your home page."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "No Archive"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Blocks search engines from storing a cached version of your home page."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "This is only for Home Page. These settings will not affect any other pages."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Select Default Image"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Set Default Image"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Default Image"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Set a default image that will be used for social sharing when no featured or social-specific image is available. This ensures your content always has a visual when shared on platforms like Facebook or X (Twitter)."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Recommended size: 1200 x 630 px. Use JPG or PNG format for best results."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Learn more"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Preview"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Fallback"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Default Social Image"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "This is your site's default social sharing image (Open Graph). It shows up when your pages are shared on social platforms — unless a custom image is set on that page."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Add Schema"
 msgstr ""
@@ -3993,8 +4813,72 @@ msgid "Cancel"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-#: build/seo-popup/index.js:1
-msgid "Type @ to view variable suggestions"
+#: build/admin-onboarding/index.js:1
+#, js-format
+msgid "%s completed"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#, js-format
+msgid "%1$s/%2$s imported"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Preparing migration…"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#, js-format
+msgid "Reading %s…"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Reading taxonomies…"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Reading content…"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Migrating global settings…"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#, js-format
+msgid "Migrating %s…"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Migrating taxonomies…"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Migrating content…"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Processing…"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Importing SEO Settings from"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Global Settings"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
@@ -4038,8 +4922,70 @@ msgid "Fix It for Me"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Sample Post - Testing Site"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Failed to update robots.txt file."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Settings saved successfully."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "An unexpected error occurred while updating the robots.txt content. Please try again later."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "The contents are locked because a robots.txt file exists in the root folder. If you want to edit the contents, please delete the existing robots.txt file from your server."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Warning:"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Your site's search engine visibility is currently set to Hidden in "
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Settings > Reading"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid ". Any changes made here will not be applied until you set the search engine visibility to Public. This is required to update the robots.txt content."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Changes to your robots.txt file can affect how search engines crawl and index your site. Editing this file incorrectly may block important pages from search results or impact your site’s SEO. Please proceed with caution. Leave empty to let WordPress manage it. If a robots.txt file exists, delete it to use this setting. Verify the robots.txt content "
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "here."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Robots.txt Editor"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Manage your robots.txt file to control what search engines can see on your website."
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
@@ -4052,6 +4998,16 @@ msgstr ""
 #: build/admin-seo-bar/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Action failed. Please try again."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Other Accounts"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Enter the full URLs of your official profiles. These will be added to the Organization schema under SameAs to help search engines verify your online presence."
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
@@ -4145,6 +5101,344 @@ msgid "Ignore"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "SureRank migration will run smoothly if the cache plugin is temporarily paused"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "We’ve detected a cache plugin on your site. While not required, we recommend turning it off during migration to avoid any possible conflicts. You can keep it active if you prefer, but disabling it for now may help ensure everything runs smoothly."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Migration Error"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Try Again"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Enable Author Archive"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Displays all posts published by a specific author. Useful for showcasing an author’s contributions and helping search engines understand authorship and topical relevance."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Enable Date Archive"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Groups posts by month or year. Helps visitors explore content chronologically and allows search engines to better index time-based content."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Archive Pages"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Archive Pages let visitors access links to view posts by author or by date. This makes it easier for people to find content based on who wrote it or when it was published."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Migration is in progress. Are you sure you want to leave? Unsaved changes may be lost."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "API request failed"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Migration failed"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Migration failed. Please try again."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "No index"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Prevents search engines from listing your page in search results."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "No follow"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Tells search engines not to follow any links on your page."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "No archive"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Blocks search engines from storing a cached version of your page."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "This content will be set as the meta description tag and may appear in search results. Keep it short and clearly explain what the page is about."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "View a preview of how your page may appear in search engine results. This preview is for guidance only and might not exactly match how search engines display your content."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Site Icon: "
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "The site icon (favicon) appears in browser tabs, bookmarks, and mobile devices. To update it, go to General Settings → Site Icon and upload a new image under Site Identity."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Change Here"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Search Engine Title"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Set a default title for all individual post pages to help define how they appear in search engines. You can override this title for any post by editing it directly."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Search Engine Description"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Set a default description for all individual post pages to help define how they appear in search engines. You can override this description for any post by editing it directly."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Search Engine Preview"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Meta Templates"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Site Name: "
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "The site name used in meta titles and descriptions is taken from the WordPress General Settings, where it is defined under \"Site Title.\""
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Create a default template for how your pages appear in Google search. You can still set custom titles and descriptions for individual pages."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Site SEO Analysis"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Social"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "X"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Home Page"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Sitemaps"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Content Performance"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Manage Features"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Migrate to SureRank"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Miscellaneous"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Summary Large Image"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Summary"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "X Card Type"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Choose how your content will appear when shared on X. This setting determines the card type—either a summary or a summary with a large image—used in the post preview."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Site's X Profile"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Provide the full URL of your official X (Twitter) profile. This URL will be used in your site’s structured data under the Schema → Organization → SameAs field to associate your brand with its verified social profile."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Author’s X Profile"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Enter the URL of your fallback Twitter author page. This will be used if an individual author URL is not provided."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Control how your pages appear when shared on X. Set attribution and preview settings here."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Enable XML Sitemap"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Generates an XML sitemap to help search engines index your site content."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Include Images in XML Sitemap"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Add images from your posts and pages to the XML sitemap so search engines can find and index them more easily. Images are visible only in source code."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "XML"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Error generating sitemap cache. Please try again."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Sitemap is currently disabled. Please enable XML sitemap in settings to access the sitemap file."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Open Sitemap"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Generates a sitemap to help search engines find and index your content more efficiently. Showing image count can improve how your media appears in search results."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Save"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Saving.."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Saved"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
 msgid "Search…"
 msgstr ""
 
@@ -4196,12 +5490,6 @@ msgid "Your search didn't match any results. Please try a different keyword or r
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-msgid "Issue"
-msgid_plural "Issues"
-msgstr[0] ""
-msgstr[1] ""
-
-#: build/admin-dashboard/index.js:1
 msgid "Action"
 msgstr ""
 
@@ -4215,10 +5503,6 @@ msgstr ""
 
 #: build/admin-dashboard/index.js:1
 msgid "No additional information to show."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Site SEO Analysis"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
@@ -4278,10 +5562,6 @@ msgid "Manage titles and meta descriptions to boost your search rankings."
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-msgid "Home Page"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
 msgid "Set SEO options for your homepage to improve its search visibility."
 msgstr ""
 
@@ -4294,16 +5574,7 @@ msgid "Configure how your content appears when shared on social media platforms.
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-msgid "Sitemaps"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
 msgid "Generate XML sitemaps to help search engines crawl your site."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-#: build/seo-popup/index.js:1
-msgid "Robot Instructions"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
@@ -4327,24 +5598,7 @@ msgid "Manage RSS feeds to keep search engines updated with your latest content.
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-#: build/seo-popup/index.js:1
-msgid "Schema"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
 msgid "Add structured data to enhance search engine understanding."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Import/Export"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Transfer SEO settings or backup configurations with ease."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Planned"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
@@ -4425,271 +5679,11 @@ msgid "Launch Setup Wizard"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-msgid "Select Default Image"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Set Default Image"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Default Image"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Set a default image that will be used for social sharing when no featured or social-specific image is available. This ensures your content always has a visual when shared on platforms like Facebook or X (Twitter)."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Preview"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Fallback"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Settings saved successfully"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "To apply the new settings, the page will refresh automatically in 3 seconds."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Default Social Image"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "This is your site's default social sharing image (Open Graph). It shows up when your pages are shared on social platforms — unless a custom image is set on that page."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Site Facebook Page"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Provide the full URL of your official Facebook Page. This URL will be used in your site’s structured data under the Schema → Organization → SameAs field to associate your brand with its verified social profile."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Author Facebook Page"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Enter the URL of your default Facebook author page. It will be used in structured data when a post doesn’t have a specific author profile set - useful for multi-author sites."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Facebook"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Control how your pages appear when shared on Facebook. Set attribution and preview settings here."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Summary Large Image"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Summary"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "X Card Type"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Choose how your content will appear when shared on X. This setting determines the card type—either a summary or a summary with a large image—used in the post preview."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Site's X Profile"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Provide the full URL of your official X (Twitter) profile. This URL will be used in your site’s structured data under the Schema → Organization → SameAs field to associate your brand with its verified social profile."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Author’s X Profile"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Enter the URL of your fallback Twitter author page. This will be used if an individual author URL is not provided."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "X"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Control how your pages appear when shared on X. Set attribution and preview settings here."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "XML"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Enable XML Sitemap"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Generates an XML sitemap to help search engines index your site content."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Include Images in XML Sitemap"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Add images from your posts and pages to the XML sitemap so search engines can find and index them more easily. Images are visible only in source code."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Sitemap is currently disabled. Please enable XML sitemap in settings to access the sitemap file."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Open Sitemap"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Generates a sitemap to help search engines find and index your content more efficiently. Showing image count can improve how your media appears in search results."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Enable Author Archive"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Displays all posts published by a specific author. Useful for showcasing an author’s contributions and helping search engines understand authorship and topical relevance."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Enable Date Archive"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Groups posts by month or year. Helps visitors explore content chronologically and allows search engines to better index time-based content."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Archive Pages"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Archive Pages let visitors access links to view posts by author or by date. This makes it easier for people to find content based on who wrote it or when it was published."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "These settings help search engines understand how to treat your home page in search results. Enabling ‘No Index’ will prevent the home page from appearing in search results. ‘No Follow’ tells search engines not to follow any links on the page, and ‘No Archive’ prevents search engines from storing a cached version of the page. These settings apply only to your website’s home page."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "No Index"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Prevents search engines from listing your home page in search results."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "No Follow"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Tells search engines not to follow any links on your home page."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "No Archive"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Blocks search engines from storing a cached version of your home page."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "This is only for Home Page. These settings will not affect any other pages."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Other Accounts"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Enter the full URLs of your official profiles. These will be added to the Organization schema under SameAs to help search engines verify your online presence."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-#: build/seo-popup/index.js:1
-msgid "Search Engine Title"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Set a default title for all individual post pages to help define how they appear in search engines. You can override this title for any post by editing it directly."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-#: build/seo-popup/index.js:1
-msgid "Search Engine Description"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Set a default description for all individual post pages to help define how they appear in search engines. You can override this description for any post by editing it directly."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-#: build/seo-popup/index.js:1
-msgid "Search Engine Preview"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Meta Templates"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Site Name: "
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "The site name used in meta titles and descriptions is taken from the WordPress General Settings, where it is defined under \"Site Title.\""
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Create a default template for how your pages appear in Google search. You can still set custom titles and descriptions for individual pages."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-#: build/seo-popup/index.js:1
-msgid "Social"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Features Management"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Content Performance"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Migrate to SureRank"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Miscellaneous"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
 msgid "Connect to Search Console"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-msgid "Let's Connect to Search Console!"
+msgid "Let’s connect to Search Console to Optimize further!"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
@@ -4701,11 +5695,11 @@ msgid "Learn about Google Search Console and how SureRank uses it for optimizing
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-msgid "What is Google Search Console and how does SureRank use it?"
+msgid "Learn More about Google Search Console."
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-msgid "Connect to Search Console Now"
+msgid "Connect to Search Console - It’s Free"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
@@ -4726,10 +5720,6 @@ msgstr ""
 
 #: build/admin-dashboard/index.js:1
 msgid "Add and verify your site in Google Search Console to start seeing insights here. "
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Learn more"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
@@ -4889,11 +5879,6 @@ msgid "Upgrade"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-#: build/seo-popup/index.js:1
-msgid "View a preview of how your page may appear in search engine results. This preview is for guidance only and might not exactly match how search engines display your content."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
 msgid "Use data from Facebook Tab"
 msgstr ""
 
@@ -5010,11 +5995,15 @@ msgid "Add structured data to improve how your site appears in search."
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-msgid "Feature Management"
+msgid "Migration"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-msgid "Control which features need to be enabled or disabled completely."
+msgid "Helps you migrate your SEO plugin data into SureRank smoothly."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+msgid "Select which SureRank features you want to use. Turning a feature off will stop it from running in the background and hide its settings from your dashboard."
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
@@ -5042,140 +6031,20 @@ msgid "Low Visibility"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-msgid "Migrate"
+msgid "Plugin deactivated successfully"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-msgid "Simplify your SEO management by migrating your settings from a plugin to SureRank, ensuring a seamless transition and consistent optimization across your website."
+msgid "The page will automatically refresh in 3 seconds to apply the changes made during the plugin deactivation process."
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-msgid "Your SEO Settings Migration is Paused"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "We've successfully imported some of your SEO settings, but the migration wasn't completed. This may happen if the process was interrupted or exited early. Don't worry — everything imported so far is safely saved, and no duplicate data will be created."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Resume Migration"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Start Over"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Cancel Migration"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "We've Imported SEO Settings. Here's What's Done:"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Since SureRank has different features compared to the plugin you imported from, and this was an automatic migration, some settings may not have carried over. Please review and test everything to ensure it works as expected."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Settings which may not be migrated completely."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Done"
+msgid "Deactivating…"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
 #, js-format
-msgid "%s completed"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-#, js-format
-msgid "%1$s/%2$s imported"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Preparing migration…"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-#, js-format
-msgid "Reading %s…"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Reading taxonomies…"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Reading content…"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Migrating global settings…"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-#, js-format
-msgid "Migrating %s…"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Migrating taxonomies…"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Migrating content…"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Processing…"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Importing SEO Settings from"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Global Settings"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Migration Error"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Try Again"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Migration is in progress. Are you sure you want to leave? Unsaved changes may be lost."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "API request failed"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Migration failed"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Migration failed. Please try again."
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Import SEO data from"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-msgid "Select an option"
-msgstr ""
-
-#: build/admin-dashboard/index.js:1
-#, js-format
-msgid "%s will be deactivated after migration. Uncheck to keep it active."
+msgid "Deactivate %s"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
@@ -5192,6 +6061,10 @@ msgstr ""
 
 #: build/admin-dashboard/index.js:1
 msgid "Additional settings and preferences for SureRank."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+msgid "Select an option"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
@@ -5224,12 +6097,24 @@ msgid "Display Conditions"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-msgid "Adds structured data to your content so search engines can better understand and present it. Most fields are already filled in to make setup easier and help your site show up better in search results."
+msgid "Global Level"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+msgid "Content Level"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+msgid "No schemas found in this category."
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Remove"
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+msgid "Adds structured data to your content so search engines can better understand and present it. Most fields are already filled in to make setup easier and help your site show up better in search results."
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
@@ -5306,73 +6191,72 @@ msgid "Quick Access"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-#: build/seo-popup/index.js:1
-msgid "No index"
+msgid "Import SEO data from"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-#: build/seo-popup/index.js:1
-msgid "Prevents search engines from listing your page in search results."
+msgid "No supported SEO plugins were found on this website."
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-#: build/seo-popup/index.js:1
-msgid "No follow"
+msgid "Migration Completed "
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-#: build/seo-popup/index.js:1
-msgid "Tells search engines not to follow any links on your page."
+msgid "Your SEO settings have been successfully migrated to SureRank. However, we noticed your previous SEO plugin is still active. Would you like us to deactivate it to avoid conflicts?"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-#: build/seo-popup/index.js:1
-msgid "No archive"
+msgid "SureRank Is Ready — Clean Setup with Migration Support Built In"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-#: build/seo-popup/index.js:1
-msgid "Blocks search engines from storing a cached version of your page."
+msgid "SureRank supports migration from many popular SEO plugins. Since none are currently active, there’s nothing to import — giving you a clean start with everything you need to optimize your site."
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-#: build/seo-popup/index.js:1
-msgid "This content will be set as the meta description tag and may appear in search results. Keep it short and clearly explain what the page is about."
+#: build/admin-onboarding/index.js:1
+msgid "Your SEO Settings Migration is Paused"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-#: build/seo-popup/index.js:1
-msgid "Site Icon: "
+#: build/admin-onboarding/index.js:1
+msgid "We've successfully imported some of your SEO settings, but the migration wasn't completed. This may happen if the process was interrupted or exited early. Don't worry — everything imported so far is safely saved, and no duplicate data will be created."
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-#: build/seo-popup/index.js:1
-msgid "The site icon (favicon) appears in browser tabs, bookmarks, and mobile devices. To update it, go to General Settings → Site Icon and upload a new image under Site Identity."
+#: build/admin-onboarding/index.js:1
+msgid "Resume Migration"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-#: build/seo-popup/index.js:1
-msgid "Change Here"
+#: build/admin-onboarding/index.js:1
+msgid "Start Over"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-#: build/seo-popup/index.js:1
-msgid "Save"
+#: build/admin-onboarding/index.js:1
+msgid "Cancel Migration"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-#: build/seo-popup/index.js:1
-msgid "Saving.."
+#: build/admin-onboarding/index.js:1
+msgid "We've Imported SEO Settings. Here's What's Done:"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-#: build/seo-popup/index.js:1
-msgid "Saved"
+#: build/admin-onboarding/index.js:1
+msgid "Since SureRank has different features compared to the plugin you imported from, and this was an automatic migration, some settings may not have carried over. Please review and test everything to ensure it works as expected."
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
-#: build/seo-popup/index.js:1
-msgid "Settings saved successfully."
+#: build/admin-onboarding/index.js:1
+msgid "Settings which may not be migrated completely."
+msgstr ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Done"
 msgstr ""
 
 #: build/admin-dashboard/index.js:1
@@ -5417,7 +6301,7 @@ msgid "Community Blog/News Website"
 msgstr ""
 
 #: build/admin-onboarding/index.js:1
-msgid "Webshop"
+msgid "E-commerce Store"
 msgstr ""
 
 #: build/admin-onboarding/index.js:1
@@ -5482,6 +6366,14 @@ msgid "Let's Get Started"
 msgstr ""
 
 #: build/admin-onboarding/index.js:1
+msgid "Bring Your SEO Settings into SureRank"
+msgstr ""
+
+#: build/admin-onboarding/index.js:1
+msgid "We found other SEO plugins installed on your website. Choose the ones you'd like to import data from into SureRank."
+msgstr ""
+
+#: build/admin-onboarding/index.js:1
 #: build/admin-seo-bar/index.js:1
 msgid "Untitled"
 msgstr ""
@@ -5511,7 +6403,7 @@ msgid "Website Logo"
 msgstr ""
 
 #: build/admin-onboarding/index.js:1
-msgid "Image needs to be 112×112 px or larger."
+msgid "Recommended Logo size 112 X 112 or more, PNG / JPG format"
 msgstr ""
 
 #: build/admin-onboarding/index.js:1
@@ -5627,11 +6519,6 @@ msgstr ""
 
 #: build/admin-seo-bar/index.js:1
 #: build/seo-popup/index.js:1
-msgid "Warning"
-msgstr ""
-
-#: build/admin-seo-bar/index.js:1
-#: build/seo-popup/index.js:1
 msgid "Suggestion"
 msgstr ""
 
@@ -5690,6 +6577,10 @@ msgstr ""
 
 #: build/seo-popup/index.js:1
 msgid "Upload at least 600x315px image. Recommended size is 1200x630px."
+msgstr ""
+
+#: build/seo-popup/index.js:1
+msgid "Click to update Facebook's share preview cache. This will update the preview with the latest content."
 msgstr ""
 
 #: build/seo-popup/index.js:1
@@ -5765,6 +6656,10 @@ msgstr ""
 
 #: build/seo-popup/index.js:1
 msgid "Optimize"
+msgstr ""
+
+#: build/seo-popup/index.js:1
+msgid "Page SEO Checks"
 msgstr ""
 
 #: build/seo-popup/index.js:1

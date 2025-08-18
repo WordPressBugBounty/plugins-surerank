@@ -384,7 +384,7 @@ const SiteSearchTraffic = () => {
 				? {
 						imageSrc: `${ surerank_globals.admin_assets_url }/images/search-console.svg`,
 						title: __(
-							"Let's Connect to Search Console!",
+							'Let’s connect to Search Console to Optimize further!',
 							'surerank'
 						),
 						description: __(
@@ -392,7 +392,7 @@ const SiteSearchTraffic = () => {
 							'surerank'
 						),
 						actionButtonText: __(
-							'Connect to Search Console Now',
+							'Connect to Search Console - It’s Free',
 							'surerank'
 						),
 						onClickActionBtn: handleOpenAuthURL,

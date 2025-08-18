@@ -7,18 +7,18 @@ import { isBricksBuilder } from '../page-seo-checks/analyzer/utils/page-builder'
 
 const MetaSettings = () => {
 	//we will show settings here
-	const SeoTabsComponent = applyFilters( 'surerank-pro.seo-popup' );
+	const SeoPopupProTabContent = !! applyFilters( 'surerank-pro.seo-popup' );
 
 	return (
 		<>
-			{ SeoTabsComponent && (
-				<div className="flex items-center gap-2">
-					<KeywordInput />
-					{ ENABLE_PAGE_LEVEL_SEO && ! isBricksBuilder() && (
+			{ ENABLE_PAGE_LEVEL_SEO &&
+				! isBricksBuilder() &&
+				SeoPopupProTabContent && (
+					<div className="flex items-center gap-2">
+						<KeywordInput />
 						<PageSeoCheckStatusButton />
-					) }
-				</div>
-			) }
+					</div>
+				) }
 			<MetaSettingsScreen />
 		</>
 	);

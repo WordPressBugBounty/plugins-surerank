@@ -68,7 +68,8 @@ class Single {
 			return $meta_data;
 		}
 
-		$this->meta_data = Variables::replace( Validate::array( Settings::prep_post_meta( intval( $post_id ) ) ), intval( $post_id ) );
+		$post_type       = get_post_type( $post_id ) ? get_post_type( $post_id ) : '';
+		$this->meta_data = Variables::replace( Validate::array( Settings::prep_post_meta( intval( $post_id ), $post_type, false ) ), intval( $post_id ) );
 		return $this->meta_data;
 	}
 }

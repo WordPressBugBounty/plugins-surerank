@@ -1,14 +1,8 @@
 import { cn } from '@Functions/utils';
 import { forwardRef, Fragment, useState } from '@wordpress/element';
-import {
-	Select,
-	Input,
-	Checkbox,
-	Label,
-	FilePreview,
-	Text,
-} from '@bsf/force-ui';
+import { Select, Input, Checkbox, Label, Text } from '@bsf/force-ui';
 import { __ } from '@wordpress/i18n';
+import MediaPreview from '../admin-components/media-preview';
 
 // Track which elements have already been initially focused
 const initiallyFocusedElements = new WeakMap();
@@ -144,6 +138,15 @@ export const renderField = ( field, fieldValue, onChange, error, option ) => {
 			);
 			break;
 		case 'file':
+			const mediaPreviewProps = {
+				imageUrl:
+					typeof fieldValue === 'string' ? fieldValue : undefined,
+				imageId:
+					typeof fieldValue === 'object'
+						? fieldValue?.attachment_id
+						: undefined,
+				onRemove: () => onChange( null ),
+			};
 			children = (
 				<div key={ name } className="space-y-1.5">
 					<Input
@@ -156,10 +159,7 @@ export const renderField = ( field, fieldValue, onChange, error, option ) => {
 					{ renderDescription }
 					{ fieldValue && fieldValue.attachment_id !== 0 && (
 						<div className="pt-0.5">
-							<FilePreview
-								file={ fieldValue }
-								onRemove={ () => onChange( null ) }
-							/>
+							<MediaPreview { ...mediaPreviewProps } />
 						</div>
 					) }
 				</div>

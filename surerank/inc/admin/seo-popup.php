@@ -61,90 +61,15 @@ class Seo_Popup {
 	public function admin_enqueue_scripts() {
 		wp_enqueue_media();
 
-		$screen = null;
+		$screen      = $this->get_current_screen_safe();
+		$editor_type = $this->detect_editor_type( $screen );
 
-		if ( function_exists( 'get_current_screen' ) ) {
-			$screen = get_current_screen();
-		}
-
-		if ( class_exists( \Elementor\Plugin::class ) && \Elementor\Plugin::instance()->editor->is_edit_mode() ) {
-			$editor_type = 'elementor';
-		} elseif ( function_exists( 'bricks_is_builder_main' ) && bricks_is_builder_main() ) {
-			$editor_type = 'bricks';
-		} elseif ( $screen && $screen->is_block_editor ) {
-			$editor_type = 'block';
-		} else {
-			$editor_type = 'classic';
-		}
-
-		if ( $editor_type !== 'bricks' && ( ! $screen || empty( $screen->base ) || ! in_array( $screen->base, [ 'post', 'term' ], true ) ) ) {
+		if ( ! $this->should_enqueue_scripts( $editor_type, $screen ) ) {
 			return;
 		}
 
-		$term_data = [];
-		$post_data = [];
-
-		if ( ( $screen && 'post' === $screen->base ) || $editor_type === 'bricks' ) {
-			$post_data = [
-				'post_id'     => get_the_ID(),
-				'editor_type' => $editor_type,
-				'link'        => get_the_permalink( (int) get_the_ID() ),
-			];
-		}
-
-		if ( $screen && 'term' === $screen->base ) {
-			global $tag_ID;
-
-			$final_link = get_term_link( (int) $tag_ID );
-
-			if ( is_wp_error( $final_link ) ) {
-				return;
-			}
-
-			if ( 'category' === $screen->taxonomy ) {
-				if ( apply_filters( 'surerank_remove_category_base', false ) ) {
-					$final_link = Crawl_Optimization::get_instance()->remove_category_base_from_links( $final_link, $tag_ID, $screen->taxonomy );
-				}
-			}
-
-			$term_data = [
-				'term_id' => $tag_ID,
-				'link'    => $final_link,
-			];
-		}
-
-		$post_type   = $screen ? ( ! empty( $screen->taxonomy ) ? $screen->taxonomy : $screen->post_type ) : ''; // post type or taxonomy localized.
-		$is_taxonomy = $screen && ! empty( $screen->taxonomy ) ? true : false;
-
-		// Set post type and is taxonomy flag for Bricks editor.
-		if ( $editor_type === 'bricks' ) {
-			$post_type   = get_the_ID() ? get_post_type( get_the_ID() ) : '';
-			$is_taxonomy = false;
-		}
-
-		// Enqueue vendor and common assets.
-		$this->enqueue_vendor_and_common_assets();
-
-		$this->build_assets_operations(
-			'seo-popup',
-			[
-				'hook'        => 'seo-popup',
-				'object_name' => 'seo_popup',
-				'data'        => array_merge(
-					[
-						'admin_assets_url'   => SURERANK_URL . 'inc/admin/assets',
-						'site_icon_url'      => get_site_icon_url( 16 ),
-						'editor_type'        => $editor_type,
-						'post_type'          => $post_type,
-						'is_taxonomy'        => $is_taxonomy,
-						'description_length' => Get::description_length(),
-						'title_length'       => Get::title_length(),
-					],
-					$post_data,
-					$term_data
-				),
-			]
-		);
+		$context_data = $this->get_context_data( $editor_type, $screen );
+		$this->enqueue_assets( $editor_type, $context_data );
 	}
 
 	/**
@@ -169,5 +94,201 @@ class Seo_Popup {
 		}
 
 		do_action( 'surerank_after_update_category_seo_values', $term_id );
+	}
+
+	/**
+	 * Get current screen safely.
+	 *
+	 * @return \WP_Screen|null
+	 */
+	private function get_current_screen_safe() {
+		return function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+	}
+
+	/**
+	 * Detect the current editor type.
+	 *
+	 * @param \WP_Screen|null $screen Current screen object.
+	 * @return string Editor type.
+	 */
+	private function detect_editor_type( $screen ): string {
+		if ( class_exists( \Elementor\Plugin::class ) && \Elementor\Plugin::instance()->editor->is_edit_mode() ) {
+			return 'elementor';
+		}
+
+		if ( function_exists( 'bricks_is_builder_main' ) && bricks_is_builder_main() ) {
+			return 'bricks';
+		}
+
+		if ( $screen && $screen->is_block_editor ) {
+			return 'block';
+		}
+
+		return 'classic';
+	}
+
+	/**
+	 * Check if scripts should be enqueued.
+	 *
+	 * @param string          $editor_type Editor type.
+	 * @param \WP_Screen|null $screen Current screen object.
+	 * @return bool True if scripts should be enqueued.
+	 */
+	private function should_enqueue_scripts( string $editor_type, $screen ): bool {
+		if ( $editor_type === 'bricks' ) {
+			return true;
+		}
+
+		return $screen && ! empty( $screen->base ) && in_array( $screen->base, [ 'post', 'term' ], true );
+	}
+
+	/**
+	 * Get context data for the current page.
+	 *
+	 * @param string          $editor_type Editor type.
+	 * @param \WP_Screen|null $screen Current screen object.
+	 * @return array{post_data: array<string, mixed>, term_data: array<string, mixed>, post_type: string, is_taxonomy: bool} Context data.
+	 */
+	private function get_context_data( string $editor_type, $screen ): array {
+		$post_data = $this->get_post_data( $editor_type, $screen );
+		$term_data = $this->get_term_data( $screen );
+
+		return [
+			'post_data'   => $post_data,
+			'term_data'   => $term_data,
+			'post_type'   => $this->get_post_type( $editor_type, $screen ),
+			'is_taxonomy' => $this->is_taxonomy( $editor_type, $screen ),
+		];
+	}
+
+	/**
+	 * Get post data if on post edit screen.
+	 *
+	 * @param string          $editor_type Editor type.
+	 * @param \WP_Screen|null $screen Current screen object.
+	 * @return array<string, mixed> Post data.
+	 */
+	private function get_post_data( string $editor_type, $screen ): array {
+		if ( ( $screen && 'post' === $screen->base ) || $editor_type === 'bricks' ) {
+			return [
+				'post_id'     => get_the_ID(),
+				'editor_type' => $editor_type,
+				'link'        => get_the_permalink( (int) get_the_ID() ),
+			];
+		}
+
+		return [];
+	}
+
+	/**
+	 * Get term data if on term edit screen.
+	 *
+	 * @param \WP_Screen|null $screen Current screen object.
+	 * @return array<string, mixed> Term data.
+	 */
+	private function get_term_data( $screen ): array {
+		if ( ! $screen || 'term' !== $screen->base ) {
+			return [];
+		}
+
+		global $tag_ID;
+
+		$final_link = get_term_link( (int) $tag_ID );
+		if ( is_wp_error( $final_link ) ) {
+			return [];
+		}
+
+		$final_link = $this->process_category_link( $final_link, $tag_ID, $screen );
+
+		return [
+			'term_id' => $tag_ID,
+			'link'    => $final_link,
+		];
+	}
+
+	/**
+	 * Process category link if needed.
+	 *
+	 * @param string          $link Term link.
+	 * @param int             $tag_ID Term ID.
+	 * @param \WP_Screen|null $screen Current screen object.
+	 * @return string Processed link.
+	 */
+	private function process_category_link( string $link, int $tag_ID, $screen ): string {
+		if ( $screen && 'category' === $screen->taxonomy && apply_filters( 'surerank_remove_category_base', false ) ) {
+			$term = get_term( $tag_ID );
+			if ( $term && ! is_wp_error( $term ) ) {
+				return Crawl_Optimization::get_instance()->remove_category_base_from_links( $link, $term, $screen->taxonomy );
+			}
+		}
+
+		return $link;
+	}
+
+	/**
+	 * Get post type for current context.
+	 *
+	 * @param string          $editor_type Editor type.
+	 * @param \WP_Screen|null $screen Current screen object.
+	 * @return string Post type.
+	 */
+	private function get_post_type( string $editor_type, $screen ): string {
+		if ( $editor_type === 'bricks' ) {
+			$post_type = get_the_ID() ? get_post_type( get_the_ID() ) : false;
+			return $post_type !== false ? $post_type : '';
+		}
+
+		if ( ! $screen ) {
+			return '';
+		}
+
+		return ! empty( $screen->taxonomy ) ? $screen->taxonomy : $screen->post_type;
+	}
+
+	/**
+	 * Check if current context is taxonomy.
+	 *
+	 * @param string          $editor_type Editor type.
+	 * @param \WP_Screen|null $screen Current screen object.
+	 * @return bool True if taxonomy context.
+	 */
+	private function is_taxonomy( string $editor_type, $screen ): bool {
+		if ( $editor_type === 'bricks' ) {
+			return false;
+		}
+
+		return $screen && ! empty( $screen->taxonomy );
+	}
+
+	/**
+	 * Enqueue assets for SEO popup.
+	 *
+	 * @param string                                                                                                        $editor_type Editor type.
+	 * @param array{post_data: array<string, mixed>, term_data: array<string, mixed>, post_type: string, is_taxonomy: bool} $context_data Context data.
+	 * @return void
+	 */
+	private function enqueue_assets( string $editor_type, array $context_data ): void {
+		$this->enqueue_vendor_and_common_assets();
+
+		$this->build_assets_operations(
+			'seo-popup',
+			[
+				'hook'        => 'seo-popup',
+				'object_name' => 'seo_popup',
+				'data'        => array_merge(
+					[
+						'admin_assets_url'   => SURERANK_URL . 'inc/admin/assets',
+						'site_icon_url'      => get_site_icon_url( 16 ),
+						'editor_type'        => $editor_type,
+						'post_type'          => $context_data['post_type'],
+						'is_taxonomy'        => $context_data['is_taxonomy'],
+						'description_length' => Get::description_length(),
+						'title_length'       => Get::title_length(),
+					],
+					$context_data['post_data'],
+					$context_data['term_data']
+				),
+			]
+		);
 	}
 }

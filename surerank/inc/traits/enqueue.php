@@ -41,6 +41,13 @@ trait Enqueue {
 	public $build_url = SURERANK_URL . 'build/';
 
 	/**
+	 * Language directory
+	 *
+	 * @var string
+	 */
+	public $language_dir = SURERANK_DIR . 'languages';
+
+	/**
 	 * Enqueue scripts
 	 * This function should be called from the class constructor.
 	 * It will add action to enqueue scripts.
@@ -96,8 +103,8 @@ trait Enqueue {
 		if ( function_exists( 'wp_set_script_translations' ) ) {
 			wp_set_script_translations(
 				$this->enqueue_prefix . '-' . $hook,
-				'surerank',
-				SURERANK_DIR . 'languages'
+				$this->enqueue_prefix,
+				$this->language_dir
 			);
 		}
 	}

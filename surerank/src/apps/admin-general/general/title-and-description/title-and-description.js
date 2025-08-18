@@ -22,8 +22,9 @@ import replacement from '@Functions/replacement';
 import withSuspense from '@AdminComponents/hoc/with-suspense';
 import GeneratePageContent from '@Functions/page-content-generator';
 import { createLazyRoute } from '@tanstack/react-router';
+import { applyFilters } from '@wordpress/hooks';
 
-const get_tooltip_content = () => {
+export const get_tooltip_content = () => {
 	return (
 		<>
 			<strong>{ __( 'Site Name: ', 'surerank' ) }</strong>{ ' ' }
@@ -145,7 +146,7 @@ const TitleAndDescriptionSettings = () => {
 				{ /* Input */ }
 				<EditorInput
 					ref={ descriptionEditor }
-					className="!min-h-32 [&+div]:items-start [&+div]:pt-1"
+					className="[&+div]:items-start [&+div]:pt-1"
 					by="label"
 					trigger="@"
 					defaultValue={ stringValueToFormatJSON(
@@ -216,9 +217,12 @@ const TitleAndDescription = () => {
 		<PageContentWrapper
 			title={ __( 'Meta Templates', 'surerank' ) }
 			info_tooltip={ get_tooltip_content() }
-			description={ __(
-				'Create a default template for how your pages appear in Google search. You can still set custom titles and descriptions for individual pages.',
-				'surerank'
+			description={ applyFilters(
+				'surerank.extended-meta.description',
+				__(
+					'Create a default template for how your pages appear in Google search. You can still set custom titles and descriptions for individual pages.',
+					'surerank'
+				)
 			) }
 		>
 			<GeneratePageContent json={ PAGE_CONTENT } />

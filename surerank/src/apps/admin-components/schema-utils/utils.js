@@ -22,3 +22,17 @@ export const generateUUID = ( length = 16 ) => {
 		}
 	);
 };
+
+/**
+ * Checks if a schema type exists and is valid in schemaTypeData
+ * @param {string} schemaTitle - The schema title/name to check
+ * @return {boolean} - True if schema exists and has valid data
+ */
+export const isSchemaTypeValid = ( schemaTitle ) => {
+	const schemaTypeData = surerank_globals?.schema_type_data || {};
+	return (
+		schemaTypeData[ schemaTitle ] &&
+		Array.isArray( schemaTypeData[ schemaTitle ] ) &&
+		schemaTypeData[ schemaTitle ].length > 0
+	);
+};

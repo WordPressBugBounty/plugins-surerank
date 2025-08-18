@@ -13,10 +13,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use SureRank\Inc\Admin\Attachment;
+use SureRank\Inc\Admin\BulkActions;
+use SureRank\Inc\Admin\BulkEdit;
 use SureRank\Inc\Admin\Dashboard;
 use SureRank\Inc\Admin\Onboarding;
 use SureRank\Inc\Admin\Seo_Bar;
 use SureRank\Inc\Admin\Seo_Popup;
+use SureRank\Inc\Admin\Sync;
 use SureRank\Inc\Admin\Update_Timestamp;
 use SureRank\Inc\Ajax\Ajax;
 use SureRank\Inc\Analytics\Analytics;
@@ -24,6 +27,8 @@ use SureRank\Inc\Analyzer\PostAnalyzer;
 use SureRank\Inc\Analyzer\TermAnalyzer;
 use SureRank\Inc\API\Analyzer;
 use SureRank\Inc\API\Api_Init;
+use SureRank\Inc\BatchProcess\Process;
+use SureRank\Inc\Cli\Cli;
 use SureRank\Inc\Frontend\Archives;
 use SureRank\Inc\Frontend\Canonical;
 use SureRank\Inc\Frontend\Common;
@@ -35,20 +40,22 @@ use SureRank\Inc\Frontend\Product;
 use SureRank\Inc\Frontend\Robots;
 use SureRank\Inc\Frontend\Seo_Popup as Seo_Popup_Frontend;
 use SureRank\Inc\Frontend\Single;
-use SureRank\Inc\Frontend\Sitemap;
 use SureRank\Inc\Frontend\Special_Page;
 use SureRank\Inc\Frontend\Taxonomy;
 use SureRank\Inc\Frontend\Title;
 use SureRank\Inc\Frontend\Twitter;
+use SureRank\Inc\Functions\Cron;
 use SureRank\Inc\Functions\Defaults;
 use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Functions\Update;
 use SureRank\Inc\GoogleSearchConsole\Auth;
-use SureRank\Inc\Lib\Surerank_Nps_Survey;
+use SureRank\Inc\Lib\SureRank_Nps_Survey;
 use SureRank\Inc\Nps_Notice;
 use SureRank\Inc\Routes;
 use SureRank\Inc\Schema\Schemas;
+use SureRank\Inc\Sitemap\Checksum;
+use SureRank\Inc\Sitemap\Xml_Sitemap;
 use SureRank\Inc\ThirdPartyPlugins\Bricks;
 use SureRank\Inc\ThirdPartyPlugins\CartFlows;
 use SureRank\Inc\ThirdPartyPlugins\Elementor;
@@ -95,66 +102,12 @@ class Loader {
 	 * @since 0.0.1
 	 * @return void
 	 */
-	public function setup() {
-		Defaults::get_instance();
-		Schemas::get_instance();
-		Seo_Bar::get_instance();
-		Attachment::get_instance();
-		Crawl_Optimization::get_instance();
-		Analyzer::get_instance();
-		CartFlows::get_instance();
-		PostAnalyzer::get_instance();
-		TermAnalyzer::get_instance();
-		Api_Init::get_instance();
-		Auth::get_instance();
-
-		if ( is_admin() ) {
-			Seo_Popup::get_instance();
-			Update_Timestamp::get_instance();
-			Dashboard::get_instance();
-			Onboarding::get_instance();
-			if ( class_exists( 'SureRank\Inc\Lib\Surerank_Nps_Survey' ) && ! apply_filters( 'surerank_disable_nps_survey', false ) ) {
-				Surerank_Nps_Survey::get_instance();
-				Nps_Notice::get_instance();
-			}
-			if ( defined( 'ELEMENTOR_VERSION' ) ) {
-				Elementor::get_instance();
-			}
-			Ajax::get_instance();
-		} else {
-			Single::get_instance();
-			Product::get_instance();
-			Taxonomy::get_instance();
-			Title::get_instance();
-			Canonical::get_instance();
-			Common::get_instance();
-			Robots::get_instance();
-			Facebook::get_instance();
-			Twitter::get_instance();
-			Special_Page::get_instance();
-			Feed::get_instance();
-			Seo_Popup_Frontend::get_instance();
-			Meta_Data::get_instance();
-			Sitemap::get_instance();
-			Archives::get_instance();
-			if ( defined( 'BRICKS_VERSION' ) ) {
-				Bricks::get_instance();
-			}
-
-			/**
-			 * Commenting this since we will deal with bricks in the next release.
-			 * if ( defined( 'BRICKS_VERSION' ) ) {
-			 * Seo_Popup::get_instance();
-			 * Bricks::get_instance();
-			 * }
-			 */
-
-		}
-
-		if ( class_exists( 'SureRank\Inc\Lib\Surerank_Nps_Survey' ) && ! apply_filters( 'surerank_disable_nps_survey', false ) ) {
-			Surerank_Nps_Survey::get_instance();
-			Nps_Notice::get_instance();
-		}
+	public function setup(): void {
+		$this->load_core_components();
+		$this->load_environment_components();
+		$this->load_conditional_components();
+		$this->load_background_processing();
+		$this->load_final_components();
 	}
 
 	/**
@@ -260,6 +213,9 @@ class Loader {
 	public function activation() {
 		Update::option( 'surerank_flush_required', 1 );
 		Update::option( 'surerank_redirect_on_activation', 'yes' );
+
+		$cron = Cron::get_instance();
+		$cron->schedule_sitemap_generation();
 	}
 
 	/**
@@ -270,6 +226,10 @@ class Loader {
 	 */
 	public function deactivation() {
 		Update::option( 'surerank_flush_required', 1 );
+
+		$cron = Cron::get_instance();
+		$cron->unschedule_sitemap_generation();
+		Checksum::get_instance()->clear_checksum();
 	}
 
 	/**
@@ -319,6 +279,195 @@ class Loader {
 			);
 		}
 		return $links;
+	}
+
+	/**
+	 * Load core components that are always needed.
+	 *
+	 * @return void
+	 */
+	private function load_core_components(): void {
+		$core_components = [
+			Defaults::class,
+			Schemas::class,
+			Seo_Bar::class,
+			Attachment::class,
+			Crawl_Optimization::class,
+			Analyzer::class,
+			CartFlows::class,
+			PostAnalyzer::class,
+			TermAnalyzer::class,
+			Api_Init::class,
+			Auth::class,
+			Sync::class,
+			Cron::class,
+			Checksum::class,
+		];
+
+		$this->load_components( $core_components );
+	}
+
+	/**
+	 * Load environment-specific components.
+	 *
+	 * @return void
+	 */
+	private function load_environment_components(): void {
+		if ( is_admin() ) {
+			$this->load_admin_components();
+		} else {
+			$this->load_frontend_components();
+		}
+	}
+
+	/**
+	 * Load admin-specific components.
+	 *
+	 * @return void
+	 */
+	private function load_admin_components(): void {
+		$admin_components = [
+			Seo_Popup::class,
+			Update_Timestamp::class,
+			Dashboard::class,
+			Onboarding::class,
+			BulkActions::class,
+			BulkEdit::class,
+			Ajax::class,
+		];
+
+		$this->load_components( $admin_components );
+		$this->load_admin_conditional_components();
+	}
+
+	/**
+	 * Load frontend-specific components.
+	 *
+	 * @return void
+	 */
+	private function load_frontend_components(): void {
+		$frontend_components = [
+			Single::class,
+			Product::class,
+			Taxonomy::class,
+			Title::class,
+			Canonical::class,
+			Common::class,
+			Robots::class,
+			Facebook::class,
+			Twitter::class,
+			Special_Page::class,
+			Feed::class,
+			Seo_Popup_Frontend::class,
+			Meta_Data::class,
+			Xml_Sitemap::class,
+			Archives::class,
+		];
+
+		$this->load_components( $frontend_components );
+		$this->load_frontend_conditional_components();
+	}
+
+	/**
+	 * Load admin conditional components.
+	 *
+	 * @return void
+	 */
+	private function load_admin_conditional_components(): void {
+		// Load NPS Survey if available and not disabled.
+		if ( $this->should_load_nps_survey() ) {
+			SureRank_Nps_Survey::get_instance();
+			Nps_Notice::get_instance();
+		}
+
+		// Load Elementor integration if available.
+		if ( defined( 'ELEMENTOR_VERSION' ) ) {
+			Elementor::get_instance();
+		}
+	}
+
+	/**
+	 * Load frontend conditional components.
+	 *
+	 * @return void
+	 */
+	private function load_frontend_conditional_components(): void {
+		// Load Bricks integration if available.
+		if ( defined( 'BRICKS_VERSION' ) ) {
+			Bricks::get_instance();
+		}
+	}
+
+	/**
+	 * Load components that depend on environment checks.
+	 *
+	 * @return void
+	 */
+	private function load_conditional_components(): void {
+		// Load NPS Survey globally if conditions are met.
+		if ( ! is_admin() && $this->should_load_nps_survey() ) {
+			SureRank_Nps_Survey::get_instance();
+			Nps_Notice::get_instance();
+		}
+	}
+
+	/**
+	 * Check if NPS Survey should be loaded.
+	 *
+	 * @return bool True if should load.
+	 */
+	private function should_load_nps_survey(): bool {
+		return class_exists( 'SureRank\Inc\Lib\SureRank_Nps_Survey' ) && ! apply_filters( 'surerank_disable_nps_survey', false );
+	}
+
+	/**
+	 * Load background processing dependencies.
+	 *
+	 * @return void
+	 */
+	private function load_background_processing(): void {
+		$this->require_background_processing_files();
+	}
+
+	/**
+	 * Require background processing files if not already loaded.
+	 *
+	 * @return void
+	 */
+	private function require_background_processing_files(): void {
+		if ( ! class_exists( 'WP_Async_Request' ) ) {
+			require_once SURERANK_DIR . 'inc/lib/background-process/wp-async-request.php';
+		}
+
+		if ( ! class_exists( 'WP_Background_Process' ) ) {
+			require_once SURERANK_DIR . 'inc/lib/background-process/wp-background-process.php';
+		}
+	}
+
+	/**
+	 * Load final components that depend on everything else.
+	 *
+	 * @return void
+	 */
+	private function load_final_components(): void {
+		$final_components = [
+			Process::class,
+			Cli::class,
+		];
+
+		$this->load_components( $final_components );
+	}
+
+	/**
+	 * Load an array of components.
+	 *
+	 * @param array<string> $components Component class names.
+	 * @return void
+	 */
+	private function load_components( array $components ): void {
+		foreach ( $components as $component ) {
+			$component::get_instance();
+		}
 	}
 }
 

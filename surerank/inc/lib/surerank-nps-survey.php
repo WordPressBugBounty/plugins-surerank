@@ -8,20 +8,20 @@
  * @since 1.0.0
  */
 
-namespace Surerank\Inc\Lib;
+namespace SureRank\Inc\Lib;
 
-use Surerank\Inc\Traits\Get_Instance;
+use SureRank\Inc\Traits\Get_Instance;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'Surerank_Nps_Survey' ) ) {
+if ( ! class_exists( 'SureRank_Nps_Survey' ) ) {
 
 	/**
 	 * Admin
 	 */
-	class Surerank_Nps_Survey {
+	class SureRank_Nps_Survey {
 		use Get_Instance;
 
 		/**

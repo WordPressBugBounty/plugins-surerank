@@ -21,7 +21,7 @@ const inputFields = [
 		name: 'last_name',
 		type: 'text',
 		width: 'half',
-		required: true,
+		required: false,
 	},
 	{
 		label: __( 'Email Address', 'surerank' ),

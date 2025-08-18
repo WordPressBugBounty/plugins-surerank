@@ -9,7 +9,11 @@ import { getNavLinks } from '@Global/constants/nav-links';
 import { Navigate } from '@tanstack/react-router';
 import SidebarLayout from '@AdminComponents/layout/sidebar-layout';
 import SearchConsole from '../admin-search-console';
-import { ENABLE_GOOGLE_CONSOLE, ENABLE_SCHEMAS } from '@Global/constants';
+import {
+	ENABLE_GOOGLE_CONSOLE,
+	ENABLE_SCHEMAS,
+	ENABLE_MIGRATION,
+} from '@Global/constants';
 import { applyFilters } from '@wordpress/hooks';
 
 // Import all the components directly
@@ -27,7 +31,9 @@ import ContentAnalysisRoute from '@AdminDashboard/content-analysis/content-analy
 import SiteSeoChecksRoute from '@AdminDashboard/site-seo-checks/site-seo-checks-main';
 import MigrationRoute from '@AdminGeneral/advanced/tools/migration';
 import MiscellaneousRoute from '@AdminGeneral/advanced/tools/miscellaneous';
+import RobotsTxtEditorRoute from '@AdminGeneral/advanced/tools/robots-txt-editor/robots-txt-editor';
 import SchemaRoute from '@AdminGeneral/schema/schema';
+// import ImportExportSettingsRoute from '@AdminGeneral/advanced/tools/import-export-settings';
 
 // Define toast globally for PRO plugin.
 if ( window && ! window?.toast ) {
@@ -68,11 +74,12 @@ const generalAndAdvancedRoutes = [
 			createChildRoute( '/archiving', RobotInstructionsRoute ),
 		] ),
 		createChildRoute( '/sitemaps', SitemapsRoute ),
+
 		// Conditionally include schema route
 		...( ENABLE_SCHEMAS && SchemaRoute
 			? [ createChildRoute( '/schema', SchemaRoute ) ]
 			: [] ),
-		createChildRoute( '/features_management', FeaturesManagementRoute ),
+		createChildRoute( '/robots-txt-editor', RobotsTxtEditorRoute ),
 	] ),
 ];
 
@@ -92,7 +99,11 @@ const siteSeoAnalysisRoutes = [
 // Tools routes
 const toolsRoutes = [
 	createRoute( '/tools', null, [
-		createChildRoute( '/migrate', MigrationRoute ),
+		createChildRoute( '/manage-features', FeaturesManagementRoute ),
+		// createChildRoute( '/import-export', ImportExportSettingsRoute ),
+		...( ENABLE_MIGRATION
+			? [ createChildRoute( '/migrate', MigrationRoute ) ]
+			: [] ),
 		createChildRoute( '/miscellaneous', MiscellaneousRoute ),
 	] ),
 ];
@@ -108,7 +119,7 @@ export const routes = applyFilters( 'surerank-pro.routes', [
 ] );
 
 // Navigation Links
-export const navLinks = applyFilters( 'surerank-pro.nav-links', getNavLinks() );
+export const navLinks = getNavLinks();
 
 // Create router using the original createAdminRouter but with custom layout
 const Router = createAdminRouter( {

@@ -47,6 +47,9 @@ class Api_Init {
 			'\SureRank\Inc\API\Onboarding',
 			'\SureRank\Inc\API\Analyzer',
 			'\SureRank\Inc\API\Migrations',
+			'\SureRank\Inc\API\Import_Export_Settings',
+			'\SureRank\Inc\API\Sitemap',
+			'\SureRank\Inc\API\RobotsTxt',
 		];
 
 		$controllers = apply_filters( 'surerank_api_controllers', $controllers );

@@ -9,10 +9,12 @@ import { mountComponent } from '@Functions/utils';
 import WebsiteDetails from '@Onboarding/steps/website-details';
 import UserDetails from '@Onboarding/steps/user-details';
 import Welcome from '@Onboarding/steps/welcome';
-// import ImportData from '@Onboarding/steps/import-data';
 import Success from '@Onboarding/steps/success';
 import SocialProfiles from '@Onboarding/steps/social-profiles';
 import OnboardingLayout from '@Onboarding/components/layout/onboarding-layout';
+import Migration from './steps/migration';
+import { PLUGIN_OPTIONS } from '@AdminGeneral/advanced/tools/migration/constants';
+import { ENABLE_MIGRATION } from '@Global/constants';
 
 // App styles
 import './style.scss';
@@ -28,14 +30,18 @@ export const ONBOARDING_STEPS_CONFIG = [
 			containerSize: 'sm',
 		},
 	},
-	// {
-	// 	path: '/import-data',
-	// 	component: ImportData,
-	// 	config: {
-	// 		containerSize: 'lg',
-	// 		hideBackButton: true,
-	// 	},
-	// },
+	...( ENABLE_MIGRATION && !! PLUGIN_OPTIONS?.length
+		? [
+				{
+					path: '/migration',
+					component: Migration,
+					config: {
+						containerSize: 'lg',
+						hideBackButton: true,
+					},
+				},
+		  ]
+		: [] ),
 	{
 		path: '/website-details',
 		component: WebsiteDetails,

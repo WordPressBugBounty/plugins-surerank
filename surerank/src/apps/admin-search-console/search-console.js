@@ -56,7 +56,7 @@ const SearchConsole = () => {
 						( ! isSearchConsoleConnected ||
 							! isSiteSelected ||
 							openSiteSelectorModal ) &&
-							'after:content-[""] after:absolute after:inset-0 after:bg-black/5 backdrop-blur-[5px] blur-sm after:rounded-xl after:z-auto'
+							'after:content-[""] after:absolute after:inset-0 after:bg-black/40 backdrop-blur-[5px] blur-sm after:rounded-xl after:z-auto'
 					) }
 				>
 					<RenderContent

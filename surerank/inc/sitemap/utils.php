@@ -18,7 +18,7 @@ use DOMDocument;
 use DOMElement;
 use DOMProcessingInstruction;
 use RuntimeException;
-use SureRank\Inc\Frontend\Sitemap;
+use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Traits\Get_Instance;
 
 /**
@@ -281,13 +281,56 @@ class Utils {
 		self::output_headers();
 
 		$sitemap_title = esc_html( get_bloginfo( 'name' ) . ' Sitemap' );
-		$sitemap_slug  = Sitemap::get_slug();
+		$sitemap_slug  = Xml_Sitemap::get_slug();
 
 		$stylesheet         = new Stylesheet();
 		$stylesheet_content = $stylesheet->generate( $sitemap_title, $sitemap_slug );
 
 		echo $stylesheet_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		exit;
+	}
+
+	/**
+	 * Get noindex settings.
+	 *
+	 * @return array<string, mixed>|array<int, string>
+	 */
+	public static function get_noindex_settings() {
+		$settings = Get::option( SURERANK_SETTINGS );
+		return $settings['no_index'] ?? [];
+	}
+
+	/**
+	 * Get meta query for indexable content based on no_index settings
+	 *
+	 * @param string $content_type The post type or taxonomy name.
+	 * @return array<int|string, mixed> The meta query array.
+	 */
+	public static function get_indexable_meta_query( string $content_type ): array {
+		$no_index_settings = self::get_noindex_settings();
+
+		if ( in_array( $content_type, $no_index_settings, true ) ) {
+			return [
+				[
+					'key'     => 'surerank_settings_post_no_index',
+					'value'   => 'no',
+					'compare' => '=',
+				],
+			];
+		}
+
+		return [
+			'relation' => 'OR',
+			[
+				'key'     => 'surerank_settings_post_no_index',
+				'value'   => 'yes',
+				'compare' => '!=',
+			],
+			[
+				'key'     => 'surerank_settings_post_no_index',
+				'compare' => 'NOT EXISTS',
+			],
+		];
 	}
 
 }

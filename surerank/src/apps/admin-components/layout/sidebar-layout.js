@@ -1,4 +1,4 @@
-import { __, _n, sprintf } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import {
 	Outlet,
 	Link,
@@ -19,12 +19,11 @@ import { Info, Megaphone, ChartNoAxesColumnIncreasing } from 'lucide-react';
 import '@Global/style.scss';
 import withSuspense from '@AdminComponents/hoc/with-suspense';
 import SidebarSkeleton from '../sidebar-skeleton';
-import { cn } from '@Functions/utils';
+import { cn, getSeoCheckLabel } from '@Functions/utils';
 import useWhatsNewRSS from '../../../../lib/useWhatsNewRSS';
 import {
 	renderToString,
 	Suspense,
-	lazy,
 	useLayoutEffect,
 	Fragment,
 	useMemo,
@@ -36,19 +35,10 @@ import { useSuspenseSiteSeoAnalysis } from '@/apps/admin-dashboard/site-seo-chec
 import { getSeverityColor } from '@GlobalComponents/seo-checks';
 import Logo from '@AdminComponents/logo';
 import { Tooltip } from '@AdminComponents/tooltip';
+import TanStackRouterDevtools from '@AdminComponents/tanstack-router-dev-tools';
 import '@AdminStore/store';
 
 const { version } = surerank_globals;
-
-const TanStackRouterDevtools =
-	process.env.NODE_ENV === 'production'
-		? () => null // Render nothing in production
-		: lazy( () =>
-				// Lazy load in development
-				import( '@tanstack/router-devtools' ).then( ( res ) => ( {
-					default: res.TanStackRouterDevtools,
-				} ) )
-		  );
 
 const NavLink = ( { path, children } ) => {
 	const matchRoute = useMatchRoute();
@@ -95,21 +85,6 @@ const SiteSeoAnalysisBadge = () => {
 		( counts.error && 'error' ) ||
 		( counts.warning && 'warning' ) ||
 		'success';
-
-	const getLabel = ( type ) => {
-		if ( type === 'error' ) {
-			return sprintf(
-				// translators: %1$s is the number of issues detected, %2$s is the word "Issue".
-				'%1$s %2$s Detected',
-				counts.error,
-				_n( 'Issue', 'Issues', counts.error, 'surerank' )
-			);
-		}
-		if ( type === 'warning' ) {
-			return __( 'Needs Improvement', 'surerank' );
-		}
-		return __( 'SEO is Optimized', 'surerank' );
-	};
 
 	const isDashboard = () => {
 		const url = new URL( window.location.href );
@@ -160,7 +135,10 @@ const SiteSeoAnalysisBadge = () => {
 		>
 			<Badge
 				icon={ <ChartNoAxesColumnIncreasing /> }
-				label={ getLabel( selectedType ) }
+				label={ getSeoCheckLabel(
+					selectedType,
+					counts.error || counts.warning || counts.success
+				) }
 				variant={ getSeverityColor( selectedType ) }
 			/>
 		</Link>
@@ -307,26 +285,27 @@ const useNavbarLinks = ( navLinks ) => {
 	};
 };
 
-/**
- * Check if the current route should show navbar only
- * @param {Array} routes - All routes configuration
- * @return {boolean} Whether to show navbar only
- */
-const useIsNavbarOnly = ( routes ) => {
+const useRouteConfig = ( routes ) => {
 	const location = useLocation();
 	const currentPath = location.pathname;
 
 	// Function to recursively search for route configuration
-	const findRouteConfig = ( routesList, path ) => {
+	const findRouteConfig = ( routesList, path, parentPath = '' ) => {
 		for ( const route of routesList ) {
+			// Build the full path by combining parent path with current route path
+			const fullPath = parentPath + route.path;
 			// Check if this route matches the current path
-			if ( route.path === path ) {
+			if ( fullPath === path ) {
 				return route;
 			}
 
 			// Check child routes recursively
 			if ( route.children ) {
-				const childResult = findRouteConfig( route.children, path );
+				const childResult = findRouteConfig(
+					route.children,
+					path,
+					fullPath
+				);
 				if ( childResult ) {
 					return childResult;
 				}
@@ -336,7 +315,10 @@ const useIsNavbarOnly = ( routes ) => {
 	};
 
 	const currentRoute = findRouteConfig( routes, currentPath );
-	return currentRoute?.navbarOnly || false;
+	return {
+		isNavbarOnly: currentRoute?.navbarOnly || false,
+		isFullWidth: currentRoute?.fullWidth || false,
+	};
 };
 
 const SidebarLayout = ( {
@@ -347,8 +329,10 @@ const SidebarLayout = ( {
 	const { activeSection, navbarLinks: topNavbarLinks } =
 		useNavbarLinks( navLinks );
 	const location = useLocation();
-	// Check if current route should show navbar only
-	const isNavbarOnly = useIsNavbarOnly( routes ) || navbarOnly;
+	// Get route configuration using the unified hook
+	const { isNavbarOnly: routeNavbarOnly, isFullWidth } =
+		useRouteConfig( routes );
+	const isNavbarOnly = routeNavbarOnly || navbarOnly;
 
 	// Use only the links of the active section
 	const filteredNavLinks = activeSection ? [ activeSection ] : [];
@@ -522,7 +506,12 @@ const SidebarLayout = ( {
 
 							{ /* Main content */ }
 							<div className="bg-background-secondary p-5">
-								<main className="max-w-[768px] mx-auto">
+								<main
+									className={ cn(
+										'mx-auto',
+										isFullWidth ? 'w-full' : 'max-w-[768px]'
+									) }
+								>
 									<Outlet />
 								</main>
 							</div>
