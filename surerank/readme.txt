@@ -1,11 +1,11 @@
-## SureRank – SEO Assistant with Meta Tags, Social Preview, XML Sitemap, and Schema ##
+## SureRank SEO – Smart Assistant with Meta Tags, Social Preview, XML Sitemap, and Schema ##
 Contributors: brainstormforce
 Donate link: https://www.paypal.me/BrainstormForce
 Tags: seo, wordpress seo, xml sitemap, schema, google search console
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 8.0
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -292,6 +292,9 @@ Brainstorm Force
 
 
 == Changelog ==
+
+= 1.2.1 - 28-August-2025 =
+* Fix: Fixed an issue where the index sitemap date was in an incorrect format.
 
 = 1.2.0 - 18-August-2025 =
 * New: Added the ability to edit the robots.txt file via the SureRank Robots Settings Editor.

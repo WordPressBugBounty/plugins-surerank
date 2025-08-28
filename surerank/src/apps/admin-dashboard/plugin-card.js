@@ -17,8 +17,12 @@ export const PluginCard = ( {
 			direction="column"
 		>
 			<Container.Item>
-				<Container className="items-center gap-1.5 p-1">
-					<Container.Item className="flex" grow={ 0 } shrink={ 0 }>
+				<Container className="items-start gap-1.5 p-1">
+					<Container.Item
+						className="flex mt-0.5"
+						grow={ 0 }
+						shrink={ 0 }
+					>
 						<item.icon className="size-5" />
 					</Container.Item>
 					<Container.Item className="flex">

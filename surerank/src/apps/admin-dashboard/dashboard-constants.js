@@ -15,7 +15,7 @@ import {
 	SpectraLogo,
 	SureMailIcon,
 	SureFormsIcon,
-	OttoKitLogo,
+	UAE,
 } from '@GlobalComponents/icons';
 
 export const FETCH_STATUS = {
@@ -116,7 +116,7 @@ export const dashboard_plugins_sequence = [
 	'ultimate-addons-for-gutenberg',
 	'sureforms',
 	'suremails',
-	'suretriggers',
+	'header-footer-elementor',
 ];
 
 export const themesAndPlugins = [
@@ -155,10 +155,13 @@ export const themesAndPlugins = [
 		type: 'plugin',
 	},
 	{
-		name: __( 'OttoKit', 'surerank' ),
-		description: __( 'Automate your WordPress setup.', 'surerank' ),
-		icon: OttoKitLogo,
-		slug: 'suretriggers',
+		name: __( 'Ultimate Addons for Elementor', 'surerank' ),
+		description: __(
+			'Build modern websites with elementor addons.',
+			'surerank'
+		),
+		icon: UAE,
+		slug: 'header-footer-elementor',
 		type: 'plugin',
 	},
 ];

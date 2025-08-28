@@ -257,7 +257,7 @@ class Cache {
 		$sitemap_index_filename = $type . '-sitemap-' . $sitemap_index_number . '.json';
 		$sitemap_index_data     = self::get_sitemap_index_data( $sitemap_index_filename, $type, $sitemap_index_number );
 
-		$sitemap_index_data['updated_at'] = current_time( 'mysql' );
+		$sitemap_index_data['updated_at'] = current_time( 'c' );
 
 		self::update_unified_sitemap_index( $sitemap_index_filename );
 	}
@@ -306,7 +306,7 @@ class Cache {
 		$sitemap_exists = false;
 		foreach ( $unified_index_data as &$sitemap_entry ) {
 			if ( $sitemap_entry['link'] === $sitemap_url ) {
-				$sitemap_entry['updated'] = current_time( 'mysql' );
+				$sitemap_entry['updated'] = current_time( 'c' );
 				$sitemap_exists           = true;
 				break;
 			}
@@ -315,7 +315,7 @@ class Cache {
 		if ( ! $sitemap_exists ) {
 			$unified_index_data[] = [
 				'link'    => $sitemap_url,
-				'updated' => current_time( 'mysql' ),
+				'updated' => current_time( 'c' ),
 			];
 		}
 
