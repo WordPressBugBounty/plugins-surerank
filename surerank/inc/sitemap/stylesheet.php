@@ -189,7 +189,7 @@ class Stylesheet {
 							</xsl:when>
 							<xsl:when test="count(s:urlset/s:url) = 0">
 								<p class="sitemap-count">No Indexable URLs found for this sitemap.</p>
-								<a href="/<?php echo esc_attr( $sitemap_slug ); ?>" class="sitemap-index">
+								<a href="<?php echo esc_url( home_url( $sitemap_slug ) ); ?>" class="sitemap-index">
 									<div style="display: flex; align-items: center; gap: 8px;">
 										<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
 											<path d="M11.0846 7H2.91797" stroke="#4330D2" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
@@ -201,7 +201,7 @@ class Stylesheet {
 							</xsl:when>
 							<xsl:otherwise>
 								<p class="sitemap-count" style="font-size: 16px;"> This XML Sitemap contains <b><xsl:value-of select="count(s:urlset/s:url)" /></b> URLs.</p>
-								<a href="/<?php echo esc_attr( $sitemap_slug ); ?>" class="sitemap-index">
+								<a href="<?php echo esc_url( home_url( $sitemap_slug ) ); ?>" class="sitemap-index">
 									<div style="display: flex; align-items: center; gap: 8px;">
 										<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
 											<path d="M11.0846 7H2.91797" stroke="#4330D2" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>

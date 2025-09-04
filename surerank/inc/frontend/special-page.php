@@ -109,7 +109,7 @@ class Special_Page {
 	 * Get the page id.
 	 *
 	 * @return int Page id.
-	 * @since x.x.x
+	 * @since 1.3.0
 	 */
 	public static function get_page_id() {
 		if ( is_home() && ! is_front_page() && Get::option( 'page_for_posts' ) ) {
@@ -124,7 +124,7 @@ class Special_Page {
 	 *
 	 * @param array<string, mixed> $meta Meta data.
 	 * @return string Canonical url.
-	 * @since x.x.x
+	 * @since 1.3.0
 	 */
 	public static function get_canonical_url( $meta ) {
 

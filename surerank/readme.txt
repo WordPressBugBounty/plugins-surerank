@@ -5,7 +5,7 @@ Tags: seo, wordpress seo, xml sitemap, schema, google search console
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 8.0
-Stable tag: 1.2.1
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -292,6 +292,18 @@ Brainstorm Force
 
 
 == Changelog ==
+
+= 1.3.0 - 04-September-2025 =
+* New: Import/Export functionality for SureRank settings
+* New: Migration – Ability to migrate from the SEOPress plugin to SureRank
+* Improvement: Added a tooltip to the Elementor Editor SureRank Meta Box trigger button
+* Improvement: Introduced a new UI for Twitter previews in the Metabox and General settings
+* Improvement: Enhanced code quality and UI/UX
+* Improvement: Included homepage link in the sitemap XML
+* Fix: Ensured compatibility with Bricks Builder v2.0.1
+* Fix: Ensured the Gutenberg sidebar doesn’t close when the SureRank panel is closed
+* Fix: Resolved an issue with the SEO Bar that displayed an incorrect status despite the page being optimized
+* Fix: Resolved an issue where duplicate canonical meta tags were printed on front page.
 
 = 1.2.1 - 28-August-2025 =
 * Fix: Fixed an issue where the index sitemap date was in an incorrect format.

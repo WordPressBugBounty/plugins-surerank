@@ -64,17 +64,7 @@ class BulkActions {
 	 * @return array<string, string> Modified bulk actions.
 	 */
 	public function add_bulk_actions( array $actions ): array {
-		$new_actions = [
-			'surerank-settings'  => __( 'SureRank Settings', 'surerank' ),
-			'surerank_index'     => __( 'Set to index', 'surerank' ),
-			'surerank_noindex'   => __( 'Set to noindex', 'surerank' ),
-			'surerank_follow'    => __( 'Set to follow', 'surerank' ),
-			'surerank_nofollow'  => __( 'Set to nofollow', 'surerank' ),
-			'surerank_archive'   => __( 'Set to archive', 'surerank' ),
-			'surerank_noarchive' => __( 'Set to noarchive', 'surerank' ),
-		];
-
-		return array_merge( $actions, $new_actions );
+		return array_merge( $actions, $this->get_bulk_action_labels() );
 	}
 
 	/**
@@ -122,11 +112,13 @@ class BulkActions {
 			return $redirect_to;
 		}
 
-		$surerank_actions = [ 'surerank_index', 'surerank_noindex', 'surerank_follow', 'surerank_nofollow', 'surerank_archive', 'surerank_noarchive' ];
+		$surerank_actions = apply_filters( 'surerank_allowed_bulk_actions', [ 'surerank_index', 'surerank_noindex', 'surerank_follow', 'surerank_nofollow', 'surerank_archive', 'surerank_noarchive' ] );
 
 		if ( ! in_array( $action, $surerank_actions, true ) || empty( $ids ) ) {
 			return $redirect_to;
 		}
+
+		do_action( 'surerank_bulk_action_performed', $action, $ids );
 
 		$is_taxonomy = Helper::is_taxonomy_screen();
 
@@ -166,14 +158,7 @@ class BulkActions {
 		}
 
 		$action        = sanitize_text_field( wp_unslash( $_GET['surerank_bulk_action'] ) );
-		$action_labels = [
-			'surerank_index'     => __( 'set to index', 'surerank' ),
-			'surerank_noindex'   => __( 'set to noindex', 'surerank' ),
-			'surerank_follow'    => __( 'set to follow', 'surerank' ),
-			'surerank_nofollow'  => __( 'set to nofollow', 'surerank' ),
-			'surerank_archive'   => __( 'set to archive', 'surerank' ),
-			'surerank_noarchive' => __( 'set to noarchive', 'surerank' ),
-		];
+		$action_labels = $this->get_bulk_action_labels();
 
 		if ( ! isset( $action_labels[ $action ] ) ) {
 			return;
@@ -203,6 +188,26 @@ class BulkActions {
 			});
 		</script>
 		<?php
+	}
+
+	/**
+	 * Get SureRank bulk action labels.
+	 *
+	 * @return array<string, string> Bulk action labels.
+	 */
+	private function get_bulk_action_labels(): array {
+		return apply_filters(
+			'surerank_bulk_actions',
+			[
+				'surerank-settings'  => __( 'SureRank Settings', 'surerank' ),
+				'surerank_index'     => __( 'Set to index', 'surerank' ),
+				'surerank_noindex'   => __( 'Set to noindex', 'surerank' ),
+				'surerank_follow'    => __( 'Set to follow', 'surerank' ),
+				'surerank_nofollow'  => __( 'Set to nofollow', 'surerank' ),
+				'surerank_archive'   => __( 'Set to archive', 'surerank' ),
+				'surerank_noarchive' => __( 'Set to noarchive', 'surerank' ),
+			]
+		);
 	}
 
 	/**

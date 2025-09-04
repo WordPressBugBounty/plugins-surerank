@@ -11,7 +11,7 @@
  * @abstract
  * @extends WP_Async_Request
  */
-abstract class WP_Background_Process extends WP_Async_Request {
+abstract class WP_Background_Process extends \WP_Async_Request {
 	/**
 	 * The default query arg name used for passing the chain ID to new processes.
 	 */

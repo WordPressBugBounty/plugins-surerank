@@ -143,12 +143,20 @@ class PostAnalyzer {
 
 		$rendered_content = '';
 		$post_content     = $post->post_content;
-		$blocks           = parse_blocks( $post_content );
-		foreach ( $blocks as $block ) {
-			$rendered_content .= render_block( $block );
-		}
 
-		$this->xpath = Utils::get_rendered_xpath( $rendered_content );
+		/**
+		 * Parse blocks and render them to get the rendered content.
+		 * Commented out because it's not needed for the analyzer.
+		 *
+		 * Kept here for reference if needed in the future.
+		 *
+		 * $blocks           = parse_blocks( $post_content );
+		 * foreach ( $blocks as $block ) {
+		 *  $rendered_content .= render_block( $block );
+		 * }
+		 */
+
+		$this->xpath = Utils::get_rendered_xpath( $post_content );
 		$result      = $this->analyze();
 
 		if ( $this->update_broken_links_status( $result ) && is_array( $result ) ) {
@@ -221,7 +229,8 @@ class PostAnalyzer {
 	 */
 	private function check_image_alt_text(): array {
 		$images = $this->get_images();
-		if ( empty( $images ) ) {
+
+		if ( ! $images instanceof DOMNodeList || $images->length === 0 ) {
 			return [];
 		}
 

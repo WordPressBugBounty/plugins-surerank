@@ -66,10 +66,11 @@ const FixButton = ( {
 		>
 			<Button
 				{ ...props }
-				className={ cn( 'w-fit', hidden && 'hidden' ) }
+				className={ cn( 'w-fit underline', hidden && 'hidden' ) }
 				size={ size }
 				icon={ icon }
 				iconPosition={ iconPosition }
+				variant="link"
 			>
 				{ button_label }
 			</Button>

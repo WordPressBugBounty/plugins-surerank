@@ -7,7 +7,7 @@ import { sureRankLogoForBuilder, handleOpenSureRankDrawer } from '../elementor';
 // eslint-disable-next-line wrap-iife
 ( function ( $ ) {
 	document.addEventListener( 'DOMContentLoaded', function () {
-		const toolbar = $( '#bricks-toolbar .right' );
+		const toolbar = $( '#bricks-toolbar .right, #bricks-toolbar .end' );
 		const button = $( `<li aria-label="${ __(
 			'Open SureRank SEO',
 			'surerank'

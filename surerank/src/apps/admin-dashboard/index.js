@@ -33,7 +33,7 @@ import MigrationRoute from '@AdminGeneral/advanced/tools/migration';
 import MiscellaneousRoute from '@AdminGeneral/advanced/tools/miscellaneous';
 import RobotsTxtEditorRoute from '@AdminGeneral/advanced/tools/robots-txt-editor/robots-txt-editor';
 import SchemaRoute from '@AdminGeneral/schema/schema';
-// import ImportExportSettingsRoute from '@AdminGeneral/advanced/tools/import-export-settings';
+import ImportExportSettingsRoute from '@AdminGeneral/advanced/tools/import-export-settings';
 
 // Define toast globally for PRO plugin.
 if ( window && ! window?.toast ) {
@@ -100,7 +100,7 @@ const siteSeoAnalysisRoutes = [
 const toolsRoutes = [
 	createRoute( '/tools', null, [
 		createChildRoute( '/manage-features', FeaturesManagementRoute ),
-		// createChildRoute( '/import-export', ImportExportSettingsRoute ),
+		createChildRoute( '/import-export', ImportExportSettingsRoute ),
 		...( ENABLE_MIGRATION
 			? [ createChildRoute( '/migrate', MigrationRoute ) ]
 			: [] ),

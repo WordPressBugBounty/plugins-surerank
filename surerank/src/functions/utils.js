@@ -782,3 +782,42 @@ export const getSeoCheckLabel = ( type, counts ) => {
 	}
 	return __( 'SEO is Optimized', 'surerank' );
 };
+
+/**
+ * Get status indicator CSS classes based on check status
+ *
+ * @param {string} status Status of page checks ('error', 'warning', 'suggestion', 'success')
+ * @return {string} CSS classes for the status indicator
+ */
+export const getStatusIndicatorClasses = ( status ) => {
+	switch ( status ) {
+		case 'error':
+			return 'bg-support-error';
+		case 'warning':
+			return 'bg-support-warning';
+		case 'suggestion':
+			return 'bg-support-info';
+		case 'success':
+			return 'bg-support-success';
+		default:
+			return 'bg-background-secondary';
+	}
+};
+
+/**
+ * Get accessibility label for status indicator
+ *
+ * @param {number} errorAndWarnings Count of errors and warnings
+ * @return {string} Accessibility label text
+ */
+export const getStatusIndicatorAriaLabel = ( errorAndWarnings ) => {
+	if ( errorAndWarnings > 0 ) {
+		return sprintf(
+			/* translators: %1$d: number of errors and warnings */
+			__( '%1$d %2$s need attention.', 'surerank' ),
+			errorAndWarnings,
+			_n( 'issue', 'issues', errorAndWarnings, 'surerank' )
+		);
+	}
+	return __( 'All SEO checks passed.', 'surerank' );
+};

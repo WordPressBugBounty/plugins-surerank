@@ -2,7 +2,7 @@ import { Badge, Label, Button } from '@bsf/force-ui';
 import { cn, isURL } from '@/functions/utils';
 import FixButton from '@GlobalComponents/fix-button';
 import { __ } from '@wordpress/i18n';
-import { Info, X } from 'lucide-react';
+import { CircleAlert, CircleCheck, Info, TriangleAlert, X } from 'lucide-react';
 import {
 	SeoPopupInfoTooltip,
 	SeoPopupTooltip,
@@ -13,6 +13,44 @@ import { fetchImageDataByUrl } from '@/functions/api';
 import DOMPurify from 'dompurify';
 
 const IMAGE_ID_CACHE = new Map();
+
+const getIcon = ( type ) => {
+	const commonClassName = 'size-4';
+	switch ( type ) {
+		case 'blue':
+			return (
+				<Info
+					className={ cn( commonClassName, 'text-badge-color-sky' ) }
+				/>
+			);
+		case 'red':
+			return (
+				<CircleAlert
+					className={ cn( commonClassName, 'text-badge-color-red' ) }
+				/>
+			);
+		case 'yellow':
+			return (
+				<TriangleAlert
+					className={ cn(
+						commonClassName,
+						'text-badge-color-yellow'
+					) }
+				/>
+			);
+		case 'green':
+			return (
+				<CircleCheck
+					className={ cn(
+						commonClassName,
+						'text-badge-color-green'
+					) }
+				/>
+			);
+		default:
+			return null;
+	}
+};
 
 const formatBrokenLinkTooltip = ( item ) => {
 	if ( ! item || typeof item !== 'object' ) {
@@ -140,22 +178,35 @@ export const CheckCard = ( {
 						type="button"
 						onClick={ handleIgnoreClick }
 						aria-label={ __( 'Ignore this check', 'surerank' ) }
-						className="absolute -top-2 -right-2 rounded-full *:focus:outline-none focus:ring-0 focus:[box-shadow:none]"
-						icon={ <X className="size-4 text-text-primary" /> }
+						className="absolute -top-2 -right-2 rounded-full *:focus:outline-none [&>svg]:size-3 focus:ring-0 focus:[box-shadow:none] p-0.5"
+						icon={ <X className="text-text-primary" /> }
 						size="xs"
 					/>
 				) }
 				<div className="w-full flex items-start gap-2">
-					<Badge
-						label={ label }
-						size="sm"
-						type="pill"
-						variant={ variant }
-						disableHover
-						className={ cn(
-							showRestoreButton ? 'text-badge-color-disabled' : ''
-						) }
-					/>
+					{ showRestoreButton ? (
+						<Badge
+							label={ label }
+							size="sm"
+							type="pill"
+							variant={ variant }
+							disableHover
+							className={ cn(
+								showRestoreButton
+									? 'text-badge-color-disabled'
+									: ''
+							) }
+						/>
+					) : (
+						<>
+							<div>
+								<p className="sr-only">{ label }</p>
+								<span className="p-1 flex [&>svg]:size-4">
+									{ getIcon( variant ) }
+								</span>
+							</div>
+						</>
+					) }
 					<div className="flex items-center mt-px">
 						<Label
 							size="xs"
@@ -195,15 +246,6 @@ export const CheckCard = ( {
 							{ __( 'Restore', 'surerank' ) }
 						</Button>
 					) }
-					{ showFixButton && (
-						<FixButton
-							size="xs"
-							className="ml-auto min-w-fit shrink-0"
-							tooltipProps={ { className: 'z-999999' } }
-						>
-							{ __( 'Help Me Fix', 'surerank' ) }
-						</FixButton>
-					) }
 				</div>
 				{ showImages && <ImageGrid images={ descriptionData } /> }
 				{ ! showImages &&
@@ -222,6 +264,16 @@ export const CheckCard = ( {
 							) ) }
 						</ul>
 					) }
+
+				{ showFixButton && (
+					<FixButton
+						size="xs"
+						className="ml-auto min-w-fit shrink-0"
+						tooltipProps={ { className: 'z-999999' } }
+					>
+						{ __( 'Help Me Fix', 'surerank' ) }
+					</FixButton>
+				) }
 			</div>
 
 			<ConfirmationDialog

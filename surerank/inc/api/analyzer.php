@@ -15,6 +15,7 @@ use SureRank\Inc\Analyzer\SeoAnalyzer;
 use SureRank\Inc\Analyzer\Utils;
 use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Requests;
+use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Functions\Update;
 use SureRank\Inc\GoogleSearchConsole\Controller;
 use SureRank\Inc\Traits\Get_Instance;
@@ -466,7 +467,7 @@ class Analyzer extends Api_Base {
 			'wordpress-seo/wp-seo.php'                    => 'Yoast SEO',
 			'autodescription/autodescription.php'         => 'The SEO Framework',
 			'all-in-one-seo-pack/all_in_one_seo_pack.php' => 'AIOSEO',
-			'wp-seopress/seopress.php'                    => 'SEO Press',
+			'wp-seopress/seopress.php'                    => 'SEOPress',
 			'slim-seo/slim-seo.php'                       => 'Slim SEO',
 			'squirrly-seo/squirrly.php'                   => 'Squirrly SEO',
 		];
@@ -1240,6 +1241,11 @@ class Analyzer extends Api_Base {
 	 * @return string
 	 */
 	private function get_search_console_url() {
+		// Check if Google Search Console feature is enabled.
+		if ( ! Settings::get( 'enable_google_console' ) ) {
+			return admin_url( 'admin.php?page=surerank#/tools/manage-features' );
+		}
+		
 		return admin_url( 'admin.php?page=surerank#/search-console' );
 	}
 

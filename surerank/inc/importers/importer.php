@@ -33,6 +33,20 @@ interface Importer {
 	public function get_plugin_name(): string;
 
 	/**
+	 * Get the plugin file path for the plugin being imported from.
+	 *
+	 * @return string
+	 */
+	public function get_plugin_file(): string;
+
+	/**
+	 * Check if the plugin is active.
+	 *
+	 * @return bool True if the plugin is active, false otherwise.
+	 */
+	public function is_plugin_active(): bool;
+
+	/**
 	 * Detect whether the source plugin has data for the given post.
 	 *
 	 * @param int $post_id Post ID.

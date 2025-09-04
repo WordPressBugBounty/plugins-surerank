@@ -25,7 +25,7 @@ const DeactivatePluginFooter = () => {
 		( [ slug ] ) => slug
 	);
 
-	const migrationCompletedPlugin = PLUGIN_OPTIONS.find( ( plugin ) =>
+	const migrationCompletedPlugin = ACTIVE_MIGRATED_PLUGINS.find( ( plugin ) =>
 		completedPluginsSlugs.includes( plugin.slug )
 	);
 

@@ -65,10 +65,6 @@ const ImportSection = () => {
 					method: 'POST',
 					data: {
 						settings_data: settingsData,
-						options: {
-							overwrite: true,
-							create_backup: true,
-						},
 					},
 				} );
 

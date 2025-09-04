@@ -283,10 +283,10 @@ class Utils {
 		$sitemap_title = esc_html( get_bloginfo( 'name' ) . ' Sitemap' );
 		$sitemap_slug  = Xml_Sitemap::get_slug();
 
-		$stylesheet         = new Stylesheet();
-		$stylesheet_content = $stylesheet->generate( $sitemap_title, $sitemap_slug );
+		$stylesheet_obj     = new Stylesheet();
+		$stylesheet_content = $stylesheet_obj->generate( $sitemap_title, $sitemap_slug );
 
-		echo $stylesheet_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo apply_filters( 'surerank_sitemap_output_stylesheet', $stylesheet_content, $stylesheet ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		exit;
 	}
 

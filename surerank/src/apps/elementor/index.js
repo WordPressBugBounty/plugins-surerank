@@ -2,12 +2,160 @@ import { cn } from '@/functions/utils';
 import { STORE_NAME } from '@/store/constants';
 import { dispatch } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
+import './tooltip.css';
 
 /* global jQuery */
 
 export const handleOpenSureRankDrawer = () => {
 	const dispatchToSureRankStore = dispatch( STORE_NAME );
 	dispatchToSureRankStore.updateModalState( true );
+};
+
+// Custom Material UI style tooltip implementation for Elementor with TailwindCSS
+const createSureRankTooltip = ( targetElement, tooltipText ) => {
+	if ( ! targetElement || ! tooltipText ) {
+		return;
+	}
+
+	// Create wrapper with surerank-root class
+	const wrapper = document.createElement( 'div' );
+	wrapper.className = 'surerank-root';
+
+	// Create tooltip element with TailwindCSS styling
+	const tooltip = document.createElement( 'div' );
+	tooltip.className = cn(
+		'surerank-tooltip',
+		'absolute',
+		'bg-gray-700',
+		'text-white',
+		'px-2',
+		'py-0.5',
+		'rounded',
+		'text-[0.6875rem]',
+		'font-medium',
+		'leading-tight',
+		'tracking-wide',
+		'invisible',
+		'opacity-0',
+		'pointer-events-none',
+		'origin-top',
+		'z-[9999]',
+		'top-0',
+		'left-0'
+	);
+	tooltip.textContent = tooltipText;
+
+	// Create arrow element
+	const arrow = document.createElement( 'div' );
+	arrow.className = cn(
+		'absolute',
+		'-top-[0.4375rem]',
+		'left-1/2',
+		'w-0',
+		'h-0',
+		'border-solid',
+		'border-l-[0.375rem]',
+		'border-r-[0.375rem]',
+		'border-b-[0.375rem]',
+		'border-l-transparent',
+		'border-r-transparent',
+		'border-t-transparent',
+		'border-b-gray-700',
+		'translate-x-[-50%]',
+		'bg-transparent'
+	);
+
+	// Append arrow to tooltip
+	tooltip.appendChild( arrow );
+
+	// Append tooltip to wrapper
+	wrapper.appendChild( tooltip );
+
+	// Append wrapper to body
+	document.body.appendChild( wrapper );
+
+	// Position tooltip function
+	const positionTooltip = () => {
+		const targetRect = targetElement.getBoundingClientRect();
+
+		// Position below the target element (accounting for arrow height)
+		const top = targetRect.bottom + 16; // 14px for arrow and spacing
+		const centerX = targetRect.left + targetRect.width / 2;
+
+		tooltip.style.top = top + 'px';
+		tooltip.style.left = centerX + 'px';
+	};
+
+	// Show tooltip
+	const showTooltip = () => {
+		positionTooltip();
+		tooltip.classList.remove(
+			'invisible',
+			'opacity-0',
+			'surerank-tooltip--hidden'
+		);
+		tooltip.classList.add(
+			'visible',
+			'opacity-100',
+			'surerank-tooltip--visible'
+		);
+	};
+
+	// Add event listeners
+	let showTimeout;
+	let hideTimeout;
+	let hideAnimationTimeout;
+
+	// Hide tooltip
+	const hideTooltip = () => {
+		clearTimeout( hideAnimationTimeout );
+		tooltip.classList.remove( 'opacity-100' );
+		tooltip.classList.add( 'opacity-0' );
+		hideAnimationTimeout = setTimeout( () => {
+			tooltip.classList.remove( 'visible' );
+			tooltip.classList.add( 'invisible', 'surerank-tooltip--hidden' );
+		}, 250 );
+	};
+
+	const handleMouseEnter = () => {
+		clearTimeout( hideTimeout );
+		showTimeout = setTimeout( showTooltip, 200 ); // 200ms delay like Material UI
+	};
+
+	const handleMouseLeave = () => {
+		clearTimeout( showTimeout );
+		hideTimeout = setTimeout( hideTooltip, 0 );
+	};
+
+	const handleFocus = () => {
+		clearTimeout( hideTimeout );
+		showTooltip();
+	};
+
+	const handleBlur = () => {
+		clearTimeout( showTimeout );
+		hideTooltip();
+	};
+
+	// Attach event listeners
+	targetElement.addEventListener( 'mouseenter', handleMouseEnter );
+	targetElement.addEventListener( 'mouseleave', handleMouseLeave );
+	targetElement.addEventListener( 'focus', handleFocus );
+	targetElement.addEventListener( 'blur', handleBlur );
+
+	// Return cleanup function
+	return () => {
+		clearTimeout( showTimeout );
+		clearTimeout( hideTimeout );
+		clearTimeout( hideAnimationTimeout );
+		targetElement.removeEventListener( 'mouseenter', handleMouseEnter );
+		targetElement.removeEventListener( 'mouseleave', handleMouseLeave );
+		targetElement.removeEventListener( 'focus', handleFocus );
+		targetElement.removeEventListener( 'blur', handleBlur );
+		if ( wrapper.parentNode ) {
+			wrapper.parentNode.removeChild( wrapper );
+		}
+	};
 };
 
 export const sureRankLogoForBuilder = ( className ) => {
@@ -20,12 +168,12 @@ export const sureRankLogoForBuilder = ( className ) => {
 
 // eslint-disable-next-line wrap-iife
 ( function ( $ ) {
+	let tooltipCleanup = null;
+
 	$( window ).on( 'load', function () {
-		const topBar = $( '#elementor-editor-wrapper-v2 header' )
-			.children()
-			.children()
-			.children( '.MuiGrid-root:nth-child(3)' )
-			.children( '.MuiStack-root' );
+		const topBar = $(
+			'#elementor-editor-wrapper-v2 header .MuiGrid-root:nth-child(3) .MuiStack-root'
+		);
 
 		// Get the button and svg class name from the topbar last child.
 		const lastChild = topBar.last();
@@ -43,5 +191,18 @@ export const sureRankLogoForBuilder = ( className ) => {
 		).on( 'click', handleOpenSureRankDrawer );
 
 		topBar.children().first().after( $button );
+		// Add tooltip to the button and store cleanup function.
+		tooltipCleanup = createSureRankTooltip(
+			$button?.[ 0 ],
+			__( 'SureRank Meta Box', 'surerank' )
+		);
+	} );
+
+	// Cleanup on page unload
+	$( window ).on( 'beforeunload', function () {
+		if ( tooltipCleanup ) {
+			tooltipCleanup();
+			tooltipCleanup = null;
+		}
 	} );
 } )( jQuery );

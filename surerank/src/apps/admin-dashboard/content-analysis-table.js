@@ -12,7 +12,6 @@ import {
 } from '@bsf/force-ui';
 import {
 	ArrowUpRight,
-	ChevronsUpDown,
 	ArrowUp,
 	ArrowDown,
 	AlertTriangle,
@@ -27,46 +26,13 @@ import { addQueryArgs } from '@wordpress/url';
 import { ADMIN_DASHBOARD_URL } from '@Global/constants/index';
 import { cn, formatToISOPreserveDate, getLastNDays } from '@/functions/utils';
 import FixButton from '@GlobalComponents/fix-button';
+import { SortableColumn } from '@GlobalComponents/sortable-column';
 
 const isSameDomain = ( url ) => {
 	const cleanUrl = url.includes( 'sc-domain:' )
 		? url.replace( 'sc-domain:', '' )
 		: url;
 	return cleanUrl.includes( window.location.host );
-};
-
-const SortableColumn = ( {
-	children,
-	className,
-	sortKey,
-	onSort,
-	currentSort,
-	...props
-} ) => {
-	const isActive = currentSort?.key === sortKey;
-	let sortIcon = <ChevronsUpDown className="size-4 shrink-0" />;
-
-	if ( isActive ) {
-		sortIcon =
-			currentSort.direction === 'asc' ? (
-				<ArrowUp className="size-4 shrink-0" />
-			) : (
-				<ArrowDown className="size-4 shrink-0" />
-			);
-	}
-
-	return (
-		<Table.HeadCell
-			className={ cn( className, 'cursor-pointer select-none' ) }
-			onClick={ () => onSort( sortKey ) }
-			{ ...props }
-		>
-			<Container align="center" className="gap-0.5">
-				{ children }
-				{ sortIcon }
-			</Container>
-		</Table.HeadCell>
-	);
 };
 
 const LoadingSkeleton = ( { sameDomain = false, numberOfRows = 10 } ) => {

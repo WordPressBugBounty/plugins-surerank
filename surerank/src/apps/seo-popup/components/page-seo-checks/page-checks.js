@@ -1,15 +1,7 @@
-import {
-	useLayoutEffect,
-	useRef,
-	useState,
-	useMemo,
-	memo,
-} from '@wordpress/element';
+import { useMemo, memo } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
-import { Button, Loader, Text } from '@bsf/force-ui';
-import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronDownIcon } from 'lucide-react';
-import { cn } from '@/functions/utils';
+import { Loader, Text } from '@bsf/force-ui';
+import { motion } from 'framer-motion';
 import { CheckCard } from '@GlobalComponents/check-card';
 
 const PageChecks = ( { pageSeoChecks = {}, onIgnore, onRestore } ) => {
@@ -23,20 +15,6 @@ const PageChecks = ( { pageSeoChecks = {}, onIgnore, onRestore } ) => {
 		linkCheckProgress = { current: 0, total: 0 },
 	} = pageSeoChecks;
 
-	const passedChecksContainerRef = useRef( null );
-	const [ showPassedChecks, setShowPassedChecks ] = useState( false );
-
-	const handleTogglePassedChecks = () => {
-		setShowPassedChecks( ( prev ) => ! prev );
-	};
-
-	// Show passed checks by default if no visible bad or fair checks
-	useLayoutEffect( () => {
-		if ( ! badChecks.length && ! fairChecks.length && ! showPassedChecks ) {
-			setShowPassedChecks( true );
-		}
-	}, [ badChecks.length, fairChecks.length, showPassedChecks ] );
-
 	const hasBadOrFairChecks = useMemo(
 		() =>
 			badChecks.length > 0 ||
@@ -45,9 +23,16 @@ const PageChecks = ( { pageSeoChecks = {}, onIgnore, onRestore } ) => {
 		[ badChecks.length, fairChecks.length, suggestionChecks.length ]
 	);
 
+	const handleIgnoreCheck = ( checkId ) => () => {
+		if ( ! checkId ) {
+			return;
+		}
+		onIgnore( checkId );
+	};
+
 	return (
 		<motion.div
-			className="space-y-6 p-1"
+			className="space-y-3 p-1"
 			initial={ { opacity: 0 } }
 			animate={ { opacity: 1 } }
 			exit={ { opacity: 0 } }
@@ -65,7 +50,7 @@ const PageChecks = ( { pageSeoChecks = {}, onIgnore, onRestore } ) => {
 							title={ check.title }
 							data={ check?.data }
 							showImages={ check?.showImages }
-							onIgnore={ () => onIgnore( check.id ) }
+							onIgnore={ handleIgnoreCheck( check.id ) }
 							showIgnoreButton={ true }
 						/>
 					) ) }
@@ -78,7 +63,7 @@ const PageChecks = ( { pageSeoChecks = {}, onIgnore, onRestore } ) => {
 							title={ check.title }
 							data={ check?.data }
 							showImages={ check?.showImages }
-							onIgnore={ () => onIgnore( check.id ) }
+							onIgnore={ handleIgnoreCheck( check.id ) }
 							showIgnoreButton={ true }
 						/>
 					) ) }
@@ -91,7 +76,7 @@ const PageChecks = ( { pageSeoChecks = {}, onIgnore, onRestore } ) => {
 							title={ check.title }
 							data={ check?.data }
 							showImages={ check?.showImages }
-							onIgnore={ () => onIgnore( check.id ) }
+							onIgnore={ handleIgnoreCheck( check.id ) }
 						/>
 					) ) }
 					{ /* Broken links check progress will render here */ }
@@ -115,7 +100,7 @@ const PageChecks = ( { pageSeoChecks = {}, onIgnore, onRestore } ) => {
 			) }
 			{ /* Ignored Checks Container */ }
 			{ ignoredChecks.length > 0 && (
-				<div className="space-y-3 mt-4">
+				<div className="space-y-3">
 					{ ignoredChecks.map( ( check ) => (
 						<CheckCard
 							key={ check.id }
@@ -130,65 +115,20 @@ const PageChecks = ( { pageSeoChecks = {}, onIgnore, onRestore } ) => {
 				</div>
 			) }
 
-			{ hasBadOrFairChecks && (
-				<div className="flex items-center justify-center w-full">
-					<Button
-						variant="outline"
-						size="xs"
-						className="w-fit"
-						icon={
-							<ChevronDownIcon
-								className={ cn(
-									showPassedChecks && 'rotate-180'
-								) }
-							/>
-						}
-						iconPosition="right"
-						onClick={ handleTogglePassedChecks }
-					>
-						{ __( 'Passed Checks', 'surerank' ) }
-					</Button>
+			{ passedChecks.length > 0 && (
+				<div className="space-y-3">
+					{ passedChecks.map( ( check ) => (
+						<CheckCard
+							key={ check.id }
+							variant="green"
+							label={ __( 'Passed', 'surerank' ) }
+							title={ check.title }
+							showFixButton={ false }
+							onIgnore={ () => onIgnore( check.id ) }
+						/>
+					) ) }
 				</div>
 			) }
-
-			{ /* Passed Checks Container */ }
-			<AnimatePresence>
-				<motion.div
-					ref={ passedChecksContainerRef }
-					className={ cn( hasBadOrFairChecks && 'mt-4' ) }
-					initial={ { opacity: 0 } }
-					animate={ { opacity: showPassedChecks ? 1 : 0 } }
-					exit={ {
-						opacity: 0,
-						transition: { duration: 0.1 },
-					} }
-					transition={ {
-						duration: 0.2,
-					} }
-					onAnimationComplete={ () => {
-						if ( showPassedChecks ) {
-							passedChecksContainerRef.current.scrollIntoView( {
-								behavior: 'smooth',
-							} );
-						}
-					} }
-				>
-					{ showPassedChecks && passedChecks.length > 0 && (
-						<div className="space-y-3">
-							{ passedChecks.map( ( check ) => (
-								<CheckCard
-									key={ check.id }
-									variant="green"
-									label={ __( 'Passed', 'surerank' ) }
-									title={ check.title }
-									showFixButton={ false }
-									onIgnore={ () => onIgnore( check.id ) }
-								/>
-							) ) }
-						</div>
-					) }
-				</motion.div>
-			</AnimatePresence>
 		</motion.div>
 	);
 };

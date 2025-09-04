@@ -447,6 +447,7 @@ const SocialTab = ( { postMetaData, updatePostMetaData, globalDefaults } ) => {
 											''
 										) }
 										hideRemoveButton={ true }
+										forMetaBox
 									/>
 								</div>
 							</motion.div>

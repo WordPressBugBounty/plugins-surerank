@@ -85,7 +85,7 @@ class Schemas {
 			$variables,
 			[
 				'schema_rules'        => Rules::get_schema_rules_selections(),
-				'default_schemas'     => Utils::get_default_schemas(),
+				'default_schemas'     => Utils::get_default_schema_options(),
 				'schema_type_options' => Utils::get_schema_type_options(),
 				'schema_type_data'    => Utils::get_schema_type_data(),
 				'schema_variables'    => Variables::get_instance()->get_schema_variables(),

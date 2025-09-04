@@ -67,8 +67,6 @@ const TitleAndDescriptionSettings = () => {
 		? siteSettings?.site?.favicon
 		: '';
 	const titleContent = replacement( title, siteSettings?.site );
-	//push post_content in siteSettings
-	siteSettings.site.content = DEFAULT_PAGE_DESCRIPTION;
 	const descriptionContent = replacement( description, siteSettings?.site );
 	const titleContentTruncated = truncateText( titleContent, TITLE_LENGTH );
 	const descriptionContentTruncated = truncateText(

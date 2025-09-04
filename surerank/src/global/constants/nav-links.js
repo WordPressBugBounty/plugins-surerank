@@ -10,7 +10,7 @@ import {
 	Grid,
 	Settings,
 	FileText,
-	// ArrowUpDown,
+	ArrowUpDown,
 } from 'lucide-react';
 import { applyFilters } from '@wordpress/hooks';
 import { __ } from '@wordpress/i18n';
@@ -206,12 +206,12 @@ export const getNavLinks = () => {
 					icon: Grid,
 					migratable: false,
 				},
-				// {
-				// 	path: '/tools/import-export',
-				// 	label: __( 'Import/Export', 'surerank' ),
-				// 	icon: ArrowUpDown,
-				// 	migratable: false,
-				// },
+				{
+					path: '/tools/import-export',
+					label: __( 'Import/Export', 'surerank' ),
+					icon: ArrowUpDown,
+					migratable: false,
+				},
 				...( ENABLE_MIGRATION
 					? [
 							{

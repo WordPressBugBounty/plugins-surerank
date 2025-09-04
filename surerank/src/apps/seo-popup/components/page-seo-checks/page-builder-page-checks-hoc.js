@@ -109,13 +109,20 @@ const PageBuilderPageSeoChecksHoc = () => {
 						isChecking={ pageSeoChecks.isCheckingLinks }
 						onClick={ handleRefreshWithBrokenLinks }
 					/>
-					<div className="p-2">
+					<div className="p-2 [&_p.mr-10]:mr-0">
 						<Alert
 							variant="info"
-							content={ __(
-								'Please save changes in the editor before refreshing the checks.',
-								'surerank'
-							) }
+							content={
+								<span className="flex items-start gap-2">
+									<p>
+										{ __(
+											'Please save changes in the editor before refreshing the checks.',
+											'surerank'
+										) }
+									</p>
+									<span className="-mr-3 refresh-button-container shrink-0" />
+								</span>
+							}
 							className="shadow-none"
 						/>
 					</div>

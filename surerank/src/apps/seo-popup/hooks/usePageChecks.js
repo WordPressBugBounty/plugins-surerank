@@ -25,6 +25,7 @@ import replacement from '@Functions/replacement';
 import { flat } from '@Functions/variables';
 import { getEditorData } from '@SeoPopup/modal';
 import { isPageBuilderActive } from '../components/page-seo-checks/analyzer/utils/page-builder';
+import { calculatePageCheckStatus } from '../utils/calculate-page-check-status';
 
 const usePageChecks = () => {
 	const { setPageSeoCheck } = useDispatch( STORE_NAME );
@@ -52,12 +53,6 @@ const usePageChecks = () => {
 	}, [] );
 
 	const { categorizedChecks = {}, initializing } = pageSeoChecks;
-	const {
-		badChecks = [],
-		fairChecks = [],
-		passedChecks = [],
-		suggestionChecks = [],
-	} = categorizedChecks;
 	const [ , startTransition ] = useTransition();
 
 	const lastSnapshot = useRef( { postContent: '', permalink: '' } );
@@ -210,31 +205,9 @@ const usePageChecks = () => {
 		settingsLoaded,
 	] );
 
-	const status = useMemo( () => {
-		if ( badChecks?.length > 0 ) {
-			return 'error';
-		}
-		if ( fairChecks?.length > 0 ) {
-			return 'warning';
-		}
-		if ( suggestionChecks?.length > 0 ) {
-			return 'suggestion';
-		}
-		return 'success';
-	}, [ badChecks, fairChecks, suggestionChecks, passedChecks ] );
-
-	const counts = useMemo( () => {
-		return {
-			errorAndWarnings:
-				badChecks?.length +
-				fairChecks?.length +
-				suggestionChecks?.length,
-			success: passedChecks?.length,
-			error: badChecks?.length,
-			warning: fairChecks?.length,
-			suggestion: suggestionChecks?.length,
-		};
-	}, [ badChecks, fairChecks, suggestionChecks, passedChecks ] );
+	const { status, counts } = useMemo( () => {
+		return calculatePageCheckStatus( categorizedChecks );
+	}, [ categorizedChecks ] );
 
 	return {
 		status,

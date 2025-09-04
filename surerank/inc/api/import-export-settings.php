@@ -74,11 +74,10 @@ class Import_Export_Settings extends Api_Base {
 	 */
 	public function export_settings( $request ) {
 		try {
-			$categories     = $request->get_param( 'categories' );
-			$include_images = $request->get_param( 'include_images' );
+			$categories = $request->get_param( 'categories' );
 
 			// Export settings using the exporter class.
-			$export_result = $this->get_exporter()->export( $categories, $include_images );
+			$export_result = $this->get_exporter()->export( $categories );
 
 			// Check if export was successful.
 			if ( ! $export_result['success'] ) {
@@ -112,7 +111,13 @@ class Import_Export_Settings extends Api_Base {
 	public function import_settings( $request ) {
 		try {
 			$settings_data = $request->get_param( 'settings_data' );
-			$options       = $request->get_param( 'options' );
+			$options       = apply_filters(
+				'surerank_import_settings_options',
+				[
+					'overwrite'     => true,
+					'create_backup' => true,
+				]
+			);
 
 			// Import settings using the importer class.
 			$import_result = $this->get_importer()->import( $settings_data, $options );
@@ -187,17 +192,11 @@ class Import_Export_Settings extends Api_Base {
 				'callback'            => [ $this, 'export_settings' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
 				'args'                => [
-					'categories'     => [
+					'categories' => [
 						'required'          => true,
 						'type'              => 'array',
 						'validate_callback' => [ $this, 'validate_categories' ],
 						'sanitize_callback' => [ $this, 'sanitize_categories' ],
-					],
-					'include_images' => [
-						'required'          => false,
-						'type'              => 'boolean',
-						'default'           => true,
-						'sanitize_callback' => 'rest_sanitize_boolean',
 					],
 				],
 			]
@@ -222,12 +221,6 @@ class Import_Export_Settings extends Api_Base {
 					'settings_data' => [
 						'required'          => true,
 						'type'              => 'object',
-						'sanitize_callback' => [ $this, 'sanitize_array_data' ],
-					],
-					'options'       => [
-						'required'          => false,
-						'type'              => 'object',
-						'default'           => [],
 						'sanitize_callback' => [ $this, 'sanitize_array_data' ],
 					],
 				],

@@ -25,64 +25,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Utils {
 
 	/**
-	 * Ensure WordPress image processing functions are available
-	 *
-	 * This function ensures that all necessary WordPress image processing functions
-	 * are loaded. This is crucial for generating image thumbnails and metadata
-	 * that are required for proper display in the WordPress Media Library.
-	 *
-	 * @return bool True if functions are available, false otherwise.
-	 * @since 1.2.0
+	 * Image setting keys that need special handling during import.
 	 */
-	public static function ensure_image_functions() {
-
-		return function_exists( '\wp_generate_attachment_metadata' )
-			&& function_exists( '\wp_update_attachment_metadata' )
-			&& function_exists( '\wp_create_image_subsizes' );
-	}
-
-	/**
-	 * Generate and update attachment metadata with proper error handling
-	 *
-	 * This function generates thumbnails and image metadata for imported images
-	 * to ensure they display properly in the WordPress Media Library. Without
-	 * this metadata, images won't show preview thumbnails in /wp-admin/upload.php.
-	 *
-	 * @param int    $attachment_id Attachment ID.
-	 * @param string $file_path Full path to the image file.
-	 * @return bool True if metadata was generated successfully, false otherwise.
-	 * @since 1.2.0
-	 */
-	public static function generate_attachment_metadata( $attachment_id, $file_path ) {
-		if ( ! self::ensure_image_functions() ) {
-			return false;
-		}
-
-		if ( ! file_exists( $file_path ) || ! is_readable( $file_path ) ) {
-			return false;
-		}
-
-		// Validate that the attachment exists and is an image.
-		$attachment = \get_post( $attachment_id );
-		if ( ! $attachment || 'attachment' !== $attachment->post_type ) {
-			return false;
-		}
-
-		$mime_type = \get_post_mime_type( $attachment_id );
-		if ( ! $mime_type || ! str_starts_with( $mime_type, 'image/' ) ) {
-			return false;
-		}
-
-		// Generate attachment metadata (creates thumbnails and image sizes).
-		$attachment_data = \wp_generate_attachment_metadata( $attachment_id, $file_path );
-
-		if ( ! empty( $attachment_data ) && is_array( $attachment_data ) ) {
-			$updated = \wp_update_attachment_metadata( $attachment_id, $attachment_data );
-			return false !== $updated;
-		}
-
-		return false;
-	}
+	private const IMAGE_KEYS = [
+		'fallback_image',
+		'home_page_facebook_image_url',
+		'home_page_twitter_image_url',
+	];
 
 	/**
 	 * Create success response
@@ -202,7 +151,7 @@ class Utils {
 		$max_size = 5 * 1024 * 1024; // 5MB
 		if ( ! empty( $file_data['size'] ) && $file_data['size'] > $max_size ) {
 			$errors[] = sprintf(
-				/* translators: %s: Maximum file size limit */
+			/* translators: %s: Maximum file size limit */
 				__( 'File size exceeds maximum limit of %s.', 'surerank' ),
 				number_format( $max_size / 1024 / 1024, 2 ) . ' MB'
 			);
@@ -353,9 +302,9 @@ class Utils {
 		return [
 			'plugin'     => 'surerank',
 			'version'    => defined( 'SURERANK_VERSION' ) ? SURERANK_VERSION : '1.0.0',
-			'timestamp'  => \current_time( 'mysql' ),
-			'site_url'   => \get_site_url(),
-			'wp_version' => \get_bloginfo( 'version' ),
+			'timestamp'  => current_time( 'mysql' ),
+			'site_url'   => get_site_url(),
+			'wp_version' => get_bloginfo( 'version' ),
 		];
 	}
 
@@ -422,19 +371,10 @@ class Utils {
 	}
 
 	/**
-	 * Get image setting keys that need special handling during import
-	 *
-	 * @return array<int, string> Array of image setting keys.
-	 */
-	public static function get_image_setting_keys() {
-		return Settings_Exporter::get_instance()->get_image_setting_keys();
-	}
-
-	/**
 	 * Download and save image from URL to WordPress media library
 	 *
 	 * @param string $image_url URL of the image to download.
-	 * @param string $setting_key Setting key for naming context.
+	 * @param string $setting_key Setting key for naming context (unused, kept for compatibility).
 	 * @return array<string, mixed> Result with new URL or error.
 	 */
 	public static function download_and_save_image( $image_url, $setting_key = '' ) {
@@ -444,144 +384,54 @@ class Utils {
 			);
 		}
 
-		// Check if WordPress media functions are available.
-		if ( ! function_exists( '\wp_upload_dir' ) || ! function_exists( '\wp_insert_attachment' ) ) {
+		// Include required WordPress functions.
+		require_once ABSPATH . 'wp-admin/includes/media.php';
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+
+		// Prepare file array for sideload.
+		$file_array = [];
+
+		// Get filename from URL.
+		$file_array['name'] = wp_basename( $image_url );
+
+		// Download file to temp location.
+		$file_array['tmp_name'] = download_url( $image_url );
+
+		// If error downloading, return the error.
+		if ( is_wp_error( $file_array['tmp_name'] ) ) {
 			return self::error_response(
-				__( 'WordPress media functions are not available.', 'surerank' )
+			/* translators: %s: Error message from download_url */
+				sprintf( __( 'Failed to download image: %s', 'surerank' ), $file_array['tmp_name']->get_error_message() )
 			);
 		}
 
-		// Get upload directory info.
-		$upload_dir = \wp_upload_dir();
-		if ( ! empty( $upload_dir['error'] ) ) {
+		// Do the validation and storage using WordPress media_handle_sideload.
+		$attachment_id = media_handle_sideload( $file_array, 0, null );
+
+		// If error storing permanently, clean up and return error.
+		if ( is_wp_error( $attachment_id ) ) {
+			@unlink( $file_array['tmp_name'] ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
 			return self::error_response(
-				/* translators: %s: Upload directory error message */
-				sprintf( __( 'Upload directory error: %s', 'surerank' ), $upload_dir['error'] )
+			/* translators: %s: Error message from media_handle_sideload */
+				sprintf( __( 'Failed to save image: %s', 'surerank' ), $attachment_id->get_error_message() )
 			);
 		}
 
-		// Download the image with proper VIP compatibility.
-		$response = wp_safe_remote_get(
-			$image_url,
-			[
-				'timeout'    => 3,
-				'user-agent' => 'SureRank WordPress Plugin',
-			]
-		);
-
-		if ( \is_wp_error( $response ) ) {
-			return self::error_response(
-				/* translators: %s: Error message from wp_remote_get */
-				sprintf( __( 'Failed to download image: %s', 'surerank' ), $response->get_error_message() )
-			);
-		}
-
-		$response_code = \wp_remote_retrieve_response_code( $response );
-		if ( 200 !== $response_code ) {
-			return self::error_response(
-				/* translators: %d: HTTP response status code */
-				sprintf( __( 'Failed to download image. HTTP status: %d', 'surerank' ), $response_code )
-			);
-		}
-
-		$image_data = \wp_remote_retrieve_body( $response );
-		if ( empty( $image_data ) ) {
-			return self::error_response(
-				__( 'Downloaded image is empty.', 'surerank' )
-			);
-		}
-
-		// Check if image already exists before proceeding.
-		$file_hash = md5( $image_data );
-		$file_size = strlen( $image_data );
-
-		// Get file info from URL.
-		$parsed_url = \wp_parse_url( $image_url );
-		if ( false === $parsed_url || ! isset( $parsed_url['path'] ) ) {
-			return self::error_response(
-				__( 'Invalid image URL format.', 'surerank' )
-			);
-		}
-
-		$path_info         = pathinfo( $parsed_url['path'] );
-		$extension         = $path_info['extension'] ?? 'jpg';
-		$original_filename = ! empty( $path_info['filename'] ) ? $path_info['filename'] : 'surerank-image';
-
-		$existing_image = self::find_existing_image( $file_hash, $file_size, $original_filename . '.' . $extension );
-		if ( $existing_image['found'] ) {
-			return self::success_response(
-				[
-					'url'           => $existing_image['url'],
-					'attachment_id' => $existing_image['attachment_id'],
-					'filename'      => $existing_image['filename'],
-					'source'        => 'existing_download',
-					'reused'        => true,
-					'match_type'    => $existing_image['match_type'],
-				],
-				__( 'Using existing downloaded image from media library.', 'surerank' )
-			);
-		}
-
-		$filename = $original_filename;
-
-		// Add setting context to filename.
-		if ( ! empty( $setting_key ) ) {
-			$filename = 'surerank-' . \sanitize_title( $setting_key ) . '-' . $filename;
-		} else {
-			$filename = 'surerank-imported-' . $filename;
-		}
-
-		// Ensure unique filename.
-		$filename  = \wp_unique_filename( $upload_dir['path'], $filename . '.' . $extension );
-		$file_path = $upload_dir['path'] . '/' . $filename;
-
-		// Save the image to WordPress uploads directory (VIP-compatible).
-		$saved = file_put_contents( $file_path, $image_data ); // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_file_put_contents
-		if ( false === $saved ) {
-			return self::error_response(
-				__( 'Failed to save downloaded image.', 'surerank' )
-			);
-		}
-
-		// Create attachment in WordPress.
-		$attachment = [
-			'post_mime_type' => \wp_check_filetype( $filename )['type'],
-			'post_title'     => \sanitize_file_name( $filename ),
-			'post_content'   => '',
-			'post_status'    => 'inherit',
-		];
-
-		/**
-		 * Create WordPress attachment for downloaded image.
-		 *
-		 * @var int|\WP_Error $attachment_id Attachment ID or error object.
-		 */
-		$attachment_id = \wp_insert_attachment( $attachment, $file_path );
-		if ( \is_wp_error( $attachment_id ) || 0 === $attachment_id ) {
-			// Clean up the file if attachment creation failed (VIP-compatible - file is in uploads directory).
-			unlink( $file_path ); // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
-			$error_message = \is_wp_error( $attachment_id ) ? $attachment_id->get_error_message() : __( 'Failed to create attachment.', 'surerank' );
-			return self::error_response(
-				/* translators: %s: Error message from attachment creation */
-				sprintf( __( 'Failed to create attachment: %s', 'surerank' ), $error_message )
-			);
-		}
-
-		// Include WordPress image processing functions if not already loaded.
-		if ( ! function_exists( '\wp_generate_attachment_metadata' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/image.php';
-		}
-
-		// Generate attachment metadata (creates thumbnails and image sizes).
-		self::generate_attachment_metadata( $attachment_id, $file_path );
+		// Store the original source URL in meta for reference.
+		add_post_meta( $attachment_id, '_surerank_source_url', $image_url );
+		add_post_meta( $attachment_id, '_surerank_imported', true );
 
 		// Get the new URL.
-		$new_url = \wp_get_attachment_url( $attachment_id );
+		$new_url = wp_get_attachment_url( $attachment_id );
 		if ( ! $new_url ) {
 			return self::error_response(
 				__( 'Failed to get attachment URL.', 'surerank' )
 			);
 		}
+
+		$filename = get_attached_file( $attachment_id );
+		$filename = $filename ? basename( $filename ) : '';
 
 		return self::success_response(
 			[
@@ -596,52 +446,32 @@ class Utils {
 	}
 
 	/**
-	 * Process image settings during import
+	 * Process image settings during import.
 	 *
-	 * @param array<string, mixed> $settings Settings array to process.
-	 * @param array<string, mixed> $images_data Base64 images data from export.
-	 * @param bool                 $process_images Whether to download and process images.
-	 * @return array<string, mixed> Processed settings with downloaded images.
+	 * @param array<string, mixed> $image_urls Settings array to process.
+	 * @return array<string, mixed> Processed settings with updated image URLs.
 	 */
-	public static function process_image_settings_import( $settings, $images_data = [], $process_images = true ) {
-		// Allow disabling image processing via filter.
-		$process_images = \apply_filters( 'surerank_import_process_images', $process_images );
-		if ( ! $process_images ) {
-			return $settings;
-		}
-
-		$image_keys         = self::get_image_setting_keys();
-		$processed_settings = $settings;
-
+	public static function process_image_settings_import( $image_urls ) {
+		$image_keys         = self::IMAGE_KEYS;
+		$processed_settings = ! empty( $image_urls ) ? $image_urls : [];
 		foreach ( $image_keys as $key ) {
-			if ( ! isset( $settings[ $key ] ) || empty( $settings[ $key ] ) ) {
+			if ( ! isset( $processed_settings[ $key ] ) || empty( $processed_settings[ $key ] ) ) {
 				continue;
 			}
 
-			$image_url = $settings[ $key ];
+			$image_url = $processed_settings[ $key ];
 
-			// Check if we have base64 data for this image URL first.
-			$found_base64_data = false;
-			if ( ! empty( $images_data ) && isset( $images_data[ $image_url ] ) ) {
-				$found_base64_data = true;
-				$save_result       = self::save_base64_image( $images_data[ $image_url ], $key );
-				if ( $save_result['success'] ) {
-					$processed_settings[ $key ] = $save_result['data']['url'];
-					continue;
+			// Skip local URLs to avoid downloading the same images.
+			if ( strpos( $image_url, home_url() ) !== false ) {
+				continue;
+			}
+
+			// Try to download from URL if it's accessible.
+			if ( filter_var( $image_url, FILTER_VALIDATE_URL ) && self::is_url_accessible( $image_url ) ) {
+				$download_result = self::download_and_save_image( $image_url, $key );
+				if ( $download_result['success'] ) {
+					$processed_settings[ $key ] = $download_result['data']['url'] ?? '';
 				}
-			}
-
-			// Only skip local URLs if we don't have base64 data for them.
-			// This allows importing to the same site with new copies of images.
-			if ( ! $found_base64_data && strpos( $image_url, \home_url() ) !== false ) {
-				continue;
-			}
-
-			// Fallback to downloading from URL if base64 failed or not available.
-			$download_result = self::download_and_save_image( $image_url, $key );
-
-			if ( $download_result['success'] ) {
-				$processed_settings[ $key ] = $download_result['data']['url'];
 			}
 		}
 
@@ -649,356 +479,55 @@ class Utils {
 	}
 
 	/**
-	 * Check if an image already exists in the media library
+	 * Get image setting keys
 	 *
-	 * @param string $file_hash MD5 hash of the file content.
-	 * @param int    $file_size Size of the file in bytes.
-	 * @param string $original_filename Original filename for additional matching.
-	 * @return array<string, mixed> Result with existing attachment info or false.
+	 * @return array<int, string> Array of image setting keys.
 	 */
-	public static function find_existing_image( $file_hash, $file_size, $original_filename = '' ) {
-		if ( empty( $file_hash ) || empty( $file_size ) ) {
-			return [
-				'found'         => false,
-				'attachment_id' => 0,
-				'url'           => '',
-			];
-		}
-
-		// Look for potential matches by filename and check their content.
-		if ( ! empty( $original_filename ) ) {
-			$filename_query = new \WP_Query(
-				[
-					'post_type'      => 'attachment',
-					'post_mime_type' => 'image',
-					'post_status'    => 'inherit',
-					's'              => basename( $original_filename, '.' . pathinfo( $original_filename, PATHINFO_EXTENSION ) ),
-					'fields'         => 'ids',
-					'posts_per_page' => 10, // Limit to avoid performance issues.
-					'no_found_rows'  => true,
-					'cache_results'  => true,
-				]
-			);
-
-			if ( ! empty( $filename_query->posts ) ) {
-				foreach ( $filename_query->posts as $attachment_id ) {
-					$attachment_id = is_numeric( $attachment_id ) ? intval( $attachment_id ) : 0;
-					if ( $attachment_id <= 0 ) {
-						continue;
-					}
-
-					$file_path = \get_attached_file( $attachment_id );
-					if ( ! $file_path || ! file_exists( $file_path ) ) {
-						continue;
-					}
-
-					// Check file size first (quick check).
-					$existing_size = filesize( $file_path );
-					if ( $existing_size !== $file_size ) {
-						continue;
-					}
-
-					// File sizes match, check content hash.
-					$existing_content = function_exists( '\wpcom_vip_file_get_contents' )
-						? \wpcom_vip_file_get_contents( $file_path )
-						: file_get_contents( $file_path ); // phpcs:ignore WordPressVIPMinimum.Performance.FetchingRemoteData.FileGetContentsUnknown
-
-					if ( empty( $existing_content ) ) {
-						continue;
-					}
-
-					$existing_hash = md5( $existing_content );
-					if ( $existing_hash === $file_hash ) {
-						$url = \wp_get_attachment_url( $attachment_id );
-						if ( $url ) {
-							return [
-								'found'         => true,
-								'attachment_id' => $attachment_id,
-								'url'           => $url,
-								'filename'      => basename( $file_path ),
-								'match_type'    => 'content',
-							];
-						}
-					}
-				}
-			}
-		}
-
-		// As a last resort, if we have very few images, check recent image attachments.
-		// This is only for cases where filename matching fails but we want to be thorough.
-		$recent_images_query = new \WP_Query(
-			[
-				'post_type'      => 'attachment',
-				'post_mime_type' => 'image',
-				'post_status'    => 'inherit',
-				'posts_per_page' => 20, // Only check recent images to avoid performance issues.
-				'orderby'        => 'date',
-				'order'          => 'DESC',
-				'fields'         => 'ids',
-				'no_found_rows'  => true,
-				'cache_results'  => true,
-			]
-		);
-
-		if ( ! empty( $recent_images_query->posts ) ) {
-			foreach ( $recent_images_query->posts as $attachment_id ) {
-				$attachment_id = is_numeric( $attachment_id ) ? intval( $attachment_id ) : 0;
-				if ( $attachment_id <= 0 ) {
-					continue;
-				}
-
-				$file_path = \get_attached_file( $attachment_id );
-
-				if ( ! $file_path || ! file_exists( $file_path ) ) {
-					continue;
-				}
-
-				// Quick file size check.
-				$existing_size = filesize( $file_path );
-				if ( $existing_size !== $file_size ) {
-					continue;
-				}
-
-				// File sizes match, check content hash.
-				$existing_content = function_exists( '\wpcom_vip_file_get_contents' )
-					? \wpcom_vip_file_get_contents( $file_path )
-					: file_get_contents( $file_path ); // phpcs:ignore WordPressVIPMinimum.Performance.FetchingRemoteData.FileGetContentsUnknown
-
-				if ( empty( $existing_content ) ) {
-					continue;
-				}
-
-				$existing_hash = md5( $existing_content );
-				if ( $existing_hash === $file_hash ) {
-					$url = \wp_get_attachment_url( $attachment_id );
-					if ( $url ) {
-						return [
-							'found'         => true,
-							'attachment_id' => $attachment_id,
-							'url'           => $url,
-							'filename'      => basename( $file_path ),
-							'match_type'    => 'content',
-						];
-					}
-				}
-			}
-		}
-
-		return [
-			'found'         => false,
-			'attachment_id' => 0,
-			'url'           => '',
-		];
+	public static function get_image_setting_keys() {
+		return self::IMAGE_KEYS;
 	}
 
 	/**
-	 * Save base64 image data to WordPress media library
+	 * Check if a URL is accessible and returns an image
 	 *
-	 * @param array<string, mixed> $image_data Base64 image data.
-	 * @param string               $setting_key Setting key for naming context.
-	 * @return array<string, mixed> Result with new URL or error.
+	 * @param string $url URL to check.
+	 * @return bool True if URL is accessible and returns valid image content.
 	 */
-	public static function save_base64_image( $image_data, $setting_key = '' ) {
-		// Handle both new format (data/mime) and export format (base64/mime_type).
-		$base64_string = '';
-		$mime_type     = '';
-		$filename      = 'surerank-image';
-
-		if ( is_array( $image_data ) ) {
-			// Check for export format first (base64/mime_type).
-			if ( isset( $image_data['base64'] ) && isset( $image_data['mime_type'] ) ) {
-				$base64_string = $image_data['base64'];
-				$mime_type     = $image_data['mime_type'];
-				$filename      = $image_data['filename'] ?? $filename;
-			} elseif ( isset( $image_data['data'] ) && isset( $image_data['mime'] ) ) {
-				// Check for new format (data/mime).
-				$base64_string = $image_data['data'];
-				$mime_type     = $image_data['mime'];
-				$filename      = $image_data['filename'] ?? $filename;
-			}
+	public static function is_url_accessible( $url ) {
+		if ( empty( $url ) || ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+			return false;
 		}
 
-		if ( empty( $base64_string ) || empty( $mime_type ) ) {
-			return self::error_response(
-				__( 'Invalid base64 image data format.', 'surerank' )
-			);
-		}
-
-		// Check if WordPress media functions are available.
-		if ( ! function_exists( '\wp_upload_dir' ) || ! function_exists( '\wp_insert_attachment' ) ) {
-			return self::error_response(
-				__( 'WordPress media functions are not available.', 'surerank' )
-			);
-		}
-
-		// Get upload directory info.
-		$upload_dir = \wp_upload_dir();
-		if ( ! empty( $upload_dir['error'] ) ) {
-			return self::error_response(
-				/* translators: %s: Upload directory error message */
-				sprintf( __( 'Upload directory error: %s', 'surerank' ), $upload_dir['error'] )
-			);
-		}
-
-		// Get file extension from mime type using WordPress function if available.
-		$extension = 'jpg'; // fallback.
-		if ( function_exists( '\wp_get_default_extension_for_mime_type' ) ) {
-			$wp_extension = \wp_get_default_extension_for_mime_type( $mime_type );
-			if ( $wp_extension ) {
-				$extension = $wp_extension;
-			}
-		} else {
-			// Fallback mapping.
-			$mime_to_ext = [
-				'image/jpeg'    => 'jpg',
-				'image/jpg'     => 'jpg',
-				'image/png'     => 'png',
-				'image/gif'     => 'gif',
-				'image/webp'    => 'webp',
-				'image/svg+xml' => 'svg',
-			];
-			$extension   = $mime_to_ext[ $mime_type ] ?? 'jpg';
-		}
-
-		// Clean and decode base64 data.
-		$base64_data = str_replace( ' ', '+', $base64_string );
-
-		// Decode in chunks for large images (prevents memory issues).
-		$decoded     = '';
-		$chunk_size  = 256;
-		$data_length = strlen( $base64_data );
-		$max_i       = ceil( $data_length / $chunk_size );
-		for ( $i = 0; $i < $max_i; $i++ ) {
-			$decoded .= base64_decode( substr( $base64_data, $i * $chunk_size, $chunk_size ) );
-		}
-
-		if ( empty( $decoded ) ) {
-			return self::error_response(
-				__( 'Failed to decode base64 image data.', 'surerank' )
-			);
-		}
-
-		// Check if image already exists before proceeding.
-		$file_hash         = md5( $decoded );
-		$file_size         = strlen( $decoded );
-		$original_filename = ! empty( $image_data['filename'] ) ? $image_data['filename'] : 'surerank-image.' . $extension;
-
-		$existing_image = self::find_existing_image( $file_hash, $file_size, $original_filename );
-		if ( $existing_image['found'] ) {
-			return self::success_response(
-				[
-					'url'           => $existing_image['url'],
-					'attachment_id' => $existing_image['attachment_id'],
-					'filename'      => $existing_image['filename'],
-					'source'        => 'existing_file',
-					'reused'        => true,
-					'match_type'    => $existing_image['match_type'],
-				],
-				__( 'Using existing image from media library.', 'surerank' )
-			);
-		}
-
-		// Use the exact original filename.
-		$original_filename = ! empty( $image_data['filename'] ) ? $image_data['filename'] : 'surerank-image.' . $extension;
-
-		// Use the original filename exactly as provided.
-		$filename = $original_filename;
-
-		// Only ensure the extension is correct if it's missing or wrong.
-		$file_extension = pathinfo( $filename, PATHINFO_EXTENSION );
-		if ( empty( $file_extension ) || $file_extension !== $extension ) {
-			$filename_without_ext = pathinfo( $filename, PATHINFO_FILENAME );
-			$filename             = $filename_without_ext . '.' . $extension;
-		}
-
-		// Ensure unique filename using WordPress function if available.
-		if ( function_exists( '\wp_unique_filename' ) ) {
-			$filename = \wp_unique_filename( $upload_dir['path'], $filename );
-		} else {
-			// Simple unique filename fallback.
-			$counter       = 1;
-			$original_name = pathinfo( $filename, PATHINFO_FILENAME );
-			$ext           = pathinfo( $filename, PATHINFO_EXTENSION );
-			while ( file_exists( $upload_dir['path'] . '/' . $filename ) ) {
-				$filename = $original_name . '-' . $counter . '.' . $ext;
-				$counter++;
-			}
-		}
-
-		// Use the filename directly.
-		$hashed_filename = $filename;
-
-		// Full file path.
-		$upload_path = str_replace( '/', DIRECTORY_SEPARATOR, $upload_dir['path'] ) . DIRECTORY_SEPARATOR;
-		$file_path   = $upload_path . $hashed_filename;
-
-		// Save the image file to WordPress uploads directory (VIP-compatible).
-		$saved = file_put_contents( $file_path, $decoded ); // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_file_put_contents
-		if ( false === $saved ) {
-			return self::error_response(
-				__( 'Failed to save image from base64 data.', 'surerank' )
-			);
-		}
-
-		// Create attachment array with proper GUID (following WordPress best practices).
-		$attachment = [
-			'post_mime_type' => $mime_type,
-			'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $hashed_filename ) ),
-			'post_content'   => '',
-			'post_status'    => 'inherit',
-			'guid'           => $upload_dir['url'] . '/' . basename( $hashed_filename ),
-		];
-
-		/**
-		 * Create WordPress attachment for base64 image.
-		 *
-		 * @var int|\WP_Error $attachment_id Attachment ID or error object.
-		 */
-		$attachment_id = \wp_insert_attachment( $attachment, $upload_dir['path'] . '/' . $hashed_filename );
-		if ( \is_wp_error( $attachment_id ) || 0 === $attachment_id ) {
-			// Clean up the file if attachment creation failed (VIP-compatible - file is in uploads directory).
-			if ( file_exists( $file_path ) ) {
-				unlink( $file_path ); // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
-			}
-			$error_message = \is_wp_error( $attachment_id ) ? $attachment_id->get_error_message() : __( 'Failed to create attachment.', 'surerank' );
-			return self::error_response(
-				/* translators: %s: Error message from attachment creation */
-				sprintf( __( 'Failed to create attachment: %s', 'surerank' ), $error_message )
-			);
-		}
-
-		// Include WordPress image processing functions if not already loaded.
-		if ( ! function_exists( '\wp_generate_attachment_metadata' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/image.php';
-		}
-
-		// Generate attachment metadata (required for WordPress to recognize the image properly).
-		self::generate_attachment_metadata( $attachment_id, $upload_dir['path'] . '/' . $hashed_filename );
-
-		// Get the new URL.
-		$new_url = '';
-		if ( function_exists( '\wp_get_attachment_url' ) ) {
-			$new_url = \wp_get_attachment_url( $attachment_id );
-		} else {
-			// Fallback URL construction.
-			$new_url = $upload_dir['url'] . '/' . $hashed_filename;
-		}
-
-		if ( empty( $new_url ) ) {
-			return self::error_response(
-				__( 'Failed to get attachment URL.', 'surerank' )
-			);
-		}
-
-		return self::success_response(
+		// Use WordPress HTTP API with minimal timeout for quick check.
+		$response = wp_safe_remote_head(
+			$url,
 			[
-				'url'           => $new_url,
-				'attachment_id' => $attachment_id,
-				'filename'      => $hashed_filename,
-				'source'        => 'base64_new_file',
-				'reused'        => false,
-			],
-			__( 'Image saved from base64 data successfully.', 'surerank' )
+				'timeout'    => 3, // Quick timeout for accessibility check.
+				'user-agent' => 'SureRank WordPress Plugin',
+			]
 		);
+
+		if ( is_wp_error( $response ) ) {
+			return false;
+		}
+
+		$response_code = wp_remote_retrieve_response_code( $response );
+		if ( $response_code !== 200 ) {
+			return false;
+		}
+
+		// Check if the response indicates it's an image.
+		$content_type = wp_remote_retrieve_header( $response, 'content-type' );
+		if ( ! empty( $content_type ) ) {
+			// Handle case where content-type could be an array.
+			$content_type_string = is_array( $content_type ) ? $content_type[0] : $content_type;
+			if ( strpos( $content_type_string, 'image/' ) === 0 ) {
+				return true;
+			}
+		}
+
+		// If no content-type header or not an image type, return false.
+		return false;
 	}
+
 }

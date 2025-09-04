@@ -47,6 +47,7 @@ class Elementor {
 	 */
 	public function register_script() {
 		wp_register_script( 'surerank-elementor', SURERANK_URL . 'build/elementor/index.js', [ 'jquery', 'wp-data' ], SURERANK_VERSION, false );
+		wp_enqueue_style( 'surerank-elementor-tooltip', SURERANK_URL . 'build/elementor/style.css', [], SURERANK_VERSION );
 		wp_enqueue_script( 'surerank-elementor' );
 	}
 }

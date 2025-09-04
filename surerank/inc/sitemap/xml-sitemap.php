@@ -137,6 +137,9 @@ class Xml_Sitemap extends Sitemap {
 
 		$page      = absint( get_query_var( 'surerank_sitemap_page' ) ) ? absint( get_query_var( 'surerank_sitemap_page' ) ) : 1;
 		$threshold = apply_filters( 'surerank_sitemap_threshold', 200 );
+
+		do_action( 'surerank_sitemap_before_generation', $type, $page, $threshold );
+
 		// Dynamically handle CPTs.
 		if ( post_type_exists( $type ) ) {
 			$this->generate_main_sitemap( $type, $page, $threshold );
@@ -144,6 +147,8 @@ class Xml_Sitemap extends Sitemap {
 		}
 
 		$this->generate_sitemap( $type, $page, $threshold );
+
+		do_action( 'surerank_sitemap_after_generation', $type, $page, $threshold );
 	}
 
 	/**
@@ -231,6 +236,7 @@ class Xml_Sitemap extends Sitemap {
 			$sitemap = $this->get_sitemap_from_cache( $type, $page, $prefix_param );
 			$this->generate_main_sitemap_xml( $sitemap );
 		}
+
 
 		// Handle CPTs dynamically.
 		if ( post_type_exists( $type ) ) {
@@ -443,6 +449,7 @@ class Xml_Sitemap extends Sitemap {
 		$entries = [];
 		$updated = $last_modified ? esc_html( (string) $last_modified ) : current_time( 'c' );
 
+		// Default handling for standard sitemaps.
 		if ( $total >= $threshold ) {
 			$total_sitemaps = ceil( $total / $threshold );
 			for ( $i = 1; $i <= $total_sitemaps; $i++ ) {
@@ -458,7 +465,7 @@ class Xml_Sitemap extends Sitemap {
 			];
 		}
 
-		return $entries;
+		return apply_filters( 'surerank_build_sitemap_entries', $entries, $type, $total, $threshold, $updated );
 	}
 
 	/**

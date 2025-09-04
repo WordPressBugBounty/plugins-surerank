@@ -141,9 +141,6 @@ class Sync_Posts extends Sitemap {
 			}
 
 			$permalink = get_permalink( $post->ID );
-			if ( $permalink === home_url( '/' ) || $permalink === home_url() ) {
-				continue;
-			}
 
 			$post_data = [
 				'id'          => $post->ID,
@@ -171,6 +168,8 @@ class Sync_Posts extends Sitemap {
 					);
 				}
 			}
+
+			$post_data = apply_filters( 'surerank_sitemap_sync_posts_post_data', $post_data, $post );
 
 			$json_data[] = $post_data;
 		}

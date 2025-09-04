@@ -164,6 +164,15 @@ const SiteSelectorInputs = () => {
 		}
 	};
 
+	const setInitialFocus = ( node ) => {
+		if ( ! node ) {
+			return;
+		}
+		setTimeout( () => {
+			node.focus();
+		}, 100 );
+	};
+
 	return (
 		<>
 			<Container direction="column" gap="xs" className="p-5 pt-2 pb-3">
@@ -180,6 +189,7 @@ const SiteSelectorInputs = () => {
 						render={ ( selectedValue ) =>
 							selectedValue || __( 'Select a site', 'surerank' )
 						}
+						ref={ setInitialFocus }
 					/>
 					<Select.Options>
 						{ searchConsole?.sites?.map( ( option ) => (

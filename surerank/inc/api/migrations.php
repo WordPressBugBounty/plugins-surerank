@@ -15,8 +15,9 @@ use SureRank\Inc\Functions\Send_Json;
 use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Importers\Importer;
 use SureRank\Inc\Importers\ImporterUtils;
-use SureRank\Inc\Importers\RankMath;
-use SureRank\Inc\Importers\Yoast;
+use SureRank\Inc\Importers\Rankmath\RankMath;
+use SureRank\Inc\Importers\Seopress\Seopress;
+use SureRank\Inc\Importers\Yoast\Yoast;
 use SureRank\Inc\Traits\Get_Instance;
 use WP_REST_Request;
 use WP_REST_Server;
@@ -74,6 +75,7 @@ class Migrations extends Api_Base {
 	 */
 	private array $importers = [
 		'rankmath' => RankMath::class,
+		'seopress' => Seopress::class,
 		'yoast'    => Yoast::class,
 	];
 
@@ -101,7 +103,8 @@ class Migrations extends Api_Base {
 						'plugin_slug' => [
 							'type'        => 'string',
 							'required'    => true,
-							'description' => __( 'Plugin slug to migrate from (e.g. rankmath).', 'surerank' ),
+							/* translators: %s: list of plugin slugs */
+							'description' => sprintf( __( 'Plugin slug to migrate from (e.g. %s).', 'surerank' ), implode( ', ', array_keys( $this->importers ) ) ),
 							'enum'        => array_keys( $this->importers ),
 						],
 						'post_ids'    => [
@@ -132,7 +135,8 @@ class Migrations extends Api_Base {
 						'plugin_slug' => [
 							'type'        => 'string',
 							'required'    => true,
-							'description' => __( 'Plugin slug to filter posts by (e.g. rankmath).', 'surerank' ),
+							/* translators: %s: list of plugin slugs */
+							'description' => sprintf( __( 'Plugin slug to filter posts by (e.g. %s).', 'surerank' ), implode( ', ', array_keys( $this->importers ) ) ),
 							'enum'        => array_keys( $this->importers ),
 							'default'     => 'rankmath',
 						],
@@ -154,7 +158,8 @@ class Migrations extends Api_Base {
 						'plugin_slug' => [
 							'type'        => 'string',
 							'required'    => true,
-							'description' => __( 'Plugin slug to migrate from (e.g. rankmath).', 'surerank' ),
+							/* translators: %s: list of plugin slugs */
+							'description' => sprintf( __( 'Plugin slug to migrate from (e.g. %s).', 'surerank' ), implode( ', ', array_keys( $this->importers ) ) ),
 							'enum'        => array_keys( $this->importers ),
 						],
 						'term_ids'    => [
@@ -186,7 +191,8 @@ class Migrations extends Api_Base {
 							'type'        => 'string',
 							'required'    => true,
 							'default'     => 'rankmath',
-							'description' => __( 'Plugin slug to filter terms by (e.g. rankmath).', 'surerank' ),
+							/* translators: %s: list of plugin slugs */
+							'description' => sprintf( __( 'Plugin slug to filter terms by (e.g. %s).', 'surerank' ), implode( ', ', array_keys( $this->importers ) ) ),
 							'enum'        => array_keys( $this->importers ),
 						],
 					],
@@ -206,7 +212,8 @@ class Migrations extends Api_Base {
 					'plugin_slug' => [
 						'type'        => 'string',
 						'required'    => true,
-						'description' => __( 'Plugin slug to migrate global settings from (e.g. rankmath, yoast).', 'surerank' ),
+						/* translators: %s: list of plugin slugs */
+						'description' => sprintf( __( 'Plugin slug to migrate global settings from (e.g. %s).', 'surerank' ), implode( ', ', array_keys( $this->importers ) ) ),
 						'enum'        => array_keys( $this->importers ),
 					],
 					'cleanup'     => [
@@ -369,6 +376,9 @@ class Migrations extends Api_Base {
 		}
 
 		$results = $importer->import_global_settings();
+
+		// Trigger action after all free migration is done.
+		do_action( 'surerank_migration_after', $plugin_slug );
 
 		// Ensure results is an array.
 		if ( ! is_array( $results ) ) {
@@ -567,18 +577,23 @@ class Migrations extends Api_Base {
 	 * @return bool True if the plugin is active, false otherwise.
 	 */
 	public function is_plugin_active( $plugin ) {
-		switch ( $plugin ) {
-			case 'seo-by-rank-math/rank-math.php':
-				return defined( 'RANK_MATH_VERSION' );
-			case 'wordpress-seo/wp-seo.php':
-				return defined( 'WPSEO_VERSION' );
-			case 'all-in-one-seo-pack/all_in_one_seo_pack.php':
-				return defined( 'AIOSEOP_VERSION' );
-			case 'wp-seopress/seopress.php':
-				return defined( 'SEOPRESS_VERSION' );
-			default:
-				return false;
+		foreach ( $this->importers as $slug => $importer_class ) {
+			if ( ! class_exists( $importer_class ) ) {
+				continue;
+			}
+
+			$importer = new $importer_class();
+
+			if ( ! method_exists( $importer, 'get_plugin_file' ) || ! method_exists( $importer, 'is_plugin_active' ) ) {
+				continue;
+			}
+
+			if ( $importer->get_plugin_file() === $plugin ) {
+				return (bool) $importer->is_plugin_active();
+			}
 		}
+
+		return false;
 	}
 
 	/**
@@ -994,6 +1009,9 @@ class Migrations extends Api_Base {
 			case 'wordpress-seo/wp-seo.php':
 				$associated_plugins = [ 'wordpress-seo/wp-seo.php', 'wordpress-seo-premium/wp-seo-premium.php' ];
 				break;
+			case 'wp-seopress/seopress.php':
+				$associated_plugins = [ 'wp-seopress/seopress.php', 'wp-seopress-pro/seopress-pro.php' ];
+				break;
 		}
 
 		return $associated_plugins;
@@ -1043,24 +1061,26 @@ class Migrations extends Api_Base {
 	 * @return array<string, array<string, string>>
 	 */
 	private function get_supported_plugins(): array {
-		return [
-			'rankmath' => [
-				'name' => 'Rank Math SEO',
-				'slug' => 'seo-by-rank-math/rank-math.php',
-			],
-			'yoast'    => [
-				'name' => 'Yoast SEO',
-				'slug' => 'wordpress-seo/wp-seo.php',
-			],
-			'aioseo'   => [
-				'name' => 'All in One SEO',
-				'slug' => 'all-in-one-seo-pack/all_in_one_seo_pack.php',
-			],
-			'seopress' => [
-				'name' => 'SEO Press',
-				'slug' => 'wp-seopress/seopress.php',
-			],
-		];
+		$supported_plugins = [];
+
+		foreach ( $this->importers as $slug => $importer_class ) {
+			if ( ! class_exists( $importer_class ) ) {
+				continue;
+			}
+
+			$importer = new $importer_class();
+
+			if ( ! method_exists( $importer, 'get_plugin_name' ) || ! method_exists( $importer, 'get_plugin_file' ) ) {
+				continue;
+			}
+
+			$supported_plugins[ $slug ] = [
+				'name' => $importer->get_plugin_name(),
+				'slug' => $importer->get_plugin_file(),
+			];
+		}
+
+		return $supported_plugins;
 	}
 
 	/**

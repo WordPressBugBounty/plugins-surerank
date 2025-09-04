@@ -3,65 +3,211 @@
  */
 import { __ } from '@wordpress/i18n';
 import { useDispatch, useSelect } from '@wordpress/data';
+import { PluginMoreMenuItem } from '@wordpress/editor';
+import {
+	useEffect,
+	useState,
+	useCallback,
+	createPortal,
+} from '@wordpress/element';
+import { Button as WPButton } from '@wordpress/components';
 import { STORE_NAME as storeName } from '@Store/constants';
-import { useEffect } from '@wordpress/element';
 import { SureRankMonoSmallLogo } from '@GlobalComponents/icons';
 
-const SEOSideBar = () => {
-	const modalState = useSelect( ( select ) =>
-		select( storeName ).getModalState()
+// Inject a toolbar button directly into the Gutenberg header via a React portal.
+const SureRankToolbarButtonPortal = () => {
+	const { updateModalState } = useDispatch( storeName );
+	const [ hostEl, setHostEl ] = useState( null );
+	const isModalOpen = useSelect( ( select ) => {
+		try {
+			return !! select( storeName ).getModalState();
+		} catch ( error ) {
+			return false;
+		}
+	}, [] );
+
+	// Stable handler to open the modal; helps avoid unnecessary re-renders.
+	const handleOpenModal = useCallback(
+		() => updateModalState( true ),
+		[ updateModalState ]
 	);
 
-	const { updateModalState } = useDispatch( storeName );
-
 	useEffect( () => {
-		if ( modalState ) {
-			return;
+		const findOrCreateHost = () => {
+			// 1) Preferred: insert as FIRST item inside the pinned items container.
+			const pinned = document.querySelector( '.interface-pinned-items' );
+			if ( pinned ) {
+				let host = pinned.querySelector( '#surerank-toolbar-portal' );
+				if ( ! host ) {
+					host = document.createElement( 'div' );
+					host.id = 'surerank-toolbar-portal';
+					if ( pinned.firstChild ) {
+						pinned.insertBefore( host, pinned.firstChild );
+					} else {
+						pinned.appendChild( host );
+					}
+				} else if ( host.parentElement !== pinned ) {
+					// Reparent if necessary to ensure first position in pinned area.
+					if ( pinned.firstChild && pinned.firstChild !== host ) {
+						pinned.insertBefore( host, pinned.firstChild );
+					} else {
+						pinned.appendChild( host );
+					}
+				}
+				return host;
+			}
+
+			// 2) Fallback: right-side actions/settings area of the header (post and site editor variants).
+			const rightArea = document.querySelector(
+				[
+					'.edit-post-header__settings',
+					'.editor-header__actions',
+					'.edit-site-header__actions',
+				].join( ', ' )
+			);
+			if ( ! rightArea ) {
+				return null;
+			}
+
+			let host = rightArea.querySelector( '#surerank-toolbar-portal' );
+			if ( ! host ) {
+				host = document.createElement( 'div' );
+				host.id = 'surerank-toolbar-portal';
+
+				// Try to place AFTER the View (responsive) button/dropdown when available.
+				const viewCandidates = rightArea.querySelector(
+					[
+						'.edit-post-post-preview__button',
+						'.editor-preview-dropdown',
+					].join( ', ' )
+				);
+
+				const insertAfter = ( referenceNode, newNode ) => {
+					if ( ! referenceNode || ! referenceNode.parentNode ) {
+						rightArea.appendChild( newNode );
+						return;
+					}
+					if ( referenceNode.nextSibling ) {
+						referenceNode.parentNode.insertBefore(
+							newNode,
+							referenceNode.nextSibling
+						);
+					} else {
+						referenceNode.parentNode.appendChild( newNode );
+					}
+				};
+
+				if ( viewCandidates ) {
+					const refNode =
+						viewCandidates.closest( 'button, div, span' ) ||
+						viewCandidates;
+					insertAfter( refNode, host );
+				} else {
+					rightArea.appendChild( host );
+				}
+			}
+			return host;
+		};
+
+		let host = findOrCreateHost();
+		if ( host ) {
+			setHostEl( host );
 		}
 
-		// Open seo popup.
-		updateModalState( true );
+		// Recreate if the header re-renders.
+		const Observer =
+			window.MutationObserver ||
+			window.WebKitMutationObserver ||
+			window.MozMutationObserver;
+		if ( Observer ) {
+			const observer = new Observer( () => {
+				const current = document.getElementById(
+					'surerank-toolbar-portal'
+				);
+				const pinned = document.querySelector(
+					'.interface-pinned-items'
+				);
+				// If missing, recreate. If present but not inside pinned when pinned exists, move it.
+				if ( ! current ) {
+					host = findOrCreateHost();
+					if ( host ) {
+						setHostEl( host );
+					}
+				} else if ( pinned && current.parentElement !== pinned ) {
+					if ( pinned.firstChild && pinned.firstChild !== current ) {
+						pinned.insertBefore( current, pinned.firstChild );
+					} else {
+						pinned.appendChild( current );
+					}
+				}
+			} );
+			// Observe the header only.
+			const editorHeader = document.querySelector(
+				'.editor-header, .edit-post-header'
+			);
+			observer.observe( editorHeader, {
+				childList: true,
+				subtree: true,
+			} );
+			return () => observer.disconnect();
+		}
+
+		// Fallback: periodic check.
+		const interval = window.setInterval( () => {
+			const current = document.getElementById(
+				'surerank-toolbar-portal'
+			);
+			if ( ! current ) {
+				host = findOrCreateHost();
+				if ( host ) {
+					setHostEl( host );
+				}
+			}
+		}, 1500 );
+		return () => window.clearInterval( interval );
 	}, [] );
-	return null;
+
+	if ( ! hostEl ) {
+		return null;
+	}
+
+	return createPortal(
+		<WPButton
+			icon={ <SureRankMonoSmallLogo /> }
+			label={ __( 'SureRank Meta Box', 'surerank' ) }
+			aria-label={ __( 'Open SureRank Meta Box', 'surerank' ) }
+			aria-haspopup="dialog"
+			showTooltip
+			isPressed={ isModalOpen }
+			aria-pressed={ isModalOpen }
+			type="button"
+			size="compact"
+			onClick={ handleOpenModal }
+		/>,
+		hostEl
+	);
 };
 
 const SpectraPageSettingsPopup = () => {
-	const getSidebarStore = window?.wp?.editor;
-	if (
-		! getSidebarStore ||
-		! getSidebarStore?.PluginSidebar ||
-		! getSidebarStore?.PluginSidebarMoreMenuItem
-	) {
-		return null;
-	}
+	const { updateModalState } = useDispatch( storeName );
 
-	const PluginSidebar = getSidebarStore.PluginSidebar;
-	const PluginSidebarMoreMenuItem = getSidebarStore.PluginSidebarMoreMenuItem;
-	// If the PluginSidebar or PluginSidebarMoreMenuItem is still not available, then return null for WP lower version.
-	if (
-		'function' !== typeof PluginSidebarMoreMenuItem ||
-		'function' !== typeof PluginSidebar
-	) {
-		return null;
-	}
+	const handleMenuClick = useCallback( () => {
+		// Open the Drawer instead of sidebar
+		updateModalState( true );
+	}, [ updateModalState ] );
 
 	return (
 		<>
-			<PluginSidebarMoreMenuItem
-				target="surerank-menu-icon"
+			<PluginMoreMenuItem
+				onClick={ handleMenuClick }
 				icon={ <SureRankMonoSmallLogo /> }
+				aria-label={ __( 'Open SureRank Meta Box', 'surerank' ) }
+				aria-haspopup="dialog"
 			>
 				{ __( 'SureRank Meta Box', 'surerank' ) }
-			</PluginSidebarMoreMenuItem>
-			<PluginSidebar
-				isPinnable={ true }
-				icon={ <SureRankMonoSmallLogo /> }
-				name="surerank-menu-icon"
-				title={ __( 'SureRank Meta Box', 'surerank' ) }
-				className={ 'surerank-sidebar' }
-			>
-				<SEOSideBar />
-			</PluginSidebar>
+			</PluginMoreMenuItem>
+			{ /* Portal-injected toolbar button */ }
+			<SureRankToolbarButtonPortal />
 		</>
 	);
 };

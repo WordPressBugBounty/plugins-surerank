@@ -39,21 +39,19 @@ class Utils {
 	 * @since 1.0.0
 	 */
 	public static function get_default_schemas() {
-		$schemas = [];
-		foreach ( self::get_schema_types() as $key => $class ) {
-			$instance  = $class::get_instance();
-			$schemas[] = $instance->schema_data();
-		}
+		return self::build_schema_data_array( self::get_default_schema_types() );
+	}
 
-		$schemas = apply_filters( 'surerank_default_schemas', $schemas );
-
-		$result = [];
-		foreach ( $schemas as $key => $schema ) {
-			$unique_id            = self::generate_unique_id( $key );
-			$result[ $unique_id ] = $schema;
-		}
-
-		return $result;
+	/**
+	 * Get Default Schema Options
+	 *
+	 * Retrieves all schema data (including Pro schemas) with unique IDs as keys.
+	 *
+	 * @return array<string, mixed> Schema data with unique IDs as keys.
+	 * @since 1.0.0
+	 */
+	public static function get_default_schema_options() {
+		return self::build_schema_data_array( self::get_schema_types() );
 	}
 
 	/**
@@ -65,7 +63,7 @@ class Utils {
 	 */
 	public static function get_schema_type_data() {
 		$schema_data = [];
-		foreach ( self::get_schema_types() as $key => $class ) {
+		foreach ( self::get_default_schema_types() as $key => $class ) {
 			$instance            = $class::get_instance();
 			$schema_data[ $key ] = $instance->get();
 		}
@@ -146,16 +144,52 @@ class Utils {
 	public static function get_schema_types() {
 		return apply_filters(
 			'surerank_schema_types',
-			[
-				'WebSite'        => WebSite::class,
-				'WebPage'        => WebPage::class,
-				'Organization'   => Organization::class,
-				'BreadcrumbList' => BreadcrumbList::class,
-				'Article'        => Article::class,
-				'SearchAction'   => Search_Action::class,
-				'Person'         => Person::class,
-			]
+			self::get_default_schema_types()
 		);
+	}
+
+	/**
+	 * Get Default Schema Types
+	 *
+	 * @return array<string, mixed> Default schema type class mappings.
+	 */
+	public static function get_default_schema_types() {
+		return [
+			'WebSite'        => WebSite::class,
+			'WebPage'        => WebPage::class,
+			'Organization'   => Organization::class,
+			'BreadcrumbList' => BreadcrumbList::class,
+			'Article'        => Article::class,
+			'SearchAction'   => Search_Action::class,
+			'Person'         => Person::class,
+		];
+	}
+
+	/**
+	 * Build Schema Data Array
+	 *
+	 * Builds schema data array with unique IDs from given schema types.
+	 *
+	 * @param array<string, mixed> $schema_types Schema type class mappings.
+	 * @return array<string, mixed> Schema data with unique IDs as keys.
+	 * @since 1.0.0
+	 */
+	private static function build_schema_data_array( array $schema_types ) {
+		$schemas = [];
+		foreach ( $schema_types as $key => $class ) {
+			$instance  = $class::get_instance();
+			$schemas[] = $instance->schema_data();
+		}
+
+		$schemas = apply_filters( 'surerank_default_schemas', $schemas );
+
+		$result = [];
+		foreach ( $schemas as $key => $schema ) {
+			$unique_id            = self::generate_unique_id( $key );
+			$result[ $unique_id ] = $schema;
+		}
+
+		return $result;
 	}
 
 	/**

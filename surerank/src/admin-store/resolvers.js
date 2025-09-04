@@ -5,6 +5,7 @@ import * as actions from './actions';
 import { ADMIN_SETTINGS_URL, SITE_SETTINGS_URL } from '@Global/constants/api';
 import { addQueryArgs } from '@wordpress/url';
 import { __ } from '@wordpress/i18n';
+import { DEFAULT_PAGE_DESCRIPTION } from '@/global/constants';
 
 const resolvers = {
 	*getMetaSettings() {
@@ -23,7 +24,13 @@ const resolvers = {
 	*getSiteSettings() {
 		const response = yield actions.fetchFromAPI( SITE_SETTINGS_URL );
 		if ( response.success ) {
-			yield actions.setSiteSettings( response.data );
+			yield actions.setSiteSettings( {
+				...( response?.data ?? {} ),
+				site: {
+					...( response?.data?.site ?? {} ),
+					content: DEFAULT_PAGE_DESCRIPTION,
+				},
+			} );
 		}
 	},
 

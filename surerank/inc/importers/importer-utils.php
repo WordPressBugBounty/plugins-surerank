@@ -169,6 +169,23 @@ final class ImporterUtils {
 	}
 
 	/**
+	 * Check if a profile URL matches a specific social platform.
+	 *
+	 * @param string $profile The profile URL to check.
+	 * @param string $key The social platform key.
+	 * @return bool True if the profile matches the platform.
+	 */
+	private static function is_special_social_platform( string $profile, string $key ): bool {
+		$platform_patterns = [
+			'whatsapp' => 'https://wa.me/',
+			'telegram' => 'https://t.me/',
+			'bluesky'  => 'https://bsky.app/',
+		];
+
+		return isset( $platform_patterns[ $key ] ) && stripos( $profile, $platform_patterns[ $key ] ) !== false;
+	}
+
+	/**
 	 * Map social profiles from Rank Math to SureRank format.
 	 *
 	 * @param string|array<string> $social_profiles Social profiles from Rank Math.
@@ -197,11 +214,8 @@ final class ImporterUtils {
 					$surerank_social_profiles[ $key ] = $profile;
 					break; // Found the first matching profile, no need to continue.
 				}
-				// Special handling for WhatsApp and Telegram.
-				if (
-					( stripos( $profile, 'https://wa.me/' ) !== false && $key === 'whatsapp' ) ||
-					( stripos( $profile, 'https://t.me/' ) !== false && $key === 'telegram' )
-				) {
+				// Special handling for WhatsApp, Telegram, and Bluesky.
+				if ( self::is_special_social_platform( $profile, $key ) ) {
 					$surerank_social_profiles[ $key ] = $profile;
 					break;
 				}

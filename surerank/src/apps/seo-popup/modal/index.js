@@ -26,11 +26,16 @@ import {
 	MetaSettings,
 } from '@SeoPopup/components';
 import { __ } from '@wordpress/i18n';
-import { ArrowLeftIcon } from 'lucide-react';
+import { ArrowLeftIcon, BarChart2, TrendingUp } from 'lucide-react';
 import { fetchMetaSettings } from '@/functions/api';
-import PageBuilderPageSeoChecksHoc from '../components/page-seo-checks/page-builder-page-checks-hoc';
-import { isPageBuilderActive } from '../components/page-seo-checks/analyzer/utils/page-builder';
 import { applyFilters } from '@wordpress/hooks';
+import PageBuilderPageSeoChecksHoc from '../components/page-seo-checks/page-builder-page-checks-hoc';
+import {
+	isPageBuilderActive,
+	isBricksBuilder,
+} from '../components/page-seo-checks/analyzer/utils/page-builder';
+import Analyze from '../components/analyze';
+import { ENABLE_PAGE_LEVEL_SEO } from '@Global/constants';
 
 // Define toast globally for PRO plugin.
 if ( window && ! window?.toast ) {
@@ -46,16 +51,27 @@ const animateVariants = {
 	},
 };
 
-const TABS = applyFilters( 'surerank-pro.seo-popup-tabs', {
+export const TABS = applyFilters( 'surerank-pro.seo-popup-tabs', {
 	optimize: {
 		title: __( 'Optimize', 'surerank' ),
 		component: MetaSettings,
+		label: __( 'Optimize', 'surerank' ),
+		icon: <TrendingUp />,
+		slug: 'optimize',
 	},
-	checks: {
-		title: __( 'Page SEO Checks', 'surerank' ),
-		component: PageChecksHoc,
-		pageBuilderComponent: PageBuilderPageSeoChecksHoc,
-	},
+	// Conditionally add the Analyze tab
+	...( ! ENABLE_PAGE_LEVEL_SEO || isBricksBuilder()
+		? {}
+		: {
+				analyze: {
+					title: __( 'Analyze', 'surerank' ),
+					component: Analyze,
+					label: __( 'Analyze', 'surerank' ),
+					slug: 'analyze',
+					icon: <BarChart2 />,
+					className: 'relative surerank-page-checks-indicator',
+				},
+		  } ),
 } );
 
 const SCREENS = {
@@ -158,12 +174,7 @@ const SeoModal = ( props ) => {
 	}, [ getSEOData ] );
 
 	const closeModal = useCallback( () => {
-		setTimeout( () => {
-			updateModalState( false );
-			staticDispatch( 'core/edit-post' )?.closeGeneralSidebar(
-				'surerank-menu-icon'
-			);
-		}, 100 );
+		updateModalState( false );
 	}, [ updateModalState ] );
 
 	const isPageBuilder = isPageBuilderActive();
@@ -224,10 +235,6 @@ const SeoModal = ( props ) => {
 											</Button>
 										) }
 									</div>
-									{ appSettings.currentScreen === 'checks' &&
-										isPageBuilder && (
-											<div className="refresh-button-container" />
-										) }
 								</div>
 							</div>
 						) }

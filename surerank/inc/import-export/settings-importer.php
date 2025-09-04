@@ -11,6 +11,7 @@
 namespace SureRank\Inc\Import_Export;
 
 use SureRank\Inc\Functions\Get;
+use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Functions\Update;
 use SureRank\Inc\Traits\Get_Instance;
 
@@ -57,6 +58,14 @@ class Settings_Importer {
 	public function import( $settings_data, $options = [] ) {
 		$this->reset_import_results();
 
+		$options = wp_parse_args(
+			$options,
+			[
+				'overwrite'     => true,
+				'create_backup' => true,
+			]
+		);
+
 		// Validate the import data.
 		$validation_result = Utils::validate_import_data( $settings_data );
 		if ( ! $validation_result['valid'] ) {
@@ -66,9 +75,8 @@ class Settings_Importer {
 			);
 		}
 
-		$enable_backup = apply_filters( 'surerank_create_settings_backup', true );
 		// Create backup if requested.
-		if ( ! empty( $options['create_backup'] ) && $enable_backup ) {
+		if ( ! empty( $options['create_backup'] ) ) {
 			$this->create_backup();
 		}
 
@@ -132,133 +140,61 @@ class Settings_Importer {
 	 * @return void
 	 */
 	private function process_import( $settings_data, $options = [] ) {
-		$overwrite      = ! empty( $options['overwrite'] );
-		$process_images = ! isset( $options['process_images'] ) || ! empty( $options['process_images'] );
-		$settings       = $settings_data['settings'];
-		$images_data    = $settings_data['images'] ?? [];
+		$overwrite   = $options['overwrite'] ?? true;
+		$settings    = $settings_data['settings'] ?? [];
+		$images_data = $settings_data['settings']['images'] ?? [];
 
-		// Get current SureRank settings once.
-		$current_settings  = Get::option( SURERANK_SETTINGS, [], 'array' );
-		$updated_settings  = is_array( $current_settings ) ? $current_settings : [];
-		$all_imported_keys = [];
+		// Get current SureRank settings.
+		$current_settings = Settings::get();
+		$current_settings = is_array( $current_settings ) ? $current_settings : [];
+
+		// Collect all settings from all categories into one flat array.
+		$all_new_settings = [];
+
+		if ( empty( $settings ) || ! is_array( $settings ) ) {
+			$this->add_import_error( __( 'No settings found to import.', 'surerank' ) );
+			return;
+		}
 
 		foreach ( $settings as $category => $category_options ) {
 			if ( ! $this->exporter->is_valid_category( $category ) ) {
 				$this->add_import_error(
-					/* translators: %s: Category name that was skipped during import */
-					sprintf( __( 'Skipped invalid category: %s', 'surerank' ), $category )
+					sprintf(
+						// translators: %s: Category name.
+						__( 'Skipped invalid category: %s', 'surerank' ),
+						$category
+					)
 				);
 				continue;
 			}
 
-			$imported_keys     = $this->process_category_options( $category, $category_options, $updated_settings, $overwrite, $process_images, $images_data );
-			$all_imported_keys = array_merge( $all_imported_keys, $imported_keys );
-		}
-
-		// Update the database once with all changes.
-		if ( ! empty( $all_imported_keys ) ) {
-			$this->save_imported_settings( $updated_settings, $all_imported_keys );
-		}
-	}
-
-	/**
-	 * Process options for a specific category
-	 *
-	 * @param string               $category Category ID.
-	 * @param array<string, mixed> $options Category options to import.
-	 * @param array<string, mixed> &$updated_settings Reference to updated settings array.
-	 * @param bool                 $overwrite Whether to overwrite existing options.
-	 * @param bool                 $process_images Whether to download and process images.
-	 * @param array<string, mixed> $images_data Base64 images data.
-	 * @return array<int, string> Array of successfully processed setting keys.
-	 */
-	private function process_category_options( $category, $options, &$updated_settings, $overwrite = true, $process_images = true, $images_data = [] ) {
-		$valid_setting_keys = $this->exporter->get_category_setting_keys( $category );
-
-		if ( empty( $valid_setting_keys ) ) {
-			$this->add_import_error(
-				/* translators: %s: Category name with no valid setting keys */
-				sprintf( __( 'No valid setting keys found for category: %s', 'surerank' ), $category )
-			);
-			return [];
-		}
-
-		// Process image settings first if they exist.
-		$processed_options = Utils::process_image_settings_import( $options, $images_data, $process_images );
-
-		$imported_keys = [];
-
-		foreach ( $processed_options as $setting_key => $setting_value ) {
-			// Security check: only allow valid SureRank setting keys for this category.
-			if ( ! in_array( $setting_key, $valid_setting_keys, true ) ) {
-				$this->add_import_error(
-					/* translators: %s: Option name that was skipped during import */
-					sprintf( __( 'Skipped invalid option: %s', 'surerank' ), $setting_key )
-				);
+			if ( $category === 'images' && ! empty( $images_data ) ) {
+				$processed_options = Utils::process_image_settings_import( $category_options );
+				$all_new_settings  = array_merge( $all_new_settings, $processed_options );
 				continue;
 			}
 
-			// Check if setting already exists and overwrite is disabled.
-			if ( ! $overwrite && isset( $updated_settings[ $setting_key ] ) ) {
-				$this->add_import_warning(
-					/* translators: %s: Option name that was skipped because it already exists */
-					sprintf( __( 'Skipped existing option: %s', 'surerank' ), $setting_key )
-				);
-				continue;
-			}
+			$processed_options = $category_options;
 
-			// Import the setting.
-			$updated_settings[ $setting_key ] = $setting_value;
-			$imported_keys[]                  = $setting_key;
-
-			// Add success note for processed images.
-			if ( $process_images &&
-				in_array( $setting_key, Utils::get_image_setting_keys(), true ) &&
-				isset( $options[ $setting_key ] ) &&
-				$options[ $setting_key ] !== $setting_value ) {
-				$this->add_import_warning(
-					/* translators: %s: Setting key name for which an image was downloaded and processed */
-					sprintf( __( 'Downloaded and processed image for: %s', 'surerank' ), $setting_key )
-				);
-			}
+			// Merge all settings.
+			$all_new_settings = array_merge( $all_new_settings, $processed_options );
 		}
 
-		return $imported_keys;
-	}
-
-	/**
-	 * Save imported settings to database
-	 *
-	 * @param array<string, mixed> $updated_settings The updated settings array.
-	 * @param array<int, string>   $imported_keys Array of imported setting keys.
-	 * @return void
-	 */
-	private function save_imported_settings( $updated_settings, $imported_keys ) {
-		// Always use update_option with forced update to handle cases where values are the same.
-		Update::option( SURERANK_SETTINGS, $updated_settings );
-
-		// For WordPress, update_option returns false if the value is the same.
-		// So we need to check if the current value in database matches what we tried to save.
-		$saved_settings  = Get::option( SURERANK_SETTINGS, [], 'array' );
-		$save_successful = true;
-
-		// Verify that all imported keys were saved correctly.
-		foreach ( $imported_keys as $key ) {
-			if ( ! isset( $saved_settings[ $key ] ) || $saved_settings[ $key ] !== $updated_settings[ $key ] ) {
-				$save_successful = false;
-				break;
-			}
+		if ( empty( $all_new_settings ) || ! is_array( $all_new_settings ) ) {
+			$this->add_import_error( __( 'No settings found to import.', 'surerank' ) );
+			return;
 		}
 
-		if ( $save_successful ) {
-			// Mark all imported keys as successful.
-			foreach ( $imported_keys as $imported_key ) {
-				$this->add_import_success( $imported_key );
+		// Merge with existing settings.
+		$final_settings = $overwrite
+			? array_merge( $current_settings, $all_new_settings )
+			: array_merge( $all_new_settings, $current_settings );
+		if ( Update::option( SURERANK_SETTINGS, $final_settings ) ) {
+			foreach ( array_keys( $all_new_settings ) as $key ) {
+				$this->add_import_success( $key );
 			}
 		} else {
-			$this->add_import_error(
-				__( 'Failed to save imported settings to database.', 'surerank' )
-			);
+			$this->add_import_error( __( 'Failed to save settings to database.', 'surerank' ) );
 		}
 	}
 
@@ -306,17 +242,6 @@ class Settings_Importer {
 	private function add_import_error( $error ) {
 		$this->import_results['errors'][] = $error;
 	}
-
-	/**
-	 * Add import warning
-	 *
-	 * @param string $warning Warning message.
-	 * @return void
-	 */
-	private function add_import_warning( $warning ) {
-		$this->import_results['warnings'][] = $warning;
-	}
-
 	/**
 	 * Get final import results
 	 *
@@ -325,15 +250,13 @@ class Settings_Importer {
 	private function get_import_results() {
 		$this->import_results['success'] = $this->import_results['imported_count'] > 0;
 
-		if ( $this->import_results['success'] ) {
-			$this->import_results['message'] = sprintf(
+		$this->import_results['message'] = $this->import_results['success']
+			? sprintf(
 				/* translators: %d: Number of settings that were successfully imported */
 				__( 'Successfully imported %d settings.', 'surerank' ),
 				$this->import_results['imported_count']
-			);
-		} else {
-			$this->import_results['message'] = __( 'No settings were imported.', 'surerank' );
-		}
+			)
+			: __( 'No settings were imported.', 'surerank' );
 
 		return $this->import_results;
 	}
