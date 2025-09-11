@@ -42,11 +42,26 @@ class Products {
 	 * @return void
 	 */
 	public function init() {
+		add_filter( 'surerank_schema_types', [ $this, 'add_product_schema_type' ] );
 		add_filter( 'surerank_default_schemas', [ $this, 'add_product_schema' ] );
 		add_filter( 'surerank_schema_data', [ $this, 'add_schema_data' ] );
 		add_action( 'wp_footer', [ $this, 'remove_wc_schema' ], 0 );
 		add_filter( 'surerank_default_schema_variables', [ $this, 'add_variables' ] );
 		add_filter( 'surerank_schema_type_data', [ $this, 'schema_type_data' ] );
+	}
+
+	/**
+	 * Add Product schema type to available schema types.
+	 *
+	 * @param array<string, mixed> $schema_types Existing schema types.
+	 * @return array<string, mixed> Modified schema types.
+	 */
+	public function add_product_schema_type( $schema_types ) {
+		if ( Helper::wc_status() || Helper::sc_status() ) {
+			$schema_types['Product'] = Product::class;
+		}
+
+		return $schema_types;
 	}
 
 	/**

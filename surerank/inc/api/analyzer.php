@@ -1245,7 +1245,7 @@ class Analyzer extends Api_Base {
 		if ( ! Settings::get( 'enable_google_console' ) ) {
 			return admin_url( 'admin.php?page=surerank#/tools/manage-features' );
 		}
-		
+
 		return admin_url( 'admin.php?page=surerank#/search-console' );
 	}
 

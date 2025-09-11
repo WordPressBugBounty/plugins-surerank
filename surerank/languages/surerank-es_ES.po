@@ -691,7 +691,7 @@ msgid "Image"
 msgstr "Imagen"
 
 #: inc/schema/helper.php:109
-#: inc/schema/products.php:143
+#: inc/schema/products.php:158
 #: inc/schema/types/product.php:135
 msgid "Product Image"
 msgstr "Imagen del producto"
@@ -1063,103 +1063,103 @@ msgstr "Entidad principal de la página"
 msgid "Identify the main entity being described on the page, such as an article, product, or event. This helps search engines understand the primary focus of the page through structured data."
 msgstr "Identifica la entidad principal que se describe en la página, como un artículo, producto o evento. Esto ayuda a los motores de búsqueda a entender el enfoque principal de la página a través de datos estructurados."
 
-#: inc/schema/products.php:131
+#: inc/schema/products.php:146
 msgid "Product Price"
 msgstr "Precio del producto"
 
-#: inc/schema/products.php:132
+#: inc/schema/products.php:147
 msgid "Product Price Including Tax"
 msgstr "Precio del producto incluyendo impuestos"
 
-#: inc/schema/products.php:133
+#: inc/schema/products.php:148
 msgid "Product Low Price (variable product)"
 msgstr "Precio bajo del producto (producto variable)"
 
-#: inc/schema/products.php:134
+#: inc/schema/products.php:149
 msgid "Product High Price (variable product)"
 msgstr "Precio alto del producto (producto variable)"
 
-#: inc/schema/products.php:135
+#: inc/schema/products.php:150
 msgid "Product Offer Count (variable product)"
 msgstr "Cantidad de ofertas del producto (producto variable)"
 
-#: inc/schema/products.php:136
+#: inc/schema/products.php:151
 msgid "Product Sale Price Date \"From\""
 msgstr "Fecha de precio de venta del producto \"Desde\""
 
-#: inc/schema/products.php:137
+#: inc/schema/products.php:152
 msgid "Product Sale Price Date \"To\""
 msgstr "Fecha de precio de venta del producto \"Hasta\""
 
-#: inc/schema/products.php:138
+#: inc/schema/products.php:153
 msgid "Product SKU"
 msgstr "SKU del producto"
 
-#: inc/schema/products.php:139
+#: inc/schema/products.php:154
 msgid "Product Stock Status"
 msgstr "Estado de stock del producto"
 
-#: inc/schema/products.php:140
+#: inc/schema/products.php:155
 msgid "Product Currency"
 msgstr "Moneda del producto"
 
-#: inc/schema/products.php:141
+#: inc/schema/products.php:156
 msgid "Product Rating Value"
 msgstr "Valor de calificación del producto"
 
-#: inc/schema/products.php:142
+#: inc/schema/products.php:157
 msgid "Product Review Count"
 msgstr "Cantidad de reseñas del producto"
 
-#: inc/schema/products.php:144
+#: inc/schema/products.php:159
 msgid "Product Image Width"
 msgstr "Ancho de imagen del producto"
 
-#: inc/schema/products.php:145
+#: inc/schema/products.php:160
 msgid "Product Image Height"
 msgstr "Altura de la imagen del producto"
 
-#: inc/schema/products.php:146
+#: inc/schema/products.php:161
 msgid "Product Description"
 msgstr "Descripción del producto"
 
-#: inc/schema/products.php:147
+#: inc/schema/products.php:162
 msgid "Product Variant SKU"
 msgstr "SKU de la variante del producto"
 
-#: inc/schema/products.php:148
+#: inc/schema/products.php:163
 msgid "Product Variant Name"
 msgstr "Nombre de la variante del producto"
 
-#: inc/schema/products.php:149
+#: inc/schema/products.php:164
 msgid "Product Variant URL"
 msgstr "URL de la variante del producto"
 
-#: inc/schema/products.php:150
+#: inc/schema/products.php:165
 msgid "Product Variant Image"
 msgstr "Imagen de la variante del producto"
 
-#: inc/schema/products.php:151
+#: inc/schema/products.php:166
 msgid "Product Variant Size"
 msgstr "Tamaño de la variante del producto"
 
-#: inc/schema/products.php:152
+#: inc/schema/products.php:167
 msgid "Product Variant Color"
 msgstr "Color de la variante del producto"
 
-#: inc/schema/products.php:153
+#: inc/schema/products.php:168
 msgid "Product Variant Description"
 msgstr "Descripción de la variante del producto"
 
-#: inc/schema/products.php:154
+#: inc/schema/products.php:169
 msgid "Product Variant Sale Price"
 msgstr "Precio de venta de la variante del producto"
 
-#: inc/schema/products.php:155
+#: inc/schema/products.php:170
 msgid "Product Variant Regular Price"
 msgstr "Precio regular de la variante del producto"
 
-#: inc/schema/products.php:156
+#: inc/schema/products.php:171
 msgid "Product Variant Stock Status"
 msgstr "Estado del stock de la variante del producto"
 
@@ -5501,7 +5501,6 @@ msgid "No social metadata to import for post %d."
 msgstr "No hay metadatos sociales para importar para la publicación %d."
 
 #. translators: %d: term ID.
-#. translators: %d: post ID.
 #: inc/importers/seopress/seopress.php:302
 #: inc/importers/yoast/yoast.php:296
 #, php-format
@@ -5509,7 +5508,6 @@ msgid "Social metadata imported for term %d."
 msgstr "Metadatos sociales importados para el término %d."
 
 #. translators: %d: term ID.
-#. translators: %d: post ID.
 #: inc/importers/seopress/seopress.php:302
 #: inc/importers/yoast/yoast.php:296
 #, php-format

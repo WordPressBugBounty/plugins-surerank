@@ -829,7 +829,7 @@ msgid "Image"
 msgstr "Afbeelding"
 
 #: inc/schema/helper.php:109
-#: inc/schema/products.php:143
+#: inc/schema/products.php:158
 #: inc/schema/types/product.php:135
 msgid "Product Image"
 msgstr "Productafbeelding"
@@ -1201,103 +1201,103 @@ msgstr "Hoofd entiteit van pagina"
 msgid "Identify the main entity being described on the page, such as an article, product, or event. This helps search engines understand the primary focus of the page through structured data."
 msgstr "Identificeer de hoofd entiteit die op de pagina wordt beschreven, zoals een artikel, product of evenement. Dit helpt zoekmachines de primaire focus van de pagina te begrijpen via gestructureerde gegevens."
 
-#: inc/schema/products.php:131
+#: inc/schema/products.php:146
 msgid "Product Price"
 msgstr "Productprijs"
 
-#: inc/schema/products.php:132
+#: inc/schema/products.php:147
 msgid "Product Price Including Tax"
 msgstr "Productprijs inclusief belasting"
 
-#: inc/schema/products.php:133
+#: inc/schema/products.php:148
 msgid "Product Low Price (variable product)"
 msgstr "Product laagste prijs (variabel product)"
 
-#: inc/schema/products.php:134
+#: inc/schema/products.php:149
 msgid "Product High Price (variable product)"
 msgstr "Product hoogste prijs (variabel product)"
 
-#: inc/schema/products.php:135
+#: inc/schema/products.php:150
 msgid "Product Offer Count (variable product)"
 msgstr "Product aanbod aantal (variabel product)"
 
-#: inc/schema/products.php:136
+#: inc/schema/products.php:151
 msgid "Product Sale Price Date \"From\""
 msgstr "Product verkoopprijs datum \"Van\""
 
-#: inc/schema/products.php:137
+#: inc/schema/products.php:152
 msgid "Product Sale Price Date \"To\""
 msgstr "Product verkoopprijs datum \"Tot\""
 
-#: inc/schema/products.php:138
+#: inc/schema/products.php:153
 msgid "Product SKU"
 msgstr "Product SKU"
 
-#: inc/schema/products.php:139
+#: inc/schema/products.php:154
 msgid "Product Stock Status"
 msgstr "Product voorraadstatus"
 
-#: inc/schema/products.php:140
+#: inc/schema/products.php:155
 msgid "Product Currency"
 msgstr "Product valuta"
 
-#: inc/schema/products.php:141
+#: inc/schema/products.php:156
 msgid "Product Rating Value"
 msgstr "Product beoordelingswaarde"
 
-#: inc/schema/products.php:142
+#: inc/schema/products.php:157
 msgid "Product Review Count"
 msgstr "Product beoordelingsaantal"
 
-#: inc/schema/products.php:144
+#: inc/schema/products.php:159
 msgid "Product Image Width"
 msgstr "Product afbeelding breedte"
 
-#: inc/schema/products.php:145
+#: inc/schema/products.php:160
 msgid "Product Image Height"
 msgstr "Product afbeelding hoogte"
 
-#: inc/schema/products.php:146
+#: inc/schema/products.php:161
 msgid "Product Description"
 msgstr "Productbeschrijving"
 
-#: inc/schema/products.php:147
+#: inc/schema/products.php:162
 msgid "Product Variant SKU"
 msgstr "Product variant SKU"
 
-#: inc/schema/products.php:148
+#: inc/schema/products.php:163
 msgid "Product Variant Name"
 msgstr "Product variant naam"
 
-#: inc/schema/products.php:149
+#: inc/schema/products.php:164
 msgid "Product Variant URL"
 msgstr "Product variant URL"
 
-#: inc/schema/products.php:150
+#: inc/schema/products.php:165
 msgid "Product Variant Image"
 msgstr "Product variant afbeelding"
 
-#: inc/schema/products.php:151
+#: inc/schema/products.php:166
 msgid "Product Variant Size"
 msgstr "Product variant maat"
 
-#: inc/schema/products.php:152
+#: inc/schema/products.php:167
 msgid "Product Variant Color"
 msgstr "Product variant kleur"
 
-#: inc/schema/products.php:153
+#: inc/schema/products.php:168
 msgid "Product Variant Description"
 msgstr "Product variant beschrijving"
 
-#: inc/schema/products.php:154
+#: inc/schema/products.php:169
 msgid "Product Variant Sale Price"
 msgstr "Product variant verkoopprijs"
 
-#: inc/schema/products.php:155
+#: inc/schema/products.php:170
 msgid "Product Variant Regular Price"
 msgstr "Product variant reguliere prijs"
 
-#: inc/schema/products.php:156
+#: inc/schema/products.php:171
 msgid "Product Variant Stock Status"
 msgstr "Voorraadstatus van productvariant"
 
@@ -5501,7 +5501,6 @@ msgid "No social metadata to import for post %d."
 msgstr "Geen sociale metadata om te importeren voor bericht %d."
 
 #. translators: %d: term ID.
-#. translators: %d: post ID.
 #: inc/importers/seopress/seopress.php:302
 #: inc/importers/yoast/yoast.php:296
 #, php-format
@@ -5509,7 +5508,6 @@ msgid "Social metadata imported for term %d."
 msgstr "Sociale metadata geïmporteerd voor term %d."
 
 #. translators: %d: term ID.
-#. translators: %d: post ID.
 #: inc/importers/seopress/seopress.php:302
 #: inc/importers/yoast/yoast.php:296
 #, php-format

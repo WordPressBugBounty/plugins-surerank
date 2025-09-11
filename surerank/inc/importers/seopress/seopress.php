@@ -766,7 +766,7 @@ class Seopress extends BaseImporter {
 	private function has_twitter_specific_data(): bool {
 		$twitter_fields = [
 			'_seopress_social_twitter_title',
-			'_seopress_social_twitter_desc', 
+			'_seopress_social_twitter_desc',
 			'_seopress_social_twitter_img',
 			'_seopress_social_twitter_img_attachment_id',
 		];

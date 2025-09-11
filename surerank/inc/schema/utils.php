@@ -39,7 +39,7 @@ class Utils {
 	 * @since 1.0.0
 	 */
 	public static function get_default_schemas() {
-		return self::build_schema_data_array( self::get_default_schema_types() );
+		return self::build_final_schemas( apply_filters( 'surerank_default_schemas', self::build_schemas_from_types( self::get_default_schema_types() ) ) );
 	}
 
 	/**
@@ -51,7 +51,46 @@ class Utils {
 	 * @since 1.0.0
 	 */
 	public static function get_default_schema_options() {
-		return self::build_schema_data_array( self::get_schema_types() );
+		return self::build_final_schemas( self::build_schemas_from_types( self::get_schema_types() ) );
+	}
+
+	/**
+	 * Build final schemas array with unique IDs as keys.
+	 *
+	 * Takes an array of schemas and assigns each a unique UUID key for
+	 * identification in the frontend and database storage.
+	 *
+	 * @param array<int|string, mixed> $schemas Array of schema data.
+	 * @return array<string, mixed> Schema data with unique IDs as keys.
+	 * @since 1.0.0
+	 */
+	public static function build_final_schemas( $schemas ) {
+		$result = [];
+		foreach ( $schemas as $key => $schema ) {
+			$unique_id            = self::generate_unique_id();
+			$result[ $unique_id ] = $schema;
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Build schemas array from schema type classes.
+	 *
+	 * Iterates through schema type class mappings, instantiates each class,
+	 * and calls their schema_data() method to generate schema configurations.
+	 *
+	 * @param array<string, string> $schema_types Schema type class mappings (type => class).
+	 * @return array<int, mixed> Array of schema data from each type class.
+	 * @since 1.0.0
+	 */
+	public static function build_schemas_from_types( $schema_types ) {
+		$schemas = [];
+		foreach ( $schema_types as $key => $class ) {
+			$instance  = $class::get_instance();
+			$schemas[] = $instance->schema_data();
+		}
+		return $schemas;
 	}
 
 	/**
@@ -166,41 +205,13 @@ class Utils {
 	}
 
 	/**
-	 * Build Schema Data Array
-	 *
-	 * Builds schema data array with unique IDs from given schema types.
-	 *
-	 * @param array<string, mixed> $schema_types Schema type class mappings.
-	 * @return array<string, mixed> Schema data with unique IDs as keys.
-	 * @since 1.0.0
-	 */
-	private static function build_schema_data_array( array $schema_types ) {
-		$schemas = [];
-		foreach ( $schema_types as $key => $class ) {
-			$instance  = $class::get_instance();
-			$schemas[] = $instance->schema_data();
-		}
-
-		$schemas = apply_filters( 'surerank_default_schemas', $schemas );
-
-		$result = [];
-		foreach ( $schemas as $key => $schema ) {
-			$unique_id            = self::generate_unique_id( $key );
-			$result[ $unique_id ] = $schema;
-		}
-
-		return $result;
-	}
-
-	/**
 	 * Generate Unique ID
 	 *
 	 * Generates a unique ID for a given schema type.
 	 *
-	 * @param string $type The schema type.
 	 * @return string The unique ID.
 	 */
-	private static function generate_unique_id( string $type ): string {
+	private static function generate_unique_id(): string {
 		return sprintf( '%s', wp_generate_uuid4() );
 	}
 

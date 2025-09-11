@@ -829,7 +829,7 @@ msgid "Image"
 msgstr "Obraz"
 
 #: inc/schema/helper.php:109
-#: inc/schema/products.php:143
+#: inc/schema/products.php:158
 #: inc/schema/types/product.php:135
 msgid "Product Image"
 msgstr "Obraz produktu"
@@ -1201,103 +1201,103 @@ msgstr "Główna jednostka strony"
 msgid "Identify the main entity being described on the page, such as an article, product, or event. This helps search engines understand the primary focus of the page through structured data."
 msgstr "Zidentyfikuj główną jednostkę opisaną na stronie, taką jak artykuł, produkt lub wydarzenie. Pomaga to wyszukiwarkom zrozumieć główny temat strony poprzez dane strukturalne."
 
-#: inc/schema/products.php:131
+#: inc/schema/products.php:146
 msgid "Product Price"
 msgstr "Cena produktu"
 
-#: inc/schema/products.php:132
+#: inc/schema/products.php:147
 msgid "Product Price Including Tax"
 msgstr "Cena produktu z podatkiem"
 
-#: inc/schema/products.php:133
+#: inc/schema/products.php:148
 msgid "Product Low Price (variable product)"
 msgstr "Najniższa cena produktu (produkt zmienny)"
 
-#: inc/schema/products.php:134
+#: inc/schema/products.php:149
 msgid "Product High Price (variable product)"
 msgstr "Najwyższa cena produktu (produkt zmienny)"
 
-#: inc/schema/products.php:135
+#: inc/schema/products.php:150
 msgid "Product Offer Count (variable product)"
 msgstr "Liczba ofert produktu (produkt zmienny)"
 
-#: inc/schema/products.php:136
+#: inc/schema/products.php:151
 msgid "Product Sale Price Date \"From\""
 msgstr "Data sprzedaży produktu \"Od\""
 
-#: inc/schema/products.php:137
+#: inc/schema/products.php:152
 msgid "Product Sale Price Date \"To\""
 msgstr "Data sprzedaży produktu \"Do\""
 
-#: inc/schema/products.php:138
+#: inc/schema/products.php:153
 msgid "Product SKU"
 msgstr "SKU produktu"
 
-#: inc/schema/products.php:139
+#: inc/schema/products.php:154
 msgid "Product Stock Status"
 msgstr "Status magazynowy produktu"
 
-#: inc/schema/products.php:140
+#: inc/schema/products.php:155
 msgid "Product Currency"
 msgstr "Waluta produktu"
 
-#: inc/schema/products.php:141
+#: inc/schema/products.php:156
 msgid "Product Rating Value"
 msgstr "Wartość oceny produktu"
 
-#: inc/schema/products.php:142
+#: inc/schema/products.php:157
 msgid "Product Review Count"
 msgstr "Liczba recenzji produktu"
 
-#: inc/schema/products.php:144
+#: inc/schema/products.php:159
 msgid "Product Image Width"
 msgstr "Szerokość obrazu produktu"
 
-#: inc/schema/products.php:145
+#: inc/schema/products.php:160
 msgid "Product Image Height"
 msgstr "Wysokość obrazu produktu"
 
-#: inc/schema/products.php:146
+#: inc/schema/products.php:161
 msgid "Product Description"
 msgstr "Opis produktu"
 
-#: inc/schema/products.php:147
+#: inc/schema/products.php:162
 msgid "Product Variant SKU"
 msgstr "SKU wariantu produktu"
 
-#: inc/schema/products.php:148
+#: inc/schema/products.php:163
 msgid "Product Variant Name"
 msgstr "Nazwa wariantu produktu"
 
-#: inc/schema/products.php:149
+#: inc/schema/products.php:164
 msgid "Product Variant URL"
 msgstr "URL wariantu produktu"
 
-#: inc/schema/products.php:150
+#: inc/schema/products.php:165
 msgid "Product Variant Image"
 msgstr "Obraz wariantu produktu"
 
-#: inc/schema/products.php:151
+#: inc/schema/products.php:166
 msgid "Product Variant Size"
 msgstr "Rozmiar wariantu produktu"
 
-#: inc/schema/products.php:152
+#: inc/schema/products.php:167
 msgid "Product Variant Color"
 msgstr "Kolor wariantu produktu"
 
-#: inc/schema/products.php:153
+#: inc/schema/products.php:168
 msgid "Product Variant Description"
 msgstr "Opis wariantu produktu"
 
-#: inc/schema/products.php:154
+#: inc/schema/products.php:169
 msgid "Product Variant Sale Price"
 msgstr "Cena sprzedaży wariantu produktu"
 
-#: inc/schema/products.php:155
+#: inc/schema/products.php:170
 msgid "Product Variant Regular Price"
 msgstr "Regularna cena wariantu produktu"
 
-#: inc/schema/products.php:156
+#: inc/schema/products.php:171
 msgid "Product Variant Stock Status"
 msgstr "Status zapasów wariantu produktu"
 
@@ -5501,7 +5501,6 @@ msgid "No social metadata to import for post %d."
 msgstr "Brak metadanych społecznościowych do zaimportowania dla wpisu %d."
 
 #. translators: %d: term ID.
-#. translators: %d: post ID.
 #: inc/importers/seopress/seopress.php:302
 #: inc/importers/yoast/yoast.php:296
 #, php-format
@@ -5509,7 +5508,6 @@ msgid "Social metadata imported for term %d."
 msgstr "Metadane społecznościowe zaimportowane dla terminu %d."
 
 #. translators: %d: term ID.
-#. translators: %d: post ID.
 #: inc/importers/seopress/seopress.php:302
 #: inc/importers/yoast/yoast.php:296
 #, php-format

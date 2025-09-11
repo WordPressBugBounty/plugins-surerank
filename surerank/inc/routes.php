@@ -80,7 +80,6 @@ class Routes {
 			'top'
 		);
 
-
 		// Generic fallback for any type without prefix (legacy support).
 		add_rewrite_rule(
 			'^([a-z0-9_-]+)-sitemap-([0-9]+)?\.xml$',

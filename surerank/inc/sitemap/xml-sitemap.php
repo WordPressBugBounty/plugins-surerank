@@ -237,7 +237,6 @@ class Xml_Sitemap extends Sitemap {
 			$this->generate_main_sitemap_xml( $sitemap );
 		}
 
-
 		// Handle CPTs dynamically.
 		if ( post_type_exists( $type ) ) {
 			$sitemap = $this->generate_post_sitemap( $type, $page, $offset );

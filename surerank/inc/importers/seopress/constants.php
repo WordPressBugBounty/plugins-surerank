@@ -194,7 +194,7 @@ class Constants {
 						$meta_data[ $key ] = is_array( $value ) && isset( $value[0] ) ? $value[0] : $value;
 					}
 				}
-			}       
+			}
 		}
 
 		$meta_data['separator'] = '-';

@@ -169,23 +169,6 @@ final class ImporterUtils {
 	}
 
 	/**
-	 * Check if a profile URL matches a specific social platform.
-	 *
-	 * @param string $profile The profile URL to check.
-	 * @param string $key The social platform key.
-	 * @return bool True if the profile matches the platform.
-	 */
-	private static function is_special_social_platform( string $profile, string $key ): bool {
-		$platform_patterns = [
-			'whatsapp' => 'https://wa.me/',
-			'telegram' => 'https://t.me/',
-			'bluesky'  => 'https://bsky.app/',
-		];
-
-		return isset( $platform_patterns[ $key ] ) && stripos( $profile, $platform_patterns[ $key ] ) !== false;
-	}
-
-	/**
 	 * Map social profiles from Rank Math to SureRank format.
 	 *
 	 * @param string|array<string> $social_profiles Social profiles from Rank Math.
@@ -507,5 +490,22 @@ final class ImporterUtils {
 			[],
 			true
 		);
+	}
+
+	/**
+	 * Check if a profile URL matches a specific social platform.
+	 *
+	 * @param string $profile The profile URL to check.
+	 * @param string $key The social platform key.
+	 * @return bool True if the profile matches the platform.
+	 */
+	private static function is_special_social_platform( string $profile, string $key ): bool {
+		$platform_patterns = [
+			'whatsapp' => 'https://wa.me/',
+			'telegram' => 'https://t.me/',
+			'bluesky'  => 'https://bsky.app/',
+		];
+
+		return isset( $platform_patterns[ $key ] ) && stripos( $profile, $platform_patterns[ $key ] ) !== false;
 	}
 }

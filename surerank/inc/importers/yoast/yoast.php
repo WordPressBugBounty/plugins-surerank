@@ -713,7 +713,7 @@ class Yoast extends BaseImporter {
 	private function has_term_twitter_data(): bool {
 		$term_twitter_fields = [
 			'wpseo_twitter-title',
-			'wpseo_twitter-description', 
+			'wpseo_twitter-description',
 			'wpseo_twitter-image',
 			'wpseo_twitter-image-id',
 		];

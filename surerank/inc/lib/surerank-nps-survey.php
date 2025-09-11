@@ -16,12 +16,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'SureRank_Nps_Survey' ) ) {
+if ( ! class_exists( 'Surerank_Nps_Survey' ) ) {
 
 	/**
 	 * Admin
 	 */
-	class SureRank_Nps_Survey {
+	class Surerank_Nps_Survey {
 		use Get_Instance;
 
 		/**
