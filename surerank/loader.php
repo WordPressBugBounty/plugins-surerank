@@ -86,7 +86,8 @@ class Loader {
 		spl_autoload_register( [ $this, 'autoload' ] );
 		add_action( 'shutdown', [ $this, 'shutdown' ] );
 
-		add_action( 'init', [ $this, 'setup' ], 99 );
+		add_action( 'init', [ $this, 'setup' ], 999 );
+		add_action( 'init', [ $this, 'load_nps' ], 99 );
 		add_action( 'init', [ $this, 'flush_rules' ], 999 );
 		add_action( 'init', [ $this, 'load_textdomain' ], 10 );
 		add_action( 'plugins_loaded', [ $this, 'load_routes' ], 10 );
@@ -103,11 +104,14 @@ class Loader {
 	 * @return void
 	 */
 	public function setup(): void {
+		do_action( 'surerank_before_load_components' );
+
 		$this->load_core_components();
 		$this->load_environment_components();
-		$this->load_conditional_components();
 		$this->load_background_processing();
 		$this->load_final_components();
+
+		do_action( 'surerank_after_load_components' );
 	}
 
 	/**
@@ -369,17 +373,21 @@ class Loader {
 	}
 
 	/**
+	 * Load NPS Survey if conditions are met.
+	 */
+	public function load_nps(): void {
+		if ( $this->should_load_nps_survey() ) {
+			Surerank_Nps_Survey::get_instance();
+			Nps_Notice::get_instance();
+		}
+	}
+
+	/**
 	 * Load admin conditional components.
 	 *
 	 * @return void
 	 */
 	private function load_admin_conditional_components(): void {
-		// Load NPS Survey if available and not disabled.
-		if ( $this->should_load_nps_survey() ) {
-			Surerank_Nps_Survey::get_instance();
-			Nps_Notice::get_instance();
-		}
-
 		// Load Elementor integration if available.
 		if ( defined( 'ELEMENTOR_VERSION' ) ) {
 			Elementor::get_instance();
@@ -395,19 +403,6 @@ class Loader {
 		// Load Bricks integration if available.
 		if ( defined( 'BRICKS_VERSION' ) ) {
 			Bricks::get_instance();
-		}
-	}
-
-	/**
-	 * Load components that depend on environment checks.
-	 *
-	 * @return void
-	 */
-	private function load_conditional_components(): void {
-		// Load NPS Survey globally if conditions are met.
-		if ( ! is_admin() && $this->should_load_nps_survey() ) {
-			Surerank_Nps_Survey::get_instance();
-			Nps_Notice::get_instance();
 		}
 	}
 

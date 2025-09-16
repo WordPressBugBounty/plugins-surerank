@@ -5,7 +5,7 @@ Tags: seo, wordpress seo, xml sitemap, schema, google search console
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 8.0
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,6 +16,8 @@ SureRank – SEO Assistant with Meta Tags, Social Preview, XML Sitemap, and Sche
 Powerful, lightweight SEO plugin to manage search and social previews, generate XML sitemap, add schema markup — and optimize content.
 
 ★★★★★
+
+[youtube https://www.youtube.com/watch?v=GEeTu2D74Z8]
 
 SureRank was born from a simple idea: SEO doesn’t have to be hard, bloated, or overwhelming.
 
@@ -292,6 +294,9 @@ Brainstorm Force
 
 
 == Changelog ==
+
+### 1.3.2 - 16-September-2025 ###
+* Fix: Fixed an issue where SureRank Pro components won't get loaded in some edge cases.
 
 = 1.3.1 - 11-September-2025 =
 * Fix: Fixed an issue where Product Schema was not showing correctly on SureCart products.
