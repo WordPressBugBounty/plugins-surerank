@@ -1,15 +1,22 @@
-import { cn } from '@/functions/utils';
+import {
+	cn,
+	getStatusIndicatorClasses,
+	getStatusIndicatorAriaLabel,
+} from '@/functions/utils';
 import { STORE_NAME } from '@/store/constants';
-import { dispatch } from '@wordpress/data';
+import { dispatch, select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
+import { calculateCheckStatus } from '@SeoPopup/utils/calculate-check-status';
+import { refreshPageChecks } from '@SeoPopup/components/page-seo-checks/analyzer/utils/page-builder';
+import { getTooltipText } from '@/apps/seo-popup/utils/page-checks-status-tooltip-text';
 import './tooltip.css';
+import {
+	handleOpenSureRankDrawer,
+	sureRankLogoForBuilder,
+} from '@SeoPopup/utils/page-builder-functions';
+import { ENABLE_PAGE_LEVEL_SEO } from '@/global/constants';
 
 /* global jQuery */
-
-export const handleOpenSureRankDrawer = () => {
-	const dispatchToSureRankStore = dispatch( STORE_NAME );
-	dispatchToSureRankStore.updateModalState( true );
-};
 
 // Custom Material UI style tooltip implementation for Elementor with TailwindCSS
 const createSureRankTooltip = ( targetElement, tooltipText ) => {
@@ -158,19 +165,132 @@ const createSureRankTooltip = ( targetElement, tooltipText ) => {
 	};
 };
 
-export const sureRankLogoForBuilder = ( className ) => {
-	return `<svg class="${ cn(
-		className
-	) }" width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M13.5537 1.5C17.8453 1.5 21.3251 4.97895 21.3252 9.27051C21.3252 12.347 19.5368 15.0056 16.9434 16.2646H21.3252V22.5H18.0889C14.9086 22.5 12.2861 20.1186 11.9033 17.042H11.9014L11.9033 13.7852C14.8283 13.7661 17.0342 11.3894 17.0342 8.45996V6.0293C14.137 6.02947 11.6948 7.97682 10.9443 10.6338C10.1605 9.53345 8.87383 8.8165 7.41992 8.81641H6.38086V9.85352H6.38379C6.44515 12.0356 8.23375 13.786 10.4307 13.7861H10.7061L10.6934 17.042H10.6865C10.2943 20.1082 7.67678 22.4785 4.50391 22.4785H2.6748V1.5H13.5537Z" fill="white"/>
-        </svg>`;
+// Function to get page check status using WordPress data
+const getPageCheckStatus = () => {
+	try {
+		const storeSelectors = select( STORE_NAME );
+		if (
+			! storeSelectors ||
+			typeof storeSelectors.getPageSeoChecks !== 'function'
+		) {
+			return {
+				status: null,
+				initializing: true,
+				counts: { errorAndWarnings: 0, error: 0, warning: 0 },
+			};
+		}
+
+		// Trigger ignored list retrieval
+		const pageSeoChecks = storeSelectors.getPageSeoChecks() || {};
+		const { categorizedChecks = {}, initializing = true } = pageSeoChecks;
+
+		const { status, counts } = calculateCheckStatus( categorizedChecks );
+
+		if ( initializing ) {
+			dispatch( STORE_NAME ).setPageSeoCheck( 'initializing', false );
+		}
+
+		return {
+			status,
+			initializing,
+			counts,
+		};
+	} catch ( error ) {
+		// Return safe defaults if store is not available
+		return {
+			status: null,
+			initializing: false,
+			counts: { errorAndWarnings: 0, error: 0, warning: 0 },
+		};
+	}
+};
+
+// Function to create status indicator element
+// eslint-disable-next-line no-shadow
+const createStatusIndicator = ( $ ) => {
+	const { status, counts } = getPageCheckStatus();
+
+	// Don't show indicator if no status
+	if ( ! status || ! ENABLE_PAGE_LEVEL_SEO ) {
+		return null;
+	}
+
+	// Status indicator colors based on check status
+	const statusClasses = getStatusIndicatorClasses( status );
+
+	// Accessibility label for the indicator
+	const ariaLabel = getStatusIndicatorAriaLabel( counts.errorAndWarnings );
+
+	const indicator = $( '<div></div>' );
+	indicator.addClass(
+		cn(
+			'absolute top-1.5 right-1.5 size-2 rounded-full z-10 duration-200',
+			statusClasses
+		)
+	);
+	indicator.attr( 'aria-label', ariaLabel );
+	indicator.attr( 'title', ariaLabel );
+
+	return indicator;
 };
 
 // eslint-disable-next-line wrap-iife
 ( function ( $ ) {
 	let tooltipCleanup = null;
+	let statusUpdateInterval = null;
+	let unsubscribe = null;
 
-	$( window ).on( 'load', function () {
+	// State variables for refresh functionality
+	let brokenLinkState = {
+		isChecking: false,
+		checkedLinks: new Set(),
+		brokenLinks: new Set(),
+		allLinks: [],
+	};
+	let refreshCalled = false;
+
+	const setBrokenLinkState = ( updater ) => {
+		if ( typeof updater === 'function' ) {
+			brokenLinkState = updater( brokenLinkState );
+		} else {
+			brokenLinkState = updater;
+		}
+	};
+
+	const setRefreshCalled = ( value ) => {
+		refreshCalled = value;
+	};
+
+	// Function to handle refresh with broken links - adapted for Elementor context
+	const handleRefreshWithBrokenLinks = async () => {
+		const storeDispatch = dispatch( STORE_NAME );
+		const storeSelectors = select( STORE_NAME );
+
+		if ( ! storeSelectors || ! storeDispatch || ! ENABLE_PAGE_LEVEL_SEO ) {
+			return;
+		}
+
+		try {
+			setRefreshCalled( true ); // Ensure subsequent calls don't auto-refresh
+
+			// Get current page SEO checks
+			const pageSeoChecks = storeSelectors.getPageSeoChecks() || {};
+
+			await refreshPageChecks(
+				() => {},
+				setBrokenLinkState,
+				storeDispatch.setPageSeoCheck,
+				select,
+				pageSeoChecks,
+				brokenLinkState
+			);
+		} catch ( error ) {
+			// Silently ignore errors
+		}
+	};
+
+	// Function to set up the Elementor integration once store is initialized
+	const setupElementorIntegration = () => {
 		const topBar = $(
 			'#elementor-editor-wrapper-v2 header .MuiGrid-root:nth-child(3) .MuiStack-root'
 		);
@@ -180,7 +300,13 @@ export const sureRankLogoForBuilder = ( className ) => {
 		const buttonClassName = lastChild.find( 'button' ).attr( 'class' );
 		const svgClassName = lastChild.find( 'svg' ).attr( 'class' );
 
-		// Create the button with click handler and insert as the 2nd child.
+		// Create surerank-root wrapper for TailwindCSS
+		const $sureRankWrapper = $( '<div class="surerank-root"></div>' );
+
+		// Create a wrapper with relative positioning for the status indicator
+		const $wrapper = $( '<div class="relative"></div>' );
+
+		// Create the button with click handler
 		const $button = $(
 			`<button type="button" class="${ buttonClassName }" aria-label="${ __(
 				'Open SureRank SEO',
@@ -190,12 +316,150 @@ export const sureRankLogoForBuilder = ( className ) => {
 			</button>`
 		).on( 'click', handleOpenSureRankDrawer );
 
-		topBar.children().first().after( $button );
-		// Add tooltip to the button and store cleanup function.
+		// Add button to wrapper
+		$wrapper.append( $button );
+
+		// Add relative wrapper to surerank-root wrapper
+		$sureRankWrapper.append( $wrapper );
+
+		// Insert surerank-root wrapper after the first child
+		topBar.children().first().after( $sureRankWrapper );
+
+		// Function to update the status indicator
+		const updateStatusIndicator = () => {
+			// Remove existing indicator
+			$wrapper.find( '.surerank-status-indicator' ).remove();
+
+			// Create new indicator
+			const indicator = createStatusIndicator( $ );
+			if ( indicator ) {
+				indicator.addClass( 'surerank-status-indicator' );
+				$wrapper.append( indicator );
+			}
+		};
+
+		// Function to update the tooltip
+		const updateTooltip = () => {
+			if ( tooltipCleanup ) {
+				tooltipCleanup();
+			}
+			const { counts } = getPageCheckStatus();
+			tooltipCleanup = createSureRankTooltip(
+				$button[ 0 ],
+				getTooltipText( counts )
+			);
+		};
+
+		// Initial status indicator update
+		updateStatusIndicator();
+
+		// Refresh page checks on page load if not already called
+		if ( ! refreshCalled ) {
+			handleRefreshWithBrokenLinks();
+		}
+
+		// Subscribe to store changes to update the status and tooltip.
+		unsubscribe = wp?.data?.subscribe?.( () => {
+			updateStatusIndicator();
+			updateTooltip();
+		} );
+
+		// Add tooltip to the button and store cleanup function
+		const { counts } = getPageCheckStatus();
 		tooltipCleanup = createSureRankTooltip(
-			$button?.[ 0 ],
-			__( 'SureRank Meta Box', 'surerank' )
+			$button[ 0 ],
+			getTooltipText( counts )
 		);
+	};
+
+	// Function to wait for store initialization before setting up Elementor integration
+	const waitForStoreInit = () => {
+		let retryCount = 0;
+		let storeUnsubscribe = null;
+		let isInitialized = false;
+		const maxRetries = 50; // Maximum 5 seconds of retrying (50 * 100ms)
+
+		const cleanup = () => {
+			if ( storeUnsubscribe && typeof storeUnsubscribe === 'function' ) {
+				storeUnsubscribe();
+				storeUnsubscribe = null;
+			}
+		};
+
+		const checkStoreAndInitialize = () => {
+			// Prevent multiple initializations
+			if ( isInitialized ) {
+				return;
+			}
+
+			try {
+				const storeSelectors = select( STORE_NAME );
+
+				// Check if store exists and has the required functions
+				if (
+					! storeSelectors ||
+					typeof storeSelectors.getVariables !== 'function'
+				) {
+					// Store not available yet, retry with limit
+					if ( retryCount < maxRetries ) {
+						retryCount++;
+						setTimeout( checkStoreAndInitialize, 100 );
+					}
+					return;
+				}
+
+				const variables = storeSelectors.getVariables();
+
+				if ( variables ) {
+					// Store is initialized, proceed with setup
+					isInitialized = true;
+					cleanup();
+					setupElementorIntegration();
+				} else if ( ! storeUnsubscribe ) {
+					// Store exists but not initialized, subscribe once
+					storeUnsubscribe = wp?.data?.subscribe?.( () => {
+						try {
+							const currentVariables =
+								select( STORE_NAME )?.getVariables();
+							if ( currentVariables && ! isInitialized ) {
+								isInitialized = true;
+								cleanup();
+								setupElementorIntegration();
+							}
+						} catch ( error ) {
+							// Silently handle subscription errors
+						}
+					} );
+
+					// Fallback timeout to prevent infinite waiting
+					setTimeout( () => {
+						if ( ! isInitialized ) {
+							const fallbackVariables =
+								select( STORE_NAME )?.getVariables();
+							if ( fallbackVariables ) {
+								isInitialized = true;
+								cleanup();
+								setupElementorIntegration();
+							}
+						}
+					}, 3000 );
+				}
+			} catch ( error ) {
+				// Handle errors gracefully with retry limit
+				if ( retryCount < maxRetries ) {
+					retryCount++;
+					setTimeout( checkStoreAndInitialize, 100 );
+				}
+			}
+		};
+
+		// Start the initialization check
+		checkStoreAndInitialize();
+	};
+
+	$( window ).on( 'load', function () {
+		// Wait for store initialization before proceeding
+		waitForStoreInit();
 	} );
 
 	// Cleanup on page unload
@@ -203,6 +467,14 @@ export const sureRankLogoForBuilder = ( className ) => {
 		if ( tooltipCleanup ) {
 			tooltipCleanup();
 			tooltipCleanup = null;
+		}
+		if ( statusUpdateInterval ) {
+			clearInterval( statusUpdateInterval );
+			statusUpdateInterval = null;
+		}
+		if ( unsubscribe && typeof unsubscribe === 'function' ) {
+			unsubscribe();
+			unsubscribe = null;
 		}
 	} );
 } )( jQuery );

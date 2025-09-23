@@ -45,6 +45,15 @@ class Meta_Data {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
+		/**
+		 * If it's a ajax request, we don't need to call wp_head or wp hook here.
+		 *
+		 * @since 1.3.0
+		 */
+		if ( \wp_doing_ajax() ) {
+			return;
+		}
+
 		add_action( 'wp_head', [ $this, 'print_meta_data' ], 2 );
 		add_action( 'wp', [ $this, 'set_meta_data' ], 1 );
 	}

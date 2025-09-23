@@ -3,7 +3,7 @@ import { SureRankLogo } from '@/global/components/icons';
 import { Button, Tabs } from '@bsf/force-ui';
 import { X } from 'lucide-react';
 import { STORE_NAME } from '@/store/constants';
-import { TABS } from '@/apps/seo-popup/modal';
+import { TABS } from '@SeoPopup/modal/tabs';
 import { cn } from '@/functions/utils';
 import { createPortal, useEffect, useState } from '@wordpress/element';
 import PageCheckStatusIndicator from '@AdminComponents/page-check-status-indicator';
@@ -17,13 +17,13 @@ const SeoPopupTabs = () => {
 		select( STORE_NAME ).getAppSettings()
 	);
 
-	const handleTabClick = ( { value: { slug } } ) => {
-		if ( screen?.currentScreen === slug ) {
+	const handleChangeTab = ( { value: { slug } } ) => {
+		if ( screen?.currentTab === slug ) {
 			return;
 		}
 		updateAppSettings( {
-			currentScreen: slug,
-			previousScreen: '',
+			currentTab: slug,
+			previousTab: screen?.currentTab || '',
 		} );
 	};
 
@@ -32,8 +32,8 @@ const SeoPopupTabs = () => {
 			className="h-full [&_button]:h-full border-0"
 			size="sm"
 			variant="underline"
-			activeItem={ screen?.currentScreen }
-			onChange={ handleTabClick }
+			activeItem={ screen?.currentTab }
+			onChange={ handleChangeTab }
 		>
 			{ tabs.map( ( tab ) => (
 				<Tabs.Tab
@@ -72,9 +72,7 @@ const PageChecksStatus = () => {
 				status={ status }
 				errorAndWarnings={ counts.errorAndWarnings }
 				initializing={ initializing }
-				className={ cn( 'static ml-1 size-1.5', {
-					hidden: status === 'success' || status === 'suggestion',
-				} ) }
+				className="static ml-1 size-1.5"
 			/>,
 			host
 		)

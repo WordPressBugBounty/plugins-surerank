@@ -89,9 +89,35 @@ export const setPageSeoCheck = ( key, value ) => {
 
 		const categorizedChecks = getCategorizedChecks( value, ignoredList );
 
+		// Filter checks by allowed page checks to avoid filtering on every render
+		const allowedPageChecks = window?.surerank_seo_popup?.page_checks || [];
+		const allowedKeywordChecks = window?.surerank_seo_popup?.keyword_checks || [];
+
+		const filterChecksByType = ( checksArray, allowedChecks ) => {
+			return checksArray.filter( ( check ) => allowedChecks.includes( check.id ) );
+		};
+
+		const filteredPageChecks = {
+			badChecks: filterChecksByType( categorizedChecks.badChecks || [], allowedPageChecks ),
+			fairChecks: filterChecksByType( categorizedChecks.fairChecks || [], allowedPageChecks ),
+			passedChecks: filterChecksByType( categorizedChecks.passedChecks || [], allowedPageChecks ),
+			ignoredChecks: filterChecksByType( categorizedChecks.ignoredChecks || [], allowedPageChecks ),
+			suggestionChecks: filterChecksByType( categorizedChecks.suggestionChecks || [], allowedPageChecks ),
+		};
+
+		const filteredKeywordChecks = {
+			badChecks: filterChecksByType( categorizedChecks.badChecks || [], allowedKeywordChecks ),
+			fairChecks: filterChecksByType( categorizedChecks.fairChecks || [], allowedKeywordChecks ),
+			passedChecks: filterChecksByType( categorizedChecks.passedChecks || [], allowedKeywordChecks ),
+			ignoredChecks: filterChecksByType( categorizedChecks.ignoredChecks || [], allowedKeywordChecks ),
+			suggestionChecks: filterChecksByType( categorizedChecks.suggestionChecks || [], allowedKeywordChecks ),
+		};
+
 		payload = {
 			checks: value,
 			categorizedChecks,
+			filteredPageChecks,
+			filteredKeywordChecks,
 		};
 	}
 
@@ -142,7 +168,7 @@ export function* restoreIgnoreCheck( checkId, actionType ) {
 
 	try {
 		const data = yield fetchFromAPI( {
-			path: 'surerank/v1/ignore-post-checks',
+			path: 'surerank/v1/checks/ignore-page-check',
 			method: actionType === 'ignore' ? 'POST' : 'DELETE',
 			data: { post_id: postId, id: checkId, check_type: checkType },
 		} );
@@ -205,12 +231,38 @@ export const setPageSeoChecksByIdAndType = (
 		}
 	);
 
+	// Filter checks by allowed page checks to avoid filtering on every render
+	const allowedPageChecks = window?.surerank_seo_popup?.page_checks || [];
+	const allowedKeywordChecks = window?.surerank_seo_popup?.keyword_checks || [];
+
+	const filterChecksByType = ( checksArray, allowedChecks ) => {
+		return checksArray.filter( ( check ) => allowedChecks.includes( check.id ) );
+	};
+
+	const filteredPageChecks = {
+		badChecks: filterChecksByType( categorizedChecks.badChecks || [], allowedPageChecks ),
+		fairChecks: filterChecksByType( categorizedChecks.fairChecks || [], allowedPageChecks ),
+		passedChecks: filterChecksByType( categorizedChecks.passedChecks || [], allowedPageChecks ),
+		ignoredChecks: filterChecksByType( categorizedChecks.ignoredChecks || [], allowedPageChecks ),
+		suggestionChecks: filterChecksByType( categorizedChecks.suggestionChecks || [], allowedPageChecks ),
+	};
+
+	const filteredKeywordChecks = {
+		badChecks: filterChecksByType( categorizedChecks.badChecks || [], allowedKeywordChecks ),
+		fairChecks: filterChecksByType( categorizedChecks.fairChecks || [], allowedKeywordChecks ),
+		passedChecks: filterChecksByType( categorizedChecks.passedChecks || [], allowedKeywordChecks ),
+		ignoredChecks: filterChecksByType( categorizedChecks.ignoredChecks || [], allowedKeywordChecks ),
+		suggestionChecks: filterChecksByType( categorizedChecks.suggestionChecks || [], allowedKeywordChecks ),
+	};
+
 	return {
 		type: actionTypes.SET_PAGE_SEO_CHECKS_BY_ID_AND_TYPE,
 		payload: {
 			postId,
 			postType,
 			checks: categorizedChecks,
+			filteredPageChecks,
+			filteredKeywordChecks,
 			sequence,
 			error,
 		},
@@ -226,7 +278,7 @@ function* handleSeoBarCheckIgnoreUpdate(
 ) {
 	try {
 		const response = yield fetchFromAPI( {
-			path: 'surerank/v1/ignore-post-checks',
+			path: 'surerank/v1/checks/ignore-page-check',
 			method,
 			data: { post_id: postId, id: checkId, check_type: postType },
 		} );

@@ -273,4 +273,175 @@ class Utils {
 			'message' => __( 'Open Graph tags are present on the page.', 'surerank' ),
 		];
 	}
+
+	/**
+	 * Check if keyword exists in text (case-insensitive).
+	 *
+	 * @param string $text Text to search in.
+	 * @param string $keyword Keyword to search for.
+	 * @return bool
+	 */
+	private static function keyword_exists_in_text( $text, $keyword ) {
+		if ( empty( $text ) || empty( $keyword ) ) {
+			return false;
+		}
+		return stripos( $text, $keyword ) !== false;
+	}
+
+	/**
+	 * Analyze focus keyword in SEO title.
+	 *
+	 * @param string|null $title SEO title.
+	 * @param string      $keyword Focus keyword.
+	 * @return array<string, mixed>
+	 */
+	public static function analyze_keyword_in_title( $title, $keyword ) {
+		if ( empty( $keyword ) ) {
+			return [
+				'status'  => 'suggestion',
+				'message' => __( 'No focus keyword set to analyze title.', 'surerank' ),
+			];
+		}
+
+		if ( empty( $title ) ) {
+			return [
+				'status'  => 'warning',
+				'message' => __( 'No SEO title found to analyze.', 'surerank' ),
+			];
+		}
+
+		if ( self::keyword_exists_in_text( $title, $keyword ) ) {
+			return [
+				'status'  => 'success',
+				// translators: %s is the focus keyword.
+				'message' => sprintf( __( 'Focus keyword "%s" found in SEO title.', 'surerank' ), $keyword ),
+			];
+		}
+
+		return [
+			'status'  => 'warning',
+			// translators: %s is the focus keyword.
+			'message' => sprintf( __( 'Focus keyword "%s" not found in SEO title.', 'surerank' ), $keyword ),
+		];
+	}
+
+	/**
+	 * Analyze focus keyword in meta description.
+	 *
+	 * @param string|null $description Meta description.
+	 * @param string      $keyword Focus keyword.
+	 * @return array<string, mixed>
+	 */
+	public static function analyze_keyword_in_description( $description, $keyword ) {
+		if ( empty( $keyword ) ) {
+			return [
+				'status'  => 'suggestion',
+				'message' => __( 'No focus keyword set to analyze meta description.', 'surerank' ),
+			];
+		}
+
+		if ( empty( $description ) ) {
+			return [
+				'status'  => 'warning',
+				'message' => __( 'No meta description found to analyze.', 'surerank' ),
+			];
+		}
+
+		if ( self::keyword_exists_in_text( $description, $keyword ) ) {
+			return [
+				'status'  => 'success',
+				// translators: %s is the focus keyword.
+				'message' => sprintf( __( 'Focus keyword "%s" found in meta description.', 'surerank' ), $keyword ),
+			];
+		}
+
+		return [
+			'status'  => 'warning',
+			// translators: %s is the focus keyword.
+			'message' => sprintf( __( 'Focus keyword "%s" not found in meta description.', 'surerank' ), $keyword ),
+		];
+	}
+
+	/**
+	 * Analyze focus keyword in URL.
+	 *
+	 * @param string $url Page URL.
+	 * @param string $keyword Focus keyword.
+	 * @return array<string, mixed>
+	 */
+	public static function analyze_keyword_in_url( $url, $keyword ) {
+		if ( empty( $keyword ) ) {
+			return [
+				'status'  => 'suggestion',
+				'message' => __( 'No focus keyword set to analyze URL.', 'surerank' ),
+			];
+		}
+
+		if ( empty( $url ) ) {
+			return [
+				'status'  => 'warning',
+				'message' => __( 'No URL found to analyze.', 'surerank' ),
+			];
+		}
+
+		// Convert keyword to URL-friendly format (lowercase, spaces to hyphens).
+		$url_friendly_keyword = strtolower( str_replace( ' ', '-', $keyword ) );
+		$url_lower            = strtolower( $url );
+
+		if ( strpos( $url_lower, $url_friendly_keyword ) !== false || self::keyword_exists_in_text( $url, $keyword ) ) {
+			return [
+				'status'  => 'success',
+				// translators: %s is the focus keyword.
+				'message' => sprintf( __( 'Focus keyword "%s" found in URL.', 'surerank' ), $keyword ),
+			];
+		}
+
+		return [
+			'status'  => 'warning',
+			// translators: %s is the focus keyword.
+			'message' => sprintf( __( 'Focus keyword "%s" not found in URL.', 'surerank' ), $keyword ),
+		];
+	}
+
+	/**
+	 * Analyze focus keyword in content.
+	 *
+	 * @param string $content Page content.
+	 * @param string $keyword Focus keyword.
+	 * @return array<string, mixed>
+	 */
+	public static function analyze_keyword_in_content( $content, $keyword ) {
+		if ( empty( $keyword ) ) {
+			return [
+				'status'  => 'suggestion',
+				'message' => __( 'No focus keyword set to analyze content.', 'surerank' ),
+			];
+		}
+
+		if ( empty( $content ) ) {
+			return [
+				'status'  => 'warning',
+				'message' => __( 'No content found to analyze.', 'surerank' ),
+			];
+		}
+
+		// Clean content of HTML tags for better analysis.
+		$clean_content = wp_strip_all_tags( $content );
+		$clean_content = preg_replace( '/\s+/', ' ', $clean_content );
+		$clean_content = trim( (string) $clean_content );
+
+		if ( self::keyword_exists_in_text( $clean_content, $keyword ) ) {
+			return [
+				'status'  => 'success',
+				// translators: %s is the focus keyword.
+				'message' => sprintf( __( 'Focus keyword "%s" found in content.', 'surerank' ), $keyword ),
+			];
+		}
+
+		return [
+			'status'  => 'warning',
+			// translators: %s is the focus keyword.
+			'message' => sprintf( __( 'Focus keyword "%s" not found in content.', 'surerank' ), $keyword ),
+		];
+	}
 }

@@ -70,10 +70,8 @@ class GoogleConsole {
 			case 'POST':
 			case 'PUT':
 			case 'PATCH':
-				if ( ! empty( $args ) ) {
-					$request_args['headers']['Content-Type'] = 'application/json';
-					$request_args['body']                    = (string) wp_json_encode( $args );
-				}
+				$request_args['headers']['Content-Type'] = 'application/json';
+				$request_args['body']                    = ! empty( $args ) ? (string) wp_json_encode( $args ) : '{}';
 				break;
 			case 'GET':
 			case 'DELETE':

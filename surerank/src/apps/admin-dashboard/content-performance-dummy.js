@@ -14,11 +14,10 @@ import Section from './section';
 import EmptyContentGap from './empty-content-gap';
 import { ArrowRight } from 'lucide-react';
 import { cn } from '@/functions/utils';
-
-const CONTENT_PERFORMANCE_TABS = {
-	analysis: { label: __( 'Content Analysis', 'surerank' ) },
-	gap: { label: __( 'Content Gap', 'surerank' ) },
-};
+import {
+	CONTENT_PERFORMANCE_TABS,
+	CONTENT_PERFORMANCE_TABS_COUNT,
+} from './content-analysis/constants';
 
 const dummyData = [
 	{
@@ -81,7 +80,7 @@ const ContentPerformanceDummy = () => {
 				>
 					<Container align="center" className="gap-2">
 						<Title
-							title={ __( 'SEO Performance', 'surerank' ) }
+							title={ __( 'Content Analysis', 'surerank' ) }
 							tag="h4"
 							size="md"
 						/>
@@ -89,17 +88,19 @@ const ContentPerformanceDummy = () => {
 							{ __( '(Last 90 days)', 'surerank' ) }
 						</Text>
 					</Container>
-					<Container.Item className="w-fit block">
-						<Tabs.Group
-							activeItem={ activeTab }
-							onChange={ ( { value: { slug } } ) =>
-								setActiveTab( slug )
-							}
-							size="sm"
-							variant="rounded"
-						>
-							{ Object.entries( CONTENT_PERFORMANCE_TABS ).map(
-								( [ key, tab ] ) => (
+					{ CONTENT_PERFORMANCE_TABS_COUNT > 1 && (
+						<Container.Item className="w-fit block">
+							<Tabs.Group
+								activeItem={ activeTab }
+								onChange={ ( { value: { slug } } ) =>
+									setActiveTab( slug )
+								}
+								size="sm"
+								variant="rounded"
+							>
+								{ Object.entries(
+									CONTENT_PERFORMANCE_TABS
+								).map( ( [ key, tab ] ) => (
 									<Tabs.Tab
 										key={ key }
 										slug={ key }
@@ -110,10 +111,10 @@ const ContentPerformanceDummy = () => {
 												'text-brand-800'
 										) }
 									/>
-								)
-							) }
-						</Tabs.Group>
-					</Container.Item>
+								) ) }
+							</Tabs.Group>
+						</Container.Item>
+					) }
 				</Container>
 
 				<Tabs.Panel slug="analysis">

@@ -3,6 +3,7 @@ import { forwardRef, Fragment, useState } from '@wordpress/element';
 import { Select, Input, Checkbox, Label, Text } from '@bsf/force-ui';
 import { __ } from '@wordpress/i18n';
 import MediaPreview from '../admin-components/media-preview';
+import { createMediaFrame } from '@/global/utils/utils';
 
 // Track which elements have already been initially focused
 const initiallyFocusedElements = new WeakMap();
@@ -37,7 +38,7 @@ export const renderField = ( field, fieldValue, onChange, error, option ) => {
 	const handleClick = ( event ) => {
 		//prevent native file input from opening
 		event.preventDefault();
-		const frame = wp.media( {
+		const frame = createMediaFrame( {
 			title: field?.label,
 			button: {
 				text: field?.label,

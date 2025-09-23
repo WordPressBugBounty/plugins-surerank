@@ -1,8 +1,8 @@
 import { Container, Badge, Button, Pagination, Table } from '@bsf/force-ui';
 import { __, sprintf } from '@wordpress/i18n';
-import { ArrowRight, ArrowUpRight, Lock, Search, X } from 'lucide-react';
-import FixButton from '@GlobalComponents/fix-button';
+import { ArrowRight, ArrowUpRight, Search, X } from 'lucide-react';
 import { ConfirmationDialog } from '@GlobalComponents/confirmation-dialog';
+import SiteSeoChecksFixButton from './site-seo-checks-fix-button';
 import { useSuspenseSiteSeoAnalysis } from './site-seo-checks-main';
 import {
 	getSeverityColor,
@@ -20,16 +20,16 @@ const SUMMARY_ITEMS_COUNT = 5;
 // Action button component
 const SiteSeoChecksActionButtons = ( {
 	onViewItem,
-	showFixButton = true,
 	item,
 	onIgnore,
+	showFixButton,
 } ) => {
 	const [ isDialogOpen, setIsDialogOpen ] = useState( false );
 
 	const ignoreCheck = useCallback(
 		async ( id ) => {
 			const response = await apiFetch( {
-				path: `/surerank/v1/ignore-checks`,
+				path: `/surerank/v1/checks/ignore-site-check`,
 				method: 'POST',
 				data: { id },
 			} );
@@ -44,7 +44,7 @@ const SiteSeoChecksActionButtons = ( {
 	const restoreCheck = useCallback(
 		async ( id ) => {
 			const response = await apiFetch( {
-				path: `/surerank/v1/ignore-checks`,
+				path: `/surerank/v1/checks/ignore-site-check`,
 				method: 'DELETE',
 				data: { id },
 			} );
@@ -54,6 +54,10 @@ const SiteSeoChecksActionButtons = ( {
 		},
 		[ onIgnore ]
 	);
+
+	const handleSelectOnly = () => {
+		onViewItem( false );
+	};
 
 	// 🟢 If item is ignored, only show Restore
 	if ( item.ignore ) {
@@ -74,16 +78,10 @@ const SiteSeoChecksActionButtons = ( {
 	return (
 		<Container justify="end">
 			{ showFixButton && (
-				<FixButton
+				<SiteSeoChecksFixButton
+					selectedItem={ item }
 					size="xs"
-					tooltipProps={ { className: 'z-999999' } }
-					button_label={
-						item?.not_fixable
-							? __( 'Help Me Fix', 'surerank' )
-							: __( 'Fix it for me', 'surerank' )
-					}
-					disabled
-					icon={ <Lock /> }
+					runBeforeOnClick={ handleSelectOnly }
 				/>
 			) }
 			{ item.status !== 'success' && item.status !== 'suggestion' && (
@@ -130,12 +128,16 @@ const SiteSeoChecksActionButtons = ( {
 const SiteSeoChecksTableRow = ( { item, onIgnore } ) => {
 	const [ , dispatch ] = useSuspenseSiteSeoAnalysis();
 
-	const handleViewItem = useCallback( () => {
-		dispatch( {
-			open: true,
-			selectedItem: item,
-		} );
-	}, [ item, dispatch ] );
+	const handleViewItem = useCallback(
+		( openModal = true ) => {
+			dispatch( {
+				open: typeof openModal === 'boolean' ? openModal : true,
+				selectedItem: item,
+				currentScreen: 'overview',
+			} );
+		},
+		[ item, dispatch ]
+	);
 
 	return (
 		<Table.Row>
@@ -270,7 +272,7 @@ const SiteSeoChecksTable = ( { limit, showViewAll = false } ) => {
 		<Table>
 			<Table.Head>
 				<Table.HeadCell>{ __( 'Issue', 'surerank' ) }</Table.HeadCell>
-				<Table.HeadCell className="w-52 text-center">
+				<Table.HeadCell className="w-72 text-center">
 					{ __( 'Action', 'surerank' ) }
 				</Table.HeadCell>
 			</Table.Head>

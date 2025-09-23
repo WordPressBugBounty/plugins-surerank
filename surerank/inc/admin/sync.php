@@ -94,12 +94,15 @@ class Sync {
 		/** Handle taxonomies with pagination. */
 		$classes = array_merge( $classes, $this->create_post_type_sync_classes( $chunk_size ) );
 		$classes = array_merge( $classes, $this->create_taxonomy_sync_classes( $chunk_size ) );
+		
+		$classes = apply_filters( 'surerank_batch_process_classes', $classes );
+		
 		$classes = array_merge( $classes, $this->create_cleanup_class() );
 
 		if ( defined( 'WP_CLI' ) ) {
 			WP_CLI::line( 'Batch Process Started..' );
 			foreach ( $classes as $key => $class ) {
-				if ( method_exists( $class, 'import' ) ) {
+				if ( is_object( $class ) && method_exists( $class, 'import' ) ) {
 					$class->import();
 				}
 			}

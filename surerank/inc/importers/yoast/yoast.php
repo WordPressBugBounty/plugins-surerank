@@ -266,7 +266,7 @@ class Yoast extends BaseImporter {
 
 		$this->default_surerank_meta['twitter_same_as_facebook'] = ! $this->has_post_twitter_data();
 
-		$imported = $this->process_meta_mapping( Constants::SOCIAL_MAPPING );
+		$imported = $this->process_meta_mapping( Constants::get_social_mapping() );
 		// translators: %d: post ID.
 
 		$message = $imported ? __( 'Social metadata imported for post %d.', 'surerank' ) : __( 'No social metadata to import for post %d.', 'surerank' );
@@ -330,13 +330,13 @@ class Yoast extends BaseImporter {
 		}
 		$this->surerank_settings = Settings::get();
 
-		$this->update_robot_settings( Constants::ROBOT_KEYS_MAPPING );
-		$this->update_description_and_title( Constants::TITLE_DESC_MAPPING );
-		$this->update_archive_settings( Constants::ARCHIVE_SETTINGS_MAPPING );
+		$this->update_robot_settings( Constants::get_robots_key_mapping() );
+		$this->update_description_and_title( Constants::get_title_desc_mapping() );
+		$this->update_archive_settings( Constants::get_archive_settings_mapping() );
 		$this->update_twitter_card_type();
 		$this->update_other_social_profiles();
-		$this->update_social_settings( Constants::OG_SETTINGS_MAPPING );
-		$this->update_sitemap_settings( Constants::SITEMAP_MAPPING );
+		$this->update_social_settings( Constants::get_social_settings_mapping() );
+		$this->update_sitemap_settings( Constants::get_sitemap_mapping() );
 		$this->update_site_details();
 		try {
 			ImporterUtils::update_global_settings( $this->surerank_settings );

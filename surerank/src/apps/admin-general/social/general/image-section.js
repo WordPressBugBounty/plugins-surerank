@@ -7,6 +7,7 @@ import { STORE_NAME } from '@AdminStore/constants';
 import { cn } from '@Functions/utils';
 import { InfoTooltip } from '@AdminComponents/tooltip';
 import MediaPreview from '@/apps/admin-components/media-preview';
+import { createMediaFrame } from '@/global/utils/utils';
 
 const ImageTab = memo( () => {
 	const { setMetaSettings } = useDispatch( STORE_NAME );
@@ -18,7 +19,7 @@ const ImageTab = memo( () => {
 	const openMediaLibrary = useCallback(
 		( e ) => {
 			e.preventDefault();
-			const frame = wp.media( {
+			const frame = createMediaFrame( {
 				title: __( 'Select Default Image', 'surerank' ),
 				button: {
 					text: __( 'Set Default Image', 'surerank' ),

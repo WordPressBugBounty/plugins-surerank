@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use SureRank\Inc\Frontend\Crawl_Optimization;
+use SureRank\Inc\Frontend\Image_Seo;
 use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Update;
 use SureRank\Inc\Traits\Enqueue;
@@ -284,11 +285,57 @@ class Seo_Popup {
 						'is_taxonomy'        => $context_data['is_taxonomy'],
 						'description_length' => Get::description_length(),
 						'title_length'       => Get::title_length(),
+						'keyword_checks'     => $this->keyword_checks(),
+						'page_checks'        => $this->page_checks(),
+						'image_seo'          => Image_Seo::get_instance()->status(),
 					],
 					$context_data['post_data'],
 					$context_data['term_data']
 				),
 			]
 		);
+	}
+
+	/**
+	 * Get keyword checks configuration
+	 *
+	 * @since 1.0.0
+	 * @return array
+	 */
+	/**
+	 * Get keyword checks configuration
+	 *
+	 * @since 1.0.0
+	 * @return array<string>
+	 */
+	public function keyword_checks() {
+		return [
+			'keyword_in_title',
+			'keyword_in_description', 
+			'keyword_in_url',
+			'keyword_in_content',
+		];
+	}
+
+	/**
+	 * Get page checks configuration
+	 *
+	 * @since 1.0.0
+	 * @return array<string>
+	 */
+	public function page_checks() {
+		return [
+			'h2_subheadings',
+			'image_alt_text',
+			'media_present',
+			'links_present',
+			'url_length',
+			'search_engine_title',
+			'search_engine_description',
+			'canonical_url',
+			'all_links',
+			'open_graph_tags',
+			'broken_links',
+		];
 	}
 }

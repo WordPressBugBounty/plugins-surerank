@@ -221,7 +221,7 @@ const SiteSearchTraffic = () => {
 
 		try {
 			const response = await apiFetch( {
-				path: '/surerank/v1/clicks-and-impressions',
+				path: '/surerank/v1/google-search-console/clicks-and-impressions',
 				method: 'POST',
 				data: {
 					startDate: formattedStartDate,
@@ -277,10 +277,13 @@ const SiteSearchTraffic = () => {
 
 		try {
 			const response = await apiFetch( {
-				path: addQueryArgs( '/surerank/v1/site-traffic', {
-					startDate: formattedStartDate,
-					endDate: formattedEndDate,
-				} ),
+				path: addQueryArgs(
+					'/surerank/v1/google-search-console/site-traffic',
+					{
+						startDate: formattedStartDate,
+						endDate: formattedEndDate,
+					}
+				),
 				method: 'GET',
 			} );
 			if ( ! response.success ) {

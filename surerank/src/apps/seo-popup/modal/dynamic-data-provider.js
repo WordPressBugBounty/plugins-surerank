@@ -18,8 +18,10 @@ export const GutenbergData = ( ChildComponent ) => {
 			// Post excerpt.
 			const postExcerpt =
 				coreEditorData.getEditedPostAttribute( 'excerpt' );
+			// Post content.
+			const postContent = coreEditorData.getEditedPostContent();
 
-			return { postTitle, postExcerpt };
+			return { postTitle, postExcerpt, postContent };
 		}, [] );
 
 		useEffect( () => {
@@ -28,8 +30,13 @@ export const GutenbergData = ( ChildComponent ) => {
 			dispatchToSureRankStore.updatePostDynamicData( {
 				title: dynamicData.postTitle,
 				excerpt: dynamicData.postExcerpt,
+				content: cleanContent( dynamicData.postContent ),
 			} );
-		}, [ dynamicData.postTitle, dynamicData.postExcerpt ] );
+		}, [
+			dynamicData.postTitle,
+			dynamicData.postExcerpt,
+			dynamicData.postContent,
+		] );
 
 		return <ChildComponent { ...props } />;
 	};

@@ -203,7 +203,7 @@ class Dashboard {
 		add_menu_page(
 			__( 'SureRank', 'surerank' ),
 			__( 'SureRank', 'surerank' ),
-			'edit_others_posts',
+			'manage_options',
 			$menu_slug,
 			static function () {
 			},

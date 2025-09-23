@@ -4,6 +4,7 @@ import {
 	getStatusIndicatorClasses,
 	getStatusIndicatorAriaLabel,
 } from '@/functions/utils';
+import { ENABLE_PAGE_LEVEL_SEO } from '@/global/constants';
 
 /**
  * PageCheckStatusIndicator - A reusable status indicator component
@@ -32,8 +33,8 @@ const PageCheckStatusIndicator = ( {
 		return getStatusIndicatorAriaLabel( errorAndWarnings );
 	}, [ errorAndWarnings ] );
 
-	// Don't show indicator during initialization or if no status
-	if ( initializing || ! status ) {
+	// Don't show indicator during initialization, disabled or if no status
+	if ( initializing || ! status || ! ENABLE_PAGE_LEVEL_SEO ) {
 		return null;
 	}
 

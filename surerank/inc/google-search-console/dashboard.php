@@ -106,12 +106,20 @@ class Dashboard extends Api_Base {
 					],
 				],
 			],
+			'add-site'               => [
+				'methods'  => WP_REST_Server::CREATABLE,
+				'callback' => [ $this, 'auto_create_property' ],
+			],
+			'verify-site'            => [
+				'methods'  => WP_REST_Server::CREATABLE,
+				'callback' => [ $this, 'verify_existing_property' ],
+			],
 		];
 
 		foreach ( $routes as $endpoint => $args ) {
 			register_rest_route(
 				$namespace,
-				$endpoint,
+				'google-search-console/' . $endpoint,
 				[
 					'methods'             => $args['methods'],
 					'callback'            => $args['callback'],
@@ -123,7 +131,7 @@ class Dashboard extends Api_Base {
 
 		register_rest_route(
 			$namespace,
-			'site',
+			'google-search-console/site',
 			[
 				'methods'             => WP_REST_Server::EDITABLE,
 				'callback'            => [ $this, 'update_site' ],
@@ -197,11 +205,24 @@ class Dashboard extends Api_Base {
 	/**
 	 * Get Sites
 	 *
+	 * Returns all sites with verification status
+	 *
 	 * @return void
+	 * @since 1.0.0
+	 * @since 1.4.0
 	 */
 	public function get_sites() {
-		// We are checking is_wp_error() in call_api() method.
-		Send_Json::success( Controller::get_instance()->get_sites() );
+		// Get all sites once.
+		$all_sites = Controller::get_instance()->get_sites();
+		
+		if ( isset( $all_sites['siteEntry'] ) && is_array( $all_sites['siteEntry'] ) ) {
+			foreach ( $all_sites['siteEntry'] as &$site ) {
+				$site['isVerified'] = isset( $site['permissionLevel'] ) && 
+					$site['permissionLevel'] !== 'siteUnverifiedUser';
+			}
+		}
+		
+		Send_Json::success( $all_sites );
 	}
 
 	/**
@@ -246,4 +267,41 @@ class Dashboard extends Api_Base {
 	public function get_content_performance( $request ) {
 		Send_Json::success( Controller::get_instance()->get_content_performance( $request ) );
 	}
+
+	/**
+	 * Auto Create Property
+	 *
+	 * Automatically creates and verifies GSC property if one doesn't exist
+	 *
+	 * @return void
+	 * @since 1.4.0
+	 */
+	public function auto_create_property() {
+		$result = Controller::get_instance()->auto_create_and_verify_property();
+
+		if ( isset( $result['success'] ) && $result['success'] ) {
+			Send_Json::success( $result );
+		} else {
+			Send_Json::error( $result );
+		}
+	}
+
+	/**
+	 * Verify Existing Property
+	 *
+	 * Verifies an existing GSC property that's already added but not verified
+	 *
+	 * @return void
+	 * @since 1.4.0
+	 */
+	public function verify_existing_property() {
+		$result = Controller::get_instance()->verify_existing_property();
+
+		if ( isset( $result['success'] ) && $result['success'] ) {
+			Send_Json::success( $result );
+		} else {
+			Send_Json::error( $result );
+		}
+	}
+
 }

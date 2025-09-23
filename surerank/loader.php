@@ -35,7 +35,9 @@ use SureRank\Inc\Frontend\Common;
 use SureRank\Inc\Frontend\Crawl_Optimization;
 use SureRank\Inc\Frontend\Facebook;
 use SureRank\Inc\Frontend\Feed;
+use SureRank\Inc\Frontend\Image_Seo;
 use SureRank\Inc\Frontend\Meta_Data;
+use SureRank\Inc\Frontend\Meta_Tag_Injection;
 use SureRank\Inc\Frontend\Product;
 use SureRank\Inc\Frontend\Robots;
 use SureRank\Inc\Frontend\Seo_Popup as Seo_Popup_Frontend;
@@ -50,6 +52,8 @@ use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Functions\Update;
 use SureRank\Inc\GoogleSearchConsole\Auth;
+use SureRank\Inc\Modules\Ai_Auth\Init as Ai_Auth_Init;
+use SureRank\Inc\Modules\Content_Generation\Init as Content_Generation_Init;
 use SureRank\Inc\Lib\Surerank_Nps_Survey;
 use SureRank\Inc\Nps_Notice;
 use SureRank\Inc\Routes;
@@ -59,6 +63,7 @@ use SureRank\Inc\Sitemap\Xml_Sitemap;
 use SureRank\Inc\ThirdPartyPlugins\Bricks;
 use SureRank\Inc\ThirdPartyPlugins\CartFlows;
 use SureRank\Inc\ThirdPartyPlugins\Elementor;
+use SureRank\Inc\Modules\FixSeoChecks\Init as Fix_Seo_Checks_Init;
 
 /**
  * Plugin_Loader
@@ -306,6 +311,9 @@ class Loader {
 			Sync::class,
 			Cron::class,
 			Checksum::class,
+			Ai_Auth_Init::class,
+			Content_Generation_Init::class,
+			Fix_Seo_Checks_Init::class,
 		];
 
 		$this->load_components( $core_components );
@@ -330,6 +338,10 @@ class Loader {
 	 * @return void
 	 */
 	private function load_admin_components(): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
 		$admin_components = [
 			Seo_Popup::class,
 			Update_Timestamp::class,
@@ -364,6 +376,8 @@ class Loader {
 			Feed::class,
 			Seo_Popup_Frontend::class,
 			Meta_Data::class,
+			Image_Seo::class,
+			Meta_Tag_Injection::class,
 			Xml_Sitemap::class,
 			Archives::class,
 		];

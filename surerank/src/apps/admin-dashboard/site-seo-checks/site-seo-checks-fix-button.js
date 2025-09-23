@@ -1,71 +1,61 @@
-import { SeoPopupTooltip } from '@/apps/admin-components/tooltip';
-import { Text, Button } from '@bsf/force-ui';
+import { useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { applyFilters } from '@wordpress/hooks';
+import { LockIcon } from 'lucide-react';
+import FixButton from '@GlobalComponents/fix-button';
+import {
+	REQUIRE_CONTENT_GENERATION,
+	SEO_FIX_TYPE_MAPPING,
+} from '@Global/constants';
 
-const pricingLink = window?.surerank_globals?.pricing_link ?? '';
+const SHOW_FIX_BUTTON_FOR = [
+	...new Set( [
+		...REQUIRE_CONTENT_GENERATION,
+		...Object.keys( SEO_FIX_TYPE_MAPPING ),
+	] ),
+];
 
-const FixButton = ( {
-	size = 'xs',
-	disabled = true,
-	tooltipProps,
-	title = __( 'Fix SEO Issues with AI', 'surerank' ),
-	description = __(
-		'Let AI automatically detect and resolve on-page SEO problems, such as missing SEO descriptions, image alt tags, and more.',
-		'surerank'
-	),
-	link = pricingLink,
-	linkLabel = __( 'Upgrade Now', 'surerank' ),
-	iconPosition = 'left',
-	icon,
-	button_label = __( 'Fix It for Me', 'surerank' ),
-	...props
-} ) => {
-	return (
-		<SeoPopupTooltip
-			arrow
-			interactive
-			placement="top-end"
-			{ ...tooltipProps }
-			content={
-				<div className="space-y-1">
-					<Text size={ 12 } weight={ 600 } color="inverse">
-						{ title }
-					</Text>
-					<Text
-						size={ 12 }
-						weight={ 400 }
-						color="inverse"
-						className="leading-relaxed"
-					>
-						{ description }
-					</Text>
-					<div className="mt-1.5">
-						<Button
-							size="xs"
-							variant="link"
-							className="[&>span]:px-0 no-underline hover:no-underline focus:[box-shadow:none] text-link-inverse hover:text-link-inverse-hover"
-							tag="a"
-							href={ link }
-							target="_blank"
-						>
-							{ linkLabel }
-						</Button>
-					</div>
-				</div>
-			}
-		>
-			<Button
-				className="w-fit"
-				size={ size }
-				icon={ icon }
-				iconPosition={ iconPosition }
-				disabled={ disabled }
-				{ ...props }
-			>
-				{ button_label }
-			</Button>
-		</SeoPopupTooltip>
+/**
+ * SiteSeoChecksFixButton component that renders a FixButton with consistent logic
+ * @param {Object} props                 - Component props
+ * @param {Object} props.selectedItem    - The selected item object containing status and other properties
+ * @param {Object} props.additionalProps - Additional props to pass to the FixButton
+ * @return {JSX.Element} The rendered FixButton component
+ */
+const SiteSeoChecksFixButton = ( { selectedItem, ...additionalProps } ) => {
+	const fixItButtonProps = useMemo(
+		() => ( {
+			buttonLabel: ! REQUIRE_CONTENT_GENERATION.includes(
+				selectedItem?.id
+			)
+				? __( 'Fix It For Me', 'surerank' )
+				: __( 'Help Me Fix', 'surerank' ),
+			...additionalProps,
+			hidden: true,
+			id: selectedItem?.id,
+			category: selectedItem?.category ?? '',
+		} ),
+		[ selectedItem, additionalProps ]
+	);
+
+	if ( ! SHOW_FIX_BUTTON_FOR.includes( selectedItem.id ) ) {
+		return null;
+	}
+
+	const ProFixButton = applyFilters(
+		'surerank-pro.dashboard.site-seo-checks-fix-it-button'
+	);
+
+	return ProFixButton ? (
+		<ProFixButton { ...fixItButtonProps } />
+	) : (
+		<FixButton
+			icon={ <LockIcon /> }
+			tooltipProps={ { className: 'z-999999' } }
+			locked={ true }
+			{ ...fixItButtonProps }
+		/>
 	);
 };
 
-export default FixButton;
+export default SiteSeoChecksFixButton;

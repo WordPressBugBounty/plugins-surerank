@@ -1,5 +1,8 @@
 import { __ } from '@wordpress/i18n';
-import { sureRankLogoForBuilder, handleOpenSureRankDrawer } from '../elementor';
+import {
+	sureRankLogoForBuilder,
+	handleOpenSureRankDrawer,
+} from '@SeoPopup/utils/page-builder-functions';
 
 /* global jQuery */
 /* eslint-disable */
@@ -11,7 +14,10 @@ import { sureRankLogoForBuilder, handleOpenSureRankDrawer } from '../elementor';
 		const button = $( `<li aria-label="${ __(
 			'Open SureRank SEO',
 			'surerank'
-		) }" data-balloon-pos="bottom" data-balloon="SureRank" tabindex="0">
+		) }" data-balloon-pos="bottom" data-balloon="${ __(
+			'SureRank Meta Box',
+			'surerank'
+		) }" tabindex="0">
 						<span class="bricks-svg-wrapper">${ sureRankLogoForBuilder(
 							'surerank'
 						) }</span>

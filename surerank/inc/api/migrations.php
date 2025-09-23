@@ -39,29 +39,29 @@ class Migrations extends Api_Base {
 	/**
 	 * Route Migrated Data
 	 */
-	protected const MIGRATED_DATA = '/migrated-data';
+	protected const MIGRATED_DATA = '/migration/migrated-data';
 
 	/**
 	 * API endpoint for migrating posts.
 	 */
-	private const ENDPOINT_POSTS = '/migrate/posts';
+	private const ENDPOINT_POSTS = '/migration/posts';
 
 	/**
 	 * API endpoint for migrating terms.
 	 */
-	private const ENDPOINT_TERMS = '/migrate/terms';
+	private const ENDPOINT_TERMS = '/migration/terms';
 
 	/**
 	 * API endpoint for migrating global settings.
 	 */
-	private const ENDPOINT_GLOBAL = '/migrate/global-settings';
+	private const ENDPOINT_GLOBAL = '/migration/global-settings';
 
 	/**
 	 * API endpoint for deactivating a plugin.
 	 *
 	 * @since 1.1.0
 	 */
-	private const ENDPOINT_DEACTIVATE = '/migrate/deactivate-plugin';
+	private const ENDPOINT_DEACTIVATE = '/plugins/deactivate';
 
 	/**
 	 * Batch size for processing large datasets.
@@ -80,7 +80,7 @@ class Migrations extends Api_Base {
 	];
 
 	/**
-	 * Register the /migrate/posts, /migrate/terms, /migrate/global-settings routes.
+	 * Register the /migration/posts, /migration/terms, /migration/global-settings routes.
 	 */
 	public function register_routes(): void {
 
@@ -248,7 +248,7 @@ class Migrations extends Api_Base {
 		// -------- Mark migration completed --------.
 		register_rest_route(
 			$namespace,
-			'/migration-completed',
+			'/migration/completed',
 			[
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'mark_migration_completed_endpoint' ],

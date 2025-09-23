@@ -91,7 +91,7 @@ const UserDropdown = () => {
 export const handleDisconnectConfirm = async () => {
 	try {
 		const response = await apiFetch( {
-			path: '/surerank/v1/revoke-auth',
+			path: '/surerank/v1/google-search-console/revoke-auth',
 			method: 'DELETE',
 		} );
 		if ( ! response.success ) {

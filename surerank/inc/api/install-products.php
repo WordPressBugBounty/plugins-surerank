@@ -28,7 +28,7 @@ class Install_Products extends Api_Base {
 	/**
 	 * Route Get Installed Plugins and Themes
 	 */
-	protected const INSTALLED_PLUGINS_AND_THEMES = '/installed-plugins-and-themes';
+	protected const INSTALLED_PLUGINS_AND_THEMES = '/plugins/installed';
 
 	/**
 	 * Constructor

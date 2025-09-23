@@ -81,14 +81,27 @@ export const checkImageAlt = async ( doc ) => {
 		} );
 	}
 
+	const image_seo = window?.surerank_seo_popup?.image_seo;
+	const baseMessage = __(
+		'One or more images are missing alt text attributes.',
+		'surerank'
+	);
+
+	let title = `${ baseMessage } ${ __(
+		'You can add them manually or turn on auto-set image title and alt in the settings.',
+		'surerank'
+	) }`;
+	if ( image_seo ) {
+		title = `${ baseMessage } ${ __(
+			"But don't worry, we will add them automatically for you.",
+			'surerank'
+		) }`;
+	}
+
 	return createCheck( {
 		id: 'image_alt_text',
-		title: __(
-			'One or more images on this page are missing alt text attributes.',
-			'surerank'
-		),
-		status: 'warning',
-		// Include the images that are missing alt text.
+		title,
+		status: 'suggestion',
 		data: Array.from(
 			new Set( missingAltImages.map( ( img ) => img.src ) )
 		),

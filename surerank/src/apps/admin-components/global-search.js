@@ -318,7 +318,7 @@ const GlobalSearch = ( { navLinks = [] } ) => {
 				size="sm"
 				open={ open }
 				setOpen={ setOpen }
-				className="w-full md:w-72"
+				className="w-full md:w-72 z-50"
 				filter={ false }
 			>
 				<SearchBox.Input

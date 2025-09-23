@@ -4,10 +4,10 @@ import { useDispatch, useSuspenseSelect } from '@wordpress/data';
 import { STORE_NAME } from '@AdminStore/constants';
 import {
 	INPUT_VARIABLE_SUGGESTIONS as variableSuggestions,
-	DEFAULT_PAGE_DESCRIPTION,
+	getDefaultPageDescription,
 	DESCRIPTION_LENGTH,
 	TITLE_LENGTH,
-	SEARCH_ENGINE_PREVIEW_INFO_TEXT,
+	getSearchEnginePreviewInfoText,
 } from '@Global/constants';
 import { __ } from '@wordpress/i18n';
 import { useRef } from '@wordpress/element';
@@ -177,7 +177,7 @@ const TitleAndDescriptionSettings = () => {
 						</span>
 					</Label>
 					<InfoTooltip
-						content={ SEARCH_ENGINE_PREVIEW_INFO_TEXT }
+						content={ getSearchEnginePreviewInfoText() }
 						interactive
 					/>
 				</div>
@@ -187,7 +187,7 @@ const TitleAndDescriptionSettings = () => {
 					title={ titleContentTruncated }
 					faviconURL={ faviconImageUrl }
 					description={
-						descriptionContentTruncated || DEFAULT_PAGE_DESCRIPTION
+						descriptionContentTruncated || getDefaultPageDescription()
 					}
 					permalink={ siteSettings?.site?.site_url ?? '' }
 				/>

@@ -1,24 +1,29 @@
-import { useState } from '@wordpress/element';
-import { useDispatch } from '@wordpress/data';
+import { useDispatch, useSelect } from '@wordpress/data';
 import { STORE_NAME } from '@AdminStore/constants';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
+import { addCategoryToSiteSeoChecks } from '@Functions/utils';
 
 /**
  * Custom hook for running SEO checks
  *
+ * @param {Object} options            - Configuration options for the hook
+ * @param {Array}  options.categories - Array of categories to fetch ('settings', 'other', 'general'). If not provided, fetches all categories.
  * @return {Object} Hook return object containing isLoading state and handleRunChecksAgain function
  */
-export const useRunSeoChecks = () => {
+export const useRunSeoChecks = ( options = {} ) => {
+	const { categories = [ 'settings', 'other', 'general' ] } = options;
 	const dispatch = useDispatch( STORE_NAME );
-	const [ isLoading, setIsLoading ] = useState( false );
+	const { runningChecks, report } =
+		useSelect( ( select ) => select( STORE_NAME ).getSiteSeoAnalysis() ) ||
+		false;
 	const { setSiteSeoAnalysis } = dispatch;
 
 	const handleRunChecksAgain = async () => {
-		if ( isLoading ) {
+		if ( runningChecks ) {
 			return;
 		}
-		setIsLoading( true );
+		setSiteSeoAnalysis( { runningChecks: true } );
 		const url = surerank_globals.site_url;
 		const force = true;
 
@@ -26,50 +31,70 @@ export const useRunSeoChecks = () => {
 		let otherResponse = {};
 		let generalResponse = {};
 
-		try {
-			settingsResponse = await apiFetch( {
-				path: addQueryArgs( '/surerank/v1/checks/settings', {
-					url,
-					force,
-				} ),
-			} );
-		} catch ( error ) {}
+		// Fetch only the requested categories
+		if ( categories.includes( 'settings' ) ) {
+			try {
+				settingsResponse = await apiFetch( {
+					path: addQueryArgs( '/surerank/v1/checks/settings', {
+						url,
+						force,
+					} ),
+				} );
+				settingsResponse = addCategoryToSiteSeoChecks(
+					settingsResponse,
+					'settings'
+				);
+			} catch ( error ) {}
+		}
 
-		try {
-			otherResponse = await apiFetch( {
-				path: addQueryArgs( '/surerank/v1/checks/other', {
-					url,
-					force,
-				} ),
-			} );
-		} catch ( error ) {}
+		if ( categories.includes( 'other' ) ) {
+			try {
+				otherResponse = await apiFetch( {
+					path: addQueryArgs( '/surerank/v1/checks/other', {
+						url,
+						force,
+					} ),
+				} );
+				otherResponse = addCategoryToSiteSeoChecks(
+					otherResponse,
+					'other'
+				);
+			} catch ( error ) {}
+		}
 
-		try {
-			generalResponse = await apiFetch( {
-				path: addQueryArgs( '/surerank/v1/checks/general', {
-					url,
-					force,
-				} ),
-			} );
-		} catch ( error ) {}
+		if ( categories.includes( 'general' ) ) {
+			try {
+				generalResponse = await apiFetch( {
+					path: addQueryArgs( '/surerank/v1/checks/general', {
+						url,
+						force,
+					} ),
+				} );
+				generalResponse = addCategoryToSiteSeoChecks(
+					generalResponse,
+					'general'
+				);
+			} catch ( error ) {}
+		}
 
 		const hasAnyData =
 			Object.keys( settingsResponse ).length > 0 ||
 			Object.keys( otherResponse ).length > 0 ||
 			Object.keys( generalResponse ).length > 0;
 
+		const payload = {
+			runningChecks: false,
+		};
 		if ( hasAnyData ) {
-			setSiteSeoAnalysis( {
-				report: {
-					...generalResponse,
-					...settingsResponse,
-					...otherResponse,
-				},
-			} );
+			payload.report = {
+				...report,
+				...generalResponse,
+				...settingsResponse,
+				...otherResponse,
+			};
 		}
-
-		setIsLoading( false );
+		setSiteSeoAnalysis( payload );
 	};
 
-	return { isLoading, handleRunChecksAgain };
+	return { isLoading: runningChecks, handleRunChecksAgain };
 };

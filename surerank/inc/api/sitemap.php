@@ -30,7 +30,7 @@ class Sitemap extends Api_Base {
 	/**
 	 * Route for generating sitemap cache
 	 */
-	protected const GENERATE_CACHE = '/generate-cache';
+	protected const GENERATE_CACHE = '/sitemap/generate-cache';
 
 	/**
 	 * Register API routes.

@@ -26,10 +26,30 @@ const FixButton = ( {
 	linkLabel = __( 'Join Waitlist', 'surerank' ),
 	iconPosition = 'left',
 	icon,
-	button_label = __( 'Fix It for Me', 'surerank' ),
+	buttonLabel = __( 'Fix It for Me', 'surerank' ),
+	className,
 	hidden = true,
+	locked = true,
 	...props
 } ) => {
+	const buttonComponent = (
+		<Button
+			className={ cn( 'w-fit', hidden && 'hidden', className ) }
+			size={ size }
+			icon={ icon }
+			iconPosition={ iconPosition }
+			{ ...props }
+		>
+			{ buttonLabel }
+		</Button>
+	);
+
+	// If locked is false, render just the button without tooltip
+	if ( ! locked ) {
+		return buttonComponent;
+	}
+
+	// If locked is true (default), render with tooltip
 	return (
 		<SeoPopupTooltip
 			arrow
@@ -64,16 +84,7 @@ const FixButton = ( {
 				</div>
 			}
 		>
-			<Button
-				{ ...props }
-				className={ cn( 'w-fit underline', hidden && 'hidden' ) }
-				size={ size }
-				icon={ icon }
-				iconPosition={ iconPosition }
-				variant="link"
-			>
-				{ button_label }
-			</Button>
+			{ buttonComponent }
 		</SeoPopupTooltip>
 	);
 };

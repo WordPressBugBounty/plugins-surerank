@@ -4,7 +4,12 @@ import { Loader, Text } from '@bsf/force-ui';
 import { motion } from 'framer-motion';
 import { CheckCard } from '@GlobalComponents/check-card';
 
-const PageChecks = ( { pageSeoChecks = {}, onIgnore, onRestore } ) => {
+const PageChecks = ( {
+	pageSeoChecks = {},
+	onIgnore,
+	onRestore,
+	type = 'page',
+} ) => {
 	const {
 		badChecks = [],
 		fairChecks = [],
@@ -41,6 +46,23 @@ const PageChecks = ( { pageSeoChecks = {}, onIgnore, onRestore } ) => {
 			{ /* Critical and Warning Checks Container */ }
 			{ hasBadOrFairChecks && (
 				<div className="space-y-3">
+					{ /* Broken links check progress will render here - only for page checks */ }
+					{ type === 'page' && isCheckingLinks && (
+						<div className="flex items-center gap-2 p-2 bg-white rounded-lg shadow-sm border-0.5 border-solid border-border-subtle">
+							<Loader size="sm" />
+							<Text size={ 14 } weight={ 500 } color="tertiary">
+								{ sprintf(
+									/* translators: %1$d: number of links */
+									__(
+										'%1$d out of %2$d checks are done.',
+										'surerank'
+									),
+									linkCheckProgress.current,
+									linkCheckProgress.total
+								) }
+							</Text>
+						</div>
+					) }
 					{ badChecks.map( ( check ) => (
 						<CheckCard
 							key={ check.id }
@@ -79,23 +101,6 @@ const PageChecks = ( { pageSeoChecks = {}, onIgnore, onRestore } ) => {
 							onIgnore={ handleIgnoreCheck( check.id ) }
 						/>
 					) ) }
-					{ /* Broken links check progress will render here */ }
-					{ isCheckingLinks && (
-						<div className="flex items-center gap-2 p-2 bg-white rounded-lg shadow-sm border-0.5 border-solid border-border-subtle">
-							<Loader size="sm" />
-							<Text size={ 14 } weight={ 500 } color="tertiary">
-								{ sprintf(
-									/* translators: %1$d: number of links */
-									__(
-										'%1$d out of %2$d checks are done.',
-										'surerank'
-									),
-									linkCheckProgress.current,
-									linkCheckProgress.total
-								) }
-							</Text>
-						</div>
-					) }
 				</div>
 			) }
 			{ /* Ignored Checks Container */ }

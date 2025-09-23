@@ -6,12 +6,12 @@ import {
 	Fragment,
 	useMemo,
 	memo,
+	Suspense,
 } from '@wordpress/element';
 import {
 	withSelect,
 	withDispatch,
 	useSelect,
-	dispatch as staticDispatch,
 	select as staticSelect,
 } from '@wordpress/data';
 import { STORE_NAME } from '@Store/constants';
@@ -19,23 +19,11 @@ import { cn } from '@Functions/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button, Text, Toaster, toast } from '@bsf/force-ui';
 import { GutenbergData, ClassicEditorData } from './dynamic-data-provider';
-import {
-	Header,
-	Footer,
-	PageChecksHoc,
-	MetaSettings,
-} from '@SeoPopup/components';
-import { __ } from '@wordpress/i18n';
-import { ArrowLeftIcon, BarChart2, TrendingUp } from 'lucide-react';
+import { Header, Footer } from '@SeoPopup/components';
+import { ArrowLeftIcon } from 'lucide-react';
 import { fetchMetaSettings } from '@/functions/api';
-import { applyFilters } from '@wordpress/hooks';
-import PageBuilderPageSeoChecksHoc from '../components/page-seo-checks/page-builder-page-checks-hoc';
-import {
-	isPageBuilderActive,
-	isBricksBuilder,
-} from '../components/page-seo-checks/analyzer/utils/page-builder';
-import Analyze from '../components/analyze';
-import { ENABLE_PAGE_LEVEL_SEO } from '@Global/constants';
+import { SCREENS } from './screens';
+import { usePageChecks } from '../hooks';
 
 // Define toast globally for PRO plugin.
 if ( window && ! window?.toast ) {
@@ -48,41 +36,6 @@ const animateVariants = {
 	},
 	closed: {
 		x: '100%',
-	},
-};
-
-export const TABS = applyFilters( 'surerank-pro.seo-popup-tabs', {
-	optimize: {
-		title: __( 'Optimize', 'surerank' ),
-		component: MetaSettings,
-		label: __( 'Optimize', 'surerank' ),
-		icon: <TrendingUp />,
-		slug: 'optimize',
-	},
-	// Conditionally add the Analyze tab
-	...( ! ENABLE_PAGE_LEVEL_SEO || isBricksBuilder()
-		? {}
-		: {
-				analyze: {
-					title: __( 'Analyze', 'surerank' ),
-					component: Analyze,
-					label: __( 'Analyze', 'surerank' ),
-					slug: 'analyze',
-					icon: <BarChart2 />,
-					className: 'relative surerank-page-checks-indicator',
-				},
-		  } ),
-} );
-
-const SCREENS = {
-	checks: {
-		title: __( 'Page SEO Checks', 'surerank' ),
-		component: PageChecksHoc,
-		pageBuilderComponent: PageBuilderPageSeoChecksHoc,
-	},
-	settings: {
-		title: __( 'Settings', 'surerank' ),
-		component: MetaSettings,
 	},
 };
 
@@ -126,6 +79,11 @@ export const getEditorData = () => {
 	};
 };
 
+const IsolatePageChecksHook = () => {
+	usePageChecks();
+	return null;
+};
+
 const SeoModal = ( props ) => {
 	const {
 		setMetaDataAndDefaults,
@@ -154,11 +112,6 @@ const SeoModal = ( props ) => {
 				postSeoMeta: response.data,
 				globalDefaults: response.global_default,
 			} );
-
-			//set post content
-			staticDispatch( STORE_NAME ).updatePostDynamicData( {
-				content: response.data.auto_description,
-			} );
 		} catch ( error ) {
 			toast.error( error.message );
 		} finally {
@@ -177,18 +130,37 @@ const SeoModal = ( props ) => {
 		updateModalState( false );
 	}, [ updateModalState ] );
 
-	const isPageBuilder = isPageBuilderActive();
-
 	const RenderScreen = useMemo( () => {
-		const screen = TABS[ appSettings?.currentScreen ?? 'optimize' ];
-		if ( isPageBuilder ) {
-			return screen?.pageBuilderComponent || screen?.component;
+		if ( appSettings?.currentScreen ) {
+			return SCREENS[ appSettings?.currentScreen ].component;
 		}
-		return screen?.component;
-	}, [ appSettings?.currentScreen, isPageBuilder ] );
+	}, [ appSettings?.currentScreen ] );
+
+	const RenderHeader = useMemo( () => {
+		const screen = SCREENS[ appSettings?.currentScreen ];
+		if ( !! screen?.header ) {
+			return screen.header;
+		}
+
+		return Header;
+	}, [ appSettings?.currentScreen ] );
+
+	const handleBack = useCallback( () => {
+		const { previousScreen } = appSettings;
+		if ( ! previousScreen ) {
+			return;
+		}
+		updateAppSettings( {
+			currentScreen: previousScreen,
+			previousScreen: '',
+		} );
+	}, [ appSettings.previousScreen, updateAppSettings ] );
 
 	return (
 		<Fragment>
+			<Suspense fallback={ null }>
+				<IsolatePageChecksHook />
+			</Suspense>
 			<Toaster className="z-[100000]" />
 			<AnimatePresence>
 				{ modalState && (
@@ -202,7 +174,9 @@ const SeoModal = ( props ) => {
 						variants={ animateVariants }
 						transition={ { duration: 0.3 } }
 					>
-						<Header onClose={ closeModal } />
+						{ /* Header */ }
+						<RenderHeader onClose={ closeModal } />
+						{ /* Screen controls */ }
 						{ appSettings?.previousScreen && (
 							<div className="space-y-2">
 								<div className="flex items-center justify-between gap-2 px-4 pt-4">
@@ -210,13 +184,7 @@ const SeoModal = ( props ) => {
 										{ appSettings.currentScreen ===
 											'checks' && (
 											<Button
-												onClick={ () =>
-													updateAppSettings( {
-														currentScreen:
-															appSettings.previousScreen,
-														previousScreen: '',
-													} )
-												}
+												onClick={ handleBack }
 												variant="ghost"
 												size="sm"
 												icon={ <ArrowLeftIcon /> }
@@ -243,13 +211,12 @@ const SeoModal = ( props ) => {
 						<div
 							className={ cn(
 								'flex-1 flex flex-col gap-6 overflow-y-auto px-4 pt-4 pb-0',
-								appSettings?.currentScreen !== 'optimize' &&
-									'pb-4'
+								appSettings?.currentTab !== 'optimize' && 'pb-4'
 							) }
 						>
 							<RenderScreen />
 						</div>
-						{ appSettings?.currentScreen === 'optimize' && (
+						{ appSettings?.currentTab === 'optimize' && (
 							<Footer onClose={ closeModal } />
 						) }
 					</motion.div>

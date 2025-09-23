@@ -41,6 +41,7 @@ class Defaults {
 		'fallback_image'            => '',
 		'auto_generated_og_image'   => '',
 		'canonical_url'             => '',
+		'focus_keyword'             => '',
 	];
 
 	/**
@@ -137,14 +138,8 @@ class Defaults {
 	 * @since 1.0.0
 	 */
 	private $global_advanced_sitemaps_default = [
-		'enable_xml_sitemap'        => true,
-		'enable_xml_image_sitemap'  => true,
-		'enable_author_sitemap'     => false,
-		'enable_html_sitemap'       => true,
-		'sitemap_display_shortcode' => [],
-		'sitemap_display_format'    => 'shortcode',
-		'enable_xml_video_sitemap'  => true,
-		'enable_xml_news_sitemap'   => true,
+		'enable_xml_sitemap'       => true,
+		'enable_xml_image_sitemap' => true,
 	];
 
 	/**

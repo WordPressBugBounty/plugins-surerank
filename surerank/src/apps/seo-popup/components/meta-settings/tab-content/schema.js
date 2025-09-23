@@ -37,6 +37,14 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 	const schemas = postMetaData.schemas
 		? postMetaData.schemas
 		: globalSchemas || {};
+
+	const validSchemas = useMemo(
+		() =>
+			Object.entries( schemas ).filter( ( [ , schema ] ) => {
+				return isSchemaTypeValid( schema?.title );
+			} ),
+		[ schemas ]
+	);
 	const schemaTypeData = surerank_globals?.schema_type_data || {};
 	const schemaTypeOptions = surerank_globals?.schema_type_options || {};
 
@@ -329,66 +337,57 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 					'w-full bg-background-secondary flex flex-col items-center justify-center rounded p-1'
 				) }
 			>
-				{ Object.entries( schemas ).length > 0 ? (
+				{ validSchemas.length > 0 ? (
 					<Accordion
 						type="simple"
 						iconType="arrow"
 						className="w-full space-y-1"
 						autoClose={ false }
 					>
-						{ Object.entries( schemas )
-							.filter( ( [ , schema ] ) => {
-								// Only show schemas that exist in schemaTypeData
-								return isSchemaTypeValid( schema?.title );
-							} )
-							.map( ( [ schemaId, schema ] ) => {
-								return (
-									<Accordion.Item
-										key={ schemaId }
-										value={ schemaId }
-										className="bg-background-primary rounded-md"
-										defaultExpanded={
-											schemaId === expandedSchemaId
-										}
+						{ validSchemas.map( ( [ schemaId, schema ] ) => {
+							return (
+								<Accordion.Item
+									key={ schemaId }
+									value={ schemaId }
+									className="bg-background-primary rounded-md"
+									defaultExpanded={
+										schemaId === expandedSchemaId
+									}
+								>
+									<Accordion.Trigger
+										iconType="arrow"
+										className="hover:bg-background-primary rounded-md flex justify-between items-center [&>div]:w-full p-2 gap-2 [&>svg]:size-4 cursor-pointer"
 									>
-										<Accordion.Trigger
-											iconType="arrow"
-											className="hover:bg-background-primary rounded-md flex justify-between items-center [&>div]:w-full p-2 gap-2 [&>svg]:size-4 cursor-pointer"
+										<span className="text-base font-normal text-text-primary leading-6 ml-1">
+											{ schema.title }
+										</span>
+										<ConfirmationPopover
+											onConfirm={ () =>
+												handleDeleteSchema( schemaId )
+											}
+											placement="bottom"
+											offset={ {
+												mainAxis: 8,
+												crossAxis: -28,
+											} }
 										>
-											<span className="text-base font-normal text-text-primary leading-6 ml-1">
-												{ schema.title }
-											</span>
-											<ConfirmationPopover
-												onConfirm={ () =>
-													handleDeleteSchema(
-														schemaId
-													)
-												}
-												placement="bottom"
-												offset={ {
-													mainAxis: 8,
-													crossAxis: -28,
-												} }
+											<div
+												className="inline-flex ml-auto"
+												role="button"
+												tabIndex={ 0 }
 											>
-												<div
-													className="inline-flex ml-auto"
-													role="button"
-													tabIndex={ 0 }
-												>
-													<Trash className="size-3.5 text-icon-secondary cursor-pointer" />
-												</div>
-											</ConfirmationPopover>
-										</Accordion.Trigger>
-										<Accordion.Content>
-											<div className="mt-3 space-y-4">
-												{ renderSchemaFields(
-													schemaId
-												) }
+												<Trash className="size-3.5 text-icon-secondary cursor-pointer" />
 											</div>
-										</Accordion.Content>
-									</Accordion.Item>
-								);
-							} ) }
+										</ConfirmationPopover>
+									</Accordion.Trigger>
+									<Accordion.Content>
+										<div className="mt-3 space-y-4">
+											{ renderSchemaFields( schemaId ) }
+										</div>
+									</Accordion.Content>
+								</Accordion.Item>
+							);
+						} ) }
 					</Accordion>
 				) : (
 					<Alert

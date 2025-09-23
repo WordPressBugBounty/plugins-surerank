@@ -7,15 +7,10 @@ import Section from './section';
 import { STORE_NAME } from '@/admin-store/constants';
 import { useSelect } from '@wordpress/data';
 import EmptyContentGap from './empty-content-gap';
-
-const CONTENT_PERFORMANCE_TABS = {
-	analysis: {
-		label: __( 'Content Analysis', 'surerank' ),
-	},
-	gap: {
-		label: __( 'Content Gap', 'surerank' ),
-	},
-};
+import {
+	CONTENT_PERFORMANCE_TABS,
+	CONTENT_PERFORMANCE_TABS_COUNT,
+} from './content-analysis/constants';
 
 const ContentPerformance = () => {
 	const [ activeTab, setActiveTab ] = useState( 'analysis' );
@@ -41,7 +36,7 @@ const ContentPerformance = () => {
 				>
 					<Container align="center" className="gap-2">
 						<Title
-							title={ __( 'SEO Performance', 'surerank' ) }
+							title={ __( 'Content Analysis', 'surerank' ) }
 							tag="h4"
 							size="md"
 						/>
@@ -52,17 +47,19 @@ const ContentPerformance = () => {
 							</Text>
 						) }
 					</Container>
-					<Container.Item className="w-fit block">
-						<Tabs.Group
-							activeItem={ activeTab }
-							onChange={ ( { value: { slug } } ) => {
-								setActiveTab( slug );
-							} }
-							size="sm"
-							variant="rounded"
-						>
-							{ Object.entries( CONTENT_PERFORMANCE_TABS ).map(
-								( [ key, tab ] ) => (
+					{ CONTENT_PERFORMANCE_TABS_COUNT > 1 && (
+						<Container.Item className="w-fit block">
+							<Tabs.Group
+								activeItem={ activeTab }
+								onChange={ ( { value: { slug } } ) => {
+									setActiveTab( slug );
+								} }
+								size="sm"
+								variant="rounded"
+							>
+								{ Object.entries(
+									CONTENT_PERFORMANCE_TABS
+								).map( ( [ key, tab ] ) => (
 									<Tabs.Tab
 										key={ key }
 										slug={ key }
@@ -75,10 +72,10 @@ const ContentPerformance = () => {
 										badge={ null }
 										disabled={ tab.disabled }
 									/>
-								)
-							) }
-						</Tabs.Group>
-					</Container.Item>
+								) ) }
+							</Tabs.Group>
+						</Container.Item>
+					) }
 				</Container>
 				<Tabs.Panel slug="analysis">
 					<ContentAnalysisTable />

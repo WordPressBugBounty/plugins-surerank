@@ -90,7 +90,7 @@ const SiteMaps = () => {
 			setIsGenerating( true );
 			try {
 				const result = await apiFetch( {
-					path: '/surerank/v1/generate-cache',
+					path: '/surerank/v1/sitemap/generate-cache',
 					method: 'POST',
 				} );
 

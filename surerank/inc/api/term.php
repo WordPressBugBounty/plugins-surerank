@@ -34,7 +34,7 @@ class Term extends Api_Base {
 	/**
 	 * Route Get Term Seo Data
 	 */
-	protected const TERM_SEO_DATA = '/term-seo-data';
+	protected const TERM_SEO_DATA = '/term/settings';
 
 	/**
 	 * Constructor

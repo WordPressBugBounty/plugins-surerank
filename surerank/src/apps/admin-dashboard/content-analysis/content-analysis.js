@@ -1,4 +1,3 @@
-import { createLazyRoute } from '@tanstack/react-router';
 import { Container, Title, Select, Tabs, Input, Text } from '@bsf/force-ui';
 import ContentAnalysisTable from '../content-analysis-table';
 import { __ } from '@wordpress/i18n';
@@ -10,19 +9,12 @@ import {
 } from '@/apps/admin-components/dashboard-breadcrumb';
 import { cn } from '@/functions/utils';
 import EmptyContentGap from '../empty-content-gap';
+import { CONTENT_PERFORMANCE_TABS, CONTENT_PERFORMANCE_TABS_COUNT } from './constants';
 const ContentAnalysis = () => {
 	const [ searchQuery, setSearchQuery ] = useState( '' );
 	const [ statusFilter, setStatusFilter ] = useState( 'All' );
 	const breadcrumbs = useBreadcrumb(); // Get breadcrumb data
 	const [ activeTab, setActiveTab ] = useState( 'analysis' );
-	const CONTENT_PERFORMANCE_TABS = {
-		analysis: {
-			label: __( 'Content Analysis', 'surerank' ),
-		},
-		gap: {
-			label: __( 'Content Gap', 'surerank' ),
-		},
-	};
 
 	useEffect( () => {
 		window.scrollTo( { top: 0, behavior: 'smooth' } );
@@ -73,7 +65,7 @@ const ContentAnalysis = () => {
 							<Container align="center" className="gap-2">
 								<Title
 									title={ __(
-										'SEO Performance',
+										'Content Analysis',
 										'surerank'
 									) }
 									size="md"
@@ -131,31 +123,33 @@ const ContentAnalysis = () => {
 									</Select.Portal>
 								</Select>
 							</div>
-							<Tabs.Group
-								activeItem={ activeTab }
-								onChange={ ( { value: { slug } } ) =>
-									setActiveTab( slug )
-								}
-								size="sm"
-								variant="rounded"
-							>
-								{ Object.entries(
-									CONTENT_PERFORMANCE_TABS
-								).map( ( [ key, tab ] ) => (
-									<Tabs.Tab
-										key={ key }
-										slug={ key }
-										text={ tab.label }
-										className={ cn(
-											'w-fit text-nowrap space-x-1.5',
-											activeTab === key &&
-												'text-brand-800 hover:text-brand-800'
-										) }
-										badge={ null }
-										disabled={ tab.disabled }
-									/>
-								) ) }
-							</Tabs.Group>
+							{ CONTENT_PERFORMANCE_TABS_COUNT > 1 && (
+								<Tabs.Group
+									activeItem={ activeTab }
+									onChange={ ( { value: { slug } } ) =>
+										setActiveTab( slug )
+									}
+									size="sm"
+									variant="rounded"
+								>
+									{ Object.entries(
+										CONTENT_PERFORMANCE_TABS
+									).map( ( [ key, tab ] ) => (
+										<Tabs.Tab
+											key={ key }
+											slug={ key }
+											text={ tab.label }
+											className={ cn(
+												'w-fit text-nowrap space-x-1.5',
+												activeTab === key &&
+													'text-brand-800 hover:text-brand-800'
+											) }
+											badge={ null }
+											disabled={ tab.disabled }
+										/>
+									) ) }
+								</Tabs.Group>
+							) }
 						</Container.Item>
 					</Container>
 				</Container.Item>
@@ -176,9 +170,5 @@ const ContentAnalysis = () => {
 		</Container>
 	);
 };
-
-export const LazyRoute = createLazyRoute( '/content-performance' )( {
-	component: ContentAnalysis,
-} );
 
 export default ContentAnalysis;

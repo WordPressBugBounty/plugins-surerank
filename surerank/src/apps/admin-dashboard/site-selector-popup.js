@@ -1,7 +1,6 @@
 import apiFetch from '@wordpress/api-fetch';
 import {
 	Button,
-	Select,
 	toast,
 	Loader,
 	Skeleton,
@@ -16,6 +15,10 @@ import { useState, Suspense } from '@wordpress/element';
 import { handleDisconnectConfirm } from '../admin-components/user-dropdown';
 import { X } from 'lucide-react';
 import ModalWrapper from '@AdminComponents/modal-wrapper';
+import useSiteVerificationStatus, {
+	normalizeUrl,
+} from './use-site-verification-status';
+import SiteSelector from './site-selector';
 
 const SiteSelectorPopup = () => {
 	const { toggleSiteSelectorModal } = useDispatch( STORE_NAME );
@@ -107,16 +110,45 @@ const SiteSelectorInputs = () => {
 	const { toggleSiteSelectorModal, setSearchConsole, setConfirmationModal } =
 		useDispatch( STORE_NAME );
 	const [ isLoading, setIsLoading ] = useState( false );
-	const [ selectedSite, setSelectedSite ] = useState(
-		searchConsole?.selectedSite || searchConsole?.tempSelectedSite || ''
+	const [ isCreatingProperty, setIsCreatingProperty ] = useState( false );
+
+	// Check if current site is in the available sites list
+	const getCurrentSiteUrl = () => {
+		// Get current site URL from window location or WordPress localized data
+		return window.location.origin;
+	};
+
+	const currentSiteUrl = getCurrentSiteUrl();
+
+	// Set default selected site - if current site is not in list, use current site URL
+	const [ selectedSite, setSelectedSite ] = useState( () => {
+		const isCurrentSiteInList = searchConsole?.sites?.some(
+			( site ) =>
+				site.siteUrl === currentSiteUrl ||
+				site.siteUrl === `${ currentSiteUrl }/` ||
+				normalizeUrl( site.siteUrl ) === normalizeUrl( currentSiteUrl )
+		);
+		return ! isCurrentSiteInList
+			? currentSiteUrl
+			: searchConsole?.selectedSite ||
+					searchConsole?.tempSelectedSite ||
+					currentSiteUrl;
+	} );
+
+	// Use the custom hook for site verification status
+	const {
+		isSelectedSiteVerified,
+		currentSiteInListButNotVerified,
+		shouldShowConnectAlert,
+	} = useSiteVerificationStatus(
+		selectedSite,
+		currentSiteUrl,
+		searchConsole
 	);
 
 	const handleSelectSite = ( site ) => {
 		setSelectedSite( site );
 	};
-
-	const noSitesAvailable =
-		! searchConsole?.sites || searchConsole?.sites.length === 0;
 
 	const handleDisconnect = () => {
 		setConfirmationModal( {
@@ -131,18 +163,87 @@ const SiteSelectorInputs = () => {
 		} );
 	};
 
+	const handleCreateProperty = async () => {
+		if ( isCreatingProperty ) {
+			return;
+		}
+
+		setIsCreatingProperty( true );
+
+		try {
+			// Use different endpoints based on whether site exists or not
+			const endpoint = currentSiteInListButNotVerified
+				? '/surerank/v1/google-search-console/verify-site'
+				: '/surerank/v1/google-search-console/add-site';
+
+			const response = await apiFetch( {
+				path: endpoint,
+				method: 'POST',
+			} );
+
+			if ( ! response.success ) {
+				throw new Error(
+					response.message ??
+						__( 'Failed to create property', 'surerank' )
+				);
+			}
+
+			// Handle pending verification case
+			if ( response.pending ) {
+				toast.success(
+					currentSiteInListButNotVerified
+						? __( 'Verification started successfully!', 'surerank' )
+						: __( 'Property created successfully!', 'surerank' ),
+					{
+						description: __(
+							'Verification is pending and may take 1-2 hours or up to 2 days. Your site has been added to Search Console. Reloading in 2 seconds…',
+							'surerank'
+						),
+					}
+				);
+			} else {
+				toast.success(
+					currentSiteInListButNotVerified
+						? __( 'Property verified successfully!', 'surerank' )
+						: __(
+								'Property created and verified successfully!',
+								'surerank'
+						  ),
+					{
+						description: __(
+							'The changes will take effect after a page refresh. Reloading in 2 seconds…',
+							'surerank'
+						),
+					}
+				);
+			}
+
+			// Reload page after 2 seconds
+			setTimeout( () => {
+				window.location.reload();
+			}, 2000 );
+		} catch ( error ) {
+			toast.error( error.message );
+		} finally {
+			setIsCreatingProperty( false );
+		}
+	};
+
 	const handleProceed = async () => {
+		if ( isLoading ) {
+			return;
+		}
+
+		// Proceed with site selection only
 		if ( ! selectedSite ) {
 			toast.error( __( 'Please select a site', 'surerank' ) );
 			return;
 		}
-		if ( isLoading ) {
-			return;
-		}
+
 		setIsLoading( true );
 		try {
 			const response = await apiFetch( {
-				path: '/surerank/v1/site',
+				path: '/surerank/v1/google-search-console/site',
 				method: 'PUT',
 				data: { url: selectedSite },
 			} );
@@ -164,107 +265,138 @@ const SiteSelectorInputs = () => {
 		}
 	};
 
-	const setInitialFocus = ( node ) => {
-		if ( ! node ) {
-			return;
-		}
-		setTimeout( () => {
-			node.focus();
-		}, 100 );
-	};
-
 	return (
 		<>
 			<Container direction="column" gap="xs" className="p-5 pt-2 pb-3">
-				<Select
-					onChange={ handleSelectSite }
-					size="md"
-					value={ selectedSite }
-					combobox
-					className="p-1"
-				>
-					<Select.Button
-						label={ __( 'Select a site', 'surerank' ) }
-						placeholder={ __( 'Select a site', 'surerank' ) }
-						render={ ( selectedValue ) =>
-							selectedValue || __( 'Select a site', 'surerank' )
-						}
-						ref={ setInitialFocus }
-					/>
-					<Select.Options>
-						{ searchConsole?.sites?.map( ( option ) => (
-							<Select.Option
-								key={ option.siteUrl }
-								value={ option.siteUrl }
-								selected={ selectedSite === option.siteUrl }
-							>
-								{ option.siteUrl }
-							</Select.Option>
-						) ) }
-					</Select.Options>
-				</Select>
+				<SiteSelector
+					sites={ searchConsole?.sites || [] }
+					currentSiteUrl={ currentSiteUrl }
+					selectedSite={ selectedSite }
+					onSiteSelect={ handleSelectSite }
+					placeholder={ __( 'Select a site', 'surerank' ) }
+				/>
 
-				{ noSitesAvailable && (
+				{ shouldShowConnectAlert && (
 					<Container className="mt-4">
-						<Alert
-							variant="warning"
-							className="shadow-none m-0 testtest [&>div>p]:mr-0"
-							content={
-								<div className="flex flex-col gap-0.5">
-									<span className="text-text-primary text-sm font-semibold">
-										{ __(
-											'No Verified Site Found',
-											'surerank'
-										) }
-									</span>
-									<span className="text-text-primary">
-										{ __(
-											'Add and verify your site in Google Search Console to start seeing insights here. ',
-											'surerank'
-										) }
-										<a
-											href="https://support.google.com/webmasters/answer/34592?hl=en"
-											target="_blank"
-											rel="noopener noreferrer"
-											className="text-blue-600 no-underline hover:no-underline"
-										>
-											{ __( 'Learn more', 'surerank' ) }
-										</a>
-									</span>
-								</div>
-							}
-						/>
+						<div>
+							<Alert
+								variant="info"
+								className="shadow-none m-0 [&>div>p]:mr-0"
+								content={
+									<div className="flex flex-col gap-3">
+										<div className="flex flex-col gap-1">
+											<span className="text-text-primary text-sm font-semibold">
+												{ __(
+													"Let's Get Your Site Connected",
+													'surerank'
+												) }
+											</span>
+
+											<p className="text-text-primary text-sm">
+												{ __(
+													'Connect it now to see SureRank insights. Your site will usually be verified instantly, though Google may take up to 1-2 days in some situations.',
+													'surerank'
+												) }{ ' ' }
+												<a
+													href="https://support.google.com/webmasters/answer/34592?hl=en"
+													target="_blank"
+													rel="noopener noreferrer"
+													className="text-text-secondary"
+												>
+													{ __(
+														'Learn more',
+														'surerank'
+													) }
+												</a>
+											</p>
+										</div>
+									</div>
+								}
+							/>
+						</div>
 					</Container>
 				) }
 			</Container>
 			{ /* Footer */ }
-			<Container
-				className="border-0 border-solid border-t border-gray-200 gap-3 p-4"
-				justify="end"
+			<SiteSelectorFooter
+				currentSiteUrl={ currentSiteUrl }
+				isLoading={ isLoading }
+				isCreatingProperty={ isCreatingProperty }
+				selectedSite={ selectedSite }
+				isSelectedSiteVerified={ isSelectedSiteVerified }
+				handleDisconnect={ handleDisconnect }
+				handleProceed={ handleProceed }
+				handleCreateProperty={ handleCreateProperty }
+			/>
+		</>
+	);
+};
+
+const SiteSelectorFooter = ( {
+	currentSiteUrl,
+	isLoading,
+	isCreatingProperty,
+	selectedSite,
+	isSelectedSiteVerified,
+	handleDisconnect,
+	handleProceed,
+	handleCreateProperty,
+} ) => {
+	// Check if current site is selected and not verified
+	const isCurrentSiteSelectedAndUnverified =
+		normalizeUrl( selectedSite ) === normalizeUrl( currentSiteUrl ) &&
+		! isSelectedSiteVerified;
+
+	return (
+		<Container
+			className="border-0 border-solid border-t border-gray-200 gap-3 p-4"
+			justify="between"
+		>
+			<Button
+				destructive
+				iconPosition="left"
+				size="md"
+				tag="button"
+				type="button"
+				variant="link"
+				onClick={ handleDisconnect }
 			>
+				{ __( 'Disconnect', 'surerank' ) }
+			</Button>
+
+			{ isCurrentSiteSelectedAndUnverified ? (
 				<Button
-					destructive
-					iconPosition="left"
+					variant="primary"
 					size="md"
-					tag="button"
-					type="button"
-					variant="outline"
-					onClick={ handleDisconnect }
+					onClick={ handleCreateProperty }
+					icon={
+						isCreatingProperty && <Loader variant="secondary" />
+					}
+					iconPosition="left"
+					disabled={ isCreatingProperty || isLoading }
 				>
-					{ __( 'Disconnect', 'surerank' ) }
+					{ isCreatingProperty
+						? __( 'Connecting your site…', 'surerank' )
+						: __( 'Connect Site', 'surerank' ) }
 				</Button>
+			) : (
 				<Button
 					variant="primary"
 					size="md"
 					onClick={ handleProceed }
 					icon={ isLoading && <Loader variant="secondary" /> }
 					iconPosition="left"
-					disabled={ isLoading }
+					disabled={
+						isLoading ||
+						isCreatingProperty ||
+						! selectedSite ||
+						! isSelectedSiteVerified
+					}
 				>
-					{ __( 'Proceed', 'surerank' ) }
+					{ __( 'Select Site', 'surerank' ) }
 				</Button>
-			</Container>
-		</>
+			) }
+		</Container>
 	);
 };
 

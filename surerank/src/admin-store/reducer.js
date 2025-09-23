@@ -309,6 +309,7 @@ const DEFAULT_STATE = {
 		selectedItem: null,
 		report: [],
 		searchKeyword: '',
+		runningChecks: false,
 	},
 
 	// Store unsaved settings

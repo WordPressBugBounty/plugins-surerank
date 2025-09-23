@@ -1,7 +1,7 @@
+import { applyFilters } from '@wordpress/hooks';
 import { Container, Title, Button } from '@bsf/force-ui';
 import { __ } from '@wordpress/i18n';
 import { Suspense } from '@wordpress/element';
-import FixButton from '@GlobalComponents/fix-button';
 import SiteSeoChecksTable from './site-seo-checks-table';
 import SiteSeoChecksTableSkeleton, {
 	SiteSeoChecksInnerTableSkeleton,
@@ -26,6 +26,11 @@ const SiteSeoChecksSummary = ( { limit = 5, showViewAll = true } ) => {
 	const SiteSeoChecksTitle = () => {
 		return (
 			<Container align="center" justify="between" className="p-2">
+				{ applyFilters(
+					'surerank-pro.dashboard.site-seo-checks-save-auth',
+					null,
+					'site-seo-analysis'
+				) }
 				<Title
 					tag="h4"
 					title={ __( 'Site SEO Analysis', 'surerank' ) }
@@ -46,10 +51,6 @@ const SiteSeoChecksSummary = ( { limit = 5, showViewAll = true } ) => {
 				>
 					{ __( 'Re-run Checks', 'surerank' ) }
 				</Button>
-				<FixButton
-					size="sm"
-					button_label={ __( 'Fix All for Me', 'surerank' ) }
-				/>
 			</Container>
 		);
 	};

@@ -60,6 +60,13 @@ class TermAnalyzer {
 	private $term_permalink = '';
 
 	/**
+	 * Term content.
+	 *
+	 * @var string
+	 */
+	private $term_content = '';
+
+	/**
 	 * Constructor.
 	 */
 	private function __construct() {
@@ -128,9 +135,10 @@ class TermAnalyzer {
 		$this->term_description = $meta_data['page_description'] ?? ''; // same for meta_data['page_description'] as above.
 		$this->canonical_url    = $meta_data['canonical_url'] ?? '';
 		$this->term_permalink   = ! is_wp_error( get_term_link( (int) $term_id ) ) ? get_term_link( (int) $term_id ) : '';
+		$this->term_content     = $term->description;
 
 		$rendered_content = $term->description;
-		$result           = $this->analyze();
+		$result           = $this->analyze( $meta_data );
 
 		$success = Update::taxonomy_seo_checks( $term_id, $result );
 
@@ -147,15 +155,24 @@ class TermAnalyzer {
 	/**
 	 * Analyze the term.
 	 *
+	 * @param array<string, mixed> $meta_data Meta data.
 	 * @return array<string, mixed>
 	 */
-	private function analyze() {
+	private function analyze( array $meta_data ) {
+		// Get focus keyword for keyword checks.
+		$focus_keyword = $meta_data['focus_keyword'] ?? '';
+		
 		return [
 			'url_length'                => Utils::check_url_length( $this->term_permalink ),
 			'search_engine_title'       => Utils::analyze_title( $this->term_title ),
 			'search_engine_description' => Utils::analyze_description( $this->term_description ),
 			'canonical_url'             => $this->canonical_url(),
 			'open_graph_tags'           => Utils::open_graph_tags(),
+			// Keyword checks.
+			'keyword_in_title'          => Utils::analyze_keyword_in_title( $this->term_title, $focus_keyword ),
+			'keyword_in_description'    => Utils::analyze_keyword_in_description( $this->term_description, $focus_keyword ),
+			'keyword_in_url'            => Utils::analyze_keyword_in_url( $this->term_permalink, $focus_keyword ),
+			'keyword_in_content'        => Utils::analyze_keyword_in_content( $this->term_content, $focus_keyword ),
 		];
 	}
 

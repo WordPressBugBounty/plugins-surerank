@@ -131,7 +131,7 @@ const useMigration = ( {
 	const markMigrationCompleted = async ( pluginSlug ) => {
 		try {
 			await apiRequest(
-				`/surerank/v1/migration-completed`,
+				`/surerank/v1/migration/completed`,
 				'POST',
 				{ plugin_slug: pluginSlug },
 				true // Skip error handling since this is optional
@@ -152,7 +152,10 @@ const useMigration = ( {
 		} );
 
 		return apiRequest(
-			addQueryArgs( '/surerank/v1/migrate/terms', { page, plugin_slug } ),
+			addQueryArgs( '/surerank/v1/migration/terms', {
+				page,
+				plugin_slug,
+			} ),
 			'GET'
 		);
 	};
@@ -168,7 +171,10 @@ const useMigration = ( {
 		} );
 
 		return apiRequest(
-			addQueryArgs( '/surerank/v1/migrate/posts', { page, plugin_slug } ),
+			addQueryArgs( '/surerank/v1/migration/posts', {
+				page,
+				plugin_slug,
+			} ),
 			'GET'
 		);
 	};
@@ -283,10 +289,14 @@ const useMigration = ( {
 				},
 			} );
 
-			await apiRequest( '/surerank/v1/migrate/global-settings', 'POST', {
-				plugin_slug,
-				cleanup: false,
-			} );
+			await apiRequest(
+				'/surerank/v1/migration/global-settings',
+				'POST',
+				{
+					plugin_slug,
+					cleanup: false,
+				}
+			);
 
 			dispatch( { type: ACTIONS.COMPLETE_GLOBAL_SETTINGS } );
 		} catch ( err ) {
@@ -307,7 +317,7 @@ const useMigration = ( {
 			} );
 
 			await apiRequest(
-				'/surerank/v1/migrate/terms',
+				'/surerank/v1/migration/terms',
 				'POST',
 				{
 					plugin_slug,
@@ -339,7 +349,7 @@ const useMigration = ( {
 			} );
 
 			await apiRequest(
-				'/surerank/v1/migrate/posts',
+				'/surerank/v1/migration/posts',
 				'POST',
 				{
 					plugin_slug,
@@ -361,13 +371,9 @@ const useMigration = ( {
 
 	const deactivateSourcePlugin = async ( pluginSlug = plugin_slug ) => {
 		try {
-			await apiRequest(
-				'/surerank/v1/migrate/deactivate-plugin',
-				'POST',
-				{
-					plugin_slug: pluginSlug,
-				}
-			);
+			await apiRequest( '/surerank/v1/plugins/deactivate', 'POST', {
+				plugin_slug: pluginSlug,
+			} );
 		} catch ( err ) {}
 	};
 

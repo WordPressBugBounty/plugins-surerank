@@ -49,7 +49,9 @@ const DEFAULT_STATE = {
 
 	// App settings start.
 	appSettings: {
-		currentScreen: 'optimize',
+		currentTab: 'optimize',
+		previousTab: '',
+		currentScreen: 'settings',
 		previousScreen: '',
 	},
 	// App settings end.
@@ -181,6 +183,8 @@ function reducer( state = DEFAULT_STATE, action ) {
 								?.checks,
 							...action.payload.checks,
 						},
+						filteredPageChecks: action.payload.filteredPageChecks,
+						filteredKeywordChecks: action.payload.filteredKeywordChecks,
 						sequence: action.payload.sequence,
 						error: action.payload.error,
 					},

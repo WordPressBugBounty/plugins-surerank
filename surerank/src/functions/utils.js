@@ -821,3 +821,21 @@ export const getStatusIndicatorAriaLabel = ( errorAndWarnings ) => {
 	}
 	return __( 'All SEO checks passed.', 'surerank' );
 };
+
+/**
+ * Adds category property to each check item in the response
+ *
+ * @param {Object} response - The API response object
+ * @param {string} category - The category to add to each item
+ * @return {Object} The response object with category added to each item
+ */
+export const addCategoryToSiteSeoChecks = ( response, category ) => {
+	if ( response && typeof response === 'object' ) {
+		Object.keys( response ).forEach( ( key ) => {
+			if ( response[ key ] && typeof response[ key ] === 'object' ) {
+				response[ key ].category = category;
+			}
+		} );
+	}
+	return response;
+};

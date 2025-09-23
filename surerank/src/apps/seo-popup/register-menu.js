@@ -13,6 +13,9 @@ import {
 import { Button as WPButton } from '@wordpress/components';
 import { STORE_NAME as storeName } from '@Store/constants';
 import { SureRankMonoSmallLogo } from '@GlobalComponents/icons';
+import PageCheckStatusIndicator from '@AdminComponents/page-check-status-indicator';
+import usePageCheckStatus from './hooks/usePageCheckStatus';
+import { getTooltipText } from './utils/page-checks-status-tooltip-text';
 
 // Inject a toolbar button directly into the Gutenberg header via a React portal.
 const SureRankToolbarButtonPortal = () => {
@@ -25,6 +28,9 @@ const SureRankToolbarButtonPortal = () => {
 			return false;
 		}
 	}, [] );
+
+	// Get page checks status for indicator
+	const { status, initializing, counts } = usePageCheckStatus();
 
 	// Stable handler to open the modal; helps avoid unnecessary re-renders.
 	const handleOpenModal = useCallback(
@@ -41,6 +47,7 @@ const SureRankToolbarButtonPortal = () => {
 				if ( ! host ) {
 					host = document.createElement( 'div' );
 					host.id = 'surerank-toolbar-portal';
+					host.className = 'surerank-root';
 					if ( pinned.firstChild ) {
 						pinned.insertBefore( host, pinned.firstChild );
 					} else {
@@ -73,6 +80,7 @@ const SureRankToolbarButtonPortal = () => {
 			if ( ! host ) {
 				host = document.createElement( 'div' );
 				host.id = 'surerank-toolbar-portal';
+				host.className = 'surerank-root';
 
 				// Try to place AFTER the View (responsive) button/dropdown when available.
 				const viewCandidates = rightArea.querySelector(
@@ -172,18 +180,26 @@ const SureRankToolbarButtonPortal = () => {
 	}
 
 	return createPortal(
-		<WPButton
-			icon={ <SureRankMonoSmallLogo /> }
-			label={ __( 'SureRank Meta Box', 'surerank' ) }
-			aria-label={ __( 'Open SureRank Meta Box', 'surerank' ) }
-			aria-haspopup="dialog"
-			showTooltip
-			isPressed={ isModalOpen }
-			aria-pressed={ isModalOpen }
-			type="button"
-			size="compact"
-			onClick={ handleOpenModal }
-		/>,
+		<div className="relative">
+			<WPButton
+				icon={ <SureRankMonoSmallLogo /> }
+				label={ getTooltipText( counts ) }
+				aria-label={ __( 'Open SureRank Meta Box', 'surerank' ) }
+				aria-haspopup="dialog"
+				showTooltip
+				isPressed={ isModalOpen }
+				aria-pressed={ isModalOpen }
+				type="button"
+				size="compact"
+				onClick={ handleOpenModal }
+			>
+				<PageCheckStatusIndicator
+					status={ status }
+					errorAndWarnings={ counts.errorAndWarnings }
+					initializing={ initializing }
+				/>
+			</WPButton>
+		</div>,
 		hostEl
 	);
 };

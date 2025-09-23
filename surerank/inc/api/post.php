@@ -35,12 +35,12 @@ class Post extends Api_Base {
 	/**
 	 * Route Get Post Seo Data
 	 */
-	protected const POST_SEO_DATA = '/post-seo-data';
+	protected const POST_SEO_DATA = '/post/settings';
 
 	/**
 	 * Route Get Post Content
 	 */
-	protected const POST_CONTENT = '/post-content';
+	protected const POST_CONTENT = '/admin/post-content';
 
 	/**
 	 * Constructor

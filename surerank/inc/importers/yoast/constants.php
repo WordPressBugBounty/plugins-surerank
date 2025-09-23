@@ -24,6 +24,11 @@ class Constants {
 	public const PLUGIN_NAME = 'Yoast SEO';
 
 	/**
+	 * Plugin Slug.
+	 */
+	public const PLUGIN_SLUG = 'yoast';
+	
+	/**
 	 * Yoast plugin file path.
 	 */
 	public const PLUGIN_FILE = 'wordpress-seo/wp-seo.php';
@@ -70,7 +75,7 @@ class Constants {
 	/**
 	 * Mapping of Yoast social meta to SureRank social meta.
 	 */
-	public const SOCIAL_MAPPING = [
+	private const SOCIAL_MAPPING = [
 		'_yoast_wpseo_opengraph-title'       => [ 'social-title', 'facebook_title' ],
 		'_yoast_wpseo_opengraph-description' => [ 'social-description', 'facebook_description' ],
 		'_yoast_wpseo_opengraph-image'       => [ 'social-image-url', 'facebook_image_url' ],
@@ -110,7 +115,7 @@ class Constants {
 	/**
 	 * Mapping for global title and description settings.
 	 */
-	public const TITLE_DESC_MAPPING = [
+	private const TITLE_DESC_MAPPING = [
 		'title-home-wpseo'           => 'home_page_title',
 		'metadesc-home-wpseo'        => 'home_page_description',
 		'open_graph_frontpage_title' => 'home_page_facebook_title',
@@ -118,7 +123,7 @@ class Constants {
 		'open_graph_frontpage_image' => 'home_page_facebook_image_url',
 	];
 
-	public const OG_SETTINGS_MAPPING = [
+	private const OG_SETTINGS_MAPPING = [
 		'twitter_card_type'      => 'twitter_card_type',
 		'twitter_site'           => 'twitter_profile_username',
 		'facebook_site'          => 'facebook_page_url',
@@ -128,7 +133,7 @@ class Constants {
 	/**
 	 * Mapping for archive settings.
 	 */
-	public const ARCHIVE_SETTINGS_MAPPING = [
+	private const ARCHIVE_SETTINGS_MAPPING = [
 		'disable-author'       => 'author_archive',
 		'disable-date'         => 'date_archive',
 		'noindex-author-wpseo' => 'noindex_paginated_pages',
@@ -137,14 +142,14 @@ class Constants {
 	/**
 	 * Mapping for sitemap settings.
 	 */
-	public const SITEMAP_MAPPING = [
+	private const SITEMAP_MAPPING = [
 		'enable_xml_sitemap' => 'enable_xml_sitemap',
 	];
 
 	/**
 	 * Mapping for robot settings.
 	 */
-	public const ROBOT_KEYS_MAPPING = [
+	private const ROBOT_KEYS_MAPPING = [
 		'noindex-post'            => 'post',
 		'noindex-page'            => 'page',
 		'noindex-attachment'      => 'attachment',
@@ -257,6 +262,78 @@ class Constants {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Get filtered title and description mapping.
+	 *
+	 * @return array<string, string> Filtered title and description mapping.
+	 */
+	public static function get_title_desc_mapping() {
+	
+		return apply_filters( 'surerank_yoast_title_desc_mapping', self::TITLE_DESC_MAPPING );
+	}
+
+	/**
+	 * Get sitemap mapping with filter.
+	 *
+	 * @return array<string, string> Sitemap mapping array.
+	 */
+	public static function get_sitemap_mapping() {
+
+		return apply_filters( 'surerank_yoast_sitemap_mapping', self::SITEMAP_MAPPING );
+	}
+
+	/**
+	 * Get robots key mapping with filter.
+	 *
+	 * @return array<string, string> Robots key mapping array.
+	 */
+	public static function get_robots_key_mapping() {
+
+		return apply_filters( 'surerank_yoast_robots_key_mapping', self::ROBOT_KEYS_MAPPING );
+	}
+
+	/**
+	 * Get archive settings mapping with filter.
+	 *
+	 * @return array<string, string> Archive settings mapping array.
+	 */
+	public static function get_archive_settings_mapping() {
+
+		return apply_filters( 'surerank_yoast_archive_settings_mapping', self::ARCHIVE_SETTINGS_MAPPING );
+	}
+
+	/**
+	 * Get social mapping with filter.
+	 *
+	 * @return array<string, array<int, string>> Social mapping array.
+	 */
+	public static function get_social_mapping() {
+		/**
+		 * Filter the Yoast social mapping.
+		 *
+		 * @since 1.4.0
+		 *
+		 * @param array<string, array<int, string>> $mapping The default social mapping.
+		 */
+		return apply_filters( 'surerank_yoast_social_mapping', self::SOCIAL_MAPPING );
+	}
+
+	/**
+	 * Get social settings mapping with filter.
+	 *
+	 * @return array<string, string> Social settings mapping array.
+	 */
+	public static function get_social_settings_mapping() {
+		/**
+		 * Filter the Yoast social settings mapping.
+		 *
+		 * @since 1.4.0
+		 *
+		 * @param array<string, string> $mapping The default social settings mapping.
+		 */
+		return apply_filters( 'surerank_yoast_social_settings_mapping', self::OG_SETTINGS_MAPPING );
 	}
 
 	/**

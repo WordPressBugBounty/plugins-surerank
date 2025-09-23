@@ -33,10 +33,11 @@ export const ROBOTS_OPTIONS = [
 	},
 ];
 
-export const DEFAULT_PAGE_DESCRIPTION = __(
-	'This content will be set as the meta description tag and may appear in search results. Keep it short and clearly explain what the page is about.',
-	'surerank'
-);
+export const getDefaultPageDescription = () =>
+	__(
+		'This content will be set as the meta description tag and may appear in search results. Keep it short and clearly explain what the page is about.',
+		'surerank'
+	);
 
 export const ADMIN_DASHBOARD_URL =
 	window?.surerank_globals?.wp_dashboard_url ?? '';
@@ -48,7 +49,7 @@ export const TITLE_LENGTH = window?.surerank_globals?.title_length ?? 60;
 
 export const URL_LENGTH = window?.surerank_globals?.url_length ?? 90;
 
-export const SEARCH_ENGINE_PREVIEW_INFO_TEXT = (
+export const getSearchEnginePreviewInfoText = () => (
 	<>
 		{ __(
 			'View a preview of how your page may appear in search engine results. This preview is for guidance only and might not exactly match how search engines display your content.',
@@ -85,3 +86,15 @@ export const ENABLE_GOOGLE_CONSOLE =
 export const ENABLE_SCHEMAS = window?.surerank_globals?.enable_schemas ?? false;
 export const ENABLE_MIGRATION =
 	window?.surerank_globals?.enable_migration ?? false;
+
+// Content generation
+export {
+	REQUIRE_CONTENT_GENERATION,
+	CONTENT_GENERATION_MAPPING,
+} from './content-generation';
+
+// Site SEO Fix Types
+export { SEO_FIX_TYPE_MAPPING } from './site-seo-fix';
+
+// Process status
+export { PROCESS_STATUSES } from './process-status';

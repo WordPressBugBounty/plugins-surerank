@@ -6,6 +6,8 @@ import { select, useDispatch } from '@wordpress/data';
 import { STORE_NAME } from '@Store/constants';
 import { SureRankMonoLogo } from '@GlobalComponents/icons';
 import { useEffect } from '@wordpress/element';
+import PageCheckStatusIndicator from '@AdminComponents/page-check-status-indicator';
+import usePageCheckStatus from './hooks/usePageCheckStatus';
 
 import '@Store/store';
 import './style.scss';
@@ -18,6 +20,9 @@ if ( select( 'core/editor' ) ) {
 const RenderTriggerPopupButton = () => {
 	const { updateModalState } = useDispatch( STORE_NAME );
 
+	// Get page checks status for indicator
+	const { status, initializing, counts } = usePageCheckStatus();
+
 	useEffect( () => {
 		const adminBar = document.querySelector( '#wpadminbar' );
 		if ( adminBar ) {
@@ -26,13 +31,21 @@ const RenderTriggerPopupButton = () => {
 	}, [] );
 
 	return (
-		<button
-			className="inline-flex w-auto h-auto p-1 rounded-full border-0 bg-transparent focus:outline-none outline-none cursor-pointer"
-			type="button"
-			onClick={ () => updateModalState( true ) }
-		>
-			<SureRankMonoLogo className="size-6" />
-		</button>
+		<div className="relative inline-flex">
+			<button
+				className="inline-flex w-auto h-auto p-1 rounded-full border-0 bg-transparent focus:outline-none outline-none cursor-pointer"
+				type="button"
+				onClick={ () => updateModalState( true ) }
+			>
+				<SureRankMonoLogo className="size-6" />
+			</button>
+			<PageCheckStatusIndicator
+				className="z-auto"
+				status={ status }
+				errorAndWarnings={ counts.errorAndWarnings }
+				initializing={ initializing }
+			/>
+		</div>
 	);
 };
 

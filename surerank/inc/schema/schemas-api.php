@@ -29,7 +29,7 @@ class SchemasApi extends Api_Base {
 	/**
 	 * Route Get Term Seo Data
 	 */
-	protected const GET_POST_BY_QUERY = '/posts';
+	protected const GET_POST_BY_QUERY = '/admin/posts';
 
 	/**
 	 * Route get variables

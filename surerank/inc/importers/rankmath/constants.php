@@ -29,6 +29,11 @@ class Constants {
 	public const PLUGIN_FILE = 'seo-by-rank-math/rank-math.php';
 
 	/**
+	 * Plugin Slug.
+	 */
+	public const PLUGIN_SLUG = 'rankmath';
+
+	/**
 	 * Prefix for RankMath meta keys.
 	 */
 	public const META_KEY_PREFIX = 'rank_math_';
@@ -72,7 +77,7 @@ class Constants {
 	/**
 	 * Mapping of RankMath social meta to SureRank social meta.
 	 */
-	public const SOCIAL_MAPPING = [
+	private const SOCIAL_MAPPING = [
 		'rank_math_facebook_title'       => [ '', 'facebook_title' ],
 		'rank_math_facebook_description' => [ '', 'facebook_description' ],
 		'rank_math_facebook_image'       => [ 'open_graph_image', 'facebook_image_url' ],
@@ -100,7 +105,7 @@ class Constants {
 		'%org_name%'         => '%org_name%',
 		'%org_url%'          => '%org_url%',
 		'%org_logo%'         => '%org_logo%',
-		'%author_name%'      => '%author_name%',
+		'%name%'             => '%author_name%',
 		'%post_url%'         => '%post_url%',
 		'%title%'            => '%title%',
 		'%excerpt%'          => '%excerpt%',
@@ -112,7 +117,7 @@ class Constants {
 	/**
 	 * Mapping for global title and description settings.
 	 */
-	public const TITLE_DESC_MAPPING = [
+	private const TITLE_DESC_MAPPING = [
 		'homepage_title'                => 'home_page_title',
 		'homepage_description'          => 'home_page_description',
 		'homepage_facebook_title'       => 'home_page_facebook_title',
@@ -122,7 +127,7 @@ class Constants {
 	/**
 	 * Mapping for archive settings.
 	 */
-	public const ARCHIVE_SETTINGS_MAPPING = [
+	private const ARCHIVE_SETTINGS_MAPPING = [
 		'disable_author_archives' => 'author_archive',
 		'disable_date_archives'   => 'date_archive',
 		'noindex_paginated_pages' => 'noindex_paginated_pages',
@@ -131,21 +136,21 @@ class Constants {
 	/**
 	 * Mapping for sitemap settings.
 	 */
-	public const SITEMAP_MAPPING = [
+	private const SITEMAP_MAPPING = [
 		'include_images' => 'enable_xml_image_sitemap',
 	];
 
 	/**
 	 * Mapping for robot settings.
 	 */
-	public const ROBOT_KEYS_MAPPING = [
+	private const ROBOT_KEYS_MAPPING = [
 		'author_custom_robots' => [ 'author_robots', 'author' ],
 	];
 
 	/**
 	 * Mapping for social settings.
 	 */
-	public const SOCIAL_SETTINGS_MAPPING = [
+	private const SOCIAL_SETTINGS_MAPPING = [
 		'social_url_facebook'     => 'facebook_page_url',
 		'facebook_author_urls'    => 'facebook_author_fallback',
 		'twitter_author_names'    => 'twitter_profile_username',
@@ -290,5 +295,59 @@ class Constants {
 			'page_title'       => 'pt_' . $type . '_title',
 			'page_description' => 'pt_' . $type . '_description',
 		];
+	}
+
+	/**
+	 * Get social mapping with filter.
+	 *
+	 * @return array<string, array<int, string>> Social mapping array.
+	 */
+	public static function get_social_mapping() {
+		return apply_filters( 'surerank_rankmath_social_mapping', self::SOCIAL_MAPPING );
+	}
+
+	/**
+	 * Get title description mapping with filter.
+	 *
+	 * @return array<string, string> Title description mapping array.
+	 */
+	public static function get_title_desc_mapping() {
+		return apply_filters( 'surerank_rankmath_title_desc_mapping', self::TITLE_DESC_MAPPING );
+	}
+
+	/**
+	 * Get archive settings mapping with filter.
+	 *
+	 * @return array<string, string> Archive settings mapping array.
+	 */
+	public static function get_archive_settings_mapping() {
+		return apply_filters( 'surerank_rankmath_archive_settings_mapping', self::ARCHIVE_SETTINGS_MAPPING );
+	}
+
+	/**
+	 * Get sitemap mapping with filter.
+	 *
+	 * @return array<string, string> Sitemap mapping array.
+	 */
+	public static function get_sitemap_mapping() {
+		return apply_filters( 'surerank_rankmath_sitemap_mapping', self::SITEMAP_MAPPING );
+	}
+
+	/**
+	 * Get robot keys mapping with filter.
+	 *
+	 * @return array<string, array<int, string>> Robot keys mapping array.
+	 */
+	public static function get_robot_keys_mapping() {
+		return apply_filters( 'surerank_rankmath_robot_keys_mapping', self::ROBOT_KEYS_MAPPING );
+	}
+
+	/**
+	 * Get social settings mapping with filter.
+	 *
+	 * @return array<string, string> Social settings mapping array.
+	 */
+	public static function get_social_settings_mapping() {
+		return apply_filters( 'surerank_rankmath_social_settings_mapping', self::SOCIAL_SETTINGS_MAPPING );
 	}
 }

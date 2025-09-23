@@ -361,9 +361,13 @@ const FormField = ( { field, formValues, setFormValues } ) => {
 		typeof field?.disabled === 'function'
 			? field.disabled( formValues )
 			: field?.disabled;
+	const className = typeof field?.className === 'function'
+		? field.className( formValues )
+		: field?.className;
 
 	const additionalProps = {
 		...( disabled && { disabled } ),
+		...( className && { className } ),
 	};
 
 	const renderFieldByType = () => {
@@ -454,6 +458,13 @@ const FormField = ( { field, formValues, setFormValues } ) => {
 					/>
 				);
 			case 'custom':
+				if ( Object.keys( additionalProps ).length ) {
+					return (
+						<div { ...additionalProps }>
+							{ field?.component ?? null }
+						</div>
+					);
+				}
 				return field?.component ?? null;
 			default:
 				return null;
@@ -465,7 +476,12 @@ const FormField = ( { field, formValues, setFormValues } ) => {
 			direction="column"
 			align="start"
 			justify="start"
-			className="gap-1.5 w-full"
+			className={ cn(
+				'gap-1.5 w-full',
+				typeof field.wrapperClassName === 'function'
+					? field.wrapperClassName( formValues )
+					: field.wrapperClassName
+			) }
 		>
 			{ ! CUSTOM_LABEL_EXCLUSIONS.includes( field?.type ) && (
 				<FormFieldLabel

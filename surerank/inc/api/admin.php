@@ -37,17 +37,17 @@ class Admin extends Api_Base {
 	/**
 	 * Route Editor
 	 */
-	protected const EDITOR = '/editor';
+	protected const EDITOR = '/admin/editor';
 
 	/**
 	 * Route Get Admin Settings
 	 */
-	protected const ADMIN_SETTINGS = '/admin-settings';
+	protected const ADMIN_SETTINGS = '/admin/global-settings';
 
 	/**
 	 * Route Get Site Settings
 	 */
-	protected const SITE_SETTINGS = '/site-settings';
+	protected const SITE_SETTINGS = '/admin/site-settings';
 
 	/**
 	 * Constructor

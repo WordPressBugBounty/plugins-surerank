@@ -8,14 +8,12 @@ import {
 	Skeleton,
 	Text,
 	Pagination,
-	ProgressBar,
 } from '@bsf/force-ui';
 import {
 	ArrowUpRight,
 	ArrowUp,
 	ArrowDown,
 	AlertTriangle,
-	ArrowRight,
 } from 'lucide-react';
 import { __ } from '@wordpress/i18n';
 import { useSelect, useDispatch } from '@wordpress/data';
@@ -24,8 +22,7 @@ import { useEffect, useState, useCallback, useRef } from '@wordpress/element';
 import ContentPerformanceEmptyState from './content-performance-empty-state';
 import { addQueryArgs } from '@wordpress/url';
 import { ADMIN_DASHBOARD_URL } from '@Global/constants/index';
-import { cn, formatToISOPreserveDate, getLastNDays } from '@/functions/utils';
-import FixButton from '@GlobalComponents/fix-button';
+import { formatToISOPreserveDate, getLastNDays } from '@/functions/utils';
 import { SortableColumn } from '@GlobalComponents/sortable-column';
 
 const isSameDomain = ( url ) => {
@@ -56,7 +53,8 @@ const LoadingSkeleton = ( { sameDomain = false, numberOfRows = 10 } ) => {
 					<Table.Cell>
 						<Skeleton className="h-5 w-16" />
 					</Table.Cell>
-					<Table.Cell>
+					{ /* Uncomment this block if you want to show the additional skeletons */ }
+					{ /* <Table.Cell>
 						<Container direction="column" className="gap-1.5">
 							<Skeleton className="h-5 w-16" />
 							<Skeleton className="h-2 w-5/6" />
@@ -64,7 +62,7 @@ const LoadingSkeleton = ( { sameDomain = false, numberOfRows = 10 } ) => {
 					</Table.Cell>
 					<Table.Cell>
 						<Skeleton className="h-5 w-16" />
-					</Table.Cell>
+					</Table.Cell> */ }
 				</Table.Row>
 			) ) }
 		</>
@@ -197,11 +195,14 @@ const ContentAnalysisTable = ( {
 		try {
 			setLoading( true );
 			const response = await apiFetch( {
-				path: addQueryArgs( '/surerank/v1/content-performance', {
-					rowLimit: 100,
-					startDate: formattedStartDate,
-					endDate: formattedEndDate,
-				} ),
+				path: addQueryArgs(
+					'/surerank/v1/google-search-console/content-performance',
+					{
+						rowLimit: 100,
+						startDate: formattedStartDate,
+						endDate: formattedEndDate,
+					}
+				),
 				method: 'GET',
 			} );
 			if ( ! response.success ) {
@@ -419,7 +420,8 @@ const ContentAnalysisTable = ( {
 				>
 					{ __( 'Impressions', 'surerank' ) }
 				</SortableColumn>
-				<Table.HeadCell className="min-w-[10rem] text-nowrap">
+				{ /* Uncomment this when content score feature is ready. */ }
+				{ /* <Table.HeadCell className="min-w-[10rem] text-nowrap">
 					<Container align="center" className="gap-1">
 						<span className="text-text-tertiary">
 							{ __( 'Content Score', 'surerank' ) }
@@ -431,12 +433,12 @@ const ContentAnalysisTable = ( {
 							label={ __( 'Pro', 'surerank' ) }
 						/>
 					</Container>
-				</Table.HeadCell>
-				<Table.HeadCell className="min-w-[10%]">
+				</Table.HeadCell> */ }
+				{ /* <Table.HeadCell className="min-w-[10%]">
 					<span className="sr-only">
 						{ __( 'Actions', 'surerank' ) }
 					</span>
-				</Table.HeadCell>
+				</Table.HeadCell> */ }
 			</Table.Head>
 			<Table.Body>
 				{ loading ? (
@@ -518,7 +520,8 @@ const ContentAnalysisTable = ( {
 									</Table.Cell>
 								)
 							) }
-							<Table.Cell>
+							{ /* Uncomment this when content score feature is ready. */ }
+							{ /* <Table.Cell>
 								<Container
 									direction="column"
 									className="gap-1.5"
@@ -534,14 +537,11 @@ const ContentAnalysisTable = ( {
 										) }
 									/>
 								</Container>
-							</Table.Cell>
-							<Table.Cell>
+							</Table.Cell> */ }
+							{ /* <Table.Cell>
 								<Container align="center" justify="start">
 									<FixButton
-										button_label={ __(
-											'View',
-											'surerank'
-										) }
+										buttonLabel={ __( 'View', 'surerank' ) }
 										icon={ <ArrowRight /> }
 										iconPosition="right"
 										title={ __(
@@ -563,7 +563,7 @@ const ContentAnalysisTable = ( {
 										} }
 									/>
 								</Container>
-							</Table.Cell>
+							</Table.Cell> */ }
 						</Table.Row>
 					) )
 				) }

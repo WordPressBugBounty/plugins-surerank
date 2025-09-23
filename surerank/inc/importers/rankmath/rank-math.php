@@ -170,13 +170,13 @@ class RankMath extends BaseImporter {
 		$this->surerank_settings = Settings::get();
 
 		$this->update_global_robot_settings();
-		$this->update_robot_settings( Constants::ROBOT_KEYS_MAPPING );
+		$this->update_robot_settings( Constants::get_robot_keys_mapping() );
 		$this->update_homepage_robots();
-		$this->update_description_and_title( Constants::TITLE_DESC_MAPPING );
-		$this->update_archive_settings( Constants::ARCHIVE_SETTINGS_MAPPING );
+		$this->update_description_and_title( Constants::get_title_desc_mapping() );
+		$this->update_archive_settings( Constants::get_archive_settings_mapping() );
 		$this->update_twitter_card_type();
-		$this->update_social_mapping( Constants::SOCIAL_SETTINGS_MAPPING );
-		$this->update_sitemap_settings( Constants::SITEMAP_MAPPING );
+		$this->update_social_mapping( Constants::get_social_settings_mapping() );
+		$this->update_sitemap_settings( Constants::get_sitemap_mapping() );
 		$this->update_site_details();
 
 		try {
@@ -372,7 +372,7 @@ class RankMath extends BaseImporter {
 		$same_as_facebook                                        = $this->source_meta['rank_math_twitter_use_facebook'][0] ?? 'on';
 		$this->default_surerank_meta['twitter_same_as_facebook'] = 'on' === $same_as_facebook ? true : false;
 
-		$imported = $this->process_meta_mapping( Constants::SOCIAL_MAPPING );
+		$imported = $this->process_meta_mapping( Constants::get_social_mapping() );
 
 		if ( $imported ) {
 			return ImporterUtils::build_response(

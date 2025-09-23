@@ -1,4 +1,5 @@
 import PageHeader from './page-header';
+import { cn } from '@Functions/utils';
 
 const PageContentWrapper = ( {
 	children,
@@ -7,13 +8,19 @@ const PageContentWrapper = ( {
 	icon,
 	secondaryButton,
 	info_tooltip = null,
+	className,
 } ) => {
 	if ( ! children ) {
 		return null;
 	}
 
 	return (
-		<div className="flex flex-col justify-start-start gap-7 w-full h-full">
+		<div
+			className={ cn(
+				'flex flex-col justify-start-start gap-7 w-full h-full',
+				className
+			) }
+		>
 			<PageHeader
 				title={ title }
 				description={ description }

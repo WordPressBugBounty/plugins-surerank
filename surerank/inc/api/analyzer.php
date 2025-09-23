@@ -71,28 +71,28 @@ class Analyzer extends Api_Base {
 	 *
 	 * @var string
 	 */
-	private $page_seo_checks = '/page-seo-checks';
+	private $page_seo_checks = '/checks/page';
 
 	/**
 	 * Taxonomy Seo Status
 	 *
 	 * @var string
 	 */
-	private $taxonomy_seo_checks = '/taxonomy-seo-checks';
+	private $taxonomy_seo_checks = '/checks/taxonomy';
 
 	/**
 	 * Route for sitemap check.
 	 *
 	 * @var string
 	 */
-	private $ignore_checks = '/ignore-checks';
+	private $ignore_checks = '/checks/ignore-site-check';
 
 	/**
 	 * Route for post-specific ignore checks.
 	 *
 	 * @var string
 	 */
-	private $ignore_post_checks = '/ignore-post-checks';
+	private $ignore_post_checks = '/checks/ignore-page-check';
 
 	/**
 	 * Register API routes.
@@ -454,6 +454,63 @@ class Analyzer extends Api_Base {
 	}
 
 	/**
+	 * Get list of installed SEO plugins with detection info.
+	 *
+	 * @return array{active_plugins: array<int, string>, detected_plugins: array<int, array<string, string>>}
+	 * @since 1.4.0
+	 */
+	public function get_installed_seo_plugins_data(): array {
+		$seo_plugins = [
+			'seo-by-rank-math/rank-math.php'              => [
+				'name'     => 'Rank Math',
+				'pro_slug' => 'seo-by-rank-math-pro/rank-math-pro.php',
+			],
+			'wordpress-seo/wp-seo.php'                    => [
+				'name'     => 'Yoast SEO',
+				'pro_slug' => 'wordpress-seo-premium/wp-seo-premium.php',
+			],
+			'autodescription/autodescription.php'         => [
+				'name'     => 'The SEO Framework',
+				'pro_slug' => '',
+			],
+			'all-in-one-seo-pack/all_in_one_seo_pack.php' => [
+				'name'     => 'AIOSEO',
+				'pro_slug' => 'all-in-one-seo-pack-pro/all_in_one_seo_pack.php',
+			],
+			'wp-seopress/seopress.php'                    => [
+				'name'     => 'SEOPress',
+				'pro_slug' => 'wp-seopress-pro/wp-seopress-pro.php',
+			],
+			'slim-seo/slim-seo.php'                       => [
+				'name'     => 'Slim SEO',
+				'pro_slug' => 'slim-seo-pro/slim-seo-pro.php',
+			],
+			'squirrly-seo/squirrly.php'                   => [
+				'name'     => 'Squirrly SEO',
+				'pro_slug' => '',
+			],
+		];
+
+		$active_plugins   = apply_filters( 'active_plugins', get_option( 'active_plugins', [] ) );
+		$detected_plugins = [];
+
+		foreach ( $seo_plugins as $file => $data ) {
+			if ( in_array( $file, $active_plugins, true ) ) {
+				$detected_plugins[] = [
+					'name'     => $data['name'],
+					'slug'     => $file,
+					'pro_slug' => $data['pro_slug'],
+				];
+			}
+		}
+
+		return [
+			'active_plugins'   => $active_plugins,
+			'detected_plugins' => $detected_plugins,
+		];
+	}
+
+	/**
 	 * Analyze installed SEO plugins.
 	 *
 	 * @return array<string, mixed>
@@ -462,26 +519,14 @@ class Analyzer extends Api_Base {
 		$description = [
 			__( 'SEO plugins help manage how your site appears in search engines. They control important things like titles, meta descriptions, canonical tags, and structured data. ', 'surerank' ),
 		];
-		$seo_plugins = [
-			'seo-by-rank-math/rank-math.php'              => 'Rank Math',
-			'wordpress-seo/wp-seo.php'                    => 'Yoast SEO',
-			'autodescription/autodescription.php'         => 'The SEO Framework',
-			'all-in-one-seo-pack/all_in_one_seo_pack.php' => 'AIOSEO',
-			'wp-seopress/seopress.php'                    => 'SEOPress',
-			'slim-seo/slim-seo.php'                       => 'Slim SEO',
-			'squirrly-seo/squirrly.php'                   => 'Squirrly SEO',
-		];
 
-		$active_plugins   = apply_filters( 'active_plugins', get_option( 'active_plugins', [] ) );
-		$detected_plugins = [];
-
-		foreach ( $seo_plugins as $file => $name ) {
-			if ( in_array( $file, $active_plugins, true ) ) {
-				$detected_plugins[] = [
-					'name' => $name,
-				];
-			}
-		}
+		$plugin_data      = $this->get_installed_seo_plugins_data();
+		$detected_plugins = array_map(
+			static function( $plugin ) {
+				return [ 'name' => $plugin['name'] ];
+			},
+			$plugin_data['detected_plugins']
+		);
 
 		$active_count = count( $detected_plugins );
 		$title        = __( 'No other SEO plugin detected on the site.', 'surerank' );
@@ -793,6 +838,69 @@ class Analyzer extends Api_Base {
 	}
 
 	/**
+	 * Run general checks.
+	 *
+	 * @param string $url URL to run checks on.
+	 * @return array<string, mixed>|WP_Error
+	 */
+	public function run_general_checks( string $url ) {
+		$analyzer = SeoAnalyzer::get_instance( $url );
+		$xpath    = $analyzer->get_xpath();
+
+		if ( ! $xpath instanceof DOMXPath ) {
+			return $this->create_analysis_error( $xpath );
+		}
+
+		$response = $this->execute_general_checks( $analyzer, $xpath );
+		$this->update_site_seo_checks( $response, 'general' );
+
+		return $response;
+	}
+
+	/**
+	 * Run settings checks.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function run_settings_checks() {
+		$ignore_checks = $this->get_ignore_checks();
+		$response      = [
+			'sitemaps'     => fn() => $this->sitemaps(),
+			'index_status' => fn() => $this->index_status(),
+			'robots_txt'   => fn() => $this->robots_txt(),
+		];
+
+		foreach ( $response as $key => $callback ) {
+			$response[ $key ] = array_merge( (array) $callback(), [ 'ignore' => in_array( $key, $ignore_checks, true ) ] );
+		}
+
+		$this->update_site_seo_checks( $response, 'settings' );
+
+		return $response;
+	}
+
+	/**
+	 * Run other checks.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function run_other_checks() {
+		$response = [
+			'other_seo_plugins' => fn() => $this->get_installed_seo_plugins(),
+			'site_tag_line'     => fn() => $this->get_site_tag_line(),
+			'auth_status'       => fn() => $this->get_auth_status(),
+		];
+
+		foreach ( $response as $key => $callback ) {
+			$response[ $key ] = array_merge( (array) $callback(), [ 'ignore' => in_array( $key, $this->get_ignore_checks(), true ) ] );
+		}
+
+		$this->update_site_seo_checks( $response, 'other' );
+
+		return $response;
+	}
+
+	/**
 	 * Register all analyzer routes
 	 *
 	 * @param string $namespace The API namespace.
@@ -1042,26 +1150,6 @@ class Analyzer extends Api_Base {
 	}
 
 	/**
-	 * Run general checks.
-	 *
-	 * @param string $url URL to run checks on.
-	 * @return array<string, mixed>|WP_Error
-	 */
-	private function run_general_checks( string $url ) {
-		$analyzer = SeoAnalyzer::get_instance( $url );
-		$xpath    = $analyzer->get_xpath();
-
-		if ( ! $xpath instanceof DOMXPath ) {
-			return $this->create_analysis_error( $xpath );
-		}
-
-		$response = $this->execute_general_checks( $analyzer, $xpath );
-		$this->update_site_seo_checks( $response, 'general' );
-
-		return $response;
-	}
-
-	/**
 	 * Create analysis error response.
 	 *
 	 * @param mixed $xpath XPath error data.
@@ -1142,49 +1230,6 @@ class Analyzer extends Api_Base {
 	 */
 	private function is_check_ignored( string $key ): bool {
 		return in_array( $key, $this->get_ignore_checks(), true );
-	}
-
-	/**
-	 * Run settings checks.
-	 *
-	 * @return array<string, mixed>
-	 */
-	private function run_settings_checks() {
-		$ignore_checks = $this->get_ignore_checks();
-		$response      = [
-			'sitemaps'     => fn() => $this->sitemaps(),
-			'index_status' => fn() => $this->index_status(),
-			'robots_txt'   => fn() => $this->robots_txt(),
-		];
-
-		foreach ( $response as $key => $callback ) {
-			$response[ $key ] = array_merge( (array) $callback(), [ 'ignore' => in_array( $key, $ignore_checks, true ) ] );
-		}
-
-		$this->update_site_seo_checks( $response, 'settings' );
-
-		return $response;
-	}
-
-	/**
-	 * Run other checks.
-	 *
-	 * @return array<string, mixed>
-	 */
-	private function run_other_checks() {
-		$response = [
-			'other_seo_plugins' => fn() => $this->get_installed_seo_plugins(),
-			'site_tag_line'     => fn() => $this->get_site_tag_line(),
-			'auth_status'       => fn() => $this->get_auth_status(),
-		];
-
-		foreach ( $response as $key => $callback ) {
-			$response[ $key ] = array_merge( (array) $callback(), [ 'ignore' => in_array( $key, $this->get_ignore_checks(), true ) ] );
-		}
-
-		$this->update_site_seo_checks( $response, 'other' );
-
-		return $response;
 	}
 
 	/**

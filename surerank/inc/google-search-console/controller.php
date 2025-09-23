@@ -34,7 +34,8 @@ class Controller {
 	/**
 	 * Google API Base
 	 */
-	private const GOOGLE_ANALYTICS_API_BASE = 'https://www.googleapis.com/webmasters/v3/';
+	public const GOOGLE_ANALYTICS_API_BASE = 'https://www.googleapis.com/webmasters/v3/';
+
 
 	/**
 	 * Google User Info API Base
@@ -60,6 +61,8 @@ class Controller {
 		// We are returning Array, because we will use Send_Json::success() to send the response.
 		return GoogleConsole::get_instance()->call_api( self::GOOGLE_ANALYTICS_API_BASE . 'sites' );
 	}
+
+
 
 	/**
 	 * Get Matched Domain or Site URL
@@ -493,4 +496,112 @@ class Controller {
 		}
 		return $site_url;
 	}
+
+	/**
+	 * Auto Create and Verify Property
+	 *
+	 * Creates and verifies a Search Console property following the documented flow
+	 * Simplified version that only handles URL-prefix properties since subdomain logic moved to frontend
+	 *
+	 * @since 1.4.0
+	 * @return array<string, mixed>|array<int, array<string, mixed>>
+	 */
+	public function auto_create_and_verify_property() {
+		return SiteVerification::get_instance()->auto_create_and_verify_property();
+	}
+
+	/**
+	 * Verify Existing Property
+	 *
+	 * Verifies an existing Search Console property that's already added but not verified
+	 *
+	 * @since 1.4.0
+	 * @return array<string, mixed>|array<int, array<string, mixed>>
+	 */
+	public function verify_existing_property() {
+		return SiteVerification::get_instance()->verify_existing_property();
+	}
+
+
+
+	/**
+	 * Get Verification Token
+	 *
+	 * Gets the HTML tag verification token for a site using Site Verification API
+	 *
+	 * @since 1.4.0
+	 * @param string $site_url The site URL to get verification token for.
+	 * @return array<string, mixed>|array<int, array<string, mixed>>
+	 */
+	public function get_verification_token( $site_url ) {
+		return SiteVerification::get_instance()->get_verification_token( $site_url );
+	}
+
+	/**
+	 * Store Verification Token
+	 *
+	 * Stores the verification token for meta tag injection
+	 *
+	 * @since 1.4.0
+	 * @param string $token The verification token.
+	 * @return void
+	 */
+	public function store_verification_token( $token ) {
+		SiteVerification::get_instance()->store_verification_token( $token );
+	}
+
+	/**
+	 * Get Stored Verification Token
+	 *
+	 * Gets the stored verification token
+	 *
+	 * @since 1.4.0
+	 * @return string|false
+	 */
+	public function get_stored_verification_token() {
+		return SiteVerification::get_instance()->get_stored_verification_token();
+	}
+
+	/**
+	 * Verify Site
+	 *
+	 * Verifies a site using Site Verification API
+	 *
+	 * @since 1.4.0
+	 * @param string $site_url The site URL to verify.
+	 * @return array<string, mixed>|array<int, array<string, mixed>>
+	 */
+	public function verify_site( $site_url ) {
+		return SiteVerification::get_instance()->verify_site( $site_url );
+	}
+
+	/**
+	 * Call Site Verification API
+	 *
+	 * Makes direct wp_remote_request calls to Site Verification API with specific error handling
+	 *
+	 * @since 1.4.0
+	 * @param string               $endpoint The API endpoint URL.
+	 * @param string               $method   HTTP method (GET, POST, PUT, etc.).
+	 * @param array<string, mixed> $args     Request arguments.
+	 * @return array<string, mixed> API response or error array.
+	 */
+	public function call_site_verification_api( $endpoint, $method = 'GET', $args = [] ) {
+		return SiteVerification::get_instance()->call_site_verification_api( $endpoint, $method, $args );
+	}
+
+
+	/**
+	 * Add Site
+	 *
+	 * Adds a site to Google Search Console
+	 *
+	 * @since 1.4.0
+	 * @param string $site_url The site URL to add.
+	 * @return array<string, mixed>|array<int, array<string, mixed>>
+	 */
+	public function add_site( $site_url ) {
+		return SiteVerification::get_instance()->add_site( $site_url );
+	}
+
 }

@@ -27,6 +27,7 @@ import { flat } from '@Functions/variables';
 import { SeoPopupTooltip } from '@AdminComponents/tooltip';
 import { XSocialIcon } from '@/global/components/icons';
 import MediaPreview from '@/apps/admin-components/media-preview';
+import { createMediaFrame } from '@/global/utils/utils';
 
 const socialMedia = [
 	{
@@ -150,7 +151,7 @@ const SocialTab = ( { postMetaData, updatePostMetaData, globalDefaults } ) => {
 	const handleClickInput = ( event ) => {
 		event.preventDefault();
 
-		const mediaUploader = wp.media( {
+		const mediaUploader = createMediaFrame( {
 			title: 'Select Image',
 			button: {
 				text: 'Use this image',

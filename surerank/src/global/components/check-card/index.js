@@ -267,8 +267,9 @@ export const CheckCard = ( {
 
 				{ showFixButton && (
 					<FixButton
+						variant="link"
 						size="xs"
-						className="ml-auto min-w-fit shrink-0"
+						className="mr-auto min-w-fit shrink-0 underline"
 						tooltipProps={ { className: 'z-999999' } }
 					>
 						{ __( 'Help Me Fix', 'surerank' ) }
@@ -341,17 +342,20 @@ export const ImageGrid = ( { images } ) => {
 				isURL( image ) ? (
 					<Button
 						variant="link"
-						className="inline-flex focus:outline-none focus:[box-shadow:none] p-0"
+						className="inline-flex focus:outline-none focus:[box-shadow:none] p-0 relative"
 						onClick={ ( event ) =>
 							handleImageClick( event, image )
 						}
 						key={ `${ image }-${ index }` }
 					>
-						<img
-							src={ image }
-							alt={ image }
-							className="w-full h-36 object-cover rounded"
-						/>
+						<div className="absolute inset-0 bg-black bg-opacity-20 pointer-events-none"></div>
+						<div className="relative w-full h-36 rounded overflow-hidden">
+							<img
+								src={ image }
+								alt={ image }
+								className="w-full h-36 object-cover rounded"
+							/>
+						</div>
 					</Button>
 				) : null
 			) }

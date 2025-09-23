@@ -1,3 +1,4 @@
+import { applyFilters } from '@wordpress/hooks';
 import { STORE_NAME } from '@/admin-store/constants';
 import { Breadcrumb, Button, Container, Title } from '@bsf/force-ui';
 import { useDispatch, useSuspenseSelect, useSelect } from '@wordpress/data';
@@ -7,7 +8,6 @@ import { Home, RefreshCw } from 'lucide-react';
 import SiteSeoChecksTableSkeleton, {
 	SiteSeoChecksInnerTableSkeleton,
 } from './site-seo-checks-table-skeleton';
-import FixButton from '@GlobalComponents/fix-button';
 import SiteSeoChecksTable from './site-seo-checks-table';
 import SiteSeoChecksDrawer from './site-seo-checks-drawer';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -90,10 +90,6 @@ const SiteSeoChecksTitle = ( { isLoading, handleRunChecksAgain } ) => {
 			>
 				{ __( 'Re-run Checks', 'surerank' ) }
 			</Button>
-			<FixButton
-				size="sm"
-				button_label={ __( ' Fix All for Me', 'surerank' ) }
-			/>
 		</Container>
 	);
 };
@@ -142,6 +138,11 @@ const SiteSeoChecks = () => {
 		<div className="w-full p-5 pb-8 xl:p-8 max-[1920px]:max-w-full mx-auto space-y-8">
 			<SiteSeoChecksHeader />
 			<SuspendedContent />
+			{ applyFilters(
+				'surerank-pro.dashboard.site-seo-checks-save-auth',
+				null,
+				'site-seo-analysis'
+			) }
 		</div>
 	);
 };

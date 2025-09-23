@@ -14,6 +14,7 @@ use DOMNodeList;
 use DOMXPath;
 use SureRank\Inc\API\Admin;
 use SureRank\Inc\API\Post;
+use SureRank\Inc\Frontend\Image_Seo;
 use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Functions\Settings;
@@ -70,6 +71,13 @@ class PostAnalyzer {
 	 * @var string
 	 */
 	private $post_permalink = '';
+
+	/**
+	 * Post content.
+	 *
+	 * @var string
+	 */
+	private $post_content = '';
 
 	/**
 	 * Constructor.
@@ -139,11 +147,8 @@ class PostAnalyzer {
 		$this->page_title       = $meta_data['page_title'] ?? '';
 		$this->page_description = $meta_data['page_description'] ?? '';
 		$this->canonical_url    = $meta_data['canonical_url'] ?? '';
-		$this->post_permalink   = get_permalink( (int) $post_id ) !== false ? get_permalink( (int) $post_id ) : '';
-
-		$rendered_content = '';
-		$post_content     = $post->post_content;
-
+		$this->post_permalink   = $this->get_original_permalink( $post_id, $post );
+		$this->post_content     = $post->post_content;
 		/**
 		 * Parse blocks and render them to get the rendered content.
 		 * Commented out because it's not needed for the analyzer.
@@ -156,8 +161,8 @@ class PostAnalyzer {
 		 * }
 		 */
 
-		$this->xpath = Utils::get_rendered_xpath( $post_content );
-		$result      = $this->analyze();
+		$this->xpath = Utils::get_rendered_xpath( $this->post_content );
+		$result      = $this->analyze( $meta_data );
 
 		if ( $this->update_broken_links_status( $result ) && is_array( $result ) ) {
 			$result['broken_links'] = $this->update_broken_links_status( $result );
@@ -178,9 +183,13 @@ class PostAnalyzer {
 	/**
 	 * Analyze the post.
 	 *
+	 * @param array<string, mixed> $meta_data Meta data.
 	 * @return array<string, mixed>
 	 */
-	private function analyze() {
+	private function analyze( array $meta_data ) {
+		// Get focus keyword for keyword checks.
+		$focus_keyword = $meta_data['focus_keyword'] ?? '';
+
 		return [
 			'h2_subheadings'            => $this->check_subheadings(),
 			'image_alt_text'            => $this->check_image_alt_text(),
@@ -192,6 +201,11 @@ class PostAnalyzer {
 			'canonical_url'             => $this->canonical_url(),
 			'all_links'                 => $this->get_all_links(),
 			'open_graph_tags'           => Utils::open_graph_tags(),
+			// Keyword checks.
+			'keyword_in_title'          => Utils::analyze_keyword_in_title( $this->page_title, $focus_keyword ),
+			'keyword_in_description'    => Utils::analyze_keyword_in_description( $this->page_description, $focus_keyword ),
+			'keyword_in_url'            => Utils::analyze_keyword_in_url( $this->post_permalink, $focus_keyword ),
+			'keyword_in_content'        => Utils::analyze_keyword_in_content( $this->post_content, $focus_keyword ),
 		];
 	}
 
@@ -334,6 +348,10 @@ class PostAnalyzer {
 			return 'warning';
 		}
 
+		if ( Image_Seo::get_instance()->status() ) {
+			return 'suggestion';
+		}
+
 		return $is_optimized ? 'success' : 'warning';
 	}
 
@@ -349,7 +367,13 @@ class PostAnalyzer {
 			return __( 'All images on this page have alt text attributes.', 'surerank' );
 		}
 
-		return __( 'One or more images on this page are missing alt text attributes.', 'surerank' );
+		$base_message = __( 'One or more images are missing alt text attributes.', 'surerank' );
+
+		if ( Image_Seo::get_instance()->status() ) {
+			return $base_message . ' ' . __( 'But don\'t worry, we will add them automatically for you.', 'surerank' );
+		}
+
+		return $base_message . ' ' . __( 'You can add them manually or turn on auto-set image title and alt in the settings.', 'surerank' );
 	}
 
 	/**
@@ -549,6 +573,38 @@ class PostAnalyzer {
 		}
 
 		return $links;
+	}
+
+	/**
+	 * Get the original permalink for a post, even if it's set as homepage.
+	 *
+	 * @param int     $post_id Post ID.
+	 * @param WP_Post $post    Post object.
+	 * @return string Original permalink or empty string.
+	 */
+	private function get_original_permalink( $post_id, $post ) {
+		$homepage_id = (int) get_option( 'page_on_front' );
+		
+		if ( $homepage_id === $post_id ) {
+			return $this->generate_original_page_url( $post );
+		}
+		
+		$permalink = get_permalink( $post_id );
+		return $permalink !== false ? $permalink : '';
+	}
+
+	/**
+	 * Generate original page URL for a post that's set as homepage.
+	 *
+	 * @param WP_Post $post Post object.
+	 * @return string Original page URL.
+	 */
+	private function generate_original_page_url( $post ) {
+		if ( empty( $post->post_name ) ) {
+			return '';
+		}
+		
+		return trailingslashit( home_url() ) . $post->post_name . '/';
 	}
 
 }

@@ -1,4 +1,4 @@
-import { DEFAULT_PAGE_DESCRIPTION } from '@Global/constants';
+import { getDefaultPageDescription } from '@Global/constants';
 
 const replacement = ( str, data, postDynamicData = {} ) => {
 	if ( ! str || ! data ) {
@@ -23,7 +23,7 @@ const replacement = ( str, data, postDynamicData = {} ) => {
 
 	return str.replace( /%([^%\s]+)%/g, ( match, value ) => {
 		if ( value === 'excerpt' && ! replacementArray[ value ] ) {
-			return DEFAULT_PAGE_DESCRIPTION;
+			return getDefaultPageDescription();
 		}
 		return replacementArray[ value ];
 	} );

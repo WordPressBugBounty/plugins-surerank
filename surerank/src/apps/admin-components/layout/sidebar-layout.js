@@ -15,7 +15,11 @@ import {
 	Button,
 	Skeleton,
 } from '@bsf/force-ui';
-import { Info, Megaphone, ChartNoAxesColumnIncreasing } from 'lucide-react';
+import {
+	BookOpenText,
+	Megaphone,
+	ChartNoAxesColumnIncreasing,
+} from 'lucide-react';
 import '@Global/style.scss';
 import withSuspense from '@AdminComponents/hoc/with-suspense';
 import SidebarSkeleton from '../sidebar-skeleton';
@@ -396,7 +400,7 @@ const SidebarLayout = ( {
 			<div className="grid max-[782px]:grid-rows-[64px_calc(100dvh_-_110px)] grid-rows-[64px_calc(100dvh_-_96px)] min-h-full bg-background-secondary">
 				{ /* Header */ }
 				<Topbar
-					className="w-auto min-h-[unset] h-16 shadow-sm p-0 relative z-[99]"
+					className="w-auto min-h-[unset] h-16 shadow-sm p-0 relative"
 					gap={ 0 }
 				>
 					<Topbar.Left className="p-5">
@@ -480,7 +484,7 @@ const SidebarLayout = ( {
 										'surerank'
 									) }
 									icon={
-										<Info
+										<BookOpenText
 											className="size-4 m-1"
 											strokeWidth="1.5"
 										/>

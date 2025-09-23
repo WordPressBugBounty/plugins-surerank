@@ -30,6 +30,11 @@ class Seo_Bar {
 		if ( ! Settings::get( 'enable_page_level_seo' ) ) {
 			return;
 		}
+		
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
 		$this->enqueue_scripts_admin();
 		add_action( 'admin_init', [ $this, 'setup_columns' ] );
 		add_action( 'admin_init', [ $this, 'setup_taxonomy_columns' ] );

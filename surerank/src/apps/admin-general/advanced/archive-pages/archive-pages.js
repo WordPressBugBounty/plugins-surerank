@@ -17,7 +17,7 @@ export const PAGE_CONTENT = [
 				storeKey: 'author_archive',
 				label: __( 'Enable Author Archive', 'surerank' ),
 				description: __(
-					'Displays all posts published by a specific author. Useful for showcasing an author’s contributions and helping search engines understand authorship and topical relevance.',
+					'Enabling this creates author archive pages that list all posts by each author, helping showcase contributions and strengthen SEO signals. If disabled, author archive pages redirect to the homepage.',
 					'surerank'
 				),
 			},
@@ -27,7 +27,7 @@ export const PAGE_CONTENT = [
 				storeKey: 'date_archive',
 				label: __( 'Enable Date Archive', 'surerank' ),
 				description: __(
-					'Groups posts by month or year. Helps visitors explore content chronologically and allows search engines to better index time-based content.',
+					'Enabling this creates date archive pages that group posts by month or year, making it easier for visitors to browse content chronologically and for search engines to index time-based posts. If disabled, date archive pages redirect to the homepage.',
 					'surerank'
 				),
 			},

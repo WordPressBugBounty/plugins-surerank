@@ -181,7 +181,7 @@ class Title {
 	 * @since 0.0.1
 	 */
 	public function search_title( $title ) {
-		$search_query = get_search_query( false );
+		$search_query = get_search_query();
 		/* translators: %s: Search query */
 		$title = sprintf( __( 'Search Results for: %s', 'surerank' ), $search_query ? $search_query : __( 'No query', 'surerank' ) );
 		$title = $this->add_pagination_title( $title );

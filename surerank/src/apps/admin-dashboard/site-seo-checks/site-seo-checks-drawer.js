@@ -1,14 +1,15 @@
-import { Drawer, Container, Badge, Button } from '@bsf/force-ui';
+import { Drawer, Container, Badge, Button, Text } from '@bsf/force-ui';
 import { useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { applyFilters } from '@wordpress/hooks';
 import { useSuspenseSiteSeoAnalysis } from './site-seo-checks-main';
 import {
 	getSeverityColor,
 	getSeverityLabel,
 } from '@GlobalComponents/seo-checks';
-import FixButton from '@GlobalComponents/fix-button';
+import SiteSeoChecksFixButton from './site-seo-checks-fix-button';
 import DOMPurify from 'dompurify';
-import { LockIcon } from 'lucide-react';
+import { ArrowLeftIcon } from 'lucide-react';
 import { cn, isURL } from '@/functions/utils';
 import { ImageGrid } from '@/global/components/check-card';
 
@@ -23,17 +24,47 @@ const shouldWrapInParagraph = ( html ) => {
 	return ! /^<h6\b[^>]*>/i.test( trimmed );
 };
 
-const SiteSeoChecksDrawer = () => {
-	// Using suspense version inside Suspense boundary
-	const [ { open, selectedItem = {} }, dispatch ] =
-		useSuspenseSiteSeoAnalysis();
+const CheckHeader = ( {
+	title = __( 'Site Analysis', 'surerank' ),
+	selectedItem,
+	showBack = false,
+	onBackClick,
+} ) => {
+	return (
+		<>
+			<Container justify="between">
+				<Drawer.Title>{ title }</Drawer.Title>
+				<div className="inline-flex items-center gap-2">
+					{ showBack ? (
+						<Button
+							size="xs"
+							icon={ <ArrowLeftIcon /> }
+							iconPosition="left"
+							variant="outline"
+							onClick={ onBackClick }
+						>
+							{ __( 'Back', 'surerank' ) }
+						</Button>
+					) : (
+						<Badge
+							size="xs"
+							label={ getSeverityLabel( selectedItem?.status ) }
+							variant={ getSeverityColor( selectedItem?.status ) }
+						/>
+					) }
+					<Drawer.CloseButton />
+				</div>
+			</Container>
+			{ ! showBack && (
+				<Drawer.Description>
+					{ selectedItem?.message }
+				</Drawer.Description>
+			) }
+		</>
+	);
+};
 
-	const handleSetDrawerOpen = ( value ) => {
-		dispatch( {
-			open: value,
-		} );
-	};
-
+const CheckOverview = ( { selectedItem } ) => {
 	// Render the description as a list or paragraph
 	const renderDescription = useCallback(
 		( list, type = 'paragraph', isImage = false ) => {
@@ -163,6 +194,62 @@ const SiteSeoChecksDrawer = () => {
 	);
 
 	return (
+		<>
+			<div className="px-2 space-y-0.5 w-full border border-border-subtle border-solid rounded-md bg-background-secondary">
+				{ renderDescription( selectedItem?.description ) || (
+					<Text color="secondary" className="m-0">
+						{ __(
+							'No additional information to show.',
+							'surerank'
+						) }
+					</Text>
+				) }
+			</div>
+			<SiteSeoChecksFixButton selectedItem={ selectedItem } size="sm" />
+		</>
+	);
+};
+
+const SCREENS = applyFilters(
+	'surerank-pro.dashboard.site-seo-checks-screens',
+	{
+		overview: {
+			title: __( 'Site Analysis', 'surerank' ),
+			component: CheckOverview,
+		},
+	}
+);
+
+const SiteSeoChecksDrawer = () => {
+	// Using suspense version inside Suspense boundary
+	const [
+		{ open, selectedItem = {}, currentScreen = 'overview' },
+		dispatch,
+	] = useSuspenseSiteSeoAnalysis();
+
+	const handleSetDrawerOpen = ( value ) => {
+		const resetState = {
+			selectedItem: null,
+			currentScreen: 'overview',
+		};
+		dispatch( {
+			open: value,
+			...( ! value ? resetState : {} ),
+		} );
+	};
+
+	const handleBack = () => {
+		dispatch( {
+			currentScreen: 'overview',
+		} );
+	};
+
+	// Get the current screen configuration
+	const currentScreenConfig = SCREENS[ currentScreen ] || SCREENS.overview;
+	const CurrentScreenComponent = currentScreenConfig.component;
+	const showBack = currentScreen !== 'overview';
+
+	return (
 		<Drawer
 			exitOnEsc
 			position="right"
@@ -174,48 +261,14 @@ const SiteSeoChecksDrawer = () => {
 		>
 			<Drawer.Panel>
 				<Drawer.Header>
-					<Container justify="between">
-						<Drawer.Title>
-							{ __( 'Site Analysis', 'surerank' ) }
-						</Drawer.Title>
-						<div className="inline-flex items-center gap-2">
-							<Badge
-								size="xs"
-								label={ getSeverityLabel(
-									selectedItem?.status
-								) }
-								variant={ getSeverityColor(
-									selectedItem?.status
-								) }
-							/>
-							<Drawer.CloseButton />
-						</div>
-					</Container>
-					<Drawer.Description>
-						{ selectedItem?.message }
-					</Drawer.Description>
+					<CheckHeader
+						selectedItem={ selectedItem }
+						showBack={ showBack }
+						onBackClick={ handleBack }
+					/>
 				</Drawer.Header>
 				<Drawer.Body className="overflow-x-hidden space-y-3">
-					<div className="px-2 space-y-0.5 w-full border border-border-subtle border-solid rounded-md bg-background-secondary">
-						{ renderDescription( selectedItem?.description ) || (
-							<p className="m-0 text-text-secondary">
-								{ __(
-									'No additional information to show.',
-									'surerank'
-								) }
-							</p>
-						) }
-					</div>
-					<FixButton
-						button_label={
-							selectedItem?.not_fixable
-								? __( 'Fix it for me', 'surerank' )
-								: __( 'Help Me Fix', 'surerank' )
-						}
-						icon={ <LockIcon /> }
-						size="sm"
-						tooltipProps={ { className: 'z-999999' } }
-					/>
+					<CurrentScreenComponent selectedItem={ selectedItem } />
 				</Drawer.Body>
 			</Drawer.Panel>
 			<Drawer.Backdrop />

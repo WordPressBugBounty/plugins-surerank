@@ -95,26 +95,26 @@ msgstr "Gagal memproses HTML."
 msgid "Failed to parse HTML."
 msgstr "Gagal mengurai HTML."
 
-#: inc/analyzer/post-analyzer.php:171
-#: inc/analyzer/term-analyzer.php:140
+#: inc/analyzer/post-analyzer.php:176
+#: inc/analyzer/term-analyzer.php:148
 msgid "Failed to update SEO checks"
 msgstr "Gagal memperbarui pemeriksaan SEO"
 
-#: inc/analyzer/post-analyzer.php:383
+#: inc/analyzer/post-analyzer.php:407
 msgid "The page does not contain any images."
 msgstr "Halaman tidak mengandung gambar."
 
-#: inc/analyzer/post-analyzer.php:452
+#: inc/analyzer/post-analyzer.php:476
 msgid "No links found on the page."
 msgstr "Tidak ada tautan yang ditemukan di halaman."
 
-#: inc/analyzer/post-analyzer.php:471
-#: inc/analyzer/term-analyzer.php:171
+#: inc/analyzer/post-analyzer.php:495
+#: inc/analyzer/term-analyzer.php:188
 msgid "No canonical URL provided."
 msgstr "Tidak ada URL kanonik yang disediakan."
 
-#: inc/analyzer/post-analyzer.php:479
-#: inc/analyzer/term-analyzer.php:179
+#: inc/analyzer/post-analyzer.php:503
+#: inc/analyzer/term-analyzer.php:196
 msgid "No permalink provided."
 msgstr "Tidak ada permalink yang disediakan."
 
@@ -312,66 +312,66 @@ msgstr "Google Search Console terhubung."
 msgid "Google Search Console is not connected."
 msgstr "Google Search Console tidak terhubung."
 
-#: inc/api/analyzer.php:487
+#: inc/api/analyzer.php:532
 msgid "No other SEO plugin detected on the site."
 msgstr "Tidak ada plugin SEO lain yang terdeteksi di situs."
 
-#: inc/api/analyzer.php:491
+#: inc/api/analyzer.php:536
 msgid "More than one SEO plugin detected on the site."
 msgstr "Lebih dari satu plugin SEO terdeteksi di situs."
 
-#: inc/api/analyzer.php:527
+#: inc/api/analyzer.php:572
 msgid "Site tagline is set in WordPress settings."
 msgstr "Tagline situs diatur di pengaturan WordPress."
 
-#: inc/api/analyzer.php:527
+#: inc/api/analyzer.php:572
 msgid "Site tagline is not set in WordPress settings."
 msgstr "Tagline situs tidak diatur di pengaturan WordPress."
 
 #. translators: %s is the URL of the surerank settings page
-#: inc/api/analyzer.php:543
+#: inc/api/analyzer.php:588
 #, php-format
 msgid "Set the site tagline on <a href=\"%s\">General settings page</a>."
 msgstr "Atur tagline situs di <a href=\"%s\">halaman pengaturan Umum</a>."
 
-#: inc/api/analyzer.php:563
+#: inc/api/analyzer.php:608
 msgid "Robots.txt file is accessible."
 msgstr "File Robots.txt dapat diakses."
 
-#: inc/api/analyzer.php:564
+#: inc/api/analyzer.php:609
 msgid "Robots.txt file is not accessible."
 msgstr "File Robots.txt tidak dapat diakses."
 
-#: inc/api/analyzer.php:608
+#: inc/api/analyzer.php:653
 msgid "Search engine visibility is not blocked in WordPress settings."
 msgstr "Visibilitas mesin pencari tidak diblokir di pengaturan WordPress."
 
-#: inc/api/analyzer.php:609
+#: inc/api/analyzer.php:654
 msgid "Search engine visibility is blocked in WordPress settings."
 msgstr "Visibilitas mesin pencari diblokir di pengaturan WordPress."
 
-#: inc/api/analyzer.php:611
+#: inc/api/analyzer.php:656
 msgid "Search engine visibility settings need to be enabled. The “Discourage search engines from indexing this site” option in WordPress settings must remain unchecked to allow normal crawling and indexing."
 msgstr "Pengaturan visibilitas mesin pencari perlu diaktifkan. Opsi “Mencegah mesin pencari mengindeks situs ini” di pengaturan WordPress harus tetap tidak dicentang untuk memungkinkan crawling dan pengindeksan normal."
 
-#: inc/api/analyzer.php:654
+#: inc/api/analyzer.php:699
 msgid "XML sitemap is accessible to search engines."
 msgstr "Peta situs XML dapat diakses oleh mesin pencari."
 
-#: inc/api/analyzer.php:655
+#: inc/api/analyzer.php:700
 msgid "XML sitemap is not accessible to search engines."
 msgstr "Peta situs XML tidak dapat diakses oleh mesin pencari."
 
-#: inc/api/analyzer.php:729
+#: inc/api/analyzer.php:774
 msgid "Post not found"
 msgstr "Pos tidak ditemukan"
 
-#: inc/api/analyzer.php:1736
-#: inc/api/analyzer.php:1759
+#: inc/api/analyzer.php:1781
+#: inc/api/analyzer.php:1804
 msgid "Link is broken"
 msgstr "Tautan rusak"
 
-#: inc/api/analyzer.php:746
+#: inc/api/analyzer.php:791
 msgid "Link is not broken"
 msgstr "Tautan tidak rusak"
 
@@ -441,11 +441,11 @@ msgstr "Tidak ada ID istilah yang diberikan."
 msgid "No term found."
 msgstr "Tidak ada istilah yang ditemukan."
 
-#: inc/google-search-console/controller.php:119
+#: inc/google-search-console/controller.php:122
 msgid "No site URL found"
 msgstr "Tidak ada URL situs yang ditemukan"
 
-#: inc/google-search-console/controller.php:150
+#: inc/google-search-console/controller.php:153
 msgid "No data found for the selected date range."
 msgstr "Tidak ada data yang ditemukan untuk rentang tanggal yang dipilih."
 
@@ -453,7 +453,8 @@ msgstr "Tidak ada data yang ditemukan untuk rentang tanggal yang dipilih."
 msgid "Invalid credentials"
 msgstr "Kredensial tidak valid"
 
-#: inc/google-search-console/google-console.php:105
+#: inc/google-search-console/google-console.php:103
+#: inc/google-search-console/site-verification.php:61
 msgid "Unknown error"
 msgstr "Kesalahan tidak dikenal"
 
@@ -2686,42 +2687,49 @@ msgstr "Judul Istilah"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No index"
 msgstr "Tidak ada indeks"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Prevents search engines from listing your page in search results."
 msgstr "Mencegah mesin pencari mencantumkan halaman Anda dalam hasil pencarian."
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No follow"
 msgstr "Tidak mengikuti"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Tells search engines not to follow any links on your page."
 msgstr "Memberitahu mesin pencari untuk tidak mengikuti tautan apa pun di halaman Anda."
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No archive"
 msgstr "Tidak arsip"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Blocks search engines from storing a cached version of your page."
 msgstr "Memblokir mesin pencari dari menyimpan versi cache halaman Anda."
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 msgid "This content will be set as the meta description tag and may appear in search results. Keep it short and clearly explain what the page is about."
 msgstr "Konten ini akan diatur sebagai tag deskripsi meta dan mungkin muncul dalam hasil pencarian. Jaga agar tetap singkat dan jelaskan dengan jelas tentang apa halaman ini."
@@ -2734,6 +2742,7 @@ msgstr "Prabaca Mesin Pencari"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 msgid "View a preview of how your page may appear in search engine results. This preview is for guidance only and might not exactly match how search engines display your content."
 msgstr "Lihat prabaca tentang bagaimana halaman Anda mungkin muncul dalam hasil mesin pencari. Prabaca ini hanya untuk panduan dan mungkin tidak persis mencocokkan cara mesin pencari menampilkan konten Anda."
@@ -2900,10 +2909,6 @@ msgstr "Tersimpan"
 msgid "Close"
 msgstr "Tutup"
 
-#: build/seo-popup/index.js:1
-msgid "Page SEO Checks"
-msgstr "Pemeriksaan SEO Halaman"
-
 #: build/admin-seo-bar/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
@@ -2934,40 +2939,39 @@ msgstr "ArtikelBerita"
 msgid "BlogPosting"
 msgstr "PostingBlog"
 
-#: inc/analyzer/post-analyzer.php:221
+#: inc/analyzer/post-analyzer.php:235
+#: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Page contains at least one subheading."
 msgstr "Halaman berisi setidaknya satu subjudul."
 
-#: inc/analyzer/post-analyzer.php:349
+#: inc/analyzer/post-analyzer.php:367
+#: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 msgid "All images on this page have alt text attributes."
 msgstr "Semua gambar di halaman ini memiliki atribut teks alt."
 
-#: inc/analyzer/post-analyzer.php:352
-#: build/seo-popup/index.js:1
-msgid "One or more images on this page are missing alt text attributes."
-msgstr "Satu atau lebih gambar di halaman ini tidak memiliki atribut teks alt."
-
-#: inc/analyzer/post-analyzer.php:384
+#: inc/analyzer/post-analyzer.php:408
 msgid "Add images to improve the post/page's visual appeal and SEO."
 msgstr "Tambahkan gambar untuk meningkatkan daya tarik visual dan SEO pos/halaman."
 
-#: inc/analyzer/post-analyzer.php:395
+#: inc/analyzer/post-analyzer.php:419
 msgid "Images on the post/page have alt text attributes"
 msgstr "Gambar di pos/halaman memiliki atribut teks alt."
 
-#: inc/analyzer/post-analyzer.php:433
+#: inc/analyzer/post-analyzer.php:457
+#: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 msgid "This page includes images or videos to enhance content."
 msgstr "Halaman ini menyertakan gambar atau video untuk meningkatkan konten."
 
-#: inc/analyzer/post-analyzer.php:433
+#: inc/analyzer/post-analyzer.php:457
+#: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No images or videos found on this page."
 msgstr "Tidak ada gambar atau video yang ditemukan di halaman ini."
 
-#: inc/analyzer/post-analyzer.php:458
+#: inc/analyzer/post-analyzer.php:482
 msgid "Links are present on the page."
 msgstr "Tautan ada di halaman."
 
@@ -2996,32 +3000,37 @@ msgid "Search engine description exceeds %s characters."
 msgstr "Deskripsi mesin pencari melebihi %s karakter."
 
 #: inc/analyzer/utils.php:152
+#: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Canonical tag is not present on the page."
 msgstr "Tag kanonik tidak ada di halaman."
 
 #: inc/analyzer/utils.php:158
+#: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Canonical tag is present on the page."
 msgstr "Tag kanonik ada di halaman."
 
 #: inc/analyzer/utils.php:179
+#: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Page URL is short and SEO-friendly."
 msgstr "URL halaman pendek dan ramah SEO."
 
 #. translators: %s is the URL length.
 #: inc/analyzer/utils.php:182
+#: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 #, php-format,js-format
 msgid "Page URL is longer than %s characters and may affect SEO and readability."
 msgstr "URL halaman lebih panjang dari %s karakter dan dapat memengaruhi SEO dan keterbacaan."
 
-#: inc/api/analyzer.php:1300
+#: inc/api/analyzer.php:1345
 msgid "These broken links were found on the page: "
 msgstr "Tautan yang rusak ditemukan di halaman:"
 
-#: inc/api/analyzer.php:1305
+#: inc/api/analyzer.php:1350
+#: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 msgid "One or more broken links found on the page."
 msgstr "Satu atau lebih tautan yang rusak ditemukan di halaman."
@@ -3030,14 +3039,17 @@ msgstr "Satu atau lebih tautan yang rusak ditemukan di halaman."
 msgid "This setting is managed by the SureRank plugin, so you don’t need to configure indexing rules for funnels here."
 msgstr "Pengaturan ini dikelola oleh plugin SureRank, jadi Anda tidak perlu mengonfigurasi aturan pengindeksan untuk funnel di sini."
 
+#: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 msgid "This page includes video(s) but no images."
 msgstr "Halaman ini menyertakan video tetapi tidak ada gambar."
 
+#: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No links found on this page."
 msgstr "Tidak ada tautan yang ditemukan di halaman ini."
 
+#: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Links are present on this page."
 msgstr "Tautan ada di halaman ini."
@@ -3062,7 +3074,8 @@ msgstr "Tag Open Graph ada di halaman."
 msgid "Open Graph tags are not present on the page."
 msgstr "Tag Open Graph tidak ada di halaman."
 
-#: inc/analyzer/post-analyzer.php:497
+#: inc/analyzer/post-analyzer.php:521
+#: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No broken links found on the page."
 msgstr "Tidak ada tautan yang rusak ditemukan di halaman."
@@ -3126,14 +3139,6 @@ msgstr "Situs berhasil dipilih"
 #: build/admin-dashboard/index.js:1
 msgid "Select a site"
 msgstr "Pilih situs"
-
-#: build/admin-dashboard/index.js:1
-msgid "No Verified Site Found"
-msgstr "Tidak Ada Situs Terverifikasi Ditemukan"
-
-#: build/admin-dashboard/index.js:1
-msgid "Add and verify your site in Google Search Console to start seeing insights here. "
-msgstr "Tambahkan dan verifikasi situs Anda di Google Search Console untuk mulai melihat wawasan di sini."
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
@@ -3233,28 +3238,12 @@ msgid "View"
 msgstr "Lihat"
 
 #: build/admin-dashboard/index.js:1
-msgid "Unlock Content Insights"
-msgstr "Buka Wawasan Konten"
-
-#: build/admin-dashboard/index.js:1
-msgid "See what's driving traffic, content score, rankings, and performance trends."
-msgstr "Lihat apa yang mendorong lalu lintas, skor konten, peringkat, dan tren kinerja."
-
-#: build/admin-dashboard/index.js:1
-msgid "Upgrade"
-msgstr "Tingkatkan"
-
-#: build/admin-dashboard/index.js:1
 msgid "View Full Report"
 msgstr "Lihat Laporan Lengkap"
 
 #: build/admin-dashboard/index.js:1
 msgid "Content Analysis"
 msgstr "Analisis Konten"
-
-#: build/admin-dashboard/index.js:1
-msgid "Content Gap"
-msgstr "Kesenjangan Konten"
 
 #: build/admin-dashboard/index.js:1
 msgid "Search by URL or title"
@@ -3505,10 +3494,6 @@ msgid "Site SEO Analysis"
 msgstr "Analisis SEO Situs"
 
 #: build/admin-dashboard/index.js:1
-msgid " Fix All for Me"
-msgstr "Perbaiki Semua untuk Saya"
-
-#: build/admin-dashboard/index.js:1
 msgid "No Results Found"
 msgstr "Tidak Ada Hasil Ditemukan"
 
@@ -3590,18 +3575,8 @@ msgstr "Aktifkan Arsip Penulis"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
-msgid "Displays all posts published by a specific author. Useful for showcasing an author’s contributions and helping search engines understand authorship and topical relevance."
-msgstr "Menampilkan semua pos yang diterbitkan oleh penulis tertentu. Berguna untuk menampilkan kontribusi penulis dan membantu mesin pencari memahami kepenulisan dan relevansi topikal."
-
-#: build/admin-dashboard/index.js:1
-#: build/admin-onboarding/index.js:1
 msgid "Enable Date Archive"
 msgstr "Aktifkan Arsip Tanggal"
-
-#: build/admin-dashboard/index.js:1
-#: build/admin-onboarding/index.js:1
-msgid "Groups posts by month or year. Helps visitors explore content chronologically and allows search engines to better index time-based content."
-msgstr "Mengelompokkan pos berdasarkan bulan atau tahun. Membantu pengunjung menjelajahi konten secara kronologis dan memungkinkan mesin pencari untuk lebih baik mengindeks konten berbasis waktu."
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
@@ -3695,18 +3670,21 @@ msgstr "Nama situs yang digunakan dalam judul dan deskripsi meta diambil dari Pe
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Site Icon: "
 msgstr "Ikon Situs:"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 msgid "The site icon (favicon) appears in browser tabs, bookmarks, and mobile devices. To update it, go to General Settings → Site Icon and upload a new image under Site Identity."
 msgstr "Ikon situs (favicon) muncul di tab browser, bookmark, dan perangkat mobile. Untuk memperbaruinya, pergi ke Pengaturan Umum → Ikon Situs dan unggah gambar baru di bawah Identitas Situs."
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Change Here"
 msgstr "Ubah Di Sini"
@@ -4064,11 +4042,11 @@ msgstr "Daftar fitur"
 msgid "Let's Get Started"
 msgstr "Mari Kita Mulai"
 
-#: inc/analyzer/term-analyzer.php:115
+#: inc/analyzer/term-analyzer.php:122
 msgid "Invalid term ID or term object."
 msgstr "ID istilah atau objek istilah tidak valid."
 
-#: inc/api/analyzer.php:1543
+#: inc/api/analyzer.php:1588
 msgid "Post ID is required."
 msgstr "ID pos diperlukan."
 
@@ -4076,11 +4054,11 @@ msgstr "ID pos diperlukan."
 msgid "Invalid Post ID."
 msgstr "ID Pos tidak valid."
 
-#: inc/api/analyzer.php:1596
+#: inc/api/analyzer.php:1641
 msgid "SEO checks retrieved from cache."
 msgstr "Pemeriksaan SEO diambil dari cache."
 
-#: inc/api/analyzer.php:1619
+#: inc/api/analyzer.php:1664
 msgid "SEO checks completed."
 msgstr "Pemeriksaan SEO selesai."
 
@@ -4088,11 +4066,11 @@ msgstr "Pemeriksaan SEO selesai."
 msgid "Taxonomy and term ID are required."
 msgstr "Taksonomi dan ID istilah diperlukan."
 
-#: inc/api/analyzer.php:1658
+#: inc/api/analyzer.php:1703
 msgid "Taxonomy SEO checks retrieved from cache."
 msgstr "Pemeriksaan SEO Taksonomi diambil dari cache."
 
-#: inc/api/analyzer.php:1681
+#: inc/api/analyzer.php:1726
 msgid "Taxonomy SEO checks found."
 msgstr "Pemeriksaan SEO Taksonomi ditemukan."
 
@@ -4116,6 +4094,7 @@ msgstr "Tidak Ada Data"
 msgid "Issues Detected"
 msgstr "Masalah Terdeteksi"
 
+#: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Page does not contain at least one subheading."
 msgstr "Halaman tidak mengandung setidaknya satu subjudul."
@@ -4141,7 +4120,7 @@ msgid "Search engine description of the home page is present and under 160 chara
 msgstr "Deskripsi mesin pencari halaman beranda ada dan kurang dari 160 karakter."
 
 #. translators: %s is the URL of the surerank settings page
-#: inc/api/analyzer.php:614
+#: inc/api/analyzer.php:659
 #, php-format
 msgid "Set the search engine visibility on <a href=\"%s\">WordPress Reading settings page</a>."
 msgstr "Atur visibilitas mesin pencari di <a href=\"%s\">halaman pengaturan Bacaan WordPress</a>."
@@ -4196,6 +4175,7 @@ msgid_plural "Warnings"
 msgstr[0] "Peringatan"
 msgstr[1] ""
 
+#: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 msgid "These broken links were found on the page:"
 msgstr "Tautan yang rusak ini ditemukan di halaman:"
@@ -4353,17 +4333,13 @@ msgstr "Kueri Pencarian"
 msgid "Search query (only available on search results page)"
 msgstr "Kueri pencarian (hanya tersedia di halaman hasil pencarian)"
 
-#: loader.php:277
+#: loader.php:286
 msgid "Rate our plugin"
 msgstr "Beri nilai plugin kami"
 
 #: build/admin-dashboard/index.js:1
 msgid "Learn about Google Search Console and how SureRank uses it for optimizing your website."
 msgstr "Pelajari tentang Google Search Console dan bagaimana SureRank menggunakannya untuk mengoptimalkan situs web Anda."
-
-#: build/admin-dashboard/index.js:1
-msgid "Fix All for Me"
-msgstr "Perbaiki Semua untuk Saya"
 
 #: build/admin-onboarding/index.js:1
 #, js-format
@@ -4435,11 +4411,6 @@ msgstr "Segera Hadir di SureRank Pro."
 msgid "Join Waitlist"
 msgstr "Bergabung dengan Daftar Tunggu"
 
-#: build/seo-popup/index.js:1
-#, js-format
-msgid "%1$s %2$s need attention. Click to see"
-msgstr "%1$s %2$s perlu perhatian. Klik untuk melihat"
-
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 #: build/admin-seo-bar/index.js:1
@@ -4450,10 +4421,6 @@ msgid "issue"
 msgid_plural "issues"
 msgstr[0] "masalah"
 msgstr[1] ""
-
-#: build/seo-popup/index.js:1
-msgid "All SEO checks passed. Click to see"
-msgstr "Semua pemeriksaan SEO berhasil. Klik untuk melihat"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-seo-bar/index.js:1
@@ -4515,8 +4482,8 @@ msgstr "Ini sering kali adalah hal pertama yang dilihat seseorang sebelum mereka
 #: inc/analyzer/seo-analyzer.php:655
 #: inc/analyzer/seo-analyzer.php:780
 #: inc/analyzer/seo-analyzer.php:1056
-#: inc/api/analyzer.php:502
-#: inc/api/analyzer.php:532
+#: inc/api/analyzer.php:547
+#: inc/api/analyzer.php:577
 msgid "Why this matters:"
 msgstr "Mengapa ini penting:"
 
@@ -4724,9 +4691,9 @@ msgstr "Jika mesin pencari melihat beberapa versi dari halaman yang sama, mereka
 #: inc/analyzer/seo-analyzer.php:735
 #: inc/analyzer/seo-analyzer.php:783
 #: inc/api/analyzer.php:444
-#: inc/api/analyzer.php:535
-#: inc/api/analyzer.php:573
-#: inc/api/analyzer.php:664
+#: inc/api/analyzer.php:580
+#: inc/api/analyzer.php:618
+#: inc/api/analyzer.php:709
 msgid "What you can do:"
 msgstr "Apa yang dapat Anda lakukan:"
 
@@ -4762,8 +4729,8 @@ msgstr "Ini dapat terjadi jika beranda Anda dipindahkan, dihapus, atau dikonfigu
 #: inc/analyzer/seo-analyzer.php:623
 #: inc/analyzer/seo-analyzer.php:732
 #: inc/api/analyzer.php:441
-#: inc/api/analyzer.php:570
-#: inc/api/analyzer.php:661
+#: inc/api/analyzer.php:615
+#: inc/api/analyzer.php:706
 msgid "Why it matters:"
 msgstr "Mengapa ini penting:"
 
@@ -4887,8 +4854,8 @@ msgstr "Di mana menambahkannya:"
 msgid "When uploading or editing images in WordPress, you’ll see an “ALT text” field in the media settings. Fill this out for each image on your homepage."
 msgstr "Saat mengunggah atau mengedit gambar di WordPress, Anda akan melihat kolom \"teks ALT\" di pengaturan media. Isi ini untuk setiap gambar di beranda Anda."
 
-#: inc/api/analyzer.php:1507
-#: inc/api/analyzer.php:1530
+#: inc/api/analyzer.php:1552
+#: inc/api/analyzer.php:1575
 msgid "Type of check to delete. Can be \"post\" or \"taxonomy\"."
 msgstr "Jenis pemeriksaan untuk dihapus. Bisa \"pos\" atau \"taksonomi\"."
 
@@ -4920,101 +4887,101 @@ msgstr "Google Search Console adalah alat gratis yang menunjukkan bagaimana situ
 msgid "Connecting Search Console to your site doesn’t change anything on the front end — but it gives you a behind-the-scenes view of what’s working. SureRank uses this connection to show useful insights directly in your dashboard."
 msgstr "Menghubungkan Search Console ke situs Anda tidak mengubah apa pun di bagian depan — tetapi memberi Anda pandangan di balik layar tentang apa yang berhasil. SureRank menggunakan koneksi ini untuk menunjukkan wawasan berguna langsung di dasbor Anda."
 
-#: inc/api/analyzer.php:463
+#: inc/api/analyzer.php:520
 msgid "SEO plugins help manage how your site appears in search engines. They control important things like titles, meta descriptions, canonical tags, and structured data. "
 msgstr "Plugin SEO membantu mengelola bagaimana situs Anda muncul di mesin pencari. Mereka mengontrol hal-hal penting seperti judul, deskripsi meta, tag kanonik, dan data terstruktur."
 
 #. translators: %s is the list of active plugins
-#: inc/api/analyzer.php:498
+#: inc/api/analyzer.php:543
 #, php-format
 msgid "Currently active plugins : %s"
 msgstr "Plugin aktif saat ini: %s"
 
-#: inc/api/analyzer.php:499
+#: inc/api/analyzer.php:544
 msgid "But here’s something many site owners don’t realize — using more than one SEO plugin at the same time can lead to issues."
 msgstr "Tetapi inilah sesuatu yang banyak pemilik situs tidak sadari — menggunakan lebih dari satu plugin SEO pada saat yang sama dapat menyebabkan masalah."
 
-#: inc/api/analyzer.php:503
+#: inc/api/analyzer.php:548
 msgid "Most SEO plugins try to manage the same parts of your site. When two plugins do this together, they can send mixed signals to search engines. This might affect how your content is indexed or shown in results. It also makes it harder to know which tool is changing what."
 msgstr "Sebagian besar plugin SEO mencoba mengelola bagian yang sama dari situs Anda. Ketika dua plugin melakukan ini bersama-sama, mereka dapat mengirim sinyal campuran ke mesin pencari. Ini mungkin mempengaruhi bagaimana konten Anda diindeks atau ditampilkan dalam hasil. Ini juga membuat lebih sulit untuk mengetahui alat mana yang mengubah apa."
 
-#: inc/api/analyzer.php:505
+#: inc/api/analyzer.php:550
 msgid "What to keep in mind:"
 msgstr "Apa yang perlu diingat:"
 
-#: inc/api/analyzer.php:506
+#: inc/api/analyzer.php:551
 msgid "Keeping just one SEO plugin active ensures your settings stay clean and consistent. It’s easier to manage, avoids conflicts, and helps search engines read your site clearly."
 msgstr "Menjaga hanya satu plugin SEO aktif memastikan pengaturan Anda tetap bersih dan konsisten. Ini lebih mudah dikelola, menghindari konflik, dan membantu mesin pencari membaca situs Anda dengan jelas."
 
-#: inc/api/analyzer.php:508
+#: inc/api/analyzer.php:553
 msgid "SureRank is designed to handle everything you need in one place — so there’s no need for multiple plugins doing the same job."
 msgstr "SureRank dirancang untuk menangani semua yang Anda butuhkan di satu tempat — jadi tidak perlu beberapa plugin yang melakukan pekerjaan yang sama."
 
-#: inc/api/analyzer.php:529
+#: inc/api/analyzer.php:574
 msgid "Your site tagline is a simple line that helps explain what your website is about. It often shows up in the browser tab, homepage, or in search snippets — depending on your theme or SEO settings."
 msgstr "Tagline situs Anda adalah satu kalimat sederhana yang membantu menjelaskan tentang apa situs web Anda. Ini sering muncul di tab browser, halaman utama, atau dalam cuplikan pencarian — tergantung pada tema atau pengaturan SEO Anda."
 
-#: inc/api/analyzer.php:530
+#: inc/api/analyzer.php:575
 msgid "Leaving it blank, using a default message like “Just another WordPress site,” or writing something unclear doesn’t help people or search engines understand your site."
 msgstr "Meninggalkannya kosong, menggunakan pesan default seperti “Hanya situs WordPress lainnya,” atau menulis sesuatu yang tidak jelas tidak membantu orang atau mesin pencari memahami situs Anda."
 
-#: inc/api/analyzer.php:533
+#: inc/api/analyzer.php:578
 msgid "A good tagline can instantly tell visitors what your site offers — and make it more appealing in search results. Think of it like a mini pitch that follows your site name."
 msgstr "Tagline yang baik dapat segera memberi tahu pengunjung apa yang ditawarkan situs Anda — dan membuatnya lebih menarik dalam hasil pencarian. Anggap saja seperti pitch mini yang mengikuti nama situs Anda."
 
-#: inc/api/analyzer.php:536
+#: inc/api/analyzer.php:581
 msgid "Write one short sentence that describes your site’s purpose or audience. For example: "
 msgstr "Tulis satu kalimat pendek yang menggambarkan tujuan atau audiens situs Anda. Misalnya:"
 
-#: inc/api/analyzer.php:537
+#: inc/api/analyzer.php:582
 msgid "“Simple budgeting tools for everyday people”"
 msgstr "“Alat anggaran sederhana untuk orang sehari-hari”"
 
-#: inc/api/analyzer.php:538
+#: inc/api/analyzer.php:583
 msgid "“Home workouts and fitness tips that fit your schedule”"
 msgstr "“Latihan di rumah dan tips kebugaran yang sesuai dengan jadwal Anda”"
 
-#: inc/api/analyzer.php:539
+#: inc/api/analyzer.php:584
 msgid "Keep it short, specific, and friendly. You can change it from the WordPress settings."
 msgstr "Jaga agar tetap singkat, spesifik, dan ramah. Anda dapat mengubahnya dari pengaturan WordPress."
 
-#: inc/api/analyzer.php:566
+#: inc/api/analyzer.php:611
 msgid "Your site uses a small file called robots.txt to guide search engines on where they can and can’t go. It’s like a set of instructions that says, “You’re welcome to look here — but please don’t touch this part.”"
 msgstr "Situs Anda menggunakan file kecil bernama robots.txt untuk membimbing mesin pencari tentang di mana mereka dapat dan tidak dapat pergi. Ini seperti seperangkat instruksi yang mengatakan, “Anda dipersilakan untuk melihat di sini — tetapi tolong jangan sentuh bagian ini.”"
 
-#: inc/api/analyzer.php:568
+#: inc/api/analyzer.php:613
 msgid "Most of the time, WordPress creates this automatically. But if the file is missing or misconfigured, search engines might avoid pages they’re actually allowed to visit — or worse, miss important content altogether."
 msgstr "Sebagian besar waktu, WordPress membuat ini secara otomatis. Tetapi jika file tersebut hilang atau salah konfigurasi, mesin pencari mungkin menghindari halaman yang sebenarnya diizinkan untuk mereka kunjungi — atau lebih buruk, melewatkan konten penting sama sekali."
 
-#: inc/api/analyzer.php:571
+#: inc/api/analyzer.php:616
 msgid "Without a robots.txt file, search engines may not crawl your site properly, or they might spend too much time on pages that don’t matter. With a working file, your site can be explored more efficiently."
 msgstr "Tanpa file robots.txt, mesin pencari mungkin tidak merayapi situs Anda dengan benar, atau mereka mungkin menghabiskan terlalu banyak waktu di halaman yang tidak penting. Dengan file yang berfungsi, situs Anda dapat dijelajahi dengan lebih efisien."
 
-#: inc/api/analyzer.php:574
+#: inc/api/analyzer.php:619
 msgid "Check if your robots.txt file is available by visiting yourdomain.com/robots.txt in your browser. If it opens and lists some basic rules (even if you don’t understand them), that means it’s active. "
 msgstr "Periksa apakah file robots.txt Anda tersedia dengan mengunjungi yourdomain.com/robots.txt di browser Anda. Jika terbuka dan mencantumkan beberapa aturan dasar (meskipun Anda tidak memahaminya), itu berarti aktif."
 
-#: inc/api/analyzer.php:576
+#: inc/api/analyzer.php:621
 msgid "SureRank takes care of this by default — so if it’s missing, we’ll help you fix it easily."
 msgstr "SureRank mengurus ini secara default — jadi jika hilang, kami akan membantu Anda memperbaikinya dengan mudah."
 
-#: inc/api/analyzer.php:657
+#: inc/api/analyzer.php:702
 msgid "A sitemap is like a guide or map that helps search engines explore your website more efficiently. It lists out the important pages on your site and gives search engines a clear path to follow — like a floor plan showing where everything is. This way, nothing important gets missed."
 msgstr "Peta situs seperti panduan atau peta yang membantu mesin pencari menjelajahi situs web Anda dengan lebih efisien. Ini mencantumkan halaman-halaman penting di situs Anda dan memberikan mesin pencari jalur yang jelas untuk diikuti — seperti denah lantai yang menunjukkan di mana semuanya berada. Dengan cara ini, tidak ada yang penting yang terlewat."
 
-#: inc/api/analyzer.php:659
+#: inc/api/analyzer.php:704
 msgid "Think of it like this: if your website was a story, the sitemap would be the chapter list — helping Google and other search engines jump to the right sections. It doesn’t change how your site looks to visitors, but it makes a big difference in how your site is discovered and understood behind the scenes."
 msgstr "Pikirkan seperti ini: jika situs web Anda adalah sebuah cerita, peta situs akan menjadi daftar bab — membantu Google dan mesin pencari lainnya melompat ke bagian yang tepat. Ini tidak mengubah bagaimana situs Anda terlihat bagi pengunjung, tetapi membuat perbedaan besar dalam bagaimana situs Anda ditemukan dan dipahami di belakang layar."
 
-#: inc/api/analyzer.php:662
+#: inc/api/analyzer.php:707
 msgid "Without a sitemap, search engines might miss some of your pages or take longer to find new ones. That can slow down how quickly your updates appear in search results. With a sitemap, they get a clear overview of your content and can index it faster and more accurately — which can help improve visibility."
 msgstr "Tanpa peta situs, mesin pencari mungkin melewatkan beberapa halaman Anda atau membutuhkan waktu lebih lama untuk menemukan yang baru. Itu dapat memperlambat seberapa cepat pembaruan Anda muncul dalam hasil pencarian. Dengan peta situs, mereka mendapatkan gambaran jelas tentang konten Anda dan dapat mengindeksnya lebih cepat dan lebih akurat — yang dapat membantu meningkatkan visibilitas."
 
-#: inc/api/analyzer.php:665
+#: inc/api/analyzer.php:710
 msgid "Check that your sitemap is active and accessible. You can usually visit it at a link like yourdomain.com/sitemap.xml. If it opens and shows a list of links (even if it looks a bit technical), that means it’s working."
 msgstr "Periksa bahwa peta situs Anda aktif dan dapat diakses. Anda biasanya dapat mengunjunginya di tautan seperti yourdomain.com/sitemap.xml. Jika terbuka dan menunjukkan daftar tautan (meskipun terlihat sedikit teknis), itu berarti peta situs Anda berfungsi."
 
-#: inc/api/analyzer.php:667
+#: inc/api/analyzer.php:712
 msgid "If you’ve connected tools like Google Search Console, you can also submit the sitemap there — but that’s optional. The key is to make sure it’s available and up to date so search engines can do their job properly."
 msgstr "Jika Anda telah menghubungkan alat seperti Google Search Console, Anda juga dapat mengirimkan peta situs di sana — tetapi itu opsional. Kuncinya adalah memastikan bahwa peta situs tersedia dan diperbarui sehingga mesin pencari dapat melakukan tugas mereka dengan baik."
 
@@ -5041,10 +5008,6 @@ msgstr "Jenis organisasi."
 #: inc/api/onboarding.php:144
 msgid "Social profiles URLs."
 msgstr "URL profil sosial."
-
-#: build/admin-dashboard/index.js:1
-msgid "SEO Performance"
-msgstr "Kinerja SEO"
 
 #: build/admin-dashboard/index.js:1
 msgid "No SEO Performance to Show"
@@ -5139,7 +5102,7 @@ msgstr "Abaikan Pemeriksaan Halaman"
 msgid "Action failed. Please try again."
 msgstr "Tindakan gagal. Silakan coba lagi."
 
-#: inc/analyzer/post-analyzer.php:215
+#: inc/analyzer/post-analyzer.php:229
 msgid "The page does not contain any subheadings."
 msgstr "Halaman tidak mengandung subjudul apa pun."
 
@@ -5153,7 +5116,7 @@ msgid "Site does not correctly redirect between www and non-www versions."
 msgstr "Situs tidak mengalihkan dengan benar antara versi www dan non-www."
 
 #. translators: %s is the list of active plugins
-#: inc/api/analyzer.php:494
+#: inc/api/analyzer.php:539
 #, php-format
 msgid "Another SEO plugin, %s, detected on the site."
 msgstr "Plugin SEO lain, %s, terdeteksi di situs."
@@ -5332,13 +5295,13 @@ msgid "Failed to update SureRank settings for term ID %1$s. Error: %2$s"
 msgstr "Gagal memperbarui pengaturan SureRank untuk istilah ID %1$s. Kesalahan: %2$s"
 
 #. translators: %d: term ID
-#: inc/importers/importer-utils.php:495
+#: inc/importers/importer-utils.php:478
 #, php-format
 msgid "Invalid Term ID %d."
 msgstr "ID Term tidak valid %d."
 
 #. translators: %d: post ID
-#: inc/importers/importer-utils.php:500
+#: inc/importers/importer-utils.php:483
 #, php-format
 msgid "Invalid Post ID %d."
 msgstr "ID Post tidak valid %d."
@@ -5577,10 +5540,6 @@ msgid "Enter your focus keyword"
 msgstr "Masukkan kata kunci fokus Anda"
 
 #: build/seo-popup/index.js:1
-msgid "Upgrade to Pro"
-msgstr "Upgrade ke Pro"
-
-#: build/seo-popup/index.js:1
 msgid "Optimize"
 msgstr "Optimalkan"
 
@@ -5786,7 +5745,7 @@ msgid "Done"
 msgstr "Selesai"
 
 #: inc/analyzer/utils.php:243
-#: inc/api/analyzer.php:1280
+#: inc/api/analyzer.php:1325
 msgid "The link is broken."
 msgstr "Tautan rusak."
 
@@ -5832,6 +5791,7 @@ msgstr "Mengapa tautan ini rusak?"
 msgid "Status:"
 msgstr "Status:"
 
+#: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Failed to check link"
 msgstr "Gagal memeriksa tautan"
@@ -5894,8 +5854,8 @@ msgstr "Tidak Follow -"
 msgid "No Archive -"
 msgstr "Tidak Archive -"
 
-#: inc/admin/seo-bar.php:113
-#: inc/admin/seo-bar.php:133
+#: inc/admin/seo-bar.php:118
+#: inc/admin/seo-bar.php:138
 #: build/admin-seo-bar/index.js:1
 msgid "SEO Checks"
 msgstr "Pemeriksaan SEO"
@@ -6706,3 +6666,376 @@ msgstr "Analisis SEO tidak tersedia untuk halaman ini."
 #: build/seo-popup/index.js:1
 msgid "Open SureRank Meta Box"
 msgstr "Buka Kotak Meta SureRank"
+
+#: inc/analyzer/post-analyzer.php:370
+#: build/elementor/index.js:1
+#: build/seo-popup/index.js:1
+msgid "One or more images are missing alt text attributes."
+msgstr "Satu atau lebih gambar hilang atribut teks alt."
+
+#: inc/analyzer/post-analyzer.php:373
+#: build/elementor/index.js:1
+#: build/seo-popup/index.js:1
+msgid "But don't worry, we will add them automatically for you."
+msgstr "Tapi jangan khawatir, kami akan menambahkannya secara otomatis untuk Anda."
+
+#: inc/analyzer/post-analyzer.php:376
+#: build/elementor/index.js:1
+#: build/seo-popup/index.js:1
+msgid "You can add them manually or turn on auto-set image title and alt in the settings."
+msgstr "Anda dapat menambahkannya secara manual atau mengaktifkan pengaturan otomatis-set judul dan alt gambar di pengaturan."
+
+#: inc/analyzer/utils.php:302
+#: build/seo-popup/index.js:1
+msgid "No focus keyword set to analyze title."
+msgstr "Tidak ada kata kunci fokus yang disetel untuk menganalisis judul."
+
+#: inc/analyzer/utils.php:309
+#: build/seo-popup/index.js:1
+msgid "No SEO title found to analyze."
+msgstr "Tidak ditemukan judul SEO untuk dianalisis."
+
+#. translators: %s is the focus keyword.
+#: inc/analyzer/utils.php:317
+#: build/seo-popup/index.js:1
+#, php-format,js-format
+msgid "Focus keyword \"%s\" found in SEO title."
+msgstr "Kata kunci fokus \"%s\" ditemukan dalam judul SEO."
+
+#. translators: %s is the focus keyword.
+#: inc/analyzer/utils.php:324
+#: build/seo-popup/index.js:1
+#, php-format,js-format
+msgid "Focus keyword \"%s\" not found in SEO title."
+msgstr "Kata kunci fokus \"%s\" tidak ditemukan dalam judul SEO."
+
+#: inc/analyzer/utils.php:339
+#: build/seo-popup/index.js:1
+msgid "No focus keyword set to analyze meta description."
+msgstr "Tidak ada kata kunci fokus yang disetel untuk menganalisis meta deskripsi."
+
+#: inc/analyzer/utils.php:346
+#: build/seo-popup/index.js:1
+msgid "No meta description found to analyze."
+msgstr "Tidak ditemukan meta deskripsi untuk dianalisis."
+
+#. translators: %s is the focus keyword.
+#: inc/analyzer/utils.php:354
+#: build/seo-popup/index.js:1
+#, php-format,js-format
+msgid "Focus keyword \"%s\" found in meta description."
+msgstr "Kata kunci fokus \"%s\" ditemukan dalam meta deskripsi."
+
+#. translators: %s is the focus keyword.
+#: inc/analyzer/utils.php:361
+#: build/seo-popup/index.js:1
+#, php-format,js-format
+msgid "Focus keyword \"%s\" not found in meta description."
+msgstr "Kata kunci fokus \"%s\" tidak ditemukan dalam meta deskripsi."
+
+#: inc/analyzer/utils.php:376
+#: build/seo-popup/index.js:1
+msgid "No focus keyword set to analyze URL."
+msgstr "Tidak ada kata kunci fokus yang disetel untuk menganalisis URL."
+
+#: inc/analyzer/utils.php:383
+#: build/seo-popup/index.js:1
+msgid "No URL found to analyze."
+msgstr "Tidak ditemukan URL untuk dianalisis."
+
+#. translators: %s is the focus keyword.
+#: inc/analyzer/utils.php:395
+#: build/seo-popup/index.js:1
+#, php-format,js-format
+msgid "Focus keyword \"%s\" found in URL."
+msgstr "Kata kunci fokus \"%s\" ditemukan dalam URL."
+
+#. translators: %s is the focus keyword.
+#: inc/analyzer/utils.php:402
+#: build/seo-popup/index.js:1
+#, php-format,js-format
+msgid "Focus keyword \"%s\" not found in URL."
+msgstr "Kata kunci fokus \"%s\" tidak ditemukan dalam URL."
+
+#: inc/analyzer/utils.php:417
+#: build/seo-popup/index.js:1
+msgid "No focus keyword set to analyze content."
+msgstr "Tidak ada kata kunci fokus yang disetel untuk menganalisis konten."
+
+#: inc/analyzer/utils.php:424
+#: build/seo-popup/index.js:1
+msgid "No content found to analyze."
+msgstr "Tidak ditemukan konten untuk dianalisis."
+
+#. translators: %s is the focus keyword.
+#: inc/analyzer/utils.php:437
+#: build/seo-popup/index.js:1
+#, php-format,js-format
+msgid "Focus keyword \"%s\" found in content."
+msgstr "Kata kunci fokus \"%s\" ditemukan dalam konten."
+
+#. translators: %s is the focus keyword.
+#: inc/analyzer/utils.php:444
+#: build/seo-popup/index.js:1
+#, php-format,js-format
+msgid "Focus keyword \"%s\" not found in content."
+msgstr "Kata kunci fokus \"%s\" tidak ditemukan dalam konten."
+
+#: inc/google-search-console/site-verification.php:68
+msgid "This site is already verified with Google."
+msgstr "Situs ini sudah diverifikasi dengan Google."
+
+#: inc/google-search-console/site-verification.php:70
+msgid "Invalid site URL format for verification. Please check the URL."
+msgstr "Format URL situs tidak valid untuk verifikasi. Silakan periksa URL-nya."
+
+#: inc/google-search-console/site-verification.php:74
+msgid "Authentication expired. Please disconnect and reconnect your Google account."
+msgstr "Sesi otentikasi kedaluwarsa. Silakan putuskan dan sambungkan kembali akun Google Anda."
+
+#: inc/google-search-console/site-verification.php:77
+msgid "Access denied. Please disconnect and reconnect your Google account with the necessary permissions."
+msgstr "Akses ditolak. Silakan putuskan dan sambungkan kembali akun Google Anda dengan izin yang diperlukan."
+
+#: inc/google-search-console/site-verification.php:80
+msgid "Verification resource not found. Please try again."
+msgstr "Sumber daya verifikasi tidak ditemukan. Silakan coba lagi."
+
+#: inc/google-search-console/site-verification.php:83
+msgid "Site verification conflict. This site may already be verified by another user."
+msgstr "Konflik verifikasi situs. Situs ini mungkin sudah diverifikasi oleh pengguna lain."
+
+#: inc/google-search-console/site-verification.php:86
+msgid "Too many verification requests. Please wait a moment and try again."
+msgstr "Permintaan verifikasi terlalu banyak. Silakan tunggu sebentar dan coba lagi."
+
+#: inc/google-search-console/site-verification.php:91
+msgid "Google Site Verification service is temporarily unavailable. Please try again later."
+msgstr "Layanan Verifikasi Situs Google sementara tidak tersedia. Silakan coba lagi nanti."
+
+#. translators: %d: HTTP status code
+#: inc/google-search-console/site-verification.php:97
+#, php-format
+msgid "Site verification error (Code: %d). Please try again."
+msgstr "Kesalahan verifikasi situs (Kode: %d). Silakan coba lagi."
+
+#: inc/google-search-console/site-verification.php:144
+msgid "No verification token received"
+msgstr "Token verifikasi tidak diterima"
+
+#: inc/google-search-console/site-verification.php:229
+msgid "Site verification is pending. Google needs time to crawl and verify your site. This may take 1-2 hours or up to 2 days."
+msgstr "Verifikasi situs sedang menunggu. Google membutuhkan waktu untuk merayapi dan memverifikasi situs Anda. Ini mungkin memakan waktu 1-2 jam atau hingga 2 hari."
+
+#: inc/google-search-console/site-verification.php:240
+msgid "Site verified successfully"
+msgstr "Situs berhasil diverifikasi"
+
+#: inc/google-search-console/site-verification.php:263
+msgid "Site added successfully"
+msgstr "Situs berhasil ditambahkan"
+
+#: inc/google-search-console/site-verification.php:332
+msgid "Property created successfully. Verification is pending and may take 1-2 hours or up to 2 days."
+msgstr "Properti berhasil dibuat. Verifikasi sedang berlangsung dan mungkin memakan waktu 1-2 jam atau hingga 2 hari."
+
+#: inc/google-search-console/site-verification.php:333
+msgid "Verification is pending and may take 1-2 hours or up to 2 days."
+msgstr "Verifikasi sedang berlangsung dan mungkin memakan waktu 1-2 jam atau hingga 2 hari."
+
+#: inc/google-search-console/site-verification.php:343
+msgid "Property created and verified successfully"
+msgstr "Properti dibuat dan diverifikasi dengan sukses"
+
+#: inc/google-search-console/site-verification.php:344
+msgid "Property verified successfully"
+msgstr "Properti diverifikasi dengan sukses"
+
+#: inc/modules/ai-auth/api.php:78
+msgid "No access key provided."
+msgstr "Kunci akses tidak disediakan."
+
+#: inc/modules/ai-auth/api.php:88
+msgid "Failed to save authentication data."
+msgstr "Gagal menyimpan data otentikasi."
+
+#: inc/modules/ai-auth/api.php:91
+msgid "Authentication data saved."
+msgstr "Data otentikasi disimpan."
+
+#: inc/modules/ai-auth/api.php:103
+msgid "Authentication is already completed."
+msgstr "Otentikasi sudah selesai."
+
+#: inc/modules/ai-auth/controller.php:67
+msgid "Failed to encode the token data."
+msgstr "Gagal mengkodekan data token."
+
+#: inc/modules/ai-auth/controller.php:100
+msgid "Failed to decode the access key."
+msgstr "Gagal mendekode kunci akses."
+
+#: inc/modules/ai-auth/controller.php:111
+msgid "Failed to decrypt the access key."
+msgstr "Gagal mendekripsi kunci akses"
+
+#: inc/modules/ai-auth/controller.php:118
+msgid "Failed to json decode the decrypted data."
+msgstr "Gagal mendecode data yang didekripsi dengan json"
+
+#: inc/modules/ai-auth/controller.php:123
+msgid "Nonce verification failed."
+msgstr "Verifikasi Nonce gagal"
+
+#: inc/modules/ai-auth/controller.php:128
+msgid "No user email found in the decrypted data."
+msgstr "Tidak ditemukan email pengguna dalam data yang didekripsi"
+
+#: inc/modules/ai-auth/controller.php:151
+msgid "No authentication data found."
+msgstr "Data otentikasi tidak ditemukan"
+
+#: inc/modules/ai-auth/controller.php:155
+msgid "No data found for the provided key."
+msgstr "Tidak ditemukan data untuk kunci yang diberikan"
+
+#: inc/modules/content-generation/api.php:79
+msgid "Post ID whose content needs to be generated (optional)"
+msgstr "ID Pos yang kontennya perlu dibuat (opsional)"
+
+#: inc/modules/content-generation/api.php:86
+msgid "Type of content to generate: page title, page description, social title, social description"
+msgstr "Jenis konten yang akan dibuat: judul halaman, deskripsi halaman, judul sosial, deskripsi sosial"
+
+#: inc/modules/content-generation/api.php:108
+msgid "Invalid Content Type"
+msgstr "Jenis Konten Tidak Valid"
+
+#. translators: %1$s: Valid content types
+#: inc/modules/content-generation/api.php:110
+#, php-format
+msgid "The content type needs to be one of these types: \"%1$s\""
+msgstr "Jenis konten harus salah satu dari tipe ini: \"%1$s\""
+
+#: inc/modules/content-generation/api.php:125
+#: inc/modules/content-generation/api.php:126
+msgid "Invalid post ID"
+msgstr "ID pos tidak valid"
+
+#: inc/modules/content-generation/controller.php:91
+#: inc/modules/content-generation/controller.php:103
+msgid "Failed to generate content."
+msgstr "Gagal membuat konten"
+
+#. translators: %s is response code
+#: inc/modules/content-generation/controller.php:97
+#, php-format
+msgid "Failed to generate content with error code %s."
+msgstr "Gagal membuat konten dengan kode error %s"
+
+#: inc/modules/fix-seo-checks/api.php:115
+msgid "An unexpected error occurred. Please try again."
+msgstr "Terjadi kesalahan tak terduga. Silakan coba lagi"
+
+#: inc/modules/fix-seo-checks/page.php:62
+#: inc/modules/fix-seo-checks/page.php:71
+msgid "An error occurred while applying the content generation fix."
+msgstr "Terjadi kesalahan saat menerapkan perbaikan pembuatan konten"
+
+#: inc/modules/fix-seo-checks/page.php:100
+msgid "Term not found."
+msgstr "Istilah tidak ditemukan"
+
+#: inc/modules/fix-seo-checks/page.php:106
+msgid "Post not found or not published."
+msgstr "Pos tidak ditemukan atau tidak dipublikasikan"
+
+#: inc/modules/fix-seo-checks/page.php:130
+msgid "Invalid input for page title fix."
+msgstr "Input tidak valid untuk perbaikan judul halaman"
+
+#: inc/modules/fix-seo-checks/page.php:131
+msgid "Page title fix applied successfully."
+msgstr "Perbaikan judul halaman berhasil diterapkan"
+
+#: inc/modules/fix-seo-checks/page.php:152
+msgid "Invalid input for meta description fix."
+msgstr "Input tidak valid untuk perbaikan deskripsi meta"
+
+#: inc/modules/fix-seo-checks/page.php:153
+msgid "Meta description fix applied successfully."
+msgstr "Perbaikan deskripsi meta berhasil diterapkan"
+
+#: build/admin-dashboard/index.js:1
+msgid "Fix It For Me"
+msgstr "Perbaiki untuk saya"
+
+#: build/admin-dashboard/index.js:1
+msgid "Not Verified"
+msgstr "Belum Diverifikasi"
+
+#: build/admin-dashboard/index.js:1
+msgid "Not Connected"
+msgstr "Belum Terhubung"
+
+#: build/admin-dashboard/index.js:1
+msgid "Let's Get Your Site Connected"
+msgstr "Mari Hubungkan Situs Anda"
+
+#: build/admin-dashboard/index.js:1
+msgid "Connect it now to see SureRank insights. Your site will usually be verified instantly, though Google may take up to 1-2 days in some situations."
+msgstr "Hubungkan sekarang untuk melihat wawasan SureRank. Situs Anda biasanya akan diverifikasi secara instan, meskipun Google mungkin memerlukan waktu hingga 1-2 hari dalam beberapa situasi"
+
+#: build/admin-dashboard/index.js:1
+msgid "Failed to create property"
+msgstr "Gagal membuat properti"
+
+#: build/admin-dashboard/index.js:1
+msgid "Verification is pending and may take 1-2 hours or up to 2 days. Your site has been added to Search Console. Reloading in 2 seconds…"
+msgstr "Verifikasi tertunda dan mungkin memakan waktu 1-2 jam atau hingga 2 hari. Situs Anda telah ditambahkan ke Search Console. Memuat ulang dalam 2 detik…"
+
+#: build/admin-dashboard/index.js:1
+msgid "The changes will take effect after a page refresh. Reloading in 2 seconds…"
+msgstr "Perubahan akan berlaku setelah penyegaran halaman. Memuat ulang dalam 2 detik…"
+
+#: build/admin-dashboard/index.js:1
+msgid "Select Site"
+msgstr "Pilih Situs"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Enabling this creates author archive pages that list all posts by each author, helping showcase contributions and strengthen SEO signals. If disabled, author archive pages redirect to the homepage."
+msgstr "Mengaktifkan ini akan membuat halaman arsip pengarang yang menampilkan semua pos oleh setiap pengarang, membantu menampilkan kontribusi dan memperkuat sinyal SEO. Jika dinonaktifkan, halaman arsip pengarang akan dialihkan ke beranda."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Enabling this creates date archive pages that group posts by month or year, making it easier for visitors to browse content chronologically and for search engines to index time-based posts. If disabled, date archive pages redirect to the homepage."
+msgstr "Mengaktifkan ini akan membuat halaman arsip tanggal yang mengelompokkan pos berdasarkan bulan atau tahun, memudahkan pengunjung menelusuri konten secara kronologis dan mesin pencari mengindeks pos berbasis waktu. Jika dinonaktifkan, halaman arsip tanggal akan dialihkan ke beranda."
+
+#: build/elementor/index.js:1
+#: build/seo-popup/index.js:1
+#, js-format
+msgid "%s Issue Detected"
+msgid_plural "%s Issues Detected"
+msgstr[0] "%s Masalah Terdeteksi"
+msgstr[1] ""
+
+#: build/elementor/index.js:1
+#: build/seo-popup/index.js:1
+#, js-format
+msgid "%s Warning Detected"
+msgid_plural "%s Warnings Detected"
+msgstr[0] "%s Peringatan Terdeteksi"
+msgstr[1] ""
+
+#: build/seo-popup/index.js:1
+msgid "To see keyword-specific SEO checks, first set a focus keyword under the Optimize tab."
+msgstr "Untuk melihat pemeriksaan SEO berdasarkan kata kunci, pertama atur kata kunci fokus di tab Optimalkan"
+
+#: build/seo-popup/index.js:1
+msgid "Enter a focus keyword to see keyword-specific SEO checks."
+msgstr "Masukkan kata kunci fokus untuk melihat pemeriksaan SEO berdasarkan kata kunci"
+
+#: build/seo-popup/index.js:1
+msgid "Keyword Checks"
+msgstr "Pemeriksaan Kata Kunci"

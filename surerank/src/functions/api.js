@@ -145,7 +145,7 @@ export const fetchImageDataByUrl = async ( imageUrl ) => {
  */
 export const getMigratedData = () => {
 	return apiFetch( {
-		path: `/surerank/v1/migrated-data`,
+		path: `/surerank/v1/migration/migrated-data`,
 		method: 'GET',
 	} );
 };

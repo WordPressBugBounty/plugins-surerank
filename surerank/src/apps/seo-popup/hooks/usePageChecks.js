@@ -25,7 +25,8 @@ import replacement from '@Functions/replacement';
 import { flat } from '@Functions/variables';
 import { getEditorData } from '@SeoPopup/modal';
 import { isPageBuilderActive } from '../components/page-seo-checks/analyzer/utils/page-builder';
-import { calculatePageCheckStatus } from '../utils/calculate-page-check-status';
+import { calculateCheckStatus } from '@SeoPopup/utils/calculate-check-status';
+import { ENABLE_PAGE_LEVEL_SEO } from '@/global/constants';
 
 const usePageChecks = () => {
 	const { setPageSeoCheck } = useDispatch( STORE_NAME );
@@ -152,7 +153,12 @@ const usePageChecks = () => {
 	};
 
 	useLayoutEffect( () => {
-		if ( isPageBuilderEditor || ! settingsLoaded || ! initializing ) {
+		if (
+			isPageBuilderEditor ||
+			! settingsLoaded ||
+			! initializing ||
+			! ENABLE_PAGE_LEVEL_SEO
+		) {
 			return;
 		}
 
@@ -169,7 +175,12 @@ const usePageChecks = () => {
 	] );
 
 	useLayoutEffect( () => {
-		if ( isPageBuilderEditor || ! settingsLoaded || initializing ) {
+		if (
+			isPageBuilderEditor ||
+			! settingsLoaded ||
+			initializing ||
+			! ENABLE_PAGE_LEVEL_SEO
+		) {
 			return;
 		}
 		const updateChecks = debounce( async () => {
@@ -206,7 +217,7 @@ const usePageChecks = () => {
 	] );
 
 	const { status, counts } = useMemo( () => {
-		return calculatePageCheckStatus( categorizedChecks );
+		return calculateCheckStatus( categorizedChecks );
 	}, [ categorizedChecks ] );
 
 	return {

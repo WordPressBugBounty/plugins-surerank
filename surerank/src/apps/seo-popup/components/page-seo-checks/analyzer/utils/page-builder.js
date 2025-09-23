@@ -75,6 +75,7 @@ export const checkBrokenLinks = async (
 					'One or more broken links found on the page.',
 					'surerank'
 				),
+				status: 'error',
 				data: [
 					__(
 						'These broken links were found on the page:',
@@ -115,7 +116,7 @@ export const refreshPageChecks = async (
 
 	try {
 		const response = await apiFetch( {
-			path: `/surerank/v1/page-seo-checks?post_id=${ dynamicPostId }&_t=${ Date.now() }`,
+			path: `/surerank/v1/checks/page?post_id=${ dynamicPostId }&_t=${ Date.now() }`,
 			method: 'GET',
 		} );
 

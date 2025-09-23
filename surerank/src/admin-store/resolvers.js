@@ -5,7 +5,8 @@ import * as actions from './actions';
 import { ADMIN_SETTINGS_URL, SITE_SETTINGS_URL } from '@Global/constants/api';
 import { addQueryArgs } from '@wordpress/url';
 import { __ } from '@wordpress/i18n';
-import { DEFAULT_PAGE_DESCRIPTION } from '@/global/constants';
+import { getDefaultPageDescription } from '@/global/constants';
+import { addCategoryToSiteSeoChecks } from '@/functions/utils';
 
 const resolvers = {
 	*getMetaSettings() {
@@ -28,7 +29,7 @@ const resolvers = {
 				...( response?.data ?? {} ),
 				site: {
 					...( response?.data?.site ?? {} ),
-					content: DEFAULT_PAGE_DESCRIPTION,
+					content: getDefaultPageDescription(),
 				},
 			} );
 		}
@@ -48,7 +49,10 @@ const resolvers = {
 			if ( criticalIssuesResponse ) {
 				report = {
 					...report,
-					...criticalIssuesResponse,
+					...addCategoryToSiteSeoChecks(
+						criticalIssuesResponse,
+						'general'
+					),
 				};
 			}
 		} catch ( error ) {
@@ -77,7 +81,10 @@ const resolvers = {
 			if ( othersIssuesResponse ) {
 				report = {
 					...report,
-					...othersIssuesResponse,
+					...addCategoryToSiteSeoChecks(
+						othersIssuesResponse,
+						'other'
+					),
 				};
 			}
 		} catch ( error ) {
@@ -106,7 +113,10 @@ const resolvers = {
 			if ( settingsReportResponse ) {
 				report = {
 					...report,
-					...settingsReportResponse,
+					...addCategoryToSiteSeoChecks(
+						settingsReportResponse,
+						'settings'
+					),
 				};
 			}
 		} catch ( error ) {
@@ -143,8 +153,9 @@ const resolvers = {
 		}
 		const updatedData = {};
 		// Fetch selected site
-		const selectedSiteResponse =
-			yield actions.fetchFromAPI( '/surerank/v1/site' );
+		const selectedSiteResponse = yield actions.fetchFromAPI(
+			'/surerank/v1/google-search-console/site'
+		);
 		if ( selectedSiteResponse.success ) {
 			updatedData.selectedSite = selectedSiteResponse.site;
 			if ( ! updatedData.selectedSite ) {
@@ -154,8 +165,9 @@ const resolvers = {
 			}
 		}
 		// Fetch sites
-		const sitesResponse =
-			yield actions.fetchFromAPI( '/surerank/v1/sites' );
+		const sitesResponse = yield actions.fetchFromAPI(
+			'/surerank/v1/google-search-console/sites'
+		);
 		if ( sitesResponse.success ) {
 			updatedData.sites = sitesResponse.siteEntry;
 
