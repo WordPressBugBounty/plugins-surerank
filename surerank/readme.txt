@@ -5,7 +5,7 @@ Tags: seo, wordpress seo, xml sitemap, schema, google search console
 Requires at least: 6.8
 Tested up to: 6.8
 Requires PHP: 8.0
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -294,6 +294,10 @@ Brainstorm Force
 
 
 == Changelog ==
+
+### 1.4.1 - 26-September-2025 ###
+* Fix: Fixed an issue where the WooCommerce product image wasn't opening when clicked on zoom in due to a conflict with the SureRank plugin.
+
 
 ### 1.4.0 - 23-September-2025 ###
 * New: Added Focus Keyword Checks for Page-level SEO.

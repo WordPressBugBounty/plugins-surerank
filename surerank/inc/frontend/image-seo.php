@@ -109,6 +109,19 @@ class Image_Seo {
 	 * @since 1.4.0
 	 */
 	private function remove_script_style_tags( $content ): string {
+		/**
+		 * Using regex to remove script and style tags
+		 * 
+		 * Regex pattern breakdown:
+		 * 
+		 * < matches the start of a tag
+		 * (script|style) matches either script or style
+		 * [^>]*? matches any character except > (using lazy quantifier)
+		 * .*? matches any character any number of times (using lazy quantifier)
+		 * <\/\1> matches the closing tag of the same type as the opening tag
+		 * s single line mode
+		 * i matches case insensitive
+		 */
 		$result = preg_replace( '/<(script|style)[^>]*?>.*?<\/\1>/si', '', $content );
 		return $result !== null ? $result : $content;
 	}
@@ -137,6 +150,39 @@ class Image_Seo {
 	 * @since 1.4.0
 	 */
 	private function extract_images_missing_alt( $content ): array {
+		/**
+		 * Finds all <img> tags that are missing proper alt attributes for accessibility compliance.
+		 * 
+		 * Regex breakdown:
+		 * <img                                    : Matches literal "<img"
+		 * (?!                                     : Start negative lookahead (ensure pattern does NOT exist)
+		 *   [^>]*                                 : Match any chars except ">" (stay within tag)
+		 *   alt\s*=\s*                            : Match "alt" + optional whitespace + "=" + optional whitespace
+		 *   ["\']                                 : Match opening quote (single or double)
+		 *   [^"\'\s]                              : Match at least one non-quote, non-whitespace character
+		 *   [^"\']*                               : Match remaining non-quote characters
+		 *   ["\']                                 : Match closing quote
+		 * )                                       : End negative lookahead
+		 * [^>]*>                                  : Match remaining tag content until closing ">"
+		 * i                                       : Case-insensitive flag
+		 * 
+		 * Examples of what this WILL match (accessibility violations):
+		 * - <img src="photo.jpg">                 (no alt attribute)
+		 * - <img src="photo.jpg" alt="">          (empty alt)
+		 * - <img src="photo.jpg" alt=" ">         (whitespace-only alt)
+		 * - <IMG SRC="photo.jpg" ALT="">          (case variations)
+		 * 
+		 * Examples of what this will NOT match (valid alt attributes):
+		 * - <img src="photo.jpg" alt="A photo">   (valid alt text)
+		 * - <img src="photo.jpg" alt="User avatar"> (descriptive alt text)
+		 * 
+		 * @param string $content The HTML content to search for non-compliant img tags
+		 * @param array $matches Output array that will contain all matched img tags
+		 * @return int Number of matches found
+		 * 
+		 * @see https://www.php.net/manual/en/reference.pcre.pattern.syntax.php
+		 * @since 1.0.0
+		 */
 		preg_match_all( '/<img(?![^>]*alt\s*=\s*["\'][^"\'\s][^"\']*["\'])[^>]*>/i', $content, $matches );
 		return $matches[0];
 	}
@@ -149,6 +195,39 @@ class Image_Seo {
 	 * @since 1.4.0
 	 */
 	private function extract_images_missing_title( $content ): array {
+		/**
+		 * Finds all <img> tags that are missing proper title attributes for accessibility compliance.
+		 * 
+		 * Regex breakdown:
+		 * <img                                    : Matches literal "<img"
+		 * (?!                                     : Start negative lookahead (ensure pattern does NOT exist)
+		 *   [^>]*                                 : Match any chars except ">" (stay within tag)
+		 *   title\s*=\s*                            : Match "title" + optional whitespace + "=" + optional whitespace
+		 *   ["\']                                 : Match opening quote (single or double)
+		 *   [^"\'\s]                              : Match at least one non-quote, non-whitespace character
+		 *   [^"\']*                               : Match remaining non-quote characters
+		 *   ["\']                                 : Match closing quote
+		 * )                                       : End negative lookahead
+		 * [^>]*>                                  : Match remaining tag content until closing ">"
+		 * i                                       : Case-insensitive flag
+		 * 
+		 * Examples of what this WILL match (accessibility violations):
+		 * - <img src="photo.jpg">                 (no title attribute)
+		 * - <img src="photo.jpg" title="">          (empty title)
+		 * - <img src="photo.jpg" title=" ">         (whitespace-only title)
+		 * - <IMG SRC="photo.jpg" TITLE="">          (case variations)
+		 * 
+		 * Examples of what this will NOT match (valid title attributes):
+		 * - <img src="photo.jpg" title="A photo">   (valid title text)
+		 * - <img src="photo.jpg" title="User avatar"> (descriptive title text)
+		 * 
+		 * @param string $content The HTML content to search for non-compliant img tags
+		 * @param array $matches Output array that will contain all matched img tags
+		 * @return int Number of matches found
+		 * 
+		 * @see https://www.php.net/manual/en/reference.pcre.pattern.syntax.php
+		 * @since 1.0.0
+		 */
 		preg_match_all( '/<img(?![^>]*title\s*=\s*["\'][^"\'\s][^"\']*["\'])[^>]*>/i', $content, $matches );
 		return $matches[0];
 	}
@@ -232,7 +311,35 @@ class Image_Seo {
 	private function parse_image_attributes( $tag ): array {
 		$attributes = [];
 
-		if ( preg_match_all( '/(\w+)=["\']([^"\']*)["\']/', $tag, $matches, PREG_SET_ORDER ) ) {
+		/**
+		 * Using regex to parse image attributes
+		 * 
+		 * Regex pattern breakdown:
+		 *  ([a-zA-Z_:][a-zA-Z0-9\-_.:]*)        : Check for the attribute name.
+		 *   [a-zA-Z_:]                         : First char: letter, underscore, or colon
+		 *   [a-zA-Z0-9\-_.]*                   : Remaining chars: alphanumeric, hyphen, dot, underscore, colon
+		 * =                                    : Literal equals sign
+		 * ["\']                                : Opening quote (single or double)
+		 * ([^"\']*)                            : Capture group 2 - Attribute value (any chars except quotes)
+		 * ["\']                                : Closing quote (single or double)
+		 * i                                    : Case-insensitive flag
+		 * 
+		 * Examples of what this WILL match (accessibility violations):
+		 * - <img src="photo.jpg">                 (no alt attribute)
+		 * - <img src="photo.jpg" alt="">          (empty alt)
+		 * - <img src="photo.jpg" alt=" ">         (whitespace-only alt)
+		 * - <IMG SRC="photo.jpg" ALT="">          (case variations)
+		 * 
+		 * Examples of what this will NOT match (valid alt attributes):
+		 * - <img src="photo.jpg" alt="A photo">   (valid alt text)
+		 * - <img src="photo.jpg" alt="User avatar"> (descriptive alt text)
+		 */
+		if ( preg_match_all( '/([a-zA-Z_:][a-zA-Z0-9\-_.:]*)=["\']([^"\']*)["\']/', $tag, $matches, PREG_SET_ORDER ) ) {
+			/**
+			 * [0] => src="photo.jpg"      // Full match
+			 * [1] => src                  // Attribute name
+			 * [2] => photo.jpg            // Attribute value
+			 */
 			foreach ( $matches as $match ) {
 				$attributes[ $match[1] ] = $match[2];
 			}
@@ -325,7 +432,15 @@ class Image_Seo {
 	 */
 	private function get_basename_without_extension( $url ): string {
 		$filename = basename( $url );
-		$result   = preg_replace( '/\.[^.]+$/', '', $filename );
+		/**
+		 * Using regex to get the basename without the extension
+		 * Regex pattern breakdown:
+		 * 
+		 * \. matches a literal dot
+		 * [^.]+ matches one or more characters that are not a dot
+		 * $ matches the end of the string
+		 */
+		$result = preg_replace( '/\.[^.]+$/', '', $filename );
 		return $result !== null ? $result : $filename;
 	}
 
@@ -337,6 +452,14 @@ class Image_Seo {
 	 * @since 1.4.0
 	 */
 	private function sanitize_filename( $filename ): string {
+		/**
+		 * Using regex to sanitize the filename
+		 * Regex pattern breakdown:
+		 * 
+		 * [-_] matches a hyphen or underscore
+		 * + matches one or more of the preceding element
+		 * $ matches the end of the string
+		 */
 		$cleaned      = preg_replace( '/[-_]+/', ' ', $filename );
 		$safe_cleaned = $cleaned !== null ? $cleaned : $filename;
 		return ucwords( trim( $safe_cleaned ) );
