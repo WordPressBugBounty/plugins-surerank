@@ -1,14 +1,13 @@
-import { Badge, Label, Button } from '@bsf/force-ui';
+import { Badge, Label, Button, toast } from '@bsf/force-ui';
 import { cn, isURL } from '@/functions/utils';
 import FixButton from '@GlobalComponents/fix-button';
 import { __ } from '@wordpress/i18n';
-import { CircleAlert, CircleCheck, Info, TriangleAlert, X } from 'lucide-react';
+import { CircleAlert, CircleCheck, Info, TriangleAlert } from 'lucide-react';
 import {
 	SeoPopupInfoTooltip,
 	SeoPopupTooltip,
 } from '@/apps/admin-components/tooltip';
-import { ConfirmationDialog } from '@GlobalComponents/confirmation-dialog';
-import { Fragment, useState } from '@wordpress/element';
+import { Fragment } from '@wordpress/element';
 import { fetchImageDataByUrl } from '@/functions/api';
 import DOMPurify from 'dompurify';
 
@@ -87,15 +86,15 @@ const formatBrokenLinkTooltip = ( item ) => {
 
 	return (
 		<div className="space-y-1">
-			<p className="m-0">
+			<p className="m-0 text-inherit">
 				<b>{ __( 'Why is this link broken?', 'surerank' ) }</b>
 			</p>
 			<p
-				className="m-0"
+				className="m-0 text-inherit"
 				dangerouslySetInnerHTML={ { __html: purifiedContent } }
 			/>
 			{ status && (
-				<p className="text-xs m-0">
+				<p className="text-xs m-0 text-inherit">
 					<b>{ __( 'Status:', 'surerank' ) }</b> { status }
 				</p>
 			) }
@@ -123,7 +122,7 @@ const renderItem = ( item ) => {
 	} else if ( typeof item === 'object' && item?.url ) {
 		// For broken links or similar objects
 		return (
-			<li className="my-1 p-2 flex items-center justify-between gap-1.5 text-sm border border-dashed border-border-subtle rounded-md bg-background-secondary">
+			<li className="my-1 first:mt-0 last:mb-0 p-2 flex items-center justify-between gap-1.5 text-sm border border-dashed border-border-subtle rounded-md bg-background-secondary">
 				<Button { ...commonLinkProps } href={ item.url }>
 					{ item.url }
 				</Button>
@@ -152,37 +151,35 @@ export const CheckCard = ( {
 	title,
 	data,
 	showImages,
-	showFixButton = true,
 	onIgnore,
 	showRestoreButton = false,
 	onRestore,
 	showIgnoreButton = false,
+	onFix,
+	fixItButtonProps = {},
 } ) => {
-	const [ showIgnoreDialog, setShowIgnoreDialog ] = useState( false );
 	const { data: descriptionData, listStyleClassName } = getData( data );
-	const handleIgnoreClick = () => {
-		setShowIgnoreDialog( true );
+	const handleIgnoreClick = async () => {
+		try {
+			await onIgnore();
+			toast.success( __( 'Check ignored successfully', 'surerank' ) );
+		} catch ( error ) {
+			toast.error( __( 'Failed to ignore check', 'surerank' ) );
+		}
 	};
 
-	const handleIgnoreConfirm = async () => {
-		await onIgnore();
-		setShowIgnoreDialog( false );
+	const handleRestoreClick = async () => {
+		try {
+			await onRestore();
+			toast.success( __( 'Check restored successfully', 'surerank' ) );
+		} catch ( error ) {
+			toast.error( __( 'Failed to restore check', 'surerank' ) );
+		}
 	};
 
 	return (
 		<>
-			<div className="relative flex flex-col gap-3 p-3 bg-background-primary rounded-lg shadow-sm border-0.5 border-solid border-border-subtle">
-				{ showIgnoreButton && (
-					<Button
-						variant="outline"
-						type="button"
-						onClick={ handleIgnoreClick }
-						aria-label={ __( 'Ignore this check', 'surerank' ) }
-						className="absolute -top-2 -right-2 rounded-full *:focus:outline-none [&>svg]:size-3 focus:ring-0 focus:[box-shadow:none] p-0.5"
-						icon={ <X className="text-text-primary" /> }
-						size="xs"
-					/>
-				) }
+			<div className="relative flex flex-col gap-4 p-3 bg-background-primary rounded-lg shadow-sm border-0.5 border-solid border-border-subtle">
 				<div className="w-full flex items-start gap-2">
 					{ showRestoreButton ? (
 						<Badge
@@ -207,7 +204,7 @@ export const CheckCard = ( {
 							</div>
 						</>
 					) }
-					<div className="flex items-center mt-px">
+					<div className="flex items-center flex-col gap-1.5 mt-px">
 						<Label
 							size="xs"
 							className="space-x-1 text-sm text-text-secondary inline"
@@ -230,30 +227,53 @@ export const CheckCard = ( {
 								</a>
 							</SeoPopupTooltip>
 						</Label>
+						{ fixItButtonProps?.show && (
+							<FixButton
+								variant="link"
+								size="xs"
+								className="[&>span]:p-0 mr-auto min-w-fit shrink-0 underline"
+								tooltipProps={ { className: 'z-999999' } }
+								hidden={ false }
+								onClick={ onFix }
+								{ ...( ( { show, ...rest } ) => rest )(
+									fixItButtonProps
+								) }
+							/>
+						) }
 					</div>
+					{ showIgnoreButton && (
+						<Button
+							variant="link"
+							onClick={ handleIgnoreClick }
+							aria-label={ __( 'Ignore this check', 'surerank' ) }
+							size="xs"
+							className="underline hover:text-text-secondary ml-auto min-w-fit shrink-0 mt-1 text-text-secondary leading-4"
+						>
+							{ __( 'Ignore', 'surerank' ) }
+						</Button>
+					) }
 					{ showRestoreButton && (
 						<Button
-							variant="outline"
+							variant="link"
 							type="button"
-							onClick={ onRestore }
+							onClick={ handleRestoreClick }
 							aria-label={ __(
 								'Restore this check',
 								'surerank'
 							) }
 							size="xs"
-							className="ml-auto min-w-fit shrink-0"
+							className="underline hover:text-text-secondary ml-auto min-w-fit shrink-0 mt-1 text-text-secondary leading-4"
 						>
 							{ __( 'Restore', 'surerank' ) }
 						</Button>
 					) }
 				</div>
-				{ showImages && <ImageGrid images={ descriptionData } /> }
 				{ ! showImages &&
 					descriptionData &&
 					descriptionData.length > 0 && (
 						<ul
 							className={ cn(
-								'list-disc list-inside ml-3 mr-0 mt-0 mb-0.5',
+								'list-disc list-inside ml-3 mr-0 mt-0 mb-0.5 p-0',
 								listStyleClassName
 							) }
 						>
@@ -264,33 +284,8 @@ export const CheckCard = ( {
 							) ) }
 						</ul>
 					) }
-
-				{ showFixButton && (
-					<FixButton
-						variant="link"
-						size="xs"
-						className="mr-auto min-w-fit shrink-0 underline"
-						tooltipProps={ { className: 'z-999999' } }
-					>
-						{ __( 'Help Me Fix', 'surerank' ) }
-					</FixButton>
-				) }
+				{ showImages && <ImageGrid images={ descriptionData } /> }
 			</div>
-
-			<ConfirmationDialog
-				open={ showIgnoreDialog }
-				setOpen={ setShowIgnoreDialog }
-				title={ __( 'Ignore Page Checks', 'surerank' ) }
-				description={ __(
-					"We'll stop flagging this check in future scans. If it's not relevant, feel free to ignore it, you can always bring it back later if needed.",
-					'surerank'
-				) }
-				confirmLabel={ __( 'Ignore', 'surerank' ) }
-				cancelLabel={ __( 'Cancel', 'surerank' ) }
-				onConfirm={ handleIgnoreConfirm }
-				confirmVariant="primary"
-				confirmDestructive={ true }
-			/>
 		</>
 	);
 };

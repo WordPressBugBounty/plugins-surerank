@@ -7,10 +7,10 @@ import {
 } from '@tanstack/react-router';
 import { mountComponent } from '@Functions/utils';
 import WebsiteDetails from '@Onboarding/steps/website-details';
-import UserDetails from '@Onboarding/steps/user-details';
 import Welcome from '@Onboarding/steps/welcome';
 import Success from '@Onboarding/steps/success';
 import SocialProfiles from '@Onboarding/steps/social-profiles';
+import ConnectAI from '@Onboarding/steps/connect-ai';
 import OnboardingLayout from '@Onboarding/components/layout/onboarding-layout';
 import Migration from './steps/migration';
 import { PLUGIN_OPTIONS } from '@AdminGeneral/advanced/tools/migration/constants';
@@ -43,6 +43,13 @@ export const ONBOARDING_STEPS_CONFIG = [
 		  ]
 		: [] ),
 	{
+		path: '/connect-ai',
+		component: ConnectAI,
+		config: {
+			containerSize: 'lg',
+		},
+	},
+	{
 		path: '/website-details',
 		component: WebsiteDetails,
 		config: {
@@ -52,13 +59,6 @@ export const ONBOARDING_STEPS_CONFIG = [
 	{
 		path: '/social-profiles',
 		component: SocialProfiles,
-		config: {
-			containerSize: 'lg',
-		},
-	},
-	{
-		path: '/user-details',
-		component: UserDetails,
 		config: {
 			containerSize: 'lg',
 		},

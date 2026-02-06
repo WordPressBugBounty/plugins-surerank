@@ -90,13 +90,13 @@ class Title {
 	public function replace_title( $title ) {
 		$meta_title = $this->meta_data['page_title'] ?? $title;
 
-		if ( is_post_type_archive() ) {
+		if ( is_post_type_archive() && apply_filters( 'surerank_enable_post_type_archive_auto_title', false ) ) {
 			$title = $this->post_type_archive_title( $meta_title );
-		} elseif ( is_archive() ) {
+		} elseif ( is_archive() && apply_filters( 'surerank_enable_archive_auto_title', false ) ) {
 			$title = $this->archive_title( $meta_title );
-		} elseif ( is_search() ) {
+		} elseif ( is_search() && apply_filters( 'surerank_enable_search_auto_title', true ) ) {
 			$title = $this->search_title( $meta_title );
-		} elseif ( is_404() ) {
+		} elseif ( is_404() && apply_filters( 'surerank_enable_404_auto_title', true ) ) {
 			$title = $this->not_found_title( $meta_title );
 		} elseif ( is_singular() || is_home() || is_front_page() ) {
 			$title = $meta_title;

@@ -1,22 +1,14 @@
-import { __ } from '@wordpress/i18n';
-import { TextArea, Container, Button, toast } from '@bsf/force-ui';
+import { __, sprintf } from '@wordpress/i18n';
+import { TextArea, Container, Button, toast, Text } from '@bsf/force-ui';
 import { DotIcon } from '@/global/components/icons';
 import { LoaderCircle } from 'lucide-react';
-import Alert from '@/global/components/alert';
 import GeneratePageContent from '@/functions/page-content-generator';
 import PageContentWrapper from '@/apps/admin-components/page-content-wrapper';
 import withSuspense from '@/apps/admin-components/hoc/with-suspense';
 import apiFetch from '@wordpress/api-fetch';
-import { useState, useCallback } from '@wordpress/element';
+import { useState, useCallback, renderToString } from '@wordpress/element';
 import { ROBOTS_TXT_URL } from '@Global/constants/api';
 import { cn } from '@/functions/utils';
-
-const EDITOR_PLACEHOLDER = `# Edit your robots.txt file here to manage how search engines crawl your site
-
-User-Agent: *
-Disallow:
-
-Sitemap: https://yourwebsite.com/sitemap_index.xml`;
 
 const RobotsTxtEditorSettings = () => {
 	const {
@@ -29,6 +21,7 @@ const RobotsTxtEditorSettings = () => {
 		search_engine_visibility: isSearchEngineEnabled = false,
 		robots_file_exists: isRobotsFileExist = false,
 		robot_file_content: robotsFileActualContent = '',
+		default_robots_txt: defaultRobotsTxt = '',
 	} = robots_data;
 
 	const getInitialContent = () => {
@@ -45,9 +38,10 @@ const RobotsTxtEditorSettings = () => {
 	const [ hasUnsavedSettings, setHasUnsavedSettings ] = useState( false );
 	const cursorNotAllowed = isSearchEngineEnabled === '0' || isRobotsFileExist;
 	const getAlertMessage = () => {
+		const robotsTxtUrl = `${ window?.surerank_globals?.site_url }/robots.txt`;
 		if ( isRobotsFileExist ) {
 			return __(
-				'The contents are locked because a robots.txt file exists in the root folder. If you want to edit the contents, please delete the existing robots.txt file from your server.',
+				"We found a physical robots.txt file on your server. To use this feature in SureRank, you'll need to delete that file first.",
 				'surerank'
 			);
 		}
@@ -76,20 +70,41 @@ const RobotsTxtEditorSettings = () => {
 		}
 
 		return (
-			<>
-				{ __(
-					'Changes to your robots.txt file can affect how search engines crawl and index your site. Editing this file incorrectly may block important pages from search results or impact your site’s SEO. Please proceed with caution. Leave empty to let WordPress manage it. If a robots.txt file exists, delete it to use this setting. Verify the robots.txt content ',
-					'surerank'
-				) }
-				<a
-					href="https://technicalseo.com/tools/robots-txt/"
-					target="_blank"
-					rel="noopener noreferrer"
-					className="text-badge-color-sky no-underline hover:no-underline cursor-pointer bg-transparent border-none p-0 outline-none shadow-none focus:ring-0"
-				>
-					{ __( 'here.', 'surerank' ) }
-				</a>
-			</>
+			<div
+				dangerouslySetInnerHTML={ {
+					__html: sprintf(
+						/* translators: %s: robots.txt */
+						__(
+							'Open %1$s on your website. If you want to verify the contents of robots.txt, click %2$s',
+							'surerank'
+						),
+						renderToString(
+							<Text
+								as="a"
+								color="link"
+								href={ robotsTxtUrl }
+								target="_blank"
+								rel="noopener noreferrer"
+								className="no-underline focus:ring-0 hover:no-underline"
+							>
+								{ __( 'robots.txt', 'surerank' ) }
+							</Text>
+						),
+						renderToString(
+							<Text
+								as="a"
+								color="link"
+								href="https://technicalseo.com/tools/robots-txt/"
+								target="_blank"
+								rel="noopener noreferrer"
+								className="no-underline focus:ring-0 hover:no-underline"
+							>
+								{ __( 'here.', 'surerank' ) }
+							</Text>
+						)
+					),
+				} }
+			/>
 		);
 	};
 
@@ -127,8 +142,17 @@ const RobotsTxtEditorSettings = () => {
 				setRobotsTxtContent( content );
 				setHasUnsavedSettings( false );
 				toast.success(
-					__( 'Settings saved successfully.', 'surerank' )
+					__( 'Settings saved successfully', 'surerank' ),
+					{
+						description: __(
+							'To apply the new settings, the page will refresh automatically in 3 seconds.',
+							'surerank'
+						),
+					}
 				);
+				setTimeout( () => {
+					window.location.reload();
+				}, 1500 );
 			} catch ( error ) {
 				toast.error( error.message, {
 					description: __(
@@ -163,20 +187,22 @@ const RobotsTxtEditorSettings = () => {
 				rows={ 10 }
 				size="md"
 				disabled={ cursorNotAllowed }
+				title={ __(
+					'This field is disabled when a physical robots.txt file exists.',
+					'surerank'
+				) }
 				className={ cn(
 					'font-mono text-sm w-full bg-background-inverse text-background-tertiary',
 					cursorNotAllowed && 'cursor-not-allowed'
 				) }
-				placeholder={ robotsFileActualContent || EDITOR_PLACEHOLDER }
+				placeholder={ robotsFileActualContent || defaultRobotsTxt }
 			/>
 
 			{ /* Warning Alert */ }
 			<div className="w-full">
-				<Alert
-					id="robots-txt-warning"
-					color="warning"
-					message={ getAlertMessage() }
-				/>
+				<Text id="robots-txt-warning" size="sm" weight={ 400 }>
+					{ getAlertMessage() }
+				</Text>
 			</div>
 
 			{ /* Save Button with unsaved settings feedback */ }

@@ -2,7 +2,6 @@ import PageContentWrapper from '@AdminComponents/page-content-wrapper';
 import { __ } from '@wordpress/i18n';
 import withSuspense from '@AdminComponents/hoc/with-suspense';
 import GeneratePageContent from '@Functions/page-content-generator';
-import { createLazyRoute } from '@tanstack/react-router';
 
 export const PAGE_CONTENT = [
 	{
@@ -15,21 +14,29 @@ export const PAGE_CONTENT = [
 				id: 'author_archive',
 				type: 'switch',
 				storeKey: 'author_archive',
-				label: __( 'Enable Author Archive', 'surerank' ),
-				description: __(
-					'Enabling this creates author archive pages that list all posts by each author, helping showcase contributions and strengthen SEO signals. If disabled, author archive pages redirect to the homepage.',
+				label: __(
+					'Remove Author Pages & Redirect to Home',
 					'surerank'
 				),
+				description: __(
+					'Author pages list all posts written by a specific author. On single-author sites, these pages duplicate your main blog and can confuse search engines. Enable this to redirect them to your homepage.',
+					'surerank'
+				),
+				transform: ( value ) => ! value,
 			},
 			{
 				id: 'date_archive',
 				type: 'switch',
 				storeKey: 'date_archive',
-				label: __( 'Enable Date Archive', 'surerank' ),
-				description: __(
-					'Enabling this creates date archive pages that group posts by month or year, making it easier for visitors to browse content chronologically and for search engines to index time-based posts. If disabled, date archive pages redirect to the homepage.',
+				label: __(
+					'Remove Date Archive Pages & Redirect to Home',
 					'surerank'
 				),
+				description: __(
+					'WordPress creates archive pages for each month or year of your posts. These pages often add no real value and can lead to duplicate content. Enable this to redirect them to your homepage.',
+					'surerank'
+				),
+				transform: ( value ) => ! value,
 			},
 		],
 	},
@@ -48,9 +55,5 @@ const ArchivePages = () => {
 		</PageContentWrapper>
 	);
 };
-
-export const LazyRoute = createLazyRoute( '/archive_pages' )( {
-	component: withSuspense( ArchivePages ),
-} );
 
 export default withSuspense( ArchivePages );

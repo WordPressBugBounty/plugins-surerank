@@ -10,8 +10,8 @@
 
 namespace SureRank\Inc\Frontend;
 
-use SureRank\Inc\Traits\Get_Instance;
 use SureRank\Inc\Functions\Settings;
+use SureRank\Inc\Traits\Get_Instance;
 
 /**
  * Meta Tag Injection Class

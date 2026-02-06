@@ -1,5 +1,5 @@
 import { Drawer, Container, Badge, Button, Text } from '@bsf/force-ui';
-import { useCallback } from '@wordpress/element';
+import { Fragment, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { applyFilters } from '@wordpress/hooks';
 import { useSuspenseSiteSeoAnalysis } from './site-seo-checks-main';
@@ -68,11 +68,11 @@ const CheckOverview = ( { selectedItem } ) => {
 	// Render the description as a list or paragraph
 	const renderDescription = useCallback(
 		( list, type = 'paragraph', isImage = false ) => {
-			if ( ! list || list?.length <= 0 ) {
+			if ( ! list || ! list?.filter( Boolean )?.length ) {
 				return;
 			}
 
-			if ( isImage ) {
+			if ( isImage && !! list?.filter( Boolean )?.length ) {
 				return (
 					<div className="my-4">
 						<ImageGrid images={ list } />
@@ -84,7 +84,7 @@ const CheckOverview = ( { selectedItem } ) => {
 					if ( isURL( item ) ) {
 						return (
 							<li
-								className="m-0 text-text-primary mb-0.5"
+								className="m-0 text-text-secondary text-sm mb-0.5"
 								key={ item }
 							>
 								<Button
@@ -102,7 +102,7 @@ const CheckOverview = ( { selectedItem } ) => {
 					}
 					return (
 						<li
-							className="m-0 text-text-primary mb-0.5"
+							className="m-0 text-text-secondary text-sm mb-0.5"
 							key={ item }
 							dangerouslySetInnerHTML={ {
 								__html: DOMPurify.sanitize( item ),
@@ -111,7 +111,7 @@ const CheckOverview = ( { selectedItem } ) => {
 					);
 				} );
 				return (
-					<ul className="my-0 ml-2 mr-0 text-text-primary list-disc list-inside">
+					<ul className="my-0 ml-2 mr-0 text-text-secondary list-disc list-inside">
 						{ listContent }
 					</ul>
 				);
@@ -142,14 +142,15 @@ const CheckOverview = ( { selectedItem } ) => {
 								( nextItem?.img === true ||
 									nextItem?.img === 'true' );
 
-							return (
-								<div key={ idx }>
-									{ renderDescription(
-										item.list,
-										'list',
-										isImgFlag
-									) }
-								</div>
+							const render = renderDescription(
+								item.list,
+								'list',
+								isImgFlag
+							);
+							return !! render ? (
+								<div key={ idx }>{ render }</div>
+							) : (
+								<Fragment key={ idx } />
 							);
 						}
 
@@ -160,7 +161,7 @@ const CheckOverview = ( { selectedItem } ) => {
 
 						const purifiedItem = DOMPurify.sanitize( item );
 						const itemClassName =
-							'm-0 text-text-primary text-sm font-normal [&_a]:no-underline [&_a]:ring-0';
+							'm-0 text-text-secondary text-sm font-normal [&_a]:no-underline [&_a]:ring-0';
 
 						if ( shouldWrapInParagraph( purifiedItem ) ) {
 							return (
@@ -195,7 +196,7 @@ const CheckOverview = ( { selectedItem } ) => {
 
 	return (
 		<>
-			<div className="px-2 space-y-0.5 w-full border border-border-subtle border-solid rounded-md bg-background-secondary">
+			<div className="px-2 space-y-0.5 w-full border border-border-subtle border-dashed rounded-md bg-background-secondary">
 				{ renderDescription( selectedItem?.description ) || (
 					<Text color="secondary" className="m-0">
 						{ __(
@@ -205,7 +206,13 @@ const CheckOverview = ( { selectedItem } ) => {
 					</Text>
 				) }
 			</div>
-			<SiteSeoChecksFixButton selectedItem={ selectedItem } size="sm" />
+			{ /* Only show fix button if check hasn't passed */ }
+			{ selectedItem?.status !== 'success' && (
+				<SiteSeoChecksFixButton
+					selectedItem={ selectedItem }
+					size="sm"
+				/>
+			) }
 		</>
 	);
 };

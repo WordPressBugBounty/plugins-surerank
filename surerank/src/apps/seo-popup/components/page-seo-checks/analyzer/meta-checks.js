@@ -11,6 +11,7 @@ export const checkSeoTitle = ( resolvedTitle ) => {
 				'surerank'
 			),
 			status: 'error',
+			type: 'page',
 		} );
 	}
 
@@ -26,6 +27,7 @@ export const checkSeoTitle = ( resolvedTitle ) => {
 				TITLE_LENGTH
 			),
 			status: 'warning',
+			type: 'page',
 		} );
 	}
 
@@ -40,6 +42,7 @@ export const checkSeoTitle = ( resolvedTitle ) => {
 			TITLE_LENGTH
 		),
 		status: 'success',
+		type: 'page',
 	} );
 };
 
@@ -52,6 +55,7 @@ export const checkSeoDescription = ( resolvedDescription ) => {
 				'surerank'
 			),
 			status: 'warning',
+			type: 'page',
 		} );
 	}
 
@@ -67,6 +71,7 @@ export const checkSeoDescription = ( resolvedDescription ) => {
 				DESCRIPTION_LENGTH
 			),
 			status: 'warning',
+			type: 'page',
 		} );
 	}
 
@@ -81,6 +86,7 @@ export const checkSeoDescription = ( resolvedDescription ) => {
 			DESCRIPTION_LENGTH
 		),
 		status: 'success',
+		type: 'page',
 	} );
 };
 
@@ -93,6 +99,7 @@ export const checkOpenGraphTags = () => {
 			id: 'open_graph_tags',
 			title: __( 'Open Graph tags are present on the page.', 'surerank' ),
 			status: 'success',
+			type: 'page',
 		} );
 	}
 
@@ -100,5 +107,6 @@ export const checkOpenGraphTags = () => {
 		id: 'open_graph_tags',
 		title: __( 'Open Graph tags are not present on the page.', 'surerank' ),
 		status: 'suggestion',
+		type: 'page',
 	} );
 };

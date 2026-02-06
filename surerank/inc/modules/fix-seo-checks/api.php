@@ -4,11 +4,11 @@
  *
  * Handles optimize related REST API endpoints.
  *
- * @package SureRank\Inc\Modules\FixSeoChecks
- * @since x.x.x
+ * @package SureRank\Inc\Modules\Fix_Seo_Checks
+ * @since 1.4.2
  */
 
-namespace SureRank\Inc\Modules\FixSeoChecks;
+namespace SureRank\Inc\Modules\Fix_Seo_Checks;
 
 use SureRank\Inc\Functions\Send_Json;
 use SureRank\Inc\Traits\Get_Instance;

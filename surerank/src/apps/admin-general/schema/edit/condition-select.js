@@ -1,7 +1,7 @@
-import { memo, useMemo } from '@wordpress/element';
+import { memo, useMemo, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Button, Select as RuleSelectInput } from '@bsf/force-ui';
-import { Trash } from 'lucide-react';
+import { Trash, X } from 'lucide-react';
 import Select from 'react-select';
 
 const ConditionSelect = ( {
@@ -11,10 +11,30 @@ const ConditionSelect = ( {
 	viewKey,
 	updateSchema,
 	fetchSpecificPosts,
+	isClearable = false,
 } ) => {
 	const formattedOptions = useMemo( () => {
 		return groupedOptions.flatMap( ( group ) => group.options );
-	}, [ groupedOptions ] );
+	}, [ groupedOptions, conditionsList ] );
+
+	const conditionsListRef = useRef( conditionsList );
+	conditionsListRef.current = conditionsList;
+
+	const handleConditionUpdate = ( updatedConditions ) => {
+		setConditionsList( updatedConditions );
+
+		const validConditions = updatedConditions.filter(
+			( cond ) => cond.condition
+		);
+
+		updateSchema(
+			viewKey,
+			validConditions.map( ( cond ) => cond.condition ),
+			validConditions
+				.filter( ( cond ) => cond.condition === 'specifics' )
+				.flatMap( ( cond ) => cond.specificPosts )
+		);
+	};
 
 	return conditionsList.map( ( item, index ) => (
 		<div key={ index } className="flex flex-col gap-2 mt-2">
@@ -23,35 +43,67 @@ const ConditionSelect = ( {
 					<RuleSelectInput
 						combobox
 						onChange={ ( value ) => {
-							const updated = [ ...conditionsList ];
-							updated[ index ].condition = value;
-							setConditionsList( updated );
-							updateSchema(
-								viewKey,
-								updated.map( ( cond ) => cond.condition ),
-								updated
-									.filter(
-										( cond ) =>
-											cond.condition === 'specifics'
-									)
-									.flatMap( ( cond ) => cond.specificPosts )
-							);
+							const updated = [ ...conditionsListRef.current ];
+							updated[ index ] = {
+								...updated[ index ],
+								condition: value,
+							};
+							handleConditionUpdate( updated );
 						} }
 						size="md"
 						value={ item.condition ?? '' }
 					>
 						<RuleSelectInput.Button
+							className="[&>div>span]:inline-block [&>div>span]:w-full"
 							placeholder={ __( 'Select an option', 'surerank' ) }
 							render={ ( value ) => {
-								if ( value ) {
-									const selectedOption =
-										formattedOptions.find(
+								const selectedOption = value
+									? formattedOptions.find(
 											( option ) => option.value === value
-										);
-									return selectedOption
-										? selectedOption.label
-										: __( 'Select an option', 'surerank' );
-								}
+									  )
+									: null;
+								const displayText = selectedOption
+									? selectedOption.label
+									: __( 'Select an option', 'surerank' );
+
+								return (
+									<span className="relative flex items-center justify-between w-full">
+										<span className="truncate pr-7">
+											{ displayText }
+										</span>
+										{ isClearable && value && (
+											<>
+												<span
+													role="button"
+													tabIndex="0"
+													onMouseDown={ ( event ) => {
+														event.preventDefault();
+														event.stopPropagation();
+														const updated = [
+															...conditionsListRef.current,
+														];
+														updated[ index ] = {
+															...updated[ index ],
+															condition: '',
+															specificPosts: [],
+														};
+														handleConditionUpdate(
+															updated
+														);
+													} }
+													className="absolute p-1 right-4 inline-flex rounded transition-colors text-icon-secondary hover:text-icon-primary"
+													aria-label={ __(
+														'Clear selection',
+														'surerank'
+													) }
+												>
+													<X className="size-5 transition-colors" />
+												</span>
+												<hr className="h-4 border-l border-y-0 border-r-0 border-solid border-border-subtle mx-2 my-0" />
+											</>
+										) }
+									</span>
+								);
 							} }
 						/>
 						<RuleSelectInput.Portal id="surerank-root">
@@ -86,17 +138,7 @@ const ConditionSelect = ( {
 							const updated = conditionsList.filter(
 								( _, i ) => i !== index
 							);
-							setConditionsList( updated );
-							updateSchema(
-								viewKey,
-								updated.map( ( cond ) => cond.condition ),
-								updated
-									.filter(
-										( cond ) =>
-											cond.condition === 'specifics'
-									)
-									.flatMap( ( cond ) => cond.specificPosts )
-							);
+							handleConditionUpdate( updated );
 						} }
 						className="text-icon-secondary"
 						icon={ <Trash className="size-4" /> }
@@ -115,18 +157,12 @@ const ConditionSelect = ( {
 						}
 					} }
 					onChange={ ( values ) => {
-						const updated = [ ...conditionsList ];
-						updated[ index ].specificPosts = values;
-						setConditionsList( updated );
-						updateSchema(
-							viewKey,
-							updated.map( ( cond ) => cond.condition ),
-							updated
-								.filter(
-									( cond ) => cond.condition === 'specifics'
-								)
-								.flatMap( ( cond ) => cond.specificPosts )
-						);
+						const updated = [ ...conditionsListRef.current ];
+						updated[ index ] = {
+							...updated[ index ],
+							specificPosts: values,
+						};
+						handleConditionUpdate( updated );
 					} }
 					placeholder={ __(
 						'Search posts/pages/taxonomies, etc',

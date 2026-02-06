@@ -137,7 +137,7 @@ class Validator {
 		}
 
 		// Check special page rules.
-		$special_result = self::check_special_rules( $rule_type, $is_taxonomy );
+		$special_result = self::check_special_rules( $rule_type, $is_taxonomy, $post_id );
 		if ( $special_result !== null ) {
 			return $special_result;
 		}
@@ -170,9 +170,10 @@ class Validator {
 	 *
 	 * @param string $rule_type Rule type.
 	 * @param bool   $is_taxonomy Is taxonomy.
+	 * @param int    $post_id Post ID.
 	 * @return bool|null Result or null if not applicable.
 	 */
-	private static function check_special_rules( string $rule_type, bool $is_taxonomy ) {
+	private static function check_special_rules( string $rule_type, bool $is_taxonomy, $post_id ) {
 		switch ( $rule_type ) {
 			case 'special-404':
 				return is_404();
@@ -181,13 +182,30 @@ class Validator {
 			case 'special-blog':
 				return is_home();
 			case 'special-front':
-				return is_front_page() || $is_taxonomy;
+				return self::is_front_page_context( $post_id, $is_taxonomy );
 			case 'special-date':
 				return is_date() || $is_taxonomy;
 			case 'special-author':
 				return is_author() || $is_taxonomy;
 		}
+
 		return null;
+	}
+
+	/**
+	 * Check if current context is front page.
+	 *
+	 * @param int  $post_id Post ID.
+	 * @param bool $is_taxonomy Is taxonomy.
+	 * @return bool True if front page context.
+	 */
+	private static function is_front_page_context( int $post_id, bool $is_taxonomy ) {
+		$frontpage_id = get_option( 'page_on_front' );
+		if ( $frontpage_id && ( (int) $post_id === (int) $frontpage_id ) ) {
+			return true;
+		}
+
+		return is_front_page() || $is_taxonomy;
 	}
 
 	/**

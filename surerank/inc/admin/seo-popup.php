@@ -41,6 +41,9 @@ class Seo_Popup {
 		add_action( 'category_term_edit_form_top', [ $this, 'add_meta_box_trigger' ] );
 		add_action( 'created_category', [ $this, 'update_category_seo_values' ] );
 		add_action( 'edited_category', [ $this, 'update_category_seo_values' ] );
+		// For enqueue scripts on the frontend.
+		// Uncomment this line when the frontend meta box style issue is resolved.
+		// add_action( 'wp_enqueue_scripts', [ $this, 'frontend_enqueue_scripts' ] );.
 	}
 
 	/**
@@ -51,6 +54,50 @@ class Seo_Popup {
 	 */
 	public function add_meta_box_trigger() {
 		echo '<span id="seo-popup" class="surerank-root"></span>';
+	}
+
+	/**
+	 * Enqueue SEO metabox front-end scripts
+	 *
+	 * @since 1.6.2
+	 * @return void
+	 */
+	public function frontend_enqueue_scripts() {
+		// Check if the user is logged in and has the necessary capabilities.
+		if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+		// Early return if it's a preview of editor or customizer.
+		if ( is_admin() ||
+			is_customize_preview() ||
+			is_preview() ||
+			! is_admin_bar_showing() ) {
+			return;
+		}
+
+		add_action( 'admin_bar_menu', [ $this, 'add_admin_bar_menu' ], 100 );
+
+		do_action( 'surerank_seo_popup_frontend_enqueue_scripts' );
+
+		wp_enqueue_media();
+		Dashboard::get_instance()->site_seo_check_enqueue_scripts();
+
+		$context_data = $this->get_frontend_context_data();
+
+		if ( ! $context_data ) {
+			return;
+		}
+
+		$this->enqueue_assets( 'elementor', $context_data );
+
+		$this->build_assets_operations(
+			'front-end-meta-box',
+			[
+				'hook'        => 'front-end-meta-box',
+				'object_name' => 'front_end_meta_box',
+				'data'        => [],
+			]
+		);
 	}
 
 	/**
@@ -71,6 +118,34 @@ class Seo_Popup {
 
 		$context_data = $this->get_context_data( $editor_type, $screen );
 		$this->enqueue_assets( $editor_type, $context_data );
+	}
+
+	/**
+	 * Add admin bar menu
+	 *
+	 * @since 1.6.2
+	 *
+	 * @param \WP_Admin_Bar $wp_admin_bar WP_Admin_Bar instance.
+	 *
+	 * @return void
+	 */
+	public function add_admin_bar_menu( $wp_admin_bar ) {
+		if ( ! wp_script_is( $this->enqueue_prefix . '-seo-popup', 'enqueued' ) ) {
+			return;
+		}
+
+		$wp_admin_bar->add_node(
+			[
+				'id'    => 'surerank-meta-box',
+				'title' => '<span class="ab-icon" style="margin-top: 2px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.5537 1.5C17.8453 1.5 21.3251 4.97895 21.3252 9.27051C21.3252 12.347 19.5368 15.0056 16.9434 16.2646H21.3252V22.5H18.0889C14.9086 22.5 12.2861 20.1186 11.9033 17.042H11.9014L11.9033 13.7852C14.8283 13.7661 17.0342 11.3894 17.0342 8.45996V6.0293C14.137 6.02947 11.6948 7.97682 10.9443 10.6338C10.1605 9.53345 8.87383 8.8165 7.41992 8.81641H6.38086V9.85352H6.38379C6.44515 12.0356 8.23375 13.786 10.4307 13.7861H10.7061L10.6934 17.042H10.6865C10.2943 20.1082 7.67678 22.4785 4.50391 22.4785H2.6748V1.5H13.5537Z" fill="currentColor"/></svg></span><span class="ab-label">' . esc_html__( 'SureRank Meta Box', 'surerank' ) . '</span>',
+				'href'  => '#',
+				'meta'  => [
+					'class'   => 'surerank-meta-box-trigger',
+					'title'   => esc_html__( 'Open SureRank Meta Box', 'surerank' ),
+					'onclick' => 'return false;',
+				],
+			]
+		);
 	}
 
 	/**
@@ -95,6 +170,49 @@ class Seo_Popup {
 		}
 
 		do_action( 'surerank_after_update_category_seo_values', $term_id );
+	}
+
+	/**
+	 * Get keyword checks configuration
+	 *
+	 * @since 1.0.0
+	 * @return array
+	 */
+	/**
+	 * Get keyword checks configuration
+	 *
+	 * @since 1.0.0
+	 * @return array<string>
+	 */
+	public function keyword_checks() {
+		return [
+			'keyword_in_title',
+			'keyword_in_description',
+			'keyword_in_url',
+			'keyword_in_content',
+		];
+	}
+
+	/**
+	 * Get page checks configuration
+	 *
+	 * @since 1.0.0
+	 * @return array<string>
+	 */
+	public function page_checks() {
+		return [
+			'h2_subheadings',
+			'image_alt_text',
+			'media_present',
+			'links_present',
+			'url_length',
+			'search_engine_title',
+			'search_engine_description',
+			'canonical_url',
+			'all_links',
+			'open_graph_tags',
+			'broken_links',
+		];
 	}
 
 	/**
@@ -148,7 +266,7 @@ class Seo_Popup {
 	 *
 	 * @param string          $editor_type Editor type.
 	 * @param \WP_Screen|null $screen Current screen object.
-	 * @return array{post_data: array<string, mixed>, term_data: array<string, mixed>, post_type: string, is_taxonomy: bool} Context data.
+	 * @return array{post_data: array<string, mixed>, term_data: array<string, mixed>, post_type: string, is_taxonomy: bool, is_frontend?: bool} Context data.
 	 */
 	private function get_context_data( string $editor_type, $screen ): array {
 		$post_data = $this->get_post_data( $editor_type, $screen );
@@ -171,10 +289,14 @@ class Seo_Popup {
 	 */
 	private function get_post_data( string $editor_type, $screen ): array {
 		if ( ( $screen && 'post' === $screen->base ) || $editor_type === 'bricks' ) {
+			$post_id = get_the_ID();
+			if ( ! $post_id ) {
+				return [];
+			}
 			return [
-				'post_id'     => get_the_ID(),
+				'post_id'     => $post_id,
 				'editor_type' => $editor_type,
-				'link'        => get_the_permalink( (int) get_the_ID() ),
+				'link'        => get_the_permalink( $post_id ),
 			];
 		}
 
@@ -235,7 +357,8 @@ class Seo_Popup {
 	 */
 	private function get_post_type( string $editor_type, $screen ): string {
 		if ( $editor_type === 'bricks' ) {
-			$post_type = get_the_ID() ? get_post_type( get_the_ID() ) : false;
+			$post_id   = get_the_ID();
+			$post_type = $post_id ? get_post_type( $post_id ) : false;
 			return $post_type !== false ? $post_type : '';
 		}
 
@@ -264,8 +387,8 @@ class Seo_Popup {
 	/**
 	 * Enqueue assets for SEO popup.
 	 *
-	 * @param string                                                                                                        $editor_type Editor type.
-	 * @param array{post_data: array<string, mixed>, term_data: array<string, mixed>, post_type: string, is_taxonomy: bool} $context_data Context data.
+	 * @param string                                                                                                                            $editor_type Editor type.
+	 * @param array{post_data: array<string, mixed>, term_data: array<string, mixed>, post_type: string, is_taxonomy: bool, is_frontend?: bool} $context_data Context data.
 	 * @return void
 	 */
 	private function enqueue_assets( string $editor_type, array $context_data ): void {
@@ -288,6 +411,7 @@ class Seo_Popup {
 						'keyword_checks'     => $this->keyword_checks(),
 						'page_checks'        => $this->page_checks(),
 						'image_seo'          => Image_Seo::get_instance()->status(),
+						'is_frontend'        => $context_data['is_frontend'] ?? false,
 					],
 					$context_data['post_data'],
 					$context_data['term_data']
@@ -297,45 +421,55 @@ class Seo_Popup {
 	}
 
 	/**
-	 * Get keyword checks configuration
+	 * Get frontend context data.
 	 *
-	 * @since 1.0.0
-	 * @return array
+	 * @return array{post_data: array<string, mixed>, term_data: array<string, mixed>, post_type: string, is_taxonomy: bool, is_frontend: bool}|false Context data or false if invalid.
 	 */
-	/**
-	 * Get keyword checks configuration
-	 *
-	 * @since 1.0.0
-	 * @return array<string>
-	 */
-	public function keyword_checks() {
-		return [
-			'keyword_in_title',
-			'keyword_in_description', 
-			'keyword_in_url',
-			'keyword_in_content',
-		];
-	}
+	private function get_frontend_context_data() {
+		$post_data   = [];
+		$term_data   = [];
+		$post_type   = '';
+		$is_taxonomy = false;
 
-	/**
-	 * Get page checks configuration
-	 *
-	 * @since 1.0.0
-	 * @return array<string>
-	 */
-	public function page_checks() {
+		if ( is_singular() ) {
+			$post_id = get_the_ID();
+			if ( ! $post_id ) {
+				return false;
+			}
+			$post_type = get_post_type( $post_id );
+			if ( ! $post_type ) {
+				return false;
+			}
+			$post_data = [
+				'post_id'     => $post_id,
+				'editor_type' => 'classic',
+				'link'        => get_the_permalink( $post_id ),
+			];
+		} elseif ( is_tax() || is_tag() || is_category() ) {
+			$object = get_queried_object();
+			if ( ! $object instanceof \WP_Term ) {
+				return false;
+			}
+			$term_link = get_term_link( $object );
+			if ( is_wp_error( $term_link ) ) {
+				return false;
+			}
+			$term_data   = [
+				'term_id' => $object->term_id,
+				'link'    => $term_link,
+			];
+			$post_type   = $object->taxonomy;
+			$is_taxonomy = true;
+		} else {
+			return false;
+		}
+
 		return [
-			'h2_subheadings',
-			'image_alt_text',
-			'media_present',
-			'links_present',
-			'url_length',
-			'search_engine_title',
-			'search_engine_description',
-			'canonical_url',
-			'all_links',
-			'open_graph_tags',
-			'broken_links',
+			'post_data'   => $post_data,
+			'term_data'   => $term_data,
+			'post_type'   => $post_type,
+			'is_taxonomy' => $is_taxonomy,
+			'is_frontend' => true,
 		];
 	}
 }

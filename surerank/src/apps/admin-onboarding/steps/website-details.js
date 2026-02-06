@@ -1,10 +1,24 @@
 import { __ } from '@wordpress/i18n';
 import { renderField } from '../utils';
 import StepNavButtons from '../components/nav-buttons';
-import { Fragment, useState, useEffect, useMemo } from '@wordpress/element';
+import {
+	Fragment,
+	useState,
+	useEffect,
+	useMemo,
+	useRef,
+	useCallback,
+} from '@wordpress/element';
 import { useOnboardingState } from '@Onboarding/store';
-import { Title } from '@bsf/force-ui';
+import { Title, Label, Button, Tooltip, Text, toast } from '@bsf/force-ui';
 import apiFetch from '@wordpress/api-fetch';
+import { InfoTooltip } from '@AdminComponents/tooltip';
+import { Sparkles } from 'lucide-react';
+import { cn } from '@/functions/utils';
+import useOnboardingAuth from '@Onboarding/hooks/use-onboarding-auth';
+
+const IMPROVE_WITH_AI_TEXT = __( 'Improve with AI', 'surerank' );
+const IMPROVING_TEXT = __( 'Improving…', 'surerank' );
 
 const websiteTypes = [
 	{
@@ -34,7 +48,7 @@ const websiteTypes = [
 ];
 
 const WebsiteDetails = () => {
-	const [ { pages = [], websiteDetails = {}, userDetails = {} }, dispatch ] =
+	const [ { pages = [], websiteDetails = {} }, dispatch ] =
 		useOnboardingState();
 
 	const organizationOptions = Object.values(
@@ -43,6 +57,14 @@ const WebsiteDetails = () => {
 
 	const [ formState, setFormState ] = useState( websiteDetails );
 	const [ pageOptions, setPageOptions ] = useState( pages ); // Local state for pages
+	const [ isImprovingDescription, setIsImprovingDescription ] =
+		useState( false );
+
+	const { isAuthenticated, isConnecting, handleConnect } = useOnboardingAuth(
+		{ skipCheck: true }
+	);
+
+	const shouldAutoImprove = useRef( false );
 
 	/**
 	 * Fetch pages from the WordPress REST API
@@ -81,7 +103,7 @@ const WebsiteDetails = () => {
 		loadInitialPages();
 	}, [] );
 
-	// Sync formState and dispatch websiteDetails/userDetails
+	// Sync formState and dispatch websiteDetails
 	useEffect( () => {
 		const details = surerank_admin_common?.website_details;
 		const data = {
@@ -101,6 +123,10 @@ const WebsiteDetails = () => {
 				websiteDetails?.website_owner_phone ||
 				details?.website_owner_phone ||
 				'',
+			business_description:
+				websiteDetails?.business_description ||
+				details?.business_description ||
+				'',
 			website_logo:
 				websiteDetails?.website_logo || details?.website_logo || '',
 			about_page:
@@ -109,46 +135,14 @@ const WebsiteDetails = () => {
 				websiteDetails?.contact_page ||
 				details?.website_contact_us ||
 				'',
-			first_name:
-				userDetails?.first_name ||
-				details?.website_lead_details?.first_name ||
-				'',
-			last_name:
-				userDetails?.last_name ||
-				details?.website_lead_details?.last_name ||
-				'',
-			email:
-				userDetails?.email ||
-				details?.website_lead_details?.email ||
-				'',
-		};
-
-		const user_data = {
-			first_name:
-				userDetails?.first_name ||
-				details?.website_lead_details?.first_name ||
-				'',
-			last_name:
-				userDetails?.last_name ||
-				details?.website_lead_details?.last_name ||
-				'',
-			email:
-				userDetails?.email ||
-				details?.website_lead_details?.email ||
-				'',
 		};
 
 		dispatch( {
 			websiteDetails: data,
-			userDetails: user_data,
 		} );
 
 		setFormState( data );
 	}, [] );
-
-	const handleSubmit = ( event ) => {
-		event.preventDefault();
-	};
 
 	const handleChangeSelection = ( name ) => ( value ) => {
 		setFormState( ( prev ) => ( {
@@ -156,6 +150,113 @@ const WebsiteDetails = () => {
 			[ name ]: value?.value ?? value,
 		} ) );
 	};
+
+	/**
+	 * Count words in a string
+	 * @param {string} text - Text to count words in
+	 * @return {number} Word count
+	 */
+	const countWords = ( text ) => {
+		if ( ! text || typeof text !== 'string' ) {
+			return 0;
+		}
+		return text.trim().split( /\s+/ ).filter( Boolean ).length;
+	};
+
+	/**
+	 * Improve business description with AI
+	 */
+	const handleImproveDescription = useCallback( async () => {
+		const description = formState.business_description;
+		const wordCount = countWords( description );
+
+		// Check if description has more than 10 words
+		if ( wordCount < 5 ) {
+			toast.error(
+				__(
+					'Please add at least 5 words to your description before improving.',
+					'surerank'
+				)
+			);
+			return;
+		}
+
+		setIsImprovingDescription( true );
+
+		try {
+			const response = await apiFetch( {
+				path: '/surerank/v1/onboarding/improve-description',
+				method: 'POST',
+				data: {
+					business_name: formState.website_name || '',
+					business_desc: description,
+					business_category: formState.organization_type || '',
+					language: 'en',
+				},
+			} );
+
+			if ( response?.success && response?.description ) {
+				setFormState( ( prev ) => ( {
+					...prev,
+					business_description: response.description,
+				} ) );
+				toast.success(
+					__( 'Description improved successfully!', 'surerank' )
+				);
+			} else {
+				throw new Error( 'Invalid response format' );
+			}
+		} catch ( error ) {
+			toast.error(
+				__(
+					'Failed to improve description. Please try again.',
+					'surerank'
+				),
+				{
+					description: error?.message || '',
+				}
+			);
+		} finally {
+			setIsImprovingDescription( false );
+		}
+	}, [
+		formState.business_description,
+		formState.website_name,
+		formState.organization_type,
+	] );
+
+	useEffect( () => {
+		if ( isAuthenticated && shouldAutoImprove.current ) {
+			shouldAutoImprove.current = false;
+			handleImproveDescription();
+		}
+	}, [ isAuthenticated, handleImproveDescription ] );
+
+	const handleConnectAndImprove = () => {
+		shouldAutoImprove.current = true;
+		handleConnect();
+	};
+
+	// Calculate current word count for styling
+	const currentWordCount = useMemo(
+		() => countWords( formState.business_description ),
+		[ formState.business_description ]
+	);
+	const hasMinimumWords = currentWordCount >= 5;
+
+	// Calculate textarea rows dynamically based on content (min 4, max 8)
+	const textareaRows = useMemo( () => {
+		const text = formState.business_description || '';
+		const lineBreaks = ( text.match( /\n/g ) || [] ).length + 1;
+		const textLength = text.length;
+
+		const calculatedRows = Math.max(
+			lineBreaks,
+			Math.ceil( textLength / 60 )
+		);
+
+		return Math.min( Math.max( calculatedRows, 4 ), 8 );
+	}, [ formState.business_description ] );
 
 	const baseFields = [
 		{
@@ -193,18 +294,167 @@ const WebsiteDetails = () => {
 			],
 		},
 		{
+			label: __( 'Phone Number (Optional)', 'surerank' ),
+			name: 'website_owner_phone',
+			type: 'text',
+			width: 'half',
+		},
+		{
+			label: (
+				<>
+					<div className="flex items-center justify-between gap-2 w-full">
+						<div className="flex items-center justify-start gap-1">
+							<Label tag="span" size="sm">
+								{ __( 'Describe what you do', 'surerank' ) }
+							</Label>
+							<InfoTooltip
+								content={ __(
+									'Please describe what you do in a few sentences. This description will be used for content generation and other purposes.',
+									'surerank'
+								) }
+							/>
+						</div>
+						{ isAuthenticated && hasMinimumWords && (
+							<Button
+								variant="outline"
+								size="xs"
+								icon={
+									<Sparkles
+										className={ cn(
+											isImprovingDescription &&
+												'animate-pulse'
+										) }
+									/>
+								}
+								iconPosition="left"
+								onClick={ handleImproveDescription }
+								className={ cn(
+									'text-background-brand',
+									isImprovingDescription &&
+										'cursor-not-allowed'
+								) }
+							>
+								{ isImprovingDescription
+									? IMPROVING_TEXT
+									: IMPROVE_WITH_AI_TEXT }
+							</Button>
+						) }
+						{ isAuthenticated && ! hasMinimumWords && (
+							<Tooltip
+								variant="dark"
+								placement="top-end"
+								title={ __(
+									'Minimum word count required',
+									'surerank'
+								) }
+								content={
+									<Text
+										size={ 12 }
+										weight={ 400 }
+										color="inverse"
+										className="leading-relaxed"
+									>
+										{ __(
+											'Please add at least 5 words to your description before improving.',
+											'surerank'
+										) }
+									</Text>
+								}
+								triggers={ [ 'hover' ] }
+								tooltipPortalId="surerank-root"
+								arrow={ true }
+							>
+								<Button
+									variant="outline"
+									size="xs"
+									icon={ <Sparkles /> }
+									iconPosition="left"
+									className="text-icon-secondary cursor-not-allowed"
+									onClick={ ( e ) => e.preventDefault() }
+								>
+									{ IMPROVE_WITH_AI_TEXT }
+								</Button>
+							</Tooltip>
+						) }
+						{ ! isAuthenticated && (
+							<Tooltip
+								variant="dark"
+								placement="top-end"
+								title={ __(
+									'Connect with AI to improve this',
+									'surerank'
+								) }
+								content={
+									<div className="space-y-1">
+										<Text
+											size={ 12 }
+											weight={ 400 }
+											color="inverse"
+											className="leading-relaxed"
+										>
+											{ __(
+												"To generate better content with AI, you'll need to connect your AI provider first. It only takes a minute and unlocks all AI-powered features.",
+												'surerank'
+											) }
+										</Text>
+										<div className="mt-1.5">
+											<Button
+												size="xs"
+												variant="link"
+												onClick={
+													handleConnectAndImprove
+												}
+												disabled={ isConnecting }
+												className="[&>span]:px-0 no-underline hover:no-underline focus:[box-shadow:none] text-link-visited-inverse hover:text-link-visited-inverse-hover"
+											>
+												{ isConnecting
+													? __(
+															'Connecting…',
+															'surerank'
+													  )
+													: __(
+															'Connect',
+															'surerank'
+													  ) }
+											</Button>
+										</div>
+									</div>
+								}
+								triggers={ [ 'hover' ] }
+								interactive={ true }
+								tooltipPortalId="surerank-root"
+								arrow={ true }
+							>
+								<Button
+									variant="outline"
+									size="xs"
+									icon={ <Sparkles /> }
+									iconPosition="left"
+									className={
+										hasMinimumWords
+											? 'text-background-brand'
+											: 'text-icon-secondary'
+									}
+								>
+									{ IMPROVE_WITH_AI_TEXT }
+								</Button>
+							</Tooltip>
+						) }
+					</div>
+				</>
+			),
+			name: 'business_description',
+			type: 'textarea',
+			width: 'full',
+			rows: textareaRows,
+		},
+		{
 			label: __( 'Website Owner Name', 'surerank' ),
 			name: 'website_owner_name',
 			type: 'text',
 			width: 'half',
 			conditionalOn: 'website_type',
 			conditionalValues: [ 'personal', 'blog' ],
-		},
-		{
-			label: __( 'Phone Number (Optional)', 'surerank' ),
-			name: 'website_owner_phone',
-			type: 'text',
-			width: 'half',
 		},
 		{
 			label: __( 'Website Logo', 'surerank' ),
@@ -262,7 +512,7 @@ const WebsiteDetails = () => {
 	} );
 
 	return (
-		<form className="flex flex-col gap-6" onSubmit={ handleSubmit }>
+		<div className="flex flex-col gap-6">
 			<div className="space-y-1">
 				<Title
 					tag="h4"
@@ -309,7 +559,7 @@ const WebsiteDetails = () => {
 					onClick: handleSaveForm,
 				} }
 			/>
-		</form>
+		</div>
 	);
 };
 

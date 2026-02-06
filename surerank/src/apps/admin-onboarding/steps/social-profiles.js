@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { useState, Fragment, useMemo } from '@wordpress/element';
+import { useState, useMemo, useRef, useEffect } from '@wordpress/element';
 import {
 	FacebookIcon,
 	TwitterIcon,
@@ -16,11 +16,12 @@ import {
 	TelegramIcon,
 	BlueSkyIcon,
 } from '../icons';
-import { Button, DropdownMenu, Title } from '@bsf/force-ui';
+import { Button, DropdownMenu, Title, Text } from '@bsf/force-ui';
 import { PlusIcon, LinkIcon } from 'lucide-react';
 import StepNavButtons from '../components/nav-buttons';
 import { useOnboardingState } from '@Onboarding/store';
 import { focusHelper } from '../utils';
+import { submitOnboardingData } from './user-details';
 
 const iconMap = {
 	facebook: FacebookIcon,
@@ -40,15 +41,25 @@ const iconMap = {
 	bluesky: BlueSkyIcon,
 };
 
+// Default social profiles to show
+const defaultSocialIds = [
+	'facebook',
+	'instagram',
+	'twitter',
+	'youtube',
+	'whatsapp',
+	'pinterest',
+];
+
 const socialProfiles = surerank_admin_common?.social_profiles
-	.filter( ( item ) => ! item.extra )
+	.filter( ( item ) => defaultSocialIds.includes( item.id ) )
 	.map( ( item ) => ( {
 		...item,
 		icon: iconMap[ item.id ] || iconMap.link,
 	} ) );
 
 const dropdownOptions = surerank_admin_common?.social_profiles
-	.filter( ( item ) => item.extra )
+	.filter( ( item ) => ! defaultSocialIds.includes( item.id ) )
 	.map( ( item ) => ( {
 		...item,
 		icon: iconMap[ item.id ] || iconMap.link,
@@ -68,16 +79,24 @@ const getInitialList = ( formState ) => {
 };
 
 const SocialProfiles = () => {
-	const [ { socialProfilesURLs = {} }, dispatch ] = useOnboardingState();
+	const [ { socialProfilesURLs = {}, websiteDetails = {} }, dispatch ] =
+		useOnboardingState();
 	// Local states
 	const [ formState, setFormState ] = useState( socialProfilesURLs );
 	const [ socialProfileLists, setSocialProfileLists ] = useState(
 		getInitialList( formState )
 	);
+	const scrollContainerRef = useRef( null );
 
-	const handleSubmit = ( event ) => {
-		event.preventDefault();
-	};
+	// Auto-scroll to bottom when new field is added
+	useEffect( () => {
+		if ( scrollContainerRef.current ) {
+			scrollContainerRef.current.scrollTo( {
+				top: scrollContainerRef.current.scrollHeight,
+				behavior: 'smooth',
+			} );
+		}
+	}, [ socialProfileLists.length ] );
 
 	const handleAddProfileToList = ( socialMediaItem ) => {
 		setSocialProfileLists( ( prev ) => [ ...prev, socialMediaItem ] );
@@ -102,8 +121,22 @@ const SocialProfiles = () => {
 		} );
 	};
 
+	const handleClickNext = async ( setIsLoading ) => {
+		setIsLoading( ( prevState ) => ( { ...prevState, next: true } ) );
+
+		dispatch( {
+			socialProfilesURLs: formState,
+		} );
+
+		try {
+			await submitOnboardingData( websiteDetails, formState );
+		} catch ( error ) {
+			// Silently handle errors.
+		}
+	};
+
 	return (
-		<form className="flex flex-col gap-6" onSubmit={ handleSubmit }>
+		<div className="flex flex-col gap-6">
 			<div className="space-y-1">
 				<Title
 					tag="h4"
@@ -118,100 +151,120 @@ const SocialProfiles = () => {
 				</p>
 			</div>
 			{ /* Settings / options */ }
-			<div className="flex flex-col border border-solid border-border-subtle rounded-lg p-1">
-				{ socialProfileLists.map(
-					( { label, id, placeholder, icon: Icon }, index ) => (
-						<Fragment key={ id }>
-							<div className="flex items-center gap-3 w-full p-2.5">
-								<div className="flex items-center gap-3 w-2/4">
-									<Icon className="size-5" />
-									<span className="hidden md:inline-block text-field-label text-sm font-medium whitespace-nowrap">
-										{ label }
-									</span>
+			<div className="flex flex-col gap-4">
+				{ /* Scrollable container for social profile inputs */ }
+				<div
+					ref={ scrollContainerRef }
+					className="flex flex-col gap-6 p-2 max-h-[500px] overflow-y-auto"
+				>
+					{ socialProfileLists.map(
+						( { label, id, placeholder, icon: Icon }, index ) => (
+							<div key={ id } className="flex flex-col gap-1.5">
+								{ /* Input field with prefix */ }
+								<div className="relative flex items-center">
+									{ /* Prefix with icon and label */ }
+									<div className="absolute left-0 flex items-center gap-2 pl-4 pointer-events-none">
+										<Icon className="size-5 text-text-secondary flex-shrink-0" />
+										<Text
+											size={ 14 }
+											className="capitalize"
+											color="text-text-secondary"
+											weight={ 500 }
+										>
+											{ label }
+										</Text>
+									</div>
+									<input
+										id={ `social-${ id }` }
+										type="url"
+										className="w-full py-3 pr-4 pl-[calc(1rem+1px+0.5rem+80px+0.5rem+1ch+0.5rem)] text-sm text-text-primary placeholder:text-text-quaternary border border-solid border-border-subtle rounded-lg bg-white focus:border-border-strong focus:ring-2 focus:ring-border-subtle focus:outline-none transition-all duration-200 shadow-sm"
+										placeholder={ placeholder }
+										onChange={ handleChange( id ) }
+										value={ formState[ id ] || '' }
+										{ ...( index === 0 && {
+											ref: focusHelper,
+										} ) }
+									/>
 								</div>
-								<input
-									className="text-sm text-right text-text-primary placeholder:text-text-tertiary w-full border-none bg-transparent focus:outline-none focus:ring-0"
-									placeholder={ placeholder }
-									onChange={ handleChange( id ) }
-									value={ formState[ id ] || '' }
-									{ ...( index === 0 && {
-										ref: focusHelper,
-									} ) }
-								/>
 							</div>
-							{ ( !! filteredDropdownOptions.length ||
-								index < socialProfileLists.length - 1 ) && (
-								<span className="w-full block px-2.5">
-									<hr className="border-border-subtle border-b border-t-0 border-x-0 my-1 w-full" />
-								</span>
-							) }
-						</Fragment>
-					)
-				) }
+						)
+					) }
+				</div>
+				{ /* Add More button - always visible outside scroll container */ }
 				{ !! filteredDropdownOptions.length && (
-					<DropdownMenu>
-						<DropdownMenu.Trigger>
-							<Button
-								type="button"
-								variant="ghost"
-								className="w-max my-2 mx-auto"
-								size="xs"
-								icon={ <PlusIcon className="size-4" /> }
-								iconPosition="right"
-							>
-								{ __( 'Add another profile', 'surerank' ) }
-							</Button>
-						</DropdownMenu.Trigger>
-						<DropdownMenu.Portal id="surerank-root">
-							<DropdownMenu.ContentWrapper>
-								<DropdownMenu.Content className="w-60">
-									<DropdownMenu.List>
-										{ filteredDropdownOptions.map(
-											( {
-												label,
-												id,
-												icon: Icon,
-												placeholder,
-											} ) => (
-												<DropdownMenu.Item
-													key={ id }
-													onClick={ () =>
-														handleAddProfileToList(
-															{
-																label,
-																id,
-																icon: Icon,
-																placeholder,
-															}
-														)
-													}
-												>
-													<div className="flex items-center gap-3 w-full">
-														<Icon className="size-4" />
-														<span className="text-field-label text-sm font-medium">
-															{ label }
-														</span>
-													</div>
-												</DropdownMenu.Item>
-											)
-										) }
-									</DropdownMenu.List>
-								</DropdownMenu.Content>
-							</DropdownMenu.ContentWrapper>
-						</DropdownMenu.Portal>
-					</DropdownMenu>
+					<div className="px-2">
+						<DropdownMenu>
+							<DropdownMenu.Trigger>
+								<Button
+									type="button"
+									variant="outline"
+									className="w-max"
+									size="xs"
+									icon={ <PlusIcon /> }
+									iconPosition="right"
+								>
+									{ __( 'Add More', 'surerank' ) }
+								</Button>
+							</DropdownMenu.Trigger>
+							<DropdownMenu.Portal id="surerank-root">
+								<DropdownMenu.ContentWrapper>
+									<DropdownMenu.Content className="w-60">
+										<DropdownMenu.List>
+											{ filteredDropdownOptions.map(
+												( {
+													label,
+													id,
+													icon: Icon,
+													placeholder,
+												} ) => (
+													<DropdownMenu.Item
+														key={ id }
+														onClick={ () =>
+															handleAddProfileToList(
+																{
+																	label,
+																	id,
+																	icon: Icon,
+																	placeholder,
+																}
+															)
+														}
+													>
+														<div className="flex items-center gap-3 w-full">
+															<Icon className="size-5 text-text-secondary flex-shrink-0" />
+															<Text
+																size={ 14 }
+																color="text-field-label"
+																weight={ 500 }
+															>
+																{ label }
+															</Text>
+														</div>
+													</DropdownMenu.Item>
+												)
+											) }
+										</DropdownMenu.List>
+									</DropdownMenu.Content>
+								</DropdownMenu.ContentWrapper>
+							</DropdownMenu.Portal>
+						</DropdownMenu>
+					</div>
 				) }
 			</div>
 			<StepNavButtons
 				className="my-0"
+				skipProps={ {
+					onClick: handleClickNext,
+				} }
 				nextProps={ {
-					onClick: handleSaveForm,
+					onClick: handleClickNext,
+					children: __( 'Finish', 'surerank' ),
 				} }
 				backProps={ {
 					onClick: handleSaveForm,
 				} }
 			/>
-		</form>
+		</div>
 	);
 };
 

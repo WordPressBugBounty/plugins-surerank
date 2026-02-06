@@ -52,6 +52,27 @@ class Sync {
 	public function __construct() {
 		add_action( 'surerank_start_building_cache', [ $this, 'start_building_cache' ], 10, 1 );
 		add_action( 'surerank_batch_process_complete', [ $this, 'batch_process_complete' ] );
+		add_filter( 'surerank_dashboard_localization_vars', [ $this, 'add_localization_vars' ] );
+	}
+
+	/**
+	 * Add localization variables.
+	 *
+	 * @since 1.4.3
+	 * @param array<string, mixed> $vars Localization variables.
+	 * @return array<string, mixed> Localization variables.
+	 */
+	public function add_localization_vars( $vars ) {
+		$vars['crons_available']    = Helper::are_crons_available();
+		$vars['sitemap_cpts']       = array_keys( Sync::get_instance()->get_included_post_types() );
+		$vars['sitemap_taxonomies'] = array_map(
+			static function( $taxonomy ) {
+				return $taxonomy['slug'];
+			},
+			Sync::get_instance()->get_included_taxonomies()
+		);
+
+		return $vars;
 	}
 
 	/**
@@ -87,17 +108,7 @@ class Sync {
 
 		// Clear existing sitemap cache before regeneration.
 		Cache::clear_all();
-
-		$classes    = [];
-		$chunk_size = apply_filters( 'surerank_sitemap_json_chunk_size', 20 );
-
-		/** Handle taxonomies with pagination. */
-		$classes = array_merge( $classes, $this->create_post_type_sync_classes( $chunk_size ) );
-		$classes = array_merge( $classes, $this->create_taxonomy_sync_classes( $chunk_size ) );
-		
-		$classes = apply_filters( 'surerank_batch_process_classes', $classes );
-		
-		$classes = array_merge( $classes, $this->create_cleanup_class() );
+		$classes = $this->generate_classes();
 
 		if ( defined( 'WP_CLI' ) ) {
 			WP_CLI::line( 'Batch Process Started..' );
@@ -120,6 +131,21 @@ class Sync {
 				self::$processes->save()->dispatch();
 			}
 		}
+	}
+
+	/**
+	 * Prepare cache.
+	 *
+	 * @since 1.4.3
+	 * @return array<int, object>
+	 */
+	public function generate_classes() {
+		$classes    = [];
+		$chunk_size = apply_filters( 'surerank_sitemap_json_chunk_size', 20 );
+		$classes    = array_merge( $classes, $this->create_post_type_sync_classes( $chunk_size ) );
+		$classes    = array_merge( $classes, $this->create_taxonomy_sync_classes( $chunk_size ) );
+		$classes    = apply_filters( 'surerank_batch_process_classes', $classes );
+		return array_merge( $classes, $this->create_cleanup_class() );
 	}
 
 	/**
@@ -181,10 +207,10 @@ class Sync {
 	 * Get count of indexable posts for a specific post type
 	 *
 	 * @param string $post_type The post type.
-	 * @since 1.2.0
+	 * @since 1.4.3
 	 * @return int
 	 */
-	private function get_indexable_posts_count( string $post_type ): int {
+	public function get_indexable_posts_count( string $post_type ): int {
 		$args = [
 			'post_type'           => $post_type,
 			'post_status'         => 'publish',
@@ -205,7 +231,7 @@ class Sync {
 	 * @since 1.2.0
 	 * @return int
 	 */
-	private function get_indexable_terms_count( string $taxonomy ) {
+	public function get_indexable_terms_count( string $taxonomy ) {
 		$args = [
 			'taxonomy'   => $taxonomy,
 			'hide_empty' => true,
@@ -220,6 +246,18 @@ class Sync {
 		}
 
 		return count( $terms );
+	}
+
+	/**
+	 * Finalize cache generation process.
+	 *
+	 * @since 1.4.3
+	 * @return void
+	 */
+	public function finalize_cache_generation(): void {
+		$cleanup = Cleanup::get_instance();
+		$cleanup->import();
+		$this->batch_process_complete();
 	}
 
 	/**

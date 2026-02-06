@@ -63,8 +63,9 @@ class BreadcrumbList extends Base {
 				[
 					'id'      => 'schema_name',
 					'label'   => __( 'Schema Title', 'surerank' ),
-					'tooltip' => __( 'Give your schema a name to help you identify it later. This title is for internal reference only and won’t be included in your site’s structured data.', 'surerank' ),
+					'tooltip' => __( 'Give your schema a name to help you identify it later. This title is for internal reference only and won\'t be included in your site\'s structured data.', 'surerank' ),
 					'show'    => true,
+					'default' => true,
 					'type'    => 'Title',
 					'std'     => 'BreadcrumbList',
 				],
@@ -73,24 +74,32 @@ class BreadcrumbList extends Base {
 					'std'      => __( 'BreadcrumbList', 'surerank' ),
 					'type'     => 'Hidden',
 					'required' => true,
+					'default'  => true,
+					'show'     => true,
 				],
 				[
 					'id'       => '@id',
 					'type'     => 'Hidden',
 					'std'      => '%current.url%#%id%',
 					'required' => true,
+					'default'  => true,
+					'show'     => true,
 				],
 				[
 					'id'       => '@type',
 					'std'      => 'BreadcrumbList',
 					'type'     => 'Hidden',
 					'required' => true,
+					'default'  => true,
+					'show'     => true,
 				],
 				[
 					'id'       => 'itemListElement',
 					'type'     => 'Hidden',
 					'std'      => '%current.breadcrumbs%',
 					'required' => true,
+					'default'  => true,
+					'show'     => true,
 				],
 			]
 		);

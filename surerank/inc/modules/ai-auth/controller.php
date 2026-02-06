@@ -5,7 +5,7 @@
  * Main module class for handling instant indexing functionality.
  *
  * @package SureRank\Inc\Modules\Ai_Auth
- * @since x.x.x
+ * @since 1.4.2
  */
 
 namespace SureRank\Inc\Modules\Ai_Auth;
@@ -30,15 +30,15 @@ class Controller {
 	/**
 	 * Module settings key.
 	 *
-	 * @since x.x.x
+	 * @since 1.4.2
 	 * @var string
 	 */
-	private const SETTINGS_KEY = 'surerank_auth';
+	public const SETTINGS_KEY = 'surerank_auth';
 
 	/**
 	 * Encryption key.
 	 *
-	 * @since x.x.x
+	 * @since 1.4.2
 	 * @var string
 	 */
 	public $key;
@@ -46,7 +46,7 @@ class Controller {
 	/**
 	 * Get Auth URL.
 	 * 
-	 * @since x.x.x
+	 * @since 1.4.2
 	 * @return string|WP_Error
 	 */
 	public function get_auth_url() {
@@ -73,7 +73,7 @@ class Controller {
 	/**
 	 * Get Auth status.
 	 * 
-	 * @since x.x.x
+	 * @since 1.4.2
 	 * @return bool
 	 */
 	public function get_auth_status() {
@@ -84,7 +84,7 @@ class Controller {
 	/**
 	 * Save Auth.
 	 * 
-	 * @since x.x.x
+	 * @since 1.4.2
 	 * @param string $data Data to save.
 	 * @param string $key Key to use for encryption.
 	 * @param string $method Encryption method. Default is AES-256-CBC.
@@ -128,6 +128,25 @@ class Controller {
 			return new WP_Error( 'no_user_email', __( 'No user email found in the decrypted data.', 'surerank' ) );
 		}
 
+		// Extract is_subscribed value if present.
+		$is_subscribed = false;
+		if ( isset( $decrypted_data_array['is_subscribed'] ) ) {
+			// Convert string 'true'/'false' to boolean if needed.
+			if ( is_string( $decrypted_data_array['is_subscribed'] ) ) {
+				$is_subscribed = 'true' === $decrypted_data_array['is_subscribed'];
+			} else {
+				$is_subscribed = (bool) $decrypted_data_array['is_subscribed'];
+			}
+
+			// Update the analytics option based on the preference.
+			// Set 'yes' if opted in, empty string if not.
+			$enable_contribution = $is_subscribed ? 'yes' : '';
+			update_option( 'surerank_analytics_optin', $enable_contribution );
+
+			// Remove is_subscribed from the decrypted data.
+			unset( $decrypted_data_array['is_subscribed'] );
+		}
+
 		// remove the nonce from the decrypted data before saving it to the options.
 		unset( $decrypted_data_array['nonce'] );
 
@@ -135,26 +154,5 @@ class Controller {
 		update_option( self::SETTINGS_KEY, $decrypted_data_array );
 
 		return true;
-	}
-
-	/**
-	 * Get Auth Data.
-	 * 
-	 * @since x.x.x
-	 * @param string $key Optional. Key to retrieve specific data. Default is empty which returns all data.
-	 * @return array<string, mixed>|WP_Error
-	 */
-	public function get_auth_data( $key = '' ) {
-		$auth_data = get_option( self::SETTINGS_KEY, false );
-
-		if ( empty( $auth_data ) ) {
-			return new WP_Error( 'no_auth_data', __( 'No authentication data found.', 'surerank' ) );
-		}
-
-		if ( ! empty( $key ) && is_string( $key ) ) {
-			return $auth_data[ $key ] ?? new WP_Error( 'no_key_found', __( 'No data found for the provided key.', 'surerank' ) );
-		}
-
-		return $auth_data;
 	}
 }

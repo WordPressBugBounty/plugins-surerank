@@ -40,6 +40,45 @@ const updateCache = ( links ) => {
 };
 
 /**
+ * Determine whether a URL should be skipped. We use an inclusive check:
+ * - Allow absolute http/https URLs
+ * - Allow relative URLs (no scheme)
+ * - Skip everything else (mailto:, tel:, sms:, geo:, javascript:, data:, etc.)
+ *
+ * @param {string} href Raw href value
+ * @return {boolean} True if the URL should be skipped
+ */
+const shouldSkipUrl = ( href ) => {
+	if ( ! href ) {
+		return true;
+	}
+
+	const trimmed = href.trim();
+	if ( trimmed === '' ) {
+		return true;
+	}
+
+	// Anchors
+	if ( trimmed.startsWith( '#' ) ) {
+		return true;
+	}
+
+	try {
+		// If it's an absolute URL, the constructor will succeed. If it has a scheme
+		// like mailto:, URL will still be constructed but protocol will reflect that.
+		const url = new URL( trimmed, surerank_globals.site_url );
+		const protocol = ( url.protocol || '' )
+			.replace( ':', '' )
+			.toLowerCase();
+		return ! ( protocol === 'http' || protocol === 'https' );
+	} catch ( error ) {
+		// If URL parsing fails, treat as relative (allow) if it doesn't contain a colon
+		// early on (which would indicate a scheme). Otherwise skip.
+		return trimmed.includes( ':' );
+	}
+};
+
+/**
  * Get all unique links (href/src) from <a> and <img> tags in the document.
  * @param {Document} document
  * @return {string[]} Array of unique URLs
@@ -48,29 +87,34 @@ export const getAllLinks = ( document ) => {
 	if ( ! document ) {
 		return [];
 	}
+
 	const linkElements = Array.from( document.querySelectorAll( 'a[href]' ) );
-	const urls = linkElements.map( ( el ) => {
-		if ( el.tagName.toLowerCase() === 'a' ) {
-			let url = el.getAttribute( 'href' );
-			// Append base URL if the URL starts with '/'
-			if ( ! url.startsWith( 'http' ) ) {
-				const baseUrl = ( url.startsWith( '/' ) ? '' : '/' ) + url;
-				url = `${ surerank_globals.site_url }${ baseUrl }`;
+	const urls = linkElements
+		.map( ( element ) => {
+			const href = element.getAttribute( 'href' );
+			if ( ! href ) {
+				return null;
 			}
-			return url;
-		}
-		return null;
-	} );
-	return Array.from(
-		new Set(
-			urls.filter(
-				( url ) =>
-					url &&
-					! url.startsWith( '#' ) &&
-					! url.toLowerCase().startsWith( 'javascript:' )
-			)
-		)
-	);
+
+			const trimmed = href.trim();
+			// Skip anchors, javascript and various schemes we don't want to check.
+			if ( shouldSkipUrl( trimmed ) ) {
+				return null;
+			}
+
+			// Append base URL if the URL is relative
+			if ( ! trimmed.startsWith( 'http' ) ) {
+				const baseUrl =
+					( trimmed.startsWith( '/' ) ? '' : '/' ) + trimmed;
+				return `${ surerank_globals.site_url }${ baseUrl }`;
+			}
+
+			return trimmed;
+		} )
+		.filter( Boolean ); // Remove null/undefined values
+
+	// Return unique URLs
+	return [ ...new Set( urls ) ];
 };
 
 /**
@@ -195,6 +239,7 @@ export const checkBrokenLinks = async (
 			),
 			status: 'error',
 			data: brokenLinks,
+			type: 'page',
 		} );
 	}
 
@@ -203,6 +248,7 @@ export const checkBrokenLinks = async (
 		title: __( 'No broken links found on the page.', 'surerank' ),
 		status: 'success',
 		description: [],
+		type: 'page',
 	} );
 };
 
@@ -215,6 +261,7 @@ export const checkCanonicalUrl = ( canonical ) => {
 				'surerank'
 			),
 			status: 'warning',
+			type: 'page',
 		} );
 	}
 
@@ -222,6 +269,7 @@ export const checkCanonicalUrl = ( canonical ) => {
 		id: 'canonical_url',
 		title: __( 'Canonical tag is present on the page.', 'surerank' ),
 		status: 'success',
+		type: 'page',
 	} );
 };
 

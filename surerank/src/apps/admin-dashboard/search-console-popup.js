@@ -20,7 +20,7 @@ const SearchConsolePopup = ( { isOpen = true } ) => {
 					<div className="flex flex-col text-left space-y-1">
 						<Text size={ 18 } weight={ 600 } lineHeight={ 28 }>
 							{ __(
-								'Let’s connect to Search Console to Optimize further!',
+								'Connect Your Site to Google Search Console',
 								'surerank'
 							) }
 						</Text>

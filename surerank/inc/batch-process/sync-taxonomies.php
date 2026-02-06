@@ -182,7 +182,7 @@ class Sync_Taxonomies extends Sitemap {
 			return;
 		}
 
-		Cache::store_file( $filename, $json_string );
+		Cache::store_file( 'sitemap/' . $filename, $json_string );
 		Cache::update_sitemap_index( $tax_prefix . '-' . $safe_taxonomy, $file_index, count( $json_data ) );
 	}
 

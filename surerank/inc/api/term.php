@@ -85,8 +85,10 @@ class Term extends Api_Base {
 		$all_options            = Settings::format_array( Defaults::get_instance()->get_post_defaults( false ) );
 		$data                   = array_intersect_key( Settings::prep_term_meta( $term_id, $post_type, $is_taxonomy ), $all_options );
 		$decode_data            = Utils::decode_html_entities_recursive( $data ) ?? $data;
-		$global_defaults        = Settings::get();
-		$decode_global_defaults = Utils::decode_html_entities_recursive( $global_defaults ) ?? $global_defaults;
+		$global_values          = Settings::get();
+		$extended_meta          = Utils::get_extended_meta_values( $term_id, $post_type, $is_taxonomy );
+		$global_with_emt        = array_merge( $global_values, $extended_meta );
+		$decode_global_defaults = Utils::decode_html_entities_recursive( $global_with_emt ) ?? $global_with_emt;
 		return [
 			'data'           => $decode_data,
 			'global_default' => $decode_global_defaults,
@@ -129,7 +131,9 @@ class Term extends Api_Base {
 			$data = array_merge( $term_meta, $data );
 		}
 
-		$processed_options = Utils::process_option_values( $all_options, $data );
+		$term              = get_term( $term_id );
+		$taxonomy          = $term instanceof \WP_Term ? $term->taxonomy : '';
+		$processed_options = Utils::process_option_values( $all_options, $data, $term_id, $taxonomy, true );
 
 		foreach ( $processed_options as $option_name => $new_option_value ) {
 			Update::term_meta( $term_id, 'surerank_settings_' . $option_name, $new_option_value );

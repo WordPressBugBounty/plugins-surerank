@@ -12,11 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+use SureRank\Inc\Admin\Admin_Notice;
 use SureRank\Inc\Admin\Attachment;
 use SureRank\Inc\Admin\BulkActions;
 use SureRank\Inc\Admin\BulkEdit;
 use SureRank\Inc\Admin\Dashboard;
 use SureRank\Inc\Admin\Onboarding;
+use SureRank\Inc\Admin\Search_Console_Widget;
 use SureRank\Inc\Admin\Seo_Bar;
 use SureRank\Inc\Admin\Seo_Popup;
 use SureRank\Inc\Admin\Sync;
@@ -32,10 +34,10 @@ use SureRank\Inc\Cli\Cli;
 use SureRank\Inc\Frontend\Archives;
 use SureRank\Inc\Frontend\Canonical;
 use SureRank\Inc\Frontend\Common;
+use SureRank\Inc\Frontend\Content_Seo;
 use SureRank\Inc\Frontend\Crawl_Optimization;
 use SureRank\Inc\Frontend\Facebook;
 use SureRank\Inc\Frontend\Feed;
-use SureRank\Inc\Frontend\Image_Seo;
 use SureRank\Inc\Frontend\Meta_Data;
 use SureRank\Inc\Frontend\Meta_Tag_Injection;
 use SureRank\Inc\Frontend\Product;
@@ -52,18 +54,18 @@ use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Functions\Update;
 use SureRank\Inc\GoogleSearchConsole\Auth;
+use SureRank\Inc\Lib\Surerank_Nps_Survey;
 use SureRank\Inc\Modules\Ai_Auth\Init as Ai_Auth_Init;
 use SureRank\Inc\Modules\Content_Generation\Init as Content_Generation_Init;
-use SureRank\Inc\Lib\Surerank_Nps_Survey;
+use SureRank\Inc\Modules\EmailReports\Init as EmailReports_Init;
+use SureRank\Inc\Modules\Fix_Seo_Checks\Init as Fix_Seo_Checks_Init;
+use SureRank\Inc\Modules\Nudges\Init as Nudges_Init;
 use SureRank\Inc\Nps_Notice;
 use SureRank\Inc\Routes;
 use SureRank\Inc\Schema\Schemas;
 use SureRank\Inc\Sitemap\Checksum;
 use SureRank\Inc\Sitemap\Xml_Sitemap;
-use SureRank\Inc\ThirdPartyPlugins\Bricks;
-use SureRank\Inc\ThirdPartyPlugins\CartFlows;
-use SureRank\Inc\ThirdPartyPlugins\Elementor;
-use SureRank\Inc\Modules\FixSeoChecks\Init as Fix_Seo_Checks_Init;
+use SureRank\Inc\ThirdPartyIntegrations\Init as Integrations_Init;
 
 /**
  * Plugin_Loader
@@ -87,19 +89,22 @@ class Loader {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-
 		spl_autoload_register( [ $this, 'autoload' ] );
 		add_action( 'shutdown', [ $this, 'shutdown' ] );
 
-		add_action( 'init', [ $this, 'setup' ], 999 );
-		add_action( 'init', [ $this, 'load_nps' ], 99 );
-		add_action( 'init', [ $this, 'flush_rules' ], 999 );
-		add_action( 'init', [ $this, 'load_textdomain' ], 10 );
 		add_action( 'plugins_loaded', [ $this, 'load_routes' ], 10 );
+
+		add_action( 'init', [ $this, 'load_textdomain' ], 10 );
+		add_action( 'init', [ $this, 'load_nps' ], 99 );
+		add_action( 'init', [ $this, 'setup' ], 999 );
+		add_action( 'init', [ $this, 'flush_rules' ], 999 );
 
 		register_activation_hook( SURERANK_FILE, [ $this, 'activation' ] );
 		register_deactivation_hook( SURERANK_FILE, [ $this, 'deactivation' ] );
+
 		add_filter( 'plugin_row_meta', [ $this, 'add_meta_links' ], 10, 2 );
+
+		add_filter( 'body_class', [ $this, 'add_body_class' ] );
 	}
 
 	/**
@@ -113,8 +118,6 @@ class Loader {
 
 		$this->load_core_components();
 		$this->load_environment_components();
-		$this->load_background_processing();
-		$this->load_final_components();
 
 		do_action( 'surerank_after_load_components' );
 	}
@@ -126,8 +129,13 @@ class Loader {
 	 * @return void
 	 */
 	public function load_routes() {
+		do_action( 'surerank_before_load_routes' );
+
 		Routes::get_instance();
 		Analytics::get_instance();
+		Admin_Notice::get_instance();
+
+		do_action( 'surerank_before_load_routes' );
 	}
 
 	/**
@@ -222,9 +230,7 @@ class Loader {
 	public function activation() {
 		Update::option( 'surerank_flush_required', 1 );
 		Update::option( 'surerank_redirect_on_activation', 'yes' );
-
-		$cron = Cron::get_instance();
-		$cron->schedule_sitemap_generation();
+		Cron::get_instance()->schedule_sitemap_generation();
 	}
 
 	/**
@@ -235,10 +241,10 @@ class Loader {
 	 */
 	public function deactivation() {
 		Update::option( 'surerank_flush_required', 1 );
-
-		$cron = Cron::get_instance();
-		$cron->unschedule_sitemap_generation();
+		Cron::get_instance()->unschedule_sitemap_generation();
 		Checksum::get_instance()->clear_checksum();
+
+		delete_option( 'surerank_cron_test_ok' );
 	}
 
 	/**
@@ -248,9 +254,7 @@ class Loader {
 	 * @return void
 	 */
 	public function flush_rules() {
-
-		$flush = Get::option( 'surerank_flush_required' );
-		if ( $flush ) {
+		if ( Get::option( 'surerank_flush_required' ) ) {
 			Helper::flush();
 		}
 
@@ -264,7 +268,7 @@ class Loader {
 	 * @return void
 	 */
 	public function shutdown() {
-		Update::option( 'rewrite_rules', '' );
+		update_option( 'rewrite_rules', '' );
 	}
 
 	/**
@@ -291,6 +295,28 @@ class Loader {
 	}
 
 	/**
+	 * Load NPS Survey if conditions are met.
+	 */
+	public function load_nps(): void {
+		if ( $this->should_load_nps_survey() ) {
+			Surerank_Nps_Survey::get_instance();
+			Nps_Notice::get_instance();
+		}
+	}
+
+	/**
+	 * Add body class - Assign version class for reference.
+	 *
+	 * @param array<int, string> $classes body classes.
+	 * @since 1.6.2
+	 * @return array<int, string>
+	 */
+	public function add_body_class( $classes ) {
+		$classes[] = 'surerank-' . SURERANK_VERSION;
+		return $classes;
+	}
+
+	/**
 	 * Load core components that are always needed.
 	 *
 	 * @return void
@@ -303,7 +329,6 @@ class Loader {
 			Attachment::class,
 			Crawl_Optimization::class,
 			Analyzer::class,
-			CartFlows::class,
 			PostAnalyzer::class,
 			TermAnalyzer::class,
 			Api_Init::class,
@@ -313,7 +338,12 @@ class Loader {
 			Checksum::class,
 			Ai_Auth_Init::class,
 			Content_Generation_Init::class,
+			EmailReports_Init::class,
 			Fix_Seo_Checks_Init::class,
+			Nudges_Init::class,
+			Integrations_Init::class,
+			Process::class,
+			Cli::class,
 		];
 
 		$this->load_components( $core_components );
@@ -350,10 +380,10 @@ class Loader {
 			BulkActions::class,
 			BulkEdit::class,
 			Ajax::class,
+			Search_Console_Widget::class,
 		];
 
 		$this->load_components( $admin_components );
-		$this->load_admin_conditional_components();
 	}
 
 	/**
@@ -376,48 +406,18 @@ class Loader {
 			Feed::class,
 			Seo_Popup_Frontend::class,
 			Meta_Data::class,
-			Image_Seo::class,
+			Content_Seo::class,
 			Meta_Tag_Injection::class,
 			Xml_Sitemap::class,
 			Archives::class,
 		];
 
+		// Add SEO metabox on the frontend for logged in users.
+		if ( is_user_logged_in() ) {
+			$frontend_components[] = Seo_Popup::class;
+		}
+
 		$this->load_components( $frontend_components );
-		$this->load_frontend_conditional_components();
-	}
-
-	/**
-	 * Load NPS Survey if conditions are met.
-	 */
-	public function load_nps(): void {
-		if ( $this->should_load_nps_survey() ) {
-			Surerank_Nps_Survey::get_instance();
-			Nps_Notice::get_instance();
-		}
-	}
-
-	/**
-	 * Load admin conditional components.
-	 *
-	 * @return void
-	 */
-	private function load_admin_conditional_components(): void {
-		// Load Elementor integration if available.
-		if ( defined( 'ELEMENTOR_VERSION' ) ) {
-			Elementor::get_instance();
-		}
-	}
-
-	/**
-	 * Load frontend conditional components.
-	 *
-	 * @return void
-	 */
-	private function load_frontend_conditional_components(): void {
-		// Load Bricks integration if available.
-		if ( defined( 'BRICKS_VERSION' ) ) {
-			Bricks::get_instance();
-		}
 	}
 
 	/**
@@ -427,44 +427,6 @@ class Loader {
 	 */
 	private function should_load_nps_survey(): bool {
 		return class_exists( 'SureRank\Inc\Lib\Surerank_Nps_Survey' ) && ! apply_filters( 'surerank_disable_nps_survey', false );
-	}
-
-	/**
-	 * Load background processing dependencies.
-	 *
-	 * @return void
-	 */
-	private function load_background_processing(): void {
-		$this->require_background_processing_files();
-	}
-
-	/**
-	 * Require background processing files if not already loaded.
-	 *
-	 * @return void
-	 */
-	private function require_background_processing_files(): void {
-		if ( ! class_exists( 'WP_Async_Request' ) ) {
-			require_once SURERANK_DIR . 'inc/lib/background-process/wp-async-request.php';
-		}
-
-		if ( ! class_exists( 'WP_Background_Process' ) ) {
-			require_once SURERANK_DIR . 'inc/lib/background-process/wp-background-process.php';
-		}
-	}
-
-	/**
-	 * Load final components that depend on everything else.
-	 *
-	 * @return void
-	 */
-	private function load_final_components(): void {
-		$final_components = [
-			Process::class,
-			Cli::class,
-		];
-
-		$this->load_components( $final_components );
 	}
 
 	/**

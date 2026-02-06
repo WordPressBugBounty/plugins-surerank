@@ -8,6 +8,7 @@ import {
 import clsx from 'clsx';
 import { createRoot } from 'react-dom';
 import { twMerge } from 'tailwind-merge';
+import { CHECK_TYPES } from '@/global/constants';
 
 export const cleanContent = ( postContent ) => {
 	// Get first paragraph. tag will be <p>.
@@ -217,6 +218,17 @@ export const stringValueToFormatJSON = (
 				value.root.children[ 0 ].children.push( {
 					...mentionObjectStructure,
 					data: { ...option },
+				} );
+			} else {
+				// If option not found, render as plain text (e.g., %custom_field.field_name%)
+				value.root.children[ 0 ].children.push( {
+					detail: 0,
+					format: 0,
+					mode: 'normal',
+					style: '',
+					text: item,
+					type: 'text',
+					version: 1,
 				} );
 			}
 		} else {
@@ -767,15 +779,15 @@ export const getSeoCheckLabel = ( type, counts ) => {
 	if ( type === 'error' ) {
 		return sprintf(
 			// translators: %1$s is the number of issues detected, %2$s is the word "Issue".
-			'%1$s %2$s Detected',
+			'%1$s %2$s',
 			counts,
 			_n( 'Issue', 'Issues', counts, 'surerank' )
 		);
 	}
 	if ( type === 'warning' ) {
 		return sprintf(
-			// translators: %1$s is the number of issues detected, %2$s is the word "Issue".
-			'%1$s %2$s Detected',
+			// translators: %1$s is the number of warnings detected, %2$s is the word "Warning".
+			'%1$s %2$s',
 			counts,
 			_n( 'Warning', 'Warnings', counts, 'surerank' )
 		);
@@ -823,6 +835,51 @@ export const getStatusIndicatorAriaLabel = ( errorAndWarnings ) => {
 };
 
 /**
+ * Extracts URL parameters from a given URL string and returns them as an object.
+ * Handles both absolute and relative URLs by using the current origin as a base for relative ones.
+ *
+ * @param {string} url   - The URL string to parse.
+ * @param {string} [key] - The specific key to retrieve from the URL parameters.
+ * @return {Object} An object containing the URL parameters, or an empty object if parsing fails.
+ */
+export const getURLParams = ( url, key = '' ) => {
+	try {
+		const fullUrl = new URL( url, window.location.origin );
+		const params = fullUrl.searchParams;
+		if ( key ) {
+			return params.get( key ) || '';
+		}
+		return Object.fromEntries( params.entries() );
+	} catch ( error ) {
+		return key ? '' : {};
+	}
+};
+
+/**
+ * Removes specified query parameters from a given URL string and returns the updated URL.
+ * Handles both absolute and relative URLs by using the current origin as a base for relative ones.
+ * If an array of keys is provided, removes all matching parameters; otherwise, removes the single key.
+ *
+ * @param {string}          url  - The URL string to modify.
+ * @param {string|string[]} keys - The key(s) of the query parameter(s) to remove.
+ * @return {string} The updated URL string with the specified parameters removed, or the original URL if parsing fails.
+ */
+export const removeQueryParams = ( url, keys ) => {
+	try {
+		const fullUrl = new URL( url, window.location.origin );
+		const params = fullUrl.searchParams;
+		if ( Array.isArray( keys ) ) {
+			keys.forEach( ( key ) => params.delete( key ) );
+		} else {
+			params.delete( keys );
+		}
+		return fullUrl.toString();
+	} catch ( error ) {
+		return url;
+	}
+};
+
+/**
  * Adds category property to each check item in the response
  *
  * @param {Object} response - The API response object
@@ -838,4 +895,111 @@ export const addCategoryToSiteSeoChecks = ( response, category ) => {
 		} );
 	}
 	return response;
+};
+
+/**
+ * Merges all check types into a single array, updating the specified type with new values.
+ *
+ * @param {Object} state        - The current state containing pageSeoChecks.
+ * @param {string} updatedType  - The type of checks to update (e.g., 'keywordChecks', 'pageChecks').
+ * @param {Array}  updatedValue - The new array of checks for the specified type.
+ * @return {Array} - The merged array of all checks.
+ */
+export const mergeAllCheckTypes = ( state, updatedType, updatedValue ) => {
+	const allChecks = [];
+
+	// Add checks from all types except the one being updated
+	CHECK_TYPES.forEach( ( checkType ) => {
+		if ( checkType === updatedType ) {
+			// Use the new value for the type being updated
+			allChecks.push( ...updatedValue );
+		} else {
+			const checkTypeKey = getCheckTypeKey( checkType ).type;
+			// Use existing value from state for other types
+			const existingChecks = state.pageSeoChecks?.[ checkTypeKey ] || [];
+			allChecks.push( ...existingChecks );
+		}
+	} );
+
+	return allChecks;
+};
+
+/**
+ * Create checkType for state management
+ *
+ * @param {string} type - The type of check (e.g., 'keyword', 'page').
+ * @return {string} - The corresponding state key for the check type.
+ */
+export const getCheckTypeKey = ( type ) => {
+	return {
+		type: `${ type }Checks`,
+		categorizedType: `categorized${
+			type.charAt( 0 ).toUpperCase() + type.slice( 1 )
+		}Checks`,
+	};
+};
+
+/**
+ * Prepare URL by ensuring it has the correct protocol and removing unwanted prefixes.
+ *
+ * @param {string} siteURL
+ * @return {string} prepared URL
+ */
+export const prepareURL = ( siteURL ) => {
+	let url = siteURL ?? '';
+	if ( url.includes( 'sc-domain:' ) ) {
+		url = url.replace( /sc-domain:/, '' );
+	}
+	if ( ! url.includes( 'https://' ) && ! url.includes( 'http://' ) ) {
+		url = `https://${ url }`;
+	}
+	return url;
+};
+
+/**
+ * Get style classes for click/impression metrics based on data state
+ *
+ * @param {Object} item - The metric item containing value, previous, and percentageType
+ * @return {Object} Object containing differenceClassName and fallbackClassName
+ */
+export const getMetricStyles = ( item ) => {
+	let differenceClassName = '';
+	switch ( item.percentageType ) {
+		case 'danger':
+			differenceClassName = 'text-support-error [&>*]:text-support-error';
+			break;
+		case 'success':
+			differenceClassName =
+				'text-support-success [&>*]:text-support-success';
+			break;
+		default:
+			differenceClassName = '';
+	}
+
+	let fallbackClassName = '';
+	// Render N/A and null for difference and icon when both value and previous are null.
+	if ( item.value === null && item.previous === null ) {
+		fallbackClassName = 'text-text-tertiary [&>*]:text-text-tertiary';
+	}
+
+	return { differenceClassName, fallbackClassName };
+};
+
+/**
+ * Get formatted value and difference for click/impression metrics
+ *
+ * @param {Object} item - The metric item containing value and previous
+ * @return {Object} Object containing renderValue and renderDifference
+ */
+export const getMetricValues = ( item ) => {
+	const renderValue =
+		item.value === null && item.previous === null
+			? 'N/A'
+			: formatNumber( item.value );
+	const renderDifference =
+		item.value === null && item.previous === null
+			? 'N/A'
+			: formatNumber( Math.abs( item?.value - item?.previous ) );
+
+	return { renderValue, renderDifference };
 };

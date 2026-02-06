@@ -1,6 +1,6 @@
 import { Accordion, Text, Alert } from '@bsf/force-ui';
 import { __ } from '@wordpress/i18n';
-import { useState, useCallback, useEffect } from '@wordpress/element';
+import { useCallback, useEffect, useMemo } from '@wordpress/element';
 import {
 	useSelect,
 	useDispatch,
@@ -10,17 +10,21 @@ import RefreshButtonPortal from '@SeoPopup/components/refresh-button-portal';
 import { STORE_NAME } from '@/store/constants';
 import PageChecksHoc from '@SeoPopup/components/page-seo-checks/page-checks-hoc';
 import PageBuilderPageSeoChecksHoc from '@SeoPopup/components/page-seo-checks/page-builder-page-checks-hoc';
+import KeywordInput from '@SeoPopup/components/keyword-input';
+import { ENABLE_PAGE_LEVEL_SEO } from '@Global/constants';
 import {
-	isBricksBuilder,
 	isPageBuilderActive,
 	isElementorBuilder,
 	refreshPageChecks,
+	isSeoAnalysisDisabled,
+	isBricksBuilder,
+	isAvadaBuilder,
+	isFrontend,
 } from '@SeoPopup/components/page-seo-checks/analyzer/utils/page-builder';
-import { ENABLE_PAGE_LEVEL_SEO } from '@/global/constants';
-import usePageCheckStatus from '@SeoPopup/hooks/usePageCheckStatus';
+import { calculateCheckStatus } from '@SeoPopup/utils/calculate-check-status';
 
 const ChecksComponent = ( { type } ) => {
-	if ( ! ENABLE_PAGE_LEVEL_SEO || isBricksBuilder() ) {
+	if ( isSeoAnalysisDisabled() ) {
 		return null;
 	}
 
@@ -36,22 +40,31 @@ const ChecksComponent = ( { type } ) => {
 const Analyze = () => {
 	const isPageBuilder = isPageBuilderActive();
 
-	// Get page check status using existing hook
-	const { status: pageCheckStatus } = usePageCheckStatus();
-
-	// Refresh functionality state - only for page builder
-	const [ isRefreshing, setIsRefreshing ] = useState( false );
-	const [ brokenLinkState, setBrokenLinkState ] = useState( {
-		isChecking: false,
-		checkedLinks: new Set(),
-		brokenLinks: new Set(),
-		allLinks: [],
-	} );
-
+	// Get entire pageSeoChecks state and extract what we need
 	const pageSeoChecks = useSelect(
 		( select ) => select( STORE_NAME ).getPageSeoChecks(),
 		[]
 	);
+
+	const hasAnyPageCheckIssues = useMemo( () => {
+		const categorizedChecks = pageSeoChecks?.categorizedPageChecks || {};
+		return calculateCheckStatus( categorizedChecks )?.status !== 'success';
+	}, [ pageSeoChecks?.categorizedPageChecks ] );
+
+	const isRefreshing = pageSeoChecks?.isRefreshing || false;
+	const brokenLinkStateFromStore = pageSeoChecks?.brokenLinkState || {
+		isChecking: false,
+		checkedLinks: [],
+		brokenLinks: [],
+		allLinks: [],
+	};
+
+	// Convert arrays back to Sets for backward compatibility
+	const brokenLinkState = {
+		...brokenLinkStateFromStore,
+		checkedLinks: new Set( brokenLinkStateFromStore.checkedLinks ),
+		brokenLinks: new Set( brokenLinkStateFromStore.brokenLinks ),
+	};
 
 	const modalState = useSelect(
 		( select ) => select( STORE_NAME ).getModalState(),
@@ -64,6 +77,53 @@ const Analyze = () => {
 	);
 
 	const { setPageSeoCheck, setRefreshCalled } = useDispatch( STORE_NAME );
+
+	// Create Redux action wrapper functions to maintain compatibility with refreshPageChecks
+	const setIsRefreshing = useCallback(
+		( value ) => {
+			setPageSeoCheck( 'isRefreshing', value );
+		},
+		[ setPageSeoCheck ]
+	);
+
+	const setBrokenLinkState = useCallback(
+		( value ) => {
+			// Convert Sets to arrays before storing in Redux
+			let storeValue = value;
+			if ( typeof value === 'function' ) {
+				// For functional updates, we need to get current state, apply function, then convert
+				const currentState = {
+					...brokenLinkStateFromStore,
+					checkedLinks: new Set(
+						brokenLinkStateFromStore.checkedLinks
+					),
+					brokenLinks: new Set(
+						brokenLinkStateFromStore.brokenLinks
+					),
+				};
+				const updatedState = value( currentState );
+				storeValue = {
+					...updatedState,
+					checkedLinks: Array.from( updatedState.checkedLinks || [] ),
+					brokenLinks: Array.from( updatedState.brokenLinks || [] ),
+				};
+			} else if ( value && typeof value === 'object' ) {
+				storeValue = {
+					...value,
+					checkedLinks:
+						value.checkedLinks instanceof Set
+							? Array.from( value.checkedLinks )
+							: value.checkedLinks || [],
+					brokenLinks:
+						value.brokenLinks instanceof Set
+							? Array.from( value.brokenLinks )
+							: value.brokenLinks || [],
+				};
+			}
+			setPageSeoCheck( 'brokenLinkState', storeValue );
+		},
+		[ setPageSeoCheck, brokenLinkStateFromStore ]
+	);
 
 	const handleRefreshWithBrokenLinks = useCallback( async () => {
 		setRefreshCalled( true );
@@ -107,15 +167,13 @@ const Analyze = () => {
 		setRefreshCalled,
 	] );
 
-	const PageChecksComponent = ChecksComponent;
-	const KeywordChecksComponent = ChecksComponent;
-
 	// Determine default accordion value based on page check status
-	const hasPageCheckIssues = pageCheckStatus && pageCheckStatus !== 'success';
-	const defaultAccordionValue = hasPageCheckIssues ? 'page-checks' : 'keyword-checks';
+	const defaultAccordionValue = hasAnyPageCheckIssues
+		? 'page-checks'
+		: 'keyword-checks';
 
 	// Early return if no valid component is found.
-	if ( ! ENABLE_PAGE_LEVEL_SEO || isBricksBuilder() ) {
+	if ( isSeoAnalysisDisabled() ) {
 		return (
 			<div>
 				<Text
@@ -135,13 +193,13 @@ const Analyze = () => {
 	return (
 		<div className="space-y-2">
 			{ /* Show save message only for Elementor */ }
-			{ isElementorBuilder() && (
-				<div className="[&_p.mr-10]:mr-0">
+			{ ( isElementorBuilder() || isFrontend() ) && (
+				<div className="[&_p.mr-10]:mr-0 m-1">
 					<Alert
 						variant="info"
 						content={
 							<span className="flex items-start gap-2">
-								<p>
+								<p className="m-0">
 									{ __(
 										'Please save changes in the editor before refreshing the checks.',
 										'surerank'
@@ -176,7 +234,7 @@ const Analyze = () => {
 					</Accordion.Trigger>
 					<Accordion.Content>
 						<div className="pt-3">
-							<PageChecksComponent type="page" />
+							<ChecksComponent type="page" />
 						</div>
 					</Accordion.Content>
 				</Accordion.Item>
@@ -189,7 +247,14 @@ const Analyze = () => {
 					</Accordion.Trigger>
 					<Accordion.Content>
 						<div className="pt-3">
-							<KeywordChecksComponent type="keyword" />
+							{ ENABLE_PAGE_LEVEL_SEO &&
+								! isBricksBuilder() &&
+								! isAvadaBuilder() && (
+									<div className="flex items-center gap-2 mb-3">
+										<KeywordInput />
+									</div>
+								) }
+							<ChecksComponent type="keyword" />
 						</div>
 					</Accordion.Content>
 				</Accordion.Item>

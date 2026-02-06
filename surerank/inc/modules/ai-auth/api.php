@@ -5,7 +5,7 @@
  * Handles instant indexing related REST API endpoints for IndexNow and Google Submit URL.
  *
  * @package SureRank\Inc\Modules\Ai_Auth
- * @since x.x.x
+ * @since 1.4.2
  */
 
 namespace SureRank\Inc\Modules\Ai_Auth;
@@ -32,7 +32,7 @@ class Api extends Api_Base {
 	/**
 	 * Register API routes.
 	 *
-	 * @since x.x.x
+	 * @since 1.4.2
 	 * @return void
 	 */
 	public function register_routes() {
@@ -67,7 +67,7 @@ class Api extends Api_Base {
 	/**
 	 * Verify Auth
 	 *
-	 * @since x.x.x
+	 * @since 1.4.2
 	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
 	 * @return void
 	 */
@@ -94,7 +94,7 @@ class Api extends Api_Base {
 	/**
 	 * Submit URLs to IndexNow API.
 	 *
-	 * @since x.x.x
+	 * @since 1.4.2
 	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
 	 * @return void
 	 */

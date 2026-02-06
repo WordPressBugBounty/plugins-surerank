@@ -10,7 +10,6 @@
 namespace SureRank\Inc\GoogleSearchConsole;
 
 use SureRank\Inc\API\Api_Base;
-use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Functions\Send_Json;
 use SureRank\Inc\Traits\Get_Instance;
 use WP_REST_Request;
@@ -198,7 +197,7 @@ class Dashboard extends Api_Base {
 		);
 
 		$redirect_uri = add_query_arg( $query_args, admin_url( 'admin.php?page=surerank' ) );
-		$auth_url     = Helper::get_auth_api_url() . 'search-console/connect/?redirect_uri=' . urlencode( $redirect_uri );
+		$auth_url     = Utils::get_saas_auth_api_url() . 'search-console/connect/?redirect_uri=' . urlencode( $redirect_uri );
 		Send_Json::success( [ 'url' => $auth_url ] );
 	}
 
@@ -214,14 +213,14 @@ class Dashboard extends Api_Base {
 	public function get_sites() {
 		// Get all sites once.
 		$all_sites = Controller::get_instance()->get_sites();
-		
+
 		if ( isset( $all_sites['siteEntry'] ) && is_array( $all_sites['siteEntry'] ) ) {
 			foreach ( $all_sites['siteEntry'] as &$site ) {
-				$site['isVerified'] = isset( $site['permissionLevel'] ) && 
+				$site['isVerified'] = isset( $site['permissionLevel'] ) &&
 					$site['permissionLevel'] !== 'siteUnverifiedUser';
 			}
 		}
-		
+
 		Send_Json::success( $all_sites );
 	}
 

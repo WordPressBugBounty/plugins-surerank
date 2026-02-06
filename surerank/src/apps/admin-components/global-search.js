@@ -6,6 +6,7 @@ import {
 	useRouterState,
 } from '@tanstack/react-router';
 import { useState, useMemo, useEffect } from '@wordpress/element';
+import React from 'react';
 import { File } from 'lucide-react';
 import { scrollToElement as scrollToElementFn } from '@Functions/utils';
 
@@ -161,6 +162,26 @@ const GlobalSearch = ( { navLinks = [] } ) => {
 			return;
 		}
 
+		// Helper function to extract text from ReactNode or string
+		const extractTextFromReactNode = ( node ) => {
+			if ( typeof node === 'string' ) {
+				return node;
+			}
+			if ( typeof node === 'number' || typeof node === 'boolean' ) {
+				return String( node );
+			}
+			if ( node === null || node === undefined ) {
+				return '';
+			}
+			if ( Array.isArray( node ) ) {
+				return node.map( extractTextFromReactNode ).join( '' );
+			}
+			if ( React.isValidElement( node ) ) {
+				return extractTextFromReactNode( node.props.children );
+			}
+			return '';
+		};
+
 		const results = flattenedLinks.reduce( ( acc, item ) => {
 			// Track if we've already added this item to prevent duplicates
 			let itemAdded = false;
@@ -172,16 +193,16 @@ const GlobalSearch = ( { navLinks = [] } ) => {
 					( contentItem ) => {
 						// Match by standard fields
 						const matchesStandardFields =
-							contentItem.label
+							extractTextFromReactNode( contentItem.label )
 								.toLowerCase()
 								.includes( searchTerm ) ||
-							contentItem.description
+							extractTextFromReactNode( contentItem.description )
 								.toLowerCase()
 								.includes( searchTerm ) ||
-							contentItem.tooltip
+							extractTextFromReactNode( contentItem.tooltip )
 								?.toLowerCase()
 								.includes( searchTerm ) ||
-							contentItem.options
+							extractTextFromReactNode( contentItem.options )
 								?.toLowerCase()
 								.includes( searchTerm );
 
@@ -243,8 +264,8 @@ const GlobalSearch = ( { navLinks = [] } ) => {
 			// Check if main item matches - only if we haven't added it already due to custom components
 			if (
 				! itemAdded &&
-				( item.label.toLowerCase().includes( searchTerm ) ||
-					item.section.toLowerCase().includes( searchTerm ) )
+				( extractTextFromReactNode( item.label ).toLowerCase().includes( searchTerm ) ||
+					extractTextFromReactNode( item.section ).toLowerCase().includes( searchTerm ) )
 			) {
 				acc.push( item );
 			}
@@ -318,7 +339,7 @@ const GlobalSearch = ( { navLinks = [] } ) => {
 				size="sm"
 				open={ open }
 				setOpen={ setOpen }
-				className="w-full md:w-72 z-50"
+				className="z-50"
 				filter={ false }
 			>
 				<SearchBox.Input

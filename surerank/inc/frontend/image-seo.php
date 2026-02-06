@@ -1,145 +1,81 @@
 <?php
 /**
- * Image SEO Enhancement Module
+ * Image SEO Processor
  *
- * Automatically enhances images with missing accessibility attributes.
+ * Handles image-specific SEO enhancement logic.
  *
  * @package surerank
- * @since 1.4.0
+ * @since 1.5.0
  */
 
 namespace SureRank\Inc\Frontend;
+
+use SureRank\Inc\Functions\Settings;
+use SureRank\Inc\Traits\Get_Instance;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use SureRank\Inc\Traits\Get_Instance;
-
 /**
- * Image SEO enhancement handler
+ * Image SEO processor
  *
- * @since 1.4.0
+ * @since 1.5.0
  */
 class Image_Seo {
 
 	use Get_Instance;
 
 	/**
-	 * Initialize image enhancement
-	 *
-	 * @since 1.4.0
-	 */
-	public function __construct() {
-		if ( $this->status() ) {
-			$this->register_enhancement_hooks();
-		}
-	}
-
-	/**
-	 * Check if image enhancement is active
+	 * Check if image enhancement is enabled
 	 *
 	 * @return bool
-	 * @since 1.4.0
+	 * @since 1.5.0
 	 */
-	public function status(): bool {
+	public function is_enabled(): bool {
 		return apply_filters( 'surerank_auto_set_image_title_and_alt', true );
 	}
 
 	/**
-	 * Enhance content with missing image attributes
+	 * Backward compatibility method for status check
 	 *
-	 * @param string   $content Content to enhance.
-	 * @param int|null $post_id Post ID context.
-	 * @return string Enhanced content
-	 * @since 1.4.0
+	 * @return bool
+	 * @since 1.5.0
 	 */
-	public function enhance_content( $content, $post_id = null ) {
-		if ( empty( $content ) || strpos( $content, '<img' ) === false ) {
-			return $content;
-		}
-
-		return $this->process_content_images( $content, $post_id );
+	public function status(): bool {
+		return $this->is_enabled();
 	}
 
 	/**
-	 * Register WordPress content enhancement hooks
-	 *
-	 * @since 1.4.0
-	 * @return void
-	 */
-	private function register_enhancement_hooks(): void {
-		$filters = [
-			'the_content'         => 11,
-			'post_thumbnail_html' => 11,
-			'woocommerce_single_product_image_thumbnail_html' => 11,
-		];
-
-		foreach ( $filters as $hook => $priority ) {
-			add_filter( $hook, [ $this, 'enhance_content' ], $priority, 2 );
-		}
-	}
-
-	/**
-	 * Process all images in content
-	 *
-	 * @param string   $content Content with images.
-	 * @param int|null $post_id Post context.
-	 * @return string Processed content
-	 * @since 1.4.0
-	 */
-	private function process_content_images( $content, $post_id ): string {
-		$clean_content = $this->remove_script_style_tags( $content );
-		$image_tags    = $this->extract_image_tags( $clean_content );
-
-		if ( empty( $image_tags ) ) {
-			return $content;
-		}
-
-		$context = $this->build_processing_context( $post_id );
-
-		return $this->enhance_image_tags( $content, $image_tags, $context );
-	}
-
-	/**
-	 * Remove script and style tags from content
-	 *
-	 * @param string $content Raw content.
-	 * @return string Cleaned content
-	 * @since 1.4.0
-	 */
-	private function remove_script_style_tags( $content ): string {
-		/**
-		 * Using regex to remove script and style tags
-		 * 
-		 * Regex pattern breakdown:
-		 * 
-		 * < matches the start of a tag
-		 * (script|style) matches either script or style
-		 * [^>]*? matches any character except > (using lazy quantifier)
-		 * .*? matches any character any number of times (using lazy quantifier)
-		 * <\/\1> matches the closing tag of the same type as the opening tag
-		 * s single line mode
-		 * i matches case insensitive
-		 */
-		$result = preg_replace( '/<(script|style)[^>]*?>.*?<\/\1>/si', '', $content );
-		return $result !== null ? $result : $content;
-	}
-
-	/**
-	 * Extract image tags from content that need enhancement
+	 * Extract images that need processing
 	 *
 	 * @param string $content Clean content.
-	 * @return array<string> Image tag matches that need enhancement
-	 * @since 1.4.0
+	 * @return array<string> Image tags that need enhancement
+	 * @since 1.5.0
 	 */
-	private function extract_image_tags( $content ): array {
+	public function extract_processable_images( $content ): array {
 		$missing_alt_images   = $this->extract_images_missing_alt( $content );
 		$missing_title_images = $this->extract_images_missing_title( $content );
+
 		if ( empty( $missing_alt_images ) && empty( $missing_title_images ) ) {
 			return [];
 		}
+
 		return array_unique( array_merge( $missing_alt_images, $missing_title_images ) );
+	}
+
+	/**
+	 * Process image tags in content
+	 *
+	 * @param string        $content Original content.
+	 * @param array<string> $image_tags Image tags to process.
+	 * @param int|null      $post_id Post context.
+	 * @return string Enhanced content
+	 * @since 1.5.0
+	 */
+	public function process_images( $content, $image_tags, $post_id ): string {
+		$context = $this->build_processing_context( $post_id );
+		return $this->enhance_image_tags( $content, $image_tags, $context );
 	}
 
 	/**
@@ -147,12 +83,12 @@ class Image_Seo {
 	 *
 	 * @param string $content Content to search.
 	 * @return array<string> Image tags missing alt
-	 * @since 1.4.0
+	 * @since 1.5.0
 	 */
 	private function extract_images_missing_alt( $content ): array {
 		/**
 		 * Finds all <img> tags that are missing proper alt attributes for accessibility compliance.
-		 * 
+		 *
 		 * Regex breakdown:
 		 * <img                                    : Matches literal "<img"
 		 * (?!                                     : Start negative lookahead (ensure pattern does NOT exist)
@@ -165,21 +101,21 @@ class Image_Seo {
 		 * )                                       : End negative lookahead
 		 * [^>]*>                                  : Match remaining tag content until closing ">"
 		 * i                                       : Case-insensitive flag
-		 * 
+		 *
 		 * Examples of what this WILL match (accessibility violations):
 		 * - <img src="photo.jpg">                 (no alt attribute)
 		 * - <img src="photo.jpg" alt="">          (empty alt)
 		 * - <img src="photo.jpg" alt=" ">         (whitespace-only alt)
 		 * - <IMG SRC="photo.jpg" ALT="">          (case variations)
-		 * 
+		 *
 		 * Examples of what this will NOT match (valid alt attributes):
 		 * - <img src="photo.jpg" alt="A photo">   (valid alt text)
 		 * - <img src="photo.jpg" alt="User avatar"> (descriptive alt text)
-		 * 
+		 *
 		 * @param string $content The HTML content to search for non-compliant img tags
 		 * @param array $matches Output array that will contain all matched img tags
 		 * @return int Number of matches found
-		 * 
+		 *
 		 * @see https://www.php.net/manual/en/reference.pcre.pattern.syntax.php
 		 * @since 1.0.0
 		 */
@@ -192,12 +128,12 @@ class Image_Seo {
 	 *
 	 * @param string $content Content to search.
 	 * @return array<string> Image tags missing title
-	 * @since 1.4.0
+	 * @since 1.5.0
 	 */
 	private function extract_images_missing_title( $content ): array {
 		/**
 		 * Finds all <img> tags that are missing proper title attributes for accessibility compliance.
-		 * 
+		 *
 		 * Regex breakdown:
 		 * <img                                    : Matches literal "<img"
 		 * (?!                                     : Start negative lookahead (ensure pattern does NOT exist)
@@ -210,21 +146,21 @@ class Image_Seo {
 		 * )                                       : End negative lookahead
 		 * [^>]*>                                  : Match remaining tag content until closing ">"
 		 * i                                       : Case-insensitive flag
-		 * 
+		 *
 		 * Examples of what this WILL match (accessibility violations):
 		 * - <img src="photo.jpg">                 (no title attribute)
 		 * - <img src="photo.jpg" title="">          (empty title)
 		 * - <img src="photo.jpg" title=" ">         (whitespace-only title)
 		 * - <IMG SRC="photo.jpg" TITLE="">          (case variations)
-		 * 
+		 *
 		 * Examples of what this will NOT match (valid title attributes):
 		 * - <img src="photo.jpg" title="A photo">   (valid title text)
 		 * - <img src="photo.jpg" title="User avatar"> (descriptive title text)
-		 * 
+		 *
 		 * @param string $content The HTML content to search for non-compliant img tags
 		 * @param array $matches Output array that will contain all matched img tags
 		 * @return int Number of matches found
-		 * 
+		 *
 		 * @see https://www.php.net/manual/en/reference.pcre.pattern.syntax.php
 		 * @since 1.0.0
 		 */
@@ -237,7 +173,7 @@ class Image_Seo {
 	 *
 	 * @param int|null $post_id Post ID.
 	 * @return object{title: string, slug: string, site_name: string} Context data
-	 * @since 1.4.0
+	 * @since 1.5.0
 	 */
 	private function build_processing_context( $post_id ): object {
 		$post = get_post( $post_id );
@@ -256,7 +192,7 @@ class Image_Seo {
 	 * @param array<string>                                          $images Image tag array.
 	 * @param object{title: string, slug: string, site_name: string} $context Processing context.
 	 * @return string Enhanced content
-	 * @since 1.4.0
+	 * @since 1.5.0
 	 */
 	private function enhance_image_tags( $content, $images, $context ): string {
 		foreach ( $images as $original_tag ) {
@@ -276,7 +212,7 @@ class Image_Seo {
 	 * @param string                                                 $tag Original image tag.
 	 * @param object{title: string, slug: string, site_name: string} $context Processing context.
 	 * @return string Enhanced tag
-	 * @since 1.4.0
+	 * @since 1.5.0
 	 */
 	private function enhance_single_image( $tag, $context ): string {
 		$attributes = $this->parse_image_attributes( $tag );
@@ -306,14 +242,14 @@ class Image_Seo {
 	 *
 	 * @param string $tag Image tag.
 	 * @return array<string, string> Parsed attributes
-	 * @since 1.4.0
+	 * @since 1.5.0
 	 */
 	private function parse_image_attributes( $tag ): array {
 		$attributes = [];
 
 		/**
 		 * Using regex to parse image attributes
-		 * 
+		 *
 		 * Regex pattern breakdown:
 		 *  ([a-zA-Z_:][a-zA-Z0-9\-_.:]*)        : Check for the attribute name.
 		 *   [a-zA-Z_:]                         : First char: letter, underscore, or colon
@@ -323,13 +259,13 @@ class Image_Seo {
 		 * ([^"\']*)                            : Capture group 2 - Attribute value (any chars except quotes)
 		 * ["\']                                : Closing quote (single or double)
 		 * i                                    : Case-insensitive flag
-		 * 
+		 *
 		 * Examples of what this WILL match (accessibility violations):
 		 * - <img src="photo.jpg">                 (no alt attribute)
 		 * - <img src="photo.jpg" alt="">          (empty alt)
 		 * - <img src="photo.jpg" alt=" ">         (whitespace-only alt)
 		 * - <IMG SRC="photo.jpg" ALT="">          (case variations)
-		 * 
+		 *
 		 * Examples of what this will NOT match (valid alt attributes):
 		 * - <img src="photo.jpg" alt="A photo">   (valid alt text)
 		 * - <img src="photo.jpg" alt="User avatar"> (descriptive alt text)
@@ -353,7 +289,7 @@ class Image_Seo {
 	 *
 	 * @param array<string, string> $attributes Image attributes.
 	 * @return string Image source
-	 * @since 1.4.0
+	 * @since 1.5.0
 	 */
 	private function resolve_image_source( $attributes ): string {
 		$lazy_attrs = [ 'data-src', 'data-lazy-src', 'data-layzr' ];
@@ -372,12 +308,14 @@ class Image_Seo {
 	 *
 	 * @param array<string, string> $attributes Current attributes.
 	 * @return array<string, string> Needed enhancements
-	 * @since 1.4.0
+	 * @since 1.5.0
 	 */
 	private function calculate_needed_enhancements( $attributes ): array {
 		$needed = [];
 
-		if ( apply_filters( 'surerank_image_seo_enable_alt', true ) && empty( $attributes['alt'] ) ) {
+		$auto_add_alt = ! empty( Settings::get( 'auto_set_image_alt' ) );
+
+		if ( $auto_add_alt && empty( $attributes['alt'] ) ) {
 			$needed['alt'] = apply_filters( 'surerank_image_seo_alt_template', '%filename%' );
 		}
 
@@ -396,7 +334,7 @@ class Image_Seo {
 	 * @param string                                                 $src Image source.
 	 * @param object{title: string, slug: string, site_name: string} $context Processing context.
 	 * @return string Enhanced image tag
-	 * @since 1.4.0
+	 * @since 1.5.0
 	 */
 	private function apply_enhancements( $attributes, $enhancements, $src, $context ): string {
 		$filename = $this->extract_clean_filename( $src );
@@ -413,7 +351,7 @@ class Image_Seo {
 	 *
 	 * @param string $url Image URL.
 	 * @return string Clean filename
-	 * @since 1.4.0
+	 * @since 1.5.0
 	 */
 	private function extract_clean_filename( $url ): string {
 		if ( empty( $url ) ) {
@@ -428,14 +366,14 @@ class Image_Seo {
 	 *
 	 * @param string $url URL.
 	 * @return string Basename
-	 * @since 1.4.0
+	 * @since 1.5.0
 	 */
 	private function get_basename_without_extension( $url ): string {
 		$filename = basename( $url );
 		/**
 		 * Using regex to get the basename without the extension
 		 * Regex pattern breakdown:
-		 * 
+		 *
 		 * \. matches a literal dot
 		 * [^.]+ matches one or more characters that are not a dot
 		 * $ matches the end of the string
@@ -449,13 +387,13 @@ class Image_Seo {
 	 *
 	 * @param string $filename Raw filename.
 	 * @return string Sanitized filename
-	 * @since 1.4.0
+	 * @since 1.5.0
 	 */
 	private function sanitize_filename( $filename ): string {
 		/**
 		 * Using regex to sanitize the filename
 		 * Regex pattern breakdown:
-		 * 
+		 *
 		 * [-_] matches a hyphen or underscore
 		 * + matches one or more of the preceding element
 		 * $ matches the end of the string
@@ -472,7 +410,7 @@ class Image_Seo {
 	 * @param object{title: string, slug: string, site_name: string} $context Context data.
 	 * @param string                                                 $filename Clean filename.
 	 * @return string Resolved string
-	 * @since 1.4.0
+	 * @since 1.5.0
 	 */
 	private function resolve_template( $template, $context, $filename ): string {
 		if ( empty( $template ) ) {
@@ -492,7 +430,7 @@ class Image_Seo {
 	 * @param object{title: string, slug: string, site_name: string} $context Context data.
 	 * @param string                                                 $filename Filename.
 	 * @return array<string, string> Variable mappings
-	 * @since 1.4.0
+	 * @since 1.5.0
 	 */
 	private function build_variable_map( $context, $filename ): array {
 		$default_vars = [
@@ -510,7 +448,7 @@ class Image_Seo {
 	 *
 	 * @param array<string, string> $attributes Attribute pairs.
 	 * @return string Complete image tag
-	 * @since 1.4.0
+	 * @since 1.5.0
 	 */
 	private function build_image_tag( $attributes ): string {
 		$attr_pairs = [];
@@ -528,7 +466,7 @@ class Image_Seo {
 	 * @param string $name Attribute name.
 	 * @param string $value Attribute value.
 	 * @return string Formatted pair
-	 * @since 1.4.0
+	 * @since 1.5.0
 	 */
 	private function format_attribute_pair( $name, $value ): string {
 		return sprintf( '%s="%s"', esc_attr( $name ), esc_attr( $value ) );

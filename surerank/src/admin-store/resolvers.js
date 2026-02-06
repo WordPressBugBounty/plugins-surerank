@@ -187,6 +187,15 @@ const resolvers = {
 		}
 		return yield actions.setSearchConsole( updatedData );
 	},
+
+	*getEmailReportsSettings() {
+		const response = yield actions.fetchFromAPI(
+			'/surerank/v1/email-reports/settings'
+		);
+		if ( response.success ) {
+			return yield actions.setEmailReportsSettings( response.data );
+		}
+	},
 };
 
 export default resolvers;

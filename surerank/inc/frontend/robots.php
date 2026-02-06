@@ -41,6 +41,21 @@ class Robots {
 	}
 
 	/**
+	 * Get existing robots.txt content
+	 *
+	 * @since 1.5.0
+	 * @return string
+	 */
+	public function get_default_robots_txt() {
+		$public   = absint( get_option( 'blog_public' ) );
+		$default  = __( '# SureRank will generate robots.txt automatically.', 'surerank' ) . "\n";
+		$default .= "User-Agent: *\n";
+		$default .= 0 === $public ? "Disallow: /wp-admin/\n Allow: /wp-admin/admin-ajax.php\n" : "Disallow: /wp-admin/\n";
+
+		return apply_filters( 'robots_txt', $default, $public );
+	}
+
+	/**
 	 * Add meta data
 	 *
 	 * @since 1.0.0
@@ -127,22 +142,16 @@ class Robots {
 
 		$custom_content = Get::option( SURERANK_ROBOTS_TXT_CONTENT, '' );
 
+		if ( is_admin() ) {
+			return $this->add_sitemap_directive( $output );
+		}
+
 		if ( ! empty( $custom_content ) ) {
 			return $custom_content;
 		}
 
 		if ( ! empty( Settings::get( 'enable_xml_sitemap' ) ) ) {
-			$sitemap_url       = home_url( Xml_Sitemap::get_slug() );
-			$sitemap_directive = "Sitemap: {$sitemap_url}" . PHP_EOL;
-
-			if ( preg_match( '/^sitemap:\s.*$/im', $output ) ) {
-				$output = preg_replace( '/^sitemap:\s.*$/im', $sitemap_directive, $output );
-			} else {
-				// Append the Sitemap directive to the output if none exists.
-				$output .= PHP_EOL . $sitemap_directive;
-			}
-
-			return (string) $output;
+			return $this->add_sitemap_directive( $output );
 		}
 		return $output;
 	}
@@ -165,6 +174,27 @@ class Robots {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Add sitemap directive to robots.txt
+	 *
+	 * @since 1.5.0
+	 * @param string $output The current robots.txt output.
+	 * @return string Updated robots.txt content with the Sitemap directive added or modified.
+	 */
+	private function add_sitemap_directive( $output ) {
+		if ( ! empty( Settings::get( 'enable_xml_sitemap' ) ) ) {
+			$sitemap_url       = home_url( Xml_Sitemap::get_slug() );
+			$sitemap_directive = "Sitemap: {$sitemap_url}" . PHP_EOL;
+
+			if ( preg_match( '/^sitemap:\s.*$/im', $output ) ) {
+				$output = preg_replace( '/^sitemap:\s.*$/im', $sitemap_directive, $output );
+			} else {
+				$output .= PHP_EOL . $sitemap_directive;
+			}
+		}
+		return (string) $output;
 	}
 
 	/**

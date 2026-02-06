@@ -10,7 +10,7 @@ import {
 	Badge,
 	Text,
 } from '@bsf/force-ui';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import {
 	useEffect,
 	useState,
@@ -25,6 +25,9 @@ import {
 	formatToISOPreserveDate,
 	getLastNDays,
 	formatDateRange,
+	prepareURL,
+	getMetricStyles,
+	getMetricValues,
 } from '@/functions/utils';
 import Section from './section';
 import { STORE_NAME } from '@/admin-store/constants';
@@ -36,14 +39,7 @@ const { auth_url: authURL } = surerank_admin_common;
 const DEFAULT_DATE_RANGE = 90;
 
 const ClicksAndImpressions = ( { item, isLoading } ) => {
-	const renderValue =
-		item.value === null && item.previous === null
-			? 'N/A'
-			: formatNumber( item.value );
-	const renderDifference =
-		item.value === null && item.previous === null
-			? 'N/A'
-			: formatNumber( Math.abs( item?.value - item?.previous ) );
+	const { renderValue, renderDifference } = getMetricValues( item );
 	let renderIcon =
 		item.percentageType === 'success' ? (
 			<ArrowUp className="size-5" />
@@ -51,23 +47,10 @@ const ClicksAndImpressions = ( { item, isLoading } ) => {
 			<ArrowDown className="size-5" />
 		);
 
-	let differenceClassName = '';
-	switch ( item.percentageType ) {
-		case 'danger':
-			differenceClassName = 'text-support-error [&>*]:text-support-error';
-			break;
-		case 'success':
-			differenceClassName =
-				'text-support-success [&>*]:text-support-success';
-			break;
-		default:
-			differenceClassName = '';
-	}
+	const { differenceClassName, fallbackClassName } = getMetricStyles( item );
 
-	let fallbackClassName = '';
 	// Render N/A and null for difference and icon when both value and previous are null.
 	if ( item.value === null && item.previous === null ) {
-		fallbackClassName = 'text-text-tertiary [&>*]:text-text-tertiary';
 		renderIcon = null;
 	}
 
@@ -387,7 +370,7 @@ const SiteSearchTraffic = () => {
 				? {
 						imageSrc: `${ surerank_globals.admin_assets_url }/images/search-console.svg`,
 						title: __(
-							'Let’s connect to Search Console to Optimize further!',
+							'Connect Your Site to Google Search Console',
 							'surerank'
 						),
 						description: __(
@@ -520,14 +503,11 @@ const SiteSearchTraffic = () => {
 	}
 
 	const updateURL = ( site ) => {
-		let url = site ?? '';
-		if ( url.includes( 'sc-domain:' ) ) {
-			url = url.replace( /sc-domain:/, '' );
-		}
-		if ( ! url.includes( 'https://' ) && ! url.includes( 'http://' ) ) {
-			url = `https://${ url }`;
-		}
-		return 'Site: ' + url;
+		return sprintf(
+			// translators: %s: site URL
+			__( 'Site: %s', 'surerank' ),
+			prepareURL( site )
+		);
 	};
 
 	return (

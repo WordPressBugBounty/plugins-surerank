@@ -1,7 +1,9 @@
-import { Button, Dialog, Select, Container } from '@bsf/force-ui';
+import { Button, Dialog, Select, Container, Text } from '@bsf/force-ui';
 import { Plus, X } from 'lucide-react';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from '@wordpress/element';
+import { isProActive } from '@/functions/nudges';
+import { UpgradeButton } from '@/global/components/nudges';
 
 const Modal = ( {
 	selectedSchema,
@@ -12,6 +14,37 @@ const Modal = ( {
 	defaultSchemas,
 	handleAddSchema,
 } ) => {
+	const proOnlySchemas = [
+		'ClaimReview',
+		'Book',
+		'Course',
+		'Dataset',
+		'Event',
+		'FAQPage',
+		'HowTo',
+		'JobPosting',
+		'Movie',
+		'Service',
+		'PodcastEpisode',
+		'Recipe',
+		'VideoObject',
+		'SoftwareApplication',
+	];
+
+	const isPro = isProActive();
+
+	const allSchemas = isPro
+		? defaultSchemas
+		: [
+				...defaultSchemas,
+
+				{
+					title: proOnlySchemas.join( ' ' ),
+					isPro: true,
+					isProUpgradeNudge: true,
+				},
+		  ];
+
 	const renderSchemaTypeOptions = () => {
 		const options = schemaTypeOptions[ selectedSchema ];
 		const isGrouped = Object.values( options ).every(
@@ -108,15 +141,70 @@ const Modal = ( {
 									>
 										<Select.Button />
 										<Select.Options>
-											{ defaultSchemas.map(
-												( schema, index ) => (
-													<Select.Option
-														key={ index }
-														value={ schema.title }
-													>
-														{ schema.title }
-													</Select.Option>
-												)
+											{ allSchemas.map(
+												( schema, index ) => {
+													if ( schema.isPro ) {
+														return (
+															<div
+																key={ index }
+																className="px-2 py-1.5 cursor-default"
+																role="presentation"
+															>
+																<div className="flex items-center justify-between gap-2 p-3 bg-brand-background-50 rounded-lg">
+																	<div className="flex-1">
+																		<Text
+																			size={
+																				14
+																			}
+																			lineHeight={
+																				20
+																			}
+																			color="secondary"
+																			weight={
+																				500
+																			}
+																		>
+																			{ __(
+																				'Looking for more schemas?',
+																				'surerank'
+																			) }
+																		</Text>
+																	</div>
+																	<UpgradeButton
+																		label={ __(
+																			'Upgrade now',
+																			'surerank'
+																		) }
+																		variant="link"
+																		size="md"
+																		showIcon={
+																			true
+																		}
+																		className="ml-2"
+																		utmMedium="schema_dropdown"
+																	/>
+																</div>
+																{ /* Hidden text for search functionality */ }
+																<span className="sr-only">
+																	{
+																		schema.title
+																	}
+																</span>
+															</div>
+														);
+													}
+
+													return (
+														<Select.Option
+															key={ index }
+															value={
+																schema.title
+															}
+														>
+															{ schema.title }
+														</Select.Option>
+													);
+												}
 											) }
 										</Select.Options>
 									</Select>

@@ -198,7 +198,7 @@ class Sync_Posts extends Sitemap {
 			return;
 		}
 
-		Cache::store_file( $filename, $json_string );
+		Cache::store_file( 'sitemap/' . $filename, $json_string );
 		Cache::update_sitemap_index( $cpt_prefix . '-' . $safe_post_type, $file_index, count( $json_data ) );
 	}
 

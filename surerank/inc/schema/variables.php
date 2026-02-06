@@ -56,6 +56,7 @@ class Variables {
 			$this->get_site_variables(),
 			$this->get_current_page_variables(),
 			$this->get_schema_links(),
+			$this->get_website_details_variables(),
 		);
 
 		asort( $all_variables );
@@ -205,5 +206,25 @@ class Variables {
 			);
 		}
 		return $data;
+	}
+
+	/**
+	 * Get Website Details Variables
+	 *
+	 * @return array<string, mixed> Website details variables.
+	 * @since 1.6.0
+	 */
+	private function get_website_details_variables() {
+		return [
+			'%website_details.website_type%'         => __( 'Website Type', 'surerank' ),
+			'%website_details.website_name%'         => __( 'Website Name', 'surerank' ),
+			'%website_details.business_description%' => __( 'Business Description', 'surerank' ),
+			'%website_details.website_owner_name%'   => __( 'Website Owner Name', 'surerank' ),
+			'%website_details.organization_type%'    => __( 'Organization Type', 'surerank' ),
+			'%website_details.website_owner_phone%'  => __( 'Website Owner Phone', 'surerank' ),
+			'%website_details.website_logo%'         => __( 'Website Logo', 'surerank' ),
+			'%website_details.about_page%'           => __( 'About Page ID', 'surerank' ),
+			'%website_details.contact_page%'         => __( 'Contact Page ID', 'surerank' ),
+		];
 	}
 }

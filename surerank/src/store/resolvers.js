@@ -5,8 +5,10 @@ import {
 	fetchFromAPI,
 	setPageSeoChecksByIdAndType,
 	setCurrentPostIgnoredList,
+	setBatchPageSeoChecks,
 } from './actions';
 import { __ } from '@wordpress/i18n';
+import { toast } from '@bsf/force-ui';
 
 export function* getCurrentPostIgnoredList() {
 	// Do NOT yield on select here; it's a synchronous read from the store.
@@ -55,51 +57,75 @@ export function* getCurrentPostIgnoredList() {
 	}
 }
 
-export function* getSeoBarChecks( postId, postType, forceRefresh = null ) {
-	if ( ! postId || ! postType ) {
+export function* getSeoBarChecks( postIds, postType, forceRefresh = null ) {
+	if ( ! postIds || ! postType ) {
 		return {};
 	}
 
-	const cacheBuster = forceRefresh ? `&_t=${ forceRefresh }` : '';
+	const ids = Array.isArray( postIds ) ? postIds : [ postIds ];
+	const state = select( STORE_NAME ).getState();
 
-	const isTaxonomy = window?.surerank_seo_bar?.type === 'taxonomy';
-	const apiPath = isTaxonomy
-		? addQueryArgs( '/surerank/v1/checks/taxonomy', {
-				term_id: postId,
-		  } )
-		: addQueryArgs( '/surerank/v1/checks/page', { post_id: postId } );
+	let idsToFetch = ids;
+
+	if ( ! forceRefresh ) {
+		idsToFetch = ids.filter( ( id ) => {
+			const existingData = state.pageSeoChecks?.[ id ]?.checks;
+			return ! existingData;
+		} );
+	}
+
+	if ( idsToFetch.length === 0 ) {
+		return;
+	}
 
 	try {
-		const response = yield fetchFromAPI( {
-			path: apiPath + cacheBuster,
-			method: 'GET',
-		} );
-
-		if ( response?.status !== 'success' ) {
-			throw new Error(
-				response?.message ||
-					__( 'Error loading SEO checks', 'surerank' )
-			);
-		}
-
-		yield setPageSeoChecksByIdAndType(
-			postId,
-			postType,
-			Object.entries( response?.checks ).map( ( [ key, value ] ) => ( {
-				...value,
-				id: key,
-				title:
-					value?.message ||
-					key
-						.replace( /_/g, ' ' )
-						.replace( /\b\w/g, ( c ) => c.toUpperCase() ),
-				data: value?.description,
-				showImages: key === 'image_alt_text',
-			} ) )
-		);
+		yield fetchSeoBarChecks( idsToFetch, postType, forceRefresh );
 	} catch ( error ) {
 		const errorMessage =
 			error?.message || __( 'Error loading SEO checks', 'surerank' );
-		yield setPageSeoChecksByIdAndType( postId, postType, [], errorMessage );
+		// For single ID calls, set error. For batch, we might want to set error for all?
+		// Keeping it simple for now as per previous logic.
+		if ( ! Array.isArray( postIds ) ) {
+			yield setPageSeoChecksByIdAndType(
+				postIds,
+				postType,
+				[],
+				errorMessage
+			);
+		}
+	}
+}
+
+export function* fetchSeoBarChecks( ids, type, forceRefresh = false ) {
+	if ( ! ids || ! ids.length ) {
+		return;
+	}
+
+	const isTaxonomy = type === 'taxonomy';
+	const endpoint = isTaxonomy
+		? '/surerank/v1/checks/taxonomy'
+		: '/surerank/v1/checks/page';
+	const queryArg = isTaxonomy ? 'term_ids' : 'post_ids';
+	const cacheBuster = forceRefresh ? `&_t=${ forceRefresh }` : '';
+
+	try {
+		const response = yield fetchFromAPI( {
+			path:
+				addQueryArgs( endpoint, {
+					[ queryArg ]: ids,
+				} ) + cacheBuster,
+			method: 'GET',
+		} );
+
+		if ( response?.status !== 'success' || ! response?.data ) {
+			throw response;
+		}
+		yield setBatchPageSeoChecks( response.data, type );
+	} catch ( error ) {
+		toast( {
+			message:
+				error?.message || __( 'Error loading SEO checks', 'surerank' ),
+			type: 'error',
+		} );
 	}
 }

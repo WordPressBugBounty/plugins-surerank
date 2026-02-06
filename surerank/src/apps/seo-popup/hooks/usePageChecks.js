@@ -99,7 +99,7 @@ const usePageChecks = () => {
 	const runChecks = useCallback(
 		async ( snapshot, seoMeta, title, description, canonical ) => {
 			if ( surerank_seo_popup?.is_taxonomy === '1' ) {
-				return setPageSeoCheck( 'checks', [
+				return setPageSeoCheck( 'page', [
 					checkUrlLength( snapshot.permalink ),
 					checkSeoTitle( title ),
 					checkSeoDescription( description ),
@@ -118,7 +118,7 @@ const usePageChecks = () => {
 				checkSubheadings( doc ),
 				checkCanonicalUrl( canonical ),
 			] );
-			setPageSeoCheck( 'checks', [ ...immediateChecks ] );
+			setPageSeoCheck( 'page', immediateChecks );
 
 			startTransition( async () => {
 				const brokenLinks = await checkBrokenLinks(
@@ -127,15 +127,17 @@ const usePageChecks = () => {
 					undefined,
 					setPageSeoCheck
 				);
-				setPageSeoCheck( 'checks', [
-					...immediateChecks,
-					brokenLinks,
-				] );
+
+				// Filter out falsy values and add broken links check
+				const validChecks = [ ...immediateChecks ];
+				if ( brokenLinks ) {
+					validChecks.push( brokenLinks );
+				}
+				setPageSeoCheck( 'page', validChecks );
 			} );
 		},
 		[]
 	);
-
 	const start = async () => {
 		const snapshot = getEditorData();
 		await runChecks(

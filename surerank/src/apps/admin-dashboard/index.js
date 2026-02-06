@@ -26,14 +26,24 @@ import TwitterRoute from '@AdminGeneral/social/twitter/twitter';
 import AccountRoute from '@AdminGeneral/social/account/account';
 import RobotInstructionsRoute from '@AdminGeneral/advanced/robot-instructions/robot-instructions';
 import SitemapsRoute from '@AdminGeneral/advanced/sitemaps/sitemaps';
+import ImageSeoRoute from '@AdminGeneral/advanced/image-seo/image-seo';
 import FeaturesManagementRoute from '@AdminGeneral/advanced/features-management/features-management';
 import ContentAnalysisRoute from '@AdminDashboard/content-analysis/content-analysis';
 import SiteSeoChecksRoute from '@AdminDashboard/site-seo-checks/site-seo-checks-main';
 import MigrationRoute from '@AdminGeneral/advanced/tools/migration';
 import MiscellaneousRoute from '@AdminGeneral/advanced/tools/miscellaneous';
 import RobotsTxtEditorRoute from '@AdminGeneral/advanced/tools/robots-txt-editor/robots-txt-editor';
+import BreadcrumbsRoute from '@AdminDashboard/breadcrumbs/settings';
 import SchemaRoute from '@AdminGeneral/schema/schema';
 import ImportExportSettingsRoute from '@AdminGeneral/advanced/tools/import-export-settings';
+import RedirectionManager from '@AdminDashboard/link-manager/redirection-manager';
+import LinkSuggestion from '@AdminDashboard/link-suggestion/link-suggestion';
+import InstantIndexingSettings from '@AdminDashboard/instant-indexing/settings';
+import InstantIndexingLogs from '@AdminDashboard/instant-indexing/logs';
+import EmailReportsRoute from '@AdminGeneral/advanced/email-reports';
+import GoogleIndexingSettings from '@AdminDashboard/google-indexing/settings';
+import GoogleIndexingLogs from '@AdminDashboard/google-indexing/logs';
+import { isProActive } from '@/functions/nudges';
 
 // Define toast globally for PRO plugin.
 if ( window && ! window?.toast ) {
@@ -73,13 +83,15 @@ const generalAndAdvancedRoutes = [
 			createChildRoute( '/following', RobotInstructionsRoute ),
 			createChildRoute( '/archiving', RobotInstructionsRoute ),
 		] ),
+		createChildRoute( '/email-reports', EmailReportsRoute ),
 		createChildRoute( '/sitemaps', SitemapsRoute ),
-
+		createChildRoute( '/image-seo', ImageSeoRoute ),
 		// Conditionally include schema route
 		...( ENABLE_SCHEMAS && SchemaRoute
 			? [ createChildRoute( '/schema', SchemaRoute ) ]
 			: [] ),
 		createChildRoute( '/robots-txt-editor', RobotsTxtEditorRoute ),
+		createChildRoute( '/breadcrumbs', BreadcrumbsRoute ),
 	] ),
 ];
 
@@ -96,6 +108,44 @@ const siteSeoAnalysisRoutes = [
 	} ),
 ];
 
+// Link Manager routes
+const linkManagerRoutes = [
+	createRoute( '/link-manager', null, [
+		createChildRoute( '/redirection-manager', RedirectionManager, {
+			fullWidth: true,
+			navbarOnly: false,
+		} ),
+		createChildRoute( '/link-suggestion', LinkSuggestion, {
+			fullWidth: isProActive( 'pro' ) ? false : true,
+			navbarOnly: false,
+		} ),
+	] ),
+];
+
+// Instant Indexing routes
+const instantIndexingRoutes = [
+	createRoute( '/advanced/instant-indexing', null, [
+		createChildRoute( '/settings', InstantIndexingSettings, {
+			fullWidth: false,
+		} ),
+		createChildRoute( '/logs', InstantIndexingLogs, {
+			fullWidth: false,
+		} ),
+	] ),
+];
+
+// Google Indexing routes
+const googleIndexingRoutes = [
+	createRoute( '/advanced/google-indexing', null, [
+		createChildRoute( '/settings', GoogleIndexingSettings, {
+			fullWidth: false,
+		} ),
+		createChildRoute( '/logs', GoogleIndexingLogs, {
+			fullWidth: false,
+		} ),
+	] ),
+];
+
 // Tools routes
 const toolsRoutes = [
 	createRoute( '/tools', null, [
@@ -109,14 +159,27 @@ const toolsRoutes = [
 ];
 
 // Combine all routes
-export const routes = applyFilters( 'surerank-pro.routes', [
+const baseRoutes = [
 	...dashboardRoutes,
 	...generalAndAdvancedRoutes,
+	...instantIndexingRoutes,
+	...googleIndexingRoutes,
+	...linkManagerRoutes,
 	...toolsRoutes,
 	...siteSeoAnalysisRoutes,
 	// Conditionally include search console routes
 	...( ENABLE_GOOGLE_CONSOLE ? searchConsoleRoutes : [] ),
-] );
+];
+
+const filteredRoutes = applyFilters( 'surerank-pro.routes', [ ...baseRoutes ] );
+
+const routeMap = new Map();
+
+filteredRoutes.forEach( ( route ) => {
+	routeMap.set( route.path, route );
+} );
+
+export const routes = Array.from( routeMap.values() );
 
 // Navigation Links
 export const navLinks = getNavLinks();

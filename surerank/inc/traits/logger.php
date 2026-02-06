@@ -33,7 +33,7 @@ trait Logger {
 		}
 
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
-			if ( 'log' === $type ) {
+			if ( 'log' === $type || 'info' === $type ) {
 				\WP_CLI::log( $message );
 			} elseif ( 'error' === $type ) {
 				\WP_CLI::error( $message );

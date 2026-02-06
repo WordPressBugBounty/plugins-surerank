@@ -35,7 +35,7 @@ const Preview = ( {
 							{ siteTitle }
 						</span>
 						<div className="flex items-center justify-start gap-2">
-							<span className="text-text-secondary">
+							<span className="text-text-secondary line-clamp-1 break-all">
 								{ /* Site URL */ }
 								{ permalink }
 							</span>
@@ -45,7 +45,7 @@ const Preview = ( {
 				</div>
 				{ /* Page title and description */ }
 				<div className="space-y-1">
-					<p className="text-xl leading-8 font-normal text-text-seo-title m-0">
+					<p className="text-xl leading-8 font-normal text-text-seo-title m-0 line-clamp-1 break-all">
 						{ /* Page title */ }
 						{ decoded_title }
 					</p>

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { useState, useCallback } from '@wordpress/element';
+import { __, sprintf } from '@wordpress/i18n';
 
 /**
  * Custom hook for form validation using Zod
@@ -10,6 +11,23 @@ import { useState, useCallback } from '@wordpress/element';
 const useFormValidation = ( formState, inputFields ) => {
 	const [ errors, setErrors ] = useState( {} );
 
+	const getErrorMessage = ( issue, fieldLabel ) => {
+		const requiredError = sprintf(
+			// translators: %s is replaced with the field label
+			__( '%s is required', 'surerank' ),
+			fieldLabel
+		);
+
+		const mustBeError = sprintf(
+			// translators: %1$s is replaced with the field label, %2$s is replaced with the expected type.
+			__( '%1$s must be a %2$s', 'surerank' ),
+			fieldLabel,
+			issue.expected
+		);
+
+		return issue.input === undefined ? requiredError : mustBeError;
+	};
+
 	// Create dynamic schema based on input fields
 	const createValidationSchema = useCallback( () => {
 		const schema = {};
@@ -17,33 +35,44 @@ const useFormValidation = ( formState, inputFields ) => {
 		inputFields.forEach( ( field ) => {
 			let fieldSchema;
 
+			const requiredError = sprintf(
+				// translators: %s is replaced with the field label
+				__( '%s is required', 'surerank' ),
+				field.label
+			);
 			// Add validation based on field type
 			switch ( field.type ) {
 				case 'text':
 				case 'textarea':
 					fieldSchema = z.string( {
-						required_error: `${ field.label } is required`,
+						error: ( issue ) =>
+							getErrorMessage( issue, field.label ),
 					} );
 					break;
 				case 'email':
 					fieldSchema = z
 						.string( {
-							required_error: `${ field.label } is required`,
+							required_error: requiredError,
 						} )
-						.email( 'Please enter a valid email address' );
+						.email(
+							__(
+								'Please enter a valid email address',
+								'surerank'
+							)
+						);
 					break;
 				case 'number':
 					fieldSchema = z.number( {
-						invalid_type_error: `${ field.label } must be a number`,
-						required_error: `${ field.label } is required`,
+						error: ( issue ) =>
+							getErrorMessage( issue, field.label ),
 					} );
 					break;
 				case 'url':
 					fieldSchema = z
 						.string( {
-							required_error: `${ field.label } is required`,
+							required_error: requiredError,
 						} )
-						.url( 'Please enter a valid URL' );
+						.url( __( 'Please enter a valid URL', 'surerank' ) );
 					break;
 				case 'file':
 					fieldSchema = z.instanceof( File );
@@ -53,7 +82,8 @@ const useFormValidation = ( formState, inputFields ) => {
 					break;
 				default:
 					fieldSchema = z.string( {
-						required_error: `${ field.label } is required`,
+						error: ( issue ) =>
+							getErrorMessage( issue, field.label ),
 					} );
 					break;
 			}
@@ -63,12 +93,16 @@ const useFormValidation = ( formState, inputFields ) => {
 				if ( field.type === 'checkbox' ) {
 					fieldSchema = fieldSchema.refine(
 						( value ) => value === true,
-						'This field is required'
+						__( 'This field is required', 'surerank' )
 					);
 				} else {
 					fieldSchema = fieldSchema.min(
 						1,
-						`${ field.label } is required`
+						sprintf(
+							// translators: %s is replaced with the field label
+							__( '%s is required', 'surerank' ),
+							field.label
+						)
 					);
 				}
 			}
@@ -91,24 +125,28 @@ const useFormValidation = ( formState, inputFields ) => {
 		} catch ( validationErrors ) {
 			const formattedErrors = {};
 
-			validationErrors.errors.forEach( ( error ) => {
-				const [ fieldName ] = error.path;
-				formattedErrors[ fieldName ] = error.message;
-			} );
+			// In zod v4 errors are in the 'issues' property, v3 errors are in the 'errors' property.
+			const errorList =
+				validationErrors?.issues || validationErrors?.errors || [];
 
-			setErrors( formattedErrors );
+			if ( Array.isArray( errorList ) && errorList.length > 0 ) {
+				errorList.forEach( ( error ) => {
+					const fieldName = error.path[ 0 ];
+					if ( fieldName ) {
+						formattedErrors[ fieldName ] = error.message;
+					}
+				} );
 
-			// Focus on the first field with error
-			const firstErrorField = validationErrors.errors[ 0 ]?.path[ 0 ];
-			if ( firstErrorField ) {
-				const element = document.querySelector(
-					`[name="${ firstErrorField }"]`
-				);
-				if ( element ) {
-					element.focus();
+				const firstErrorField = errorList[ 0 ]?.path?.[ 0 ];
+				if ( firstErrorField ) {
+					const element = document.querySelector(
+						`[name="${ firstErrorField }"]`
+					);
+					element?.focus();
 				}
 			}
 
+			setErrors( formattedErrors );
 			return false;
 		}
 	}, [ formState, createValidationSchema ] );

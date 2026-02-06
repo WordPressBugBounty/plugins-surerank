@@ -161,7 +161,7 @@ class TermAnalyzer {
 	private function analyze( array $meta_data ) {
 		// Get focus keyword for keyword checks.
 		$focus_keyword = $meta_data['focus_keyword'] ?? '';
-		
+
 		return [
 			'url_length'                => Utils::check_url_length( $this->term_permalink ),
 			'search_engine_title'       => Utils::analyze_title( $this->term_title ),

@@ -65,4 +65,25 @@ class Helper {
 			esc_html( $message )
 		);
 	}
+
+	/**
+	 * Get Business details.
+	 *
+	 * @since 1.5.0
+	 * @param string $key options name.
+	 * @return array<string, mixed>|array<int, string>|string|array<string>|array<string,string>
+	 */
+	public static function get_saved_business_details( string $key ) {
+		$details = get_option( 'zipwp_user_business_details', [] );
+
+		if ( ! is_array( $details ) ) {
+			$details = [];
+		}
+
+		if ( ! empty( $key ) ) {
+			return $details[ $key ] ?? '';
+		}
+
+		return $details;
+	}
 }

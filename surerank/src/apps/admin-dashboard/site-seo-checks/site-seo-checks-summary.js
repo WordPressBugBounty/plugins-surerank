@@ -1,4 +1,3 @@
-import { applyFilters } from '@wordpress/hooks';
 import { Container, Title, Button } from '@bsf/force-ui';
 import { __ } from '@wordpress/i18n';
 import { Suspense } from '@wordpress/element';
@@ -10,6 +9,7 @@ import SiteSeoChecksDrawer from './site-seo-checks-drawer';
 import { RefreshCw } from 'lucide-react';
 import { useRunSeoChecks } from './use-run-seo-checks';
 import { cn } from '@Functions/utils';
+import SaveAuthToken from '@/global/components/save-auth-token';
 
 /**
  * Component for showing site SEO checks summary on dashboard
@@ -26,18 +26,14 @@ const SiteSeoChecksSummary = ( { limit = 5, showViewAll = true } ) => {
 	const SiteSeoChecksTitle = () => {
 		return (
 			<Container align="center" justify="between" className="p-2">
-				{ applyFilters(
-					'surerank-pro.dashboard.site-seo-checks-save-auth',
-					null,
-					'site-seo-analysis'
-				) }
+				<SaveAuthToken />
 				<Title
 					tag="h4"
-					title={ __( 'Site SEO Analysis', 'surerank' ) }
+					title={ __( 'Site SEO Audit', 'surerank' ) }
 					size="md"
 				/>
 				<Button
-					variant="primary"
+					variant="outline"
 					size="sm"
 					icon={
 						<RefreshCw
@@ -49,7 +45,7 @@ const SiteSeoChecksSummary = ( { limit = 5, showViewAll = true } ) => {
 					onClick={ handleRunChecksAgain }
 					disabled={ isLoading } // Disable button while loading
 				>
-					{ __( 'Re-run Checks', 'surerank' ) }
+					{ __( 'Run Checks', 'surerank' ) }
 				</Button>
 			</Container>
 		);

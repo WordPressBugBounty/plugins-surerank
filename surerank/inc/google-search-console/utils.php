@@ -55,4 +55,13 @@ class Utils {
 		$base_64 = $input . str_repeat( '=', strlen( $input ) % 4 );
 		return base64_decode( $base_64 );
 	}
+
+	/**
+	 * Get SureRank SaaS Auth API URL
+	 *
+	 * @return string
+	 */
+	public static function get_saas_auth_api_url() {
+		return defined( 'SURERANK_SAAS_AUTH_API_URL' ) ? SURERANK_SAAS_AUTH_API_URL : 'https://api.surerank.com/';
+	}
 }

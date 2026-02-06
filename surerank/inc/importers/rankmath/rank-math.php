@@ -369,6 +369,21 @@ class RankMath extends BaseImporter {
 	 * @return array{success: bool, message: string}
 	 */
 	private function import_post_taxo_social( int $id, bool $is_taxonomy = false ): array {
+		// Clear social fields that were populated by Settings::prep_post_meta() with global defaults.
+		// This ensures proper fallback behavior: if RankMath didn't have explicit values,
+		// SureRank should also leave them empty to fall back to page_title/description at runtime.
+		$social_fields_to_clear = [
+			'facebook_title',
+			'facebook_description',
+			'twitter_title',
+			'twitter_description',
+			'fallback_image',
+		];
+
+		foreach ( $social_fields_to_clear as $field ) {
+			$this->default_surerank_meta[ $field ] = '';
+		}
+
 		$same_as_facebook                                        = $this->source_meta['rank_math_twitter_use_facebook'][0] ?? 'on';
 		$this->default_surerank_meta['twitter_same_as_facebook'] = 'on' === $same_as_facebook ? true : false;
 

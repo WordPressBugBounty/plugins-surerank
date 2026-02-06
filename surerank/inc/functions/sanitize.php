@@ -112,4 +112,17 @@ class Sanitize {
 
 		return do_shortcode( $text );
 	}
+
+	/**
+	 * Sanitize Email address
+	 *
+	 * @since 1.6.0
+	 * @param string $email The email address to sanitize.
+	 * @param string $default Default value if email is invalid.
+	 * @return string The sanitized email address.
+	 */
+	public static function email( $email, $default = '' ) {
+		$sanitized_email = sanitize_email( $email );
+		return is_email( $sanitized_email ) ? $sanitized_email : $default;
+	}
 }

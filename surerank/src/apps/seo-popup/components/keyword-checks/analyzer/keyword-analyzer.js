@@ -16,6 +16,7 @@ export const checkKeywordInTitle = ( title, keyword ) => {
 			id: 'keyword_in_title',
 			title: __( 'No focus keyword set to analyze title.', 'surerank' ),
 			status: 'suggestion',
+			type: 'keyword',
 		} );
 	}
 
@@ -24,6 +25,7 @@ export const checkKeywordInTitle = ( title, keyword ) => {
 			id: 'keyword_in_title',
 			title: __( 'No SEO title found to analyze.', 'surerank' ),
 			status: 'warning',
+			type: 'keyword',
 		} );
 	}
 
@@ -36,6 +38,7 @@ export const checkKeywordInTitle = ( title, keyword ) => {
 				keyword
 			),
 			status: 'success',
+			type: 'keyword',
 		} );
 	}
 
@@ -47,6 +50,7 @@ export const checkKeywordInTitle = ( title, keyword ) => {
 			keyword
 		),
 		status: 'warning',
+		type: 'keyword',
 	} );
 };
 
@@ -59,6 +63,7 @@ export const checkKeywordInDescription = ( description, keyword ) => {
 				'surerank'
 			),
 			status: 'suggestion',
+			type: 'keyword',
 		} );
 	}
 
@@ -67,6 +72,7 @@ export const checkKeywordInDescription = ( description, keyword ) => {
 			id: 'keyword_in_description',
 			title: __( 'No meta description found to analyze.', 'surerank' ),
 			status: 'warning',
+			type: 'keyword',
 		} );
 	}
 
@@ -82,6 +88,7 @@ export const checkKeywordInDescription = ( description, keyword ) => {
 				keyword
 			),
 			status: 'success',
+			type: 'keyword',
 		} );
 	}
 
@@ -96,6 +103,7 @@ export const checkKeywordInDescription = ( description, keyword ) => {
 			keyword
 		),
 		status: 'warning',
+		type: 'keyword',
 	} );
 };
 
@@ -105,6 +113,7 @@ export const checkKeywordInUrl = ( url, keyword ) => {
 			id: 'keyword_in_url',
 			title: __( 'No focus keyword set to analyze URL.', 'surerank' ),
 			status: 'suggestion',
+			type: 'keyword',
 		} );
 	}
 
@@ -113,6 +122,7 @@ export const checkKeywordInUrl = ( url, keyword ) => {
 			id: 'keyword_in_url',
 			title: __( 'No URL found to analyze.', 'surerank' ),
 			status: 'warning',
+			type: 'keyword',
 		} );
 	}
 
@@ -132,6 +142,7 @@ export const checkKeywordInUrl = ( url, keyword ) => {
 				keyword
 			),
 			status: 'success',
+			type: 'keyword',
 		} );
 	}
 
@@ -143,6 +154,7 @@ export const checkKeywordInUrl = ( url, keyword ) => {
 			keyword
 		),
 		status: 'warning',
+		type: 'keyword',
 	} );
 };
 
@@ -152,6 +164,7 @@ export const checkKeywordInContent = ( content, keyword ) => {
 			id: 'keyword_in_content',
 			title: __( 'No focus keyword set to analyze content.', 'surerank' ),
 			status: 'suggestion',
+			type: 'keyword',
 		} );
 	}
 
@@ -160,6 +173,7 @@ export const checkKeywordInContent = ( content, keyword ) => {
 			id: 'keyword_in_content',
 			title: __( 'No content found to analyze.', 'surerank' ),
 			status: 'warning',
+			type: 'keyword',
 		} );
 	}
 
@@ -178,6 +192,7 @@ export const checkKeywordInContent = ( content, keyword ) => {
 				keyword
 			),
 			status: 'success',
+			type: 'keyword',
 		} );
 	}
 
@@ -189,5 +204,6 @@ export const checkKeywordInContent = ( content, keyword ) => {
 			keyword
 		),
 		status: 'warning',
+		type: 'keyword',
 	} );
 };

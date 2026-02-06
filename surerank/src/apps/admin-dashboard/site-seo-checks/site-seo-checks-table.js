@@ -1,7 +1,13 @@
-import { Container, Badge, Button, Pagination, Table } from '@bsf/force-ui';
+import {
+	Container,
+	Badge,
+	Button,
+	Pagination,
+	Table,
+	toast,
+} from '@bsf/force-ui';
 import { __, sprintf } from '@wordpress/i18n';
-import { ArrowRight, ArrowUpRight, Search, X } from 'lucide-react';
-import { ConfirmationDialog } from '@GlobalComponents/confirmation-dialog';
+import { ArrowRight, ArrowUpRight, Check, Search, X } from 'lucide-react';
 import SiteSeoChecksFixButton from './site-seo-checks-fix-button';
 import { useSuspenseSiteSeoAnalysis } from './site-seo-checks-main';
 import {
@@ -13,6 +19,8 @@ import ContentPerformanceEmptyState from '../content-performance-empty-state';
 import { useState, useCallback, useMemo } from '@wordpress/element';
 import { Link } from '@tanstack/react-router';
 import apiFetch from '@wordpress/api-fetch';
+import { Tooltip } from '@/apps/admin-components/tooltip';
+import { cn } from '@/functions/utils';
 
 const ITEMS_PER_PAGE = 20;
 const SUMMARY_ITEMS_COUNT = 5;
@@ -24,18 +32,21 @@ const SiteSeoChecksActionButtons = ( {
 	onIgnore,
 	showFixButton,
 } ) => {
-	const [ isDialogOpen, setIsDialogOpen ] = useState( false );
-
 	const ignoreCheck = useCallback(
 		async ( id ) => {
-			const response = await apiFetch( {
-				path: `/surerank/v1/checks/ignore-site-check`,
-				method: 'POST',
-				data: { id },
-			} );
-			if ( response.status === 'success' ) {
+			try {
+				const response = await apiFetch( {
+					path: `/surerank/v1/checks/ignore-site-check`,
+					method: 'POST',
+					data: { id },
+				} );
+				if ( response.status !== 'success' ) {
+					throw new Error( 'Failed to ignore check' );
+				}
 				onIgnore( id, true );
-				setIsDialogOpen( false );
+				toast.success( __( 'Check ignored successfully', 'surerank' ) );
+			} catch ( error ) {
+				toast.error( __( 'Failed to ignore check', 'surerank' ) );
 			}
 		},
 		[ onIgnore ]
@@ -43,13 +54,21 @@ const SiteSeoChecksActionButtons = ( {
 
 	const restoreCheck = useCallback(
 		async ( id ) => {
-			const response = await apiFetch( {
-				path: `/surerank/v1/checks/ignore-site-check`,
-				method: 'DELETE',
-				data: { id },
-			} );
-			if ( response.status === 'success' ) {
+			try {
+				const response = await apiFetch( {
+					path: `/surerank/v1/checks/ignore-site-check`,
+					method: 'DELETE',
+					data: { id },
+				} );
+				if ( response.status !== 'success' ) {
+					throw new Error( 'Failed to restore check' );
+				}
 				onIgnore( id, false );
+				toast.success(
+					__( 'Check restored successfully', 'surerank' )
+				);
+			} catch ( error ) {
+				toast.error( __( 'Failed to restore check', 'surerank' ) );
 			}
 		},
 		[ onIgnore ]
@@ -81,45 +100,52 @@ const SiteSeoChecksActionButtons = ( {
 				<SiteSeoChecksFixButton
 					selectedItem={ item }
 					size="xs"
+					variant="outline"
 					runBeforeOnClick={ handleSelectOnly }
 				/>
 			) }
 			{ item.status !== 'success' && item.status !== 'suggestion' && (
 				<>
-					<Button
-						size="xs"
-						variant="outline"
-						icon={ <X /> }
-						iconPosition="right"
-						onClick={ () => setIsDialogOpen( true ) }
+					<Tooltip
+						content={ __( 'Ignore', 'surerank' ) }
+						placement="top"
+						arrow
 					>
-						{ __( 'Ignore', 'surerank' ) }
-					</Button>
-					<ConfirmationDialog
-						open={ isDialogOpen }
-						setOpen={ setIsDialogOpen }
-						title={ __( 'Ignore Site Check', 'surerank' ) }
-						description={ __(
-							"We'll stop flagging this check in future scans. If it's not relevant, feel free to ignore it, you can always bring it back later if needed.",
-							'surerank'
-						) }
-						confirmLabel={ __( 'Ignore', 'surerank' ) }
-						cancelLabel={ __( 'Cancel', 'surerank' ) }
-						onConfirm={ () => ignoreCheck( item.id ) }
-						confirmVariant="primary"
-						confirmDestructive={ true }
-					/>
+						<Button
+							size="xs"
+							variant="outline"
+							icon={ <X /> }
+							iconPosition="right"
+							onClick={ () => ignoreCheck( item.id ) }
+						/>
+					</Tooltip>
 				</>
 			) }
-			<Button
-				size="xs"
-				variant="outline"
-				icon={ <ArrowRight /> }
-				iconPosition="right"
-				onClick={ onViewItem }
-			>
-				{ __( 'View', 'surerank' ) }
-			</Button>
+			<>
+				<Tooltip
+					content={ __( 'View Details', 'surerank' ) }
+					placement="top"
+					arrow
+				>
+					<Button
+						size="xs"
+						className={ cn(
+							item.status === 'success' &&
+								'bg-badge-background-green text-badge-color-green hover:bg-badge-hover-green'
+						) }
+						variant="outline"
+						icon={
+							item.status === 'success' ? (
+								<Check />
+							) : (
+								<ArrowRight />
+							)
+						}
+						iconPosition="right"
+						onClick={ onViewItem }
+					/>
+				</Tooltip>
+			</>
 		</Container>
 	);
 };
@@ -141,9 +167,9 @@ const SiteSeoChecksTableRow = ( { item, onIgnore } ) => {
 
 	return (
 		<Table.Row>
-			<Table.Cell>
-				<Container gap="xl" align="center">
-					<Container.Item>
+			<Table.Cell className="max-w-none">
+				<Container gap="xs" align="center" className="flex-nowrap">
+					<Container.Item className="flex-shrink-0">
 						<Badge
 							label={ getSeverityLabel(
 								item?.status,
@@ -153,10 +179,12 @@ const SiteSeoChecksTableRow = ( { item, onIgnore } ) => {
 							disabled={ item?.ignore }
 						/>
 					</Container.Item>
-					<Container.Item>{ item?.message }</Container.Item>
+					<Container.Item className="flex-1">
+						{ item?.message }
+					</Container.Item>
 				</Container>
 			</Table.Cell>
-			<Table.Cell>
+			<Table.Cell className="w-1 whitespace-nowrap">
 				<SiteSeoChecksActionButtons
 					onViewItem={ handleViewItem }
 					showFixButton={ item?.status !== 'success' }
@@ -269,52 +297,57 @@ const SiteSeoChecksTable = ( { limit, showViewAll = false } ) => {
 	}
 
 	return (
-		<Table>
-			<Table.Head>
-				<Table.HeadCell>{ __( 'Issue', 'surerank' ) }</Table.HeadCell>
-				<Table.HeadCell className="w-72 text-center">
-					{ __( 'Action', 'surerank' ) }
-				</Table.HeadCell>
-			</Table.Head>
-			<Table.Body>
-				{ filteredPaginatedContent.map( ( item, index ) => (
-					<SiteSeoChecksTableRow
-						key={ `row-${ index }-${ currentPage }` }
-						item={ item }
-						onIgnore={ handleIgnoreCheck }
-					/>
-				) ) }
-			</Table.Body>
-			{ showViewAll && (
-				<Table.Footer>
-					<Button
-						tag={ Link }
-						size="md"
-						variant="link"
-						icon={ <ArrowUpRight /> }
-						iconPosition="right"
-						className="w-fit mx-auto no-underline hover:no-underline"
-						to="/site-seo-analysis"
-					>
-						{ __( 'View Full Report', 'surerank' ) }
-					</Button>
-				</Table.Footer>
-			) }
-			{ showPagination && filteredContent?.length > itemsPerPage && (
-				<Table.Footer>
-					<SiteSeoChecksPagination
-						pages={ pages }
-						validCurrentPage={ validCurrentPage }
-						totalPages={ totalPages }
-						isPreviousDisabled={ isPreviousDisabled }
-						isNextDisabled={ isNextDisabled }
-						handlePageChange={ handlePageChange }
-						goToPreviousPage={ goToPreviousPage }
-						goToNextPage={ goToNextPage }
-					/>
-				</Table.Footer>
-			) }
-		</Table>
+		<div className="overflow-x-auto -mx-3 px-3 sm:mx-0 sm:px-0">
+			<Table>
+				<Table.Head>
+					<Table.HeadCell>
+						{ __( 'Checkpoints', 'surerank' ) }
+					</Table.HeadCell>
+					<Table.HeadCell className="w-1 text-center whitespace-nowrap"></Table.HeadCell>
+				</Table.Head>
+				<Table.Body>
+					{ filteredPaginatedContent.map( ( item, index ) => (
+						<SiteSeoChecksTableRow
+							key={ `row-${ index }-${ currentPage }` }
+							item={ item }
+							onIgnore={ handleIgnoreCheck }
+						/>
+					) ) }
+				</Table.Body>
+				{ showViewAll && (
+					<Table.Footer className="bg-brand-background-50 p-0 cursor-pointer group/link">
+						<Link
+							to="/site-seo-analysis"
+							className="flex justify-center items-center w-full p-3 no-underline focus:outline-none active:outline-none focus:[box-shadow:none]"
+						>
+							<Button
+								tag="span"
+								size="md"
+								variant="link"
+								icon={ <ArrowUpRight /> }
+								iconPosition="right"
+							>
+								{ __( 'View All Results', 'surerank' ) }
+							</Button>
+						</Link>
+					</Table.Footer>
+				) }
+				{ showPagination && filteredContent?.length > itemsPerPage && (
+					<Table.Footer>
+						<SiteSeoChecksPagination
+							pages={ pages }
+							validCurrentPage={ validCurrentPage }
+							totalPages={ totalPages }
+							isPreviousDisabled={ isPreviousDisabled }
+							isNextDisabled={ isNextDisabled }
+							handlePageChange={ handlePageChange }
+							goToPreviousPage={ goToPreviousPage }
+							goToNextPage={ goToNextPage }
+						/>
+					</Table.Footer>
+				) }
+			</Table>
+		</div>
 	);
 };
 

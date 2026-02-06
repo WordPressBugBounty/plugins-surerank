@@ -1,4 +1,5 @@
 <?php
+namespace SureRank\Inc\Lib\Background_Process;
 /**
  * WP Background Process
  *
@@ -11,7 +12,7 @@
  * @abstract
  * @extends WP_Async_Request
  */
-abstract class WP_Background_Process extends \WP_Async_Request {
+abstract class Wp_Background_Process extends Wp_Async_Request {
 	/**
 	 * The default query arg name used for passing the chain ID to new processes.
 	 */
@@ -578,7 +579,7 @@ abstract class WP_Background_Process extends \WP_Async_Request {
 
 			$batches = array_map(
 				static function ( $item ) use ( $column, $value_column, $allowed_classes ) {
-					$batch       = new stdClass();
+					$batch       = new \stdClass();
 					$batch->key  = $item->{$column};
 					$batch->data = static::maybe_unserialize( $item->{$value_column}, $allowed_classes );
 

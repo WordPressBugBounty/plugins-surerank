@@ -27,7 +27,7 @@ class Constants {
 	 * Plugin Slug.
 	 */
 	public const PLUGIN_SLUG = 'yoast';
-	
+
 	/**
 	 * Yoast plugin file path.
 	 */
@@ -73,20 +73,6 @@ class Constants {
 	];
 
 	/**
-	 * Mapping of Yoast social meta to SureRank social meta.
-	 */
-	private const SOCIAL_MAPPING = [
-		'_yoast_wpseo_opengraph-title'       => [ 'social-title', 'facebook_title' ],
-		'_yoast_wpseo_opengraph-description' => [ 'social-description', 'facebook_description' ],
-		'_yoast_wpseo_opengraph-image'       => [ 'social-image-url', 'facebook_image_url' ],
-		'_yoast_wpseo_opengraph-image-id'    => [ 'social-image-id', 'facebook_image_id' ],
-		'_yoast_wpseo_twitter-title'         => [ '', 'twitter_title' ],
-		'_yoast_wpseo_twitter-description'   => [ '', 'twitter_description' ],
-		'_yoast_wpseo_twitter-image'         => [ '', 'twitter_image_url' ],
-		'_yoast_wpseo_twitter-image-id'      => [ '', 'twitter_image_id' ],
-	];
-
-	/**
 	 * Mapping of Yoast placeholders to SureRank placeholders.
 	 */
 	public const PLACEHOLDERS_MAPPING = [
@@ -110,6 +96,51 @@ class Constants {
 		'%%term_title%%'       => '%term_title%',
 		'%%term_description%%' => '%term_description%',
 		'%%sitedesc%%'         => '%tagline%',
+	];
+
+	/**
+	 * Mapping for social settings.
+	 * Term social settings are mapped to SureRank social meta.
+	 */
+	public const TERM_SOCIAL_MAPPING = [
+		'wpseo_opengraph-title'       => [ 'social-title-tax', 'facebook_title' ],
+		'wpseo_opengraph-description' => [ 'social-description-tax', 'facebook_description' ],
+		'wpseo_opengraph-image'       => [ 'social-image-url-tax', 'facebook_image_url' ],
+		'wpseo_opengraph-image-id'    => [ 'social-image-id-tax', 'facebook_image_id' ],
+		'wpseo_twitter-title'         => [ '', 'twitter_title' ],
+		'wpseo_twitter-description'   => [ '', 'twitter_description' ],
+		'wpseo_twitter-image'         => [ '', 'twitter_image_url' ],
+		'wpseo_twitter-image-id'      => [ '', 'twitter_image_id' ],
+	];
+
+	public const SEPARATOR_MAPPING = [
+		'sc-dash'   => '-',
+		'sc-ndash'  => '–',
+		'sc-mdash'  => '—',
+		'sc-middot' => '·',
+		'sc-bull'   => '•',
+		'sc-star'   => '*',
+		'sc-smstar' => '⋆',
+		'sc-pipe'   => '|',
+		'sc-tilde'  => '~',
+		'sc-laquo'  => '«',
+		'sc-raquo'  => '»',
+		'sc-lt'     => '>',
+		'sc-gt'     => '<',
+	];
+
+	/**
+	 * Mapping of Yoast social meta to SureRank social meta.
+	 */
+	private const SOCIAL_MAPPING = [
+		'_yoast_wpseo_opengraph-title'       => [ 'social-title', 'facebook_title' ],
+		'_yoast_wpseo_opengraph-description' => [ 'social-description', 'facebook_description' ],
+		'_yoast_wpseo_opengraph-image'       => [ 'social-image-url', 'facebook_image_url' ],
+		'_yoast_wpseo_opengraph-image-id'    => [ 'social-image-id', 'facebook_image_id' ],
+		'_yoast_wpseo_twitter-title'         => [ '', 'twitter_title' ],
+		'_yoast_wpseo_twitter-description'   => [ '', 'twitter_description' ],
+		'_yoast_wpseo_twitter-image'         => [ '', 'twitter_image_url' ],
+		'_yoast_wpseo_twitter-image-id'      => [ '', 'twitter_image_id' ],
 	];
 
 	/**
@@ -158,37 +189,6 @@ class Constants {
 		'noindex-tax-post_format' => 'post_format',
 		'noindex-author-wpseo'    => 'author',
 		'nodeindx-date-archive'   => 'date_archive',
-	];
-
-	/**
-	 * Mapping for social settings.
-	 * Term social settings are mapped to SureRank social meta.
-	 */
-	public const TERM_SOCIAL_MAPPING = [
-		'wpseo_opengraph-title'       => [ 'social-title-tax', 'facebook_title' ],
-		'wpseo_opengraph-description' => [ 'social-description-tax', 'facebook_description' ],
-		'wpseo_opengraph-image'       => [ 'social-image-url-tax', 'facebook_image_url' ],
-		'wpseo_opengraph-image-id'    => [ 'social-image-id-tax', 'facebook_image_id' ],
-		'wpseo_twitter-title'         => [ '', 'twitter_title' ],
-		'wpseo_twitter-description'   => [ '', 'twitter_description' ],
-		'wpseo_twitter-image'         => [ '', 'twitter_image_url' ],
-		'wpseo_twitter-image-id'      => [ '', 'twitter_image_id' ],
-	];
-
-	public const SEPARATOR_MAPPING = [
-		'sc-dash'   => '-',
-		'sc-ndash'  => '–',
-		'sc-mdash'  => '—',
-		'sc-middot' => '·',
-		'sc-bull'   => '•',
-		'sc-star'   => '*',
-		'sc-smstar' => '⋆',
-		'sc-pipe'   => '|',
-		'sc-tilde'  => '~',
-		'sc-laquo'  => '«',
-		'sc-raquo'  => '»',
-		'sc-lt'     => '>',
-		'sc-gt'     => '<',
 	];
 
 	/**
@@ -270,7 +270,7 @@ class Constants {
 	 * @return array<string, string> Filtered title and description mapping.
 	 */
 	public static function get_title_desc_mapping() {
-	
+
 		return apply_filters( 'surerank_yoast_title_desc_mapping', self::TITLE_DESC_MAPPING );
 	}
 

@@ -39,8 +39,10 @@ class Variables {
 		// Seo meta popup field. Social meta fields.
 		'facebook_title',
 		'facebook_description',
+		'facebook_image_url',
 		'twitter_title',
 		'twitter_description',
+		'twitter_image_url',
 	];
 
 	/**
@@ -102,6 +104,15 @@ class Variables {
 			}
 			if ( ! empty( $meta ) ) {
 				return Sanitize::text( $meta[ $key ]['value'] );
+			}
+
+			// Check for custom fields.
+			if ( strpos( $key, 'custom_field.' ) === 0 && method_exists( $class, 'get_custom_field' ) ) {
+				$field_name = str_replace( 'custom_field.', '', $key );
+				$value      = $class->get_custom_field( $field_name );
+				if ( $value ) {
+					return Sanitize::text( $value );
+				}
 			}
 		}
 		return '';

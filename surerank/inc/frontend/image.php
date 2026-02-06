@@ -89,13 +89,15 @@ class Image {
 	 */
 	public function get( &$meta_data, $key ) {
 		$fallback_image = Settings::get( 'fallback_image' );
-		if ( ! empty( $meta_data[ $key ] ) ) {
+
+		if ( ! empty( $meta_data[ $key ] ) && $this->is_valid_image_extension( $meta_data[ $key ] ) ) {
 			return;
 		}
 
+		$meta_data[ $key ] = '';
 		if ( $this->get_og_image() ) {
 			$meta_data[ $key ] = $this->get_og_image();
-		} else {
+		} elseif ( $fallback_image && $this->is_valid_image_extension( $fallback_image ) ) {
 			$meta_data[ $key ] = $fallback_image;
 		}
 	}
@@ -146,6 +148,19 @@ class Image {
 
 		$content = $post_instance->get_content();
 		return $content ? $this->get_first_content_image( $content ) : null;
+	}
+
+	/**
+	 * Validates image file extension
+	 *
+	 * @param string $url Image URL.
+	 * @return bool Whether extension is valid
+	 * @since 1.0.0
+	 */
+	public function is_valid_image_extension( string $url ) {
+		$valid_extensions = [ 'jpg', 'jpeg', 'png', 'gif', 'webp', 'avif' ];
+		$extension        = strtolower( pathinfo( $url, PATHINFO_EXTENSION ) );
+		return ! empty( $extension ) && in_array( $extension, $valid_extensions, true );
 	}
 
 	/**
@@ -248,19 +263,6 @@ class Image {
 		}
 
 		return true;
-	}
-
-	/**
-	 * Validates image file extension
-	 *
-	 * @param string $url Image URL.
-	 * @return bool Whether extension is valid
-	 * @since 1.0.0
-	 */
-	private function is_valid_image_extension( string $url ) {
-		$valid_extensions = [ 'jpg', 'jpeg', 'png', 'gif', 'webp' ];
-		$extension        = strtolower( pathinfo( $url, PATHINFO_EXTENSION ) );
-		return ! empty( $extension ) && in_array( $extension, $valid_extensions, true );
 	}
 
 	/**

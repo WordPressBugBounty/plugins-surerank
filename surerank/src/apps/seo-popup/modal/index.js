@@ -17,13 +17,13 @@ import {
 import { STORE_NAME } from '@Store/constants';
 import { cn } from '@Functions/utils';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Button, Text, Toaster, toast } from '@bsf/force-ui';
+import { Toaster, toast } from '@bsf/force-ui';
 import { GutenbergData, ClassicEditorData } from './dynamic-data-provider';
 import { Header, Footer } from '@SeoPopup/components';
-import { ArrowLeftIcon } from 'lucide-react';
 import { fetchMetaSettings } from '@/functions/api';
+import { usePageChecks } from '@SeoPopup/hooks';
 import { SCREENS } from './screens';
-import { usePageChecks } from '../hooks';
+import { useKeywordChecks } from '@SeoPopup/components/keyword-checks/hooks/use-keyword-checks';
 
 // Define toast globally for PRO plugin.
 if ( window && ! window?.toast ) {
@@ -42,8 +42,7 @@ const animateVariants = {
 export const getEditorData = () => {
 	const editor = staticSelect( 'core/editor' );
 	const selectors = staticSelect( STORE_NAME );
-	const isBlockEditor =
-		editor && typeof editor.getEditedPostContent === 'function';
+	const isBlockEditor = surerank_seo_popup?.editor_type === 'block';
 
 	if ( isBlockEditor ) {
 		return {
@@ -80,6 +79,7 @@ export const getEditorData = () => {
 };
 
 const IsolatePageChecksHook = () => {
+	useKeywordChecks();
 	usePageChecks();
 	return null;
 };
@@ -90,7 +90,6 @@ const SeoModal = ( props ) => {
 		initialized,
 		setInitialized,
 		updateModalState,
-		updateAppSettings,
 		appSettings,
 	} = props;
 
@@ -145,17 +144,6 @@ const SeoModal = ( props ) => {
 		return Header;
 	}, [ appSettings?.currentScreen ] );
 
-	const handleBack = useCallback( () => {
-		const { previousScreen } = appSettings;
-		if ( ! previousScreen ) {
-			return;
-		}
-		updateAppSettings( {
-			currentScreen: previousScreen,
-			previousScreen: '',
-		} );
-	}, [ appSettings.previousScreen, updateAppSettings ] );
-
 	return (
 		<Fragment>
 			<Suspense fallback={ null }>
@@ -176,36 +164,6 @@ const SeoModal = ( props ) => {
 					>
 						{ /* Header */ }
 						<RenderHeader onClose={ closeModal } />
-						{ /* Screen controls */ }
-						{ appSettings?.previousScreen && (
-							<div className="space-y-2">
-								<div className="flex items-center justify-between gap-2 px-4 pt-4">
-									<div>
-										{ appSettings.currentScreen ===
-											'checks' && (
-											<Button
-												onClick={ handleBack }
-												variant="ghost"
-												size="sm"
-												icon={ <ArrowLeftIcon /> }
-											>
-												<Text
-													size={ 14 }
-													weight={ 600 }
-												>
-													{
-														SCREENS[
-															appSettings
-																?.currentScreen
-														]?.title
-													}
-												</Text>
-											</Button>
-										) }
-									</div>
-								</div>
-							</div>
-						) }
 
 						{ /* Modal Body */ }
 						<div
@@ -216,7 +174,7 @@ const SeoModal = ( props ) => {
 						>
 							<RenderScreen />
 						</div>
-						{ appSettings?.currentTab === 'optimize' && (
+						{ appSettings.currentScreen === 'settings' && (
 							<Footer onClose={ closeModal } />
 						) }
 					</motion.div>

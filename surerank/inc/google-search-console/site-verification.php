@@ -56,7 +56,6 @@ class SiteVerification {
 	public function call_site_verification_api( $endpoint, $method = 'GET', $args = [] ) {
 		$result = GoogleConsole::get_instance()->call_api( $endpoint, $method, $args );
 
-
 		if ( isset( $result['error'] ) && $result['error'] ) {
 			$original_error_message = $result['message'] ?? __( 'Unknown error', 'surerank' );
 			$response_code          = $result['code'] ?? 0;
@@ -92,10 +91,10 @@ class SiteVerification {
 					break;
 				default:
 					if ( empty( $original_error_message ) || $original_error_message === 'Unknown error' ) {
-						$custom_error_message = sprintf( 
+						$custom_error_message = sprintf(
 							/* translators: %d: HTTP status code */
-							__( 'Site verification error (Code: %d). Please try again.', 'surerank' ), 
-							$response_code 
+							__( 'Site verification error (Code: %d). Please try again.', 'surerank' ),
+							$response_code
 						);
 					}
 					break;
@@ -131,13 +130,13 @@ class SiteVerification {
 			],
 			'verificationMethod' => 'META',
 		];
-		
+
 		$result = $this->call_site_verification_api( $url, 'POST', $body );
-		
+
 		if ( isset( $result['error'] ) ) {
 			return $result;
 		}
-		
+
 		if ( ! isset( $result['token'] ) ) {
 			return [
 				'error'   => true,
@@ -145,7 +144,7 @@ class SiteVerification {
 				'code'    => 400,
 			];
 		}
-		
+
 		// Extract token from HTML meta tag if needed.
 		$token = $result['token'];
 		if ( strpos( $token, '<meta' ) !== false ) {
@@ -155,7 +154,7 @@ class SiteVerification {
 				$token = $matches[1];
 			}
 		}
-		
+
 		return [
 			'token' => $token,
 		];
@@ -185,7 +184,7 @@ class SiteVerification {
 	public function get_stored_verification_token() {
 		return get_option( self::VERIFICATION_TOKEN_OPTION, false );
 	}
-	
+
 	/**
 	 * Verify Site
 	 *
@@ -204,13 +203,13 @@ class SiteVerification {
 				'identifier' => $site_url,
 			],
 		];
-		
+
 		$result = $this->call_site_verification_api( $url, 'POST', $body );
-		
+
 		if ( isset( $result['error'] ) ) {
 			$original_message = $result['original_message'] ?? $result['message'];
 			$http_code        = $result['http_code'] ?? $result['code'] ?? 0;
-			
+
 			if ( $http_code === 400 ) {
 				$error_details = [];
 				if ( isset( $result['original_message'] ) ) {
@@ -219,9 +218,9 @@ class SiteVerification {
 						$error_details = $decoded_error['error'];
 					}
 				}
-				
+
 				$error_reason = $error_details['errors'][0]['reason'] ?? '';
-				
+
 				if ( $error_reason === 'badRequest' ) {
 					return [
 						'pending'          => true,
@@ -231,10 +230,10 @@ class SiteVerification {
 					];
 				}
 			}
-			
+
 			return $result;
 		}
-		
+
 		return [
 			'success' => true,
 			'message' => __( 'Site verified successfully', 'surerank' ),
@@ -257,7 +256,7 @@ class SiteVerification {
 		if ( isset( $result['error'] ) && $result['error'] ) {
 			return $result;
 		}
-		
+
 		return [
 			'success' => true,
 			'message' => __( 'Site added successfully', 'surerank' ),

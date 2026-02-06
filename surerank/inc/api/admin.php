@@ -119,6 +119,14 @@ class Admin extends Api_Base {
 				$instance->set_term( $term_id );
 			}
 			$variables[ $key ] = $instance->get_all_values();
+
+			// Add custom fields if available.
+			if ( method_exists( $instance, 'get_all_custom_fields' ) ) {
+				$custom_fields = $instance->get_all_custom_fields();
+				if ( ! empty( $custom_fields ) ) {
+					$variables[ $key ] = array_merge( $variables[ $key ], $custom_fields );
+				}
+			}
 		}
 
 		return $variables;
@@ -149,6 +157,7 @@ class Admin extends Api_Base {
 	public function get_admin_settings( $request ) {
 		$data                             = Settings::get();
 		$data['surerank_analytics_optin'] = Get::option( 'surerank_analytics_optin' ) === 'yes' ? true : false;
+		$data                             = apply_filters( 'surerank_get_admin_settings_data', $data );
 		$decode_data                      = Utils::decode_html_entities_recursive( $data ) ?? $data;
 		Send_Json::success( [ 'data' => $decode_data ] );
 	}
@@ -165,10 +174,20 @@ class Admin extends Api_Base {
 		if ( empty( $data ) ) {
 			Send_Json::error( [ 'message' => __( 'No data found', 'surerank' ) ] );
 		}
+		$this->update_global_options( $data );
+	}
 
+	/**
+	 * Update global options.
+	 *
+	 * @param array<string, mixed> $data Data.
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function update_global_options( $data ) {
 		// Allow pro plugin to handle extended meta templates toggle detection BEFORE getting any settings.
 		do_action( 'surerank_admin_settings_before_processing', $data );
-
+		$data       = apply_filters( 'surerank_update_admin_settings_data', $data );
 		$db_options = Settings::get();
 
 		$updated_options = $this->get_updated_options( $data, $db_options );

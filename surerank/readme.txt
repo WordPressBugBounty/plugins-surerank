@@ -3,9 +3,9 @@ Contributors: brainstormforce
 Donate link: https://www.paypal.me/BrainstormForce
 Tags: seo, wordpress seo, xml sitemap, schema, google search console
 Requires at least: 6.8
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.4.1
+Stable tag: 1.6.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -295,9 +295,62 @@ Brainstorm Force
 
 == Changelog ==
 
+### 1.6.2 - 14-January-2026 ###
+
+* New: Introduced an option to get Email Reports on Monthly basis.
+* New: Ability to add or remove Schema field with a better control.
+* Improvement: Onboarding flow has been improved for a better user experience.
+* Improvement: UI sets of multiple fields has been improved with better user experience for edit Schema.
+* Improvement: Edit support added for the AI content suggestions in meta & social SEO.
+* Improvement: Generating sitemap as soon as any migration gets completed.
+* Improvement: Displaying an indicator and a notice in the Schema editor if any Display Rule is not being set, to avoid blank schemas without any rulesets.
+* Fix: Resolved a few issues in Rankmath migration like - global image gets set to featured image of every post, validations of search engine title and description for a social title and description.
+
+### 1.6.1 - 23-December-2025 ###
+* Improvement: Removed default title prefixes from taxonomy, archive, and post type archive pages.
+* Fix: Fixed an issue where onboarding settings were not updated correctly in an edge case.
+
+### 1.6.0 - 22-December-2025 ###
+* New: Introduced Email Summary with site performance insights from Google Search Console.
+* Improvement: Improved user experience in SureRank Meta box and other additional components.
+* Improvement: Optimized Page SEO checks in the SEO bar.
+* Improvement: Added custom field support (text and image) for ACF, SCF, Pods, and Metabox in meta templates, schemas, and social settings.
+* Fix: Fixed an issue where schema was not displaying in metabox when the display condition was set to the front page.
+
+
+
+### 1.5.1 - 09-December-2025 ###
+* Improvement: Enhanced content generation to provide more accurate and relevant results.
+* Improvement: Google Search Console Dashboard Widget - updated the UI for a better user experience.
+
+### 1.5.0 - 25-November-2025 ###
+* Improvement: Schema - Added option to reset display conditions defined in the first condition.
+* Improvement: Ability to add business information during onboarding.
+* Improvement: Added noindex robots settings for WooCommerce pages.
+* Improvement: Added compatibility to the Avada theme for Page SEO checks.
+* Improvement: UX enhancements.
+* Fix: Onboarding - Solved an issue where the onboarding form wasn't getting submitted in an edge case.
+* Fix: Fixed an issue where SEO Meta Box page checks were not updated in Classic Editor.
+* Fix: SureRank Schema now deactivates when WP Schema Pro plugin is enabled.
+
+### 1.4.3 - 29-October-2025 ###
+* Improvement: Improved UI for Google Site Verification, Site SEO Checks, Page SEO Checks, and Focus Keyword.
+* Improvement: Improved sitemap cache generation process.
+* Improvement: Improved content generation to show results based on the site’s language.
+* Fix: Fixed drag-drop sorting issue in WooCommerce product categories listing.
+* Fix: Fixed inconsistent page SEO checks in the metabox and SEO bar.
+* Fix: Fixed the issue with false detection of broken links and updated it to include only 404 and 410 status codes.
+* Fix: Fixed the issue where the onboarding screen appeared every time after activation.
+
+### 1.4.2 - 13-October-2025 ###
+* Improvement: Improved the SEO Popup and SEO Bar loading performance.
+* Improvement: Added a filter to change the default sitemap slug.
+* Improvement: Improved the UX for the Date Picker field in Schemas.
+* Fix: Site Level Checks - Resolved an issue where robots.txt accessibility checks were unnecessarily validating file content. The check now only verifies accessibility.
+* Fix: Page Level Checks - Fixed a bug that caused SureRank to mistakenly identify mailto:, tel:, and sms: links as broken, even though they were valid.
+
 ### 1.4.1 - 26-September-2025 ###
 * Fix: Fixed an issue where the WooCommerce product image wasn't opening when clicked on zoom in due to a conflict with the SureRank plugin.
-
 
 ### 1.4.0 - 23-September-2025 ###
 * New: Added Focus Keyword Checks for Page-level SEO.

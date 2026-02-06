@@ -30,7 +30,7 @@ class Breadcrumbs {
 	 *
 	 * @var array<array{name: string, link: string}>
 	 */
-	private $crumbs = [];
+	protected $crumbs = [];
 
 	/**
 	 * Get the breadcrumb trail.
@@ -43,6 +43,71 @@ class Breadcrumbs {
 		}
 
 		return $this->crumbs;
+	}
+
+	/**
+	 * Get a term's ancestors in order from root to direct parent.
+	 *
+	 * @param WP_Term $term Term object.
+	 * @param string  $taxonomy Taxonomy slug.
+	 * @return array<int, WP_Term> Array of WP_Term objects.
+	 */
+	protected function get_term_ancestors( WP_Term $term, string $taxonomy ) {
+		$ancestors     = [];
+		$original_term = $term;
+
+		while ( $term->parent ) {
+			$term = get_term( $term->parent, $taxonomy );
+
+			if ( ! ( $term instanceof WP_Term ) ) {
+				break;
+			}
+
+			array_unshift( $ancestors, $term );
+		}
+
+		return $ancestors;
+	}
+
+	/**
+	 * Get a post's ancestors in order from root to direct parent.
+	 *
+	 * @param WP_Post $post Post object.
+	 * @return array<int, WP_Post> Array of WP_Post objects.
+	 */
+	protected function get_post_ancestors( WP_Post $post ) {
+		$parents       = [];
+		$original_post = $post;
+
+		while ( $post->post_parent ) {
+			$post = get_post( $post->post_parent );
+			if ( $post instanceof WP_Post ) {
+				array_unshift( $parents, $post );
+			} else {
+				break;
+			}
+		}
+
+		return $parents;
+	}
+
+	/**
+	 * Add an item to the breadcrumb trail.
+	 *
+	 * @param string $name Name of the breadcrumb.
+	 * @param string $link URL for the breadcrumb.
+	 * @return void
+	 */
+	protected function add_crumb( string $name, string $link = '' ) {
+
+		if ( empty( $name ) ) {
+			return;
+		}
+
+		$this->crumbs[] = [
+			'name' => esc_html( $name ),
+			'link' => esc_url( $link ),
+		];
 	}
 
 	/**
@@ -326,30 +391,6 @@ class Breadcrumbs {
 	}
 
 	/**
-	 * Get a term's ancestors in order from root to direct parent.
-	 *
-	 * @param WP_Term $term Term object.
-	 * @param string  $taxonomy Taxonomy slug.
-	 * @return array<int, \WP_Term> Array of WP_Term objects.
-	 */
-	private function get_term_ancestors( WP_Term $term, string $taxonomy ) {
-		$ancestors     = [];
-		$original_term = $term;
-
-		while ( $term->parent ) {
-			$term = get_term( $term->parent, $taxonomy );
-
-			if ( ! ( $term instanceof WP_Term ) ) {
-				break;
-			}
-
-			array_unshift( $ancestors, $term );
-		}
-
-		return $ancestors;
-	}
-
-	/**
 	 * Get term link safely.
 	 *
 	 * @param WP_Term $term Term object.
@@ -395,28 +436,6 @@ class Breadcrumbs {
 				$this->add_crumb( get_the_title( $ancestor ), get_permalink( $ancestor ) );
 			}
 		}
-	}
-
-	/**
-	 * Get a post's ancestors in order from root to direct parent.
-	 *
-	 * @param WP_Post $post Post object.
-	 * @return array<int, \WP_Post> Array of WP_Post objects.
-	 */
-	private function get_post_ancestors( WP_Post $post ) {
-		$parents       = [];
-		$original_post = $post;
-
-		while ( $post->post_parent ) {
-			$post = get_post( $post->post_parent );
-			if ( $post instanceof WP_Post ) {
-				array_unshift( $parents, $post );
-			} else {
-				break;
-			}
-		}
-
-		return $parents;
 	}
 
 	/**
@@ -469,25 +488,6 @@ class Breadcrumbs {
 			$day   = get_the_date( 'd' );
 			$this->add_crumb( (string) get_the_date( 'j F Y' ), (string) get_day_link( intval( $year ), intval( $month ), intval( $day ) ) );
 		}
-	}
-
-	/**
-	 * Add an item to the breadcrumb trail.
-	 *
-	 * @param string $name Name of the breadcrumb.
-	 * @param string $link URL for the breadcrumb.
-	 * @return void
-	 */
-	private function add_crumb( string $name, string $link = '' ) {
-
-		if ( empty( $name ) ) {
-			return;
-		}
-
-		$this->crumbs[] = [
-			'name' => esc_html( $name ),
-			'link' => esc_url( $link ),
-		];
 	}
 
 	/**

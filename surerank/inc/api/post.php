@@ -88,10 +88,15 @@ class Post extends Api_Base {
 	 * @return array<string, mixed>
 	 */
 	public static function get_post_data_by_id( $post_id, $post_type = 'post', $is_taxonomy = false ) {
-		$all_options = Settings::format_array( Defaults::get_instance()->get_post_defaults( false ) );
+		$all_options   = Settings::format_array( Defaults::get_instance()->get_post_defaults( false ) );
+		$global_values = Settings::get();
+		$extended_meta = Utils::get_extended_meta_values( $post_id, $post_type, $is_taxonomy );
+		// Merge extended meta templates into global defaults for preview fallback.
+		$global_with_emt = array_merge( $global_values, $extended_meta );
+
 		return [
 			'data'           => array_intersect_key( Settings::prep_post_meta( $post_id, $post_type, $is_taxonomy ), $all_options ),
-			'global_default' => Settings::get(),
+			'global_default' => $global_with_emt,
 		];
 	}
 
@@ -135,7 +140,9 @@ class Post extends Api_Base {
 			$data = array_merge( $post_meta, $data );
 		}
 
-		$processed_options = Utils::process_option_values( $all_options, $data );
+		$post_type         = get_post_type( $post_id );
+		$post_type         = is_string( $post_type ) ? $post_type : '';
+		$processed_options = Utils::process_option_values( $all_options, $data, $post_id, $post_type, false );
 
 		foreach ( $processed_options as $option_name => $new_option_value ) {
 			Update::post_meta( $post_id, 'surerank_settings_' . $option_name, $new_option_value );
@@ -291,50 +298,12 @@ class Post extends Api_Base {
 		$data     = [];
 		$settings = Settings::get();
 
-		$data['post_types'] = $this->get_formatted_post_types();
-		$data['taxonomies'] = $this->get_formatted_taxonomies();
+		$data['post_types'] = Helper::get_formatted_post_types();
+		$data['taxonomies'] = Helper::get_formatted_taxonomies();
 		$data['archives']   = $this->build_archives_list( $settings );
 		$data['roles']      = Helper::get_role_names();
 
 		return array_filter( $data );
-	}
-
-	/**
-	 * Get formatted post types
-	 *
-	 * @return array<string, string>
-	 */
-	private function get_formatted_post_types() {
-		$post_types = \get_post_types( [ 'public' => true ], 'objects' );
-		if ( empty( $post_types ) || ! is_array( $post_types ) ) {
-			return [];
-		}
-
-		return array_map(
-			static function ( $post_type ) {
-				return ! empty( $post_type->label ) ? $post_type->label : '';
-			},
-			$post_types
-		);
-	}
-
-	/**
-	 * Get formatted taxonomies
-	 *
-	 * @return array<string, string>
-	 */
-	private function get_formatted_taxonomies() {
-		$taxonomies = \get_taxonomies( [ 'public' => true ], 'objects' );
-		if ( empty( $taxonomies ) || ! is_array( $taxonomies ) ) {
-			return [];
-		}
-
-		return array_map(
-			static function ( $taxonomy ) {
-				return $taxonomy->label;
-			},
-			$taxonomies
-		);
 	}
 
 	/**

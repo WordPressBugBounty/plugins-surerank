@@ -5,23 +5,22 @@ import {
 	INPUT_VARIABLE_SUGGESTIONS as variableSuggestions,
 	DESCRIPTION_LENGTH,
 	TITLE_LENGTH,
-	MAX_EDITOR_INPUT_LENGTH,
 } from '@Global/constants';
 import { useMemo, useRef } from '@wordpress/element';
-import { Label, EditorInput } from '@bsf/force-ui';
+import { Label } from '@bsf/force-ui';
 import { Info } from 'lucide-react';
 import { SeoPopupTooltip } from '@AdminComponents/tooltip';
 import {
 	editorValueToString,
 	stringValueToFormatJSON,
 	truncateText,
-	cn,
 	urlToBreadcrumbFormat,
 } from '@Functions/utils';
 import Preview from '@GlobalComponents/preview';
 import replacement from '@Functions/replacement';
 import { flat } from '@Functions/variables';
 import usePostPermalink from '@/global/hooks/use-post-permalink';
+import MetaField from './meta-field';
 
 const GeneralTab = ( { postMetaData, updatePostMetaData, globalDefaults } ) => {
 	const { variables, postDynamicData, title, description } = useSelect(
@@ -49,6 +48,11 @@ const GeneralTab = ( { postMetaData, updatePostMetaData, globalDefaults } ) => {
 		updatePostMetaData( {
 			[ key ]: value,
 		} );
+	};
+
+	// Function to handle field success from magic button
+	const handleUseThis = ( fieldKey, content ) => {
+		handleUpdatePostMetaData( fieldKey, content );
 	};
 
 	const variablesArray = flat( variables );
@@ -129,99 +133,52 @@ const GeneralTab = ( { postMetaData, updatePostMetaData, globalDefaults } ) => {
 			</div>
 
 			{ /* Search Engine Title input */ }
-			<div className="space-y-1.5 p-2">
-				{ /* Label & Limit */ }
-				<div className="flex items-center justify-start gap-1">
-					<Label tag="span" size="sm" className="space-x-0.5">
-						<span>{ __( 'Search Engine Title', 'surerank' ) }</span>
-					</Label>
-					<span className="text-xs leading-4 font-normal text-field-helper">
-						<span
-							className={ cn( {
-								'text-text-error':
-									inputTitleContent?.length > TITLE_LENGTH,
-							} ) }
-						>
-							{ inputTitleContent?.length ?? 0 }
-						</span>
-						/ { TITLE_LENGTH }
-					</span>
-				</div>
-				{ /* Input */ }
-				<EditorInput
-					key="title"
-					ref={ titleEditor }
-					by="label"
-					defaultValue={ stringValueToFormatJSON(
-						postMetaData.page_title || defaultGlobalMeta.page_title,
-						variableSuggestions,
-						'value'
-					) }
-					trigger="@"
-					options={ variableSuggestions }
-					onChange={ ( editorState ) => {
-						handleUpdatePostMetaData(
-							'page_title',
-							editorValueToString( editorState.toJSON() )
-						);
-					} }
-					placeholder={ '' }
-				/>
-				{ /* Hint text */ }
-				<span className="block text-xs leading-4 font-normal text-field-helper">
-					{ __( 'Type @ to view variable suggestions', 'surerank' ) }
-				</span>
-			</div>
+			<MetaField
+				label={ __( 'Search Engine Title', 'surerank' ) }
+				inputContent={ inputTitleContent }
+				maxLength={ TITLE_LENGTH }
+				editorRef={ titleEditor }
+				defaultValue={ stringValueToFormatJSON(
+					postMetaData.page_title || defaultGlobalMeta.page_title,
+					variableSuggestions,
+					'value'
+				) }
+				variableSuggestions={ variableSuggestions }
+				onChange={ ( editorState ) => {
+					handleUpdatePostMetaData(
+						'page_title',
+						editorValueToString( editorState.toJSON() )
+					);
+				} }
+				editorKey="title"
+				fieldKey="page_title"
+				onUseThis={ handleUseThis }
+			/>
 
 			{ /* Search Engine Description input */ }
-			<div className="space-y-1.5 p-2">
-				{ /* Label & Limit */ }
-				<div className="flex items-center justify-start gap-1">
-					<Label tag="span" size="sm" className="space-x-0.5">
-						<span>
-							{ __( 'Search Engine Description', 'surerank' ) }
-						</span>
-					</Label>
-					<span className="text-xs leading-4 font-normal text-field-helper">
-						<span
-							className={ cn( {
-								'text-text-error':
-									inputDescriptionContent?.length >
-									DESCRIPTION_LENGTH,
-							} ) }
-						>
-							{ inputDescriptionContent?.length ?? 0 }
-						</span>
-						/{ DESCRIPTION_LENGTH }
-					</span>
-				</div>
-				{ /* Input */ }
-				<EditorInput
-					ref={ descriptionEditor }
-					className="[&+div]:items-start [&+div]:pt-1"
-					by="label"
-					trigger="@"
-					defaultValue={ stringValueToFormatJSON(
-						postMetaData?.page_description ||
-							defaultGlobalMeta?.page_description,
-						variableSuggestions,
-						'value'
-					) }
-					options={ variableSuggestions }
-					onChange={ ( editorState ) => {
-						handleUpdatePostMetaData(
-							'page_description',
-							editorValueToString( editorState.toJSON() )
-						);
-					} }
-					placeholder={ '' }
-					maxLength={ MAX_EDITOR_INPUT_LENGTH }
-				/>
-				{ /* Hint text */ }
-				<span className="block text-xs leading-4 font-normal text-field-helper">
-					{ __( 'Type @ to view variable suggestions', 'surerank' ) }
-				</span>
-			</div>
+			<MetaField
+				label={ __( 'Search Engine Description', 'surerank' ) }
+				inputContent={ inputDescriptionContent }
+				maxLength={ DESCRIPTION_LENGTH }
+				editorRef={ descriptionEditor }
+				defaultValue={ stringValueToFormatJSON(
+					postMetaData?.page_description ||
+						defaultGlobalMeta?.page_description,
+					variableSuggestions,
+					'value'
+				) }
+				variableSuggestions={ variableSuggestions }
+				onChange={ ( editorState ) => {
+					handleUpdatePostMetaData(
+						'page_description',
+						editorValueToString( editorState.toJSON() )
+					);
+				} }
+				className="[&+div]:items-start [&+div]:pt-1"
+				editorKey="description"
+				fieldKey="page_description"
+				onUseThis={ handleUseThis }
+			/>
 		</div>
 	);
 };

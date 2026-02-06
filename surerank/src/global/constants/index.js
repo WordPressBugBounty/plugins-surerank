@@ -87,14 +87,47 @@ export const ENABLE_SCHEMAS = window?.surerank_globals?.enable_schemas ?? false;
 export const ENABLE_MIGRATION =
 	window?.surerank_globals?.enable_migration ?? false;
 
+// Page & Keyword SEO Checks
+export const CHECK_TYPES = [ 'page', 'keyword' ];
+
 // Content generation
-export {
-	REQUIRE_CONTENT_GENERATION,
-	CONTENT_GENERATION_MAPPING,
-} from './content-generation';
+export * from './content-generation';
 
 // Site SEO Fix Types
-export { SEO_FIX_TYPE_MAPPING } from './site-seo-fix';
+export * from './site-seo-fix';
 
 // Process status
-export { PROCESS_STATUSES } from './process-status';
+export * from './process-status';
+
+// Page SEO Checks
+export const LEARN_MORE_AI_AUTH =
+	'https://surerank.com/surerank-ai/?utm_medium=surerank_plugin';
+
+/**
+ * Get the appropriate max length based on the field type.
+ * @param {string} fieldType - The field type (e.g., 'page_title', 'page_description', 'page_url_slug')
+ * @return {number} The max length for the field
+ */
+export const getMaxLengthForField = ( fieldType ) => {
+	if ( ! fieldType ) {
+		return DESCRIPTION_LENGTH; // Default fallback
+	}
+
+	// Title fields
+	if ( fieldType.includes( 'title' ) ) {
+		return TITLE_LENGTH;
+	}
+
+	// URL fields
+	if ( fieldType.includes( 'url' ) || fieldType.includes( 'slug' ) ) {
+		return URL_LENGTH;
+	}
+
+	// Description fields
+	if ( fieldType.includes( 'description' ) ) {
+		return DESCRIPTION_LENGTH;
+	}
+
+	// Default fallback
+	return DESCRIPTION_LENGTH;
+};

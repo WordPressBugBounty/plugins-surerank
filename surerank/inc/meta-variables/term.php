@@ -9,6 +9,7 @@
 namespace SureRank\Inc\Meta_Variables;
 
 use SureRank\Inc\Frontend\Description;
+use SureRank\Inc\Traits\Custom_Field;
 use SureRank\Inc\Traits\Get_Instance;
 use WP_Error;
 
@@ -19,7 +20,7 @@ use WP_Error;
  */
 class Term extends Variables {
 
-	use Get_Instance;
+	use Get_Instance, Custom_Field;
 
 	/**
 	 * Stores variables array.
@@ -154,5 +155,15 @@ class Term extends Variables {
 			$term       = get_term( $term_id );
 			$this->term = $term instanceof WP_Error ? null : $term;
 		}
+	}
+
+	/**
+	 * Get the meta type for custom fields trait.
+	 *
+	 * @since 1.6.0
+	 * @return string
+	 */
+	protected function get_meta_type() {
+		return 'term';
 	}
 }

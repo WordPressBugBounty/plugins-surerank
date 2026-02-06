@@ -64,8 +64,22 @@ class Schema_Render {
 			$this->fields['sameAs'] = array_values( $this->fields['sameAs'] );
 		}
 
-		$this->fields['@type'] = $this->type;
-		$schema                = array_merge( [ '@type' => $this->type ], $this->fields );
+		$this->flatten_cloneable_fields();
+
+		$final_type = $this->type;
+		/**
+		 * Combine @type and @sub_type if @sub_type is set.
+		 */
+		if ( isset( $this->fields['@sub_type'] ) && is_array( $this->fields['@sub_type'] ) && ! empty( $this->fields['@sub_type'] ) ) {
+			$sub_types = array_filter( $this->fields['@sub_type'] );
+			if ( ! empty( $sub_types ) ) {
+				$final_type = array_merge( [ $this->type ], $sub_types );
+			}
+			unset( $this->fields['@sub_type'] );
+		}
+
+		$this->fields['@type'] = $final_type;
+		$schema                = array_merge( [ '@type' => $final_type ], $this->fields );
 
 		return $this->remove_empty( $this->remove_schema_name( $schema ) );
 	}
@@ -88,6 +102,35 @@ class Schema_Render {
 			}
 		}
 		return $data;
+	}
+
+	/**
+	 * Flatten cloneable fields that have flatten=true.
+	 *
+	 * Converts UUID-based objects to simple arrays for fields marked with flatten=true.
+	 *
+	 * @return void
+	 */
+	private function flatten_cloneable_fields() {
+		$schema_types = Utils::get_schema_types();
+		$schema_class = $schema_types[ $this->type ] ?? null;
+
+		if ( ! $schema_class || ! class_exists( $schema_class ) ) {
+			return;
+		}
+
+		$schema_instance   = $schema_class::get_instance();
+		$field_definitions = $schema_instance->get();
+
+		foreach ( $field_definitions as $field ) {
+			if ( ! empty( $field['cloneable'] ) && ! empty( $field['flatten'] ) && isset( $field['id'] ) ) {
+				$field_id = $field['id'];
+
+				if ( isset( $this->fields[ $field_id ] ) && is_array( $this->fields[ $field_id ] ) ) {
+					$this->fields[ $field_id ] = array_values( $this->fields[ $field_id ] );
+				}
+			}
+		}
 	}
 
 	/**

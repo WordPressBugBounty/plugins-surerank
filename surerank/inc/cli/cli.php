@@ -46,6 +46,7 @@ class Cli {
 			WP_CLI::line( __( 'SureRank Cache generated successfully', 'surerank' ) );
 		}
 	}
+
 }
 
 /**

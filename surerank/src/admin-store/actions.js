@@ -148,3 +148,10 @@ export const resetUnsavedSettings = () => {
 		type: actionTypes.RESET_UNSAVED_SETTINGS,
 	};
 };
+
+export const setEmailReportsSettings = ( payload ) => {
+	return {
+		type: actionTypes.SET_EMAIL_REPORTS_SETTINGS,
+		payload,
+	};
+};

@@ -23,6 +23,7 @@ import withSuspense from '@AdminComponents/hoc/with-suspense';
 import GeneratePageContent from '@Functions/page-content-generator';
 import { createLazyRoute } from '@tanstack/react-router';
 import { applyFilters } from '@wordpress/hooks';
+import { UpgradeNotice } from '@/global/components/nudges';
 
 export const get_tooltip_content = () => {
 	return (
@@ -187,7 +188,8 @@ const TitleAndDescriptionSettings = () => {
 					title={ titleContentTruncated }
 					faviconURL={ faviconImageUrl }
 					description={
-						descriptionContentTruncated || getDefaultPageDescription()
+						descriptionContentTruncated ||
+						getDefaultPageDescription()
 					}
 					permalink={ siteSettings?.site?.site_url ?? '' }
 				/>
@@ -224,6 +226,18 @@ const TitleAndDescription = () => {
 			) }
 		>
 			<GeneratePageContent json={ PAGE_CONTENT } />
+
+			<UpgradeNotice
+				title={ __(
+					'Looking for options to set meta by post type or taxonomy?',
+					'surerank'
+				) }
+				description={ __(
+					'Upgrade to unlock meta template editing for specific post types and taxonomies.',
+					'surerank'
+				) }
+				utmMedium="surerank_meta_templates"
+			/>
 		</PageContentWrapper>
 	);
 };

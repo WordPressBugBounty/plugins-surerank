@@ -1,6 +1,6 @@
 import { cn } from '@Functions/utils';
 import { forwardRef, Fragment, useState } from '@wordpress/element';
-import { Select, Input, Checkbox, Label, Text } from '@bsf/force-ui';
+import { Select, Input, Checkbox, Label, Text, TextArea } from '@bsf/force-ui';
 import { __ } from '@wordpress/i18n';
 import MediaPreview from '../admin-components/media-preview';
 import { createMediaFrame } from '@/global/utils/utils';
@@ -138,6 +138,22 @@ export const renderField = ( field, fieldValue, onChange, error, option ) => {
 				</div>
 			);
 			break;
+		case 'textarea':
+			children = (
+				<div className="space-y-1.5">
+					<Label htmlFor={ name }>{ label }</Label>
+					<TextArea
+						id={ name }
+						rows={ field.rows || 4 }
+						placeholder={ field.placeholder || '' }
+						value={ fieldValue }
+						onChange={ onChange }
+						className="w-full"
+						size="md"
+					/>
+				</div>
+			);
+			break;
 		case 'file':
 			const mediaPreviewProps = {
 				imageUrl:
@@ -229,6 +245,7 @@ const SelectWithCustomSearch = forwardRef(
 		);
 		return (
 			<Select
+				id={ id }
 				size={ size }
 				by={ by }
 				combobox={ combobox }
@@ -240,7 +257,6 @@ const SelectWithCustomSearch = forwardRef(
 					} ) }
 			>
 				<Select.Button
-					id={ id }
 					label={ label }
 					render={ ( selectedValue ) =>
 						selectedValue?.label || defaultValue?.label

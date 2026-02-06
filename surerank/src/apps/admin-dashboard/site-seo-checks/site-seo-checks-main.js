@@ -1,4 +1,3 @@
-import { applyFilters } from '@wordpress/hooks';
 import { STORE_NAME } from '@/admin-store/constants';
 import { Breadcrumb, Button, Container, Title } from '@bsf/force-ui';
 import { useDispatch, useSuspenseSelect, useSelect } from '@wordpress/data';
@@ -13,6 +12,7 @@ import SiteSeoChecksDrawer from './site-seo-checks-drawer';
 import { createLazyRoute } from '@tanstack/react-router';
 import { useRunSeoChecks } from './use-run-seo-checks';
 import { cn } from '@Functions/utils';
+import SaveAuthToken from '@/global/components/save-auth-token';
 
 // Non-suspense version of the hook for components outside Suspense boundary
 export const useSiteSeoAnalysis = () => {
@@ -56,7 +56,7 @@ const SiteSeoChecksHeader = () => {
 					<Breadcrumb.Separator type="slash" />
 					<Breadcrumb.Item>
 						<Breadcrumb.Page>
-							{ __( 'Site SEO Analysis', 'surerank' ) }
+							{ __( 'Site SEO Audit', 'surerank' ) }
 						</Breadcrumb.Page>
 					</Breadcrumb.Item>
 				</Breadcrumb.List>
@@ -71,12 +71,12 @@ const SiteSeoChecksTitle = ( { isLoading, handleRunChecksAgain } ) => {
 		<Container align="center" justify="between" className="p-2">
 			<Title
 				tag="h4"
-				title={ __( 'Site SEO Analysis', 'surerank' ) }
+				title={ __( 'Site SEO Audit', 'surerank' ) }
 				size="md"
 			/>
 			<div></div>
 			<Button
-				variant="primary"
+				variant="outline"
 				size="sm"
 				icon={
 					<RefreshCw
@@ -88,7 +88,7 @@ const SiteSeoChecksTitle = ( { isLoading, handleRunChecksAgain } ) => {
 				onClick={ handleRunChecksAgain }
 				disabled={ isLoading }
 			>
-				{ __( 'Re-run Checks', 'surerank' ) }
+				{ __( 'Run Checks', 'surerank' ) }
 			</Button>
 		</Container>
 	);
@@ -138,11 +138,7 @@ const SiteSeoChecks = () => {
 		<div className="w-full p-5 pb-8 xl:p-8 max-[1920px]:max-w-full mx-auto space-y-8">
 			<SiteSeoChecksHeader />
 			<SuspendedContent />
-			{ applyFilters(
-				'surerank-pro.dashboard.site-seo-checks-save-auth',
-				null,
-				'site-seo-analysis'
-			) }
+			<SaveAuthToken />
 		</div>
 	);
 };

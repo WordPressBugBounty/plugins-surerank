@@ -30,7 +30,7 @@ class Seo_Bar {
 		if ( ! Settings::get( 'enable_page_level_seo' ) ) {
 			return;
 		}
-		
+
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
@@ -80,6 +80,7 @@ class Seo_Bar {
 					],
 				]
 			);
+			do_action( 'surerank_seo_bar_enqueue_post_type_scripts', $hook, $screen );
 		}
 
 		if ( 'edit-tags.php' === $hook && 'edit-tags' === $screen->base && $this->display_metabox( $screen->taxonomy, 'wp_terms' ) ) {
@@ -98,6 +99,7 @@ class Seo_Bar {
 					],
 				]
 			);
+			do_action( 'surerank_seo_bar_enqueue_taxonomy_scripts', $hook, $screen );
 		}
 	}
 
@@ -189,7 +191,7 @@ class Seo_Bar {
 		foreach ( $taxonomies as $taxonomy ) {
 			if ( $this->display_metabox( $taxonomy, 'wp_terms' ) !== false ) {
 				add_filter( "manage_edit-{$taxonomy}_columns", [ $this, 'column_heading_taxonomy' ], 10, 1 );
-				add_action( "manage_{$taxonomy}_custom_column", [ $this, 'column_content_taxonomy' ], 10, 3 );
+				add_filter( "manage_{$taxonomy}_custom_column", [ $this, 'column_content_taxonomy' ], 10, 3 );
 			}
 		}
 	}
@@ -200,11 +202,11 @@ class Seo_Bar {
 	 * @param string $content     The current column content.
 	 * @param string $column_name The name of the column.
 	 * @param int    $term_id     The ID of the term.
-	 * @return void
+	 * @return string
 	 */
 	public function column_content_taxonomy( $content, $column_name, $term_id ) {
 		if ( ! $term_id ) {
-			return;
+			return $content;
 		}
 
 		$term_title = get_term( $term_id );
@@ -218,6 +220,8 @@ class Seo_Bar {
 		if ( $column_name === 'surerank-data' ) {
 			echo '<span id="surerank-seo-popup-' . esc_attr( (string) $term_id ) . '" class="surerank-root surerank-page-score" data-title="' . esc_attr( (string) $term_title ) . '" data-id="' . esc_attr( (string) $term_id ) . '"><div class="bg-gray-200 animate-pulse w-full h-6 rounded-full max-w-32"></div></span>';
 		}
+
+		return $content;
 	}
 
 	/**
@@ -227,7 +231,7 @@ class Seo_Bar {
 	 * @param string $object_type Object type to check.
 	 * @return bool Whether the metabox should be displayed.
 	 */
-	private function display_metabox( $post_type_or_taxonomy = '', $object_type = '' ) {
+	public static function display_metabox( $post_type_or_taxonomy = '', $object_type = '' ) {
 		if ( $object_type === 'wp_posts' ) {
 			if ( in_array( $post_type_or_taxonomy, apply_filters( 'surerank_excluded_post_types_from_seo_checks', [ 'elementor_library', 'sureforms_form', 'astra-advanced-hook' ] ), true ) ) {
 				return false;

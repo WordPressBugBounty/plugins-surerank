@@ -69,7 +69,9 @@ export const getCurrentPostIgnoredList = ( state ) => {
 	return ignoredList;
 };
 
-export const getPageSeoChecks = ( state ) => state.pageSeoChecks;
+export const getPageSeoChecks = ( state ) => {
+	return state.pageSeoChecks;
+};
 
 export const getSeoBarChecks = ( state, postId, checkType ) => {
 	if ( ! postId || ! checkType ) {

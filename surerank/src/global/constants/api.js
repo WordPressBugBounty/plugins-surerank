@@ -9,3 +9,4 @@ export const GET_POSTS_BY_QUERY_URL = '/surerank/v1/admin/posts';
 export const GET_INSTALLED_PLUGINS_AND_THEMES_URL =
 	'/surerank/v1/plugins/installed';
 export const ROBOTS_TXT_URL = '/surerank/v1/robots-txt';
+export const EMAIL_REPORTS_SETTINGS_URL = '/surerank/v1/email-reports/settings';

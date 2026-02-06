@@ -39,3 +39,8 @@ define( 'SURERANK_TAXONOMY_UPDATED_AT', 'surerank_taxonomy_updated_at' );
  * Robots.txt content option.
  */
 define( 'SURERANK_ROBOTS_TXT_CONTENT', 'surerank_robots_txt_content' );
+
+/**
+ * Pro nudges option key.
+ */
+define( 'SURERANK_NUDGES', 'surerank_nudges' );

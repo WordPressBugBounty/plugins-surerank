@@ -43,7 +43,13 @@ export const ensureMediaButtonText = ( mediaFrame, buttonText ) => {
 // Creates a WordPress media frame with consistent button text handling.
 // This is a wrapper around wp.media() that automatically applies the button text fix.
 export const createMediaFrame = ( options ) => {
-	const frame = wp.media( options );
+	const frame = wp.media( {
+		...options,
+		library: {
+			type: 'image',
+			...( options.library || {} ),
+		},
+	} );
 
 	// Apply button text fix
 	if ( options.button && options.button.text ) {

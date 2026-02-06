@@ -37,7 +37,7 @@ class Cache {
 	 * @return void
 	 */
 	public static function init() {
-		self::$cache_dir = wp_upload_dir()['basedir'] . '/surerank/sitemap/';
+		self::$cache_dir = wp_upload_dir()['basedir'] . '/surerank/';
 
 		// Create cache directory if it doesn't exist.
 		if ( ! file_exists( self::$cache_dir ) ) {
@@ -58,9 +58,8 @@ class Cache {
 			self::init();
 		}
 
-		// Sanitize filename to prevent directory traversal attacks.
-		$filename = sanitize_file_name( $filename );
-		$filename = basename( $filename ); // Extra protection against path traversal.
+		// Sanitize filename and prevent directory traversal attacks.
+		$filename = self::sanitize_filename( $filename );
 
 		$filepath = self::$cache_dir . $filename;
 
@@ -93,8 +92,7 @@ class Cache {
 		}
 
 		// Sanitize filename to prevent directory traversal attacks.
-		$filename = sanitize_file_name( $filename );
-		$filename = basename( $filename ); // Extra protection against path traversal.
+		$filename = self::sanitize_filename( $filename );
 
 		$filepath = self::$cache_dir . $filename;
 
@@ -124,9 +122,8 @@ class Cache {
 			self::init();
 		}
 
-		// Sanitize filename to prevent directory traversal attacks.
-		$filename = sanitize_file_name( $filename );
-		$filename = basename( $filename ); // Extra protection against path traversal.
+		// Sanitize filename and prevent directory traversal attacks.
+		$filename = self::sanitize_filename( $filename );
 
 		$filepath = self::$cache_dir . $filename;
 
@@ -182,8 +179,7 @@ class Cache {
 		}
 
 		// Sanitize filename to prevent directory traversal attacks.
-		$filename = sanitize_file_name( $filename );
-		$filename = basename( $filename ); // Extra protection against path traversal.
+		$filename = self::sanitize_filename( $filename );
 
 		return self::$cache_dir . $filename;
 	}
@@ -201,8 +197,7 @@ class Cache {
 		}
 
 		// Sanitize filename to prevent directory traversal attacks.
-		$filename = sanitize_file_name( $filename );
-		$filename = basename( $filename ); // Extra protection against path traversal.
+		$filename = self::sanitize_filename( $filename );
 
 		return file_exists( self::$cache_dir . $filename );
 	}
@@ -211,18 +206,26 @@ class Cache {
 	 * Get all files from cache directory
 	 *
 	 * @since 1.2.0
+	 * @param string $directory Optional directory name to scan (e.g., 'sitemap', 'metadata').
 	 * @return array<string> Array of filenames in the cache directory
 	 */
-	public static function get_all_files() {
+	public static function get_all_files( string $directory = '' ) {
 		if ( empty( self::$cache_dir ) ) {
 			self::init();
 		}
 
-		if ( ! file_exists( self::$cache_dir ) ) {
+		$target_dir = self::$cache_dir;
+		if ( ! empty( $directory ) ) {
+			// Sanitize directory name and prevent directory traversal.
+			$directory  = self::sanitize_filename( $directory );
+			$target_dir = self::$cache_dir . $directory . '/';
+		}
+
+		if ( ! file_exists( $target_dir ) ) {
 			return [];
 		}
 
-		$files = scandir( self::$cache_dir );
+		$files = scandir( $target_dir );
 		if ( false === $files ) {
 			return [];
 		}
@@ -254,12 +257,25 @@ class Cache {
 		$chunks_per_sitemap   = (int) ceil( $sitemap_threshold / $chunk_size );
 		$sitemap_index_number = (int) ceil( $chunk_number / $chunks_per_sitemap );
 
-		$sitemap_index_filename = $type . '-sitemap-' . $sitemap_index_number . '.json';
+		$sitemap_index_filename = 'sitemap/' . $type . '-sitemap-' . $sitemap_index_number . '.json';
 		$sitemap_index_data     = self::get_sitemap_index_data( $sitemap_index_filename, $type, $sitemap_index_number );
 
 		$sitemap_index_data['updated_at'] = current_time( 'c' );
 
 		self::update_unified_sitemap_index( $sitemap_index_filename );
+	}
+
+	/**
+	 * Sanitize filename to prevent directory traversal attacks.
+	 *
+	 * @param string $filename The filename to sanitize.
+	 * @since 1.2.0
+	 * @return string Sanitized filename.
+	 */
+	private static function sanitize_filename( string $filename ): string {
+		// Prevent directory traversal attacks.
+		$filename = str_replace( '..', '', $filename );
+		return ltrim( $filename, '/' ); // Remove leading slash.
 	}
 
 	/**
@@ -297,10 +313,11 @@ class Cache {
 	 * @return void
 	 */
 	private static function update_unified_sitemap_index( string $sitemap_filename ) {
-		$unified_index_filename = 'sitemap_index.json';
+		$unified_index_filename = 'sitemap/sitemap_index.json';
 		$unified_index_data     = self::get_unified_sitemap_index_data( $unified_index_filename );
 
 		$xml_filename = str_replace( '.json', '.xml', $sitemap_filename );
+		$xml_filename = str_replace( 'sitemap/', '', $xml_filename );
 		$sitemap_url  = home_url( $xml_filename );
 
 		$sitemap_exists = false;

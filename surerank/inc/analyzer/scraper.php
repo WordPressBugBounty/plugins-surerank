@@ -40,13 +40,20 @@ class Scraper {
 	private $last_body = null;
 
 	/**
+	 * Last response code.
+	 *
+	 * @var int|null
+	 */
+	private $response_code = null;
+
+	/**
 	 * Fetch HTML content from a URL.
 	 *
 	 * @param string $url The URL to scrape.
 	 * @return string|WP_Error HTML content or error on failure.
 	 */
 	public function fetch( string $url ) {
-		$this->last_response = Requests::get( $url, apply_filters( 'surerank_scraper_headers', [] ) );
+		$this->last_response = $this->call_request( $url );
 		if ( is_wp_error( $this->last_response ) ) {
 			return $this->last_response;
 		}
@@ -94,5 +101,33 @@ class Scraper {
 		}
 
 		return $this->last_body;
+	}
+
+	/**
+	 * Make HTTP request to URL.
+	 *
+	 * @param string $url The URL to request.
+	 * @return array<string,mixed>|WP_Error HTTP response or WP_Error on failure.
+	 */
+	public function call_request( string $url ) {
+		return Requests::get( $url, apply_filters( 'surerank_scraper_headers', [] ) );
+	}
+
+	/**
+	 * Fetch HTTP status code from a URL.
+	 *
+	 * @param string $url The URL to check status for.
+	 * @return int|WP_Error Status code or WP_Error on failure.
+	 */
+	public function fetch_status( string $url ) {
+		$this->last_response = $this->call_request( $url );
+		if ( is_wp_error( $this->last_response ) ) {
+			return new WP_Error(
+				'no_response',
+				__( 'No response available to retrieve status.', 'surerank' )
+			);
+		}
+		$this->response_code = (int) wp_remote_retrieve_response_code( $this->last_response );
+		return $this->response_code;
 	}
 }

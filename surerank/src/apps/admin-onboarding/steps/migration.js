@@ -199,11 +199,10 @@ const Migration = () => {
 
 	return (
 		<>
-			<div className="mb-6">
+			{ content }
+			<div className="mt-6">
 				<CachePluginAlert />
 			</div>
-			{ content }
-
 			{ ! showResume && (
 				<StepNavButtons
 					className="mt-12"

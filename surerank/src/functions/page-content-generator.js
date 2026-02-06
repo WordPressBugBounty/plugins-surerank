@@ -157,6 +157,30 @@ const useFieldActions = ( field, formValues, setFormValues ) => {
 				break;
 		}
 
+		// Handle pendingAction when field value matches any value in the pendingAction array
+		if (
+			field.pendingAction &&
+			Array.isArray( field.pendingAction ) &&
+			field.pendingAction.includes( transformedValue )
+		) {
+			try {
+				const actionName = field.id || field.storeKey;
+				const pendingActions = JSON.parse(
+					window.localStorage.getItem( 'surerank_pending_actions' ) ||
+						'[]'
+				);
+				if ( ! pendingActions.includes( actionName ) ) {
+					pendingActions.push( actionName );
+					window.localStorage.setItem(
+						'surerank_pending_actions',
+						JSON.stringify( pendingActions )
+					);
+				}
+			} catch ( error ) {
+				// Silently fail if localStorage is not available
+			}
+		}
+
 		const [ mainKey, subKey ] = field.storeKey.split( '.' );
 		if ( subKey ) {
 			setFormValues( {
@@ -183,6 +207,14 @@ const useFieldActions = ( field, formValues, setFormValues ) => {
 			break;
 		default:
 			fieldValue = stateValue;
+			// Apply transform for display if it exists
+			if (
+				field.transform &&
+				typeof field.transform === 'function' &&
+				fieldValue !== undefined
+			) {
+				fieldValue = field.transform( fieldValue );
+			}
 	}
 
 	return {
@@ -361,9 +393,10 @@ const FormField = ( { field, formValues, setFormValues } ) => {
 		typeof field?.disabled === 'function'
 			? field.disabled( formValues )
 			: field?.disabled;
-	const className = typeof field?.className === 'function'
-		? field.className( formValues )
-		: field?.className;
+	const className =
+		typeof field?.className === 'function'
+			? field.className( formValues )
+			: field?.className;
 
 	const additionalProps = {
 		...( disabled && { disabled } ),

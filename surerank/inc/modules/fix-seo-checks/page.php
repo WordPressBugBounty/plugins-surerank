@@ -4,11 +4,11 @@
  *
  * Module class for fixing Page SEO Checks functionality.
  *
- * @package SureRank\Inc\Modules\FixSeoChecks
- * @since x.x.x
+ * @package SureRank\Inc\Modules\Fix_Seo_Checks
+ * @since 1.4.2
  */
 
-namespace SureRank\Inc\Modules\FixSeoChecks;
+namespace SureRank\Inc\Modules\Fix_Seo_Checks;
 
 use SureRank\Inc\API\Post;
 use SureRank\Inc\API\Term;
@@ -31,7 +31,7 @@ class Page {
 	 * Get API types.
 	 * 
 	 * @return array<int,string> Array of API types.
-	 * @since x.x.x
+	 * @since 1.4.2
 	 */
 	public function get_fix_it_types() {
 		return apply_filters(
@@ -51,7 +51,7 @@ class Page {
 	 * @param bool   $is_taxonomy Whether the input is a taxonomy or not.
 	 * 
 	 * @return array{status: bool, message: string, type: string}|\WP_Error Response array with status, message, and type or WP_Error on failure.
-	 * @since x.x.x
+	 * @since 1.4.2
 	 */
 	public function use_me( $input_key, $input_value, $id, $is_taxonomy = false ) {
 		$method = Utils::create_use_me_method( $input_key );
@@ -83,7 +83,7 @@ class Page {
 	 * @param string $response_type  Response type for the fix.
 	 * 
 	 * @return array{status: bool, message: string, type: string}|\WP_Error Response array with status, message, and type or WP_Error on failure.
-	 * @since x.x.x
+	 * @since 1.4.2
 	 */
 	private function update_meta_common( $input_value, $id, $is_taxonomy, $meta_key, $error_message, $success_message, $response_type ) {
 		if ( empty( $id ) || empty( $input_value ) ) {
@@ -107,7 +107,9 @@ class Page {
 			}
 			Post::update_post_meta_common( $id, $data );
 		}
-
+		
+		Utils::get_instance()->clear_cache( $id, $is_taxonomy );
+		
 		return Utils::get_instance()->send_response( true, $success_message, $response_type );
 	}
 
@@ -119,7 +121,7 @@ class Page {
 	 * @param bool   $is_taxonomy Whether the input is a taxonomy or not.
 	 * 
 	 * @return array{status: bool, message: string, type: string}|\WP_Error Response array with status, message, and type or WP_Error on failure.
-	 * @since x.x.x
+	 * @since 1.4.2
 	 */
 	private function use_search_engine_title( $input_value = '', $id = 0, $is_taxonomy = false ) {
 		return $this->update_meta_common(
@@ -141,7 +143,7 @@ class Page {
 	 * @param bool   $is_taxonomy Whether the input is a taxonomy or not.
 	 * 
 	 * @return array{status: bool, message: string, type: string}|\WP_Error Response array with status, message, and type or WP_Error on failure.
-	 * @since x.x.x
+	 * @since 1.4.2
 	 */
 	private function use_search_engine_description( $input_value = '', $id = 0, $is_taxonomy = false ) {
 		return $this->update_meta_common(

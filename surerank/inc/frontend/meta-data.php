@@ -123,7 +123,7 @@ class Meta_Data {
 			Term::get_instance()->set_term( intval( $queried_object->term_id ) );
 		} elseif ( is_front_page() || is_home() ) {
 			Site::get_instance();
-		} elseif ( is_author() || is_date() ) {
+		} elseif ( is_author() || is_date() || is_post_type_archive() ) {
 			// For archive pages, we don't need to initialize any specific meta variable instance.
 			// But we still need to apply the filter to allow archive meta to be added.
 			$this->initialize_archive_variables();

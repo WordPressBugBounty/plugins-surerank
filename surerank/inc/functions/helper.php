@@ -8,6 +8,8 @@
 
 namespace SureRank\Inc\Functions;
 
+use SureRank\Inc\Admin\Helper as AdminHelper;
+use SureRank\Inc\Frontend\Robots;
 use SureRank\Inc\Meta_Variables\Post;
 use SureRank\Inc\Meta_Variables\Site;
 use SureRank\Inc\Meta_Variables\Term;
@@ -179,6 +181,7 @@ class Helper {
 			'website_name'         => self::get_sitename(),
 			'website_owner_name'   => self::get_admin_name(),
 			'website_owner_email'  => self::get_admin_email(),
+			'business_description' => AdminHelper::get_saved_business_details( 'business_description' ),
 			'website_represents'   => Helper::website_represents(),
 			'website_logo'         => self::get_logo(),
 			'website_lead_details' => self::get_website_lead_details(),
@@ -331,17 +334,7 @@ class Helper {
 	 * @return string
 	 */
 	public static function logo_uri() {
-
 		return 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEzLjU1MzcgMS41QzE3Ljg0NTMgMS41IDIxLjMyNTEgNC45Nzg5NSAyMS4zMjUyIDkuMjcwNTFDMjEuMzI1MiAxMi4zNDcgMTkuNTM2OCAxNS4wMDU2IDE2Ljk0MzQgMTYuMjY0NkgyMS4zMjUyVjIyLjVIMTguMDg4OUMxNC45MDg2IDIyLjUgMTIuMjg2MSAyMC4xMTg2IDExLjkwMzMgMTcuMDQySDExLjkwMTRMMTEuOTAzMyAxMy43ODUyQzE0LjgyODMgMTMuNzY2MSAxNy4wMzQyIDExLjM4OTQgMTcuMDM0MiA4LjQ1OTk2VjYuMDI5M0MxNC4xMzcgNi4wMjk0NyAxMS42OTQ4IDcuOTc2ODIgMTAuOTQ0MyAxMC42MzM4QzEwLjE2MDUgOS41MzM0NSA4Ljg3MzgzIDguODE2NSA3LjQxOTkyIDguODE2NDFINi4zODA4NlY5Ljg1MzUySDYuMzgzNzlDNi40NDUxNSAxMi4wMzU2IDguMjMzNzUgMTMuNzg2IDEwLjQzMDcgMTMuNzg2MUgxMC43MDYxTDEwLjY5MzQgMTcuMDQySDEwLjY4NjVDMTAuMjk0MyAyMC4xMDgyIDcuNjc2NzggMjIuNDc4NSA0LjUwMzkxIDIyLjQ3ODVIMi42NzQ4VjEuNUgxMy41NTM3WiIgZmlsbD0iIzQzMzhDQSIvPgo8L3N2Zz4K';
-	}
-
-	/**
-	 * Get Auth API URL
-	 *
-	 * @return string
-	 */
-	public static function get_auth_api_url() {
-		return defined( 'SURERANK_SAAS_AUTH_API_URL' ) ? SURERANK_SAAS_AUTH_API_URL : 'https://api.surerank.com/';
 	}
 
 	/**
@@ -486,11 +479,158 @@ class Helper {
 		}
 
 		return [
+			'default_robots_txt'       => Robots::get_instance()->get_default_robots_txt(),
 			'robots_txt_content'       => Get::option( SURERANK_ROBOTS_TXT_CONTENT, '' ),
 			'search_engine_visibility' => $public,
 			'robots_file_exists'       => $robots_file_exists,
 			'robot_file_content'       => $robot_file_content,
 		];
+	}
+
+	/**
+	 * Get formatted post types
+	 *
+	 * @return array<string, string>
+	 */
+	public static function get_formatted_post_types() {
+		$post_types = \get_post_types( [ 'public' => true ], 'objects' );
+		if ( empty( $post_types ) || ! is_array( $post_types ) ) {
+			return [];
+		}
+
+		return array_map(
+			static function ( $post_type ) {
+				return ! empty( $post_type->label ) ? $post_type->label : '';
+			},
+			$post_types
+		);
+	}
+
+	/**
+	 * Get formatted taxonomies
+	 *
+	 * @return array<string, string>
+	 */
+	public static function get_formatted_taxonomies() {
+		$taxonomies = \get_taxonomies( [ 'public' => true ], 'objects' );
+		if ( empty( $taxonomies ) || ! is_array( $taxonomies ) ) {
+			return [];
+		}
+
+		return array_map(
+			static function ( $taxonomy ) {
+				return $taxonomy->label;
+			},
+			$taxonomies
+		);
+	}
+
+	/**
+	 * Check if crons are available and working.
+	 *
+	 * @since 1.4.3
+	 * @return bool True if cron is available, false if not.
+	 */
+	public static function are_crons_available() {
+		global $wp_version;
+
+		// If we're currently running within a cron, it's obviously working.
+		if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
+			return true;
+		}
+
+		// Check if DISABLE_WP_CRON is defined and true.
+		if ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) {
+			return false;
+		}
+
+		// Check if ALTERNATE_WP_CRON is defined and true.
+		if ( defined( 'ALTERNATE_WP_CRON' ) && ALTERNATE_WP_CRON ) {
+			return false;
+		}
+
+		// Check cached status.
+		$cached_status = get_option( 'surerank_cron_test_ok' );
+
+		if ( 'yes' === $cached_status ) {
+			return true;
+		}
+		if ( 'no' === $cached_status ) {
+			return false;
+		}
+
+		// Prepare cron test request.
+		$sslverify     = version_compare( $wp_version, '4.0', '<' );
+		$doing_wp_cron = sprintf( '%.22F', microtime( true ) );
+
+		$cron_request = apply_filters(
+			'surerank_cron_request',
+			[
+				'url'  => site_url( 'wp-cron.php?doing_wp_cron=' . $doing_wp_cron ),
+				'key'  => $doing_wp_cron,
+				'args' => [
+					'timeout'   => 5, // phpcs:ignore WordPressVIPMinimum.Performance.RemoteRequestTimeout.timeout_timeout
+					'blocking'  => true,
+					'sslverify' => apply_filters( 'https_local_ssl_verify', $sslverify ),
+				],
+			]
+		);
+
+		// Ensure blocking is set to true.
+		$cron_request['args']['blocking'] = true;
+
+		// Test cron spawn by sending a request to wp-cron.php.
+		$result = wp_safe_remote_post( $cron_request['url'], $cron_request['args'] );
+
+		// Handle errors - cache failures for 5 minutes to prevent performance issues.
+		if ( is_wp_error( $result ) ) {
+			update_option( 'surerank_cron_test_ok', 'no' );
+			return false;
+		}
+
+		$response_code = wp_remote_retrieve_response_code( $result );
+
+		// Check for non-success HTTP response codes or empty response.
+		if ( empty( $response_code ) || $response_code < 200 || $response_code >= 300 ) {
+			update_option( 'surerank_cron_test_ok', 'no' );
+			return false;
+		}
+
+		// Success - cache the result.
+		update_option( 'surerank_cron_test_ok', 'yes' );
+		return true;
+	}
+
+	/**
+	 * Check if WP Schema Pro is active.
+	 *
+	 * @since 1.5.0
+	 * @return bool
+	 */
+	public static function is_wp_schema_pro_active() {
+		return defined( 'BSF_AIOSRS_PRO_VER' );
+	}
+
+	/**
+	 * Encode a value using base64.
+	 *
+	 * @since 1.6.0
+	 * @param string $value Value to encode.
+	 * @return string Encoded value.
+	 */
+	public static function encode( $value ) {
+		return base64_encode( $value ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+	}
+
+	/**
+	 * Decode a value using base64.
+	 *
+	 * @since 1.6.0
+	 * @param string $value Value to decode.
+	 * @return string|false Decoded value or false on failure.
+	 */
+	public static function decode( $value ) {
+		return base64_decode( $value, true ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
 	}
 
 	/**
@@ -588,5 +728,4 @@ class Helper {
 			$value
 		) ?? $value;
 	}
-
 }

@@ -14,6 +14,8 @@ import {
 import Modal from './modal';
 import { SaveSettingsButton } from '@/apps/admin-components/global-save-button';
 import { createLazyRoute } from '@tanstack/react-router';
+import { UpgradeNotice } from '@/global/components/nudges';
+import WpSchemaProNotice from '@/global/components/wp-schema-pro-notice';
 
 // Schema categories
 const SCHEMA_CATEGORIES = {
@@ -54,6 +56,8 @@ const Schema = () => {
 			metaSettings: getMetaSettings(),
 		};
 	}, [] );
+
+	const isWpSchemaProActive = surerank_globals?.wp_schema_pro_active || false;
 
 	const { setMetaSetting, invalidateResolutionForStoreSelector } =
 		useDispatch( STORE_NAME );
@@ -300,6 +304,22 @@ const Schema = () => {
 		</div>
 	);
 
+	const WpSchemaProNoticePage = () => (
+		<PageContentWrapper
+			title={ __( 'Schema', 'surerank' ) }
+			description={ __(
+				'Adds structured data to your content so search engines can better understand and present it. Most fields are already filled in to make setup easier and help your site show up better in search results.',
+				'surerank'
+			) }
+		>
+			<WpSchemaProNotice />
+		</PageContentWrapper>
+	);
+
+	if ( isWpSchemaProActive ) {
+		return <WpSchemaProNoticePage />;
+	}
+
 	return showEditSchema ? (
 		<EditSchema
 			schema={ selectedSchema }
@@ -341,6 +361,17 @@ const Schema = () => {
 					/>
 				</Container>
 			</div>
+			<UpgradeNotice
+				title={ __(
+					"Didn't find the schema you're looking for?",
+					'surerank'
+				) }
+				description={ __(
+					'Upgrade to Pro to unlock FAQ, How-To, and many more powerful schema types.',
+					'surerank'
+				) }
+				utmMedium="surerank_schema"
+			/>
 		</PageContentWrapper>
 	);
 };

@@ -92,14 +92,15 @@ const AdvancedTab = ( {
 	}
 
 	return (
-		<>
-			<div className="p-2 pl-0 space-y-2">
-				<div className="flex items-center justify-start gap-1">
+		<div className="flex flex-col gap-3 px-3 mt-1">
+			{ /* Robot Instructions Section */ }
+			<div className="flex flex-col gap-2">
+				<div className="flex items-center gap-1">
 					<Label as="p" size="sm">
-						{ __( 'Robot Instructions', 'surerank' ) }{ ' ' }
+						{ __( 'Robot Instructions', 'surerank' ) }
 						<SeoPopupInfoTooltip
 							content={ __(
-								'These settings help search engines understand how to treat your page in search results. Enabling ‘No Index’ will prevent the page from appearing in search results. ‘No Follow’ tells search engines not to follow any links on the page, and ‘No Archive’ prevents search engines from storing a cached version of the page.',
+								'These settings help search engines understand how to treat your page in search results. Enabling "No Index" will prevent the page from appearing in search results. "No Follow" tells search engines not to follow any links on the page, and "No Archive" prevents search engines from storing a cached version of the page.',
 								'surerank'
 							) }
 						/>
@@ -128,8 +129,14 @@ const AdvancedTab = ( {
 					) ) }
 				</div>
 			</div>
-			<div className="space-y-2 pt-2 px-2 pl-0">
-				<Label htmlFor="canonical-url" size="sm" className="gap-1">
+
+			{ /* Canonical URL Section */ }
+			<div className="flex flex-col gap-1.5">
+				<Label
+					htmlFor="canonical-url"
+					size="sm"
+					className="flex items-center gap-1"
+				>
 					{ __( 'Canonical URL', 'surerank' ) }
 					<SeoPopupInfoTooltip
 						content={ __(
@@ -148,7 +155,7 @@ const AdvancedTab = ( {
 					placeholder={ canonicalURLPlaceholder }
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

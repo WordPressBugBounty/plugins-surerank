@@ -129,14 +129,20 @@ class BulkActions {
 			}
 		}
 
-		return add_query_arg(
-			[
-				'surerank_bulk_action' => $action,
-				'surerank_updated'     => count( $ids ),
-				'surerank_nonce'       => wp_create_nonce( 'surerank_bulk_action_nonce' ),
-			],
-			$redirect_to
-		);
+		$query_args = [
+			'surerank_bulk_action' => $action,
+			'surerank_updated'     => count( $ids ),
+			'surerank_nonce'       => wp_create_nonce( 'surerank_bulk_action_nonce' ),
+		];
+
+		// If we're on a taxonomy screen, ensure the taxonomy parameter is preserved.
+		if ( $is_taxonomy && isset( $_REQUEST['taxonomy'] ) ) {
+			$query_args['taxonomy'] = sanitize_text_field( wp_unslash( $_REQUEST['taxonomy'] ) );
+		}
+
+		$redirect_url = add_query_arg( $query_args, $redirect_to );
+
+		return apply_filters( 'surerank_bulk_action_redirect_url', $redirect_url, $action, count( $ids ) );
 	}
 
 	/**
@@ -146,9 +152,23 @@ class BulkActions {
 	 */
 	public function admin_notices(): void {
 		if (
-			! isset( $_GET['surerank_bulk_action'], $_GET['surerank_updated'], $_GET['surerank_nonce'] ) ||
+			! isset( $_GET['surerank_bulk_action'], $_GET['surerank_nonce'] ) ||
 			! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['surerank_nonce'] ) ), 'surerank_bulk_action_nonce' )
 		) {
+			return;
+		}
+
+		$action = sanitize_text_field( wp_unslash( $_GET['surerank_bulk_action'] ) );
+
+		// Check for error message first.
+		if ( isset( $_GET['surerank_error'] ) ) {
+			$error_message = sanitize_text_field( wp_unslash( $_GET['surerank_error'] ) );
+			printf(
+				'<div class="notice notice-error is-dismissible"><p>%s</p></div>',
+				esc_html( rawurldecode( $error_message ) )
+			);
+
+			$this->clear_bulk_action_url_parameters();
 			return;
 		}
 
@@ -157,7 +177,6 @@ class BulkActions {
 			return;
 		}
 
-		$action        = sanitize_text_field( wp_unslash( $_GET['surerank_bulk_action'] ) );
 		$action_labels = $this->get_bulk_action_labels();
 
 		if ( ! isset( $action_labels[ $action ] ) ) {
@@ -175,6 +194,15 @@ class BulkActions {
 		);
 
 		// Clear the URL parameters after displaying the notice.
+		$this->clear_bulk_action_url_parameters();
+	}
+
+	/**
+	 * Clear SureRank bulk action URL parameters
+	 *
+	 * @return void
+	 */
+	public function clear_bulk_action_url_parameters() {
 		?>
 		<script>
 			jQuery(document).ready(function() {
@@ -182,6 +210,7 @@ class BulkActions {
 					var url = new URL(window.location.href);
 					url.searchParams.delete('surerank_bulk_action');
 					url.searchParams.delete('surerank_updated');
+					url.searchParams.delete('surerank_error');
 					url.searchParams.delete('surerank_nonce');
 					window.history.replaceState({}, document.title, url.toString());
 				}

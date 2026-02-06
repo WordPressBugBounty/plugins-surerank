@@ -7,8 +7,8 @@ const PreviewInputWithSuffix = ( {
 	onChange,
 	suffix = null,
 	placeholder = __( 'Enter your focus keyword', 'surerank' ),
-	props = {},
 	isLoading = false,
+	...props
 } ) => {
 	if ( isLoading ) {
 		return <Skeleton className="w-full h-10" />;

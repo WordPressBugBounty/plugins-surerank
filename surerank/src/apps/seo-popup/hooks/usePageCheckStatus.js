@@ -1,8 +1,7 @@
 import { useSelect } from '@wordpress/data';
 import { useMemo } from '@wordpress/element';
 import { STORE_NAME } from '@/store/constants';
-import { calculateCheckStatus, calculateCombinedStatus } from '../utils/calculate-check-status';
-import { useKeywordChecks } from '@SeoPopup/components/keyword-checks/hooks/use-keyword-checks';
+import { calculateCheckStatus } from '@SeoPopup/utils/calculate-check-status';
 
 /**
  * A simplified hook for getting page check status without suspense
@@ -11,55 +10,31 @@ import { useKeywordChecks } from '@SeoPopup/components/keyword-checks/hooks/use-
  * @return {Object} Status data object with status, initializing, and counts
  */
 const usePageCheckStatus = () => {
-	const {
-		categorizedChecks = {},
-		initializing = true,
-		focusKeyword = '',
-		ignoredList = [],
-	} = useSelect( ( select ) => {
-		const storeSelectors = select( STORE_NAME );
+	const { categorizedChecks = {}, initializing = true } = useSelect(
+		( select ) => {
+			const storeSelectors = select( STORE_NAME );
 
-		const pageSeoChecks = storeSelectors.getPageSeoChecks();
+			const pageSeoChecks = storeSelectors.getPageSeoChecks();
 
-		return {
-			categorizedChecks: pageSeoChecks.categorizedChecks,
-			initializing: pageSeoChecks.initializing,
-			focusKeyword: storeSelectors?.getPostSeoMeta?.()?.focus_keyword,
-			ignoredList: pageSeoChecks.ignoredList,
-		};
-	}, [] );
-
-	// Get keyword checks data
-	const keywordChecks = useKeywordChecks( {
-		focusKeyword,
-		ignoredList,
-	} );
-
-	const { status, counts } = useMemo(
-		() => {
-			// Calculate page check status
-			const pageStatus = calculateCheckStatus( categorizedChecks ) ?? {
-				status: null,
-				initializing: true,
-				counts: { errorAndWarnings: 0 },
+			return {
+				categorizedChecks: pageSeoChecks.categorizedChecks,
+				initializing: pageSeoChecks.initializing,
 			};
-
-			const keywordStatus = calculateCheckStatus( keywordChecks ) ?? {
-				status: null,
-				initializing: true,
-				counts: { errorAndWarnings: 0 },
-			};
-
-			// If no focus keyword, return only page status
-			if ( ! focusKeyword ) {
-				return pageStatus;
-			}
-
-			// Calculate combined status from page and keyword checks
-			return calculateCombinedStatus( pageStatus, keywordStatus );
 		},
-		[ categorizedChecks, keywordChecks, focusKeyword ]
+		[]
 	);
+
+	const { status, counts } = useMemo( () => {
+		// Calculate page check status
+		const pageStatus = calculateCheckStatus( categorizedChecks ) ?? {
+			status: null,
+			initializing: true,
+			counts: { errorAndWarnings: 0 },
+		};
+
+		// Calculate combined status from page and keyword checks
+		return pageStatus;
+	}, [ categorizedChecks ] );
 
 	return { status, initializing, counts };
 };

@@ -312,6 +312,12 @@ const DEFAULT_STATE = {
 		runningChecks: false,
 	},
 
+	emailReportsSettings: {
+		enabled: false,
+		scheduledOn: 'sunday',
+		recipientEmail: '',
+	},
+
 	// Store unsaved settings
 	unsavedSettings: {},
 };
@@ -441,6 +447,14 @@ function reducer(
 			return {
 				...state,
 				unsavedSettings: {},
+			};
+		case actionTypes.SET_EMAIL_REPORTS_SETTINGS:
+			return {
+				...state,
+				emailReportsSettings: {
+					...state.emailReportsSettings,
+					...action.payload,
+				},
 			};
 		default:
 			const proState = applyFilters(

@@ -122,7 +122,7 @@ const General = () => {
 		<PageContentWrapper
 			title={ __( 'Default Social Image', 'surerank' ) }
 			description={ __(
-				"This is your site's default social sharing image (Open Graph). It shows up when your pages are shared on social platforms — unless a custom image is set on that page.",
+				"This is your site's default social sharing image (Open Graph). It shows up when your pages are shared on social platforms - unless a custom image is set on that page.",
 				'surerank'
 			) }
 		>

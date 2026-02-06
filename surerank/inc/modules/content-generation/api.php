@@ -5,7 +5,7 @@
  * Handles content generation related REST API endpoints.
  *
  * @package SureRank\Inc\Modules\Content_Generation
- * @since x.x.x
+ * @since 1.4.2
  */
 
 namespace SureRank\Inc\Modules\Content_Generation;
@@ -33,14 +33,14 @@ class Api extends Api_Base {
 	 * Content Generation Controller instance.
 	 *
 	 * @var Controller
-	 * @since x.x.x
+	 * @since 1.4.2
 	 */
 	private $controller;
 
 	/**
 	 * Constructor
 	 *
-	 * @since x.x.x
+	 * @since 1.4.2
 	 */
 	public function __construct() {
 		parent::__construct();
@@ -50,7 +50,7 @@ class Api extends Api_Base {
 	/**
 	 * Register API routes.
 	 *
-	 * @since x.x.x
+	 * @since 1.4.2
 	 * @return void
 	 */
 	public function register_routes() {
@@ -60,7 +60,7 @@ class Api extends Api_Base {
 	/**
 	 * Register index route.
 	 *
-	 * @since x.x.x
+	 * @since 1.4.2
 	 * @return void
 	 */
 	private function register_content_generation_route() {
@@ -72,19 +72,26 @@ class Api extends Api_Base {
 				'callback'            => [ $this, 'generate_content' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
 				'args'                => [
-					'post_id' => [
+					'post_id'     => [
 						'required'          => false,
 						'type'              => 'integer',
 						'sanitize_callback' => 'absint',
-						'description'       => __( 'Post ID whose content needs to be generated (optional)', 'surerank' ),
+						'description'       => __( 'Post ID or Term ID whose content needs to be generated (optional)', 'surerank' ),
 					],
-					'type'    => [
+					'type'        => [
 						'required'          => true,
 						'type'              => 'string',
 						'enum'              => Utils::get_instance()->get_api_types(),
 						'sanitize_callback' => 'sanitize_text_field',
 						'description'       => __( 'Type of content to generate: page title, page description, social title, social description', 'surerank' ),
 						'default'           => 'page_title',
+					],
+					'is_taxonomy' => [
+						'required'          => false,
+						'type'              => 'boolean',
+						'sanitize_callback' => 'rest_sanitize_boolean',
+						'description'       => __( 'Whether the content is for a taxonomy term', 'surerank' ),
+						'default'           => false,
 					],
 				],
 			]
@@ -94,13 +101,14 @@ class Api extends Api_Base {
 	/**
 	 * Generate content for a post.
 	 *
-	 * @since x.x.x
+	 * @since 1.4.2
 	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
 	 * @return void
 	 */
 	public function generate_content( $request ) {
-		$post_id = $request->get_param( 'post_id' );
-		$type    = $request->get_param( 'type' );
+		$post_id     = $request->get_param( 'post_id' );
+		$type        = $request->get_param( 'type' );
+		$is_taxonomy = $request->get_param( 'is_taxonomy' ) ?? false;
 
 		if ( ! in_array( $type, Utils::get_instance()->get_api_types(), true ) ) {
 			Send_Json::error(
@@ -113,33 +121,36 @@ class Api extends Api_Base {
 			);
 		}
 
-		$post_title = '';
-
-		// If post_id is provided, validate it and get post title.
+		// If post_id is provided, validate it exists.
 		if ( ! empty( $post_id ) ) {
-			$post = get_post( $post_id );
+			if ( $is_taxonomy ) {
+				$term = get_term( $post_id );
 
-			if ( ! $post || ! $post instanceof WP_Post ) {
-				Send_Json::error(
-					[
-						'message'     => __( 'Invalid post ID', 'surerank' ),
-						'description' => __( 'Invalid post ID', 'surerank' ),
-						'code'        => 'invalid_post_id',
-					]
-				);
+				if ( ! $term || is_wp_error( $term ) ) {
+					Send_Json::error(
+						[
+							'message'     => __( 'Invalid term ID', 'surerank' ),
+							'description' => __( 'Invalid term ID provided', 'surerank' ),
+							'code'        => 'invalid_term_id',
+						]
+					);
+				}
+			} else {
+				$post = get_post( $post_id );
+
+				if ( ! $post || ! $post instanceof WP_Post ) {
+					Send_Json::error(
+						[
+							'message'     => __( 'Invalid post ID', 'surerank' ),
+							'description' => __( 'Invalid post ID', 'surerank' ),
+							'code'        => 'invalid_post_id',
+						]
+					);
+				}
 			}
-
-			$post_title = get_the_title( $post_id );
 		}
 
-		$site_name    = get_bloginfo( 'name' );
-		$site_tagline = get_bloginfo( 'description' );
-
-		$inputs = [
-			'site_name'    => $site_name,
-			'site_tagline' => $site_tagline,
-			'page_title'   => $post_title,
-		];
+		$inputs = Utils::get_instance()->prepare_content_inputs( $post_id, $is_taxonomy );
 
 		$content = $this->controller->generate_content( $inputs, $type );
 
@@ -159,4 +170,5 @@ class Api extends Api_Base {
 			] 
 		);
 	}
+
 }

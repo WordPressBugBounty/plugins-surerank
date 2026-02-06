@@ -8,6 +8,7 @@ export const createCheck = ( {
 	description,
 	data,
 	showImages,
+	type = 'page',
 } ) => ( {
 	id,
 	title,
@@ -15,6 +16,7 @@ export const createCheck = ( {
 	description,
 	data,
 	showImages,
+	type,
 } );
 
 const getFeaturedImage = async () => {
@@ -78,6 +80,7 @@ export const checkImageAlt = async ( doc ) => {
 				'surerank'
 			),
 			status: 'success',
+			type: 'page',
 		} );
 	}
 
@@ -106,6 +109,7 @@ export const checkImageAlt = async ( doc ) => {
 			new Set( missingAltImages.map( ( img ) => img.src ) )
 		),
 		showImages: true,
+		type: 'page',
 	} );
 };
 
@@ -124,6 +128,7 @@ export const checkMediaPresence = async ( doc ) => {
 			id: 'media_present',
 			title: __( 'No images or videos found on this page.', 'surerank' ),
 			status: 'warning',
+			type: 'page',
 		} );
 	}
 
@@ -135,6 +140,7 @@ export const checkMediaPresence = async ( doc ) => {
 				'surerank'
 			),
 			status: 'warning',
+			type: 'page',
 		} );
 	}
 
@@ -145,6 +151,7 @@ export const checkMediaPresence = async ( doc ) => {
 			'surerank'
 		),
 		status: 'success',
+		type: 'page',
 	} );
 };
 
@@ -156,6 +163,7 @@ export const checkLinkPresence = ( doc ) => {
 			id: 'links_present',
 			title: __( 'No links found on this page.', 'surerank' ),
 			status: 'warning',
+			type: 'page',
 		} );
 	}
 
@@ -164,6 +172,7 @@ export const checkLinkPresence = ( doc ) => {
 			id: 'links_present',
 			title: __( 'Links are present on this page.', 'surerank' ),
 			status: 'success',
+			type: 'page',
 		} );
 	}
 };
@@ -184,6 +193,7 @@ export const checkUrlLength = ( permalink ) => {
 			id: 'url_length',
 			title,
 			status: 'warning',
+			type: 'page',
 		} );
 	}
 
@@ -191,6 +201,7 @@ export const checkUrlLength = ( permalink ) => {
 		id: 'url_length',
 		title: __( 'Page URL is short and SEO-friendly.', 'surerank' ),
 		status: 'success',
+		type: 'page',
 	} );
 };
 
@@ -204,6 +215,7 @@ export const checkSubheadings = ( doc ) => {
 			id: 'h2_subheadings',
 			title: __( 'Page contains at least one subheading.', 'surerank' ),
 			status: 'success',
+			type: 'page',
 		} );
 	}
 
@@ -214,5 +226,6 @@ export const checkSubheadings = ( doc ) => {
 			'surerank'
 		),
 		status: 'warning',
+		type: 'page',
 	} );
 };

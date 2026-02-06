@@ -5,7 +5,6 @@ import { InfoTooltip } from '@AdminComponents/tooltip';
 
 const SiteSelector = ( {
 	sites = [],
-	currentSiteUrl,
 	selectedSite,
 	onSiteSelect,
 	placeholder = __( 'Select a site', 'surerank' ),
@@ -28,27 +27,8 @@ const SiteSelector = ( {
 			} );
 		} );
 
-		// Add current site if not in the list
-		const currentSiteInList = sites.some(
-			( site ) =>
-				site.siteUrl === currentSiteUrl ||
-				site.siteUrl === `${ currentSiteUrl }/` ||
-				site.siteUrl.replace( /\/$/, '' ) ===
-					currentSiteUrl.replace( /\/$/, '' )
-		);
-
-		if ( ! currentSiteInList && currentSiteUrl ) {
-			siteOptions.push( {
-				label: currentSiteUrl,
-				value: currentSiteUrl,
-				tooltipText: __( 'Not Connected', 'surerank' ),
-				isVerified: false,
-				isCurrentSite: true,
-			} );
-		}
-
 		return siteOptions;
-	}, [ sites, currentSiteUrl ] );
+	}, [ sites ] );
 
 	return (
 		<Select

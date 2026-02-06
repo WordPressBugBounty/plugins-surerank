@@ -9,7 +9,7 @@ import { useEffect, useCallback } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import withSuspense from '@AdminComponents/hoc/with-suspense';
 import { POST_CONTENT_URL } from '@Global/constants/api';
-import { useLocation, createLazyRoute } from '@tanstack/react-router';
+import { useLocation } from '@tanstack/react-router';
 import GeneratePageContent from '@Functions/page-content-generator';
 import { Skeleton } from '@bsf/force-ui';
 import { useDispatch, useSuspenseSelect } from '@wordpress/data';
@@ -204,9 +204,5 @@ const RobotInstructions = () => {
 		</PageContentWrapper>
 	);
 };
-
-export const LazyRoute = createLazyRoute( '/advanced/robot_instructions' )( {
-	component: withSuspense( RobotInstructions ),
-} );
 
 export default withSuspense( RobotInstructions );

@@ -20,10 +20,10 @@ import {
 	Megaphone,
 	ChartNoAxesColumnIncreasing,
 } from 'lucide-react';
-import '@Global/style.scss';
 import withSuspense from '@AdminComponents/hoc/with-suspense';
 import SidebarSkeleton from '../sidebar-skeleton';
 import { cn, getSeoCheckLabel } from '@Functions/utils';
+import { isProActive } from '@/functions/nudges';
 import useWhatsNewRSS from '../../../../lib/useWhatsNewRSS';
 import {
 	renderToString,
@@ -41,8 +41,11 @@ import Logo from '@AdminComponents/logo';
 import { Tooltip } from '@AdminComponents/tooltip';
 import TanStackRouterDevtools from '@AdminComponents/tanstack-router-dev-tools';
 import '@AdminStore/store';
+import { UpgradeButton } from '@/global/components/nudges';
+import VersionBadge from '../version-badge';
 
-const { version } = surerank_globals;
+// Stylesheets
+import '@Global/style.scss';
 
 const NavLink = ( { path, children } ) => {
 	const matchRoute = useMatchRoute();
@@ -151,14 +154,22 @@ const SiteSeoAnalysisBadge = () => {
 
 const SubmenuAccordion = ( { label, icon: Icon, submenu } ) => {
 	const navigate = useNavigate();
+	const matchRoute = useMatchRoute();
+
+	const isActive = submenu?.some( ( { path: subPath } ) =>
+		matchRoute( { to: subPath } )
+	);
 
 	return (
 		<Accordion defaultValue="item1" iconType="arrow" type="simple">
 			<Accordion.Item value="item1">
 				<Accordion.Trigger
 					iconType="arrow"
-					collapsible={ false }
-					className="p-2 pl-2.5 text-base font-normal [&_svg]:text-icon-secondary hover:bg-background-primary rounded-md no-underline cursor-pointer focus:outline-none focus:shadow-none transition ease-in-out duration-150 [&_svg]:size-5 [&_div]:font-normal [&_div]:text-text-primary"
+					className={ cn(
+						'p-2 pl-2.5 text-base font-normal [&_svg]:text-icon-secondary hover:bg-background-primary rounded-md no-underline cursor-pointer focus:outline-none focus:shadow-none transition ease-in-out duration-150 [&_svg]:size-5 [&_div]:font-normal [&_div]:text-text-primary',
+						isActive &&
+							'bg-background-secondary text-text-primary [&_svg]:text-brand-800'
+					) }
 					aria-label={ `${ label } submenu` }
 					onClick={ ( event ) => {
 						event.preventDefault();
@@ -233,7 +244,7 @@ const SidebarSection = ( { section, links } ) => {
 
 const SidebarNavigation = ( { navLinks = [] } ) => {
 	return (
-		<div className="h-full w-full">
+		<div className="relative h-full w-full before:content-[''] before:block before:fixed before:top-0 before:bottom-0 before:w-[289px] before:h-full before:bg-background-primary before:border-r before:border-l-0 before:border-y-0 before:border-solid before:border-border-subtle before:-z-10">
 			<Sidebar borderOn className="!h-full w-full p-4">
 				<Sidebar.Body>
 					<Sidebar.Item
@@ -397,10 +408,10 @@ const SidebarLayout = ( {
 
 	return (
 		<Fragment>
-			<div className="grid max-[782px]:grid-rows-[64px_calc(100dvh_-_110px)] grid-rows-[64px_calc(100dvh_-_96px)] min-h-full bg-background-secondary">
+			<div id="surerank-admin-dashboard" className="grid grid-rows-[64px_auto] min-h-full bg-background-secondary">
 				{ /* Header */ }
 				<Topbar
-					className="w-auto min-h-[unset] h-16 shadow-sm p-0 relative"
+					className="w-auto min-h-[unset] h-16 shadow-sm p-0 relative z-[1]"
 					gap={ 0 }
 				>
 					<Topbar.Left className="p-5">
@@ -433,7 +444,7 @@ const SidebarLayout = ( {
 										key={ path }
 										to={ path }
 										className={ cn(
-											'relative content-center no-underline h-full py-0 px-3 m-0 bg-transparent outline-none shadow-none border-0 focus:outline-none text-text-secondary text-sm font-medium cursor-pointer',
+											'relative content-center no-underline h-full py-0 px-3 m-0 bg-transparent outline-none shadow-none border-0 focus:outline-none text-text-secondary text-sm font-medium cursor-pointer whitespace-nowrap',
 											active && 'text-text-primary'
 										) }
 									>
@@ -445,21 +456,30 @@ const SidebarLayout = ( {
 								)
 							) }
 						</Topbar.Item>
+						{ ! isProActive() && (
+							<Topbar.Item>
+								<UpgradeButton
+									label={ __( 'Upgrade', 'surerank' ) }
+									variant="link"
+									size="md"
+									iconPosition="right"
+									showUnderLine={ true }
+									utmMedium="surerank_topbar"
+									className="hidden" // TODO: Remove this class to enable the button
+								/>
+							</Topbar.Item>
+						) }
 					</Topbar.Middle>
 					<Topbar.Right className="p-5">
 						<Topbar.Item>
 							<GlobalSearch navLinks={ navLinks } />
 						</Topbar.Item>
-						<Topbar.Item>
-							<Badge
-								label={ `V ${ version }` }
-								size="xs"
-								variant="neutral"
-							/>
+						<Topbar.Item className="space-x-3">
+							<VersionBadge />
 						</Topbar.Item>
 						<Topbar.Item>
 							<Suspense
-								fallback={ <Skeleton className="w-36 h-6" /> }
+								fallback={ <Skeleton className="w-20 h-6" /> }
 							>
 								<SiteSeoAnalysisBadge />
 							</Suspense>
@@ -503,7 +523,7 @@ const SidebarLayout = ( {
 				{
 					// Sidebar Navigation
 					! isNavbarOnly && (
-						<div className="w-full h-full grid grid-cols-[290px_1fr]">
+						<div className="w-full h-full grid grid-cols-[290px_1fr] max-[782px]:min-h-[calc(100dvh_-_110px)] min-h-[calc(100dvh_-_96px)]">
 							{ ! isNavbarOnly && (
 								<SuspenseNavbar navLinks={ filteredNavLinks } />
 							) }
@@ -525,7 +545,7 @@ const SidebarLayout = ( {
 				{
 					// Without sidebar navigation
 					isNavbarOnly && (
-						<div className="w-full h-fit bg-background-secondary">
+						<div className="w-full h-fit max-[782px]:min-h-[calc(100dvh_-_110px)] min-h-[calc(100dvh_-_96px)] bg-background-secondary">
 							<main className="w-full h-full mx-auto relative">
 								<Outlet />
 							</main>

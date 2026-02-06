@@ -3,6 +3,7 @@ import { STORE_NAME } from '@AdminStore/constants';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 import { addCategoryToSiteSeoChecks } from '@Functions/utils';
+import { useEffect } from '@wordpress/element';
 
 /**
  * Custom hook for running SEO checks
@@ -95,6 +96,27 @@ export const useRunSeoChecks = ( options = {} ) => {
 		}
 		setSiteSeoAnalysis( payload );
 	};
+
+	// Auto-trigger checks if pending action exists
+	useEffect( () => {
+		if ( runningChecks ) {
+			return;
+		}
+
+		try {
+			const pendingActions = JSON.parse( window.localStorage.getItem( 'surerank_pending_actions' ) || '[]' );
+			if ( pendingActions.includes( 'enable_google_console' ) ) {
+				// Remove the action first to prevent double-trigger
+				const updatedActions = pendingActions.filter( ( action ) => action !== 'enable_google_console' );
+				window.localStorage.setItem( 'surerank_pending_actions', JSON.stringify( updatedActions ) );
+
+				// Trigger the checks
+				handleRunChecksAgain();
+			}
+		} catch ( error ) {
+			// Silently fail if localStorage is not available
+		}
+	}, [ runningChecks, handleRunChecksAgain ] );
 
 	return { isLoading: runningChecks, handleRunChecksAgain };
 };

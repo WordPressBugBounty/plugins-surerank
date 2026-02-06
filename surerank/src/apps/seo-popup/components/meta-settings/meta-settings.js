@@ -1,44 +1,102 @@
-import { Fragment, memo, useState } from '@wordpress/element';
+import {
+	Fragment,
+	memo,
+	useState,
+	useEffect,
+	useMemo,
+} from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { motion } from 'framer-motion';
-import { withSelect, withDispatch } from '@wordpress/data';
+import {
+	withSelect,
+	withDispatch,
+	useDispatch,
+	useSelect,
+} from '@wordpress/data';
 import { compose } from '@wordpress/compose';
+import { applyFilters } from '@wordpress/hooks';
 import { STORE_NAME } from '@Store/constants';
 import {
 	GutenbergData,
 	ClassicEditorData,
 } from '@/apps/seo-popup/modal/dynamic-data-provider';
-import { MetaTab, SocialTab } from './tab-content';
+import { MetaTab } from '@SeoPopup/components/meta-settings/tab-content/index';
+import Analyze from '@SeoPopup/components/analyze/index';
 import LoadingSkeleton from '../loading-skeleton';
 import { Tabs } from '@bsf/force-ui';
-
-const tabs = [
-	{
-		label: __( 'Meta', 'surerank' ),
-		slug: 'meta',
-	},
-	{
-		label: __( 'Social', 'surerank' ),
-		slug: 'social',
-	},
-];
+import { usePageCheckStatus } from '@SeoPopup/hooks';
+import { cn, getStatusIndicatorClasses } from '@/functions/utils';
+import { ENABLE_PAGE_LEVEL_SEO } from '@/global/constants';
+import { isSeoAnalysisDisabled } from '@SeoPopup/components/page-seo-checks/analyzer/utils/page-builder';
 
 const MetaSettings = ( props ) => {
 	const { postMetaData, updatePostMetaData, initialized, globalDefaults } =
 		props;
 
-	const [ activeTab, setActiveTab ] = useState( 'meta' );
+	const { status, initializing } = usePageCheckStatus();
+
+	const statusIndicatorIcon = useMemo( () => {
+		if ( initializing || ! status || ! ENABLE_PAGE_LEVEL_SEO ) {
+			return null;
+		}
+
+		const statusClasses = getStatusIndicatorClasses( status );
+		return (
+			<div
+				className={ cn(
+					'rounded-full ml-1 w-[7px] h-[7px]',
+					statusClasses
+				) }
+			/>
+		);
+	}, [ status, initializing ] );
+
+	const baseTabs = [
+		{
+			label: __( 'Optimize', 'surerank' ),
+			slug: 'optimize',
+		},
+		...( isSeoAnalysisDisabled()
+			? []
+			: [
+					{
+						label: __( 'Analyze', 'surerank' ),
+						slug: 'analyze',
+						icon: statusIndicatorIcon,
+					},
+			  ] ),
+	];
+
+	const tabs = applyFilters( 'surerank.meta-settings.tabs', baseTabs, {
+		statusIndicatorIcon,
+	} );
+
+	const { updateAppSettings } = useDispatch( STORE_NAME );
+	const { currentMetaTab } = useSelect( ( select ) =>
+		select( STORE_NAME ).getAppSettings()
+	);
+
+	const [ activeTab, setActiveTab ] = useState(
+		currentMetaTab || 'optimize'
+	);
+
+	useEffect( () => {
+		if ( currentMetaTab && currentMetaTab !== activeTab ) {
+			setActiveTab( currentMetaTab );
+		}
+	}, [ currentMetaTab ] );
 
 	const handleChangeTab = ( { event, value: { slug } } ) => {
 		event.preventDefault();
 		event.stopPropagation();
 
 		setActiveTab( slug );
+		updateAppSettings( { currentMetaTab: slug } );
 	};
 
 	let tabContent = null;
 	switch ( activeTab ) {
-		case 'meta':
+		case 'optimize':
 			tabContent = (
 				<MetaTab
 					postMetaData={ postMetaData }
@@ -47,18 +105,23 @@ const MetaSettings = ( props ) => {
 				/>
 			);
 			break;
-		case 'social':
-			tabContent = (
-				<SocialTab
-					postMetaData={ postMetaData }
-					updatePostMetaData={ updatePostMetaData }
-					globalDefaults={ globalDefaults }
-				/>
-			);
+		case 'analyze':
+			tabContent = <Analyze />;
 			break;
 		default:
 			tabContent = null;
 	}
+
+	tabContent = applyFilters(
+		'surerank.meta-settings.tab-content',
+		tabContent,
+		{
+			activeTab,
+			postMetaData,
+			updatePostMetaData,
+			globalDefaults,
+		}
+	);
 
 	if ( ! initialized ) {
 		tabContent = <LoadingSkeleton tab={ activeTab } />;
@@ -69,16 +132,18 @@ const MetaSettings = ( props ) => {
 			<div>
 				<Tabs.Group
 					className="w-full"
+					iconPosition="right"
 					size="md"
 					variant="rounded"
 					activeItem={ activeTab }
 					onChange={ handleChangeTab }
 				>
-					{ tabs.map( ( { label, slug } ) => (
+					{ tabs.map( ( { label, slug, icon } ) => (
 						<Tabs.Tab
 							key={ label }
 							slug={ slug }
 							text={ label }
+							icon={ icon ?? null }
 							className="text-sm"
 						/>
 					) ) }
@@ -88,7 +153,7 @@ const MetaSettings = ( props ) => {
 			{ /* Tab content */ }
 			<motion.div
 				key={ activeTab }
-				className="flex flex-col gap-2 flex-1 overflow-y-auto"
+				className="flex flex-col -mt-1 flex-1 overflow-y-auto"
 				initial={ { opacity: 0 } }
 				animate={ { opacity: 1 } }
 				exit={ { opacity: 0 } }

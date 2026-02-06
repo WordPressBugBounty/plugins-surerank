@@ -215,12 +215,9 @@ const MigrateToSureRank = () => {
 		content = (
 			<Alert
 				color="success"
-				title={ __(
-					'SureRank Is Ready — Clean Setup with Migration Support Built In',
-					'surerank'
-				) }
+				title={ __( 'No Other SEO Plugin Found', 'surerank' ) }
 				message={ __(
-					'SureRank supports migration from many popular SEO plugins. Since none are currently active, there’s nothing to import — giving you a clean start with everything you need to optimize your site.',
+					"SureRank can migrate settings from many popular SEO plugins. Since no supported plugin is currently installed, there's nothing to migrate.",
 					'surerank'
 				) }
 			/>

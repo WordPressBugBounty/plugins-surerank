@@ -51,18 +51,15 @@ class Search_Action extends Base {
 	 * @since 1.0.0
 	 */
 	public function get() {
-		$default_search_url = esc_url( home_url( '/' ) ) . '?s={search_term_string}';
-
-		$search_url = apply_filters( 'surerank_search_action_target_url', $default_search_url );
-
 		return apply_filters(
 			'surerank_default_schema_type_search_action',
 			[
 				[
 					'id'      => 'schema_name',
 					'label'   => __( 'Schema Title', 'surerank' ),
-					'tooltip' => __( 'Give your schema a name to help you identify it later. This title is for internal reference only and won’t be included in your site’s structured data.', 'surerank' ),
+					'tooltip' => __( 'Give your schema a name to help you identify it later. This title is for internal reference only and won\'t be included in your site\'s structured data.', 'surerank' ),
 					'show'    => true,
+					'default' => true,
 					'type'    => 'Title',
 					'std'     => 'SearchAction',
 					'is_name' => true,
@@ -72,17 +69,23 @@ class Search_Action extends Base {
 					'type'     => 'Hidden',
 					'std'      => '%site.url%#%id%',
 					'required' => true,
+					'default'  => true,
+					'show'     => true,
 				],
 				[
 					'id'       => 'target',
 					'type'     => 'Hidden',
 					'required' => true,
-					'std'      => $search_url,
+					'default'  => true,
+					'show'     => true,
+					'std'      => '%site.search_url%',
 				],
 				[
 					'id'       => 'query-input',
 					'type'     => 'Hidden',
 					'required' => true,
+					'default'  => true,
+					'show'     => true,
 					'std'      => 'required name=search_term_string',
 				],
 			]

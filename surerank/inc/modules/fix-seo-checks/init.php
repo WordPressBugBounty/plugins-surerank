@@ -4,14 +4,14 @@
  *
  * Handles the initialization and hooks for our research functionality.
  *
- * @package SureRank\Inc\Modules\FixSeoChecks
- * @since x.x.x
+ * @package SureRank\Inc\Modules\Fix_Seo_Checks
+ * @since 1.4.2
  */
 
-namespace SureRank\Inc\Modules\FixSeoChecks;
+namespace SureRank\Inc\Modules\Fix_Seo_Checks;
 
 use SureRank\Inc\Traits\Get_Instance;
-use SureRank\Inc\Modules\FixSeoChecks\Page;
+use SureRank\Inc\Modules\Fix_Seo_Checks\Page;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -40,10 +40,10 @@ class Init {
 	 *
 	 * @param array<string> $controllers Existing controllers.
 	 * @return array<string> Updated controllers.
-	 * @since x.x.x
+	 * @since 1.4.2
 	 */
 	public function register_api_controller( $controllers ) {
-		$controllers[] = '\SureRank\Inc\Modules\FixSeoChecks\Api';
+		$controllers[] = '\SureRank\Inc\Modules\Fix_Seo_Checks\Api';
 		return $controllers;
 	}
 }

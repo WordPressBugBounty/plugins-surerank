@@ -73,14 +73,7 @@ class Routes {
 			'top'
 		);
 
-		// Legacy support for built-in types without prefixes.
-		add_rewrite_rule(
-			'^(post|page|attachment|post-tag|author|category|product-category)-sitemap-([0-9]+)?\.xml$',
-			'index.php?surerank_sitemap=$matches[1]&surerank_sitemap_page=$matches[2]',
-			'top'
-		);
-
-		// Generic fallback for any type without prefix (legacy support).
+		// generic sitemap rewrite rule for non-cpt and non-tax sitemaps.
 		add_rewrite_rule(
 			'^([a-z0-9_-]+)-sitemap-([0-9]+)?\.xml$',
 			'index.php?surerank_sitemap=$matches[1]&surerank_sitemap_page=$matches[2]',

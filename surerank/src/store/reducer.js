@@ -53,11 +53,20 @@ const DEFAULT_STATE = {
 		previousTab: '',
 		currentScreen: 'settings',
 		previousScreen: '',
+		// Content generation states
+		generateContentProcess: 'idle',
+		generatedContents: {}, // Changed from array to object to store per check/field
+		selectedCheckId: null,
+		selectedFieldKey: null,
+		error: null,
+		fixProcess: 'idle',
+		onUseThis: null,
 	},
 	// App settings end.
 
 	// Page SEO checks start.
 	pageSeoChecks: {
+		authenticated: window?.surerank_globals?.ai_authenticated || false,
 		initializing: true,
 		isCheckingLinks: false,
 		linkCheckProgress: {
@@ -67,6 +76,18 @@ const DEFAULT_STATE = {
 		refreshCalled: false,
 		postId: null,
 		checkType: null, // 'post' or 'term'.
+		isRefreshing: false,
+		// Check type arrays - add new check types here as needed
+		pageChecks: [], // Array to store page-specific checks
+		keywordChecks: [], // Array to store keyword-specific checks
+		// Add new check types above (e.g., technicalChecks: [], accessibilityChecks: [])
+		brokenLinkState: {
+			isChecking: false,
+			checkedLinks: [], // Array instead of Set for Redux compatibility
+			brokenLinks: [], // Array instead of Set for Redux compatibility
+			allLinks: [],
+		},
+		hideFixHelpButtons: false,
 	},
 	// Page SEO checks end.
 };
@@ -77,6 +98,11 @@ function reducer( state = DEFAULT_STATE, action ) {
 			return {
 				...state,
 				modalEnabled: action.value,
+				appSettings: {
+					...state.appSettings,
+					currentScreen: DEFAULT_STATE.appSettings.currentScreen,
+					previousScreen: state.appSettings.currentScreen,
+				},
 			};
 		case 'UPDATE_INITIAL_STATE':
 			return {
@@ -183,11 +209,17 @@ function reducer( state = DEFAULT_STATE, action ) {
 								?.checks,
 							...action.payload.checks,
 						},
-						filteredPageChecks: action.payload.filteredPageChecks,
-						filteredKeywordChecks: action.payload.filteredKeywordChecks,
 						sequence: action.payload.sequence,
 						error: action.payload.error,
 					},
+				},
+			};
+		case actionTypes.SET_BATCH_PAGE_SEO_CHECKS:
+			return {
+				...state,
+				pageSeoChecks: {
+					...state.pageSeoChecks,
+					...action.payload,
 				},
 			};
 		default:

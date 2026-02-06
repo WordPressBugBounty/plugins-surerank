@@ -23,6 +23,11 @@ const setInitialState = () => {
 		queryParams.term_id = window?.surerank_seo_popup.term_id;
 	}
 
+	// If no post or term id, return.
+	if ( ! queryParams?.post_id && ! queryParams?.term_id ) {
+		return;
+	}
+
 	apiFetch( {
 		path: addQueryArgs( EDITOR_URL, queryParams ),
 	} ).then( ( response ) => {

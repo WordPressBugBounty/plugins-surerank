@@ -1,4 +1,5 @@
 <?php
+namespace SureRank\Inc\Lib\Background_Process;
 /**
  * WP Async Request
  *
@@ -10,7 +11,7 @@
  *
  * @abstract
  */
-abstract class WP_Async_Request {
+abstract class Wp_Async_Request {
 
 	/**
 	 * Prefix

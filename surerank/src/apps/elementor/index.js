@@ -4,10 +4,8 @@ import {
 	getStatusIndicatorAriaLabel,
 } from '@/functions/utils';
 import { STORE_NAME } from '@/store/constants';
-import { dispatch, select } from '@wordpress/data';
+import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import { calculateCheckStatus } from '@SeoPopup/utils/calculate-check-status';
-import { refreshPageChecks } from '@SeoPopup/components/page-seo-checks/analyzer/utils/page-builder';
 import { getTooltipText } from '@/apps/seo-popup/utils/page-checks-status-tooltip-text';
 import './tooltip.css';
 import {
@@ -15,6 +13,7 @@ import {
 	sureRankLogoForBuilder,
 } from '@SeoPopup/utils/page-builder-functions';
 import { ENABLE_PAGE_LEVEL_SEO } from '@/global/constants';
+import { getPageCheckStatus, handleRefreshWithBrokenLinks } from './page-checks';
 
 /* global jQuery */
 
@@ -165,46 +164,6 @@ const createSureRankTooltip = ( targetElement, tooltipText ) => {
 	};
 };
 
-// Function to get page check status using WordPress data
-const getPageCheckStatus = () => {
-	try {
-		const storeSelectors = select( STORE_NAME );
-		if (
-			! storeSelectors ||
-			typeof storeSelectors.getPageSeoChecks !== 'function'
-		) {
-			return {
-				status: null,
-				initializing: true,
-				counts: { errorAndWarnings: 0, error: 0, warning: 0 },
-			};
-		}
-
-		// Trigger ignored list retrieval
-		const pageSeoChecks = storeSelectors.getPageSeoChecks() || {};
-		const { categorizedChecks = {}, initializing = true } = pageSeoChecks;
-
-		const { status, counts } = calculateCheckStatus( categorizedChecks );
-
-		if ( initializing ) {
-			dispatch( STORE_NAME ).setPageSeoCheck( 'initializing', false );
-		}
-
-		return {
-			status,
-			initializing,
-			counts,
-		};
-	} catch ( error ) {
-		// Return safe defaults if store is not available
-		return {
-			status: null,
-			initializing: false,
-			counts: { errorAndWarnings: 0, error: 0, warning: 0 },
-		};
-	}
-};
-
 // Function to create status indicator element
 // eslint-disable-next-line no-shadow
 const createStatusIndicator = ( $ ) => {
@@ -239,55 +198,6 @@ const createStatusIndicator = ( $ ) => {
 	let tooltipCleanup = null;
 	let statusUpdateInterval = null;
 	let unsubscribe = null;
-
-	// State variables for refresh functionality
-	let brokenLinkState = {
-		isChecking: false,
-		checkedLinks: new Set(),
-		brokenLinks: new Set(),
-		allLinks: [],
-	};
-	let refreshCalled = false;
-
-	const setBrokenLinkState = ( updater ) => {
-		if ( typeof updater === 'function' ) {
-			brokenLinkState = updater( brokenLinkState );
-		} else {
-			brokenLinkState = updater;
-		}
-	};
-
-	const setRefreshCalled = ( value ) => {
-		refreshCalled = value;
-	};
-
-	// Function to handle refresh with broken links - adapted for Elementor context
-	const handleRefreshWithBrokenLinks = async () => {
-		const storeDispatch = dispatch( STORE_NAME );
-		const storeSelectors = select( STORE_NAME );
-
-		if ( ! storeSelectors || ! storeDispatch || ! ENABLE_PAGE_LEVEL_SEO ) {
-			return;
-		}
-
-		try {
-			setRefreshCalled( true ); // Ensure subsequent calls don't auto-refresh
-
-			// Get current page SEO checks
-			const pageSeoChecks = storeSelectors.getPageSeoChecks() || {};
-
-			await refreshPageChecks(
-				() => {},
-				setBrokenLinkState,
-				storeDispatch.setPageSeoCheck,
-				select,
-				pageSeoChecks,
-				brokenLinkState
-			);
-		} catch ( error ) {
-			// Silently ignore errors
-		}
-	};
 
 	// Function to set up the Elementor integration once store is initialized
 	const setupElementorIntegration = () => {
@@ -354,9 +264,7 @@ const createStatusIndicator = ( $ ) => {
 		updateStatusIndicator();
 
 		// Refresh page checks on page load if not already called
-		if ( ! refreshCalled ) {
-			handleRefreshWithBrokenLinks();
-		}
+		handleRefreshWithBrokenLinks();
 
 		// Subscribe to store changes to update the status and tooltip.
 		unsubscribe = wp?.data?.subscribe?.( () => {

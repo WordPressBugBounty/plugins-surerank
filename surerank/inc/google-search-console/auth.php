@@ -10,7 +10,6 @@
 
 namespace SureRank\Inc\GoogleSearchConsole;
 
-use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Functions\Requests;
 use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Traits\Get_Instance;
@@ -282,7 +281,7 @@ class Auth {
 			$query_args,
 			admin_url( 'admin.php?page=surerank' )
 		);
-		return Helper::get_auth_api_url() . 'search-console/connect/?redirect_uri=' . urlencode( $redirect_uri );
+		return Utils::get_saas_auth_api_url() . 'search-console/connect/?redirect_uri=' . urlencode( $redirect_uri );
 	}
 
 	/**
@@ -303,7 +302,7 @@ class Auth {
 		}
 
 		$response = Requests::post(
-			Helper::get_auth_api_url() . 'api/search-console/refresh-token',
+			Utils::get_saas_auth_api_url() . 'api/search-console/refresh-token',
 			[
 				'headers' => [ 'Content-Type' => 'application/json' ],
 				'body'    => $body,

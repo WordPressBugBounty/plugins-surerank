@@ -36,7 +36,6 @@ class Controller {
 	 */
 	public const GOOGLE_ANALYTICS_API_BASE = 'https://www.googleapis.com/webmasters/v3/';
 
-
 	/**
 	 * Google User Info API Base
 	 */
@@ -61,8 +60,6 @@ class Controller {
 		// We are returning Array, because we will use Send_Json::success() to send the response.
 		return GoogleConsole::get_instance()->call_api( self::GOOGLE_ANALYTICS_API_BASE . 'sites' );
 	}
-
-
 
 	/**
 	 * Get Matched Domain or Site URL
@@ -201,11 +198,26 @@ class Controller {
 	 * @return array<string, mixed>|array<int, array<string, mixed>>
 	 */
 	public function get_clicks_and_impressions( $request ) {
+		$start_date = $this->get_start_date( $request );
+		$end_date   = $this->get_end_date( $request );
+
+		return $this->get_clicks_and_impressions_data( $start_date, $end_date );
+	}
+
+	/**
+	 * Get Clicks and Impressions Data
+	 *
+	 * @since 1.6.0
+	 * @param string $start_date Start date (Y-m-d).
+	 * @param string $end_date   End date (Y-m-d).
+	 * @return array<string, mixed>|array<int, array<string, mixed>>
+	 */
+	public function get_clicks_and_impressions_data( $start_date, $end_date ) {
 		$site_url = $this->get_user_site_url();
 
 		$current_body = [
-			'startDate' => $this->get_start_date( $request ),
-			'endDate'   => $this->get_end_date( $request ),
+			'startDate' => $start_date,
+			'endDate'   => $end_date,
 			'dataState' => 'ALL',
 		];
 
@@ -332,11 +344,26 @@ class Controller {
 	 * @return array<string, mixed>|array<int, array<string, mixed>>
 	 */
 	public function get_content_performance( $request ) {
+		$start_date = $this->get_start_date( $request );
+		$end_date   = $this->get_end_date( $request );
+
+		return $this->get_content_performance_data( $start_date, $end_date );
+	}
+
+	/**
+	 * Get Content Performance Data
+	 *
+	 * @since 1.6.0
+	 * @param string $start_date Start date (Y-m-d).
+	 * @param string $end_date   End date (Y-m-d).
+	 * @return array<string, mixed>|array<int, array<string, mixed>>
+	 */
+	public function get_content_performance_data( $start_date, $end_date ) {
 		$site_url = $this->get_user_site_url();
 
 		$current_body = [
-			'startDate'  => $this->get_start_date( $request ),
-			'endDate'    => $this->get_end_date( $request ),
+			'startDate'  => $start_date,
+			'endDate'    => $end_date,
 			'dimensions' => [ 'page' ],
 			'rowLimit'   => '500',
 			'dataState'  => 'ALL',
@@ -483,21 +510,6 @@ class Controller {
 	}
 
 	/**
-	 * Get Site URL
-	 *
-	 * @param string $site_url The site URL to get.
-	 * @return string The formatted site URL.
-	 */
-	private function get_site_url( $site_url ) {
-		if ( strpos( $site_url, 'sc-domain' ) !== false ) {
-			$site_url = $site_url;
-		} else {
-			$site_url = urlencode( $site_url );
-		}
-		return $site_url;
-	}
-
-	/**
 	 * Auto Create and Verify Property
 	 *
 	 * Creates and verifies a Search Console property following the documented flow
@@ -521,8 +533,6 @@ class Controller {
 	public function verify_existing_property() {
 		return SiteVerification::get_instance()->verify_existing_property();
 	}
-
-
 
 	/**
 	 * Get Verification Token
@@ -590,7 +600,6 @@ class Controller {
 		return SiteVerification::get_instance()->call_site_verification_api( $endpoint, $method, $args );
 	}
 
-
 	/**
 	 * Add Site
 	 *
@@ -602,6 +611,19 @@ class Controller {
 	 */
 	public function add_site( $site_url ) {
 		return SiteVerification::get_instance()->add_site( $site_url );
+	}
+
+	/**
+	 * Get Site URL
+	 *
+	 * @param string $site_url The site URL to get.
+	 * @return string The formatted site URL.
+	 */
+	private function get_site_url( $site_url ) {
+		if ( strpos( $site_url, 'sc-domain' ) === false ) {
+			$site_url = urlencode( $site_url );
+		}
+		return $site_url;
 	}
 
 }

@@ -128,10 +128,6 @@ class Attachment {
 			return;
 		}
 
-		if ( ! apply_filters( 'surerank_auto_set_image_title_and_alt', true ) ) {
-			return;
-		}
-
 		$title = $this->process_title( $this->get_attachment_title( $post_id ) );
 
 		if ( ! empty( Settings::get( 'auto_set_image_title' ) ) ) {

@@ -6,13 +6,15 @@ import { cn } from '@/functions/utils';
  * Alert component displays a success message with title and description
  * Based on the Figma design: Status=Success, High contrast=False, Type=Inline long
  *
- * @param {Object}                             props           - Component props
- * @param {string}                             props.title     - The title/heading of the alert
- * @param {string}                             props.message   - The message/description content
- * @param {boolean}                            props.showIcon  - Whether to show the success icon (default: false)
- * @param {string}                             props.className - Additional CSS classes
- * @param {'success'|'error'|'warning'|'info'} props.color     - Color variant for the alert (default: 'primary')
- * @param {JSX.Element}                        props.footer    - Footer content
+ * @param {Object}                             props            - Component props
+ * @param {string}                             props.title      - The title/heading of the alert
+ * @param {string}                             props.message    - The message/description content
+ * @param {boolean}                            props.showIcon   - Whether to show the success icon (default: false)
+ * @param {string}                             props.className  - Additional CSS classes
+ * @param {'success'|'error'|'warning'|'info'} props.color      - Color variant for the alert (default: 'primary')
+ * @param {JSX.Element}                        props.footer     - Footer content
+ * @param {JSX.Element}                        props.renderIcon - Custom icon element
+ * @param {JSX.Element}                        props.action     - Action element
  * @return {JSX.Element} Alert component
  */
 const Alert = ( {
@@ -22,6 +24,8 @@ const Alert = ( {
 	className = '',
 	color = 'success',
 	footer = null,
+	renderIcon = null,
+	action = null,
 	...props
 } ) => {
 	const borderColorClass =
@@ -67,7 +71,8 @@ const Alert = ( {
 			role="alert"
 			{ ...props }
 		>
-			{ showIcon && (
+			{ !! renderIcon && renderIcon }
+			{ showIcon && ! renderIcon && (
 				<Icon
 					className={ cn( iconColorClass, 'shrink-0' ) }
 					size={ 20 }
@@ -98,6 +103,7 @@ const Alert = ( {
 				</div>
 				{ footer }
 			</div>
+			{ action }
 		</div>
 	);
 };

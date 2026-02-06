@@ -5,7 +5,7 @@
  * Handles the initialization and hooks for SureRank Auth functionality.
  *
  * @package SureRank\Inc\Modules\Ai_Auth
- * @since x.x.x
+ * @since 1.4.2
  */
 
 namespace SureRank\Inc\Modules\Ai_Auth;
@@ -28,11 +28,11 @@ class Init {
 	/**
 	 * Constructor
 	 *
-	 * @since x.x.x
+	 * @since 1.4.2
 	 */
 	public function __construct() {
 		if ( ! defined( 'SURERANK_BILLING_PORTAL' ) ) {
-			define( 'SURERANK_BILLING_PORTAL', 'https://billing.surerank.com/' );
+			define( 'SURERANK_BILLING_PORTAL', 'https://my.surerank.com/' );
 		}
 
 		Controller::get_instance();
@@ -45,12 +45,11 @@ class Init {
 	/**
 	 * Add localisation variables
 	 *
-	 * @since x.x.x
+	 * @since 1.4.2
 	 * @param array<string, mixed> $variables Localisation variables.
 	 * @return array<string, mixed> Localisation variables.
 	 */
 	public function add_localization_vars( $variables ) {
-
 		return array_merge(
 			$variables,
 			[
@@ -62,7 +61,7 @@ class Init {
 	/**
 	 * Register API controller for this module.
 	 *
-	 * @since x.x.x
+	 * @since 1.4.2
 	 * @param array<string> $controllers Existing controllers.
 	 * @return array<string> Updated controllers.
 	 */

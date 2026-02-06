@@ -381,7 +381,7 @@ class SeoAnalyzer {
 			if ( $img instanceof DOMElement ) {
 				$src = $img->hasAttribute( 'src' )
 					? trim( $img->getAttribute( 'src' ) )
-					: __( 'Unnamed image', 'surerank' );
+					: '';
 				if ( ! $img->hasAttribute( 'alt' ) || empty( trim( $img->getAttribute( 'alt' ) ) ) ) {
 					$missing_alt++;
 					$missing_alt_images[] = $src;
@@ -723,7 +723,7 @@ class SeoAnalyzer {
 	 * @return array<string, mixed>
 	 */
 	public function schema_meta_data( DOMXPath $xpath ) {
-		$schema_meta_data  = $xpath->query( "//script[@type='application/ld+json' and @id='surerank-schema']" );
+		$schema_meta_data  = $xpath->query( "//script[@type='application/ld+json']" );
 		$working_label     = __( 'Structured data (schema) is present on the home page.', 'surerank' );
 		$not_working_label = __( 'Structured data (schema) is not present on the home page.', 'surerank' );
 		$helptext          = [
@@ -800,6 +800,21 @@ class SeoAnalyzer {
 		$host    = (string) $parsed['host'];
 		$scheme  = (string) $parsed['scheme'];
 		$timeout = 8;
+
+		// Skip www canonicalization check for subdomain sites (e.g., subdomain.example.com).
+		// This check only applies to root domains (example.com vs www.example.com).
+		$host_parts   = explode( '.', $host );
+		$is_subdomain = count( $host_parts ) > 2 && ! str_starts_with( $host, 'www.' );
+
+		if ( $is_subdomain ) {
+			return [
+				'exists'      => true,
+				'status'      => 'success',
+				'description' => $helptext,
+				'message'     => $working_label,
+				'not_fixable' => true,
+			];
+		}
 
 		$is_www    = str_starts_with( $host, 'www.' );
 		$alternate = $is_www ? preg_replace( '/^www\./', '', $host ) : "www.{$host}";

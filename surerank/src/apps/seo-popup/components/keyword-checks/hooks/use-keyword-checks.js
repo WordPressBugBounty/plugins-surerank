@@ -1,5 +1,5 @@
-import { useState, useLayoutEffect, useRef, useCallback } from '@wordpress/element';
-import { useSelect, subscribe } from '@wordpress/data';
+import { useLayoutEffect, useRef, useCallback } from '@wordpress/element';
+import { useDispatch, useSuspenseSelect, subscribe } from '@wordpress/data';
 import { debounce, isEqual } from 'lodash';
 import { STORE_NAME } from '@Store/constants';
 import replacement from '@Functions/replacement';
@@ -12,14 +12,19 @@ import {
 	checkKeywordInContent,
 } from '../analyzer/keyword-analyzer';
 
-export const useKeywordChecks = ( { focusKeyword, ignoredList = [] } ) => {
+export const useKeywordChecks = () => {
+	const { setPageSeoCheck } = useDispatch( STORE_NAME );
 	const {
 		metaData,
 		variables,
 		postDynamicData,
 		globalDefaults,
 		settingsLoaded,
-	} = useSelect( ( select ) => {
+		pageSeoChecks,
+		focusKeyword,
+		ignoredList,
+		initializing,
+	} = useSuspenseSelect( ( select ) => {
 		const selectors = select( STORE_NAME );
 		return {
 			metaData: selectors?.getPostSeoMeta(),
@@ -27,117 +32,73 @@ export const useKeywordChecks = ( { focusKeyword, ignoredList = [] } ) => {
 			postDynamicData: selectors?.getPostDynamicData(),
 			globalDefaults: selectors?.getGlobalDefaults(),
 			settingsLoaded: selectors?.getMetaboxState(),
+			pageSeoChecks: selectors?.getPageSeoChecks() || {},
+			focusKeyword: selectors?.getPostSeoMeta()?.focus_keyword,
+			ignoredList: selectors.getCurrentPostIgnoredList(),
+			initializing: selectors.getPageSeoChecks().initializing,
 		};
 	}, [] );
 
-	const [ checks, setChecks ] = useState( {
-		badChecks: [],
-		fairChecks: [],
-		passedChecks: [],
-		suggestionChecks: [],
-		ignoredChecks: [],
-		hasBadOrFairChecks: false,
-	} );
 	const lastSnapshot = useRef( { postContent: '', permalink: '' } );
 	const lastMeta = useRef( metaData );
 	const lastKeyword = useRef( focusKeyword );
 	const lastIgnoredList = useRef( ignoredList );
 
-	const runKeywordChecks = useCallback( ( snapshot, seoMeta, keyword ) => {
-		if ( ! keyword ) {
-			setChecks( {
-				badChecks: [],
-				fairChecks: [],
-				passedChecks: [],
-				suggestionChecks: [],
-				ignoredChecks: [],
-				hasBadOrFairChecks: false,
-			} );
-			return;
-		}
-
-		// variables array.
-		const variablesArray = flat( variables );
-
-		// title.
-		const resolvedTitle = replacement(
-			seoMeta.page_title || globalDefaults.page_title || '',
-			variablesArray,
-			postDynamicData
-		);
-
-		// description.
-		const resolvedDescription = replacement(
-			seoMeta.page_description || globalDefaults.page_description || '',
-			variablesArray,
-			postDynamicData
-		);
-
-		// permalink.
-		const resolvedUrl =
-			snapshot?.permalink ||
-			variables?.post?.permalink?.value ||
-			variables?.term?.permalink?.value ||
-			window.location.href ||
-			'';
-
-		// content.
-		const resolvedContent =
-			snapshot?.postContent || postDynamicData?.content || '';
-
-		const rawChecks = [];
-		rawChecks.push( checkKeywordInTitle( resolvedTitle, keyword ) );
-		rawChecks.push(
-			checkKeywordInDescription( resolvedDescription, keyword )
-		);
-		rawChecks.push( checkKeywordInUrl( resolvedUrl, keyword ) );
-		rawChecks.push( checkKeywordInContent( resolvedContent, keyword ) );
-
-		// Categorize checks
-		const categories = {
-			badChecks: [],
-			fairChecks: [],
-			passedChecks: [],
-			suggestionChecks: [],
-			ignoredChecks: [],
-		};
-
-		rawChecks.forEach( ( check ) => {
-			// Check if this check is ignored
-			if ( ignoredList.includes( check.id ) ) {
-				categories.ignoredChecks.push( { ...check, ignore: true } );
+	const runKeywordChecks = useCallback(
+		( snapshot, seoMeta, keyword ) => {
+			if ( ! keyword ) {
+				// If no keyword, clear keyword checks but keep page checks
+				setPageSeoCheck( 'keyword', [] );
 				return;
 			}
 
-			// Add ignore flag for non-ignored checks
-			const checkWithIgnoreFlag = { ...check, ignore: false };
+			// variables array.
+			const variablesArray = flat( variables );
 
-			switch ( check.status ) {
-				case 'error':
-					categories.badChecks.push( checkWithIgnoreFlag );
-					break;
-				case 'warning':
-					categories.fairChecks.push( checkWithIgnoreFlag );
-					break;
-				case 'success':
-					categories.passedChecks.push( checkWithIgnoreFlag );
-					break;
-				case 'suggestion':
-					categories.suggestionChecks.push( checkWithIgnoreFlag );
-					break;
-				default:
-					break;
-			}
-		} );
+			// title.
+			const resolvedTitle = replacement(
+				seoMeta.page_title || globalDefaults.page_title || '',
+				variablesArray,
+				postDynamicData
+			);
 
-		// Add hasBadOrFairChecks flag
-		const hasBadOrFairChecks =
-			categories.badChecks.length > 0 ||
-			categories.fairChecks.length > 0 ||
-			categories.suggestionChecks.length > 0;
+			// description.
+			const resolvedDescription = replacement(
+				seoMeta.page_description ||
+					globalDefaults.page_description ||
+					'',
+				variablesArray,
+				postDynamicData
+			);
 
-		setChecks( { ...categories, hasBadOrFairChecks } );
-	}, [ variables, postDynamicData, globalDefaults, ignoredList ] );
+			// permalink.
+			const resolvedUrl =
+				snapshot?.permalink ||
+				variables?.post?.permalink?.value ||
+				variables?.term?.permalink?.value ||
+				window.location.href ||
+				'';
+
+			// content.
+			const resolvedContent =
+				snapshot?.postContent || postDynamicData?.content || '';
+
+			const keywordChecks = [];
+			keywordChecks.push( checkKeywordInTitle( resolvedTitle, keyword ) );
+			keywordChecks.push(
+				checkKeywordInDescription( resolvedDescription, keyword )
+			);
+			keywordChecks.push( checkKeywordInUrl( resolvedUrl, keyword ) );
+			keywordChecks.push(
+				checkKeywordInContent( resolvedContent, keyword )
+			);
+
+			// Filter out falsy values and dispatch keyword checks
+			const validKeywordChecks = keywordChecks.filter( Boolean );
+			setPageSeoCheck( 'keyword', validKeywordChecks );
+		},
+		[ variables, postDynamicData, globalDefaults, setPageSeoCheck ]
+	);
 
 	// initial check.
 	useLayoutEffect( () => {
@@ -168,6 +129,7 @@ export const useKeywordChecks = ( { focusKeyword, ignoredList = [] } ) => {
 		globalDefaults,
 		postDynamicData,
 		ignoredList,
+		initializing,
 	] );
 
 	// subscribe to content changes.
@@ -206,7 +168,27 @@ export const useKeywordChecks = ( { focusKeyword, ignoredList = [] } ) => {
 		postDynamicData,
 		ignoredList,
 		runKeywordChecks,
+		initializing,
 	] );
 
-	return checks;
+	// Get filtered keyword checks from Redux state
+	// Filter checks by type directly from categorizedChecks
+	const categorizedChecks = pageSeoChecks?.keywordChecks ?? {
+		badChecks: [],
+		fairChecks: [],
+		passedChecks: [],
+		suggestionChecks: [],
+		ignoredChecks: [],
+	};
+
+	// Calculate hasBadOrFairChecks flag for backward compatibility
+	const hasBadOrFairChecks =
+		categorizedChecks?.badChecks?.length > 0 ||
+		categorizedChecks?.fairChecks?.length > 0 ||
+		categorizedChecks?.suggestionChecks?.length > 0;
+
+	return {
+		...categorizedChecks,
+		hasBadOrFairChecks,
+	};
 };

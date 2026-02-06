@@ -19,6 +19,7 @@ use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Functions\Update;
 use SureRank\Inc\Import_Export\Settings_Exporter;
+use SureRank\Inc\Modules\Nudges\Utils;
 use SureRank\Inc\Sitemap\Xml_Sitemap;
 use SureRank\Inc\Traits\Enqueue;
 use SureRank\Inc\Traits\Get_Instance;
@@ -54,7 +55,7 @@ class Dashboard {
 	 *
 	 * @return void
 	 */
-	public function common_js() {       ?>
+	public function common_js() {    ?>
 		<script type="text/javascript">
 			// This is a common JS file for admin pages.
 			// You can add your custom JS code here.
@@ -88,6 +89,15 @@ class Dashboard {
 				});
 				sidebarMenu.append(badge);
 			});
+
+// Handle Upgrade menu item click - redirect to pricing page
+			jQuery(document).on('click', '#toplevel_page_surerank a[href*="surerank#/upgrade"]', function (e) {
+				e.preventDefault();
+				const pricingLink = window?.surerank_globals?.pricing_link + '?utm_medium=surerank_upgrade_menu';
+				if (pricingLink && !pricingLink.includes('undefined')) {
+					window.open(pricingLink, '_blank', 'noopener,noreferrer');
+				}
+			});
 		</script>
 		<?php
 	}
@@ -107,14 +117,41 @@ class Dashboard {
 				'surerank_globals_localization_vars',
 				array_merge(
 					[
-						'check_score'      => $this->get_seo_score(),
-						'exporter_options' => Settings_Exporter::get_instance()->get_categories(),
+						'check_score'                => $this->get_seo_score(),
+						'exporter_options'           => Settings_Exporter::get_instance()->get_categories(),
+						'dashboard_plugins_sequence' => $this->get_plugin_sequence(),
 					],
 					$this->get_common_variables(),
 					$this->get_disabled_settings(),
 				)
 			)
 		);
+	}
+
+	/**
+	 * Get plugin sequence for dashboard.
+	 *
+	 * @return array<int,string> $sequence Plugin sequence.
+	 * @since 1.4.2
+	 */
+	public function get_plugin_sequence() {
+		$sequence = [
+			'ultimate-addons-for-gutenberg',
+			'sureforms',
+			'suremails',
+			'suretriggers',
+		];
+
+		if ( defined( 'ELEMENTOR_VERSION' ) ) {
+			$sequence = [
+				'ultimate-addons-for-gutenberg',
+				'sureforms',
+				'suremails',
+				'header-footer-elementor',
+			];
+		}
+
+		return apply_filters( 'surerank_dashboard_plugins_sequence', $sequence );
 	}
 
 	/**
@@ -164,6 +201,7 @@ class Dashboard {
 		}
 
 		if ( isset( $_GET['skip_onboarding'] ) && 'true' === $_GET['skip_onboarding'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			update_option( 'surerank_onboarding_skipped', true );
 			$this->redirect_to_page( 'surerank', '#/dashboard' );
 		}
 
@@ -176,8 +214,9 @@ class Dashboard {
 			if ( ! is_multisite() ) {
 
 				$onboarding_completed = get_option( 'surerank_onboarding_completed' );
+				$onboarding_skipped   = get_option( 'surerank_onboarding_skipped' );
 
-				if ( $onboarding_completed ) {
+				if ( $onboarding_completed || $onboarding_skipped ) {
 					$this->redirect_to_page( 'surerank', '#/dashboard' );
 				} else {
 					$this->redirect_to_page( 'surerank_onboarding' );
@@ -246,14 +285,35 @@ class Dashboard {
 				'page_title' => __( 'Search Console', 'surerank' ),
 			];
 		}
+
+		$submenus[] = [
+			'id'         => 'surerank#/link-manager',
+			'page_title' => __( 'Link Manager', 'surerank' ),
+		];
+
 		$submenus[] = [
 			'id'         => 'surerank#/tools',
 			'page_title' => __( 'Tools', 'surerank' ),
 		];
-		$submenus   = apply_filters( 'surerank_wp_admin_submenus', $submenus );
+
+		if ( ! Utils::get_instance()->is_pro_active() ) {
+			$submenus[] = [
+				'id'         => 'surerank#/upgrade',
+				'page_title' => __( 'Get Pro ↗', 'surerank' ),
+			];
+		}
+
+		$submenus = apply_filters( 'surerank_wp_admin_submenus', $submenus );
 
 		// Register the submenus.
+		$submenu_map = [];
+
 		foreach ( $submenus as $submenu ) {
+			$submenu_map[ $submenu['id'] ] = $submenu;
+		}
+
+		// Register the submenus.
+		foreach ( $submenu_map as $submenu ) {
 			add_submenu_page(
 				$menu_slug,
 				$submenu['page_title'],
@@ -368,10 +428,11 @@ class Dashboard {
 				'admin_assets_url'           => SURERANK_URL . 'inc/admin/assets',
 				'version'                    => SURERANK_VERSION,
 				'help_link'                  => esc_url( 'https://surerank.com/docs/' ),
-				'support_link'               => esc_url( 'https://surerank.com/support/' ),
+				'support_link'               => esc_url( 'https://surerank.com/contact/' ),
 				'rating_link'                => esc_url( 'https://wordpress.org/support/plugin/surerank/reviews/#new-post' ),
 				'community_link'             => esc_url( 'https://www.facebook.com/groups/surecrafted' ),
 				'pricing_link'               => esc_url( 'https://surerank.com/pricing/' ),
+				'pro_link'                   => esc_url( 'https://surerank.com/pro/' ),
 				'privacy_policy_url'         => esc_url( 'https://surerank.com/privacy-policy/' ),
 				'surerank_url'               => esc_url( 'https://surerank.com' ),
 				'wp_dashboard_url'           => admin_url( 'admin.php' ),
@@ -382,6 +443,8 @@ class Dashboard {
 				'title_length'               => Get::title_length(),
 				'open_graph_tags'            => apply_filters( 'surerank_disable_open_graph_tags', false ),
 				'input_variable_suggestions' => $this->get_input_variable_suggestions(),
+				'nudges'                     => Utils::get_instance()->get_nudges(),
+				'wp_schema_pro_active'       => Helper::is_wp_schema_pro_active(),
 			]
 		);
 	}
@@ -447,6 +510,20 @@ class Dashboard {
 
 			#toplevel_page_surerank.wp-menu-open .wp-menu-image:before {
 				background-image: url('<?php echo $logo_uri_active; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>');
+			}
+
+			/* Upgrade menu item styling */
+			#toplevel_page_surerank .wp-submenu li a[href*="surerank#/upgrade"] {
+				color: #fff !important;
+				font-size: 13px !important;
+				font-weight: 500 !important;
+				line-height: 20px !important;
+				padding-right: 12px !important;
+				padding-left: 12px !important;
+			}
+
+			#toplevel_page_surerank .wp-submenu li a[href*="surerank#/upgrade"]:hover {
+				color: #fff !important;
 			}
 		</style>
 		<?php

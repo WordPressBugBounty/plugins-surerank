@@ -9,6 +9,7 @@ const PageContentWrapper = ( {
 	secondaryButton,
 	info_tooltip = null,
 	className,
+	afterDescription = null,
 } ) => {
 	if ( ! children ) {
 		return null;
@@ -27,6 +28,7 @@ const PageContentWrapper = ( {
 				icon={ icon }
 				secondaryButton={ secondaryButton }
 				info_tooltip={ info_tooltip }
+				afterDescription={ afterDescription }
 			/>
 			{ children }
 		</div>

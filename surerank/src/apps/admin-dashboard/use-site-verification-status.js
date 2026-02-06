@@ -25,7 +25,11 @@ const useSiteVerificationStatus = (
 				return false;
 			}
 			const site = searchConsole?.sites?.find(
-				( s ) => s.siteUrl === selectedSite
+				( siteItem ) =>
+					siteItem.siteUrl === selectedSite ||
+					siteItem.siteUrl === `${ selectedSite }/` ||
+					normalizeUrl( siteItem.siteUrl ) ===
+						normalizeUrl( selectedSite )
 			);
 			return site?.isVerified === true;
 		};
@@ -40,11 +44,22 @@ const useSiteVerificationStatus = (
 			normalizeUrl( selectedSite ) === normalizeUrl( currentSiteUrl ) &&
 			! isSelectedSiteVerified();
 
+		// Check if current site is already the selected site in SureRank
+		const isCurrentSiteAlreadySelected =
+			currentSiteInList &&
+			isSelectedSiteVerified() &&
+			searchConsole?.selectedSite &&
+			( normalizeUrl( searchConsole.selectedSite ) ===
+				normalizeUrl( currentSiteUrl ) ||
+				searchConsole.selectedSite === currentSiteUrl ||
+				searchConsole.selectedSite === `${ currentSiteUrl }/` );
+
 		return {
 			currentSiteInList,
 			isSelectedSiteVerified: isSelectedSiteVerified(),
 			currentSiteInListButNotVerified,
 			shouldShowConnectAlert,
+			isCurrentSiteAlreadySelected,
 		};
 	}, [ selectedSite, currentSiteUrl, searchConsole ] );
 };

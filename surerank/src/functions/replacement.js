@@ -1,5 +1,3 @@
-import { getDefaultPageDescription } from '@Global/constants';
-
 const replacement = ( str, data, postDynamicData = {} ) => {
 	if ( ! str || ! data ) {
 		return str;
@@ -22,10 +20,7 @@ const replacement = ( str, data, postDynamicData = {} ) => {
 	} );
 
 	return str.replace( /%([^%\s]+)%/g, ( match, value ) => {
-		if ( value === 'excerpt' && ! replacementArray[ value ] ) {
-			return getDefaultPageDescription();
-		}
-		return replacementArray[ value ];
+		return replacementArray[ value ] || '';
 	} );
 };
 

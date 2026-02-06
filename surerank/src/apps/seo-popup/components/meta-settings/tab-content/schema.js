@@ -2,16 +2,23 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo, useState } from '@wordpress/element';
 import { Label, Alert, Accordion, Text } from '@bsf/force-ui';
 import { Info, Trash } from 'lucide-react';
+import WpSchemaProNotice from '@/global/components/wp-schema-pro-notice';
 import { cn } from '@Functions/utils';
 import {
 	renderFieldCommon,
-	renderCloneableField,
-	renderCloneableGroupField,
+	renderFieldSwitch,
 } from '@AdminComponents/schema-utils/render-helper';
+import { AddFieldMenu } from '@AdminComponents/schema-utils/add-field-menu';
+import { DeleteFieldButton } from '@AdminComponents/schema-utils/delete-field-button';
 import {
 	noFieldsAlert,
 	generateUUID,
 	isSchemaTypeValid,
+	processFields,
+	shouldShowField,
+	getAvailableFields,
+	canDeleteField,
+	sortFieldsByPriority,
 } from '@AdminComponents/schema-utils/utils';
 import Modal from '@/apps/admin-general/schema/modal';
 import { SeoPopupTooltip } from '@AdminComponents/tooltip';
@@ -24,6 +31,7 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 	const [ selectedType, setSelectedType ] = useState( '' );
 	const [ expandedSchemaId, setExpandedSchemaId ] = useState( null );
 	const [ fieldItemIds, setFieldItemIds ] = useState( {} );
+	const isWpSchemaProActive = surerank_globals?.wp_schema_pro_active || false;
 
 	const defaultSchemasObject = surerank_globals?.default_schemas || {};
 	const defaultSchemas = Object.entries( defaultSchemasObject ).map(
@@ -59,33 +67,55 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 		[]
 	);
 
-	const processFields = ( fieldsData ) =>
-		fieldsData.reduce( ( acc, field ) => {
-			if ( field.type === 'Group' && field.fields ) {
-				if ( field.cloneable ) {
-					// For cloneable groups, create an array with one default item
-					const defaultItem = {};
-					field.fields.forEach( ( subField ) => {
-						if ( subField.type === 'Group' && subField.fields ) {
-							// Handle nested groups recursively
-							defaultItem[ subField.id ] = processFields(
-								subField.fields
-							);
-						} else {
-							defaultItem[ subField.id ] =
-								subField.std !== undefined ? subField.std : '';
-						}
-					} );
-					acc[ field.id ] = [ defaultItem ];
-				} else {
-					// For non-cloneable groups, process recursively
-					acc[ field.id ] = processFields( field.fields );
-				}
-			} else if ( field.std !== undefined ) {
-				acc[ field.id ] = field.std;
-			}
-			return acc;
-		}, {} );
+	const handleAddField = ( schemaId, fieldId ) => {
+		const schemaTitle = schemas[ schemaId ]?.title;
+		const allFields = schemaTypeData[ schemaTitle ] || [];
+		const fieldToAdd = allFields.find( ( f ) => f.id === fieldId );
+
+		if ( ! fieldToAdd ) {
+			return;
+		}
+
+		let defaultValue = fieldToAdd.std !== undefined ? fieldToAdd.std : '';
+
+		if ( fieldToAdd.type === 'Group' && fieldToAdd.fields ) {
+			defaultValue = processFields( [ fieldToAdd ] )[ fieldToAdd.id ];
+		}
+
+		const updatedSchemas = {
+			...schemas,
+			[ schemaId ]: {
+				...schemas[ schemaId ],
+				fields: {
+					...schemas[ schemaId ].fields,
+					[ fieldId ]: defaultValue,
+				},
+			},
+		};
+
+		const cleanedSchemas = cleanSchemas( updatedSchemas );
+		updatePostMetaData( {
+			schemas: cleanedSchemas,
+		} );
+	};
+
+	const handleDeleteField = ( schemaId, fieldId ) => {
+		const updatedFields = { ...schemas[ schemaId ].fields };
+		delete updatedFields[ fieldId ];
+
+		const updatedSchemas = {
+			...schemas,
+			[ schemaId ]: {
+				...schemas[ schemaId ],
+				fields: updatedFields,
+			},
+		};
+
+		const cleanedSchemas = cleanSchemas( updatedSchemas );
+		updatePostMetaData( {
+			schemas: cleanedSchemas,
+		} );
+	};
 
 	const cleanSchemas = ( schemasData ) => {
 		const cleanedSchemas = {};
@@ -105,8 +135,10 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 		Object.entries( schemas ).forEach( ( [ schemaId, schema ] ) => {
 			const schemaFields = schemaTypeData[ schema.title ] || [];
 			const existingFields = schema.fields || {};
-			const defaultFields = processFields( schemaFields );
-			const mergedFields = { ...existingFields, ...defaultFields };
+
+			// Only initialize with default=true or required=true fields
+			const defaultFields = processFields( schemaFields, true );
+			const mergedFields = { ...defaultFields, ...existingFields };
 
 			if ( Object.keys( existingFields ).length === 0 ) {
 				mergedFields[ '@type' ] = schema?.type || '';
@@ -194,12 +226,106 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 		handleFieldUpdate( schemaId, fieldId, newValue );
 		if ( fieldId === '@type' ) {
 			const updatedSchemas = { ...schemas };
-			updatedSchemas[ schemaId ].type = newValue;
+			updatedSchemas[ schemaId ].type =
+				updatedSchemas[ schemaId ]?.title || ''; // added for backward compatibility.
 			updatedSchemas[ schemaId ].fields[ '@type' ] = newValue;
 			updatePostMetaData( {
 				schemas: updatedSchemas,
 			} );
 		}
+	};
+
+	/**
+	 * Render a single subfield within a non-cloneable Group field
+	 *
+	 * @param {Object} field    - The parent Group field configuration
+	 * @param {Object} subField - The subfield to render
+	 * @param {string} schemaId - The schema ID
+	 * @return {JSX.Element|null} - Rendered subfield or null if hidden
+	 */
+	const renderGroupSubField = ( field, subField, schemaId ) => {
+		if ( subField.type === 'Hidden' ) {
+			return null;
+		}
+
+		const groupValue = getFieldValue( schemaId, field.id ) || {};
+
+		const handleSubFieldChange = ( fldId, newVal ) => {
+			const currentGroupValue = getFieldValue( schemaId, field.id ) || {};
+			const updatedGroupValue = {
+				...currentGroupValue,
+				[ fldId ]: newVal,
+			};
+			onFieldChange( schemaId, field.id, updatedGroupValue );
+		};
+
+		return (
+			<div
+				key={ subField.id }
+				className="flex flex-col items-start justify-start gap-1.5 w-full"
+			>
+				<div className="flex items-center gap-1.5">
+					<Label tag="span" size="sm" required={ subField.required }>
+						{ subField.label }
+					</Label>
+					{ subField.tooltip && (
+						<SeoPopupTooltip
+							content={ subField.tooltip }
+							placement="top"
+							arrow
+							className="z-[99999]"
+						>
+							<Info
+								className="size-4 text-icon-secondary"
+								title={ subField.tooltip }
+							/>
+						</SeoPopupTooltip>
+					) }
+				</div>
+				<div className="flex items-center gap-1.5 w-full">
+					{ renderFieldCommon( {
+						field: subField,
+						schemaType: schemas[ schemaId ].type,
+						getFieldValue: ( fldId ) =>
+							groupValue[ fldId ] || subField.std || '',
+						onFieldChange: handleSubFieldChange,
+						variableSuggestions,
+						renderAsGroupComponent: false,
+					} ) }
+				</div>
+			</div>
+		);
+	};
+
+	/**
+	 * Render a field based on its type and configuration
+	 *
+	 * @param {Object} field    - The field configuration
+	 * @param {string} schemaId - The schema ID
+	 * @return {JSX.Element} - Rendered field component
+	 */
+	const renderField = ( field, schemaId ) => {
+		if ( field.type === 'Group' && ! field.cloneable ) {
+			return (
+				<div className="flex flex-col w-full space-y-3 border border-border-subtle rounded-lg p-3">
+					{ field.fields.map( ( subField ) =>
+						renderGroupSubField( field, subField, schemaId )
+					) }
+				</div>
+			);
+		}
+
+		return renderFieldSwitch( field, {
+			schemaId,
+			schemaType: schemas[ schemaId ].type,
+			getFieldValue: ( fieldId ) => getFieldValue( schemaId, fieldId ),
+			onFieldChange: ( fieldId, newVal ) =>
+				onFieldChange( schemaId, fieldId, newVal ),
+			variableSuggestions,
+			fieldItemIds,
+			setFieldItemIds,
+			renderAsGroupComponent: true,
+		} );
 	};
 
 	const renderSchemaFields = ( schemaId ) => {
@@ -210,11 +336,12 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 			return noFieldsAlert;
 		}
 
-		const schemaFields = schemaTypeData[ schemaTitle ] || [];
+		const allSchemaFields = schemaTypeData[ schemaTitle ] || [];
+		const existingFields = schemas[ schemaId ]?.fields || {};
 
 		if (
-			schemaFields.length === 0 ||
-			schemaFields.every(
+			allSchemaFields.length === 0 ||
+			allSchemaFields.every(
 				( field ) =>
 					field.type === 'Hidden' || field.id === 'schema_name'
 			)
@@ -222,108 +349,117 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 			return noFieldsAlert;
 		}
 
-		return schemaFields.map( ( field ) => {
+		// Filter fields to show: must exist in existingFields OR be required OR have parent dependency
+		const filteredFields = allSchemaFields.filter( ( field ) => {
 			if ( field.type === 'Hidden' || field.type === 'SchemaDocs' ) {
-				return null;
+				return false;
 			}
 
-			if ( ! field.show && ! field.required ) {
-				return null;
+			// Show if field exists in the schema
+			if (
+				Object.prototype.hasOwnProperty.call( existingFields, field.id )
+			) {
+				return true;
 			}
 
-			return (
-				<div
-					key={ field.id }
-					className="flex flex-col items-start justify-start gap-1.5 w-full p-1"
-				>
-					{ /* Label + tooltip */ }
-					<div className="flex items-center gap-1.5">
-						<Label tag="span" size="sm" required={ field.required }>
-							{ field.label }
-						</Label>
-						{ field.tooltip && (
-							<SeoPopupTooltip
-								content={ field.tooltip }
-								placement="top"
-								arrow
-								className="z-[99999]"
-							>
-								<Info
-									className="size-4 text-icon-secondary"
-									title={ field.tooltip }
-								/>
-							</SeoPopupTooltip>
-						) }
-					</div>
+			// Show if required
+			if ( field.required ) {
+				return true;
+			}
 
-					{ /* Field render */ }
-					{ ( () => {
-						if ( field.type === 'Group' && field.cloneable ) {
-							return (
-								<div className="flex flex-col w-full">
-									{ renderCloneableGroupField( {
-										field,
-										schemaId,
-										getFieldValue: ( fieldId ) =>
-											getFieldValue( schemaId, fieldId ),
-										onFieldChange: ( fieldId, newVal ) =>
-											onFieldChange(
-												schemaId,
-												fieldId,
-												newVal
-											),
-										variableSuggestions,
-										fieldItemIds,
-										setFieldItemIds,
-									} ) }
-								</div>
-							);
-						}
+			// Show if has parent dependency that is active
+			if ( field.parent && field.parent_option ) {
+				return shouldShowField( field, ( fieldId ) =>
+					getFieldValue( schemaId, fieldId )
+				);
+			}
 
-						if ( field.cloneable ) {
-							return (
-								<div className="flex items-center gap-1.5 w-full">
-									{ renderCloneableField( {
-										field,
-										schemaType: schemas[ schemaId ].type,
-										getFieldValue: ( fldId ) =>
-											getFieldValue( schemaId, fldId ),
-										onFieldChange: ( fldId, newVal ) =>
-											onFieldChange(
-												schemaId,
-												fldId,
-												newVal
-											),
-										variableSuggestions,
-										renderAsGroupComponent: true,
-									} ) }
-								</div>
-							);
-						}
-
-						return (
-							<div className="flex items-center gap-1.5 w-full">
-								{ renderFieldCommon( {
-									field,
-									schemaType: schemas[ schemaId ].type,
-									getFieldValue: ( fldId ) =>
-										getFieldValue( schemaId, fldId ),
-									onFieldChange: ( fldId, newVal ) =>
-										onFieldChange(
-											schemaId,
-											fldId,
-											newVal
-										),
-									variableSuggestions,
-									renderAsGroupComponent: true,
-								} ) }
-							</div>
-						);
-					} )() }
-				</div>
-			);
+			return false;
 		} );
+
+		const fieldsToShow = sortFieldsByPriority(
+			filteredFields,
+			existingFields
+		);
+
+		const availableFields = getAvailableFields(
+			allSchemaFields,
+			existingFields
+		);
+
+		return (
+			<>
+				{ fieldsToShow.map( ( field ) => {
+					if ( field.parent && field.parent_option ) {
+						const shouldShow = shouldShowField(
+							field,
+							( fieldId ) => getFieldValue( schemaId, fieldId )
+						);
+						if ( ! shouldShow ) {
+							return null;
+						}
+					}
+
+					const canDelete = canDeleteField( field );
+
+					return (
+						<div
+							key={ field.id }
+							className="flex flex-col items-start justify-start gap-1.5 w-full p-1"
+						>
+							{ /* Label + tooltip + delete button */ }
+							<div className="flex items-center justify-between gap-1.5 w-full">
+								<div className="flex items-center gap-1.5">
+									<Label
+										tag="span"
+										size="sm"
+										required={ field.required }
+									>
+										{ field.label }
+									</Label>
+									{ field.tooltip && (
+										<SeoPopupTooltip
+											content={ field.tooltip }
+											placement="top"
+											arrow
+											className="z-[99999]"
+										>
+											<Info
+												className="size-4 text-icon-secondary"
+												title={ field.tooltip }
+											/>
+										</SeoPopupTooltip>
+									) }
+								</div>
+								{ canDelete && (
+									<DeleteFieldButton
+										onDelete={ () =>
+											handleDeleteField( schemaId, field.id )
+										}
+									/>
+								) }
+							</div>
+
+							{ /* Field render */ }
+							{ renderField( field, schemaId ) }
+						</div>
+					);
+				} ) }
+
+				<AddFieldMenu
+					availableFields={ availableFields }
+					onAddField={ ( fieldId ) =>
+						handleAddField( schemaId, fieldId )
+					}
+					className="p-2 w-full border-t border-border-subtle mt-2"
+				/>
+			</>
+		);
 	};
+
+	if ( isWpSchemaProActive ) {
+		return <WpSchemaProNotice />;
+	}
 
 	return (
 		<div className="pt-2 gap-2">

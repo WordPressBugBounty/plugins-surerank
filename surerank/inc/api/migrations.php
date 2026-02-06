@@ -10,7 +10,10 @@
 
 namespace SureRank\Inc\API;
 
+use Exception;
+use SureRank\Inc\Functions\Cron;
 use SureRank\Inc\Functions\Get;
+use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Functions\Send_Json;
 use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Importers\Importer;
@@ -19,6 +22,7 @@ use SureRank\Inc\Importers\Rankmath\RankMath;
 use SureRank\Inc\Importers\Seopress\Seopress;
 use SureRank\Inc\Importers\Yoast\Yoast;
 use SureRank\Inc\Traits\Get_Instance;
+use SureRank\Inc\Traits\Logger;
 use WP_REST_Request;
 use WP_REST_Server;
 
@@ -35,6 +39,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Migrations extends Api_Base {
 
 	use Get_Instance;
+	use Logger;
 
 	/**
 	 * Route Migrated Data
@@ -644,6 +649,9 @@ class Migrations extends Api_Base {
 
 		// Mark the migration as completed.
 		self::mark_migration_completed( $plugin_slug );
+
+		// Regenerate sitemap cache after migration completion.
+		$this->regenerate_sitemap_cache_after_migration();
 
 		Send_Json::success(
 			[
@@ -1286,5 +1294,39 @@ class Migrations extends Api_Base {
 		}
 
 		return $grouped;
+	}
+
+	/**
+	 * Regenerate sitemap cache after migration completion.
+	 *
+	 * This method is triggered after all migration steps are completed
+	 * (global settings → posts → terms). It schedules a sitemap cache
+	 * generation to ensure the sitemap reflects the newly migrated content.
+	 *
+	 * @return void
+	 * @since 1.6.2
+	 */
+	private function regenerate_sitemap_cache_after_migration(): void {
+		try {
+			// Check if crons are available.
+			if ( Helper::are_crons_available() ) {
+				// Schedule sitemap cache generation 30 seconds after migration completes.
+				// This delay ensures migration database operations are fully complete.
+				wp_schedule_single_event(
+					time() + 30,
+					Cron::SITEMAP_CRON_EVENT,
+					[ 'yes' ]
+				);
+			}
+			// If crons are disabled, the manual batch processing will be used from the frontend.
+		} catch ( Exception $e ) {
+			$this->log(
+				sprintf(
+					'Failed to schedule sitemap cache regeneration after migration: %s',
+					$e->getMessage()
+				),
+				'error'
+			);
+		}
 	}
 }

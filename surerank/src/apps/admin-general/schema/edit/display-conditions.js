@@ -174,6 +174,7 @@ const DisplayConditions = ( { schemaId } ) => {
 					viewKey="show_on"
 					updateSchema={ updateSchema }
 					fetchSpecificPosts={ fetchSpecificPosts }
+					isClearable={ true }
 				/>
 				<Button
 					variant="ghost"
@@ -197,6 +198,7 @@ const DisplayConditions = ( { schemaId } ) => {
 					viewKey="not_show_on"
 					updateSchema={ updateSchema }
 					fetchSpecificPosts={ fetchSpecificPosts }
+					isClearable={ true }
 				/>
 				<Button
 					variant="ghost"

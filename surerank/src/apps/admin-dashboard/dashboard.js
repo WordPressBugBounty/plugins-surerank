@@ -1,16 +1,13 @@
 import { Container, Label, toast } from '@bsf/force-ui';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useCallback } from '@wordpress/element';
-import { usePluginsAndThemes } from './use-plugins-and-themes';
-import { PluginCard } from './plugin-card';
-import {
-	themesAndPlugins,
-	dashboard_plugins_sequence,
-} from './dashboard-constants';
+import { useEffect } from '@wordpress/element';
 import { Ticket, MessageSquare, Star, Info } from 'lucide-react';
 import { SureRankMonoLogo } from '@/global/components/icons';
 import { SiteSeoChecksSummary } from './site-seo-checks';
 import { useNavigate } from '@tanstack/react-router';
+import UpgradeToPro from '@AdminDashboard/upgrade-to-pro';
+import { isProActive } from '@/functions/nudges';
+
 const quickLinks = [
 	{
 		label: __( 'Open Support Ticket', 'surerank' ),
@@ -31,7 +28,7 @@ const quickLinks = [
 		external: true,
 	},
 	{
-		label: __( 'Leave Us a Review', 'surerank' ),
+		label: __( 'Enjoying SureRank? Leave a Review', 'surerank' ),
 		icon: <Star className="size-4" />,
 		link: surerank_globals.rating_link,
 		external: true,
@@ -52,23 +49,11 @@ const quickAccessLinks =
 		? [ ...onboardingSetup, ...quickLinks ]
 		: [ ...quickLinks ];
 
-const SequencedThemesAndPlugins = dashboard_plugins_sequence
-	.map( ( slug ) => themesAndPlugins.find( ( item ) => item.slug === slug ) )
-	.filter( Boolean );
-
 const Dashboard = () => {
 	const navigate = useNavigate();
-	const {
-		fetchStatus,
-		fetchInstalledPluginsAndThemes,
-		handleInstallThemeOrPlugin,
-		getProgressStatus,
-		getPluginStatus,
-	} = usePluginsAndThemes();
 
 	useEffect( () => {
 		checkForGCError();
-		fetchInstalledPluginsAndThemes();
 	}, [] );
 
 	const getErrorMessages = ( errorCode ) => {
@@ -153,96 +138,46 @@ const Dashboard = () => {
 		navigate( { to: '/search-console' } );
 	};
 
-	const renderInstallButtonText = useCallback(
-		( item ) => {
-			const status = getPluginStatus( item );
-			switch ( status ) {
-				case 'active':
-					return __( 'Activated', 'surerank' );
-				case 'activate':
-					return __( 'Activate', 'surerank' );
-				default:
-					return __( 'Install & Activate', 'surerank' );
-			}
-		},
-		[ getPluginStatus ]
-	);
-
 	return (
 		<>
 			<Container
-				className="h-full p-5 pb-8 xl:p-8 max-[1920px]:max-w-full mx-auto box-content bg-background-secondary gap-6"
+				className="h-full p-4 sm:p-5 pb-6 sm:pb-8 xl:p-8 max-[1920px]:max-w-full mx-auto box-content bg-background-secondary gap-4 sm:gap-6"
 				cols={ 12 }
 				containerType="grid"
 				gap="2xl"
 			>
-				<Container.Item className="col-span-8">
-					<Container direction="column" className="gap-8 relative">
+				<Container.Item className="col-span-12 lg:col-span-8">
+					<Container
+						direction="column"
+						className="gap-6 sm:gap-8 relative"
+					>
 						<SiteSeoChecksSummary
 							limit={ 10 }
 							showViewAll={ true }
 						/>
 					</Container>
 				</Container.Item>
-				<Container.Item className="col-span-4 flex flex-col gap-6">
-					{ /* Plugins and Themes */ }
-					<Container
-						className="w-full h-fit bg-background-primary border-0.5 border-solid rounded-xl border-border-subtle p-3 shadow-sm"
-						containerType="flex"
-						direction="column"
-						gap="xs"
-					>
-						<Container.Item className="md:w-full lg:w-full">
-							<Container
-								align="center"
-								className="p-1"
-								gap="xs"
-								justify="between"
-							>
-								<Label className="font-semibold text-text-primary">
-									{ __( 'Extend Your Website', 'surerank' ) }
-								</Label>
-							</Container>
-						</Container.Item>
-						<Container.Item className="md:w-full lg:w-full bg-field-primary-background rounded-lg">
-							<Container
-								containerType="grid"
-								className="p-1 gap-1 grid-cols-1 min-[425px]:grid-cols-2 md:grid-cols-2 xl:grid-cols-2"
-							>
-								{ SequencedThemesAndPlugins.map( ( item ) => (
-									<PluginCard
-										key={ item.name }
-										item={ item }
-										onInstall={ handleInstallThemeOrPlugin }
-										fetchStatus={ fetchStatus }
-										getPluginStatus={ getPluginStatus }
-										getProgressStatus={ getProgressStatus }
-										renderInstallButtonText={
-											renderInstallButtonText
-										}
-									/>
-								) ) }
-							</Container>
-						</Container.Item>
-					</Container>
+				<Container.Item className="col-span-12 lg:col-span-4 flex flex-col gap-4 sm:gap-6">
+					{ /* Show UpgradeToPro when pro is not active */ }
+					{ ! isProActive() && <UpgradeToPro /> }
 
 					{ /* Quick Access */ }
 					<Container
-						className="w-full h-fit bg-background-primary border-0.5 border-solid rounded-xl border-border-subtle p-3 shadow-sm"
+						className="w-full h-fit bg-background-primary border-0.5 border-solid rounded-xl border-border-subtle p-2 sm:p-3 shadow-sm"
 						containerType="flex"
 						direction="column"
 						gap="xs"
 					>
-						<Container.Item className="md:w-full lg:w-full p-1">
+						<Container.Item className="w-full p-1">
 							<Label className="font-semibold text-text-primary">
 								{ __( 'Quick Access', 'surerank' ) }
 							</Label>
 						</Container.Item>
-						<Container.Item className="flex flex-col md:w-full lg:w-full bg-field-primary-background gap-1 p-1 rounded-lg">
+						<Container.Item className="flex flex-col w-full bg-field-primary-background gap-1 p-1 rounded-lg">
 							{ quickAccessLinks.map( ( link ) => (
 								<div
 									key={ link.label }
-									className="p-2 gap-1 items-center bg-background-primary rounded-md shadow-sm cursor-pointer"
+									className="p-2 gap-1 items-center bg-background-primary rounded-md shadow-sm cursor-pointer hover:bg-field-primary-background transition-colors"
 									onClick={ () => {
 										if ( link.external ) {
 											window.open(
@@ -257,15 +192,15 @@ const Dashboard = () => {
 								>
 									<Container
 										align="center"
-										className="gap-1 p-1"
+										className="gap-2 p-1"
 										containerType="flex"
 										direction="row"
 									>
-										<Container.Item className="flex">
+										<Container.Item className="flex shrink-0">
 											{ link.icon }
 										</Container.Item>
-										<Container.Item className="flex">
-											<Label className="py-0 px-1 font-normal cursor-pointer hover:text-link-primary">
+										<Container.Item className="flex flex-1 min-w-0">
+											<Label className="py-0 px-1 font-normal cursor-pointer hover:text-link-primary truncate">
 												{ link.label }
 											</Label>
 										</Container.Item>

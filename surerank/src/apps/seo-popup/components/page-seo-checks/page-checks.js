@@ -3,11 +3,20 @@ import { __, sprintf } from '@wordpress/i18n';
 import { Loader, Text } from '@bsf/force-ui';
 import { motion } from 'framer-motion';
 import { CheckCard } from '@GlobalComponents/check-card';
+import {
+	PRO_PAGE_CHECKS_CONTENT_GENERATION_MAPPING,
+	isFixItForMeButton,
+	IS_HELP_ME_FIX_PRO_ACTIVE,
+	shouldHideFixHelpButtons,
+	helpMeFixRedirect,
+} from '@/global/constants';
+import { STORE_NAME } from '@Store/constants';
 
 const PageChecks = ( {
 	pageSeoChecks = {},
 	onIgnore,
 	onRestore,
+	onFix,
 	type = 'page',
 } ) => {
 	const {
@@ -20,6 +29,8 @@ const PageChecks = ( {
 		linkCheckProgress = { current: 0, total: 0 },
 	} = pageSeoChecks;
 
+	const hideFixHelpButtons = shouldHideFixHelpButtons( STORE_NAME );
+
 	const hasBadOrFairChecks = useMemo(
 		() =>
 			badChecks.length > 0 ||
@@ -29,10 +40,41 @@ const PageChecks = ( {
 	);
 
 	const handleIgnoreCheck = ( checkId ) => () => {
-		if ( ! checkId ) {
+		if ( ! checkId || typeof onIgnore !== 'function' ) {
 			return;
 		}
 		onIgnore( checkId );
+	};
+
+	const handleFixCheck = ( checkId ) => () => {
+		if ( ! checkId ) {
+			return;
+		}
+
+		if ( isFixItForMeButton( checkId ) && typeof onFix === 'function' ) {
+			onFix( checkId );
+		} else {
+			helpMeFixRedirect( checkId );
+		}
+	};
+
+	const getFixItButtonProps = ( checkId ) => {
+		if ( hideFixHelpButtons ) {
+			return { show: false };
+		}
+
+		const isFixButton = isFixItForMeButton( checkId );
+		const locked = isFixButton
+			? PRO_PAGE_CHECKS_CONTENT_GENERATION_MAPPING.includes( checkId )
+			: ! IS_HELP_ME_FIX_PRO_ACTIVE;
+
+		return {
+			show: true,
+			locked,
+			...( ! isFixButton && {
+				buttonLabel: __( 'Help Me Fix', 'surerank' ),
+			} ),
+		};
 	};
 
 	return (
@@ -66,7 +108,6 @@ const PageChecks = ( {
 					{ badChecks.map( ( check ) => (
 						<CheckCard
 							key={ check.id }
-							id={ check?.id }
 							variant="red"
 							label={ __( 'Critical', 'surerank' ) }
 							title={ check.title }
@@ -74,31 +115,36 @@ const PageChecks = ( {
 							showImages={ check?.showImages }
 							onIgnore={ handleIgnoreCheck( check.id ) }
 							showIgnoreButton={ true }
+							onFix={ handleFixCheck( check.id ) }
+							fixItButtonProps={ getFixItButtonProps( check.id ) }
 						/>
 					) ) }
 					{ fairChecks.map( ( check ) => (
 						<CheckCard
 							key={ check.id }
-							id={ check.id }
 							variant="yellow"
 							label={ __( 'Warning', 'surerank' ) }
 							title={ check.title }
 							data={ check?.data }
 							showImages={ check?.showImages }
 							onIgnore={ handleIgnoreCheck( check.id ) }
+							onFix={ handleFixCheck( check.id ) }
 							showIgnoreButton={ true }
+							fixItButtonProps={ getFixItButtonProps( check.id ) }
 						/>
 					) ) }
 					{ suggestionChecks.map( ( check ) => (
 						<CheckCard
 							key={ check.id }
-							id={ check.id }
 							variant="blue"
 							label={ __( 'Suggestion', 'surerank' ) }
 							title={ check.title }
 							data={ check?.data }
 							showImages={ check?.showImages }
 							onIgnore={ handleIgnoreCheck( check.id ) }
+							showIgnoreButton={ true }
+							onFix={ handleFixCheck( check.id ) }
+							fixItButtonProps={ getFixItButtonProps( check.id ) }
 						/>
 					) ) }
 				</div>
@@ -112,7 +158,6 @@ const PageChecks = ( {
 							variant="neutral"
 							label={ __( 'Ignore', 'surerank' ) }
 							title={ check.title }
-							showFixButton={ false }
 							showRestoreButton={ true }
 							onRestore={ () => onRestore( check.id ) }
 						/>
@@ -128,7 +173,6 @@ const PageChecks = ( {
 							variant="green"
 							label={ __( 'Passed', 'surerank' ) }
 							title={ check.title }
-							showFixButton={ false }
 							onIgnore={ () => onIgnore( check.id ) }
 						/>
 					) ) }

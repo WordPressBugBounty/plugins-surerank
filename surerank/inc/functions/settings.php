@@ -437,6 +437,8 @@ class Settings {
 		// 1. Base defaults -> 2. Global settings -> 3. CPT/Taxonomy defaults -> 4. Post meta.
 		$meta = array_merge( $default_values, $global_values, $extended_meta_values, $post_meta );
 
+		$meta = apply_filters( 'surerank_prep_post_meta', $meta, $post_id, $post_type, $is_taxonomy );
+
 		// Prepare schemas for the current post.
 		if ( ! empty( $post_type ) ) {
 			$meta['schemas'] = self::prepare_schemas( $meta, $post_type, $post_id, $is_taxonomy );

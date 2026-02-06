@@ -9,7 +9,10 @@ import {
 } from '@/apps/admin-components/dashboard-breadcrumb';
 import { cn } from '@/functions/utils';
 import EmptyContentGap from '../empty-content-gap';
-import { CONTENT_PERFORMANCE_TABS, CONTENT_PERFORMANCE_TABS_COUNT } from './constants';
+import {
+	CONTENT_PERFORMANCE_TABS,
+	CONTENT_PERFORMANCE_TABS_COUNT,
+} from './constants';
 const ContentAnalysis = () => {
 	const [ searchQuery, setSearchQuery ] = useState( '' );
 	const [ statusFilter, setStatusFilter ] = useState( 'All' );

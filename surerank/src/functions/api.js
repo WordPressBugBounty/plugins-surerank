@@ -3,23 +3,26 @@ import { addQueryArgs } from '@wordpress/url';
 import { TERM_SEO_DATA_URL, POST_SEO_DATA_URL } from '@Global/constants/api';
 import { isCurrentPage } from '@/functions/utils';
 
+const API_BASE_URL = '/surerank/v1';
+
 export const fetchMetaSettings = async () => {
-	const queryParams = new URLSearchParams();
-	if ( isCurrentPage( 'term.php' ) ) {
-		queryParams.append( 'term_id', surerank_seo_popup?.term_id );
+	const queryParams = {};
+	const isTerm =
+		isCurrentPage( 'term.php' ) || !! surerank_seo_popup.is_taxonomy;
+	if ( isTerm ) {
+		queryParams.term_id = surerank_seo_popup?.term_id;
 	} else {
-		queryParams.append( 'post_id', surerank_seo_popup?.post_id );
+		queryParams.post_id = surerank_seo_popup?.post_id;
 	}
-	queryParams.append( 'post_type', surerank_seo_popup?.post_type );
-	queryParams.append( 'is_taxonomy', surerank_seo_popup?.is_taxonomy );
+	queryParams.post_type = surerank_seo_popup?.post_type;
+	queryParams.is_taxonomy = surerank_seo_popup?.is_taxonomy;
 
 	try {
 		const response = await apiFetch( {
-			path: `${
-				isCurrentPage( 'term.php' )
-					? TERM_SEO_DATA_URL
-					: POST_SEO_DATA_URL
-			}?${ queryParams.toString() }`,
+			path: addQueryArgs(
+				isTerm ? TERM_SEO_DATA_URL : POST_SEO_DATA_URL,
+				queryParams
+			),
 			method: 'GET',
 		} );
 		if ( ! response.success ) {
@@ -145,7 +148,88 @@ export const fetchImageDataByUrl = async ( imageUrl ) => {
  */
 export const getMigratedData = () => {
 	return apiFetch( {
-		path: `/surerank/v1/migration/migrated-data`,
+		path: `${ API_BASE_URL }/migration/migrated-data`,
 		method: 'GET',
+	} );
+};
+
+/**
+ * Fetch AI authentication status
+ * @return {Promise<Object>} The authentication status
+ */
+export const getAuth = () => {
+	return apiFetch( { path: `${ API_BASE_URL }/ai/auth` } );
+};
+
+/**
+ * Save AI access token
+ * @param {string} accessKey The access token
+ * @return {Promise<Object>} The response from the API
+ */
+export const saveAuthAccessToken = ( accessKey ) => {
+	return apiFetch( {
+		path: `${ API_BASE_URL }/ai/auth`,
+		method: 'POST',
+		data: { accessKey },
+	} );
+};
+
+/**
+ * Generate content
+ * @param {string} type         - The type of content to generate.
+ * @param {string} [postId]     - The optional post ID.
+ * @param {string} [isTaxonomy] - The optional taxonomy flag.
+ */
+export const generateContent = ( type, postId, isTaxonomy ) => {
+	const data = { type };
+	if ( postId ) {
+		data.post_id = postId;
+	}
+	if ( isTaxonomy ) {
+		data.is_taxonomy = isTaxonomy;
+	}
+	return apiFetch( {
+		path: `${ API_BASE_URL }/generate-content`,
+		method: 'POST',
+		data,
+	} );
+};
+
+/**
+ * Save email reports settings
+ * @param {Object}  settings                - The email reports settings to save.
+ * @param {boolean} settings.enabled        - Whether email reports are enabled.
+ * @param {string}  settings.recipientEmail - The recipient email address.
+ * @param {string}  settings.dayOfWeek      - The day of the week for reports.
+ */
+export const saveEmailReportsSettings = ( settings ) => {
+	return apiFetch( {
+		path: `${ API_BASE_URL }/email-reports/settings`,
+		method: 'POST',
+		data: settings,
+	} );
+};
+
+/**
+ * Get email reports settings
+ * @return {Promise<Object>} The email reports settings.
+ */
+export const getEmailReportsSettings = () => {
+	return apiFetch( {
+		path: `${ API_BASE_URL }/email-reports/settings`,
+		method: 'GET',
+	} );
+};
+
+/**
+ * Send test email report
+ * @param {string} recipientEmail - The recipient email address.
+ * @return {Promise<Object>} The response from the API.
+ */
+export const sendTestEmailReport = ( recipientEmail ) => {
+	return apiFetch( {
+		path: `${ API_BASE_URL }/email-reports/send-test`,
+		method: 'POST',
+		data: { recipientEmail },
 	} );
 };

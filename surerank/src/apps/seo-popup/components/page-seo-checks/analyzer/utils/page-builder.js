@@ -1,10 +1,12 @@
 import apiFetch from '@wordpress/api-fetch';
 import { __ } from '@wordpress/i18n';
+import { addQueryArgs } from '@wordpress/url';
 import { Button, toast } from '@bsf/force-ui';
 import { formatSeoChecks, cn } from '@/functions/utils';
 import { STORE_NAME } from '@/store/constants';
 import { fetchBrokenLinkStatus } from '../link-checks';
 import { RefreshCcw } from 'lucide-react';
+import { CHECK_TYPES, ENABLE_PAGE_LEVEL_SEO } from '@/global/constants';
 
 // Function to check broken links for Elementor editor
 export const checkBrokenLinks = async (
@@ -76,6 +78,7 @@ export const checkBrokenLinks = async (
 					'surerank'
 				),
 				status: 'error',
+				type: 'page',
 				data: [
 					__(
 						'These broken links were found on the page:',
@@ -87,7 +90,12 @@ export const checkBrokenLinks = async (
 		}
 
 		// Update all SEO checks at once
-		setPageSeoCheck( 'checks', updatedChecks );
+		CHECK_TYPES.forEach( ( type ) => {
+			setPageSeoCheck(
+				type,
+				updatedChecks.filter( ( item ) => item.type === type )
+			);
+		} );
 		setPageSeoCheck( 'isCheckingLinks', false );
 		setPageSeoCheck( 'linkCheckProgress', {
 			current: totalLinks,
@@ -116,12 +124,15 @@ export const refreshPageChecks = async (
 
 	try {
 		const response = await apiFetch( {
-			path: `/surerank/v1/checks/page?post_id=${ dynamicPostId }&_t=${ Date.now() }`,
+			path: addQueryArgs( '/surerank/v1/checks/page', {
+				post_ids: [ dynamicPostId ],
+				_t: Date.now(),
+			} ),
 			method: 'GET',
 		} );
 
-		const checks = formatSeoChecks( response?.checks );
-		const allLinks = response?.checks?.all_links || [];
+		const checks = formatSeoChecks( response?.data[ dynamicPostId ]?.checks );
+		const allLinks = response.data[ dynamicPostId ]?.checks?.all_links || [];
 
 		// Reset brokenLinkState, keeping only broken links that still exist
 		setBrokenLinkState( ( prev ) => {
@@ -142,11 +153,16 @@ export const refreshPageChecks = async (
 		} );
 
 		const cleanedChecks = [ ...checks ].filter(
-			( c ) => c.id !== 'broken_links'
+			( item ) => item.id !== 'broken_links'
 		);
 
 		// Update pageSeoChecks with cleaned checks
-		setPageSeoCheck( 'checks', cleanedChecks );
+		CHECK_TYPES.forEach( ( type ) => {
+			setPageSeoCheck(
+				type,
+				cleanedChecks.filter( ( item ) => item.type === type )
+			);
+		} );
 
 		if ( allLinks.length === 0 ) {
 			setPageSeoCheck( 'isCheckingLinks', false );
@@ -184,6 +200,17 @@ export const refreshPageChecks = async (
 	}
 };
 
+/**
+ * Check if the page is in frontend.
+ *
+ * @return {boolean} True if the page is in frontend
+ */
+export const isFrontend = () => {
+	return (
+		!! surerank_seo_popup?.is_frontend && ! surerank_seo_popup?.is_taxonomy
+	);
+};
+
 export const isElementorBuilder = () => {
 	return (
 		typeof window !== 'undefined' &&
@@ -196,8 +223,39 @@ export const isBricksBuilder = () => {
 	return !! surerank_globals?.is_bricks;
 };
 
+export const isAvadaBuilder = () => {
+	// Check for Fusion Builder frontend context
+	if (
+		typeof window !== 'undefined' &&
+		typeof window.FusionPageBuilder !== 'undefined'
+	) {
+		return true;
+	}
+	return false;
+};
+
 export const isPageBuilderActive = () => {
-	return isBricksBuilder() || isElementorBuilder();
+	return (
+		isBricksBuilder() ||
+		isElementorBuilder() ||
+		isAvadaBuilder() ||
+		// Consider frontend as page builder active as page requires refresh.
+		isFrontend()
+	);
+};
+
+/**
+ * Check if SEO analysis should be disabled
+ * Returns true if SEO analysis should be disabled due to:
+ * - Page level SEO being disabled
+ * - Active Bricks builder
+ * - Active Avada builder
+ *
+ *
+ * @return {boolean} True if SEO analysis should be disabled
+ */
+export const isSeoAnalysisDisabled = () => {
+	return ! ENABLE_PAGE_LEVEL_SEO || isBricksBuilder() || isAvadaBuilder();
 };
 
 export const RefreshButton = ( { isRefreshing, isChecking, onClick } ) => {

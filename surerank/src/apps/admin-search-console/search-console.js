@@ -33,6 +33,9 @@ const SearchConsole = () => {
 		};
 	} );
 
+	const shouldShowOverlay =
+		! isSearchConsoleConnected || ! isSiteSelected || openSiteSelectorModal;
+
 	return (
 		<>
 			<SearchConsolePopup isOpen={ ! isSearchConsoleConnected } />
@@ -43,28 +46,27 @@ const SearchConsole = () => {
 
 			{ openSiteSelectorModal && isSiteSelected && <SiteSelectorPopup /> }
 
-			<Container
-				className="h-full p-5 pb-8 xl:p-8 max-[1920px]:max-w-full mx-auto box-content bg-background-secondary"
-				cols={ 12 }
-				containerType="grid"
-				gap="2xl"
-			>
+			<div className={ cn( 'relative h-full', shouldShowOverlay && "after:content-[''] after:fixed after:block after:w-full after:h-full after:inset-0 after:bg-black/40 after:backdrop-blur-[5px] after:z-0" ) }>
 				<Container
-					direction="column"
-					className={ cn(
-						'gap-8 col-span-12 relative',
-						( ! isSearchConsoleConnected ||
-							! isSiteSelected ||
-							openSiteSelectorModal ) &&
-							'after:content-[""] after:absolute after:inset-0 after:bg-black/40 backdrop-blur-[5px] blur-sm after:rounded-xl after:z-auto'
-					) }
+					className="h-full p-5 pb-8 xl:p-8 max-[1920px]:max-w-full mx-auto box-content bg-background-secondary"
+					cols={ 12 }
+					containerType="grid"
+					gap="2xl"
 				>
-					<RenderContent
-						connected={ isSearchConsoleConnected }
-						siteSelected={ isSiteSelected }
-					/>
+					<Container
+						direction="column"
+						className={ cn(
+							'gap-8 col-span-12 relative',
+							shouldShowOverlay && 'blur-sm'
+						) }
+					>
+						<RenderContent
+							connected={ isSearchConsoleConnected }
+							siteSelected={ isSiteSelected }
+						/>
+					</Container>
 				</Container>
-			</Container>
+			</div>
 		</>
 	);
 };

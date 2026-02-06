@@ -29,18 +29,18 @@ const SaveButton = () => {
 	};
 
 	const save = async () => {
+		const isTerm =
+			!! surerank_seo_popup.is_taxonomy || isCurrentPage( 'term.php' );
 		const queryParams = {
 			metaData: unsavedMetaSettings,
-			...( isCurrentPage( 'term.php' )
+			...( isTerm
 				? { term_id: surerank_seo_popup?.term_id }
 				: { post_id: surerank_seo_popup?.post_id } ),
 		};
 
 		try {
 			const response = await apiFetch( {
-				path: isCurrentPage( 'term.php' )
-					? TERM_SEO_DATA_URL
-					: POST_SEO_DATA_URL,
+				path: isTerm ? TERM_SEO_DATA_URL : POST_SEO_DATA_URL,
 				method: 'POST',
 				data: queryParams,
 			} );

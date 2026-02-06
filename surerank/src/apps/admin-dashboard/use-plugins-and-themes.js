@@ -281,6 +281,41 @@ export const usePluginsAndThemes = () => {
 		}
 	};
 
+	const getRecommendedPlugin = useCallback(
+		( sequencedPlugins ) => {
+			// Remove duplicates
+			const uniquePlugins = sequencedPlugins.filter(
+				( item, index, self ) =>
+					index ===
+					self.findIndex( ( plugin ) => plugin.slug === item.slug )
+			);
+
+			// Priority 1: Not installed plugins
+			const notInstalledPlugin = uniquePlugins.find(
+				( item ) => getPluginStatus( item ) === 'install'
+			);
+			if ( notInstalledPlugin ) {
+				return notInstalledPlugin;
+			}
+
+			// Priority 2: Installed but inactive plugins
+			const inactivePlugin = uniquePlugins.find(
+				( item ) => getPluginStatus( item ) === 'activate'
+			);
+			if ( inactivePlugin ) {
+				return inactivePlugin;
+			}
+
+			// Priority 3: If all are installed and active, show random one
+			const randomPlugin =
+				uniquePlugins[
+					Math.floor( Math.random() * uniquePlugins.length )
+				];
+			return randomPlugin || null;
+		},
+		[ getPluginStatus ]
+	);
+
 	return {
 		installedThemesAndPlugins,
 		fetchStatus,
@@ -288,5 +323,6 @@ export const usePluginsAndThemes = () => {
 		handleInstallThemeOrPlugin,
 		getProgressStatus,
 		getPluginStatus,
+		getRecommendedPlugin,
 	};
 };

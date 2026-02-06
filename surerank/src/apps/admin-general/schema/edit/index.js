@@ -2,11 +2,13 @@ import Properties from './properties';
 import DisplayConditions from './display-conditions';
 import PageContentWrapper from '@AdminComponents/page-content-wrapper';
 import { __ } from '@wordpress/i18n';
-import { Tabs, Container, Button } from '@bsf/force-ui';
+import { Tabs, Container, Button, Text } from '@bsf/force-ui';
 import { useState, useCallback, memo } from '@wordpress/element';
 import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import { SaveSettingsButton } from '@/apps/admin-components/global-save-button';
+import { Tooltip } from '@AdminComponents/tooltip';
+import { hasDisplayConditions } from './utils';
 
 const EditSchema = ( {
 	schema,
@@ -75,6 +77,13 @@ const EditSchema = ( {
 		</Button>
 	);
 
+	const DISPLAY_CONDITIONS_WARNING = __(
+		'Display conditions not set, please configure to ensure proper functionality.',
+		'surerank'
+	);
+
+	const DISPLAY_CONDITIONS = __( 'Display conditions', 'surerank' );
+
 	return (
 		<PageContentWrapper
 			title={ schema }
@@ -90,6 +99,7 @@ const EditSchema = ( {
 							width="full"
 							onChange={ handleTabChange }
 							className="justify-around font-medium"
+							iconPosition="right"
 						>
 							<Tabs.Tab
 								className="text-field-label max-w-none font-medium"
@@ -99,7 +109,30 @@ const EditSchema = ( {
 							<Tabs.Tab
 								className="text-field-label max-w-none font-medium"
 								slug="display-conditions"
-								text={ __( 'Display Conditions', 'surerank' ) }
+								text={
+									! hasDisplayConditions(
+										metaSettings.schemas?.[ schemaId ]
+									) ? (
+										<Tooltip
+											content={
+												DISPLAY_CONDITIONS_WARNING
+											}
+											placement="top"
+											arrow
+										>
+											<span>{ DISPLAY_CONDITIONS }</span>
+										</Tooltip>
+									) : (
+										DISPLAY_CONDITIONS
+									)
+								}
+								icon={
+									! hasDisplayConditions(
+										metaSettings.schemas?.[ schemaId ]
+									) && (
+										<span className="size-1.5 rounded-full bg-support-warning" />
+									)
+								}
 							/>
 						</Tabs.Group>
 					</Container.Item>
@@ -117,6 +150,19 @@ const EditSchema = ( {
 				<Container className="py-2 px-0" gap="sm">
 					<SaveSettingsButton />
 				</Container>
+				{ activeTab === 'display-conditions' &&
+					! hasDisplayConditions(
+						metaSettings.schemas?.[ schemaId ]
+					) && (
+						<div className="flex items-center justify-between p-3 gap-2 relative ring-1 rounded-lg ring-alert-border-warning bg-alert-background-warning shadow-none">
+							<Text size={ 14 } weight={ 400 } color="primary">
+								{ __(
+									'No display conditions set. Without conditions, this schema will not appear on any pages. Configure "Display On" rules below to target specific pages.',
+									'surerank'
+								) }
+							</Text>
+						</div>
+					) }
 			</div>
 		</PageContentWrapper>
 	);

@@ -8,16 +8,16 @@
 
 namespace SureRank\Inc\BatchProcess;
 
+use SureRank\Inc\Lib\Background_Process\Wp_Background_Process;
 use SureRank\Inc\Traits\Get_Instance;
 use SureRank\Inc\Traits\Logger;
-use WP_Background_Process;
 
 /**
  * Image Background Process
  *
  * @since 1.2.0
  */
-class Process extends WP_Background_Process {
+class Process extends Wp_Background_Process {
 
 	use Get_Instance;
 	use Logger;

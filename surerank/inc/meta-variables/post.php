@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use SureRank\Inc\Frontend\Description;
+use SureRank\Inc\Traits\Custom_Field;
 use SureRank\Inc\Traits\Get_Instance;
 
 /**
@@ -22,7 +23,7 @@ use SureRank\Inc\Traits\Get_Instance;
  */
 class Post extends Variables {
 
-	use Get_Instance;
+	use Get_Instance, Custom_Field;
 
 	/**
 	 * Stores variables array.
@@ -255,7 +256,24 @@ class Post extends Variables {
 			}
 		}
 
+		if ( is_post_type_archive() ) {
+			$post_type_object = get_queried_object();
+			if ( $post_type_object && ! empty( $post_type_object->labels->name ) ) {
+				return $post_type_object->labels->name;
+			}
+		}
+
 		return '';
+	}
+
+	/**
+	 * Get the meta type for custom fields trait.
+	 *
+	 * @since 1.6.0
+	 * @return string
+	 */
+	protected function get_meta_type() {
+		return 'post';
 	}
 
 }

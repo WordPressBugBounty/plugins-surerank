@@ -47,13 +47,14 @@ class Data {
 	 */
 	public function collect() {
 		$this->data = [
-			'post'    => $this->get_post_data(),
-			'term'    => $this->get_term_data(),
-			'author'  => $this->get_author_data(),
-			'user'    => $this->get_user_data(),
-			'site'    => $this->get_site_data(),
-			'current' => $this->get_current_data(),
-			'schemas' => $this->get_schema_links(),
+			'post'            => $this->get_post_data(),
+			'term'            => $this->get_term_data(),
+			'author'          => $this->get_author_data(),
+			'user'            => $this->get_user_data(),
+			'site'            => $this->get_site_data(),
+			'current'         => $this->get_current_data(),
+			'schemas'         => $this->get_schema_links(),
+			'website_details' => $this->get_website_details(),
 		];
 
 		$this->data = apply_filters( 'surerank_schema_data', $this->data );
@@ -321,12 +322,16 @@ class Data {
 	 * @return array<string, mixed>The site data.
 	 */
 	private function get_site_data() {
+		$default_search_url = esc_url( home_url( '/' ) ) . '?s={search_term_string}';
+		$search_url         = apply_filters( 'surerank_search_action_target_url', $default_search_url );
+
 		return [
 			'title'       => get_bloginfo( 'name' ),
 			'description' => get_bloginfo( 'description' ),
 			'url'         => home_url( '/' ),
 			'language'    => get_locale(),
 			'icon'        => get_site_icon_url(),
+			'search_url'  => $search_url,
 		];
 	}
 
@@ -434,6 +439,39 @@ class Data {
 			},
 			$meta_values
 		);
+	}
+
+	/**
+	 * Retrieves website details data from onboarding.
+	 *
+	 * @return array<string, mixed>The website details data.
+	 */
+	private function get_website_details() {
+		$onboarding_data = get_option( 'surerank_settings_onboarding', [] );
+
+		if ( empty( $onboarding_data ) || ! is_array( $onboarding_data ) ) {
+			return [];
+		}
+
+		$social_profiles = [];
+		if ( isset( $onboarding_data['social_profiles'] ) && is_array( $onboarding_data['social_profiles'] ) ) {
+			foreach ( $onboarding_data['social_profiles'] as $key => $url ) {
+				$social_profiles[ $key ] = esc_url( is_scalar( $url ) ? strval( $url ) : '' );
+			}
+		}
+
+		return [
+			'website_type'         => sanitize_text_field( $onboarding_data['website_type'] ?? '' ),
+			'website_name'         => sanitize_text_field( $onboarding_data['website_name'] ?? '' ),
+			'business_description' => sanitize_text_field( $onboarding_data['business_description'] ?? '' ),
+			'website_owner_name'   => sanitize_text_field( $onboarding_data['website_owner_name'] ?? '' ),
+			'organization_type'    => sanitize_text_field( $onboarding_data['organization_type'] ?? 'Organization' ),
+			'website_owner_phone'  => sanitize_text_field( $onboarding_data['website_owner_phone'] ?? '' ),
+			'website_logo'         => esc_url( is_scalar( $onboarding_data['website_logo'] ?? '' ) ? strval( $onboarding_data['website_logo'] ) : '' ),
+			'about_page'           => absint( $onboarding_data['about_page'] ?? 0 ),
+			'contact_page'         => absint( $onboarding_data['contact_page'] ?? 0 ),
+			'social_profiles'      => $social_profiles,
+		];
 	}
 
 	/**

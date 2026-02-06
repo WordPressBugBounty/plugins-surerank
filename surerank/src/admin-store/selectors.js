@@ -24,3 +24,5 @@ export const getSiteSeoAnalysis = ( { siteSeoAnalysis } ) => siteSeoAnalysis;
 
 export const getAppSettings = ( { appSettings } ) => appSettings;
 export const getUnsavedSettings = ( { unsavedSettings } ) => unsavedSettings;
+export const getEmailReportsSettings = ( { emailReportsSettings } ) =>
+	emailReportsSettings;

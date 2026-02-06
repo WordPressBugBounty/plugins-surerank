@@ -68,9 +68,11 @@ class Utils {
 			return [
 				'status'  => 'error',
 				'message' => __( 'Search engine title is missing on the page.', 'surerank' ),
+				'type'    => 'page',
 			];
 		}
 
+		$title        = html_entity_decode( $title );
 		$length       = mb_strlen( $title );
 		$exists       = ! empty( $title );
 		$is_optimized = $exists && $length <= Get::TITLE_LENGTH;
@@ -95,6 +97,7 @@ class Utils {
 		return [
 			'status'  => $exists ? ( $is_optimized ? 'success' : 'warning' ) : 'error',
 			'message' => $message,
+			'type'    => 'page',
 		];
 	}
 
@@ -110,6 +113,7 @@ class Utils {
 			return [
 				'status'  => 'warning',
 				'message' => __( 'Search engine description is missing on the page.', 'surerank' ),
+				'type'    => 'page',
 			];
 		}
 
@@ -135,6 +139,7 @@ class Utils {
 		return [
 			'status'  => $exists && $length <= Get::DESCRIPTION_LENGTH ? 'success' : 'warning',
 			'message' => $message,
+			'type'    => 'page',
 		];
 	}
 
@@ -150,12 +155,14 @@ class Utils {
 			return [
 				'status'  => 'warning',
 				'message' => __( 'Canonical tag is not present on the page.', 'surerank' ),
+				'type'    => 'page',
 			];
 		}
 
 		return [
 			'status'  => 'success',
 			'message' => __( 'Canonical tag is present on the page.', 'surerank' ),
+			'type'    => 'page',
 		];
 	}
 
@@ -170,6 +177,7 @@ class Utils {
 			return [
 				'status'  => 'warning',
 				'message' => __( 'No URL provided.', 'surerank' ),
+				'type'    => 'page',
 			];
 		}
 
@@ -189,6 +197,7 @@ class Utils {
 		return [
 			'status'  => $exists ? ( $is_optimized ? 'success' : 'warning' ) : 'warning',
 			'message' => $message,
+			'type'    => 'page',
 		];
 	}
 	/**
@@ -241,6 +250,7 @@ class Utils {
 							'url'     => $existing_link,
 							'status'  => 'error',
 							'details' => __( 'The link is broken.', 'surerank' ),
+							'type'    => 'page',
 						];
 					}
 				} elseif ( is_array( $existing_link ) && isset( $existing_link['url'] ) ) {
@@ -265,27 +275,15 @@ class Utils {
 			return [
 				'status'  => 'suggestion',
 				'message' => __( 'Open Graph tags are not present on the page.', 'surerank' ),
+				'type'    => 'page',
 			];
 		}
 
 		return [
 			'status'  => 'success',
 			'message' => __( 'Open Graph tags are present on the page.', 'surerank' ),
+			'type'    => 'page',
 		];
-	}
-
-	/**
-	 * Check if keyword exists in text (case-insensitive).
-	 *
-	 * @param string $text Text to search in.
-	 * @param string $keyword Keyword to search for.
-	 * @return bool
-	 */
-	private static function keyword_exists_in_text( $text, $keyword ) {
-		if ( empty( $text ) || empty( $keyword ) ) {
-			return false;
-		}
-		return stripos( $text, $keyword ) !== false;
 	}
 
 	/**
@@ -300,6 +298,7 @@ class Utils {
 			return [
 				'status'  => 'suggestion',
 				'message' => __( 'No focus keyword set to analyze title.', 'surerank' ),
+				'type'    => 'keyword',
 			];
 		}
 
@@ -307,6 +306,7 @@ class Utils {
 			return [
 				'status'  => 'warning',
 				'message' => __( 'No SEO title found to analyze.', 'surerank' ),
+				'type'    => 'keyword',
 			];
 		}
 
@@ -315,6 +315,7 @@ class Utils {
 				'status'  => 'success',
 				// translators: %s is the focus keyword.
 				'message' => sprintf( __( 'Focus keyword "%s" found in SEO title.', 'surerank' ), $keyword ),
+				'type'    => 'keyword',
 			];
 		}
 
@@ -322,6 +323,7 @@ class Utils {
 			'status'  => 'warning',
 			// translators: %s is the focus keyword.
 			'message' => sprintf( __( 'Focus keyword "%s" not found in SEO title.', 'surerank' ), $keyword ),
+			'type'    => 'keyword',
 		];
 	}
 
@@ -337,6 +339,7 @@ class Utils {
 			return [
 				'status'  => 'suggestion',
 				'message' => __( 'No focus keyword set to analyze meta description.', 'surerank' ),
+				'type'    => 'keyword',
 			];
 		}
 
@@ -344,6 +347,7 @@ class Utils {
 			return [
 				'status'  => 'warning',
 				'message' => __( 'No meta description found to analyze.', 'surerank' ),
+				'type'    => 'keyword',
 			];
 		}
 
@@ -352,6 +356,7 @@ class Utils {
 				'status'  => 'success',
 				// translators: %s is the focus keyword.
 				'message' => sprintf( __( 'Focus keyword "%s" found in meta description.', 'surerank' ), $keyword ),
+				'type'    => 'keyword',
 			];
 		}
 
@@ -359,6 +364,7 @@ class Utils {
 			'status'  => 'warning',
 			// translators: %s is the focus keyword.
 			'message' => sprintf( __( 'Focus keyword "%s" not found in meta description.', 'surerank' ), $keyword ),
+			'type'    => 'keyword',
 		];
 	}
 
@@ -374,6 +380,7 @@ class Utils {
 			return [
 				'status'  => 'suggestion',
 				'message' => __( 'No focus keyword set to analyze URL.', 'surerank' ),
+				'type'    => 'keyword',
 			];
 		}
 
@@ -381,6 +388,7 @@ class Utils {
 			return [
 				'status'  => 'warning',
 				'message' => __( 'No URL found to analyze.', 'surerank' ),
+				'type'    => 'keyword',
 			];
 		}
 
@@ -393,6 +401,7 @@ class Utils {
 				'status'  => 'success',
 				// translators: %s is the focus keyword.
 				'message' => sprintf( __( 'Focus keyword "%s" found in URL.', 'surerank' ), $keyword ),
+				'type'    => 'keyword',
 			];
 		}
 
@@ -400,6 +409,7 @@ class Utils {
 			'status'  => 'warning',
 			// translators: %s is the focus keyword.
 			'message' => sprintf( __( 'Focus keyword "%s" not found in URL.', 'surerank' ), $keyword ),
+			'type'    => 'keyword',
 		];
 	}
 
@@ -415,6 +425,7 @@ class Utils {
 			return [
 				'status'  => 'suggestion',
 				'message' => __( 'No focus keyword set to analyze content.', 'surerank' ),
+				'type'    => 'keyword',
 			];
 		}
 
@@ -422,6 +433,7 @@ class Utils {
 			return [
 				'status'  => 'warning',
 				'message' => __( 'No content found to analyze.', 'surerank' ),
+				'type'    => 'keyword',
 			];
 		}
 
@@ -435,6 +447,7 @@ class Utils {
 				'status'  => 'success',
 				// translators: %s is the focus keyword.
 				'message' => sprintf( __( 'Focus keyword "%s" found in content.', 'surerank' ), $keyword ),
+				'type'    => 'keyword',
 			];
 		}
 
@@ -442,6 +455,21 @@ class Utils {
 			'status'  => 'warning',
 			// translators: %s is the focus keyword.
 			'message' => sprintf( __( 'Focus keyword "%s" not found in content.', 'surerank' ), $keyword ),
+			'type'    => 'keyword',
 		];
+	}
+
+	/**
+	 * Check if keyword exists in text (case-insensitive).
+	 *
+	 * @param string $text Text to search in.
+	 * @param string $keyword Keyword to search for.
+	 * @return bool
+	 */
+	private static function keyword_exists_in_text( $text, $keyword ) {
+		if ( empty( $text ) || empty( $keyword ) ) {
+			return false;
+		}
+		return stripos( $text, $keyword ) !== false;
 	}
 }

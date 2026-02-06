@@ -74,12 +74,17 @@ class Twitter {
 	 */
 	private function add_common_tags( $meta_data, $same_as_facebook ) {
 
+		$twitter_image = $this->get_twitter_value( $meta_data, $same_as_facebook, 'facebook_image_url', 'twitter_image_url', 'fallback_image' );
+		if ( $twitter_image && ! Image::get_instance()->is_valid_image_extension( $twitter_image ) ) {
+			$twitter_image = '';
+		}
+
 		$common_tags = [
 			'twitter:card'        => Settings::get( 'twitter_card_type' ),
 			'twitter:site'        => $this->get_formatted_twitter_site(),
 			'twitter:title'       => $this->get_twitter_value( $meta_data, $same_as_facebook, 'facebook_title', 'twitter_title', 'page_title' ),
 			'twitter:description' => $this->get_twitter_value( $meta_data, $same_as_facebook, 'facebook_description', 'twitter_description', 'page_description' ),
-			'twitter:image'       => $this->get_twitter_value( $meta_data, $same_as_facebook, 'facebook_image_url', 'twitter_image_url', 'fallback_image' ),
+			'twitter:image'       => $twitter_image,
 			'twitter:creator'     => $this->get_formatted_twitter_creator(),
 		];
 
