@@ -411,7 +411,7 @@ const SidebarLayout = ( {
 			<div id="surerank-admin-dashboard" className="grid grid-rows-[64px_auto] min-h-full bg-background-secondary">
 				{ /* Header */ }
 				<Topbar
-					className="w-auto min-h-[unset] h-16 shadow-sm p-0 relative z-[1]"
+					className="w-auto min-h-[unset] h-16 shadow-sm p-0 relative z-[2]"
 					gap={ 0 }
 				>
 					<Topbar.Left className="p-5">

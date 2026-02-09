@@ -65,6 +65,7 @@ class GoogleConsole {
 		$request_args            = [];
 		$request_args['headers'] = $this->get_header();
 		$request_args['method']  = $method;
+		$request_args['timeout'] = 30; // phpcs:ignore WordPressVIPMinimum.Performance.RemoteRequestTimeout.timeout_timeout
 
 		switch ( strtoupper( $method ) ) {
 			case 'POST':

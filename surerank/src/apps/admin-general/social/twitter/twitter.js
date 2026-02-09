@@ -35,7 +35,7 @@ export const PAGE_CONTENT = [
 				options: twitterCardType,
 				storeKey: 'twitter_card_type',
 				tooltip: __(
-					'Choose how your content will appear when shared on X. This setting determines the card type—either a summary or a summary with a large image—used in the post preview.',
+					'Choose how your content will appear when shared on X. This setting determines the card type-either a summary or a summary with a large image-used in the post preview.',
 					'surerank'
 				),
 				showBorder: true,

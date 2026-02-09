@@ -258,7 +258,23 @@ class Seo_Popup {
 			return true;
 		}
 
-		return $screen && ! empty( $screen->base ) && in_array( $screen->base, [ 'post', 'term' ], true );
+		if ( ! $screen || empty( $screen->base ) || ! in_array( $screen->base, [ 'post', 'term' ], true ) ) {
+			return false;
+		}
+
+		if ( 'post' === $screen->base && ! empty( $screen->post_type ) ) {
+			if ( ! Seo_Bar::display_metabox( $screen->post_type, 'wp_posts' ) ) {
+				return false;
+			}
+		}
+
+		if ( 'term' === $screen->base && ! empty( $screen->taxonomy ) ) {
+			if ( ! Seo_Bar::display_metabox( $screen->taxonomy, 'wp_terms' ) ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**

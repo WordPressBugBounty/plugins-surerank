@@ -87,6 +87,10 @@ class Utils {
 		$urlset->setAttribute( 'xsi:schemaLocation', 'http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd' );
 		$urlset->setAttribute( 'xmlns:image', 'http://www.google.com/schemas/sitemap-image/1.1' );
 
+		if ( apply_filters( 'surerank_sitemap_has_hreflang', true ) ) {
+			$urlset->setAttribute( 'xmlns:xhtml', 'http://www.w3.org/1999/xhtml' );
+		}
+
 		foreach ( $sitemap as $url ) {
 			$url_element = $dom->createElement( 'url' );
 
@@ -95,6 +99,8 @@ class Utils {
 
 			$lastmod = $dom->createElement( 'lastmod', esc_xml( (string) $url['updated'] ) );
 			$url_element->appendChild( $lastmod );
+
+			$url_element = apply_filters( 'surerank_sitemap_url_element', $url_element, $url, $dom );
 
 			// Add each image if available.
 			if ( isset( $url['images_data'] ) ) {
@@ -218,6 +224,9 @@ class Utils {
 	public static function get_images_from_post_content( int $post_id ) {
 		$images  = [];
 		$content = get_post_field( 'post_content', $post_id );
+		if ( ! is_string( $content ) ) {
+			return $images;
+		}
 
 		preg_match_all( '/<img[^>]+src="([^">]+)"/i', $content, $matches );
 		if ( ! empty( $matches[1] ) ) {
@@ -249,6 +258,9 @@ class Utils {
 	public static function get_images_from_gallery_shortcode( int $post_id ) {
 		$images  = [];
 		$content = get_post_field( 'post_content', $post_id );
+		if ( ! is_string( $content ) ) {
+			return $images;
+		}
 
 		if ( preg_match_all( '/' . get_shortcode_regex( [ 'gallery' ] ) . '/s', $content, $matches, PREG_SET_ORDER ) ) {
 			foreach ( $matches as $shortcode ) {

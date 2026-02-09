@@ -17,11 +17,11 @@ const InstantIndexingSettings = () => {
 		>
 			<UpgradeNotice
 				title={ __(
-					'Unlock IndexNow for instant indexing',
+					'Get Your Content Indexed Instantly with IndexNow',
 					'surerank'
 				) }
 				description={ __(
-					'Upgrade to SureRank Pro and let search engines know about your new or updated content instantly.',
+					'Upgrade to SureRank Pro to notify search engines like Bing and Yandex the moment you publish or update content. No more waiting for crawlers—get indexed faster and boost your search visibility.',
 					'surerank'
 				) }
 				utmMedium="surerank_instant_indexing"

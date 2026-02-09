@@ -9,8 +9,9 @@ import {
 	Text,
 	Pagination,
 } from '@bsf/force-ui';
-import { ArrowUpRight, ArrowUp, ArrowDown, AlertTriangle } from 'lucide-react';
+import { ArrowUpRight, ArrowRight, AlertTriangle } from 'lucide-react';
 import { __ } from '@wordpress/i18n';
+import { getChangeIcon } from './utils/get-change-icon';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { STORE_NAME } from '@/admin-store/constants';
 import { useEffect, useState, useCallback, useRef } from '@wordpress/element';
@@ -19,6 +20,7 @@ import { addQueryArgs } from '@wordpress/url';
 import { ADMIN_DASHBOARD_URL } from '@Global/constants/index';
 import { formatToISOPreserveDate, getLastNDays } from '@/functions/utils';
 import { SortableColumn } from '@GlobalComponents/sortable-column';
+import KeywordRankingsModal from './content-analysis/keyword-rankings-modal';
 
 const isSameDomain = ( url ) => {
 	const cleanUrl = url.includes( 'sc-domain:' )
@@ -44,6 +46,9 @@ const LoadingSkeleton = ( { sameDomain = false, numberOfRows = 10 } ) => {
 					</Table.Cell>
 					<Table.Cell>
 						<Skeleton className="h-5 w-14" />
+					</Table.Cell>
+					<Table.Cell>
+						<Skeleton className="h-5 w-16" />
 					</Table.Cell>
 					<Table.Cell>
 						<Skeleton className="h-5 w-16" />
@@ -87,6 +92,17 @@ const ContentAnalysisTable = ( {
 	} );
 	const [ currentPage, setCurrentPage ] = useState( 1 );
 	const itemsPerPage = 20; // Show 20 results per page
+	const [ keywordModalOpen, setKeywordModalOpen ] = useState( false );
+	const [ selectedUrl, setSelectedUrl ] = useState( null );
+
+	// Calculate date range for last 90 days
+	const { from, to } = getLastNDays( 90 );
+	const formattedStartDate = from
+		? formatToISOPreserveDate( new Date( from ) )
+		: null;
+	const formattedEndDate = to
+		? formatToISOPreserveDate( new Date( to ) )
+		: null;
 
 	const previousSite = useRef( null ); // Track previous site, start with null
 	// Reset currentPage when searchQuery or statusFilter changes
@@ -176,13 +192,6 @@ const ContentAnalysisTable = ( {
 		if ( ! authenticated || ! selectedSite ) {
 			return;
 		}
-		const { from, to } = getLastNDays( 90 );
-		const formattedStartDate = from
-			? formatToISOPreserveDate( new Date( from ) )
-			: null;
-		const formattedEndDate = to
-			? formatToISOPreserveDate( new Date( to ) )
-			: null;
 
 		if ( ! formattedStartDate || ! formattedEndDate ) {
 			return;
@@ -223,7 +232,13 @@ const ContentAnalysisTable = ( {
 		} finally {
 			setLoading( false );
 		}
-	}, [ authenticated, selectedSite ] );
+	}, [
+		authenticated,
+		selectedSite,
+		formattedStartDate,
+		formattedEndDate,
+		setSearchConsole,
+	] );
 	useEffect( () => {
 		// Only fetch data when the site changes or on first load without data
 		if (
@@ -318,35 +333,6 @@ const ContentAnalysisTable = ( {
 
 	const pageNumbers = getPageNumbers();
 
-	const getIcon = ( item, key ) => {
-		const value = item?.changes[ key ];
-
-		if ( typeof value !== 'number' ) {
-			return null;
-		}
-		if ( value > 0 ) {
-			if ( key === 'position' ) {
-				return (
-					<ArrowDown className="size-3.5 text-support-error shrink-0" />
-				);
-			}
-			return (
-				<ArrowUp className="size-3.5 text-support-success shrink-0" />
-			);
-		}
-		if ( value < 0 ) {
-			if ( key === 'position' ) {
-				return (
-					<ArrowUp className="size-3.5 text-support-success shrink-0" />
-				);
-			}
-			return (
-				<ArrowDown className="size-3.5 text-support-error shrink-0" />
-			);
-		}
-		return null;
-	};
-
 	// Empty state when there is an error
 	if ( exception?.title && ! loading ) {
 		return (
@@ -387,254 +373,284 @@ const ContentAnalysisTable = ( {
 	}
 
 	return (
-		<Table>
-			<Table.Head>
-				<Table.HeadCell className="w-[35%] max-w-120 min-w-80">
-					{ __( 'Page', 'surerank' ) }
-				</Table.HeadCell>
-				<Table.HeadCell className="w-1/10">
-					{ __( 'Status', 'surerank' ) }
-				</Table.HeadCell>
-				<SortableColumn
-					className="w-[12%]"
-					sortKey="clicks"
-					onSort={ handleSort }
-					currentSort={ sortConfig }
-				>
-					{ __( 'Clicks', 'surerank' ) }
-				</SortableColumn>
-				<SortableColumn
-					className="w-[12%] text-nowrap"
-					sortKey="position"
-					onSort={ handleSort }
-					currentSort={ sortConfig }
-				>
-					{ __( 'Avg. Position', 'surerank' ) }
-				</SortableColumn>
-				<SortableColumn
-					className="w-[12%]"
-					sortKey="impressions"
-					onSort={ handleSort }
-					currentSort={ sortConfig }
-				>
-					{ __( 'Impressions', 'surerank' ) }
-				</SortableColumn>
-				{ /* Uncomment this when content score feature is ready. */ }
-				{ /* <Table.HeadCell className="min-w-[10rem] text-nowrap">
-					<Container align="center" className="gap-1">
-						<span className="text-text-tertiary">
-							{ __( 'Content Score', 'surerank' ) }
-						</span>
-						<Badge
-							className="w-fit"
-							size="xs"
-							variant="blue"
-							label={ __( 'Pro', 'surerank' ) }
-						/>
-					</Container>
-				</Table.HeadCell> */ }
-				{ /* <Table.HeadCell className="min-w-[10%]">
-					<span className="sr-only">
-						{ __( 'Actions', 'surerank' ) }
-					</span>
-				</Table.HeadCell> */ }
-			</Table.Head>
-			<Table.Body>
-				{ loading ? (
-					<LoadingSkeleton
-						sameDomain={ isSameDomain( selectedSite ) }
-						numberOfRows={ type === 'full' ? 10 : 5 }
-					/>
-				) : (
-					paginatedData.map( ( item, index ) => (
-						<Table.Row key={ index }>
-							<Table.Cell className="space-y-1">
-								<Text
-									as="a"
-									href={ item.url }
-									color="secondary"
-									className="line-clamp-1 no-underline text-xs"
-									target="_blank"
-								>
-									{ item.url }
-								</Text>
-							</Table.Cell>
-							<Table.Cell>
-								<Badge
-									className="w-fit"
-									size="xs"
-									variant={ ( () => {
-										const pos = item?.current?.position;
-										if ( ! pos || pos <= 0 ) {
-											return 'neutral';
-										}
-										if ( pos <= 10 ) {
-											return 'green';
-										}
-										if ( pos <= 20 ) {
-											return 'yellow';
-										}
-										return 'neutral';
-									} )() }
-									label={ ( () => {
-										const pos = item?.current?.position;
-										if ( pos <= 10 ) {
-											return __(
-												'Top Ranked',
-												'surerank'
-											);
-										}
-										if ( pos <= 20 ) {
-											return __(
-												'On the Rise',
-												'surerank'
-											);
-										}
-										return __(
-											'Low Visibility',
-											'surerank'
-										);
-									} )() }
-									disableHover
-								/>
-							</Table.Cell>
-							{ [ 'clicks', 'position', 'impressions' ].map(
-								( key ) => (
-									<Table.Cell key={ key }>
-										<Container
-											align="center"
-											className="gap-1"
-										>
-											<span className="text-xs">
-												{ key === 'position'
-													? item.current[
-															key
-													  ]?.toFixed( 2 )
-													: item.current[
-															key
-													  ]?.toLocaleString() }
-											</span>
-											{ getIcon( item, key ) }
-										</Container>
-									</Table.Cell>
-								)
-							) }
-							{ /* Uncomment this when content score feature is ready. */ }
-							{ /* <Table.Cell>
-								<Container
-									direction="column"
-									className="gap-1.5"
-								>
-									<span className="text-xs">
-										{ __( 'Out of 100', 'surerank' ) }
-									</span>
-									<ProgressBar
-										progress={ 50 }
-										className={ cn(
-											'w-full max-w-32',
-											'[&>div]:bg-gray-400'
-										) }
-									/>
-								</Container>
-							</Table.Cell> */ }
-							{ /* <Table.Cell>
-								<Container align="center" justify="start">
-									<FixButton
-										buttonLabel={ __( 'View', 'surerank' ) }
-										icon={ <ArrowRight /> }
-										iconPosition="right"
-										title={ __(
-											'Unlock Content Insights',
-											'surerank'
-										) }
-										description={ __(
-											"See what's driving traffic, content score, rankings, and performance trends.",
-											'surerank'
-										) }
-										linkLabel={ __(
-											'Upgrade',
-											'surerank'
-										) }
-										size="sm"
-										tooltipProps={ {
-											className: 'z-999999',
-										} }
-									/>
-								</Container>
-							</Table.Cell> */ }
-						</Table.Row>
-					) )
-				) }
-			</Table.Body>
-			{ type !== 'full' && (
-				<Table.Footer className="flex items-center justify-center">
-					<Button
-						size="md"
-						variant="link"
-						icon={ <ArrowUpRight /> }
-						iconPosition="right"
-						className="no-underline hover:no-underline"
-						onClick={ () => {
-							window.location.href = `${ ADMIN_DASHBOARD_URL }?page=surerank#/content-performance`;
-						} }
+		<>
+			<Table>
+				<Table.Head>
+					<Table.HeadCell className="w-[35%] max-w-full min-w-80">
+						{ __( 'Page', 'surerank' ) }
+					</Table.HeadCell>
+					<Table.HeadCell className="w-1/10">
+						{ __( 'Status', 'surerank' ) }
+					</Table.HeadCell>
+					<SortableColumn
+						className="w-[12%]"
+						sortKey="clicks"
+						onSort={ handleSort }
+						currentSort={ sortConfig }
 					>
-						{ __( 'View Full Report', 'surerank' ) }
-					</Button>
-				</Table.Footer>
-			) }
-			{ type === 'full' && (
-				<Table.Footer className="flex items-center justify-between w-full">
-					<span className="text-sm font-normal leading-5 text-text-secondary">
-						{ totalItems > 0
-							? `Page ${ currentPage } out of ${ totalPages }`
-							: 'No pages available' }
-					</span>
+						{ __( 'Clicks', 'surerank' ) }
+					</SortableColumn>
+					<SortableColumn
+						className="w-[12%] text-nowrap"
+						sortKey="position"
+						onSort={ handleSort }
+						currentSort={ sortConfig }
+					>
+						{ __( 'Avg. Position', 'surerank' ) }
+					</SortableColumn>
+					<SortableColumn
+						className="w-[12%]"
+						sortKey="impressions"
+						onSort={ handleSort }
+						currentSort={ sortConfig }
+					>
+						{ __( 'Impressions', 'surerank' ) }
+					</SortableColumn>
+					<Table.HeadCell className="w-[12%]">
+						{ __( 'Keyword Rankings', 'surerank' ) }
+					</Table.HeadCell>
+					{ /* Uncomment this when content score feature is ready. */ }
+					{ /* <Table.HeadCell className="min-w-[10rem] text-nowrap">
+						<Container align="center" className="gap-1">
+							<span className="text-text-tertiary">
+								{ __( 'Content Score', 'surerank' ) }
+							</span>
+							<Badge
+								className="w-fit"
+								size="xs"
+								variant="blue"
+								label={ __( 'Pro', 'surerank' ) }
+							/>
+						</Container>
+					</Table.HeadCell> */ }
+					{ /* <Table.HeadCell className="min-w-[10%]">
+						<span className="sr-only">
+							{ __( 'Actions', 'surerank' ) }
+						</span>
+					</Table.HeadCell> */ }
+				</Table.Head>
+				<Table.Body>
 					{ loading ? (
-						<Skeleton className="w-32 h-8" />
+						<LoadingSkeleton
+							sameDomain={ isSameDomain( selectedSite ) }
+							numberOfRows={ type === 'full' ? 10 : 5 }
+						/>
 					) : (
-						<Pagination className="w-fit">
-							<Pagination.Content className="[&>li]:m-0">
-								<Pagination.Previous
-									onClick={ handlePrevious }
-									disabled={ currentPage === 1 }
-									className={
-										currentPage === 1
-											? 'opacity-50 cursor-not-allowed'
-											: ''
-									}
-								/>
-								{ pageNumbers.map( ( item, index ) =>
-									item === 'ellipsis' ? (
-										<Pagination.Ellipsis
-											key={ `ellipsis-${ index }` }
-										/>
-									) : (
-										<Pagination.Item
-											key={ item }
-											isActive={ currentPage === item }
-											onClick={ () =>
-												handlePageChange( item )
+						paginatedData.map( ( item, index ) => (
+							<Table.Row key={ index }>
+								<Table.Cell className="space-y-1">
+									<Text
+										as="a"
+										href={ item.url }
+										color="secondary"
+										className="line-clamp-1 no-underline text-xs"
+										target="_blank"
+									>
+										{ item.url }
+									</Text>
+								</Table.Cell>
+								<Table.Cell>
+									<Badge
+										className="w-fit"
+										size="xs"
+										variant={ ( () => {
+											const pos = item?.current?.position;
+											if ( ! pos || pos <= 0 ) {
+												return 'neutral';
 											}
-										>
-											{ item }
-										</Pagination.Item>
+											if ( pos <= 10 ) {
+												return 'green';
+											}
+											if ( pos <= 20 ) {
+												return 'yellow';
+											}
+											return 'neutral';
+										} )() }
+										label={ ( () => {
+											const pos = item?.current?.position;
+											if ( pos <= 10 ) {
+												return __(
+													'Top Ranked',
+													'surerank'
+												);
+											}
+											if ( pos <= 20 ) {
+												return __(
+													'On the Rise',
+													'surerank'
+												);
+											}
+											return __(
+												'Low Visibility',
+												'surerank'
+											);
+										} )() }
+										disableHover
+									/>
+								</Table.Cell>
+								{ [ 'clicks', 'position', 'impressions' ].map(
+									( key ) => (
+										<Table.Cell key={ key }>
+											<Container
+												align="center"
+												className="gap-1"
+											>
+												<Text size={ 12 }>
+													{ key === 'position'
+														? item.current[
+																key
+														  ]?.toFixed( 2 )
+														: item.current[
+																key
+														  ]?.toLocaleString() }
+												</Text>
+												{ getChangeIcon( item, key ) }
+											</Container>
+										</Table.Cell>
 									)
 								) }
-								<Pagination.Next
-									onClick={ handleNext }
-									disabled={ currentPage === totalPages }
-									className={
-										currentPage === totalPages
-											? 'opacity-50 cursor-not-allowed'
-											: ''
-									}
-								/>
-							</Pagination.Content>
-						</Pagination>
+								<Table.Cell className="w-[12%] justify-end">
+									<Button
+										variant="outline"
+										size="xs"
+										icon={ <ArrowRight /> }
+										iconPosition="right"
+										onClick={ () => {
+											setSelectedUrl( item.url );
+											setKeywordModalOpen( true );
+										} }
+									>
+										{ __( 'View', 'surerank' ) }
+									</Button>
+								</Table.Cell>
+								{ /* Uncomment this when content score feature is ready. */ }
+								{ /* <Table.Cell>
+									<Container
+										direction="column"
+										className="gap-1.5"
+									>
+										<span className="text-xs">
+											{ __( 'Out of 100', 'surerank' ) }
+										</span>
+										<ProgressBar
+											progress={ 50 }
+											className={ cn(
+												'w-full max-w-32',
+												'[&>div]:bg-gray-400'
+											) }
+										/>
+									</Container>
+								</Table.Cell> */ }
+								{ /* <Table.Cell>
+									<Container align="center" justify="start">
+										<FixButton
+											buttonLabel={ __( 'View', 'surerank' ) }
+											icon={ <ArrowRight /> }
+											iconPosition="right"
+											title={ __(
+												'Unlock Content Insights',
+												'surerank'
+											) }
+											description={ __(
+												"See what's driving traffic, content score, rankings, and performance trends.",
+												'surerank'
+											) }
+											linkLabel={ __(
+												'Upgrade',
+												'surerank'
+											) }
+											size="sm"
+											tooltipProps={ {
+												className: 'z-999999',
+											} }
+										/>
+									</Container>
+								</Table.Cell> */ }
+							</Table.Row>
+						) )
 					) }
-				</Table.Footer>
+				</Table.Body>
+				{ type !== 'full' && (
+					<Table.Footer className="flex items-center justify-center">
+						<Button
+							size="md"
+							variant="link"
+							icon={ <ArrowUpRight /> }
+							iconPosition="right"
+							className="no-underline hover:no-underline"
+							onClick={ () => {
+								window.location.href = `${ ADMIN_DASHBOARD_URL }?page=surerank#/content-performance`;
+							} }
+						>
+							{ __( 'View Full Report', 'surerank' ) }
+						</Button>
+					</Table.Footer>
+				) }
+				{ type === 'full' && (
+					<Table.Footer className="flex items-center justify-between w-full">
+						<Text size={ 14 } weight="normal" color="secondary">
+							{ totalItems > 0
+								? `Page ${ currentPage } out of ${ totalPages }`
+								: 'No pages available' }
+						</Text>
+						{ loading ? (
+							<Skeleton className="w-32 h-8" />
+						) : (
+							<Pagination className="w-fit">
+								<Pagination.Content className="[&>li]:m-0">
+									<Pagination.Previous
+										onClick={ handlePrevious }
+										disabled={ currentPage === 1 }
+										className={
+											currentPage === 1
+												? 'opacity-50 cursor-not-allowed'
+												: ''
+										}
+									/>
+									{ pageNumbers.map( ( item, index ) =>
+										item === 'ellipsis' ? (
+											<Pagination.Ellipsis
+												key={ `ellipsis-${ index }` }
+											/>
+										) : (
+											<Pagination.Item
+												key={ item }
+												isActive={
+													currentPage === item
+												}
+												onClick={ () =>
+													handlePageChange( item )
+												}
+											>
+												{ item }
+											</Pagination.Item>
+										)
+									) }
+									<Pagination.Next
+										onClick={ handleNext }
+										disabled={ currentPage === totalPages }
+										className={
+											currentPage === totalPages
+												? 'opacity-50 cursor-not-allowed'
+												: ''
+										}
+									/>
+								</Pagination.Content>
+							</Pagination>
+						) }
+					</Table.Footer>
+				) }
+			</Table>
+			{ keywordModalOpen && (
+				<KeywordRankingsModal
+					open={ keywordModalOpen }
+					setOpen={ setKeywordModalOpen }
+					url={ selectedUrl }
+					startDate={ formattedStartDate }
+					endDate={ formattedEndDate }
+				/>
 			) }
-		</Table>
+		</>
 	);
 };
 

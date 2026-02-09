@@ -8,7 +8,7 @@ const SearchConsolePopup = ( { isOpen = true } ) => {
 	}
 
 	return (
-		<ModalWrapper isOpen={ isOpen } className="top-[40%]">
+		<ModalWrapper isOpen={ isOpen } className="top-[40%] z-[1]">
 			<div className="bg-background-primary rounded-lg shadow-2xl w-full p-5 pointer-events-auto border-0.5 border-solid border-border-subtle">
 				<div className="flex flex-col items-center w-full">
 					<img

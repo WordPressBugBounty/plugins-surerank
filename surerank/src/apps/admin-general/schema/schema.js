@@ -19,8 +19,11 @@ import WpSchemaProNotice from '@/global/components/wp-schema-pro-notice';
 
 // Schema categories
 const SCHEMA_CATEGORIES = {
-	global: { value: 'global', label: __( 'Global Level', 'surerank' ) },
-	content: { value: 'content', label: __( 'Content Level', 'surerank' ) },
+	global: { value: 'global', label: __( 'Site wide schema', 'surerank' ) },
+	content: {
+		value: 'content',
+		label: __( 'Page specific schema', 'surerank' ),
+	},
 };
 
 // Schema categorization mapping

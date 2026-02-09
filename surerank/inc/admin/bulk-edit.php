@@ -68,7 +68,7 @@ class BulkEdit {
 						<label>
 							<span class="title"><?php esc_html_e( 'No Index -', 'surerank' ); ?></span>
 							<select name="surerank_no_index">
-								<option value="-1"><?php esc_html_e( '— No Change —', 'surerank' ); ?></option>
+								<option value="-1"><?php esc_html_e( '- No Change -', 'surerank' ); ?></option>
 								<option value="yes"><?php esc_html_e( 'Yes', 'surerank' ); ?></option>
 								<option value="no"><?php esc_html_e( 'No', 'surerank' ); ?></option>
 							</select>
@@ -76,7 +76,7 @@ class BulkEdit {
 						<label>
 							<span class="title"><?php esc_html_e( 'No Follow -', 'surerank' ); ?></span>
 							<select name="surerank_no_follow">
-								<option value="-1"><?php esc_html_e( '— No Change —', 'surerank' ); ?></option>
+								<option value="-1"><?php esc_html_e( '- No Change -', 'surerank' ); ?></option>
 								<option value="yes"><?php esc_html_e( 'Yes', 'surerank' ); ?></option>
 								<option value="no"><?php esc_html_e( 'No', 'surerank' ); ?></option>
 							</select>
@@ -84,7 +84,7 @@ class BulkEdit {
 						<label>
 							<span class="title"><?php esc_html_e( 'No Archive -', 'surerank' ); ?></span>
 							<select name="surerank_no_archive">
-								<option value="-1"><?php esc_html_e( '— No Change —', 'surerank' ); ?></option>
+								<option value="-1"><?php esc_html_e( '- No Change -', 'surerank' ); ?></option>
 								<option value="yes"><?php esc_html_e( 'Yes', 'surerank' ); ?></option>
 								<option value="no"><?php esc_html_e( 'No', 'surerank' ); ?></option>
 							</select>

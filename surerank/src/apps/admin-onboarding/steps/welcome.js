@@ -35,7 +35,7 @@ const Welcome = () => {
 				/>
 				<Label tag="p" className="text-base">
 					{ __(
-						'Set up your site’s SEO easily—no advanced skills needed!',
+						'Set up your site’s SEO easily-no advanced skills needed!',
 						'surerank'
 					) }
 				</Label>

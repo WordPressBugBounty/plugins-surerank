@@ -496,6 +496,143 @@ class Controller {
 	}
 
 	/**
+	 * Get Keyword Rankings
+	 *
+	 * @since 1.6.3
+	 * @param WP_REST_Request<array<string, mixed>> $request The REST request object.
+	 * @return array<string, mixed>|array<int, array<string, mixed>>
+	 */
+	public function get_keyword_rankings( $request ) {
+		$start_date = $this->get_start_date( $request );
+		$end_date   = $this->get_end_date( $request );
+		$url        = $request->get_param( 'url' );
+
+		if ( empty( $url ) ) {
+			return [
+				'success' => false,
+				'message' => __( 'URL parameter is required', 'surerank' ),
+				'data'    => [],
+			];
+		}
+
+		return $this->get_keyword_rankings_data( $start_date, $end_date, $url );
+	}
+
+	/**
+	 * Get Keyword Rankings Data
+	 *
+	 * @since 1.6.3
+	 * @param string $start_date Start date (Y-m-d).
+	 * @param string $end_date   End date (Y-m-d).
+	 * @param string $url        The page URL to filter by.
+	 * @return array<string, mixed>|array<int, array<string, mixed>>
+	 */
+	public function get_keyword_rankings_data( $start_date, $end_date, $url ) {
+		$site_url = $this->get_user_site_url();
+
+		$date_range          = ( strtotime( $end_date ) - strtotime( $start_date ) ) / ( 60 * 60 * 24 );
+		$previous_end_date   = gmdate( 'Y-m-d', (int) strtotime( $start_date . ' -1 day' ) );
+		$previous_start_date = gmdate( 'Y-m-d', (int) strtotime( $previous_end_date . " -{$date_range} days" ) );
+
+		$body_current = [
+			'startDate'             => $start_date,
+			'endDate'               => $end_date,
+			'dimensions'            => [ 'query', 'page' ],
+			'rowLimit'              => 100,
+			'dataState'             => 'ALL',
+			'dimensionFilterGroups' => [
+				[
+					'filters' => [
+						[
+							'dimension'  => 'page',
+							'expression' => $url,
+							'operator'   => 'equals',
+						],
+					],
+				],
+			],
+		];
+
+		$body_previous = [
+			'startDate'             => $previous_start_date,
+			'endDate'               => $previous_end_date,
+			'dimensions'            => [ 'query', 'page' ],
+			'rowLimit'              => 100,
+			'dataState'             => 'ALL',
+			'dimensionFilterGroups' => [
+				[
+					'filters' => [
+						[
+							'dimension'  => 'page',
+							'expression' => $url,
+							'operator'   => 'equals',
+						],
+					],
+				],
+			],
+		];
+
+		$api_url = self::GOOGLE_ANALYTICS_API_BASE . 'sites/' . $this->get_site_url( $site_url ) . '/searchAnalytics/query';
+
+		$current_data  = $this->get_search_analytics_data( $api_url, $body_current );
+		$previous_data = $this->get_search_analytics_data( $api_url, $body_previous );
+
+		$current_rows  = $current_data['rows'] ?? [];
+		$previous_rows = $previous_data['rows'] ?? [];
+
+		$previous_by_query = [];
+		foreach ( $previous_rows as $row ) {
+			$query                       = $row['keys'][0] ?? '';
+			$previous_by_query[ $query ] = $row;
+		}
+
+		$keyword_data = [];
+		foreach ( $current_rows as $current_row ) {
+			$query        = $current_row['keys'][0] ?? '';
+			$previous_row = $previous_by_query[ $query ] ?? null;
+
+			$position_change    = 0.0;
+			$impressions_change = 0.0;
+			$clicks_change      = 0.0;
+
+			if ( $previous_row ) {
+				if ( $previous_row['position'] > 0 ) {
+					$position_change = round( ( $previous_row['position'] - $current_row['position'] ) / $previous_row['position'] * 100, 2 );
+				}
+
+				if ( $previous_row['impressions'] > 0 ) {
+					$impressions_change = round( ( $current_row['impressions'] - $previous_row['impressions'] ) / $previous_row['impressions'] * 100, 2 );
+				} elseif ( $current_row['impressions'] > 0 ) {
+					$impressions_change = 100.0;
+				}
+
+				if ( $previous_row['clicks'] > 0 ) {
+					$clicks_change = round( ( $current_row['clicks'] - $previous_row['clicks'] ) / $previous_row['clicks'] * 100, 2 );
+				} elseif ( $current_row['clicks'] > 0 ) {
+					$clicks_change = 100.0;
+				}
+			}
+
+			$keyword_data[] = [
+				'query'       => $query,
+				'position'    => $current_row['position'] ?? 0,
+				'impressions' => $current_row['impressions'] ?? 0,
+				'clicks'      => $current_row['clicks'] ?? 0,
+				'changes'     => [
+					'position'    => $position_change,
+					'impressions' => $impressions_change,
+					'clicks'      => $clicks_change,
+				],
+			];
+		}
+
+		return [
+			'success' => true,
+			'data'    => $keyword_data,
+		];
+	}
+
+	/**
 	 * Get Google Console User Details
 	 *
 	 * @since 1.0.0

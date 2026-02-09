@@ -14,7 +14,7 @@ export const ResumeMigration = ( { onResume, onStartOver, onCancel } ) => {
 			<div className="flex flex-col gap-2 p-3 bg-alert-background-warning border border-solid border-alert-border-warning rounded-lg">
 				<Text size={ 14 } weight={ 400 } color="primary">
 					{ __(
-						"We've successfully imported some of your SEO settings, but the migration wasn't completed. This may happen if the process was interrupted or exited early. Don't worry — everything imported so far is safely saved, and no duplicate data will be created.",
+						"We've successfully imported some of your SEO settings, but the migration wasn't completed. This may happen if the process was interrupted or exited early. Don't worry - everything imported so far is safely saved, and no duplicate data will be created.",
 						'surerank'
 					) }
 				</Text>

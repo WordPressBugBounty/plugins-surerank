@@ -156,7 +156,19 @@ class Sync_Taxonomies extends Sitemap {
 				'updated'     => current_time( 'c' ),
 			];
 
-			$json_data[] = $term_data;
+			$term_data = apply_filters( 'surerank_sitemap_sync_terms_term_data', $term_data, $term );
+
+			if ( empty( $term_data ) ) {
+				continue;
+			}
+
+			if ( isset( $term_data[0] ) && is_array( $term_data[0] ) ) {
+				foreach ( $term_data as $entry ) {
+					$json_data[] = $entry;
+				}
+			} else {
+				$json_data[] = $term_data;
+			}
 		}
 
 		return $json_data;

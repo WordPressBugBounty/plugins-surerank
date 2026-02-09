@@ -42,6 +42,8 @@ class Utils {
 				'home_page_title',
 				'page_description',
 				'home_page_description',
+				'home_page_social_title',
+				'home_page_social_description',
 				'social_title',
 				'social_description',
 				'site_tag_line',

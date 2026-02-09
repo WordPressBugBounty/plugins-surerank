@@ -105,6 +105,24 @@ class Dashboard extends Api_Base {
 					],
 				],
 			],
+			'keyword-rankings'       => [
+				'methods'  => WP_REST_Server::READABLE,
+				'callback' => [ $this, 'get_keyword_rankings' ],
+				'args'     => [
+					'url'       => [
+						'type'     => 'string',
+						'required' => true,
+					],
+					'startDate' => [
+						'type'     => 'string',
+						'required' => false,
+					],
+					'endDate'   => [
+						'type'     => 'string',
+						'required' => false,
+					],
+				],
+			],
 			'add-site'               => [
 				'methods'  => WP_REST_Server::CREATABLE,
 				'callback' => [ $this, 'auto_create_property' ],
@@ -265,6 +283,17 @@ class Dashboard extends Api_Base {
 	 */
 	public function get_content_performance( $request ) {
 		Send_Json::success( Controller::get_instance()->get_content_performance( $request ) );
+	}
+
+	/**
+	 * Get Keyword Rankings
+	 *
+	 * @return void
+	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
+	 * @since 1.6.3
+	 */
+	public function get_keyword_rankings( $request ) {
+		Send_Json::success( Controller::get_instance()->get_keyword_rankings( $request ) );
 	}
 
 	/**

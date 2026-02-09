@@ -17,8 +17,8 @@ export const PAGE_CONTENT = [
 				content: [
 					{
 						type: 'switch',
-						id: 'surerank_analytics_optin',
-						storeKey: 'surerank_analytics_optin',
+						id: 'surerank_usage_optin',
+						storeKey: 'surerank_usage_optin',
 						dataType: 'boolean',
 						label: __( 'Contribute to SureRank', 'surerank' ),
 						description: (

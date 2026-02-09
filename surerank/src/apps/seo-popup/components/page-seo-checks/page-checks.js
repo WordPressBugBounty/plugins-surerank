@@ -156,7 +156,7 @@ const PageChecks = ( {
 						<CheckCard
 							key={ check.id }
 							variant="neutral"
-							label={ __( 'Ignore', 'surerank' ) }
+							label={ __( 'Ignored', 'surerank' ) }
 							title={ check.title }
 							showRestoreButton={ true }
 							onRestore={ () => onRestore( check.id ) }

@@ -15,6 +15,7 @@ use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Functions\Send_Json;
 use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Functions\Update;
+use SureRank\Inc\Schema\SchemasApi;
 use SureRank\Inc\Traits\Get_Instance;
 use WP_Error;
 use WP_REST_Request;
@@ -41,6 +42,11 @@ class Post extends Api_Base {
 	 * Route Get Post Content
 	 */
 	protected const POST_CONTENT = '/admin/post-content';
+
+	/**
+	 * Route Get Posts List
+	 */
+	protected const POSTS_LIST = '/posts-list';
 
 	/**
 	 * Constructor
@@ -118,6 +124,10 @@ class Post extends Api_Base {
 			Send_Json::error( [ 'message' => __( 'Error while running SEO Checks.', 'surerank' ) ] );
 		}
 
+		$current_time = time();
+		Update::option( 'surerank_last_optimized_on', $current_time ); // Site-wide last optimization for consider site type.
+		Update::post_meta( $post_id, 'surerank_post_optimized_at', $current_time ); // Per-post optimization timestamp for considering site type of basis of posts optimization.
+
 		Send_Json::success( [ 'message' => __( 'Data updated', 'surerank' ) ] );
 	}
 
@@ -182,6 +192,51 @@ class Post extends Api_Base {
 	}
 
 	/**
+	 * Get posts list
+	 *
+	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
+	 * @since 1.6.3
+	 * @return array<int, array<string, mixed>>
+	 */
+	public function get_posts_list( $request ) {
+		$search    = $request->get_param( 'search' );
+		$page      = $request->get_param( 'page' );
+		$per_page  = $request->get_param( 'per_page' );
+		$post_type = $request->get_param( 'post_type' );
+		$exclude   = $request->get_param( 'exclude' );
+
+		$args = [
+			'post_type'      => $post_type,
+			'posts_per_page' => $per_page,
+			'paged'          => $page,
+			'post_status'    => 'publish',
+			's'              => $search,
+			'fields'         => 'ids',
+		];
+
+		if ( ! empty( $exclude ) ) {
+			$args['post__not_in'] = $exclude;
+		}
+
+		$schemas_api = SchemasApi::get_instance();
+		add_filter( 'posts_search', [ $schemas_api, 'search_only_titles' ], 10, 2 );
+		$query = new \WP_Query( $args );
+		remove_filter( 'posts_search', [ $schemas_api, 'search_only_titles' ], 10 );
+		$posts = [];
+
+		if ( $query->have_posts() ) {
+			foreach ( $query->posts as $post_id ) {
+				$posts[] = [
+					'label' => get_the_title( $post_id ),
+					'value' => $post_id,
+				];
+			}
+		}
+
+		return $posts;
+	}
+
+	/**
 	 * Register all post routes
 	 *
 	 * @param string $namespace The API namespace.
@@ -191,6 +246,7 @@ class Post extends Api_Base {
 		$this->register_get_post_seo_data_route( $namespace );
 		$this->register_update_post_seo_data_route( $namespace );
 		$this->register_post_content_route( $namespace );
+		$this->register_posts_list_route( $namespace );
 	}
 
 	/**
@@ -247,6 +303,61 @@ class Post extends Api_Base {
 				'permission_callback' => [ $this, 'validate_permission' ],
 			]
 		);
+	}
+
+	/**
+	 * Register posts list route
+	 *
+	 * @since 1.6.3
+	 * @param string $namespace The API namespace.
+	 * @return void
+	 */
+	private function register_posts_list_route( $namespace ) {
+		register_rest_route(
+			$namespace,
+			self::POSTS_LIST,
+			[
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'get_posts_list' ],
+				'permission_callback' => [ $this, 'validate_permission' ],
+				'args'                => $this->get_posts_list_args(),
+			]
+		);
+	}
+
+	/**
+	 * Get posts list arguments
+	 *
+	 * @since 1.6.3
+	 * @return array<string, array<string, mixed>>
+	 */
+	private function get_posts_list_args() {
+		return [
+			'search'    => [
+				'type'              => 'string',
+				'required'          => false,
+				'default'           => '',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'page'      => [
+				'type'              => 'integer',
+				'required'          => false,
+				'default'           => 1,
+				'sanitize_callback' => 'absint',
+			],
+			'per_page'  => [
+				'type'              => 'integer',
+				'required'          => false,
+				'default'           => 20,
+				'sanitize_callback' => 'absint',
+			],
+			'post_type' => [
+				'type'              => 'string',
+				'required'          => false,
+				'default'           => 'post',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+		];
 	}
 
 	/**

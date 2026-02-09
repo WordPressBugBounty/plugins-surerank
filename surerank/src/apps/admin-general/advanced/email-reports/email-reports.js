@@ -408,20 +408,22 @@ const EmailReportsSettings = () => {
 	return (
 		<div className="flex flex-col w-full max-w-full overflow-hidden">
 			{ renderContent }
-			{ /* Save Button */ }
-			<div className="flex justify-start pt-6 ml-2 mb-2">
-				<Button
-					variant="primary"
-					size="md"
-					onClick={ handleSave }
-					icon={ getButtonIcon() }
-					className={ cn( getSaveButtonClassName() ) }
-				>
-					{ isUpdating
-						? __( 'Saving…', 'surerank' )
-						: __( 'Save', 'surerank' ) }
-				</Button>
-			</div>
+			{ /* Save Button - only show when GSC is connected */ }
+			{ authenticated && hasSiteSelected && (
+				<div className="flex justify-start pt-6 ml-2 mb-2">
+					<Button
+						variant="primary"
+						size="md"
+						onClick={ handleSave }
+						icon={ getButtonIcon() }
+						className={ cn( getSaveButtonClassName() ) }
+					>
+						{ isUpdating
+							? __( 'Saving…', 'surerank' )
+							: __( 'Save', 'surerank' ) }
+					</Button>
+				</div>
+			) }
 		</div>
 	);
 };

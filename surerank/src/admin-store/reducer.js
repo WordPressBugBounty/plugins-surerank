@@ -179,7 +179,7 @@ const dataSettings = {
 		enable_migration: true, // true/false
 
 		// Miscellaneous
-		surerank_analytics_optin: false, // true/false
+		surerank_usage_optin: false, // true/false
 	},
 	/* Title and description End */
 	// Site Settings (Previously known as site variables)

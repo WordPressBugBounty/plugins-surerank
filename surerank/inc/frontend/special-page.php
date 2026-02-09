@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use SureRank\Inc\Functions\Get;
+use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Functions\Validate;
 use SureRank\Inc\Functions\Variables;
@@ -116,7 +117,7 @@ class Special_Page {
 			return Get::option( 'page_for_posts' );
 		}
 
-		return (int) get_the_ID();
+		return Helper::get_page_id();
 	}
 
 	/**

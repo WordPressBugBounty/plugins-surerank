@@ -113,6 +113,10 @@ class Term extends Api_Base {
 			Send_Json::error( [ 'message' => __( 'Error while running SEO Checks.', 'surerank' ) ] );
 		}
 
+		$current_time = time();
+		Update::option( 'surerank_last_optimized_on', $current_time ); // Site-wide last optimization for consider site type.
+		Update::term_meta( $term_id, 'surerank_term_optimized_at', $current_time ); // Per-term optimization timestamp for considering site type of basis of terms optimization.
+
 		Send_Json::success( [ 'message' => __( 'Data updated', 'surerank' ) ] );
 	}
 

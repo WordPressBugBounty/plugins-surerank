@@ -86,7 +86,7 @@ abstract class Base {
 	protected function parse_fields( $fields ) {
 		$parsed = [];
 		foreach ( $fields as $field ) {
-			if ( empty( $field['id'] ) || ( empty( $field['required'] ) && empty( $field['show'] ) ) ) {
+			if ( empty( $field['id'] ) || ( empty( $field['required'] ) && empty( $field['show'] ) ) || ( isset( $field['default'] ) && false === $field['default'] ) ) {
 				continue;
 			}
 

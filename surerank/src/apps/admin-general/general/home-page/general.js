@@ -5,9 +5,8 @@ import {
 	MAX_EDITOR_INPUT_LENGTH,
 } from '@Global/constants';
 import { __ } from '@wordpress/i18n';
-import { useRef } from '@wordpress/element';
+import { useRef, useState } from '@wordpress/element';
 import { Label, EditorInput, Container, Text } from '@bsf/force-ui';
-import { InfoTooltip } from '@AdminComponents/tooltip';
 import {
 	editorValueToString,
 	stringValueToFormatJSON,
@@ -18,6 +17,9 @@ import Preview from '@GlobalComponents/preview';
 import replacement from '@Functions/replacement';
 import useSettings from '@/global/hooks/use-admin-settings';
 import GeneratePageContent from '@/functions/page-content-generator';
+import AdminMagicButton from './magic-button';
+import AIModal from './ai-modal';
+import useAIModal from '@/global/hooks/use-ai-modal';
 
 const HomePageGeneralSettings = () => {
 	const { metaSettings, siteSettings, setMetaSetting } = useSettings();
@@ -27,13 +29,23 @@ const HomePageGeneralSettings = () => {
 	const titleEditor = useRef( null );
 	const descriptionEditor = useRef( null );
 
+	const [ editorKey, setEditorKey ] = useState( 0 );
+
 	const handleUpdateMetaSettings = ( key, value ) => {
-		// if value is same as previous value, return
 		if ( metaSettings[ key ] === value ) {
 			return;
 		}
 		setMetaSetting( key, value );
 	};
+
+	// AI modal management
+	const { aiModal, handleOpenAIModal, handleCloseAIModal, handleUseThis } =
+		useAIModal( ( fieldKey, content ) => {
+			handleUpdateMetaSettings( fieldKey, content );
+
+			setEditorKey( ( prev ) => prev + 1 );
+		} );
+
 	const faviconImageUrl = siteSettings?.site?.favicon
 		? siteSettings?.site?.favicon
 		: '';
@@ -60,21 +72,33 @@ const HomePageGeneralSettings = () => {
 					<Label tag="span" size="sm" className="space-x-0.5">
 						<span>{ __( 'Search Engine Title', 'surerank' ) }</span>
 					</Label>
-					<span className="text-xs leading-4 font-normal text-field-helper">
-						<span
-							className={ cn( {
-								'text-text-error':
-									inputTitleContent?.length > TITLE_LENGTH,
-							} ) }
-						>
-							{ inputTitleContent?.length ?? 0 }
+					<div className="ml-auto inline-flex items-center gap-2">
+						<span className="text-xs leading-4 font-normal text-field-helper">
+							<span
+								className={ cn( {
+									'text-text-error':
+										inputTitleContent?.length >
+										TITLE_LENGTH,
+								} ) }
+							>
+								{ inputTitleContent?.length ?? 0 }
+							</span>
+							/{ TITLE_LENGTH }
 						</span>
-						/{ TITLE_LENGTH }
-					</span>
+						<AdminMagicButton
+							onClick={ () =>
+								handleOpenAIModal(
+									'home_page_title',
+									'home_page_title'
+								)
+							}
+							tooltip={ __( 'Generate with AI', 'surerank' ) }
+						/>
+					</div>
 				</div>
 				{ /* Input */ }
 				<EditorInput
-					key="title"
+					key={ `home-page-title-${ editorKey }` }
 					ref={ titleEditor }
 					by="label"
 					trigger="@"
@@ -111,21 +135,33 @@ const HomePageGeneralSettings = () => {
 							{ __( 'Search Engine Description', 'surerank' ) }
 						</span>
 					</Label>
-					<span className="text-xs leading-4 font-normal text-field-helper">
-						<span
-							className={ cn( {
-								'text-text-error':
-									inputDescriptionContent?.length >
-									DESCRIPTION_LENGTH,
-							} ) }
-						>
-							{ inputDescriptionContent?.length ?? 0 }
+					<div className="ml-auto inline-flex items-center gap-2">
+						<span className="text-xs leading-4 font-normal text-field-helper">
+							<span
+								className={ cn( {
+									'text-text-error':
+										inputDescriptionContent?.length >
+										DESCRIPTION_LENGTH,
+								} ) }
+							>
+								{ inputDescriptionContent?.length ?? 0 }
+							</span>
+							/{ DESCRIPTION_LENGTH }
 						</span>
-						/{ DESCRIPTION_LENGTH }
-					</span>
+						<AdminMagicButton
+							onClick={ () =>
+								handleOpenAIModal(
+									'home_page_description',
+									'home_page_description'
+								)
+							}
+							tooltip={ __( 'Generate with AI', 'surerank' ) }
+						/>
+					</div>
 				</div>
 				{ /* Input */ }
 				<EditorInput
+					key={ `home-page-description-${ editorKey }` }
 					ref={ descriptionEditor }
 					className="[&+div]:items-start [&+div]:pt-1"
 					by="label"
@@ -159,12 +195,6 @@ const HomePageGeneralSettings = () => {
 								{ __( 'Search Engine Preview', 'surerank' ) }
 							</span>
 						</Label>
-						<InfoTooltip
-							content={ __(
-								'View a preview of how your page may appear in search engine results. This preview is for guidance only and might not exactly match how search engines display your content.',
-								'surerank'
-							) }
-						/>
 					</div>
 				</div>
 
@@ -177,6 +207,15 @@ const HomePageGeneralSettings = () => {
 					deviceType={ 'desktop' }
 				/>
 			</div>
+
+			{ /* AI Modal */ }
+			{ aiModal.open && (
+				<AIModal
+					fieldType={ aiModal.fieldType }
+					onClose={ handleCloseAIModal }
+					onUseThis={ handleUseThis }
+				/>
+			) }
 		</Container>
 	);
 };

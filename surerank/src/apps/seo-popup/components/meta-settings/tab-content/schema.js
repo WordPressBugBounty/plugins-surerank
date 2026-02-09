@@ -2,6 +2,7 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo, useState } from '@wordpress/element';
 import { Label, Alert, Accordion, Text } from '@bsf/force-ui';
 import { Info, Trash } from 'lucide-react';
+import { applyFilters } from '@wordpress/hooks';
 import WpSchemaProNotice from '@/global/components/wp-schema-pro-notice';
 import { cn } from '@Functions/utils';
 import {
@@ -446,12 +447,46 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 					);
 				} ) }
 
+				{ applyFilters(
+					'surerank.schema.properties.extensions',
+					null,
+					{
+						schemaId,
+						schemaType: schemas[ schemaId ]?.type || schemaTitle,
+						schema: schemaTitle,
+						metaSettings: { schemas },
+						currentSchema: schemas[ schemaId ] || {},
+						setMetaSetting: ( key, value ) => {
+							if ( key === 'schemas' ) {
+								updatePostMetaData( { schemas: value } );
+							}
+						},
+						variableSuggestions,
+						getFieldValue: ( fieldId ) =>
+							getFieldValue( schemaId, fieldId ),
+						onFieldChange: ( fieldId, newValue ) =>
+							onFieldChange( schemaId, fieldId, newValue ),
+					}
+				) }
+
 				<AddFieldMenu
 					availableFields={ availableFields }
 					onAddField={ ( fieldId ) =>
 						handleAddField( schemaId, fieldId )
 					}
 					className="p-2 w-full border-t border-border-subtle mt-2"
+					filterContext={ {
+						schemaId,
+						schemaType: schemas[ schemaId ]?.type || schemaTitle,
+						schema: schemaTitle,
+						metaSettings: { schemas },
+						currentSchema: schemas[ schemaId ] || {},
+						setMetaSetting: ( key, value ) => {
+							if ( key === 'schemas' ) {
+								updatePostMetaData( { schemas: value } );
+							}
+						},
+					} }
 				/>
 			</>
 		);

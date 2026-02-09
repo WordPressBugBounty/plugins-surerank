@@ -408,6 +408,7 @@ class Dashboard {
 						'active_cache_plugins'        => Migrations::is_cache_plugin_active(),
 						'robots_data'                 => Helper::get_robots_data(),
 						'wp_reading_settings_url'     => admin_url( 'options-reading.php' ),
+						'welcome_video'               => $this->get_welcome_video(),
 					]
 				),
 			]
@@ -527,6 +528,52 @@ class Dashboard {
 			}
 		</style>
 		<?php
+	}
+
+	/**
+	 * Get welcome video for the dashboard.
+	 * Rotates between two videos every 7 days.
+	 *
+	 * @since 1.6.3
+	 * @return array<string, mixed>
+	 */
+	private function get_welcome_video() {
+		$videos       = [
+			[
+				'id'        => 'GEeTu2D74Z8',
+				'url'       => 'https://www.youtube.com/embed/GEeTu2D74Z8?autoplay=1&rel=0',
+				'thumbnail' => 'https://img.youtube.com/vi/GEeTu2D74Z8/maxresdefault.jpg',
+			],
+			[
+				'id'        => 'uHIFFupTHYQ',
+				'url'       => 'https://www.youtube.com/embed/uHIFFupTHYQ?autoplay=1&rel=0',
+				'thumbnail' => 'https://img.youtube.com/vi/uHIFFupTHYQ/maxresdefault.jpg',
+			],
+		];
+		$option       = get_option( 'surerank_welcome_video', [] );
+		$current_time = time();
+
+		if (
+		empty( $option ) ||
+		! isset( $option['reset_time'] ) ||
+		! isset( $option['index'] )
+		) {
+			$option = [
+				'reset_time' => $current_time + ( 7 * DAY_IN_SECONDS ),
+				'index'      => 0,
+			];
+
+			update_option( 'surerank_welcome_video', $option );
+		} elseif ( $current_time >= $option['reset_time'] ) {
+
+			$option['index'] = (int) $option['index'] === 0 ? 1 : 0;
+
+			$option['reset_time'] = $current_time + ( 7 * DAY_IN_SECONDS );
+
+			update_option( 'surerank_welcome_video', $option );
+		}
+
+		return $videos[ $option['index'] ];
 	}
 
 	/**

@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+use SureRank\Inc\ThirdPartyIntegrations\Multilingual\Init as Multilingual;
 use SureRank\Inc\Traits\Get_Instance;
 
 /**
@@ -64,5 +65,6 @@ class Init {
 		Woocommerce::get_instance();
 		Angie::get_instance();
 		CartFlows::get_instance();
+		Multilingual::get_instance();
 	}
 }

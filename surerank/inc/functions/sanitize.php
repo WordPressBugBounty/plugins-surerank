@@ -110,7 +110,18 @@ class Sanitize {
 			return $text;
 		}
 
-		return do_shortcode( $text );
+		/**
+		 * Filter to control whether to execute or strip shortcodes in meta descriptions.
+		 *
+		 * By default, shortcodes are stripped to avoid side effects from complex blocks
+		 * (e.g., Event Tickets, WooCommerce blocks) that may output unwanted content.
+		 *
+		 * Set to true to execute shortcodes with do_shortcode() instead.
+		 *
+		 * @since 1.6.3
+		 * @param bool $execute_shortcodes Whether to execute shortcodes. Default false.
+		 */
+		return apply_filters( 'surerank_do_shortcodes_in_description', false ) ? do_shortcode( $text ) : strip_shortcodes( $text );
 	}
 
 	/**

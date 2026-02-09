@@ -6,6 +6,7 @@ import {
 	useDispatch,
 	select as staticSelect,
 } from '@wordpress/data';
+import { applyFilters } from '@wordpress/hooks';
 import RefreshButtonPortal from '@SeoPopup/components/refresh-button-portal';
 import { STORE_NAME } from '@/store/constants';
 import PageChecksHoc from '@SeoPopup/components/page-seo-checks/page-checks-hoc';
@@ -258,6 +259,8 @@ const Analyze = () => {
 						</div>
 					</Accordion.Content>
 				</Accordion.Item>
+				{ /* Pro Accordions - Link Manager, etc. */ }
+				{ applyFilters( 'surerank.analyze.pro_accordions', null ) }
 			</Accordion>
 		</div>
 	);

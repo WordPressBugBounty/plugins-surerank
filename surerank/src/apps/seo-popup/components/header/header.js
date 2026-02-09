@@ -1,4 +1,4 @@
-import { SureRankLogo } from '@/global/components/icons';
+import { SureRankFullLogo } from '@/global/components/icons';
 import { Button } from '@bsf/force-ui';
 import { X } from 'lucide-react';
 import { createPortal, memo, useEffect, useState } from '@wordpress/element';
@@ -70,7 +70,7 @@ const Header = ( { onClose } ) => {
 			className="flex items-center justify-between gap-3 border-0 border-b-0.5 border-solid border-border-subtle"
 		>
 			<div className="flex items-center py-3.5 px-4">
-				<SureRankLogo width={ 32 } height={ 20 } />
+				<SureRankFullLogo width={ 126 } height={ 20 } />
 			</div>
 			<div className="h-full flex items-center mr-auto gap-2"></div>
 			<div className="flex items-center py-3.5 px-4 gap-2">

@@ -7,7 +7,6 @@ import {
 	getDefaultPageDescription,
 	DESCRIPTION_LENGTH,
 	TITLE_LENGTH,
-	getSearchEnginePreviewInfoText,
 } from '@Global/constants';
 import { __ } from '@wordpress/i18n';
 import { useRef } from '@wordpress/element';
@@ -177,10 +176,6 @@ const TitleAndDescriptionSettings = () => {
 							{ __( 'Search Engine Preview', 'surerank' ) }
 						</span>
 					</Label>
-					<InfoTooltip
-						content={ getSearchEnginePreviewInfoText() }
-						interactive
-					/>
 				</div>
 
 				<Preview

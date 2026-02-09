@@ -261,6 +261,9 @@ export const stringValueToFormatJSON = (
  * // Output: "https://example.com › some › long › ..."
  */
 export function urlToBreadcrumbFormat( url, maxChar = 65 ) {
+	if ( ! url ) {
+		return '';
+	}
 	const urlParts = url.split( '/' );
 	const domain = urlParts.slice( 0, 3 ).join( '/' );
 	const path = urlParts.slice( 3 ).filter( Boolean ).join( ' › ' );

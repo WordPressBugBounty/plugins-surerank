@@ -67,23 +67,22 @@ const WebsiteDetails = () => {
 	const shouldAutoImprove = useRef( false );
 
 	/**
-	 * Fetch pages from the WordPress REST API
+	 * Fetch pages from the custom posts-list API
+	 * This searches only by page title (not content) for more accurate results
 	 * @param {string} search - Search query
 	 * @return {Promise<Array>} Array of page objects with label and value
 	 */
 	const fetchPages = async ( search = '' ) => {
 		try {
 			const response = await apiFetch( {
-				path: `/wp/v2/pages?per_page=10${
+				path: `/surerank/v1/posts-list?post_type=page&per_page=200${
 					search ? `&search=${ encodeURIComponent( search ) }` : ''
 				}`,
 				method: 'GET',
 			} );
 
-			return response.map( ( page ) => ( {
-				label: page.title.rendered || __( 'Untitled', 'surerank' ),
-				value: page.id,
-			} ) );
+			// Response is already in {label, value} format from the backend
+			return response;
 		} catch ( error ) {
 			return [];
 		}

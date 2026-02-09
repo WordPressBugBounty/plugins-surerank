@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use SureRank\Inc\Functions\Get;
+use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Functions\Sanitize;
 use SureRank\Inc\Meta_Variables\Post;
 use SureRank\Inc\Traits\Get_Instance;
@@ -93,7 +94,7 @@ class Description {
 		}
 
 		if ( is_feed() ) {
-			return absint( get_the_ID() );
+			return Helper::get_page_id();
 		}
 
 		return get_queried_object_id();

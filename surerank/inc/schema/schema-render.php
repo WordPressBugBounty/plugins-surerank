@@ -134,14 +134,19 @@ class Schema_Render {
 	}
 
 	/**
-	 * Remove the schema name from the array.
+	 * Remove the schema name and metadata fields from the array.
 	 *
 	 * @param array<string, mixed> $schema The schema to remove the name from.
-	 * @return array<string, mixed> The schema with the name removed.
+	 * @return array<string, mixed> The schema with the name and metadata removed.
 	 */
 	private function remove_schema_name( array $schema ) {
 		if ( isset( $schema['schema_name'] ) ) {
 			unset( $schema['schema_name'] );
+		}
+
+		// Remove custom fields metadata (used for tracking custom fields in admin).
+		if ( isset( $schema['_customFields'] ) ) {
+			unset( $schema['_customFields'] );
 		}
 
 		return $schema;

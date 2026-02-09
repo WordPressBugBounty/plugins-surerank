@@ -155,10 +155,10 @@ class Admin extends Api_Base {
 	 * @return void
 	 */
 	public function get_admin_settings( $request ) {
-		$data                             = Settings::get();
-		$data['surerank_analytics_optin'] = Get::option( 'surerank_analytics_optin' ) === 'yes' ? true : false;
-		$data                             = apply_filters( 'surerank_get_admin_settings_data', $data );
-		$decode_data                      = Utils::decode_html_entities_recursive( $data ) ?? $data;
+		$data                         = Settings::get();
+		$data['surerank_usage_optin'] = Get::option( 'surerank_usage_optin' ) === 'yes' ? true : false;
+		$data                         = apply_filters( 'surerank_get_admin_settings_data', $data );
+		$decode_data                  = Utils::decode_html_entities_recursive( $data ) ?? $data;
 		Send_Json::success( [ 'data' => $decode_data ] );
 	}
 
@@ -196,7 +196,7 @@ class Admin extends Api_Base {
 
 		$data = $this->process_social_profile_updates( $data, $updated_options );
 		$data = array_merge( $db_options, $data );
-		$data = $this->process_surerank_analytics_optin( $data );
+		$data = $this->process_surerank_usage_optin( $data );
 
 		if ( Update::option( SURERANK_SETTINGS, $data ) ) {
 			Update_Timestamp::timestamp_option();
@@ -212,15 +212,15 @@ class Admin extends Api_Base {
 	 * @since 1.0.0
 	 * @return array<string, mixed>
 	 */
-	public function process_surerank_analytics_optin( $data ) {
+	public function process_surerank_usage_optin( $data ) {
 
-		if ( ! isset( $data['surerank_analytics_optin'] ) ) {
+		if ( ! isset( $data['surerank_usage_optin'] ) ) {
 			return $data;
 		}
 
-		$surerank_analytics_optin = $data['surerank_analytics_optin'] ? 'yes' : 'no';
-		Update::option( 'surerank_analytics_optin', $surerank_analytics_optin );
-		unset( $data['surerank_analytics_optin'] );
+		$surerank_usage_optin = $data['surerank_usage_optin'] ? 'yes' : 'no';
+		Update::option( 'surerank_usage_optin', $surerank_usage_optin );
+		unset( $data['surerank_usage_optin'] );
 
 		return $data;
 	}

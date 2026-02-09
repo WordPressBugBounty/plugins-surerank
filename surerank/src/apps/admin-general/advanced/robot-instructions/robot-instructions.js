@@ -52,26 +52,18 @@ const migrateOptions = ( options ) =>
 	} ) );
 
 const getPageContent = ( options, settingsType = 'no_index' ) => {
-	const settingsTypes = {
-		no_index: 'noindex',
-		no_follow: 'nofollow',
-		no_archive: 'noarchive',
-	};
 	// Description templates for each settings type.
 	const descriptionTemplates = {
-		// translators: %1$s: HTML tag, %2$s: post type
-		no_index: __(
-			'Use a %1$s tag on all %2$s to prevent them from appearing in search results.',
-			'surerank'
-		),
-		// translators: %1$s: HTML tag, %2$s: post type
+		// translators: %s: post type (e.g., "Pages", "Posts", "Products")
+		no_index: __( 'Hide %s from search engines.', 'surerank' ),
+		// translators: %s: post type (e.g., "Pages", "Posts", "Products")
 		no_follow: __(
-			'Use a %1$s tag to stop search engines from following links on %2$s.',
+			'Prevent search engines from following links in %s.',
 			'surerank'
 		),
-		// translators: %1$s: HTML tag, %2$s: post type
+		// translators: %s: post type (e.g., "Pages", "Posts", "Products")
 		no_archive: __(
-			'Use a %1$s tag to keep search engines from saving cached versions of %2$s.',
+			'Prevent search engines from showing saved copies of %s.',
 			'surerank'
 		),
 	};
@@ -113,7 +105,6 @@ const getPageContent = ( options, settingsType = 'no_index' ) => {
 								// eslint-disable-next-line
 								description: sprintf(
 									descriptionTemplates[ settingsType ],
-									settingsTypes[ settingsType ],
 									option.label
 								),
 							} )

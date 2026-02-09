@@ -45,7 +45,7 @@ class Controller {
 
 	/**
 	 * Get Auth URL.
-	 * 
+	 *
 	 * @since 1.4.2
 	 * @return string|WP_Error
 	 */
@@ -72,7 +72,7 @@ class Controller {
 
 	/**
 	 * Get Auth status.
-	 * 
+	 *
 	 * @since 1.4.2
 	 * @return bool
 	 */
@@ -83,7 +83,7 @@ class Controller {
 
 	/**
 	 * Save Auth.
-	 * 
+	 *
 	 * @since 1.4.2
 	 * @param string $data Data to save.
 	 * @param string $key Key to use for encryption.
@@ -141,7 +141,7 @@ class Controller {
 			// Update the analytics option based on the preference.
 			// Set 'yes' if opted in, empty string if not.
 			$enable_contribution = $is_subscribed ? 'yes' : '';
-			update_option( 'surerank_analytics_optin', $enable_contribution );
+			update_option( 'surerank_usage_optin', $enable_contribution );
 
 			// Remove is_subscribed from the decrypted data.
 			unset( $decrypted_data_array['is_subscribed'] );

@@ -93,6 +93,7 @@ class Properties {
 			'type'      => 'Image',
 			'cloneable' => true,
 			'show'      => true,
+			'default'   => true,
 		];
 	}
 
@@ -110,6 +111,7 @@ class Properties {
 			'type'      => 'Image',
 			'cloneable' => true,
 			'show'      => true,
+			'default'   => true,
 		];
 	}
 
@@ -121,10 +123,11 @@ class Properties {
 	 */
 	private static function get_name_property() {
 		return [
-			'label' => __( 'Name', 'surerank' ),
-			'id'    => 'name',
-			'std'   => '%post.title%',
-			'show'  => true,
+			'label'   => __( 'Name', 'surerank' ),
+			'id'      => 'name',
+			'std'     => '%post.title%',
+			'show'    => true,
+			'default' => true,
 		];
 	}
 
@@ -151,16 +154,22 @@ class Properties {
 					'type'     => 'Textarea',
 					'tooltip'  => __( 'The full instruction text of this step', 'surerank' ),
 					'required' => true,
+					'show'     => true,
+					'default'  => true,
 				],
 				[
 					'id'      => 'upvoteCount',
 					'label'   => __( 'Upvote count', 'surerank' ),
 					'tooltip' => __( 'The total number of votes that this question has received. If the page supports upvotes and downvotes, then set the upvoteCount value to a single aggregate value that represents both upvotes and downvotes.', 'surerank' ),
+					'show'    => true,
+					'default' => true,
 				],
 				[
 					'id'      => 'url',
 					'label'   => __( 'URL', 'surerank' ),
 					'tooltip' => __( 'A URL that links directly to this answer.', 'surerank' ),
+					'show'    => true,
+					'default' => true,
 				],
 			],
 		];
@@ -174,10 +183,11 @@ class Properties {
 	 */
 	private static function get_date_created_property() {
 		return [
-			'id'    => 'dateCreated',
-			'label' => __( 'Created date', 'surerank' ),
-			'type'  => 'Date',
-			'show'  => true,
+			'id'      => 'dateCreated',
+			'label'   => __( 'Created date', 'surerank' ),
+			'type'    => 'Date',
+			'show'    => true,
+			'default' => true,
 		];
 	}
 
@@ -189,10 +199,11 @@ class Properties {
 	 */
 	private static function get_date_published_property() {
 		return [
-			'id'    => 'datePublished',
-			'label' => __( 'Published date', 'surerank' ),
-			'type'  => 'Date',
-			'show'  => true,
+			'id'      => 'datePublished',
+			'label'   => __( 'Published date', 'surerank' ),
+			'type'    => 'Date',
+			'show'    => true,
+			'default' => true,
 		];
 	}
 
@@ -204,10 +215,11 @@ class Properties {
 	 */
 	private static function get_date_modified_property() {
 		return [
-			'id'    => 'dateModified',
-			'label' => __( 'Modified date', 'surerank' ),
-			'type'  => 'Date',
-			'show'  => true,
+			'id'      => 'dateModified',
+			'label'   => __( 'Modified date', 'surerank' ),
+			'type'    => 'Date',
+			'show'    => true,
+			'default' => true,
 		];
 	}
 
@@ -219,11 +231,12 @@ class Properties {
 	 */
 	private static function get_description_property() {
 		return [
-			'id'    => 'description',
-			'label' => __( 'Description', 'surerank' ),
-			'type'  => 'Textarea',
-			'std'   => '%post.excerpt%',
-			'show'  => true,
+			'id'      => 'description',
+			'label'   => __( 'Description', 'surerank' ),
+			'type'    => 'Textarea',
+			'std'     => '%post.excerpt%',
+			'show'    => true,
+			'default' => true,
 		];
 	}
 
@@ -235,9 +248,10 @@ class Properties {
 	 */
 	private static function get_url_property() {
 		return [
-			'id'    => 'url',
-			'label' => __( 'URL', 'surerank' ),
-			'show'  => true,
+			'id'      => 'url',
+			'label'   => __( 'URL', 'surerank' ),
+			'show'    => true,
+			'default' => true,
 		];
 	}
 
@@ -253,8 +267,9 @@ class Properties {
 			'label'        => __( 'Aggregate rating', 'surerank' ),
 			'type'         => 'Group',
 			'propertyType' => 'AggregateRating',
-			'tooltip'      => __( 'Include an overall rating based on customer reviews. This rating is used in structured data to reflect the product\'s average performance or satisfaction level.', 'surerank' ),
 			'show'         => true,
+			'default'      => true,
+			'tooltip'      => __( 'Include an overall rating based on customer reviews. This rating is used in structured data to reflect the product\'s average performance or satisfaction level.', 'surerank' ),
 			'fields'       => [
 				[
 					'id'       => 'ratingValue',
@@ -282,11 +297,12 @@ class Properties {
 	 */
 	private static function get_video_object_property() {
 		return [
-			'id'     => 'video',
-			'label'  => __( 'Video', 'surerank' ),
-			'type'   => 'Group',
-			'show'   => true,
-			'fields' => [
+			'id'      => 'video',
+			'label'   => __( 'Video', 'surerank' ),
+			'type'    => 'Group',
+			'show'    => true,
+			'default' => true,
+			'fields'  => [
 				[
 					'id'       => '@type',
 					'std'      => 'VideoObject',
@@ -416,11 +432,12 @@ class Properties {
 	 */
 	private static function get_address_property() {
 		return [
-			'id'     => 'address',
-			'label'  => __( 'Address', 'surerank' ),
-			'type'   => 'Group',
-			'show'   => true,
-			'fields' => [
+			'id'      => 'address',
+			'label'   => __( 'Address', 'surerank' ),
+			'type'    => 'Group',
+			'show'    => true,
+			'default' => true,
+			'fields'  => [
 				[
 					'id'   => '@type',
 					'std'  => 'PostalAddress',
@@ -469,9 +486,10 @@ class Properties {
 	 */
 	private static function get_person_property() {
 		return [
-			'type'   => 'Group',
-			'show'   => true,
-			'fields' => [
+			'type'    => 'Group',
+			'show'    => true,
+			'default' => true,
+			'fields'  => [
 				[
 					'id'       => '@type',
 					'std'      => 'Person',
@@ -498,6 +516,7 @@ class Properties {
 			'type'      => 'Group',
 			'cloneable' => true,
 			'show'      => true,
+			'default'   => true,
 			'fields'    => [
 				[
 					'id'      => 'dayOfWeek',
@@ -557,6 +576,8 @@ class Properties {
 			'type'             => 'Group',
 			'label'            => __( 'Reviews', 'surerank' ),
 			'cloneable'        => true,
+			'show'             => true,
+			'default'          => true,
 			'cloneItemHeading' => __( 'Review', 'surerank' ),
 			'tooltip'          => __( 'Reviews of the item', 'surerank' ),
 			'fields'           => [
@@ -763,6 +784,7 @@ class Properties {
 			'tooltip' => __( 'Identify the main entity being described on the page, such as an article, product, or event. This helps search engines understand the primary focus of the page through structured data.', 'surerank' ),
 			'std'     => '%schemas.webpage%',
 			'show'    => true,
+			'default' => true,
 		];
 	}
 }

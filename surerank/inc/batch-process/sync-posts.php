@@ -171,7 +171,17 @@ class Sync_Posts extends Sitemap {
 
 			$post_data = apply_filters( 'surerank_sitemap_sync_posts_post_data', $post_data, $post );
 
-			$json_data[] = $post_data;
+			if ( empty( $post_data ) ) {
+				continue;
+			}
+
+			if ( isset( $post_data[0] ) && is_array( $post_data[0] ) ) {
+				foreach ( $post_data as $entry ) {
+					$json_data[] = $entry;
+				}
+			} else {
+				$json_data[] = $post_data;
+			}
 		}
 
 		return $json_data;

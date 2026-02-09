@@ -28,6 +28,10 @@ import { InfoTooltip } from '@AdminComponents/tooltip';
 import { XSocialIcon } from '@/global/components/icons';
 import MediaPreview from '@/apps/admin-components/media-preview';
 import { createMediaFrame } from '@/global/utils/utils';
+import AdminMagicButton from './magic-button';
+import AIModal from './ai-modal';
+import useAIModal from '@/global/hooks/use-ai-modal';
+
 const socialMedia = [
 	{
 		label: 'Facebook',
@@ -55,6 +59,15 @@ const SocialSettings = () => {
 	const { metaSettings, siteSettings, setMetaSetting, setSiteSettings } =
 		useSettings();
 	const [ activeSocialTab, setActiveSocialTab ] = useState( 'facebook' );
+
+	const [ editorKey, setEditorKey ] = useState( 0 );
+
+	// AI modal management
+	const { aiModal, handleOpenAIModal, handleCloseAIModal, handleUseThis } =
+		useAIModal( ( fieldKey, content ) => {
+			setMetaSetting( fieldKey, content );
+			setEditorKey( ( prev ) => prev + 1 );
+		} );
 
 	const handleTabChange = useCallback( ( { value } ) => {
 		setActiveSocialTab( value.slug );
@@ -210,7 +223,7 @@ const SocialSettings = () => {
 						{ /* Social Title */ }
 						<div className="space-y-1.5">
 							{ /* Label & Limit */ }
-							<div className="flex items-center justify-between gap-1">
+							<div className="flex items-center justify-start gap-1">
 								<Label
 									tag="span"
 									size="sm"
@@ -220,9 +233,24 @@ const SocialSettings = () => {
 										{ __( 'Social Title', 'surerank' ) }
 									</span>
 								</Label>
+								<div className="ml-auto">
+									<AdminMagicButton
+										onClick={ () =>
+											handleOpenAIModal(
+												`home_page_${ activeSocialTab }_title`,
+												'home_page_social_title'
+											)
+										}
+										tooltip={ __(
+											'Generate with AI',
+											'surerank'
+										) }
+									/>
+								</div>
 							</div>
 							{ /* Input */ }
 							<EditorInput
+								key={ `social-title-${ activeSocialTab }-${ editorKey }` }
 								ref={ titleEditor }
 								by="label"
 								trigger="@"
@@ -254,7 +282,7 @@ const SocialSettings = () => {
 						{ /* Social description */ }
 						<div className="space-y-1.5">
 							{ /* Label & Limit */ }
-							<div className="flex items-center justify-between gap-1">
+							<div className="flex items-center justify-start gap-1">
 								<Label
 									tag="span"
 									size="sm"
@@ -267,9 +295,24 @@ const SocialSettings = () => {
 										) }
 									</span>
 								</Label>
+								<div className="ml-auto">
+									<AdminMagicButton
+										onClick={ () =>
+											handleOpenAIModal(
+												`home_page_${ activeSocialTab }_description`,
+												'home_page_social_description'
+											)
+										}
+										tooltip={ __(
+											'Generate with AI',
+											'surerank'
+										) }
+									/>
+								</div>
 							</div>
 							{ /* Input */ }
 							<EditorInput
+								key={ `social-description-${ activeSocialTab }-${ editorKey }` }
 								ref={ descriptionEditor }
 								className="[&+div]:items-start [&+div]:pt-1"
 								by="label"
@@ -356,6 +399,15 @@ const SocialSettings = () => {
 					/>
 				</div>
 			</motion.div>
+
+			{ /* AI Modal */ }
+			{ aiModal.open && (
+				<AIModal
+					fieldType={ aiModal.fieldType }
+					onClose={ handleCloseAIModal }
+					onUseThis={ handleUseThis }
+				/>
+			) }
 		</Container>
 	);
 };

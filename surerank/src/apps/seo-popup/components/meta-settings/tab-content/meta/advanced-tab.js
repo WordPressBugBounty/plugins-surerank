@@ -1,10 +1,46 @@
 import { __ } from '@wordpress/i18n';
-import { Label, Checkbox, Input } from '@bsf/force-ui';
+import { Label, Checkbox, Input, Text } from '@bsf/force-ui';
 import { withSelect, withDispatch } from '@wordpress/data';
 import { compose } from '@wordpress/compose';
 import { STORE_NAME } from '@Store/constants';
 import { ROBOTS_OPTIONS as robotOptions } from '@Global/constants';
 import { SeoPopupInfoTooltip } from '@AdminComponents/tooltip';
+
+const getRobotInstructionsTooltipText = () => {
+	const tooltipTexts = [
+		__(
+			'These settings help search engines understand how to treat your page in search results.',
+			'surerank'
+		),
+		__(
+			'"No Index" will prevent the page from appearing in search results.',
+			'surerank'
+		),
+		__(
+			'"No Follow" tells search engines not to follow any links on the page.',
+			'surerank'
+		),
+		__(
+			'"No Archive" prevents search engines from storing a cached version of the page.',
+			'surerank'
+		),
+	];
+
+	return (
+		<div className="space-y-2">
+			{ tooltipTexts.map( ( text, index ) => (
+				<Text
+					key={ index }
+					as="p"
+					className="text-text-on-color"
+					size={ 12 }
+				>
+					{ text }
+				</Text>
+			) ) }
+		</div>
+	);
+};
 
 const AdvancedTab = ( {
 	postMetaData,
@@ -99,10 +135,7 @@ const AdvancedTab = ( {
 					<Label as="p" size="sm">
 						{ __( 'Robot Instructions', 'surerank' ) }
 						<SeoPopupInfoTooltip
-							content={ __(
-								'These settings help search engines understand how to treat your page in search results. Enabling "No Index" will prevent the page from appearing in search results. "No Follow" tells search engines not to follow any links on the page, and "No Archive" prevents search engines from storing a cached version of the page.',
-								'surerank'
-							) }
+							content={ getRobotInstructionsTooltipText() }
 						/>
 					</Label>
 				</div>
@@ -115,9 +148,6 @@ const AdvancedTab = ( {
 								heading: (
 									<div className="flex items-center gap-1">
 										{ option.label }
-										<SeoPopupInfoTooltip
-											content={ option.description }
-										/>
 									</div>
 								),
 							} }

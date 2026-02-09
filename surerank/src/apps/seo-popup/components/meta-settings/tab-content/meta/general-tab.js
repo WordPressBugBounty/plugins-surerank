@@ -8,8 +8,6 @@ import {
 } from '@Global/constants';
 import { useMemo, useRef } from '@wordpress/element';
 import { Label } from '@bsf/force-ui';
-import { Info } from 'lucide-react';
-import { SeoPopupTooltip } from '@AdminComponents/tooltip';
 import {
 	editorValueToString,
 	stringValueToFormatJSON,
@@ -108,17 +106,6 @@ const GeneralTab = ( { postMetaData, updatePostMetaData, globalDefaults } ) => {
 								{ __( 'Search Engine Preview', 'surerank' ) }
 							</span>
 						</Label>
-						<SeoPopupTooltip
-							content={ __(
-								'View a preview of how your page may appear in search engine results. This preview is for guidance only and might not exactly match how search engines display your content.',
-								'surerank'
-							) }
-							placement="top"
-							arrow
-							className="z-[99999]"
-						>
-							<Info className="size-4 text-icon-secondary" />
-						</SeoPopupTooltip>
 					</div>
 				</div>
 

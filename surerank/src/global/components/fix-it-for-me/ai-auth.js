@@ -93,7 +93,7 @@ const AIAuthScreen = ( {
 					>
 						{ subheading ||
 							__(
-								"Our AI-powered assistant helps you fix SEO issues smartly and quickly. No need to dig through settings or guess what's wrong — we'll do the heavy lifting for you.",
+								"Our AI-powered assistant helps you fix SEO issues smartly and quickly. No need to dig through settings or guess what's wrong - we'll do the heavy lifting for you.",
 								'surerank'
 							) }
 					</Text>

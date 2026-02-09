@@ -11,6 +11,7 @@
 namespace SureRank\Inc\Sitemap;
 
 use SureRank\Inc\Functions\Helper;
+use SureRank\Inc\Functions\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -31,7 +32,8 @@ class Stylesheet {
 	 * @return string The generated XML stylesheet as a string.
 	 */
 	public function generate( string $sitemap_title, string $sitemap_slug ): string {
-		$crons_available = Helper::are_crons_available();
+		$crons_available      = Helper::are_crons_available();
+		$enable_image_sitemap = Settings::get( 'enable_xml_image_sitemap' );
 		ob_start();
 		echo '<?xml version="1.0" encoding="UTF-8"?>'; // Direct echo to avoid PHP parsing issues.
 		?>
@@ -206,7 +208,7 @@ class Stylesheet {
 								</a>
 							</xsl:when>
 							<xsl:otherwise>
-								<p class="sitemap-count" style="font-size: 16px;"> This XML Sitemap contains <b><xsl:value-of select="count(s:urlset/s:url)" /></b> URLs.</p>
+								<p class="sitemap-count" style="font-size: 16px;"> This XML Sitemap contains <b><xsl:value-of select="count(s:urlset/s:url)" /></b> URL(s).</p>
 								<a href="<?php echo esc_url( home_url( $sitemap_slug ) ); ?>" class="sitemap-index">
 									<div style="display: flex; align-items: center; gap: 8px;">
 										<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -220,7 +222,9 @@ class Stylesheet {
 									<thead>
 										<tr>
 											<th>URL</th>
-											<th>Images</th>
+											<?php if ( $enable_image_sitemap ) { ?>
+												<th>Images</th>
+											<?php } ?>
 											<th>Last Modified</th>
 										</tr>
 									</thead>
@@ -232,14 +236,16 @@ class Stylesheet {
 														<xsl:value-of select="s:loc" />
 													</a>
 												</td>
-												<td class="image-list">
-													<xsl:choose>
-														<xsl:when test="image:image">
-															<xsl:value-of select="count(image:image)" />
-														</xsl:when>
-														<xsl:otherwise>0</xsl:otherwise>
-													</xsl:choose>
-												</td>
+												<?php if ( $enable_image_sitemap ) { ?>
+													<td class="image-list">
+														<xsl:choose>
+															<xsl:when test="image:image">
+																<xsl:value-of select="count(image:image)" />
+															</xsl:when>
+															<xsl:otherwise>0</xsl:otherwise>
+														</xsl:choose>
+													</td>
+												<?php } ?>
 												<td class="date">
 													<xsl:value-of select="s:lastmod" />
 												</td>

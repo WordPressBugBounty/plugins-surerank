@@ -6,6 +6,7 @@ import { SureRankMonoLogo } from '@/global/components/icons';
 import { SiteSeoChecksSummary } from './site-seo-checks';
 import { useNavigate } from '@tanstack/react-router';
 import UpgradeToPro from '@AdminDashboard/upgrade-to-pro';
+import WelcomeCard from './welcome-card';
 import { isProActive } from '@/functions/nudges';
 
 const quickLinks = [
@@ -151,6 +152,14 @@ const Dashboard = () => {
 						direction="column"
 						className="gap-6 sm:gap-8 relative"
 					>
+						{ /* Show WelcomeCard above SEO checks when pro is not active */ }
+						{ ! isProActive() && (
+							<WelcomeCard
+								className="max-h-[220px]"
+								isProActive={ isProActive() }
+							/>
+						) }
+
 						<SiteSeoChecksSummary
 							limit={ 10 }
 							showViewAll={ true }
@@ -158,6 +167,11 @@ const Dashboard = () => {
 					</Container>
 				</Container.Item>
 				<Container.Item className="col-span-12 lg:col-span-4 flex flex-col gap-4 sm:gap-6">
+					{ /* Show WelcomeCard in sidebar when pro is active */ }
+					{ isProActive() && (
+						<WelcomeCard isProActive={ isProActive() } />
+					) }
+
 					{ /* Show UpgradeToPro when pro is not active */ }
 					{ ! isProActive() && <UpgradeToPro /> }
 

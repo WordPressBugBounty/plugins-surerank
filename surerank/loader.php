@@ -104,6 +104,9 @@ class Loader {
 
 		add_filter( 'plugin_row_meta', [ $this, 'add_meta_links' ], 10, 2 );
 
+		add_filter( 'plugin_action_links', [ $this, 'add_settings_link' ], 10, 2 );
+		add_filter( 'plugin_action_links_' . SURERANK_BASE, [ $this, 'add_pro_nudge_link' ] );
+
 		add_filter( 'body_class', [ $this, 'add_body_class' ] );
 	}
 
@@ -291,6 +294,84 @@ class Loader {
 				$stars
 			);
 		}
+		return $links;
+	}
+
+	/**
+	 * Add Settings link to plugin action links.
+	 *
+	 * @param array<string,string> $links Array of plugin action links.
+	 * @param string               $file Plugin file path.
+	 * @return array<string,string> Modified plugin action links.
+	 * @since 1.6.3
+	 */
+	public function add_settings_link( array $links, string $file ): array {
+		if ( SURERANK_BASE === $file ) {
+			ob_start();
+			?>
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=surerank' ) ); ?>">
+				<?php echo esc_html__( 'Settings', 'surerank' ); ?>
+			</a>
+			<?php
+			$settings_link_html = ob_get_clean();
+
+			$plugin_links = apply_filters(
+				'surerank_plugin_action_links',
+				[
+					'surerank_settings' => $settings_link_html,
+				]
+			);
+
+			$links = array_merge( $plugin_links, $links );
+		}
+		return $links;
+	}
+
+	/**
+	 * Add Pro nudge link to plugin action links.
+	 *
+	 * @param array<string,string> $links Array of plugin action links.
+	 * @return array<string,string> Modified plugin action links.
+	 * @since 1.6.3
+	 */
+	public function add_pro_nudge_link( array $links ): array {
+		// Check if Pro plugin is installed using WordPress function.
+		if ( ! function_exists( 'get_plugins' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		$all_plugins   = get_plugins();
+		$pro_installed = false;
+
+		foreach ( $all_plugins as $plugin_path => $plugin_data ) {
+			if ( strpos( $plugin_path, '/surerank-pro.php' ) !== false ) {
+				$pro_installed = true;
+				break;
+			}
+		}
+
+		if ( ! $pro_installed ) {
+			$pricing_url = add_query_arg(
+				[
+					'utm_source'   => 'surerank-free',
+					'utm_medium'   => 'plugin-list',
+					'utm_campaign' => 'plugin-screen',
+				],
+				'https://surerank.com/pricing/'
+			);
+
+			ob_start();
+			?>
+			<a href="<?php echo esc_url( $pricing_url ); ?>" target="_blank" rel="noreferrer" style="color: #4330D2; font-weight: 700;">
+				<?php echo esc_html__( 'Get SureRank Pro', 'surerank' ); ?>
+			</a>
+			<?php
+			$link_html = ob_get_clean();
+			if ( false !== $link_html ) {
+				$links['surerank_pro'] = trim( $link_html );
+			}
+		}
+
 		return $links;
 	}
 

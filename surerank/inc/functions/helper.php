@@ -114,6 +114,27 @@ class Helper {
 	}
 
 	/**
+	 * Get the correct page ID, handling WooCommerce shop page as front page.
+	 *
+	 * When WooCommerce shop page is set as the front page in Settings > Reading,
+	 * get_the_ID() may not return the correct shop page ID. This function handles
+	 * that case by explicitly checking for the shop page and returning its ID.
+	 *
+	 * @since 1.6.3
+	 * @return int Page ID.
+	 */
+	public static function get_page_id() {
+		// Handle WooCommerce shop page as front page.
+		if ( function_exists( 'is_shop' ) && is_shop() && is_front_page() ) {
+			$shop_page_id = get_option( 'woocommerce_shop_page_id', '' );
+			if ( $shop_page_id ) {
+				return absint( $shop_page_id );
+			}
+		}
+		return (int) get_the_ID();
+	}
+
+	/**
 	 * Get public custom post types.
 	 *
 	 * @since 0.0.1

@@ -5,7 +5,7 @@ Tags: seo, wordpress seo, xml sitemap, schema, google search console
 Requires at least: 6.8
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.6.2
+Stable tag: 1.6.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,7 +13,7 @@ SureRank – SEO Assistant with Meta Tags, Social Preview, XML Sitemap, and Sche
 
 == Description ==
 
-Powerful, lightweight SEO plugin to manage search and social previews, generate XML sitemap, add schema markup — and optimize content.
+Powerful, lightweight SEO plugin to manage search and social previews, generate XML sitemap, add schema markup - and optimize content.
 
 ★★★★★
 
@@ -21,10 +21,10 @@ Powerful, lightweight SEO plugin to manage search and social previews, generate 
 
 SureRank was born from a simple idea: SEO doesn’t have to be hard, bloated, or overwhelming.
 
-As we looked at the existing SEO plugin landscape, we saw a pattern — bloated code, complex settings, technical jargon, cluttered interfaces, and a steep learning curve that left most WordPress users frustrated or confused. These tools were built for experts, not everyday users.
+As we looked at the existing SEO plugin landscape, we saw a pattern - bloated code, complex settings, technical jargon, cluttered interfaces, and a steep learning curve that left most WordPress users frustrated or confused. These tools were built for experts, not everyday users.
 We wanted to change that.
 
-SureRank is a simple, lightweight SEO assistant designed for anyone — whether you're launching your first website or managing dozens of sites. No more intimidating dashboards or features you’ll never use. Just clean, clear guidance focused on what really moves the needle.
+SureRank is a simple, lightweight SEO assistant designed for anyone - whether you're launching your first website or managing dozens of sites. No more intimidating dashboards or features you’ll never use. Just clean, clear guidance focused on what really moves the needle.
 
 <a href="https://bsf.io/surerank-demo" target="_blank" rel="">Try the live demo of SureRank</a>
 
@@ -38,9 +38,9 @@ We cut the fluff and focused on fundamentals:
 - Smart, visual content optimization tools
 - SERP and content analysis that makes sense
 
-We also recognized that great SEO isn’t just about checklists — it’s about understanding what to do and why. So SureRank includes intuitive visual cues, actionable suggestions, and beginner-friendly insights that help you confidently optimize your content without needing outside help.
+We also recognized that great SEO isn’t just about checklists - it’s about understanding what to do and why. So SureRank includes intuitive visual cues, actionable suggestions, and beginner-friendly insights that help you confidently optimize your content without needing outside help.
 
-SureRank is not just another SEO plugin. It’s the SEO assistant that strips away the noise and helps you get results — clearly, quickly, and confidently.
+SureRank is not just another SEO plugin. It’s the SEO assistant that strips away the noise and helps you get results - clearly, quickly, and confidently.
 
 ## How Does SureRank Work? ##
 
@@ -52,7 +52,7 @@ From your WordPress dashboard, navigate to the Plugins menu and click on the "Ad
 
 ### Step 2. Complete the Onboarding Setup ###
 
-After activation, you’ll be guided through a quick onboarding process to configure the essential SEO settings for your website. SureRank keeps it simple, so you can complete the setup in just a few minutes — no technical knowledge required.
+After activation, you’ll be guided through a quick onboarding process to configure the essential SEO settings for your website. SureRank keeps it simple, so you can complete the setup in just a few minutes - no technical knowledge required.
 
 ### Step 3. Fix Site-Level SEO Issues and Start Writing ###
 
@@ -60,7 +60,7 @@ SureRank will perform a quick SEO checkup and highlight important site-level imp
 
 ## SureRank Features ##
 
-SureRank is packed with powerful features designed to make SEO accessible, actionable, and effective for everyone — from beginners to advanced users. Here’s what you can expect.
+SureRank is packed with powerful features designed to make SEO accessible, actionable, and effective for everyone - from beginners to advanced users. Here’s what you can expect.
 
 ### Beginner-Friendly Interface ###
 
@@ -151,7 +151,7 @@ Plan better content faster with the Outline Builder. By analyzing top-ranking co
 
 ### Content Gap Finder ###
 
-Discover missing topics, keywords, and content opportunities that your competitors are covering — but you’re not. The Content Gap Finder helps you close these gaps and make your site a more complete, authoritative resource.
+Discover missing topics, keywords, and content opportunities that your competitors are covering - but you’re not. The Content Gap Finder helps you close these gaps and make your site a more complete, authoritative resource.
 
 ### One-Click SEO Issues Fixer ###
 
@@ -171,16 +171,16 @@ Maintain control over your SEO settings with the SEO Role Manager. This feature 
 
 ## Who Can Benefit from SureRank? ##
 
-Almost every website can benefit from a solid SEO strategy — and SureRank makes it simple for everyone. SureRank’s intuitive, beginner-friendly interface combined with its powerful optimization tools caters to a wide range of users across different industries and needs. Here’s who can benefit the most from SureRank:
+Almost every website can benefit from a solid SEO strategy - and SureRank makes it simple for everyone. SureRank’s intuitive, beginner-friendly interface combined with its powerful optimization tools caters to a wide range of users across different industries and needs. Here’s who can benefit the most from SureRank:
 
 - **New Website Owners:** If you're launching a brand-new website, SureRank is the perfect SEO companion to help you start strong. It guides new website owners through essential optimization steps, ensuring a solid foundation for search engine visibility right from day one.
 - **Existing Website Owners:** Already have an established site but struggling to improve rankings or feeling overwhelmed by SEO? SureRank helps existing website owners streamline their optimization efforts, identify issues, and take clear steps toward better visibility and performance.
 - **Small Local Businesses:** Entrepreneurs, local shops, and service providers with limited technical knowledge or resources can use SureRank’s beginner-friendly features to effectively optimize their websites without hiring expensive SEO consultants.
-- **Professionals and Agencies:** Freelancers, marketing consultants, and digital agencies can leverage SureRank’s powerful SEO tools, including SEO Role Management and content performance reports, to optimize and manage multiple websites with ease — making it ideal for client work.
+- **Professionals and Agencies:** Freelancers, marketing consultants, and digital agencies can leverage SureRank’s powerful SEO tools, including SEO Role Management and content performance reports, to optimize and manage multiple websites with ease - making it ideal for client work.
 - **Blogs and Online Magazines:** Content creators, bloggers, and digital publications can use SureRank’s SERP Analyzer, Content Gap Finder, and Content Optimizer tools to create content that ranks higher and stays competitive in search engine results.
 - **SaaS and eCommerce Sites:** SaaS businesses and online stores powered by WooCommerce or other eCommerce platforms can benefit from SureRank’s WooCommerce-specific SEO integrations, site-level and page-level checks, and schema optimization, all designed to increase organic traffic and sales.
 
-SureRank is built for everyone — from beginners taking their first steps in SEO to seasoned professionals managing dozens of websites — making search engine optimization simpler, faster, and more effective.
+SureRank is built for everyone - from beginners taking their first steps in SEO to seasoned professionals managing dozens of websites - making search engine optimization simpler, faster, and more effective.
 
 ## Some of the WordPress Plugins SureRank Supports ##
 
@@ -248,7 +248,7 @@ SureRank is built to simplify SEO. It avoids complex jargon and overwhelming set
 Not at all! SureRank is built to be lightweight and fast. It follows modern WordPress coding standards and has no unnecessary bloat, so your website’s performance remains top-notch.
 
 = Is SureRank beginner-friendly? =
-Absolutely. SureRank is designed with simplicity in mind. Even if you’ve never done SEO before, the plugin walks you through the process and shows exactly how your pages will appear in search results — no guesswork involved.
+Absolutely. SureRank is designed with simplicity in mind. Even if you’ve never done SEO before, the plugin walks you through the process and shows exactly how your pages will appear in search results - no guesswork involved.
 
 = What are the requirements to use SureRank? =
 You just need an up-to-date version of WordPress. Once you install the plugin, it guides you through a simple onboarding process so you can start optimizing right away.
@@ -257,7 +257,7 @@ You just need an up-to-date version of WordPress. Once you install the plugin, i
 Yes! SureRank provides insights into how your content is performing in Google SERPs. It also includes site-level and page-level SEO checks, so you can identify and fix optimization issues quickly.
 
 = Does SureRank support schema and XML sitemaps? =
-Yes, SureRank comes with built-in support for schema markup and XML sitemaps out of the box — helping search engines understand and index your site more effectively.
+Yes, SureRank comes with built-in support for schema markup and XML sitemaps out of the box - helping search engines understand and index your site more effectively.
 
 = Can I optimize my WooCommerce products with SureRank? =
 Yes! SureRank fully supports WooCommerce. You can customize SEO titles, descriptions, social previews, schema, and more for all your product pages to improve visibility in search engine results and drive more traffic to your store.
@@ -269,7 +269,7 @@ Definitely. SureRank automatically generates alt text for images and redirects a
 We don’t recommend running multiple SEO plugins at the same time to avoid conflicts.
 
 = What if I want more advanced features? =
-SureRank Pro includes advanced tools like SERP research, content gap analysis, an outline builder, and more — all designed to help you create better content and rank higher in search results.
+SureRank Pro includes advanced tools like SERP research, content gap analysis, an outline builder, and more - all designed to help you create better content and rank higher in search results.
 
 = How can I report a security bug? =
 We take plugin security extremely seriously. If you discover a security vulnerability, please report it in a safe and responsible manner.
@@ -284,16 +284,27 @@ Brainstorm Force
 
 == Screenshots ==
 
-1. Get a quick overview of your site's SEO health—run automated checks for indexing, sitemaps, and more, all directly from the main dashboard.
-2. See impressions, clicks, and keyword trends from Search Console—track what's driving traffic in one clear view.
-3. Set global titles and descriptions for your site—keep your content optimized without editing each page manually.
-4. Control how your pages look on social platforms—set fallback images and metadata for Facebook and X.
-5. Edit SEO details directly in the editor—titles, descriptions, social previews, indexing, and schema all in one panel.
-6. Manage your site's structured data with ease—set default types and control how search engines understand your content.
-7. Run smart checks on every page—spot missing titles, low content, link issues, and more at a glance.
+1. Get a quick overview of your site's SEO health-run automated checks for indexing, sitemaps, and more, all directly from the main dashboard.
+2. See impressions, clicks, and keyword trends from Search Console-track what's driving traffic in one clear view.
+3. Set global titles and descriptions for your site-keep your content optimized without editing each page manually.
+4. Control how your pages look on social platforms-set fallback images and metadata for Facebook and X.
+5. Edit SEO details directly in the editor-titles, descriptions, social previews, indexing, and schema all in one panel.
+6. Manage your site's structured data with ease-set default types and control how search engines understand your content.
+7. Run smart checks on every page-spot missing titles, low content, link issues, and more at a glance.
 
 
 == Changelog ==
+
+## 1.6.3 - 09-February-2026 ###
+* New: Multilingual: Added support for WPML and Polylang for multilingual sitemap.
+* Improvement: Google Search Console - Show average position of post and pages in content analysis table.
+* Improvement: Site SEO Checks - Added better visuals and updated content for Site SEO checks help guide.
+* Improvement: Added new fields to Organization Schema.
+* Improvement: UI/UX enhancements.
+* Fix: Onboarding - Fixed an issue where the posts and pages were not searched properly.
+* Fix: Fixed an issue with NewsPaper theme and Event plugin.
+* Fix: Fixed an issue in Sitemap where images column where adding even if the option was disabled.
+* Fix: Fixed an issue with metadata not getting applied if homepage is set to a shop page in WooCommerce.
 
 ### 1.6.2 - 14-January-2026 ###
 
@@ -316,8 +327,6 @@ Brainstorm Force
 * Improvement: Optimized Page SEO checks in the SEO bar.
 * Improvement: Added custom field support (text and image) for ACF, SCF, Pods, and Metabox in meta templates, schemas, and social settings.
 * Fix: Fixed an issue where schema was not displaying in metabox when the display condition was set to the front page.
-
-
 
 ### 1.5.1 - 09-December-2025 ###
 * Improvement: Enhanced content generation to provide more accurate and relevant results.

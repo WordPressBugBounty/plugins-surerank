@@ -161,7 +161,7 @@ class Defaults {
 	 * @since 1.0.0
 	 */
 	private $global_advanced_miscellaneous_defaults = [
-		'surerank_analytics_optin' => false,
+		'surerank_usage_optin' => false,
 	];
 
 	/**

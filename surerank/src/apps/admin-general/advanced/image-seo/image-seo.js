@@ -11,7 +11,12 @@ const ImageSeoHelpText = () => {
 	return (
 		<div className="flex items-center justify-between p-3 gap-2 relative ring-1 rounded-lg ring-alert-border-warning bg-alert-background-warning shadow-none">
 			<div className="w-full gap-2">
-				<Text size={ 14 } weight={ 400 } color="primary" className="mb-2">
+				<Text
+					size={ 14 }
+					weight={ 400 }
+					color="primary"
+					className="mb-2"
+				>
 					{ __(
 						"Without AI, meta tags will be added to images using the file name and post title. However, this data is often repetitive or too generic and doesn't describe the image accurately. Search engines may even treat such tags as spammy.",
 						'surerank'
@@ -34,10 +39,7 @@ const OptimizeImageSeoWithAiHelpText = () => {
 			dangerouslySetInnerHTML={ {
 				__html: sprintf(
 					/* translators: %s: robots.txt */
-					__(
-						'%1$s to use AI image SEO',
-						'surerank'
-					),
+					__( '%1$s to use AI image SEO', 'surerank' ),
 					renderToString(
 						<Text
 							as="a"
@@ -73,33 +75,29 @@ const imageSeoContent = () => [
 		type: 'custom',
 		storeKey: 'image_seo_helptext',
 		dataType: 'string',
-		component: <>
-			<span className="w-full block">
-				<hr className="border-border-subtle border-b border-t-0 border-x-0 my-0 w-full" />
-			</span>
-		</>,
+		component: (
+			<>
+				<span className="w-full block">
+					<hr className="border-border-subtle border-b border-t-0 border-x-0 my-0 w-full" />
+				</span>
+			</>
+		),
 	},
 	{
 		id: 'generate_alt_with_ai',
 		type: 'switch',
 		disabled: true,
 		storeKey: 'generate_alt_with_ai',
-		label: __(
-			'Optimize Image SEO with AI',
-			'surerank'
-		),
+		label: __( 'Optimize Image SEO with AI', 'surerank' ),
 		description: <OptimizeImageSeoWithAiHelpText />,
 	},
 	{
 		id: 'auto_set_image_alt',
 		type: 'switch',
 		storeKey: 'auto_set_image_alt',
-		label: __(
-			'Optimize Image SEO without AI',
-			'surerank'
-		),
+		label: __( 'Optimize Image SEO without AI', 'surerank' ),
 		description: __(
-			'Auto-add basic alt text for images that don’t have one, using the file name or post title.',
+			'Automatically adds alt text to images that are missing one, using the image filename or post title as the source.',
 			'surerank'
 		),
 		searchKeywords: [
@@ -136,7 +134,7 @@ const getImageSeoContent = () => {
 			dataType: 'string',
 			component: <ImageSeoHelpText />,
 			wrapperClassName: ( formValues ) => {
-				return formValues.auto_set_image_alt ? '' : 'hidden';
+				return formValues.generate_alt_with_ai ? 'hidden' : '';
 			},
 		} );
 	}

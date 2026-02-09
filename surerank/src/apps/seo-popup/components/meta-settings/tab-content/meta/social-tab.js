@@ -1,9 +1,17 @@
 import { __, sprintf } from '@wordpress/i18n';
 import { useSelect } from '@wordpress/data';
 import { motion } from 'framer-motion';
-import { Label, Input, EditorInput, Switch, Button, Tabs, Text } from '@bsf/force-ui';
+import {
+	Label,
+	Input,
+	EditorInput,
+	Switch,
+	Button,
+	Tabs,
+	Text,
+} from '@bsf/force-ui';
 import { useCallback, useEffect, useRef, useState } from '@wordpress/element';
-import { Info, RefreshCcw } from 'lucide-react';
+import { RefreshCcw } from 'lucide-react';
 import SocialPreview from '@GlobalComponents/social-preview';
 import { STORE_NAME } from '@Store/constants';
 import {
@@ -174,21 +182,6 @@ const SocialTab = ( { postMetaData, updatePostMetaData, globalDefaults } ) => {
 
 	const hasImageSelected = !! postMetaData?.[ `${ activeTab }_image_url` ];
 
-	const uploaderTooltip = __(
-		'Upload at least 600x315px image. Recommended size is 1200x630px.',
-		'surerank'
-	);
-	/* translators: %custom_field.field_name% is a placeholder example for custom field variables */
-	const customFieldTooltip = __(
-		'Enter a custom field variable like %custom_field.field_name% or a direct image URL.',
-		'surerank'
-	);
-
-	const imageTooltipContent =
-		imageInputMode[ activeTab ] === 'uploader'
-			? uploaderTooltip
-			: customFieldTooltip;
-
 	const handleTabChange = ( { value: { slug } } ) => {
 		setActiveTab( slug );
 	};
@@ -313,14 +306,6 @@ const SocialTab = ( { postMetaData, updatePostMetaData, globalDefaults } ) => {
 									<Label tag="span" size="sm">
 										{ __( 'Social Image', 'surerank' ) }
 									</Label>
-									<SeoPopupTooltip
-										content={ imageTooltipContent }
-										placement="top"
-										arrow
-										className="z-[99999]"
-									>
-										<Info className="size-4 text-icon-secondary" />
-									</SeoPopupTooltip>
 								</div>
 								<div className="flex items-center gap-2">
 									<Switch
@@ -365,6 +350,18 @@ const SocialTab = ( { postMetaData, updatePostMetaData, globalDefaults } ) => {
 										onClick={ handleClickInput }
 									/>
 
+									{ /* Help text for uploader mode */ }
+									<Text
+										size={ 12 }
+										weight={ 400 }
+										color="help"
+									>
+										{ __(
+											'Upload at least 600x315px image. Recommended size is 1200x630px.',
+											'surerank'
+										) }
+									</Text>
+
 									{ hasImageSelected && (
 										<MediaPreview
 											imageId={
@@ -407,9 +404,14 @@ const SocialTab = ( { postMetaData, updatePostMetaData, globalDefaults } ) => {
 										}
 									/>
 									{ /* Hint text */ }
-									<Text size={ 14 } weight={ 400 } color="help">
-										{ __(
-											'Type @ to view variable suggestions or enter a direct URL',
+									<Text
+										size={ 12 }
+										weight={ 400 }
+										color="help"
+									>
+										{ /* translators: %custom_field.field_name% is a placeholder example for custom field variables */
+										__(
+											'Enter a custom field variable like %custom_field.field_name% or a direct image URL. Type @ to view variable suggestions.',
 											'surerank'
 										) }
 									</Text>

@@ -3,6 +3,7 @@ import { useSuspenseSelect, useDispatch } from '@wordpress/data';
 import { STORE_NAME } from '@AdminStore/constants';
 import { Label } from '@bsf/force-ui';
 import { Info } from 'lucide-react';
+import { applyFilters } from '@wordpress/hooks';
 import {
 	renderHelpText,
 	renderFieldSwitch,
@@ -389,10 +390,34 @@ const Properties = ( { schema, type, handleFieldUpdate, schemaId } ) => {
 				</div>
 			) ) }
 
+			{ applyFilters(
+				'surerank.schema.properties.extensions',
+				null,
+				{
+					schemaId,
+					schemaType,
+					schema,
+					metaSettings,
+					currentSchema: metaSettings.schemas[ schemaId ] || {},
+					setMetaSetting,
+					variableSuggestions,
+					getFieldValue,
+					onFieldChange,
+				}
+			) }
+
 			<AddFieldMenu
 				availableFields={ availableFields }
 				onAddField={ addField }
 				className="p-2 w-full border-t border-border-subtle"
+				filterContext={ {
+					schemaId,
+					schemaType,
+					schema,
+					metaSettings,
+					currentSchema: metaSettings.schemas[ schemaId ] || {},
+					setMetaSetting,
+				} }
 			/>
 		</div>
 	);
