@@ -4,7 +4,6 @@ import {
 	createHashHistory,
 	RouterProvider,
 	ErrorComponent,
-	NotFoundRoute,
 	Navigate,
 	createRootRouteWithContext,
 } from '@tanstack/react-router';
@@ -12,6 +11,7 @@ import {
 // Layout component.
 import SidebarLayout from '@AdminComponents/layout/sidebar-layout';
 import { SureRankLogo } from '@/global/components/icons';
+import currentUserCan from './role-capabilities';
 
 /**
  * @typedef {Object} RouteConfig
@@ -190,6 +190,7 @@ const createAdminRouter = ( {
 			);
 		},
 		errorComponent: defaultErrorComponent,
+		notFoundComponent,
 		loader: () => void 0,
 	} );
 
@@ -197,15 +198,6 @@ const createAdminRouter = ( {
 	const createdRoutes = routes.map( ( route ) =>
 		createNestedRoutes( route, rootRoute, '', defaultLayout )
 	);
-
-	// Create Not Found route
-	if ( notFoundComponent ) {
-		const notFoundRoute = new NotFoundRoute( {
-			component: notFoundComponent,
-			getParentRoute: () => rootRoute,
-		} );
-		createdRoutes.push( notFoundRoute );
-	}
 
 	// Add routes to the root route
 	const routeTree = rootRoute.addChildren( createdRoutes );
@@ -222,15 +214,29 @@ const createAdminRouter = ( {
  * @param {string}    path      - Route path
  * @param {Component} component - Route component
  * @param {Array}     children  - Optional child routes
- * @return {Object} Route configuration object
+ * @param {Object}    options   - Optional options
+ * @return {Object|undefined} Route configuration object
  */
-export const createRoute = ( path, component, children = null ) => {
+export const createRoute = (
+	path,
+	component,
+	children = null,
+	options = {}
+) => {
+	// Handle - if capability is not allowed, return undefined
+	if (
+		options?.capability &&
+		! currentUserCan( options?.capability )
+	) {
+		return;
+	}
 	// Handle - if third param is array, treat as children example : Advanced Settings
 	if ( Array.isArray( children ) ) {
 		return {
 			path,
 			component,
 			children,
+			...options,
 		};
 	}
 
@@ -238,7 +244,8 @@ export const createRoute = ( path, component, children = null ) => {
 	return {
 		path,
 		component,
-		...children,
+		children,
+		...options,
 	};
 };
 
@@ -247,15 +254,24 @@ export const createRoute = ( path, component, children = null ) => {
  * @param {string}    path      - Route path
  * @param {Component} component - Route component
  * @param {Array}     children  - Optional nested child routes
- * @return {Object} Child route configuration object
+ * @param {Object}    options   - Optional options
+ * @return {Object|undefined} Child route configuration object
  */
-export const createChildRoute = ( path, component, children = null ) => {
+export const createChildRoute = ( path, component, children = null, options = {} ) => {
+	// Handle - if capability is not allowed, return undefined
+	if (
+		options?.capability &&
+		! currentUserCan( options?.capability )
+	) {
+		return;
+	}
 	// Handle - if third param is array, treat as children
 	if ( Array.isArray( children ) ) {
 		return {
 			path,
 			component,
 			children,
+			...options,
 		};
 	}
 
@@ -263,8 +279,111 @@ export const createChildRoute = ( path, component, children = null ) => {
 	return {
 		path,
 		component,
-		...children,
+		children,
+		...options,
 	};
+};
+
+/**
+ * Recursively filters out falsy values from routes array and children
+ * @param {RouteConfig[]} routes - Array of route configurations
+ * @return {RouteConfig[]} Filtered routes array without falsy values
+ */
+export const filterFalsyRoutes = ( routes ) => {
+	if ( ! Array.isArray( routes ) ) {
+		return [];
+	}
+
+	return routes
+		.filter( ( route ) => !! route ) // Filter out falsy values
+		.map( ( route ) => {
+			// If route has children, recursively filter them
+			if ( route.children?.length ) {
+				return {
+					...route,
+					children: filterFalsyRoutes( route.children ),
+				};
+			}
+			return route;
+		} );
+};
+
+/**
+ * Builds a Set of all available route paths from the routes array
+ * @param {RouteConfig[]} routes - Array of route configurations
+ * @return {Set<string>} Set of all route paths
+ */
+export const buildRoutePathMap = ( routes ) => {
+	const paths = new Set();
+
+	const extractPaths = ( routeArray, basePath = '' ) => {
+		routeArray.forEach( ( route ) => {
+			if ( ! route ) {
+				return;
+			}
+
+			const fullPath = basePath + route.path;
+			paths.add( fullPath );
+
+			// Recursively extract child route paths
+			if ( route.children?.length ) {
+				extractPaths( route.children, fullPath );
+			}
+		} );
+	};
+
+	extractPaths( routes );
+	return paths;
+};
+
+/**
+ * Filters navigation links to only include links that have corresponding routes
+ * @param {Array}       navLinks   - Array of navigation link sections
+ * @param {Set<string>} routePaths - Set of available route paths
+ * @return {Array} Filtered navigation links
+ */
+export const filterNavLinksByRoutes = ( navLinks, routePaths ) => {
+	const filteredSections = [];
+
+	navLinks.forEach( ( section ) => {
+		if ( ! section.links ) {
+			return;
+		}
+
+		const filteredLinks = [];
+
+		section.links.forEach( ( link ) => {
+			// Check if the link's path exists in available routes
+			if ( routePaths.has( link.path ) ) {
+				const filteredLink = { ...link };
+
+				// Recursively filter submenu items
+				if ( link.submenu?.length ) {
+					const filteredSubmenu = link.submenu.filter( ( submenuItem ) =>
+						routePaths.has( submenuItem.path )
+					);
+
+					// Only include the link if it has submenu items after filtering
+					if ( filteredSubmenu.length > 0 ) {
+						filteredLink.submenu = filteredSubmenu;
+						filteredLinks.push( filteredLink );
+					}
+				} else {
+					filteredLinks.push( filteredLink );
+				}
+			}
+		} );
+
+		// Only include the section if it has links after filtering
+		if ( filteredLinks.length > 0 ) {
+			filteredSections.push( {
+				...section,
+				links: filteredLinks,
+			} );
+		}
+	} );
+
+	return filteredSections;
 };
 
 export default createAdminRouter;

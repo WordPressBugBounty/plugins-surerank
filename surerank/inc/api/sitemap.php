@@ -59,6 +59,7 @@ class Sitemap extends Api_Base {
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'generate_cache' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
+				'role_capability'     => 'global_setting',
 			]
 		);
 		register_rest_route(
@@ -68,6 +69,7 @@ class Sitemap extends Api_Base {
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'generate_cache_manual' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
+				'role_capability'     => 'global_setting',
 			]
 		);
 
@@ -78,6 +80,7 @@ class Sitemap extends Api_Base {
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'prepare_cache' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
+				'role_capability'     => 'global_setting',
 			]
 		);
 	}

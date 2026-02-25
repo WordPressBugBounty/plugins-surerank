@@ -2,7 +2,11 @@ import { mountComponent } from '@Functions/utils';
 import createAdminRouter, {
 	createRoute,
 	createChildRoute,
+	buildRoutePathMap,
+	filterNavLinksByRoutes,
+	filterFalsyRoutes,
 } from '@Functions/router';
+import NotFound from './not-found';
 import Dashboard from './dashboard';
 import { Toaster, toast } from '@bsf/force-ui';
 import { getNavLinks } from '@Global/constants/nav-links';
@@ -15,6 +19,7 @@ import {
 	ENABLE_MIGRATION,
 } from '@Global/constants';
 import { applyFilters } from '@wordpress/hooks';
+import RedirectToFirstRoute from '@Global/components/redirect-to-first-route';
 
 // Import all the components directly
 import TitleAndDescriptionRoute from '@AdminGeneral/general/title-and-description/title-and-description';
@@ -37,12 +42,14 @@ import BreadcrumbsRoute from '@AdminDashboard/breadcrumbs/settings';
 import SchemaRoute from '@AdminGeneral/schema/schema';
 import ImportExportSettingsRoute from '@AdminGeneral/advanced/tools/import-export-settings';
 import RedirectionManager from '@AdminDashboard/link-manager/redirection-manager';
+import RoleManager from '@AdminDashboard/role-manager/index';
 import LinkSuggestion from '@AdminDashboard/link-suggestion/link-suggestion';
 import InstantIndexingSettings from '@AdminDashboard/instant-indexing/settings';
 import InstantIndexingLogs from '@AdminDashboard/instant-indexing/logs';
 import EmailReportsRoute from '@AdminGeneral/advanced/email-reports';
 import GoogleIndexingSettings from '@AdminDashboard/google-indexing/settings';
 import GoogleIndexingLogs from '@AdminDashboard/google-indexing/logs';
+import currentUserCan from '@/functions/role-capabilities';
 import { isProActive } from '@/functions/nudges';
 
 // Define toast globally for PRO plugin.
@@ -53,69 +60,124 @@ if ( window && ! window?.toast ) {
 // Routes
 const dashboardRoutes = [
 	// Default route redirects to dashboard
-	createRoute( '/', () => <Navigate to="/dashboard" />, {
-		navbarOnly: true,
-	} ),
+	createRoute(
+		'/',
+		() =>
+			currentUserCan( 'surerank_global_setting' ) ? (
+				<Navigate to="/dashboard" />
+			) : (
+				<RedirectToFirstRoute />
+			),
+		[],
+		{ navbarOnly: true }
+	),
 	// Dashboard routes
-	createRoute( '/dashboard', Dashboard, { navbarOnly: true } ),
+	createRoute( '/dashboard', Dashboard, [], {
+		navbarOnly: true,
+		capability: 'surerank_global_setting',
+	} ),
 ];
 
 const generalAndAdvancedRoutes = [
 	// General routes
-	createRoute( '/general', TitleAndDescriptionRoute ),
-	createRoute( '/general/homepage', null, [
-		createChildRoute( '/', HomePageRoute ),
-		createChildRoute( '/social', HomePageRoute ),
-		createChildRoute( '/advanced', HomePageRoute ),
-	] ),
-	createChildRoute( '/general/archive_pages', ArchivePagesRoute ),
-	createRoute( '/general/social', null, [
-		createChildRoute( '/', SocialGeneralRoute ),
-		createChildRoute( '/facebook', FacebookRoute ),
-		createChildRoute( '/x', TwitterRoute ),
-		createChildRoute( '/accounts', AccountRoute ),
-	] ),
+	createRoute( '/general', TitleAndDescriptionRoute, [], {
+		capability: 'surerank_global_setting',
+	} ),
+	createRoute(
+		'/general/homepage',
+		null,
+		[
+			createChildRoute( '/', HomePageRoute ),
+			createChildRoute( '/social', HomePageRoute ),
+			createChildRoute( '/advanced', HomePageRoute ),
+		],
+		{
+			capability: 'surerank_global_setting',
+		}
+	),
+	createChildRoute( '/general/archive_pages', ArchivePagesRoute, [], {
+		capability: 'surerank_global_setting',
+	} ),
+	createRoute(
+		'/general/social',
+		null,
+		[
+			createChildRoute( '/', SocialGeneralRoute ),
+			createChildRoute( '/facebook', FacebookRoute ),
+			createChildRoute( '/x', TwitterRoute ),
+			createChildRoute( '/accounts', AccountRoute ),
+		],
+		{
+			capability: 'surerank_global_setting',
+		}
+	),
 
 	// Advanced routes
 	createRoute( '/advanced', null, [
-		createRoute( '/robot_instructions', null, [
-			createChildRoute( '/indexing', RobotInstructionsRoute ),
-			createChildRoute( '/following', RobotInstructionsRoute ),
-			createChildRoute( '/archiving', RobotInstructionsRoute ),
-		] ),
-		createChildRoute( '/email-reports', EmailReportsRoute ),
-		createChildRoute( '/sitemaps', SitemapsRoute ),
-		createChildRoute( '/image-seo', ImageSeoRoute ),
+		createRoute(
+			'/robot_instructions',
+			null,
+			[
+				createChildRoute( '/indexing', RobotInstructionsRoute ),
+				createChildRoute( '/following', RobotInstructionsRoute ),
+				createChildRoute( '/archiving', RobotInstructionsRoute ),
+			],
+			{
+				capability: 'surerank_global_setting',
+			}
+		),
+		createChildRoute( '/email-reports', EmailReportsRoute, [], {
+			capability: 'surerank_global_setting',
+		} ),
+		createChildRoute( '/sitemaps', SitemapsRoute, [], {
+			capability: 'surerank_global_setting',
+		} ),
+		createChildRoute( '/image-seo', ImageSeoRoute, [], {
+			capability: 'surerank_global_setting',
+		} ),
 		// Conditionally include schema route
 		...( ENABLE_SCHEMAS && SchemaRoute
-			? [ createChildRoute( '/schema', SchemaRoute ) ]
+			? [
+					createChildRoute( '/schema', SchemaRoute, [], {
+						capability: 'surerank_global_setting',
+					} ),
+			  ]
 			: [] ),
-		createChildRoute( '/robots-txt-editor', RobotsTxtEditorRoute ),
-		createChildRoute( '/breadcrumbs', BreadcrumbsRoute ),
+		createChildRoute( '/robots-txt-editor', RobotsTxtEditorRoute, [], {
+			capability: 'surerank_global_setting',
+		} ),
+		createChildRoute( '/breadcrumbs', BreadcrumbsRoute, [], {
+			capability: 'surerank_global_setting',
+		} ),
 	] ),
 ];
 
 const searchConsoleRoutes = [
-	createRoute( '/search-console', SearchConsole, { navbarOnly: true } ),
-	createRoute( '/content-performance', ContentAnalysisRoute, {
+	createRoute( '/search-console', SearchConsole, [], {
 		navbarOnly: true,
+		capability: 'surerank_global_setting',
+	} ),
+	createRoute( '/content-performance', ContentAnalysisRoute, [], {
+		navbarOnly: true,
+		capability: 'surerank_global_setting',
 	} ),
 ];
 
 const siteSeoAnalysisRoutes = [
-	createRoute( '/site-seo-analysis', SiteSeoChecksRoute, {
+	createRoute( '/site-seo-analysis', SiteSeoChecksRoute, [], {
 		navbarOnly: true,
+		capability: 'surerank_global_setting',
 	} ),
 ];
 
 // Link Manager routes
 const linkManagerRoutes = [
 	createRoute( '/link-manager', null, [
-		createChildRoute( '/redirection-manager', RedirectionManager, {
+		createChildRoute( '/redirection-manager', RedirectionManager, [], {
 			fullWidth: true,
 			navbarOnly: false,
 		} ),
-		createChildRoute( '/link-suggestion', LinkSuggestion, {
+		createChildRoute( '/link-suggestion', LinkSuggestion, [], {
 			fullWidth: isProActive( 'pro' ) ? false : true,
 			navbarOnly: false,
 		} ),
@@ -124,42 +186,68 @@ const linkManagerRoutes = [
 
 // Instant Indexing routes
 const instantIndexingRoutes = [
-	createRoute( '/advanced/instant-indexing', null, [
-		createChildRoute( '/settings', InstantIndexingSettings, {
-			fullWidth: false,
-		} ),
-		createChildRoute( '/logs', InstantIndexingLogs, {
-			fullWidth: false,
-		} ),
-	] ),
+	createRoute(
+		'/advanced/instant-indexing',
+		null,
+		[
+			createChildRoute( '/settings', InstantIndexingSettings, [], {
+				fullWidth: false,
+			} ),
+			createChildRoute( '/logs', InstantIndexingLogs, [], {
+				fullWidth: false,
+			} ),
+		],
+		{
+			capability: 'surerank_global_setting',
+		}
+	),
 ];
 
 // Google Indexing routes
 const googleIndexingRoutes = [
-	createRoute( '/advanced/google-indexing', null, [
-		createChildRoute( '/settings', GoogleIndexingSettings, {
-			fullWidth: false,
-		} ),
-		createChildRoute( '/logs', GoogleIndexingLogs, {
-			fullWidth: false,
-		} ),
-	] ),
+	createRoute(
+		'/advanced/google-indexing',
+		null,
+		[
+			createChildRoute( '/settings', GoogleIndexingSettings, [], {
+				fullWidth: false,
+			} ),
+			createChildRoute( '/logs', GoogleIndexingLogs, [], {
+				fullWidth: false,
+			} ),
+		],
+		{
+			capability: 'surerank_global_setting',
+		}
+	),
 ];
 
 // Tools routes
 const toolsRoutes = [
 	createRoute( '/tools', null, [
-		createChildRoute( '/manage-features', FeaturesManagementRoute ),
-		createChildRoute( '/import-export', ImportExportSettingsRoute ),
+		createChildRoute( '/manage-features', FeaturesManagementRoute, [], {
+			capability: 'manage_options',
+		} ),
+		createChildRoute( '/import-export', ImportExportSettingsRoute, [], {
+			capability: 'manage_options',
+		} ),
 		...( ENABLE_MIGRATION
-			? [ createChildRoute( '/migrate', MigrationRoute ) ]
+			? [
+					createChildRoute( '/migrate', MigrationRoute, [], {
+						capability: 'manage_options',
+					} ),
+			  ]
 			: [] ),
-		createChildRoute( '/miscellaneous', MiscellaneousRoute ),
+		createChildRoute( '/miscellaneous', MiscellaneousRoute, [], {
+			capability: 'manage_options',
+		} ),
+		createChildRoute( '/role-manager', RoleManager, [], {
+			capability: 'manage_options',
+		} ),
 	] ),
 ];
-
 // Combine all routes
-const baseRoutes = [
+const baseRoutes = filterFalsyRoutes( [
 	...dashboardRoutes,
 	...generalAndAdvancedRoutes,
 	...instantIndexingRoutes,
@@ -169,9 +257,11 @@ const baseRoutes = [
 	...siteSeoAnalysisRoutes,
 	// Conditionally include search console routes
 	...( ENABLE_GOOGLE_CONSOLE ? searchConsoleRoutes : [] ),
-];
+] );
 
-const filteredRoutes = applyFilters( 'surerank-pro.routes', [ ...baseRoutes ] );
+const filteredRoutes = filterFalsyRoutes(
+	applyFilters( 'surerank-pro.routes', [ ...baseRoutes ] )
+);
 
 const routeMap = new Map();
 
@@ -181,13 +271,16 @@ filteredRoutes.forEach( ( route ) => {
 
 export const routes = Array.from( routeMap.values() );
 
-// Navigation Links
-export const navLinks = getNavLinks();
+// Navigation Links - filter based on available routes
+const rawNavLinks = getNavLinks();
+const routePaths = buildRoutePathMap( routes );
+export const navLinks = filterNavLinksByRoutes( rawNavLinks, routePaths );
 
 // Create router using the original createAdminRouter but with custom layout
 const Router = createAdminRouter( {
 	navLinks,
 	routes,
+	notFoundComponent: NotFound,
 	defaultLayout: {
 		component: SidebarLayout,
 		props: {},

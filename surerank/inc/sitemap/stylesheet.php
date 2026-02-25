@@ -66,12 +66,13 @@ class Stylesheet {
 						}
 						table {
 							width: 100%;
+							table-layout: fixed;
 							border-collapse: separate;
 							border-spacing: 0;
 							background-color: #fff;
 							border-radius: 8px;
 							box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
-							border: 1px solid #E5E7EB;				
+							border: 1px solid #E5E7EB;
 						}
 						th, td {
 							padding: 12px;
@@ -94,7 +95,7 @@ class Stylesheet {
 							font-weight: 400;
 							border-top: 1px solid #E5E7EB;
 							border-radius: 0px 0px 8px 8px;
-
+							word-break: break-word;
 						}
 						td a {
 							color: #4330D2;

@@ -357,7 +357,6 @@ const Properties = ( { schema, type, handleFieldUpdate, schemaId } ) => {
 										tag="span"
 										size="sm"
 										className="space-x-0.5"
-										required={ field.required }
 									>
 										<span>{ field.label }</span>
 									</Label>

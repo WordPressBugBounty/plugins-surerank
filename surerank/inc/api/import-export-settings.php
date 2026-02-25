@@ -199,6 +199,7 @@ class Import_Export_Settings extends Api_Base {
 						'sanitize_callback' => [ $this, 'sanitize_categories' ],
 					],
 				],
+				'role_capability'     => 'global_setting',
 			]
 		);
 	}
@@ -224,6 +225,7 @@ class Import_Export_Settings extends Api_Base {
 						'sanitize_callback' => [ $this, 'sanitize_array_data' ],
 					],
 				],
+				'role_capability'     => 'global_setting',
 			]
 		);
 	}

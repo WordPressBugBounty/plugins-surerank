@@ -15,8 +15,8 @@ msgstr ""
 
 #. Author of the plugin
 #: surerank.php
-#: inc/admin/dashboard.php:243
-#: inc/admin/dashboard.php:244
+#: inc/admin/dashboard.php:245
+#: inc/admin/dashboard.php:246
 #: inc/nps-notice.php:90
 msgid "SureRank"
 msgstr "SureRank"
@@ -31,13 +31,13 @@ msgstr "https://surerank.com"
 msgid "https://surerank.com/"
 msgstr "https://surerank.com/"
 
-#: inc/admin/dashboard.php:270
+#: inc/admin/dashboard.php:272
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Dashboard"
 msgstr "Tableau de bord"
 
-#: inc/admin/dashboard.php:274
+#: inc/admin/dashboard.php:276
 #: inc/schema/types/organization.php:678
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
@@ -45,7 +45,7 @@ msgstr "Tableau de bord"
 msgid "General"
 msgstr "Général"
 
-#: inc/admin/dashboard.php:278
+#: inc/admin/dashboard.php:280
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 #: build/seo-popup/index.js:1
@@ -136,14 +136,14 @@ msgstr "Échec du chargement du DOM pour analyse."
 
 #: inc/analyzer/seo-analyzer.php:194
 #: inc/analyzer/seo-analyzer.php:196
-#: inc/analyzer/seo-analyzer.php:1421
+#: inc/analyzer/seo-analyzer.php:1449
 msgid "Search engine title is missing on the homepage."
 msgstr "Le titre du moteur de recherche est manquant sur la page d'accueil."
 
 #: inc/analyzer/seo-analyzer.php:299
 #: inc/analyzer/seo-analyzer.php:301
-#: inc/analyzer/seo-analyzer.php:1447
-#: inc/analyzer/seo-analyzer.php:1460
+#: inc/analyzer/seo-analyzer.php:1475
+#: inc/analyzer/seo-analyzer.php:1488
 msgid "Search engine description is missing on the homepage."
 msgstr "La description du moteur de recherche est manquante sur la page d'accueil."
 
@@ -219,35 +219,35 @@ msgstr "La page d'accueil se charge correctement."
 msgid "Home Page is not loading correctly."
 msgstr "La page d'accueil ne se charge pas correctement."
 
-#: inc/analyzer/seo-analyzer.php:954
+#: inc/analyzer/seo-analyzer.php:955
 msgid "Site is served over a secure HTTPS connection."
 msgstr "Le site est servi via une connexion HTTPS sécurisée."
 
-#: inc/analyzer/seo-analyzer.php:955
+#: inc/analyzer/seo-analyzer.php:956
 msgid "Site is not served over a secure HTTPS connection."
 msgstr "Le site n'est pas servi via une connexion HTTPS sécurisée."
 
-#: inc/analyzer/seo-analyzer.php:1030
+#: inc/analyzer/seo-analyzer.php:1032
 msgid "Open Graph tags are present on your homepage."
 msgstr "Les balises Open Graph sont présentes sur votre page d'accueil."
 
-#: inc/analyzer/seo-analyzer.php:1031
+#: inc/analyzer/seo-analyzer.php:1033
 msgid "Open Graph tags are not present on your homepage."
 msgstr "Les balises Open Graph ne sont pas présentes sur votre page d'accueil."
 
-#: inc/analyzer/seo-analyzer.php:1144
+#: inc/analyzer/seo-analyzer.php:1146
 msgid "Structured data (schema) is present on the home page."
 msgstr "Les données structurées (schéma) sont présentes sur la page d'accueil."
 
-#: inc/analyzer/seo-analyzer.php:1145
+#: inc/analyzer/seo-analyzer.php:1147
 msgid "Structured data (schema) is not present on the home page."
 msgstr "Les données structurées (schéma) ne sont pas présentes sur la page d'accueil."
 
-#: inc/analyzer/seo-analyzer.php:1292
+#: inc/analyzer/seo-analyzer.php:1294
 msgid "Site correctly redirects between www and non-www versions."
 msgstr "Le site redirige correctement entre les versions www et non-www."
 
-#: inc/analyzer/seo-analyzer.php:1389
+#: inc/analyzer/seo-analyzer.php:1417
 msgid "Invalid URL."
 msgstr "URL invalide."
 
@@ -256,7 +256,7 @@ msgstr "URL invalide."
 msgid "Search engine title exceeds %1$d characters."
 msgstr "Le titre du moteur de recherche dépasse %1$d caractères."
 
-#: inc/analyzer/seo-analyzer.php:1434
+#: inc/analyzer/seo-analyzer.php:1462
 msgid "Search engine title is present and under 60 characters."
 msgstr "Le titre du moteur de recherche est présent et fait moins de 60 caractères."
 
@@ -346,8 +346,8 @@ msgstr "Le sitemap XML n'est pas accessible aux moteurs de recherche."
 msgid "Post not found"
 msgstr "Publication non trouvée"
 
-#: inc/api/analyzer.php:2076
-#: inc/api/analyzer.php:2099
+#: inc/api/analyzer.php:2087
+#: inc/api/analyzer.php:2110
 msgid "Link is broken"
 msgstr "Le lien est cassé"
 
@@ -355,31 +355,31 @@ msgstr "Le lien est cassé"
 msgid "Link is not broken"
 msgstr "Le lien n'est pas cassé"
 
-#: inc/api/api-base.php:62
+#: inc/api/api-base.php:98
 msgid "You do not have permission to perform this action."
 msgstr "Vous n'avez pas la permission d'effectuer cette action."
 
-#: inc/api/api-base.php:73
+#: inc/api/api-base.php:66
 msgid "Nonce is missing."
 msgstr "Le nonce est manquant."
 
-#: inc/api/api-base.php:82
+#: inc/api/api-base.php:75
 msgid "Nonce is invalid."
 msgstr "Le nonce est invalide."
 
-#: inc/api/api-base.php:125
+#: inc/api/api-base.php:157
 msgid "Sample Post"
 msgstr "Publication d'exemple"
 
-#: inc/api/onboarding.php:241
+#: inc/api/onboarding.php:286
 msgid "Invalid data provided"
 msgstr "Données invalides fournies"
 
-#: inc/api/onboarding.php:245
+#: inc/api/onboarding.php:290
 msgid "Settings updated successfully"
 msgstr "Paramètres mis à jour avec succès"
 
-#: inc/api/onboarding.php:250
+#: inc/api/onboarding.php:295
 msgid "Failed to update settings"
 msgstr "Échec de la mise à jour des paramètres"
 
@@ -393,15 +393,15 @@ msgstr "Erreur lors de l'exécution des vérifications SEO."
 msgid "Data updated"
 msgstr "Données mises à jour"
 
-#: inc/api/post.php:430
+#: inc/api/post.php:433
 msgid "Author pages"
 msgstr "Pages d'auteur"
 
-#: inc/api/post.php:434
+#: inc/api/post.php:437
 msgid "Date archives"
 msgstr "Archives par date"
 
-#: inc/api/post.php:437
+#: inc/api/post.php:440
 msgid "Search pages"
 msgstr "Pages de recherche"
 
@@ -521,14 +521,14 @@ msgstr "ID"
 msgid "The unique identifier for a post."
 msgstr "L'identifiant unique d'un article."
 
-#: inc/admin/dashboard.php:629
+#: inc/admin/dashboard.php:633
 #: inc/meta-variables/post.php:65
 #: inc/schema/variables.php:83
 #: build/admin-dashboard/index.js:1
 msgid "Post Title"
 msgstr "Titre de l'article"
 
-#: inc/admin/dashboard.php:631
+#: inc/admin/dashboard.php:635
 #: inc/meta-variables/post.php:66
 msgid "The title of the post."
 msgstr "Le titre de l'article."
@@ -537,7 +537,7 @@ msgstr "Le titre de l'article."
 msgid "Excerpt"
 msgstr "Extrait"
 
-#: inc/admin/dashboard.php:636
+#: inc/admin/dashboard.php:640
 #: inc/meta-variables/post.php:70
 msgid "The excerpt of the post."
 msgstr "L'extrait de l'article."
@@ -546,7 +546,7 @@ msgstr "L'extrait de l'article."
 msgid "Content"
 msgstr "Contenu"
 
-#: inc/admin/dashboard.php:641
+#: inc/admin/dashboard.php:645
 #: inc/meta-variables/post.php:74
 msgid "The content of the post."
 msgstr "Le contenu de l'article."
@@ -571,12 +571,12 @@ msgstr "Séparateur"
 msgid "Site Tagline"
 msgstr "Slogan du site"
 
-#: inc/admin/dashboard.php:621
+#: inc/admin/dashboard.php:625
 #: inc/meta-variables/site.php:65
 msgid "The tagline of the site."
 msgstr "Le slogan du site."
 
-#: inc/admin/dashboard.php:614
+#: inc/admin/dashboard.php:618
 #: inc/meta-variables/site.php:68
 #: build/admin-dashboard/index.js:1
 msgid "Site Name"
@@ -612,7 +612,7 @@ msgstr "L'identifiant unique d'un terme."
 msgid "Term Name"
 msgstr "Nom du terme"
 
-#: inc/admin/dashboard.php:626
+#: inc/admin/dashboard.php:630
 #: inc/meta-variables/term.php:63
 msgid "The name of the term."
 msgstr "Le nom du terme."
@@ -626,7 +626,7 @@ msgstr "Le nom du terme."
 msgid "Description"
 msgstr "Description"
 
-#: inc/admin/dashboard.php:646
+#: inc/admin/dashboard.php:650
 #: inc/meta-variables/term.php:67
 msgid "The description of the term."
 msgstr "La description du terme."
@@ -2435,17 +2435,17 @@ msgstr "Une image miniature pertinente pour le site Web."
 msgid "Post ID"
 msgstr "ID de publication"
 
-#: inc/admin/dashboard.php:634
+#: inc/admin/dashboard.php:638
 #: inc/schema/variables.php:85
 msgid "Post Excerpt"
 msgstr "Extrait de publication"
 
-#: inc/admin/dashboard.php:639
+#: inc/admin/dashboard.php:643
 #: inc/schema/variables.php:86
 msgid "Post Content"
 msgstr "Contenu de la publication"
 
-#: inc/admin/dashboard.php:659
+#: inc/admin/dashboard.php:663
 #: inc/schema/variables.php:87
 msgid "Post URL"
 msgstr "URL de la publication"
@@ -2494,7 +2494,7 @@ msgstr "Slug de terme"
 msgid "Term Taxonomy"
 msgstr "Taxonomie de terme"
 
-#: inc/admin/dashboard.php:644
+#: inc/admin/dashboard.php:648
 #: inc/schema/variables.php:115
 msgid "Term Description"
 msgstr "Description de terme"
@@ -2650,12 +2650,12 @@ msgstr "Corriger les problèmes SEO avec l'IA"
 msgid "Fix It for Me"
 msgstr "Corrigez-le pour moi"
 
-#: inc/admin/dashboard.php:619
+#: inc/admin/dashboard.php:623
 #: build/admin-dashboard/index.js:1
 msgid "Tagline"
 msgstr "Slogan"
 
-#: inc/admin/dashboard.php:624
+#: inc/admin/dashboard.php:628
 msgid "Term Title"
 msgstr "Titre de terme"
 
@@ -2913,7 +2913,7 @@ msgstr "Réussi"
 msgid "Settings"
 msgstr "Paramètres"
 
-#: inc/admin/seo-popup.php:140
+#: inc/admin/seo-popup.php:144
 #: build/bricks/index.js:1
 #: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
@@ -3022,11 +3022,11 @@ msgstr "L'URL de la page est courte et conviviale pour le SEO."
 msgid "Page URL is longer than %s characters and may affect SEO and readability."
 msgstr "L'URL de la page est plus longue que %s caractères et peut affecter le SEO et la lisibilité."
 
-#: inc/api/analyzer.php:1701
+#: inc/api/analyzer.php:1712
 msgid "These broken links were found on the page: "
 msgstr "Ces liens brisés ont été trouvés sur la page :"
 
-#: inc/api/analyzer.php:1706
+#: inc/api/analyzer.php:1717
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
@@ -3839,22 +3839,22 @@ msgid "Page does not contain at least one subheading."
 msgstr "La page ne contient pas au moins un sous-titre."
 
 #. translators: %1$d is the maximum recommended length of the title.
-#: inc/analyzer/seo-analyzer.php:1426
+#: inc/analyzer/seo-analyzer.php:1454
 #, php-format
 msgid "Search engine title of the home page exceeds %1$d characters."
 msgstr "Le titre du moteur de recherche de la page d'accueil dépasse %1$d caractères."
 
-#: inc/analyzer/seo-analyzer.php:1431
+#: inc/analyzer/seo-analyzer.php:1459
 msgid "Search engine title of the home page is present and under 60 characters."
 msgstr "Le titre du moteur de recherche de la page d'accueil est présent et fait moins de 60 caractères."
 
 #. translators: %1$d is the maximum length of the meta description.
-#: inc/analyzer/seo-analyzer.php:1452
+#: inc/analyzer/seo-analyzer.php:1480
 #, php-format
 msgid "Search engine description of the home page exceeds %1$d characters."
 msgstr "La description du moteur de recherche de la page d'accueil dépasse %1$d caractères."
 
-#: inc/analyzer/seo-analyzer.php:1457
+#: inc/analyzer/seo-analyzer.php:1485
 msgid "Search engine description of the home page is present and under 160 characters."
 msgstr "La description du moteur de recherche de la page d'accueil est présente et fait moins de 160 caractères."
 
@@ -3926,119 +3926,119 @@ msgstr "Taxonomies"
 msgid "Archives"
 msgstr "Archives"
 
-#: inc/admin/dashboard.php:616
+#: inc/admin/dashboard.php:620
 msgid "The name of the site."
 msgstr "Le nom du site."
 
-#: inc/admin/dashboard.php:649
+#: inc/admin/dashboard.php:653
 #: inc/meta-variables/post.php:81
 msgid "Date Published"
 msgstr "Date de publication"
 
-#: inc/admin/dashboard.php:651
+#: inc/admin/dashboard.php:655
 #: inc/meta-variables/post.php:82
 msgid "Publication date of the current post/page OR specified date on date archives"
 msgstr "Date de publication de l'article/page actuel OU date spécifiée dans les archives de date"
 
-#: inc/admin/dashboard.php:654
+#: inc/admin/dashboard.php:658
 #: inc/meta-variables/post.php:85
 msgid "Date Modified"
 msgstr "Date de modification"
 
-#: inc/admin/dashboard.php:656
+#: inc/admin/dashboard.php:660
 #: inc/meta-variables/post.php:86
 msgid "Last modification date of the current post/page"
 msgstr "Date de dernière modification de l'article/page actuel"
 
-#: inc/admin/dashboard.php:661
+#: inc/admin/dashboard.php:665
 msgid "URL of the current post/page"
 msgstr "URL de l'article/page actuel"
 
-#: inc/admin/dashboard.php:664
+#: inc/admin/dashboard.php:668
 #: inc/meta-variables/site.php:84
 msgid "Current Date"
 msgstr "Date actuelle"
 
-#: inc/admin/dashboard.php:666
+#: inc/admin/dashboard.php:670
 #: inc/meta-variables/site.php:85
 msgid "Current server date"
 msgstr "Date du serveur actuel"
 
-#: inc/admin/dashboard.php:669
+#: inc/admin/dashboard.php:673
 #: inc/meta-variables/site.php:88
 msgid "Current Day"
 msgstr "Jour actuel"
 
-#: inc/admin/dashboard.php:671
+#: inc/admin/dashboard.php:675
 #: inc/meta-variables/site.php:89
 msgid "Current server day"
 msgstr "Jour du serveur actuel"
 
-#: inc/admin/dashboard.php:674
+#: inc/admin/dashboard.php:678
 #: inc/meta-variables/site.php:92
 msgid "Current Month"
 msgstr "Mois actuel"
 
-#: inc/admin/dashboard.php:676
+#: inc/admin/dashboard.php:680
 #: inc/meta-variables/site.php:93
 msgid "Current server month"
 msgstr "Mois du serveur actuel"
 
-#: inc/admin/dashboard.php:679
+#: inc/admin/dashboard.php:683
 #: inc/meta-variables/site.php:96
 msgid "Current Year"
 msgstr "Année actuelle"
 
-#: inc/admin/dashboard.php:681
+#: inc/admin/dashboard.php:685
 #: inc/meta-variables/site.php:97
 msgid "Current server year"
 msgstr "Année du serveur actuel"
 
-#: inc/admin/dashboard.php:684
+#: inc/admin/dashboard.php:688
 #: inc/meta-variables/site.php:100
 msgid "Current Time"
 msgstr "Heure actuelle"
 
-#: inc/admin/dashboard.php:686
+#: inc/admin/dashboard.php:690
 #: inc/meta-variables/site.php:101
 msgid "Current server time"
 msgstr "Heure du serveur actuel"
 
-#: inc/admin/dashboard.php:689
+#: inc/admin/dashboard.php:693
 #: inc/meta-variables/site.php:104
 msgid "Organization Name"
 msgstr "Nom de l'organisation"
 
-#: inc/admin/dashboard.php:691
+#: inc/admin/dashboard.php:695
 #: inc/meta-variables/site.php:105
 msgid "The Organization Name added in Local SEO Settings."
 msgstr "Le nom de l'organisation ajouté dans les paramètres SEO locaux."
 
-#: inc/admin/dashboard.php:694
+#: inc/admin/dashboard.php:698
 #: inc/meta-variables/site.php:108
 msgid "Organization Logo"
 msgstr "Logo de l'organisation"
 
-#: inc/admin/dashboard.php:696
+#: inc/admin/dashboard.php:700
 #: inc/meta-variables/site.php:109
 msgid "Organization Logo added in Local SEO Settings."
 msgstr "Logo de l'organisation ajouté dans les paramètres SEO locaux."
 
-#: inc/admin/dashboard.php:699
+#: inc/admin/dashboard.php:703
 #: inc/meta-variables/site.php:112
 msgid "Organization URL"
 msgstr "URL de l'organisation"
 
-#: inc/admin/dashboard.php:701
+#: inc/admin/dashboard.php:705
 #: inc/meta-variables/site.php:113
 msgid "Organization URL added in Local SEO Settings."
 msgstr "URL de l'organisation ajoutée dans les paramètres SEO locaux."
 
-#: inc/admin/dashboard.php:704
+#: inc/admin/dashboard.php:708
 msgid "Post Author Name"
 msgstr "Nom de l'auteur du post"
 
-#: inc/admin/dashboard.php:706
+#: inc/admin/dashboard.php:710
 msgid "Display author's nicename of the current post, page or author archive."
 msgstr "Afficher le nom d'utilisateur de l'auteur de l'article, de la page ou de l'archive d'auteur actuel."
 
@@ -4165,7 +4165,7 @@ msgstr "Ajoute des données structurées à votre contenu afin que les moteurs d
 #: inc/analyzer/seo-analyzer.php:701
 #: inc/analyzer/seo-analyzer.php:790
 #: inc/analyzer/seo-analyzer.php:890
-#: inc/analyzer/seo-analyzer.php:1580
+#: inc/analyzer/seo-analyzer.php:1608
 #: inc/api/analyzer.php:620
 #: inc/api/analyzer.php:767
 #: inc/api/analyzer.php:947
@@ -4184,8 +4184,8 @@ msgstr "Comment ça marche"
 msgid "Trusted by 100+ Clients"
 msgstr "Fiable par plus de 100 clients"
 
-#: inc/api/analyzer.php:1916
-#: inc/api/analyzer.php:1939
+#: inc/api/analyzer.php:1927
+#: inc/api/analyzer.php:1950
 msgid "Type of check to delete. Can be \"post\" or \"taxonomy\"."
 msgstr "Type de vérification à supprimer. Peut être « post » ou « taxonomie »."
 
@@ -4215,27 +4215,27 @@ msgstr "Vérifications ignorées récupérées."
 msgid "Currently active plugins : %s"
 msgstr "Plugins actuellement actifs : %s"
 
-#: inc/api/onboarding.php:61
+#: inc/api/onboarding.php:74
 msgid "Type of the website."
 msgstr "Type de site web."
 
-#: inc/api/onboarding.php:70
+#: inc/api/onboarding.php:83
 msgid "Name of the website."
 msgstr "Nom du site web."
 
-#: inc/api/onboarding.php:88
+#: inc/api/onboarding.php:101
 msgid "Name of the website owner."
 msgstr "Nom du propriétaire du site web."
 
-#: inc/api/onboarding.php:97
+#: inc/api/onboarding.php:110
 msgid "Phone number of the website owner."
 msgstr "Numéro de téléphone du propriétaire du site web."
 
-#: inc/api/onboarding.php:106
+#: inc/api/onboarding.php:119
 msgid "Type of the organization."
 msgstr "Type d'organisation."
 
-#: inc/api/onboarding.php:126
+#: inc/api/onboarding.php:139
 msgid "Social profiles URLs."
 msgstr "URLs des profils sociaux."
 
@@ -4276,7 +4276,7 @@ msgstr "Modèles Meta"
 msgid "Suggestion"
 msgstr "Suggestion"
 
-#: inc/admin/dashboard.php:285
+#: inc/admin/dashboard.php:287
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Search Console"
@@ -4307,7 +4307,7 @@ msgstr "La page ne contient aucun sous-titre."
 msgid "Home Page does not contain internal links to other pages on the site."
 msgstr "La page d'accueil ne contient pas de liens internes vers d'autres pages du site."
 
-#: inc/analyzer/seo-analyzer.php:1293
+#: inc/analyzer/seo-analyzer.php:1295
 msgid "Site does not correctly redirect between www and non-www versions."
 msgstr "Le site ne redirige pas correctement entre les versions www et non-www."
 
@@ -4317,7 +4317,7 @@ msgstr "Le site ne redirige pas correctement entre les versions www et non-www."
 msgid "Another SEO plugin, %s, detected on the site."
 msgstr "Un autre plugin SEO, %s, détecté sur le site."
 
-#: inc/admin/dashboard.php:296
+#: inc/admin/dashboard.php:298
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Tools"
@@ -4328,98 +4328,98 @@ msgid "Post IDs to migrate."
 msgstr "ID des articles à migrer."
 
 #: inc/api/migrations.php:125
-#: inc/api/migrations.php:180
+#: inc/api/migrations.php:182
 msgid "Whether to clean up source data after import."
 msgstr "Nettoyer les données source après l'importation."
 
-#: inc/api/migrations.php:138
-#: inc/api/migrations.php:193
+#: inc/api/migrations.php:139
+#: inc/api/migrations.php:196
 msgid "Page number for pagination."
 msgstr "Numéro de page pour la pagination."
 
-#: inc/api/migrations.php:173
+#: inc/api/migrations.php:175
 msgid "Term IDs to migrate."
 msgstr "ID des termes à migrer."
 
-#: inc/api/migrations.php:228
+#: inc/api/migrations.php:232
 msgid "Whether to clean up source global data after import."
 msgstr "Nettoyer les données globales source après l'importation."
 
-#: inc/api/migrations.php:246
+#: inc/api/migrations.php:251
 msgid "Plugin slug to deactivate."
 msgstr "Slug du plugin à désactiver."
 
-#: inc/api/migrations.php:315
-#: inc/api/migrations.php:341
+#: inc/api/migrations.php:323
+#: inc/api/migrations.php:349
 msgid "Invalid importer methods."
 msgstr "Méthodes d'importation invalides."
 
-#: inc/api/migrations.php:392
+#: inc/api/migrations.php:400
 msgid "Invalid response from importer."
 msgstr "Réponse invalide de l'importateur."
 
 #. translators: 1: import status, 2: plugin name
-#: inc/api/migrations.php:410
+#: inc/api/migrations.php:418
 #, php-format
 msgid "Global settings %1$s from %2$s."
 msgstr "Paramètres globaux %1$s de %2$s."
 
-#: inc/api/migrations.php:411
+#: inc/api/migrations.php:419
 msgid "imported successfully"
 msgstr "importé avec succès"
 
-#: inc/api/migrations.php:411
+#: inc/api/migrations.php:419
 msgid "failed to import"
 msgstr "échec de l'importation"
 
-#: inc/api/migrations.php:490
+#: inc/api/migrations.php:498
 msgid "No public taxonomies found."
 msgstr "Aucune taxonomie publique trouvée."
 
-#: inc/api/migrations.php:615
+#: inc/api/migrations.php:623
 msgid "You do not have permission to deactivate plugins."
 msgstr "Vous n'avez pas la permission de désactiver les plugins."
 
-#: inc/api/migrations.php:621
+#: inc/api/migrations.php:629
 msgid "Plugin not found."
 msgstr "Plugin non trouvé."
 
-#: inc/api/migrations.php:625
+#: inc/api/migrations.php:633
 msgid "Plugin is already inactive."
 msgstr "Le plugin est déjà inactif."
 
-#: inc/api/migrations.php:633
+#: inc/api/migrations.php:641
 msgid "Plugin deactivated successfully."
 msgstr "Plugin désactivé avec succès."
 
-#: inc/api/migrations.php:1039
+#: inc/api/migrations.php:1047
 msgid "Invalid plugin slug specified."
 msgstr "Slug de plugin spécifié invalide."
 
-#: inc/api/migrations.php:1140
+#: inc/api/migrations.php:1148
 msgid "No data found for this item."
 msgstr "Aucune donnée trouvée pour cet élément."
 
-#: inc/api/migrations.php:1146
+#: inc/api/migrations.php:1154
 msgid "Detection failed."
 msgstr "Échec de la détection."
 
-#: inc/api/migrations.php:1153
+#: inc/api/migrations.php:1161
 msgid "Invalid import response."
 msgstr "Réponse d'importation invalide."
 
-#: inc/api/migrations.php:1162
+#: inc/api/migrations.php:1170
 msgid "Import failed."
 msgstr "Échec de l'importation."
 
 #. translators: %s: error message.
-#: inc/api/migrations.php:1167
+#: inc/api/migrations.php:1175
 #, php-format
 msgid "Error: %s"
 msgstr "Erreur : %s"
 
 #. translators: 1: imported count, 2: total count, 3: item type, 4: plugin name.
-#: inc/api/migrations.php:1210
+#: inc/api/migrations.php:1218
 #, php-format
 msgid "Imported %1$d of %2$d %3$s from %4$s."
 msgstr "Importé %1$d sur %2$d %3$s de %4$s."
@@ -4939,7 +4939,7 @@ msgid "Done"
 msgstr "Terminé"
 
 #: inc/analyzer/utils.php:252
-#: inc/api/analyzer.php:1681
+#: inc/api/analyzer.php:1692
 msgid "The link is broken."
 msgstr "Le lien est cassé."
 
@@ -5043,8 +5043,8 @@ msgstr "Pas de suivi -"
 msgid "No Archive -"
 msgstr "Pas d'archivage -"
 
-#: inc/admin/seo-bar.php:120
-#: inc/admin/seo-bar.php:140
+#: inc/admin/seo-bar.php:121
+#: inc/admin/seo-bar.php:141
 #: build/admin-seo-bar/index.js:1
 msgid "SEO Checks"
 msgstr "Vérifications SEO"
@@ -5061,160 +5061,160 @@ msgstr "Échec de l'exportation : %s"
 msgid "Import failed: %s"
 msgstr "Échec de l'importation : %s"
 
-#: inc/api/migrations.php:265
+#: inc/api/migrations.php:271
 msgid "Plugin slug that was migrated from."
 msgstr "Slug du plugin qui a été migré."
 
 #. translators: %s: importer class name
 #. translators: %s: importer class name.
-#: inc/api/migrations.php:376
-#: inc/api/migrations.php:1056
+#: inc/api/migrations.php:384
+#: inc/api/migrations.php:1064
 #, php-format
 msgid "Invalid importer class: %s does not implement Importer."
 msgstr "Classe d'importeur invalide : %s ne met pas en œuvre Importer."
 
-#: inc/api/migrations.php:647
+#: inc/api/migrations.php:655
 msgid "Invalid plugin slug."
 msgstr "Slug du plugin invalide."
 
 #. translators: %s: plugin slug.
-#: inc/api/migrations.php:660
+#: inc/api/migrations.php:668
 #, php-format
 msgid "Migration from %s marked as completed successfully."
 msgstr "Migration depuis %s marquée comme terminée avec succès."
 
-#: inc/api/migrations.php:760
+#: inc/api/migrations.php:768
 msgid "WP Rocket"
 msgstr "WP Rocket"
 
-#: inc/api/migrations.php:766
+#: inc/api/migrations.php:774
 msgid "FlyingPress"
 msgstr "FlyingPress"
 
-#: inc/api/migrations.php:772
+#: inc/api/migrations.php:780
 msgid "NitroPack"
 msgstr "NitroPack"
 
-#: inc/api/migrations.php:778
+#: inc/api/migrations.php:786
 msgid "WP-Optimize Premium"
 msgstr "WP-Optimize Premium"
 
-#: inc/api/migrations.php:784
+#: inc/api/migrations.php:792
 msgid "Swift Performance"
 msgstr "Swift Performance"
 
-#: inc/api/migrations.php:792
+#: inc/api/migrations.php:800
 msgid "LiteSpeed Cache"
 msgstr "LiteSpeed Cache"
 
-#: inc/api/migrations.php:798
+#: inc/api/migrations.php:806
 msgid "W3 Total Cache"
 msgstr "W3 Total Cache"
 
-#: inc/api/migrations.php:804
+#: inc/api/migrations.php:812
 msgid "WP Super Cache"
 msgstr "WP Super Cache"
 
-#: inc/api/migrations.php:810
+#: inc/api/migrations.php:818
 msgid "WP Fastest Cache"
 msgstr "WP Fastest Cache"
 
-#: inc/api/migrations.php:816
+#: inc/api/migrations.php:824
 msgid "WP-Optimize"
 msgstr "WP-Optimize"
 
-#: inc/api/migrations.php:822
+#: inc/api/migrations.php:830
 msgid "Breeze"
 msgstr "Breeze"
 
-#: inc/api/migrations.php:828
+#: inc/api/migrations.php:836
 msgid "Cache Enabler"
 msgstr "Cache Enabler"
 
-#: inc/api/migrations.php:834
+#: inc/api/migrations.php:842
 msgid "Comet Cache"
 msgstr "Comet Cache"
 
-#: inc/api/migrations.php:840
+#: inc/api/migrations.php:848
 msgid "Swift Performance Lite"
 msgstr "Swift Performance Lite"
 
-#: inc/api/migrations.php:848
+#: inc/api/migrations.php:856
 msgid "Redis Object Cache"
 msgstr "Redis Object Cache"
 
-#: inc/api/migrations.php:856
+#: inc/api/migrations.php:864
 msgid "Hummingbird Performance"
 msgstr "Hummingbird Performance"
 
-#: inc/api/migrations.php:862
+#: inc/api/migrations.php:870
 msgid "Autoptimize"
 msgstr "Autoptimize"
 
-#: inc/api/migrations.php:868
+#: inc/api/migrations.php:876
 msgid "SiteGround Speed Optimizer"
 msgstr "SiteGround Speed Optimizer"
 
-#: inc/api/migrations.php:874
+#: inc/api/migrations.php:882
 msgid "Cloudflare"
 msgstr "Cloudflare"
 
-#: inc/api/migrations.php:880
+#: inc/api/migrations.php:888
 msgid "Hyper Cache"
 msgstr "Hyper Cache"
 
-#: inc/api/migrations.php:886
+#: inc/api/migrations.php:894
 msgid "Perfmatters"
 msgstr "Perfmatters"
 
-#: inc/api/migrations.php:894
+#: inc/api/migrations.php:902
 msgid "SpeedyCache"
 msgstr "SpeedyCache"
 
-#: inc/api/migrations.php:900
+#: inc/api/migrations.php:908
 msgid "Docket Cache"
 msgstr "Docket Cache"
 
-#: inc/api/migrations.php:906
+#: inc/api/migrations.php:914
 msgid "10Web Booster"
 msgstr "10Web Booster"
 
-#: inc/api/migrations.php:912
+#: inc/api/migrations.php:920
 msgid "Super Page Cache"
 msgstr "Super Page Cache"
 
-#: inc/api/migrations.php:918
+#: inc/api/migrations.php:926
 msgid "WP REST Cache"
 msgstr "WP REST Cache"
 
-#: inc/api/migrations.php:924
+#: inc/api/migrations.php:932
 msgid "Cache Control"
 msgstr "Contrôle du cache"
 
-#: inc/api/migrations.php:932
+#: inc/api/migrations.php:940
 msgid "Aruba HiSpeed Cache"
 msgstr "Aruba HiSpeed Cache"
 
-#: inc/api/migrations.php:938
+#: inc/api/migrations.php:946
 msgid "atec Cache APCu"
 msgstr "atec Cache APCu"
 
 #. translators: 1: detection method, 2: detection value
-#: inc/api/migrations.php:974
+#: inc/api/migrations.php:982
 #, php-format
 msgid "Detected via %1$s: %2$s"
 msgstr "Détecté via %1$s : %2$s"
 
-#: inc/api/sitemap.php:156
+#: inc/api/sitemap.php:159
 msgid "Sitemap cache generation has started."
 msgstr "La génération du cache du sitemap a commencé."
 
-#: inc/api/sitemap.php:157
+#: inc/api/sitemap.php:160
 msgid "This may take up to 5 minutes, please wait before checking the sitemap."
 msgstr "Cela peut prendre jusqu'à 5 minutes, veuillez attendre avant de vérifier le sitemap."
 
 #. translators: %s: Error message
-#: inc/api/sitemap.php:173
+#: inc/api/sitemap.php:176
 #, php-format
 msgid "Failed to start cache generation: %s"
 msgstr "Échec du démarrage de la génération du cache : %s"
@@ -5607,25 +5607,25 @@ msgstr "SureRank SEO"
 
 #. translators: %s: list of plugin slugs
 #: inc/api/migrations.php:112
-#: inc/api/migrations.php:167
+#: inc/api/migrations.php:169
 #, php-format
 msgid "Plugin slug to migrate from (e.g. %s)."
 msgstr "Slug du plugin à migrer depuis (par ex. %s)."
 
 #. translators: %s: list of plugin slugs
-#: inc/api/migrations.php:144
+#: inc/api/migrations.php:145
 #, php-format
 msgid "Plugin slug to filter posts by (e.g. %s)."
 msgstr "Slug du plugin pour filtrer les publications (par ex. %s)."
 
 #. translators: %s: list of plugin slugs
-#: inc/api/migrations.php:200
+#: inc/api/migrations.php:203
 #, php-format
 msgid "Plugin slug to filter terms by (e.g. %s)."
 msgstr "Slug du plugin pour filtrer les termes (par ex. %s)."
 
 #. translators: %s: list of plugin slugs
-#: inc/api/migrations.php:221
+#: inc/api/migrations.php:225
 #, php-format
 msgid "Plugin slug to migrate global settings from (e.g. %s)."
 msgstr "Slug du plugin pour migrer les paramètres globaux (par ex. %s)."
@@ -5804,7 +5804,7 @@ msgstr "Vérifications de la page"
 msgid "SEO analysis is not available for this page."
 msgstr "L'analyse SEO n'est pas disponible pour cette page."
 
-#: inc/admin/seo-popup.php:144
+#: inc/admin/seo-popup.php:148
 #: build/seo-popup/index.js:1
 msgid "Open SureRank Meta Box"
 msgstr "Ouvrir la boîte à outils SureRank"
@@ -6048,18 +6048,18 @@ msgstr "Aucune donnée trouvée pour la clé fournie"
 msgid "Type of content to generate: page title, page description, social title, social description"
 msgstr "Type de contenu à générer : titre de la page, description de la page, titre social, description sociale"
 
-#: inc/modules/content-generation/api.php:116
+#: inc/modules/content-generation/api.php:117
 msgid "Invalid Content Type"
 msgstr "Type de contenu invalide"
 
 #. translators: %1$s: Valid content types
-#: inc/modules/content-generation/api.php:118
+#: inc/modules/content-generation/api.php:119
 #, php-format
 msgid "The content type needs to be one of these types: \"%1$s\""
 msgstr "Le type de contenu doit être l'un de ces types : \"%1$s\""
 
-#: inc/modules/content-generation/api.php:144
 #: inc/modules/content-generation/api.php:145
+#: inc/modules/content-generation/api.php:146
 msgid "Invalid post ID"
 msgstr "ID de publication invalide"
 
@@ -6069,7 +6069,7 @@ msgstr "ID de publication invalide"
 msgid "Failed to generate content with error code %s."
 msgstr "Échec de la génération du contenu avec le code d'erreur %s"
 
-#: inc/modules/fix-seo-checks/api.php:115
+#: inc/modules/fix-seo-checks/api.php:116
 msgid "An unexpected error occurred. Please try again."
 msgstr "Une erreur inattendue est survenue. Veuillez réessayer"
 
@@ -6151,11 +6151,11 @@ msgstr "ID de publication ou ID de terme dont le contenu doit être généré (o
 msgid "Whether the content is for a taxonomy term"
 msgstr "Que le contenu soit pour un terme de taxonomie"
 
-#: inc/modules/content-generation/api.php:132
+#: inc/modules/content-generation/api.php:133
 msgid "Invalid term ID"
 msgstr "ID de terme invalide"
 
-#: inc/modules/content-generation/api.php:133
+#: inc/modules/content-generation/api.php:134
 msgid "Invalid term ID provided"
 msgstr "ID de terme fourni invalide"
 
@@ -6432,28 +6432,28 @@ msgstr "Cliquez ici pour contacter le support."
 msgid "Connect Now"
 msgstr "Se connecter maintenant"
 
-#: inc/api/sitemap.php:164
+#: inc/api/sitemap.php:167
 msgid "CRONs are disabled on this website. Please enable the CRON functionality to use this feature."
 msgstr "Les CRON sont désactivés sur ce site. Veuillez activer la fonctionnalité CRON pour utiliser cette fonctionnalité."
 
-#: inc/api/sitemap.php:196
+#: inc/api/sitemap.php:199
 msgid "Sitemap classes not found."
 msgstr "Classes de sitemap non trouvées."
 
-#: inc/api/sitemap.php:208
-#: inc/api/sitemap.php:213
+#: inc/api/sitemap.php:211
+#: inc/api/sitemap.php:216
 msgid "Sitemap class not found."
 msgstr "Classe de sitemap non trouvée."
 
-#: inc/api/sitemap.php:217
+#: inc/api/sitemap.php:220
 msgid "Sitemap class information not found."
 msgstr "Informations sur la classe de sitemap non trouvées."
 
-#: inc/api/sitemap.php:222
+#: inc/api/sitemap.php:225
 msgid "Sitemap class does not exist."
 msgstr "La classe de sitemap n'existe pas."
 
-#: inc/api/sitemap.php:227
+#: inc/api/sitemap.php:230
 msgid "Import method not found in sitemap class."
 msgstr "Méthode d'importation non trouvée dans la classe de sitemap."
 
@@ -6644,7 +6644,7 @@ msgstr "Une fois connecté à Google Search Console, vous verrez ici comment vot
 msgid "Redirections"
 msgstr "Redirections"
 
-#: inc/admin/dashboard.php:302
+#: inc/admin/dashboard.php:304
 msgid "Get Pro ↗"
 msgstr "Obtenir Pro ↗"
 
@@ -6652,7 +6652,7 @@ msgstr "Obtenir Pro ↗"
 msgid "SureRank Website Insights"
 msgstr "Aperçus du site SureRank"
 
-#: inc/api/onboarding.php:79
+#: inc/api/onboarding.php:92
 msgid "Business description of the website."
 msgstr "Description commerciale du site Web."
 
@@ -7096,17 +7096,6 @@ msgstr "Pour de meilleurs résultats, nous recommandons vivement d'utiliser l'IA
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
-#, js-format
-msgid "%1$s to use AI image SEO"
-msgstr "%1$s pour utiliser l'IA pour le SEO d'image"
-
-#: build/admin-dashboard/index.js:1
-#: build/admin-onboarding/index.js:1
-msgid "Upgrade to pro"
-msgstr "Passer à la version pro"
-
-#: build/admin-dashboard/index.js:1
-#: build/admin-onboarding/index.js:1
 msgid "Redirect Attachment Pages to Parent Post"
 msgstr "Rediriger les pages de pièces jointes vers le post parent"
 
@@ -7173,8 +7162,8 @@ msgstr "Vérifiez régulièrement les réglages de votre plugin pour vous assure
 #: inc/analyzer/seo-analyzer.php:726
 #: inc/analyzer/seo-analyzer.php:811
 #: inc/analyzer/seo-analyzer.php:909
-#: inc/analyzer/seo-analyzer.php:989
-#: inc/analyzer/seo-analyzer.php:1605
+#: inc/analyzer/seo-analyzer.php:990
+#: inc/analyzer/seo-analyzer.php:1633
 #: inc/api/analyzer.php:632
 #: inc/api/analyzer.php:791
 #: inc/api/analyzer.php:968
@@ -7192,8 +7181,8 @@ msgstr "Si deux plugins essaient de définir différemment la description de vot
 #: inc/analyzer/seo-analyzer.php:732
 #: inc/analyzer/seo-analyzer.php:823
 #: inc/analyzer/seo-analyzer.php:920
-#: inc/analyzer/seo-analyzer.php:1000
-#: inc/analyzer/seo-analyzer.php:1616
+#: inc/analyzer/seo-analyzer.php:1001
+#: inc/analyzer/seo-analyzer.php:1644
 #: inc/api/analyzer.php:638
 #: inc/api/analyzer.php:800
 #: inc/api/analyzer.php:971
@@ -7211,8 +7200,8 @@ msgstr "Vous pouvez consulter vos plugins actifs depuis la page des plugins Word
 #: inc/analyzer/seo-analyzer.php:744
 #: inc/analyzer/seo-analyzer.php:829
 #: inc/analyzer/seo-analyzer.php:926
-#: inc/analyzer/seo-analyzer.php:1006
-#: inc/analyzer/seo-analyzer.php:1633
+#: inc/analyzer/seo-analyzer.php:1007
+#: inc/analyzer/seo-analyzer.php:1661
 #: inc/api/analyzer.php:648
 #: inc/api/analyzer.php:803
 #: inc/api/analyzer.php:974
@@ -7242,8 +7231,8 @@ msgstr "Si le fichier robots.txt est manquant ou mal configuré, les moteurs de 
 #: inc/analyzer/seo-analyzer.php:713
 #: inc/analyzer/seo-analyzer.php:798
 #: inc/analyzer/seo-analyzer.php:896
-#: inc/analyzer/seo-analyzer.php:977
-#: inc/analyzer/seo-analyzer.php:1592
+#: inc/analyzer/seo-analyzer.php:978
+#: inc/analyzer/seo-analyzer.php:1620
 #: inc/api/analyzer.php:778
 #: inc/api/analyzer.php:953
 msgid "How to keep things smooth"
@@ -7317,29 +7306,29 @@ msgstr "Vous pouvez gérer et mettre à jour votre sitemap directement depuis le
 msgid "SureRank automatically generates and updates your sitemap, so search engines always have a clear path to your important content. This keeps your site organized and ensures nothing valuable gets overlooked, without requiring extra work from you."
 msgstr "SureRank génère et met à jour automatiquement votre sitemap, afin que les moteurs de recherche aient toujours un chemin clair vers votre contenu important. Cela permet de garder votre site organisé et de ne rien laisser de côté, sans effort supplémentaire de votre part."
 
-#: inc/api/analyzer.php:1990
-#: inc/api/analyzer.php:2024
+#: inc/api/analyzer.php:2001
+#: inc/api/analyzer.php:2035
 msgid "No cached checks found."
 msgstr "Aucun contrôle de cache trouvé."
 
-#: inc/modules/email-reports/api.php:146
+#: inc/modules/email-reports/api.php:148
 msgid "Recipient email is required when enabled."
 msgstr "L'adresse e-mail du destinataire est requise lorsque l'option est activée."
 
-#: inc/modules/email-reports/api.php:167
+#: inc/modules/email-reports/api.php:169
 msgid "Email summary settings saved successfully."
 msgstr "Paramètres de résumé par e-mail enregistrés avec succès."
 
-#: inc/modules/email-reports/api.php:190
+#: inc/modules/email-reports/api.php:192
 msgid "Please provide a valid email address."
 msgstr "Veuillez fournir une adresse e-mail valide."
 
-#: inc/modules/email-reports/api.php:201
+#: inc/modules/email-reports/api.php:203
 msgid "Failed to send test email. Please check your email configuration."
 msgstr "Échec de l'envoi de l'e-mail de test. Veuillez vérifier votre configuration e-mail."
 
 #. translators: %s: Recipient email address
-#: inc/modules/email-reports/api.php:210
+#: inc/modules/email-reports/api.php:212
 #, php-format
 msgid "Test email sent successfully to %s."
 msgstr "E-mail de test envoyé avec succès à %s."
@@ -7566,26 +7555,26 @@ msgstr "Email de test"
 msgid "Sending…"
 msgstr "Envoi en cours…"
 
-#: inc/admin/dashboard.php:291
+#: inc/admin/dashboard.php:293
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Link Manager"
 msgstr "Gestionnaire de liens"
 
-#: inc/api/onboarding.php:273
+#: inc/api/onboarding.php:318
 msgid "Failed to encode request data"
 msgstr "Échec de l'encodage des données de la requête"
 
-#: inc/api/onboarding.php:292
-#: inc/api/onboarding.php:304
+#: inc/api/onboarding.php:337
+#: inc/api/onboarding.php:349
 msgid "Failed to improve description"
 msgstr "Échec de l'amélioration de la description"
 
-#: inc/api/onboarding.php:315
+#: inc/api/onboarding.php:360
 msgid "Description improved successfully"
 msgstr "Description améliorée avec succès"
 
-#: inc/api/onboarding.php:321
+#: inc/api/onboarding.php:366
 msgid "Invalid response from AI service"
 msgstr "Réponse invalide du service AI"
 
@@ -8126,7 +8115,7 @@ msgid "Search engines also pay attention to these subheadings. They use H2s to u
 msgstr "Les moteurs de recherche prêtent également attention à ces sous-titres. Ils utilisent les H2 pour comprendre comment votre page est structurée et sur quoi chaque section se concentre. Des titres H2 clairs aident à la fois les visiteurs et les moteurs de recherche à suivre votre contenu de manière plus naturelle."
 
 #: inc/analyzer/seo-analyzer.php:455
-#: inc/analyzer/seo-analyzer.php:1255
+#: inc/analyzer/seo-analyzer.php:1257
 msgid "💡 Why it matters"
 msgstr "💡 Pourquoi c'est important"
 
@@ -8139,9 +8128,9 @@ msgid "From a search perspective, H2 headings give structure to your page. They 
 msgstr "D'un point de vue de recherche, les titres H2 donnent de la structure à votre page. Ils aident les moteurs de recherche à comprendre les différents sujets abordés sur votre page d'accueil, ce qui améliore la clarté et soutient une meilleure visibilité."
 
 #: inc/analyzer/seo-analyzer.php:469
-#: inc/analyzer/seo-analyzer.php:1053
-#: inc/analyzer/seo-analyzer.php:1167
-#: inc/analyzer/seo-analyzer.php:1262
+#: inc/analyzer/seo-analyzer.php:1055
+#: inc/analyzer/seo-analyzer.php:1169
+#: inc/analyzer/seo-analyzer.php:1264
 #: inc/api/analyzer.php:474
 #: inc/api/analyzer.php:691
 #: inc/api/analyzer.php:856
@@ -8165,9 +8154,9 @@ msgid "Make sure each H2 matches the content that follows it."
 msgstr "Assurez-vous que chaque H2 correspond au contenu qui le suit."
 
 #: inc/analyzer/seo-analyzer.php:482
-#: inc/analyzer/seo-analyzer.php:1066
-#: inc/analyzer/seo-analyzer.php:1179
-#: inc/analyzer/seo-analyzer.php:1275
+#: inc/analyzer/seo-analyzer.php:1068
+#: inc/analyzer/seo-analyzer.php:1181
+#: inc/analyzer/seo-analyzer.php:1277
 #: inc/api/analyzer.php:487
 #: inc/api/analyzer.php:704
 #: inc/api/analyzer.php:869
@@ -8179,9 +8168,9 @@ msgid "Each of these helps visitors understand the section before reading the de
 msgstr "Chacun de ces éléments aide les visiteurs à comprendre la section avant de lire les détails."
 
 #: inc/analyzer/seo-analyzer.php:495
-#: inc/analyzer/seo-analyzer.php:1072
-#: inc/analyzer/seo-analyzer.php:1192
-#: inc/analyzer/seo-analyzer.php:1281
+#: inc/analyzer/seo-analyzer.php:1074
+#: inc/analyzer/seo-analyzer.php:1194
+#: inc/analyzer/seo-analyzer.php:1283
 #: inc/api/analyzer.php:493
 #: inc/api/analyzer.php:715
 #: inc/api/analyzer.php:875
@@ -8193,9 +8182,9 @@ msgid "Edit your homepage and look for natural section breaks where a heading ma
 msgstr "Modifiez votre page d'accueil et recherchez des pauses naturelles où un titre a du sens. Si votre page d'accueil affiche vos derniers articles, vous pouvez ajouter des titres H2 via la mise en page de votre page d'accueil ou des blocs de contenu."
 
 #: inc/analyzer/seo-analyzer.php:501
-#: inc/analyzer/seo-analyzer.php:1084
-#: inc/analyzer/seo-analyzer.php:1206
-#: inc/analyzer/seo-analyzer.php:1287
+#: inc/analyzer/seo-analyzer.php:1086
+#: inc/analyzer/seo-analyzer.php:1208
+#: inc/analyzer/seo-analyzer.php:1289
 #: inc/api/analyzer.php:509
 #: inc/api/analyzer.php:731
 #: inc/api/analyzer.php:891
@@ -8374,237 +8363,237 @@ msgstr "Dans WordPress, allez dans Réglages → Lecture et assurez-vous que la 
 msgid "SureRank SEO Analysis checks whether your homepage is reachable and flags it when it isn’t. This gives you a clear reminder to fix any loading issues so both visitors and search engines can access your site without interruption."
 msgstr "SureRank SEO Analysis vérifie si votre page d'accueil est accessible et la signale lorsqu'elle ne l'est pas. Cela vous rappelle clairement de résoudre tout problème de chargement afin que les visiteurs et les moteurs de recherche puissent accéder à votre site sans interruption."
 
-#: inc/analyzer/seo-analyzer.php:960
+#: inc/analyzer/seo-analyzer.php:961
 msgid "Secure Connection (HTTPS)"
 msgstr "Connexion sécurisée (HTTPS)"
 
-#: inc/analyzer/seo-analyzer.php:967
+#: inc/analyzer/seo-analyzer.php:968
 msgid "A secure connection means your website uses HTTPS, which is shown by the little padlock icon next to your site's address in a browser. It tells visitors and search engines that your site is safe and any information shared is protected."
 msgstr "Une connexion sécurisée signifie que votre site utilise HTTPS, ce qui est indiqué par la petite icône de cadenas à côté de l'adresse de votre site dans un navigateur. Cela indique aux visiteurs et aux moteurs de recherche que votre site est sûr et que toute information partagée est protégée."
 
-#: inc/analyzer/seo-analyzer.php:971
+#: inc/analyzer/seo-analyzer.php:972
 msgid "Why it matters"
 msgstr "Pourquoi c'est important"
 
-#: inc/analyzer/seo-analyzer.php:973
+#: inc/analyzer/seo-analyzer.php:974
 msgid "Security is important for every site, even if you don't collect sensitive information. HTTPS helps protect visitors, builds trust, and signals to search engines that your site is reliable. Modern browsers may also warn visitors when a site isn't secure, so using HTTPS keeps people confident in your site."
 msgstr "La sécurité est importante pour chaque site, même si vous ne collectez pas d'informations sensibles. HTTPS aide à protéger les visiteurs, renforce la confiance et signale aux moteurs de recherche que votre site est fiable. Les navigateurs modernes peuvent également avertir les visiteurs lorsqu'un site n'est pas sécurisé, donc utiliser HTTPS maintient la confiance des gens dans votre site."
 
-#: inc/analyzer/seo-analyzer.php:981
+#: inc/analyzer/seo-analyzer.php:982
 msgid "Check your site shows the padlock icon in the browser address bar."
 msgstr "Vérifiez que votre site affiche l'icône de cadenas dans la barre d'adresse du navigateur."
 
-#: inc/analyzer/seo-analyzer.php:982
+#: inc/analyzer/seo-analyzer.php:983
 msgid "Make sure HTTPS is active by using an SSL certificate. Many hosting providers offer them for free."
 msgstr "Assurez-vous qu'HTTPS est actif en utilisant un certificat SSL. De nombreux fournisseurs d'hébergement les proposent gratuitement."
 
-#: inc/analyzer/seo-analyzer.php:983
+#: inc/analyzer/seo-analyzer.php:984
 msgid "Keep your certificate up to date so your connection remains secure."
 msgstr "Gardez votre certificat à jour afin que votre connexion reste sécurisée."
 
-#: inc/analyzer/seo-analyzer.php:996
+#: inc/analyzer/seo-analyzer.php:997
 msgid "A visitor sees the padlock on your blog or store and feels confident browsing or signing up for your newsletter. Without HTTPS, the same visitor might get a warning and leave immediately."
 msgstr "Un visiteur voit le cadenas sur votre blog ou votre boutique et se sent en confiance pour naviguer ou s'inscrire à votre newsletter. Sans HTTPS, le même visiteur pourrait recevoir un avertissement et partir immédiatement."
 
-#: inc/analyzer/seo-analyzer.php:1002
+#: inc/analyzer/seo-analyzer.php:1003
 msgid "Most hosting dashboards include an option to enable SSL or HTTPS for your site. This is often found under sections like Security, SSL, or Domains."
 msgstr "La plupart des tableaux de bord d'hébergement incluent une option pour activer SSL ou HTTPS pour votre site. Cela se trouve souvent dans des sections comme Sécurité, SSL ou Domaines."
 
-#: inc/analyzer/seo-analyzer.php:1008
+#: inc/analyzer/seo-analyzer.php:1009
 msgid "SureRank confirms whether your site has HTTPS or not, so you can see the status clearly and see at a glance whether your connection is secure."
 msgstr "SureRank confirme si votre site a HTTPS ou non, afin que vous puissiez voir clairement l'état et savoir d'un coup d'œil si votre connexion est sécurisée."
 
-#: inc/analyzer/seo-analyzer.php:1035
+#: inc/analyzer/seo-analyzer.php:1037
 msgid "Homepage Open Graph Tags"
 msgstr "Balises Open Graph de la page d'accueil"
 
-#: inc/analyzer/seo-analyzer.php:1037
+#: inc/analyzer/seo-analyzer.php:1039
 msgid "When someone shares your site on social media or in a messaging app, the platform tries to show a preview with a title, description and image. Without Open Graph tags, they may pull random content or show no preview at all. Open Graph tags let you choose exactly what people see when your site is shared."
 msgstr "Lorsque quelqu'un partage votre site sur les réseaux sociaux ou dans une application de messagerie, la plateforme essaie d'afficher un aperçu avec un titre, une description et une image. Sans balises Open Graph, elle peut tirer un contenu aléatoire ou ne montrer aucun aperçu. Les balises Open Graph vous permettent de choisir exactement ce que les gens voient lorsque votre site est partagé."
 
-#: inc/analyzer/seo-analyzer.php:1041
-#: inc/analyzer/seo-analyzer.php:1155
+#: inc/analyzer/seo-analyzer.php:1043
+#: inc/analyzer/seo-analyzer.php:1157
 #: inc/api/analyzer.php:468
 #: inc/api/analyzer.php:679
 #: inc/api/analyzer.php:850
 msgid "💡 Why this matters:"
 msgstr "💡 Pourquoi cela importe :"
 
-#: inc/analyzer/seo-analyzer.php:1043
+#: inc/analyzer/seo-analyzer.php:1045
 msgid "A clean and attractive preview helps your site look more trustworthy and encourages people to click. If the preview is missing or doesn't show the right information, it can be harder for visitors to engage with your content. Setting these tags helps your site look polished wherever it appears."
 msgstr "Un aperçu propre et attrayant aide votre site à paraître plus fiable et encourage les gens à cliquer. Si l'aperçu est manquant ou ne montre pas les bonnes informations, il peut être plus difficile pour les visiteurs d'interagir avec votre contenu. Définir ces balises aide votre site à avoir un aspect soigné où qu'il apparaisse."
 
-#: inc/analyzer/seo-analyzer.php:1057
+#: inc/analyzer/seo-analyzer.php:1059
 msgid "Add a short, clear title that matches what your site is about."
 msgstr "Ajoutez un titre court et clair qui correspond à ce dont parle votre site."
 
-#: inc/analyzer/seo-analyzer.php:1058
+#: inc/analyzer/seo-analyzer.php:1060
 msgid "Write a brief description that introduces your site in a friendly way."
 msgstr "Rédigez une brève description qui présente votre site de manière amicale."
 
-#: inc/analyzer/seo-analyzer.php:1059
+#: inc/analyzer/seo-analyzer.php:1061
 msgid "Choose an image that represents your brand or homepage well."
 msgstr "Choisissez une image qui représente bien votre marque ou votre page d'accueil."
 
-#: inc/analyzer/seo-analyzer.php:1060
+#: inc/analyzer/seo-analyzer.php:1062
 msgid "Keep all three elements simple so the preview feels inviting."
 msgstr "Gardez les trois éléments simples afin que l'aperçu soit invitant."
 
-#: inc/analyzer/seo-analyzer.php:1068
+#: inc/analyzer/seo-analyzer.php:1070
 msgid "A homepage preview might show your site name, a short tagline and a clean image that reflects your brand or main topic."
 msgstr "Un aperçu de la page d'accueil pourrait montrer le nom de votre site, un court slogan et une image claire qui reflète votre marque ou votre sujet principal."
 
-#: inc/analyzer/seo-analyzer.php:1074
+#: inc/analyzer/seo-analyzer.php:1076
 msgid "You can configure your homepage Open Graph settings from your Home Page Social settings or your global social settings, depending on how your homepage is set up."
 msgstr "Vous pouvez configurer les paramètres Open Graph de votre page d'accueil depuis vos paramètres sociaux de la page d'accueil ou vos paramètres sociaux globaux, selon la façon dont votre page d'accueil est configurée."
 
-#: inc/analyzer/seo-analyzer.php:1086
+#: inc/analyzer/seo-analyzer.php:1088
 msgid "SureRank SEO Analysis checks whether your homepage has Open Graph tags and shows when they are missing. This gives you a simple reminder to set a clear title, description, and image so your homepage always looks good when shared."
 msgstr "SureRank SEO Analysis vérifie si votre page d'accueil a des balises Open Graph et indique quand elles manquent. Cela vous donne un simple rappel pour définir un titre, une description et une image clairs afin que votre page d'accueil ait toujours un bon aspect lorsqu'elle est partagée."
 
-#: inc/analyzer/seo-analyzer.php:1149
+#: inc/analyzer/seo-analyzer.php:1151
 msgid "Homepage Schema Metadata"
 msgstr "Métadonnées Schema de la page d'accueil"
 
-#: inc/analyzer/seo-analyzer.php:1151
+#: inc/analyzer/seo-analyzer.php:1153
 msgid "Schema works like a small cheat sheet your homepage shares with search engines. It quietly explains what type of page it is, such as a website homepage or a blog, so search engines can understand the content more clearly. This extra context helps them interpret your page better and can lead to richer details in search results."
 msgstr "Schema fonctionne comme une petite feuille de triche que votre page d'accueil partage avec les moteurs de recherche. Elle explique discrètement quel type de page il s'agit, comme une page d'accueil de site web ou un blog, afin que les moteurs de recherche puissent comprendre le contenu plus clairement. Ce contexte supplémentaire les aide à interpréter votre page mieux et peut conduire à des détails plus riches dans les résultats de recherche."
 
-#: inc/analyzer/seo-analyzer.php:1157
+#: inc/analyzer/seo-analyzer.php:1159
 msgid "Search engines use signals beyond page text to understand your site. Schema provides those signals in a structured format. When your homepage includes the right schema, search results can show clearer details, like your site name or breadcrumb paths, before users click."
 msgstr "Les moteurs de recherche utilisent des signaux au-delà du texte de la page pour comprendre votre site. Schema fournit ces signaux dans un format structuré. Lorsque votre page d'accueil inclut le bon schema, les résultats de recherche peuvent afficher des détails plus clairs, comme le nom de votre site ou les chemins de navigation, avant que les utilisateurs ne cliquent."
 
-#: inc/analyzer/seo-analyzer.php:1171
+#: inc/analyzer/seo-analyzer.php:1173
 msgid "Ensure your homepage includes essential structured data like WebPage schema."
 msgstr "Assurez-vous que votre page d'accueil inclut des données structurées essentielles comme le schéma WebPage."
 
-#: inc/analyzer/seo-analyzer.php:1172
+#: inc/analyzer/seo-analyzer.php:1174
 msgid "Keep the schema feature enabled so search engines always receive the right signals."
 msgstr "Gardez la fonctionnalité de schéma activée afin que les moteurs de recherche reçoivent toujours les bons signaux."
 
-#: inc/analyzer/seo-analyzer.php:1173
+#: inc/analyzer/seo-analyzer.php:1175
 msgid "Confirm that the schema being applied matches what your homepage represents."
 msgstr "Confirmez que le schéma appliqué correspond à ce que représente votre page d'accueil."
 
-#: inc/analyzer/seo-analyzer.php:1188
+#: inc/analyzer/seo-analyzer.php:1190
 msgid "A homepage using WebPage schema will show context such as your site name or breadcrumb information in search results, helping visitors understand your site before they click."
 msgstr "Une page d'accueil utilisant le schéma WebPage affichera des contextes tels que le nom de votre site ou des informations de fil d'Ariane dans les résultats de recherche, aidant les visiteurs à comprendre votre site avant de cliquer."
 
-#: inc/analyzer/seo-analyzer.php:1194
+#: inc/analyzer/seo-analyzer.php:1196
 msgid "Schema is generated automatically by SureRank when the feature is enabled. To verify that it's being applied correctly, you can:"
 msgstr "Le schéma est généré automatiquement par SureRank lorsque la fonctionnalité est activée. Pour vérifier qu'il est appliqué correctement, vous pouvez :"
 
-#: inc/analyzer/seo-analyzer.php:1197
+#: inc/analyzer/seo-analyzer.php:1199
 msgid "View the live page source and search for \"schema\" or \"application/ld+json.\""
 msgstr "Voir le code source de la page en direct et rechercher \"schéma\" ou \"application/ld+json\"."
 
-#: inc/analyzer/seo-analyzer.php:1198
+#: inc/analyzer/seo-analyzer.php:1200
 msgid "Use a schema validation tool to check what search engines can read."
 msgstr "Utiliser un outil de validation de schéma pour vérifier ce que les moteurs de recherche peuvent lire."
 
-#: inc/analyzer/seo-analyzer.php:1199
+#: inc/analyzer/seo-analyzer.php:1201
 msgid "Use the Schema Builder to see the schema SureRank prepares, then confirm it appears on the live page."
 msgstr "Utiliser le Schema Builder pour voir le schéma préparé par SureRank, puis confirmer qu'il apparaît sur la page en direct."
 
-#: inc/analyzer/seo-analyzer.php:1202
+#: inc/analyzer/seo-analyzer.php:1204
 msgid "This helps you understand what should be output, but the live page check is the real confirmation."
 msgstr "Cela vous aide à comprendre ce qui doit être affiché, mais la vérification de la page en direct est la véritable confirmation."
 
-#: inc/analyzer/seo-analyzer.php:1208
+#: inc/analyzer/seo-analyzer.php:1210
 msgid "SureRank SEO Analysis checks whether your homepage schema is active and present. Once enabled, the plugin builds the structured data for you and gives you simple ways to confirm that search engines can read it correctly."
 msgstr "L'analyse SEO de SureRank vérifie si le schéma de votre page d'accueil est actif et présent. Une fois activé, le plugin construit les données structurées pour vous et vous offre des moyens simples de confirmer que les moteurs de recherche peuvent les lire correctement."
 
-#: inc/analyzer/seo-analyzer.php:1249
+#: inc/analyzer/seo-analyzer.php:1251
 msgid "🌐 WWW Canonicalization"
 msgstr "🌐 Canonicalisation WWW"
 
-#: inc/analyzer/seo-analyzer.php:1251
+#: inc/analyzer/seo-analyzer.php:1253
 msgid "Your site can usually be accessed in two ways. One version uses www at the front of the address and the other does not. For example, https://example.com and https://www.example.com might both load your site, even though they look identical. Search engines see these as two separate versions unless one automatically redirects to the other."
 msgstr "Votre site peut généralement être accessible de deux manières. Une version utilise www au début de l'adresse et l'autre ne l'utilise pas. Par exemple, https://example.com et https://www.example.com peuvent tous deux charger votre site, même s'ils semblent identiques. Les moteurs de recherche voient ces deux versions comme distinctes à moins qu'une ne redirige automatiquement vers l'autre."
 
-#: inc/analyzer/seo-analyzer.php:1257
+#: inc/analyzer/seo-analyzer.php:1259
 msgid "When both versions load without a redirect, search engines may think you have duplicate copies of every page on your site. This can spread your SEO strength across two versions and make it harder for search engines to know which one to focus on. A single preferred version keeps everything consistent and helps search engines understand your site more clearly."
 msgstr "Lorsque les deux versions se chargent sans redirection, les moteurs de recherche peuvent penser que vous avez des copies dupliquées de chaque page de votre site. Cela peut répartir votre force SEO sur deux versions et rendre plus difficile pour les moteurs de recherche de savoir laquelle privilégier. Une version préférée unique maintient tout cohérent et aide les moteurs de recherche à comprendre votre site plus clairement."
 
-#: inc/analyzer/seo-analyzer.php:1258
+#: inc/analyzer/seo-analyzer.php:1260
 msgid "Choosing one version also gives visitors a cleaner experience. Visitors always land on the same address, which builds trust and avoids confusion."
 msgstr "Choisir une version donne également aux visiteurs une expérience plus claire. Les visiteurs atterrissent toujours sur la même adresse, ce qui renforce la confiance et évite la confusion."
 
-#: inc/analyzer/seo-analyzer.php:1266
+#: inc/analyzer/seo-analyzer.php:1268
 msgid "Decide whether you want to use www or non www as your main address."
 msgstr "Décidez si vous souhaitez utiliser www ou non-www comme votre adresse principale."
 
-#: inc/analyzer/seo-analyzer.php:1267
+#: inc/analyzer/seo-analyzer.php:1269
 msgid "Set up a redirect so all traffic goes to your preferred version."
 msgstr "Configurez une redirection afin que tout le trafic soit dirigé vers votre version préférée."
 
-#: inc/analyzer/seo-analyzer.php:1268
+#: inc/analyzer/seo-analyzer.php:1270
 msgid "Make sure your internal links and sitemap match the version you choose."
 msgstr "Assurez-vous que vos liens internes et votre sitemap correspondent à la version que vous choisissez."
 
-#: inc/analyzer/seo-analyzer.php:1269
+#: inc/analyzer/seo-analyzer.php:1271
 msgid "Ask your hosting provider for help if you are unsure how to set up the redirect."
 msgstr "Demandez de l'aide à votre fournisseur d'hébergement si vous n'êtes pas sûr de la façon de configurer la redirection."
 
-#: inc/analyzer/seo-analyzer.php:1277
+#: inc/analyzer/seo-analyzer.php:1279
 msgid "If someone visits https://www.example.com but your preferred version is https://example.com, a redirect will automatically send them to the correct version. This keeps everything clean and consistent for search engines and visitors."
 msgstr "Si quelqu'un visite https://www.example.com mais que votre version préférée est https://example.com, une redirection l'enverra automatiquement vers la bonne version. Cela maintient tout propre et cohérent pour les moteurs de recherche et les visiteurs."
 
-#: inc/analyzer/seo-analyzer.php:1283
+#: inc/analyzer/seo-analyzer.php:1285
 msgid "You can configure this from your hosting panel or by adjusting your domain settings. Some hosts offer a simple toggle to enforce either www or non www. You can also ask your hosting support to set it up if you prefer an easier option."
 msgstr "Vous pouvez configurer cela depuis votre panneau d'hébergement ou en ajustant les paramètres de votre domaine. Certains hébergeurs offrent un simple bouton pour imposer soit www, soit non www. Vous pouvez également demander à votre support d'hébergement de le configurer si vous préférez une option plus facile."
 
-#: inc/analyzer/seo-analyzer.php:1289
+#: inc/analyzer/seo-analyzer.php:1291
 msgid "SureRank SEO Analysis checks whether your site redirects properly between the www and non www versions. When it detects that both versions load separately, it gives you a clear reminder to set a single preferred version so your site stays consistent and easy for search engines to understand."
 msgstr "SureRank SEO Analysis vérifie si votre site redirige correctement entre les versions www et non www. Lorsqu'il détecte que les deux versions se chargent séparément, il vous rappelle clairement de définir une seule version préférée afin que votre site reste cohérent et facile à comprendre pour les moteurs de recherche."
 
-#: inc/analyzer/seo-analyzer.php:1574
+#: inc/analyzer/seo-analyzer.php:1602
 msgid "Homepage Image ALT Text"
 msgstr "Texte ALT de l'image de la page d'accueil"
 
-#: inc/analyzer/seo-analyzer.php:1576
+#: inc/analyzer/seo-analyzer.php:1604
 msgid "Images add personality and meaning to your homepage, but search engines cannot understand them on their own. ALT text is a short written description that tells screen readers what an image shows, making your site more accessible for visitors who rely on assistive tools. It also gives search engines a bit more context, which can help them understand your page more clearly."
 msgstr "Les images ajoutent de la personnalité et du sens à votre page d'accueil, mais les moteurs de recherche ne peuvent pas les comprendre par eux-mêmes. Le texte ALT est une courte description écrite qui indique aux lecteurs d'écran ce que montre une image, rendant votre site plus accessible pour les visiteurs qui dépendent d'outils d'assistance. Cela donne également aux moteurs de recherche un peu plus de contexte, ce qui peut les aider à comprendre votre page plus clairement."
 
-#: inc/analyzer/seo-analyzer.php:1582
+#: inc/analyzer/seo-analyzer.php:1610
 msgid "ALT text plays an important role in accessibility by helping people who cannot see the images understand what is being shown. It also adds helpful context for search engines, especially when they try to understand the purpose of the images on your page. On your homepage, where key visuals often support your main message, clear ALT text makes your site more inclusive and easier to understand for everyone."
 msgstr "Le texte ALT joue un rôle important dans l'accessibilité en aidant les personnes qui ne peuvent pas voir les images à comprendre ce qui est montré. Il ajoute également un contexte utile pour les moteurs de recherche, surtout lorsqu'ils essaient de comprendre le but des images sur votre page. Sur votre page d'accueil, où les visuels clés soutiennent souvent votre message principal, un texte ALT clair rend votre site plus inclusif et plus facile à comprendre pour tout le monde."
 
-#: inc/analyzer/seo-analyzer.php:1596
+#: inc/analyzer/seo-analyzer.php:1624
 msgid "Describe what the image is showing in clear, simple words."
 msgstr "Décrivez ce que l'image montre en mots clairs et simples."
 
-#: inc/analyzer/seo-analyzer.php:1597
+#: inc/analyzer/seo-analyzer.php:1625
 msgid "Add ALT text to images that have meaning and skip for purely decorative ones."
 msgstr "Ajoutez du texte ALT aux images qui ont un sens et omettez-le pour celles qui sont purement décoratives."
 
-#: inc/analyzer/seo-analyzer.php:1598
+#: inc/analyzer/seo-analyzer.php:1626
 msgid "Keep descriptions short so they feel natural when read aloud."
 msgstr "Gardez les descriptions courtes afin qu'elles semblent naturelles lorsqu'elles sont lues à voix haute."
 
-#: inc/analyzer/seo-analyzer.php:1599
+#: inc/analyzer/seo-analyzer.php:1627
 msgid "Write as if helping someone who cannot see the image."
 msgstr "Écrivez comme si vous aidiez quelqu'un qui ne peut pas voir l'image."
 
-#: inc/analyzer/seo-analyzer.php:1609
+#: inc/analyzer/seo-analyzer.php:1637
 msgid "Woman doing yoga in a sunny room."
 msgstr "Femme faisant du yoga dans une pièce ensoleillée."
 
-#: inc/analyzer/seo-analyzer.php:1610
+#: inc/analyzer/seo-analyzer.php:1638
 msgid "Handmade ceramic mug on wooden table."
 msgstr "Tasse en céramique faite à la main sur une table en bois."
 
 #. translators: %s is the URL of the WordPress Media Library
-#: inc/analyzer/seo-analyzer.php:1620
+#: inc/analyzer/seo-analyzer.php:1648
 #, php-format
 msgid "You can add ALT text in the <a href=\"%s\">media settings</a> when you upload or edit an image."
 msgstr "Vous pouvez ajouter du texte ALT dans les <a href=\"%s\">paramètres des médias</a> lorsque vous téléchargez ou modifiez une image."
 
-#: inc/analyzer/seo-analyzer.php:1623
+#: inc/analyzer/seo-analyzer.php:1651
 msgid "Depending on your page builder, updating ALT text in the media library may not change images that are already placed on a page. Builders often store that information inside the block so you may need to open each image block and update the ALT text manually. New uploads usually apply the ALT text correctly from the start."
 msgstr "Selon votre constructeur de pages, la mise à jour du texte ALT dans la bibliothèque de médias peut ne pas changer les images déjà placées sur une page. Les constructeurs stockent souvent cette information à l'intérieur du bloc, vous devrez donc peut-être ouvrir chaque bloc d'image et mettre à jour le texte ALT manuellement. Les nouveaux téléchargements appliquent généralement le texte ALT correctement dès le départ."
 
-#: inc/analyzer/seo-analyzer.php:1635
+#: inc/analyzer/seo-analyzer.php:1663
 msgid "SureRank checks whether your homepage images have ALT text and shows which ones are missing it. This helps you keep your site more accessible and ensures your important images are described clearly for every visitor."
 msgstr "SureRank vérifie si les images de votre page d'accueil ont un texte ALT et indique celles qui en manquent. Cela vous aide à rendre votre site plus accessible et garantit que vos images importantes sont décrites clairement pour chaque visiteur."
 
@@ -9291,3 +9280,104 @@ msgstr "Gérez votre SEO"
 #: build/seo-popup/index.js:1
 msgid "Optimize Here"
 msgstr "Optimisez ici"
+
+#: inc/api/onboarding.php:158
+msgid "First name of the user."
+msgstr "Prénom de l'utilisateur."
+
+#: inc/api/onboarding.php:167
+msgid "Last name of the user."
+msgstr "Nom de famille de l'utilisateur."
+
+#: inc/api/onboarding.php:176
+msgid "Email address of the user."
+msgstr "Adresse e-mail de l'utilisateur."
+
+#: build/admin-dashboard/index.js:1
+msgid "You don't have permission to perform this action. Please contact administrator."
+msgstr "Vous n'avez pas la permission d'effectuer cette action. Veuillez contacter l'administrateur."
+
+#: build/admin-dashboard/index.js:1
+msgid "Please contact the administrator to manage the static page SEO, as you do not have the required access rights."
+msgstr "Veuillez contacter l'administrateur pour gérer le SEO de la page statique, car vous n'avez pas les droits d'accès requis."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Role Manager"
+msgstr "Gestionnaire de rôles"
+
+#: build/admin-dashboard/index.js:1
+msgid "Manage user roles and their access to SureRank features. Ensure the right people handle the right SEO tasks while protecting critical site settings."
+msgstr "Gérez les rôles des utilisateurs et leur accès aux fonctionnalités de SureRank. Assurez-vous que les bonnes personnes s'occupent des bonnes tâches SEO tout en protégeant les paramètres critiques du site."
+
+#: build/admin-dashboard/index.js:1
+msgid "Unlock Role Manager"
+msgstr "Déverrouiller le Gestionnaire de rôles"
+
+#: build/admin-dashboard/index.js:1
+msgid "Upgrade to SureRank Pro and manage user roles and their access to SureRank features."
+msgstr "Passez à SureRank Pro et gérez les rôles des utilisateurs et leur accès aux fonctionnalités de SureRank."
+
+#: build/admin-dashboard/index.js:1
+msgid "Page Not Found"
+msgstr "Page non trouvée"
+
+#: build/admin-dashboard/index.js:1
+msgid "Either the page does not exist or you don't have permission to access this page please contact your administrator. "
+msgstr "Soit la page n'existe pas, soit vous n'avez pas la permission d'accéder à cette page, veuillez contacter votre administrateur."
+
+#: build/admin-dashboard/index.js:1
+msgid "Go Back"
+msgstr "Retour"
+
+#: build/admin-dashboard/index.js:1
+msgid "Go to Dashboard"
+msgstr "Aller au tableau de bord"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Email Reports"
+msgstr "Rapports par e-mail"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "<a>Upgrade to Pro</a> to use AI image SEO"
+msgstr "<a>Passer à Pro</a> pour utiliser le SEO d'image AI"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Auto Generate Alt Text for Uploaded Images"
+msgstr "Générer automatiquement du texte alternatif pour les images téléchargées"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "<a>Upgrade to Pro</a> to automatically generate alt text for uploaded images using AI."
+msgstr "<a>Passer à Pro</a> pour générer automatiquement du texte alternatif pour les images téléchargées en utilisant l'IA."
+
+#: build/admin-onboarding/index.js:1
+msgid "First Name"
+msgstr "Prénom"
+
+#: build/admin-onboarding/index.js:1
+msgid "Last Name"
+msgstr "Nom de famille"
+
+#: build/admin-onboarding/index.js:1
+msgid "Email Address"
+msgstr "Adresse e-mail"
+
+#: build/admin-onboarding/index.js:1
+msgid "Get notified about SEO issues on your website. Plus help improve SureRank by sharing how you use the plugin. <a>View our Privacy Policy</a>"
+msgstr "Recevez des notifications concernant les problèmes de SEO sur votre site Web. De plus, aidez à améliorer SureRank en partageant comment vous utilisez le plugin. <a>Voir notre politique de confidentialité</a>"
+
+#: build/admin-onboarding/index.js:1
+msgid "Form validation error!"
+msgstr "Erreur de validation du formulaire !"
+
+#: build/admin-onboarding/index.js:1
+msgid "Okay, just one last step…"
+msgstr "D'accord, juste une dernière étape…"
+
+#: build/admin-onboarding/index.js:1
+msgid "Help us tailor your SureRank experience and keep you updated with SEO tips, feature improvements, and helpful recommendations."
+msgstr "Aidez-nous à personnaliser votre expérience SureRank et à vous tenir informé des conseils SEO, des améliorations de fonctionnalités et des recommandations utiles."

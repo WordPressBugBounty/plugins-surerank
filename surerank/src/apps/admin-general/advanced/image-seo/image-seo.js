@@ -1,11 +1,12 @@
 import PageContentWrapper from '@AdminComponents/page-content-wrapper';
-import { __, sprintf } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import withSuspense from '@AdminComponents/hoc/with-suspense';
 import GeneratePageContent from '@Functions/page-content-generator';
 import { UpgradeNotice } from '@/global/components/nudges';
 import { Text } from '@bsf/force-ui';
 import { applyFilters } from '@wordpress/hooks';
-import { renderToString } from '@wordpress/element';
+import { createInterpolateElement } from '@wordpress/element';
+import { getPricingLink } from '@/functions/nudges';
 
 const ImageSeoHelpText = () => {
 	return (
@@ -35,26 +36,23 @@ const ImageSeoHelpText = () => {
 
 const OptimizeImageSeoWithAiHelpText = () => {
 	return (
-		<div
-			dangerouslySetInnerHTML={ {
-				__html: sprintf(
-					/* translators: %s: robots.txt */
-					__( '%1$s to use AI image SEO', 'surerank' ),
-					renderToString(
+		<div>
+			{ createInterpolateElement(
+				__( '<a>Upgrade to Pro</a> to use AI image SEO', 'surerank' ),
+				{
+					a: (
 						<Text
 							as="a"
 							color="link"
-							href="https://surerank.com/pro/?utm_medium=surerank_image_seo"
+							href={ getPricingLink( 'surerank_image_seo' ) }
 							target="_blank"
 							rel="noopener noreferrer"
 							className="no-underline focus:ring-0 hover:no-underline"
-						>
-							{ __( 'Upgrade to pro', 'surerank' ) }
-						</Text>
-					)
-				),
-			} }
-		/>
+						/>
+					),
+				}
+			) }
+		</div>
 	);
 };
 
@@ -106,6 +104,35 @@ const imageSeoContent = () => [
 			'Add Missing Alt Text',
 			'Image Alt Text Attribute',
 		],
+	},
+	{
+		id: 'auto_gen_image_alt',
+		type: 'switch',
+		storeKey: 'auto_gen_image_alt',
+		label: __( 'Auto Generate Alt Text for Uploaded Images', 'surerank' ),
+		disabled: true,
+		description: (
+			<div>
+				{ createInterpolateElement(
+					__(
+						'<a>Upgrade to Pro</a> to automatically generate alt text for uploaded images using AI.',
+						'surerank'
+					),
+					{
+						a: (
+							<Text
+								as="a"
+								color="link"
+								href={ getPricingLink( 'surerank_image_seo' ) }
+								target="_blank"
+								rel="noopener noreferrer"
+								className="no-underline focus:ring-0 hover:no-underline"
+							/>
+						),
+					}
+				) }
+			</div>
+		),
 	},
 ];
 

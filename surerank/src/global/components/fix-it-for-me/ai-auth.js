@@ -128,13 +128,24 @@ const AIAuthScreen = ( {
 					<Button
 						variant="primary"
 						onClick={ handleGetStarted }
-						className="[&>span]:flex [&>span]:items-center [&>span]:justify-center [&>span]:gap-2"
+						className={ `[&>span]:flex [&>span]:items-center [&>span]:justify-center [&>span]:gap-2 ${ buttonConfig.className || '' }` }
 						icon={
 							loading && <Loader size="sm" variant="secondary" />
 						}
+						disabled={ buttonConfig.disabled || loading }
 					>
 						{ buttonConfig.buttonText }
 					</Button>
+					{ buttonConfig.notice && (
+						<Text
+							size={ 13 }
+							weight={ 400 }
+							color="secondary"
+							className="text-center"
+						>
+							{ buttonConfig.notice }
+						</Text>
+					) }
 					<Button
 						variant="ghost"
 						className="w-fit mx-auto hover:bg-transparent focus:[box-shadow:none] text-text-tertiary hover:text-text-secondary font-normal"

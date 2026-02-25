@@ -232,7 +232,9 @@ class Dashboard {
 	 * @return void
 	 */
 	public function add_menu_page() {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		$required_capability = apply_filters( 'surerank_main_menu_capability', 'manage_options' );
+
+		if ( ! current_user_can( $required_capability ) ) {
 			return;
 		}
 
@@ -242,7 +244,7 @@ class Dashboard {
 		add_menu_page(
 			__( 'SureRank', 'surerank' ),
 			__( 'SureRank', 'surerank' ),
-			'manage_options',
+			$required_capability,
 			$menu_slug,
 			static function () {
 			},
@@ -262,7 +264,7 @@ class Dashboard {
 	 * @return void
 	 */
 	public function register_sub_menus( $menu_slug ) {
-		$capability = 'manage_options';
+		$default_capability = 'manage_options';
 
 		$submenus = [
 			[
@@ -314,6 +316,8 @@ class Dashboard {
 
 		// Register the submenus.
 		foreach ( $submenu_map as $submenu ) {
+			// Allow filtering of capability per submenu. Defaults to 'manage_options'.
+			$capability = $submenu['capability'] ?? $default_capability;
 			add_submenu_page(
 				$menu_slug,
 				$submenu['page_title'],
@@ -488,8 +492,7 @@ class Dashboard {
 			return;
 		}
 
-		$logo_uri        = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEzLjU1MzcgMS41QzE3Ljg0NTMgMS41IDIxLjMyNTEgNC45Nzg5NSAyMS4zMjUyIDkuMjcwNTFDMjEuMzI1MiAxMi4zNDcgMTkuNTM2OCAxNS4wMDU2IDE2Ljk0MzQgMTYuMjY0NkgyMS4zMjUyVjIyLjVIMTguMDg4OUMxNC45MDg2IDIyLjUgMTIuMjg2MSAyMC4xMTg2IDExLjkwMzMgMTcuMDQySDExLjkwMTRMMTEuOTAzMyAxMy43ODUyQzE0LjgyODMgMTMuNzY2MSAxNy4wMzQyIDExLjM4OTQgMTcuMDM0MiA4LjQ1OTk2VjYuMDI5M0MxNC4xMzcgNi4wMjk0NyAxMS42OTQ4IDcuOTc2ODIgMTAuOTQ0MyAxMC42MzM4QzEwLjE2MDUgOS41MzM0NSA4Ljg3MzgzIDguODE2NSA3LjQxOTkyIDguODE2NDFINi4zODA4NlY5Ljg1MzUySDYuMzgzNzlDNi40NDUxNSAxMi4wMzU2IDguMjMzNzUgMTMuNzg2IDEwLjQzMDcgMTMuNzg2MUgxMC43MDYxTDEwLjY5MzQgMTcuMDQySDEwLjY4NjVDMTAuMjk0MyAyMC4xMDgyIDcuNjc2NzggMjIuNDc4NSA0LjUwMzkxIDIyLjQ3ODVIMi42NzQ4VjEuNUgxMy41NTM3WiIgZmlsbD0iI0EwQTVBQSIvPgo8L3N2Zz4K'; // 24px x 24px in #A0A5AA
-		$logo_uri_active = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEzLjU1MzcgMS41QzE3Ljg0NTMgMS41IDIxLjMyNTEgNC45Nzg5NSAyMS4zMjUyIDkuMjcwNTFDMjEuMzI1MiAxMi4zNDcgMTkuNTM2OCAxNS4wMDU2IDE2Ljk0MzQgMTYuMjY0NkgyMS4zMjUyVjIyLjVIMTguMDg4OUMxNC45MDg2IDIyLjUgMTIuMjg2MSAyMC4xMTg2IDExLjkwMzMgMTcuMDQySDExLjkwMTRMMTEuOTAzMyAxMy43ODUyQzE0LjgyODMgMTMuNzY2MSAxNy4wMzQyIDExLjM4OTQgMTcuMDM0MiA4LjQ1OTk2VjYuMDI5M0MxNC4xMzcgNi4wMjk0NyAxMS42OTQ4IDcuOTc2ODIgMTAuOTQ0MyAxMC42MzM4QzEwLjE2MDUgOS41MzM0NSA4Ljg3MzgzIDguODE2NSA3LjQxOTkyIDguODE2NDFINi4zODA4NlY5Ljg1MzUySDYuMzgzNzlDNi40NDUxNSAxMi4wMzU2IDguMjMzNzUgMTMuNzg2IDEwLjQzMDcgMTMuNzg2MUgxMC43MDYxTDEwLjY5MzQgMTcuMDQySDEwLjY4NjVDMTAuMjk0MyAyMC4xMDgyIDcuNjc2NzggMjIuNDc4NSA0LjUwMzkxIDIyLjQ3ODVIMi42NzQ4VjEuNUgxMy41NTM3WiIgZmlsbD0iI0ZGRkZGRiIvPgo8L3N2Zz4K'; // 24px x 24px in #FFFFFF
+		$logo_uri = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEzLjU1MzcgMS41QzE3Ljg0NTMgMS41IDIxLjMyNTEgNC45Nzg5NSAyMS4zMjUyIDkuMjcwNTFDMjEuMzI1MiAxMi4zNDcgMTkuNTM2OCAxNS4wMDU2IDE2Ljk0MzQgMTYuMjY0NkgyMS4zMjUyVjIyLjVIMTguMDg4OUMxNC45MDg2IDIyLjUgMTIuMjg2MSAyMC4xMTg2IDExLjkwMzMgMTcuMDQySDExLjkwMTRMMTEuOTAzMyAxMy43ODUyQzE0LjgyODMgMTMuNzY2MSAxNy4wMzQyIDExLjM4OTQgMTcuMDM0MiA4LjQ1OTk2VjYuMDI5M0MxNC4xMzcgNi4wMjk0NyAxMS42OTQ4IDcuOTc2ODIgMTAuOTQ0MyAxMC42MzM4QzEwLjE2MDUgOS41MzM0NSA4Ljg3MzgzIDguODE2NSA3LjQxOTkyIDguODE2NDFINi4zODA4NlY5Ljg1MzUySDYuMzgzNzlDNi40NDUxNSAxMi4wMzU2IDguMjMzNzUgMTMuNzg2IDEwLjQzMDcgMTMuNzg2MUgxMC43MDYxTDEwLjY5MzQgMTcuMDQySDEwLjY4NjVDMTAuMjk0MyAyMC4xMDgyIDcuNjc2NzggMjIuNDc4NSA0LjUwMzkxIDIyLjQ3ODVIMi42NzQ4VjEuNUgxMy41NTM3WiIgZmlsbD0iI0EwQTVBQSIvPgo8L3N2Zz4K';
 
 		?>
 		<style>
@@ -499,18 +502,19 @@ class Dashboard {
 
 			#toplevel_page_surerank .wp-menu-image:before {
 				content: "";
-				background-image: url('<?php echo $logo_uri; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>');
-				background-position: center center;
-				background-repeat: no-repeat;
-				background-size: contain;
+				mask-image: url('<?php echo $logo_uri; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>');
+				-webkit-mask-image: url('<?php echo $logo_uri; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>');
+				mask-size: contain;
+				-webkit-mask-size: contain;
+				mask-position: center;
+				-webkit-mask-position: center;
+				mask-repeat: no-repeat;
+				-webkit-mask-repeat: no-repeat;
+				background-color: currentColor;
 			}
 
 			#toplevel_page_surerank .wp-menu-image {
 				align-content: center;
-			}
-
-			#toplevel_page_surerank.wp-menu-open .wp-menu-image:before {
-				background-image: url('<?php echo $logo_uri_active; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>');
 			}
 
 			/* Upgrade menu item styling */

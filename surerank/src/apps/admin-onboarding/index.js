@@ -10,6 +10,7 @@ import WebsiteDetails from '@Onboarding/steps/website-details';
 import Welcome from '@Onboarding/steps/welcome';
 import Success from '@Onboarding/steps/success';
 import SocialProfiles from '@Onboarding/steps/social-profiles';
+import UserDetails from '@Onboarding/steps/user-details';
 import ConnectAI from '@Onboarding/steps/connect-ai';
 import OnboardingLayout from '@Onboarding/components/layout/onboarding-layout';
 import Migration from './steps/migration';
@@ -59,6 +60,13 @@ export const ONBOARDING_STEPS_CONFIG = [
 	{
 		path: '/social-profiles',
 		component: SocialProfiles,
+		config: {
+			containerSize: 'lg',
+		},
+	},
+	{
+		path: '/user-details',
+		component: UserDetails,
 		config: {
 			containerSize: 'lg',
 		},

@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { useState, useEffect } from '@wordpress/element';
+import { useState, useEffect, useSyncExternalStore } from '@wordpress/element';
 import { toast } from '@bsf/force-ui';
 import { getAuth } from '@Functions/api';
 import useAuthPolling from '@Global/hooks/use-auth-polling';
@@ -11,7 +11,24 @@ const getInitialAuthState = () => {
 };
 
 const authCheckedRef = { current: false };
-const authStateRef = { current: { isAuthenticated: getInitialAuthState() } };
+
+// Auth store with subscription support for cross-component sync
+const authListeners = new Set();
+const authStore = {
+	isAuthenticated: getInitialAuthState(),
+};
+
+const subscribeToAuth = ( listener ) => {
+	authListeners.add( listener );
+	return () => authListeners.delete( listener );
+};
+
+const getAuthSnapshot = () => authStore.isAuthenticated;
+
+const setAuthState = ( value ) => {
+	authStore.isAuthenticated = value;
+	authListeners.forEach( ( listener ) => listener() );
+};
 
 // eslint-disable-next-line
 /**
@@ -22,16 +39,17 @@ const authStateRef = { current: { isAuthenticated: getInitialAuthState() } };
  * @return {Object}                    -  Authentication state and handlers
  */
 const useOnboardingAuth = ( { skipCheck = false } = {} ) => {
-	const [ isAuthenticated, setIsAuthenticated ] = useState(
-		authStateRef.current.isAuthenticated
+	// Use useSyncExternalStore for cross-component auth state sync
+	const isAuthenticated = useSyncExternalStore(
+		subscribeToAuth,
+		getAuthSnapshot
 	);
 	const [ isConnecting, setIsConnecting ] = useState( false );
 
 	// Auth success handler
 	const handleAuthSuccess = () => {
 		setIsConnecting( false );
-		setIsAuthenticated( true );
-		authStateRef.current.isAuthenticated = true;
+		setAuthState( true );
 	};
 
 	// Auth failure handler

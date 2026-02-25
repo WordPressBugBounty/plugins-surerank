@@ -44,7 +44,7 @@ class Translation_Manager {
 	/**
 	 * Term translation cache for batch processing
 	 *
-	 * @since x.x.x
+	 * @since 1.6.4
 	 * @var array<int, array<string, mixed>>
 	 */
 	private static $term_translation_cache = [];
@@ -158,7 +158,7 @@ class Translation_Manager {
 	/**
 	 * Add translation data to term data during batch processing
 	 *
-	 * @since x.x.x
+	 * @since 1.6.4
 	 * @param array<string, mixed> $term_data Term data.
 	 * @param \WP_Term             $term Term object.
 	 * @return array<string, mixed>|array<int, array<string, mixed>>
@@ -226,7 +226,7 @@ class Translation_Manager {
 	/**
 	 * Invalidate term cache when translation changes
 	 *
-	 * @since x.x.x
+	 * @since 1.6.4
 	 * @param int $term_id Term ID.
 	 * @return void
 	 */

@@ -56,13 +56,6 @@ abstract class Api_Base extends WP_REST_Controller {
 	 * @return bool|WP_Error True if valid, WP_REST_Response if invalid.
 	 */
 	public function validate_permission( $request ) {
-		if ( ! current_user_can( 'manage_options' ) ) {
-			return new WP_Error(
-				'surerank_rest_cannot_access',
-				__( 'You do not have permission to perform this action.', 'surerank' ),
-				[ 'status' => rest_authorization_required_code() ]
-			);
-		}
 		// Retrieve the nonce from the request header.
 		$nonce = $request->get_header( 'X-WP-Nonce' );
 
@@ -82,6 +75,45 @@ abstract class Api_Base extends WP_REST_Controller {
 				__( 'Nonce is invalid.', 'surerank' ),
 				[ 'status' => rest_authorization_required_code() ]
 			);
+		}
+
+		/**
+		 * Filter to allow Pro plugin or extensions to override permission checks.
+		 *
+		 * @since 1.6.4
+		 * @param bool|WP_Error $has_permission True to allow access, WP_Error to deny with custom message, false to use default check.
+		 * @param WP_REST_Request $request The REST request object.
+		 */
+		$has_permission = apply_filters( 'surerank_rest_api_permission', false, $request );
+
+		if ( is_wp_error( $has_permission ) ) {
+			return $has_permission;
+		}
+
+		// If filter didn't handle permission (Pro not active), fall back to admin capability check.
+		if ( true !== $has_permission ) {
+			if ( ! current_user_can( 'manage_options' ) ) {
+				return new WP_Error(
+					'surerank_rest_cannot_access',
+					__( 'You do not have permission to perform this action.', 'surerank' ),
+					[ 'status' => rest_authorization_required_code() ]
+				);
+			}
+		}
+
+		/**
+		 * Filter to allow additional permission checks (e.g., license validation).
+		 *
+		 * This runs AFTER the user capability check has passed.
+		 *
+		 * @since 1.6.4
+		 * @param bool|WP_Error $permission_status True if permission granted, WP_Error to deny.
+		 * @param WP_REST_Request $request The REST request object.
+		 */
+		$permission_status = apply_filters( 'surerank_rest_api_permission_check', true, $request );
+
+		if ( is_wp_error( $permission_status ) ) {
+			return $permission_status;
 		}
 
 		return true;

@@ -94,6 +94,7 @@ class Api extends Api_Base {
 						'default'           => false,
 					],
 				],
+				'role_capability'     => 'content_setting',
 			]
 		);
 	}

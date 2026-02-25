@@ -4,6 +4,7 @@ import { cn } from '@Functions/utils';
 import { Outlet, useLocation } from '@tanstack/react-router';
 import { ONBOARDING_STEPS_CONFIG } from '@Onboarding/index';
 import { OnboardingProvider } from '@Onboarding/store';
+import useOnboardingAuth from '@Onboarding/hooks/use-onboarding-auth';
 import ExitButton from '@Onboarding/components/exit-button';
 import TanStackRouterDevtools from '@/apps/admin-components/tanstack-router-dev-tools';
 
@@ -11,12 +12,20 @@ const OnboardingLayout = () => {
 	const currentStepURL = useLocation( {
 		select: ( location ) => location.pathname,
 	} );
-	const currentStep = ONBOARDING_STEPS_CONFIG.findIndex(
+	const { isAuthenticated } = useOnboardingAuth();
+
+	const visibleSteps = isAuthenticated
+		? ONBOARDING_STEPS_CONFIG.filter(
+				( step ) => step.path !== '/user-details'
+		  )
+		: ONBOARDING_STEPS_CONFIG;
+
+	const currentStep = visibleSteps.findIndex(
 		( step ) => step.path === currentStepURL
 	);
 	const {
 		config: { containerSize = 'sm' },
-	} = ONBOARDING_STEPS_CONFIG[ currentStep ] || {
+	} = visibleSteps[ currentStep ] || {
 		config: { containerSize: 'sm' },
 	};
 
@@ -62,7 +71,7 @@ const OnboardingLayout = () => {
 								completedVariant="number"
 							>
 								{ Array.from( {
-									length: ONBOARDING_STEPS_CONFIG.length - 1,
+									length: visibleSteps.length - 1,
 								} ).map( ( _, index ) => (
 									<ProgressSteps.Step key={ index } />
 								) ) }

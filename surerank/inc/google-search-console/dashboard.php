@@ -141,6 +141,7 @@ class Dashboard extends Api_Base {
 					'methods'             => $args['methods'],
 					'callback'            => $args['callback'],
 					'permission_callback' => [ $this, 'validate_permission' ],
+					'role_capability'     => 'global_setting',
 					'args'                => $args['args'] ?? [],
 				]
 			);
@@ -153,6 +154,7 @@ class Dashboard extends Api_Base {
 				'methods'             => WP_REST_Server::EDITABLE,
 				'callback'            => [ $this, 'update_site' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
+				'role_capability'     => 'global_setting',
 				'args'                => [
 					'url' => [
 						'type'     => 'string',

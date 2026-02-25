@@ -47,11 +47,13 @@ class Api extends Api_Base {
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => [ $this, 'get_settings' ],
 					'permission_callback' => [ $this, 'validate_permission' ],
+					'role_capability'     => 'global_setting',
 				],
 				[
 					'methods'             => WP_REST_Server::CREATABLE,
 					'callback'            => [ $this, 'save_settings' ],
 					'permission_callback' => [ $this, 'validate_permission' ],
+					'role_capability'     => 'global_setting',
 					'args'                => apply_filters(
 						'surerank_email_reports_settings_args',
 						[

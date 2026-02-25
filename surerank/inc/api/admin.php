@@ -310,6 +310,7 @@ class Admin extends Api_Base {
 				'callback'            => [ $this, 'get_initials' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
 				'args'                => $this->get_editor_args(),
+				'role_capability'     => 'content_setting',
 			]
 		);
 	}
@@ -339,6 +340,7 @@ class Admin extends Api_Base {
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'get_admin_settings' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
+				'role_capability'     => 'global_setting',
 			]
 		);
 	}
@@ -358,6 +360,7 @@ class Admin extends Api_Base {
 				'callback'            => [ $this, 'update_admin_settings' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
 				'args'                => $this->get_admin_settings_update_args(),
+				'role_capability'     => 'global_setting',
 			]
 		);
 	}
@@ -376,6 +379,7 @@ class Admin extends Api_Base {
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'get_site_settings' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
+				'role_capability'     => 'global_setting',
 			]
 		);
 	}

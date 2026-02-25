@@ -81,7 +81,7 @@ interface Provider {
 	/**
 	 * Get translation URLs for a single term
 	 *
-	 * @since x.x.x
+	 * @since 1.6.4
 	 * @param int    $term_id Term ID.
 	 * @param string $taxonomy Taxonomy name.
 	 * @return array<string, array{url: string, locale: string}>
@@ -91,7 +91,7 @@ interface Provider {
 	/**
 	 * Get the language of a term
 	 *
-	 * @since x.x.x
+	 * @since 1.6.4
 	 * @param int $term_id Term ID.
 	 * @return string Language code, or empty string if not found.
 	 */

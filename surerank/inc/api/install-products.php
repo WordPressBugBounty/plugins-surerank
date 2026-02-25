@@ -52,6 +52,7 @@ class Install_Products extends Api_Base {
 				'methods'             => WP_REST_Server::READABLE, // GET method.
 				'callback'            => [ $this, 'get_installed_plugins_and_themes' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
+				'role_capability'     => 'global_setting',
 			]
 		);
 	}

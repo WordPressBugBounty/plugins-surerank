@@ -3,6 +3,7 @@ import { __ } from '@wordpress/i18n';
 import withSuspense from '@AdminComponents/hoc/with-suspense';
 import GeneratePageContent from '@Functions/page-content-generator';
 import { applyFilters } from '@wordpress/hooks';
+import currentUserCan from '@/functions/role-capabilities';
 
 // Base feature toggles
 const isWpSchemaProActive = surerank_globals?.wp_schema_pro_active || false;
@@ -15,7 +16,22 @@ const wpSchemaProInactiveLabel = __(
 	'surerank'
 );
 
-const getBaseToggles = () => [
+const GLOBAL_SEO_FEATURES = [
+	{
+		type: 'switch',
+		id: 'enable_schemas',
+		storeKey: 'enable_schemas',
+		shouldReload: true,
+		dataType: 'boolean',
+		label: __( 'Schema', 'surerank' ),
+		disabled: isWpSchemaProActive,
+		description: isWpSchemaProActive
+			? wpSchemaProActiveLabel
+			: wpSchemaProInactiveLabel,
+	},
+];
+
+const CONTENT_PERFORMANCE_FEATURES = [
 	{
 		type: 'switch',
 		id: 'enable_page_level_seo',
@@ -27,6 +43,24 @@ const getBaseToggles = () => [
 			'surerank'
 		),
 	},
+];
+
+const TECHNICAL_CONTROLS_FEATURES = [
+	{
+		type: 'switch',
+		id: 'enable_migration',
+		storeKey: 'enable_migration',
+		shouldReload: true,
+		dataType: 'boolean',
+		label: __( 'Migration', 'surerank' ),
+		description: __(
+			'Helps you migrate your SEO plugin data into SureRank smoothly.',
+			'surerank'
+		),
+	},
+];
+
+const PERFORMANCE_INSIGHTS_FEATURES = [
 	{
 		type: 'switch',
 		id: 'enable_google_console',
@@ -40,30 +74,19 @@ const getBaseToggles = () => [
 		),
 		pendingAction: [ false, true ],
 	},
-	{
-		type: 'switch',
-		id: 'enable_schemas',
-		storeKey: 'enable_schemas',
-		shouldReload: true,
-		dataType: 'boolean',
-		label: __( 'Schema', 'surerank' ),
-		disabled: isWpSchemaProActive,
-		description: isWpSchemaProActive
-			? wpSchemaProActiveLabel
-			: wpSchemaProInactiveLabel,
-	},
-	{
-		type: 'switch',
-		id: 'enable_migration',
-		storeKey: 'enable_migration',
-		shouldReload: true,
-		dataType: 'boolean',
-		label: __( 'Migration', 'surerank' ),
-		description: __(
-			'Helps you migrate your SEO plugin data into SureRank smoothly.',
-			'surerank'
-		),
-	},
+];
+
+const getBaseToggles = () => [
+	...( currentUserCan( 'surerank_content_performance' )
+		? CONTENT_PERFORMANCE_FEATURES
+		: [] ),
+	...( currentUserCan( 'surerank_global_setting' )
+		? PERFORMANCE_INSIGHTS_FEATURES
+		: [] ),
+	...( currentUserCan( 'surerank_global_setting' ) ? GLOBAL_SEO_FEATURES : [] ),
+	...( currentUserCan( 'surerank_global_setting' )
+		? TECHNICAL_CONTROLS_FEATURES
+		: [] ),
 ];
 
 export const PAGE_CONTENT = [

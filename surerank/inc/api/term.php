@@ -190,6 +190,7 @@ class Term extends Api_Base {
 				'callback'            => [ $this, 'get_term_seo_data' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
 				'args'                => $this->get_term_seo_data_args(),
+				'role_capability'     => 'content_setting',
 			]
 		);
 	}
@@ -209,6 +210,7 @@ class Term extends Api_Base {
 				'callback'            => [ $this, 'update_term_seo_data' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
 				'args'                => $this->get_update_term_seo_data_args(),
+				'role_capability'     => 'content_setting',
 			]
 		);
 	}

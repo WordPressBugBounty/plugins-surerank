@@ -1302,6 +1302,7 @@ class Analyzer extends Api_Base {
 				'callback'            => [ $this, 'get_general_checks' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
 				'args'                => $this->get_general_checks_args(),
+				'role_capability'     => 'global_setting',
 			]
 		);
 	}
@@ -1321,6 +1322,7 @@ class Analyzer extends Api_Base {
 				'callback'            => [ $this, 'get_settings_checks' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
 				'args'                => $this->get_force_args(),
+				'role_capability'     => 'global_setting',
 			]
 		);
 	}
@@ -1340,6 +1342,7 @@ class Analyzer extends Api_Base {
 				'callback'            => [ $this, 'get_other_checks' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
 				'args'                => $this->get_force_args(),
+				'role_capability'     => 'global_setting',
 			]
 		);
 	}
@@ -1359,6 +1362,7 @@ class Analyzer extends Api_Base {
 				'callback'            => [ $this, 'get_broken_links_status' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
 				'args'                => $this->get_broken_links_args(),
+				'role_capability'     => 'content_setting',
 			]
 		);
 	}
@@ -1378,6 +1382,7 @@ class Analyzer extends Api_Base {
 				'callback'            => [ $this, 'get_page_seo_checks' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
 				'args'                => $this->get_post_id_args(),
+				'role_capability'     => 'content_setting',
 			]
 		);
 	}
@@ -1397,6 +1402,7 @@ class Analyzer extends Api_Base {
 				'callback'            => [ $this, 'get_taxonomy_seo_checks' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
 				'args'                => $this->get_term_id_args(),
+				'role_capability'     => 'content_setting',
 			]
 		);
 	}
@@ -1439,6 +1445,7 @@ class Analyzer extends Api_Base {
 				'callback'            => [ $this, 'ignore_checks' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
 				'args'                => $this->get_id_args(),
+				'role_capability'     => 'global_setting',
 			]
 		);
 	}
@@ -1458,6 +1465,7 @@ class Analyzer extends Api_Base {
 				'callback'            => [ $this, 'delete_ignore_checks' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
 				'args'                => $this->get_sanitized_id_args(),
+				'role_capability'     => 'global_setting',
 			]
 		);
 	}
@@ -1477,6 +1485,7 @@ class Analyzer extends Api_Base {
 				'callback'            => [ $this, 'ignore_post_taxo_check' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
 				'args'                => $this->get_ignore_post_check_args(),
+				'role_capability'     => 'content_setting',
 			]
 		);
 	}
@@ -1496,6 +1505,7 @@ class Analyzer extends Api_Base {
 				'callback'            => [ $this, 'delete_ignore_post_taxo_check' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
 				'args'                => $this->get_ignore_post_check_args(),
+				'role_capability'     => 'content_setting',
 			]
 		);
 	}
@@ -1515,6 +1525,7 @@ class Analyzer extends Api_Base {
 				'callback'            => [ $this, 'get_ignore_post_taxo_check' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
 				'args'                => $this->get_post_id_with_check_type_args(),
+				'role_capability'     => 'content_setting',
 			]
 		);
 	}

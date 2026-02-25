@@ -11,6 +11,7 @@ namespace SureRank\Inc\API;
 
 use SureRank\Inc\Admin\Helper;
 use SureRank\Inc\Admin\Update_Timestamp;
+use SureRank\Inc\Functions\Requests;
 use SureRank\Inc\Functions\Send_Json;
 use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Functions\Update;
@@ -29,6 +30,17 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Onboarding extends Api_Base {
 	use Get_Instance;
+
+	/**
+	 * Default user details.
+	 */
+	public const DEFAULT_USER_DETAILS = [
+		'first_name' => '',
+		'last_name'  => '',
+		'email'      => '',
+		'skip'       => 'no',
+		'lead'       => false,
+	];
 
 	/**
 	 * Route Onboarding
@@ -54,6 +66,7 @@ class Onboarding extends Api_Base {
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'save_website_details' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
+				'role_capability'     => 'global_setting',
 				'args'                => [
 					'website_type'         => [
 						'type'              => 'string',
@@ -139,6 +152,36 @@ class Onboarding extends Api_Base {
 						'type'     => 'string',
 						'required' => false,
 					],
+					'first_name'           => [
+						'type'              => 'string',
+						'required'          => false,
+						'description'       => __( 'First name of the user.', 'surerank' ),
+						'sanitize_callback' => 'sanitize_text_field',
+						'validate_callback' => static function( $value ) {
+							return is_string( $value );
+						},
+					],
+					'last_name'            => [
+						'type'              => 'string',
+						'required'          => false,
+						'description'       => __( 'Last name of the user.', 'surerank' ),
+						'sanitize_callback' => 'sanitize_text_field',
+						'validate_callback' => static function( $value ) {
+							return is_string( $value );
+						},
+					],
+					'email'                => [
+						'type'              => 'string',
+						'required'          => false,
+						'description'       => __( 'Email address of the user.', 'surerank' ),
+						'sanitize_callback' => 'sanitize_email',
+						'validate_callback' => static function( $value ) {
+							if ( empty( $value ) ) {
+								return true;
+							}
+							return is_email( $value );
+						},
+					],
 				],
 			]
 		);
@@ -205,6 +248,8 @@ class Onboarding extends Api_Base {
 			'contact_page'         => 0,
 			'social_profiles'      => [],
 			'email'                => $auth_data['user_email'] ?? '',
+			'first_name'           => '',
+			'last_name'            => '',
 		];
 
 		$data = wp_parse_args(
@@ -575,6 +620,36 @@ class Onboarding extends Api_Base {
 	}
 
 	/**
+	 * Get User Details
+	 *
+	 * @since 1.6.4
+	 * @param string $key     Optional. Specific key to retrieve.
+	 * @param mixed  $default Optional. Default value if key not found.
+	 * @return mixed User details array or specific value.
+	 */
+	public function get_user_details( $key = '', $default = '' ) {
+		$user_details = get_option( 'surerank_onboarding_user_details', self::DEFAULT_USER_DETAILS );
+
+		if ( ! empty( $key ) ) {
+			return $user_details[ $key ] ?? $default;
+		}
+
+		return $user_details;
+	}
+
+	/**
+	 * Set User Details
+	 *
+	 * @since 1.6.4
+	 * @param array<string, mixed> $data User details data.
+	 * @return bool
+	 */
+	public function set_user_details( $data ) {
+		$user_details = wp_parse_args( $data, self::DEFAULT_USER_DETAILS );
+		return update_option( 'surerank_onboarding_user_details', $user_details );
+	}
+
+	/**
 	 * Set Onboarding Data
 	 *
 	 * We need to store the facebook page url and twitter profile username in the settings array as per the new requirement.
@@ -602,6 +677,13 @@ class Onboarding extends Api_Base {
 		$this->set_social_schema( $data, $settings );
 		$this->set_social_profiles( $data, $settings );
 		$this->set_person_or_organization( $data, $settings );
+
+		$lead = [
+			'email'      => $data['email'] ?? '',
+			'first_name' => $data['first_name'] ?? '',
+			'last_name'  => $data['last_name'] ?? '',
+		];
+		$this->generate_lead( $lead );
 
 		return $this->save_onboarding_data( $data );
 	}
@@ -640,6 +722,41 @@ class Onboarding extends Api_Base {
 	private function set_social_profiles( &$data, &$settings ) {
 		$settings['social_profiles'] = $data['social_profiles'];
 		unset( $data['social_profiles'] );
+	}
+
+	/**
+	 * Generate Lead
+	 *
+	 * @since 1.6.4
+	 * @param array<string, mixed> $lead Lead data.
+	 * @return void
+	 */
+	private function generate_lead( $lead ) {
+		if ( empty( $lead['email'] ) ) {
+			return;
+		}
+
+		$user_details = $this->get_user_details();
+
+		if ( ! empty( $user_details['lead'] ) ) {
+			return;
+		}
+
+		$this->set_user_details( $lead );
+
+		$response = Requests::post(
+			'https://websitedemos.net/wp-json/surerank/v1/subscribe/',
+			[
+				'headers' => [
+					'Content-Type' => 'application/json',
+				],
+				'body'    => wp_json_encode( $lead ),
+			]
+		);
+
+		if ( ! is_wp_error( $response ) && wp_remote_retrieve_response_code( $response ) === 200 ) {
+			$this->set_user_details( [ 'lead' => true ] );
+		}
 	}
 
 }

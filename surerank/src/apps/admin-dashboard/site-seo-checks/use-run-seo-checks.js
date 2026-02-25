@@ -4,6 +4,7 @@ import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 import { addCategoryToSiteSeoChecks } from '@Functions/utils';
 import { useEffect } from '@wordpress/element';
+import currentUserCan from '@/functions/role-capabilities';
 
 /**
  * Custom hook for running SEO checks
@@ -99,16 +100,27 @@ export const useRunSeoChecks = ( options = {} ) => {
 
 	// Auto-trigger checks if pending action exists
 	useEffect( () => {
-		if ( runningChecks ) {
+		if (
+			runningChecks ||
+			! currentUserCan( 'surerank_global_setting' )
+		) {
 			return;
 		}
 
 		try {
-			const pendingActions = JSON.parse( window.localStorage.getItem( 'surerank_pending_actions' ) || '[]' );
+			const pendingActions = JSON.parse(
+				window.localStorage.getItem( 'surerank_pending_actions' ) ||
+					'[]'
+			);
 			if ( pendingActions.includes( 'enable_google_console' ) ) {
 				// Remove the action first to prevent double-trigger
-				const updatedActions = pendingActions.filter( ( action ) => action !== 'enable_google_console' );
-				window.localStorage.setItem( 'surerank_pending_actions', JSON.stringify( updatedActions ) );
+				const updatedActions = pendingActions.filter(
+					( action ) => action !== 'enable_google_console'
+				);
+				window.localStorage.setItem(
+					'surerank_pending_actions',
+					JSON.stringify( updatedActions )
+				);
 
 				// Trigger the checks
 				handleRunChecksAgain();

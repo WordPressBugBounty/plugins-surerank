@@ -266,7 +266,7 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 				className="flex flex-col items-start justify-start gap-1.5 w-full"
 			>
 				<div className="flex items-center gap-1.5">
-					<Label tag="span" size="sm" required={ subField.required }>
+					<Label tag="span" size="sm">
 						{ subField.label }
 					</Label>
 					{ subField.tooltip && (
@@ -414,7 +414,6 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 									<Label
 										tag="span"
 										size="sm"
-										required={ field.required }
 									>
 										{ field.label }
 									</Label>

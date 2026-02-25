@@ -766,4 +766,16 @@ const GeneratePageContent = ( { json, hideGlobalSaveButton = false } ) => {
 	);
 };
 
+/**
+ * The component is responsible for generating the page content only and it's for independent single page.
+ * No save button will be displayed.
+ *
+ * @param {Object} props      The component props.
+ * @param {Object} props.json The JSON data for the page content.
+ * @return {JSX.Element} The generated page content.
+ */
+export const GeneratePageContentOnly = ( { json } ) => {
+	return generateForm( json, {}, () => {}, {}, false, true );
+};
+
 export default GeneratePageContent;

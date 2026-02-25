@@ -125,6 +125,7 @@ class Migrations extends Api_Base {
 							'description' => __( 'Whether to clean up source data after import.', 'surerank' ),
 						],
 					],
+					'role_capability'     => 'global_setting',
 				],
 				[
 					'methods'             => WP_REST_Server::READABLE,
@@ -146,6 +147,7 @@ class Migrations extends Api_Base {
 							'default'     => 'rankmath',
 						],
 					],
+					'role_capability'     => 'global_setting',
 				],
 			]
 		);
@@ -180,6 +182,7 @@ class Migrations extends Api_Base {
 							'description' => __( 'Whether to clean up source data after import.', 'surerank' ),
 						],
 					],
+					'role_capability'     => 'global_setting',
 				],
 				[
 					'methods'             => WP_REST_Server::READABLE,
@@ -201,6 +204,7 @@ class Migrations extends Api_Base {
 							'enum'        => array_keys( $this->importers ),
 						],
 					],
+					'role_capability'     => 'global_setting',
 				],
 			]
 		);
@@ -228,6 +232,7 @@ class Migrations extends Api_Base {
 						'description' => __( 'Whether to clean up source global data after import.', 'surerank' ),
 					],
 				],
+				'role_capability'     => 'global_setting',
 			]
 		);
 
@@ -247,6 +252,7 @@ class Migrations extends Api_Base {
 						'enum'        => array_keys( $this->importers ),
 					],
 				],
+				'role_capability'     => 'global_setting',
 			]
 		);
 
@@ -266,6 +272,7 @@ class Migrations extends Api_Base {
 						'enum'        => array_keys( $this->importers ),
 					],
 				],
+				'role_capability'     => 'global_setting',
 			]
 		);
 		// -------- Get migrated data --------.
@@ -276,6 +283,7 @@ class Migrations extends Api_Base {
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'get_migrated_data' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
+				'role_capability'     => 'global_setting',
 			]
 		);
 	}

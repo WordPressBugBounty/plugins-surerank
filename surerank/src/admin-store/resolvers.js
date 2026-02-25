@@ -7,6 +7,7 @@ import { addQueryArgs } from '@wordpress/url';
 import { __ } from '@wordpress/i18n';
 import { getDefaultPageDescription } from '@/global/constants';
 import { addCategoryToSiteSeoChecks } from '@/functions/utils';
+import currentUserCan from '@/functions/role-capabilities';
 
 const resolvers = {
 	*getMetaSettings() {
@@ -38,6 +39,10 @@ const resolvers = {
 	*getSiteSeoAnalysis() {
 		let report = {};
 		const url = surerank_globals.site_url;
+
+		if ( ! currentUserCan( 'surerank_global_setting' ) ) {
+			return;
+		}
 
 		// Fetch critical issues
 		try {

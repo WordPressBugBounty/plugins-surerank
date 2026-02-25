@@ -51,6 +51,7 @@ class RobotsTxt extends Api_Base {
 						'type'     => 'string',
 					],
 				],
+				'role_capability'     => 'global_setting',
 			]
 		);
 	}

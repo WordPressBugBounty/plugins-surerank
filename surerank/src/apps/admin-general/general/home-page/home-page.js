@@ -7,6 +7,7 @@ import withSuspense from '@AdminComponents/hoc/with-suspense';
 import { useLocation, createLazyRoute } from '@tanstack/react-router';
 import { Alert } from '@bsf/force-ui';
 import useSettings from '@/global/hooks/use-admin-settings';
+import currentUserCan from '@/functions/role-capabilities';
 
 const PAGE_TITLE = {
 	homepage: __( 'Home Page General', 'surerank' ),
@@ -50,8 +51,9 @@ const HomePage = () => {
 
 	if ( siteSettings?.home_page_static === 'page' ) {
 		const home_page_edit_url = siteSettings?.home_page_edit_url;
+		const canEditPages = currentUserCan( 'surerank_content_setting' );
 
-		const labelWithLink = (
+		const labelWithLink = canEditPages ? (
 			<>
 				{ __(
 					'A static page is set as the home page of your website under WordPress Dashboard > Settings > Reading. ',
@@ -70,6 +72,11 @@ const HomePage = () => {
 					'surerank'
 				) }
 			</>
+		) : (
+			__(
+				'Please contact the administrator to manage the static page SEO, as you do not have the required access rights.',
+				'surerank'
+			)
 		);
 		return (
 			<PageContentWrapper title={ __( 'Home Page', 'surerank' ) }>

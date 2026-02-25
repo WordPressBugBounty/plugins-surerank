@@ -168,7 +168,7 @@ class Translatepress implements Provider {
 	/**
 	 * Get translation URLs for a single term
 	 *
-	 * @since x.x.x
+	 * @since 1.6.4
 	 * @param int    $term_id Term ID.
 	 * @param string $taxonomy Taxonomy name.
 	 * @return array<string, array{url: string, locale: string}>
@@ -206,7 +206,7 @@ class Translatepress implements Provider {
 	/**
 	 * Get the language of a term
 	 *
-	 * @since x.x.x
+	 * @since 1.6.4
 	 * @param int $term_id Term ID.
 	 * @return string
 	 */

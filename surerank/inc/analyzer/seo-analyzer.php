@@ -944,13 +944,14 @@ class SeoAnalyzer {
 	}
 
 	/**
-	 * Analyze secure HTTPS connection.
+	 * Analyze secure HTTPS connection and SSL certificate validity.
 	 *
 	 * @return array<string, mixed>
 	 */
 	public function analyze_secure_connection(): array {
 		$header_url        = $this->fetch_header( 'x-final-url' );
 		$effective_url     = $header_url !== '' ? $header_url : home_url();
+		$is_https          = strpos( $effective_url, 'https://' ) === 0;
 		$working_label     = __( 'Site is served over a secure HTTPS connection.', 'surerank' );
 		$not_working_label = __( 'Site is not served over a secure HTTPS connection.', 'surerank' );
 
@@ -1008,11 +1009,12 @@ class SeoAnalyzer {
 			__( 'SureRank confirms whether your site has HTTPS or not, so you can see the status clearly and see at a glance whether your connection is secure.', 'surerank' ),
 		];
 
-		$is_https = strpos( $effective_url, 'https://' ) === 0;
-		$title    = $is_https ? $working_label : $not_working_label;
+		$is_secure = $is_https && $this->is_ssl_certificate_valid( $effective_url );
+		$title     = $is_secure ? $working_label : $not_working_label;
+
 		return [
 			'exists'      => true,
-			'status'      => $is_https ? 'success' : 'warning',
+			'status'      => $is_secure ? 'success' : 'warning',
 			'description' => $description,
 			'message'     => $title,
 			'not_fixable' => true,
@@ -1375,6 +1377,32 @@ class SeoAnalyzer {
 			'message'     => $title,
 			'not_fixable' => true,
 		];
+	}
+
+	/**
+	 * Check if SSL certificate is valid for a given URL.
+	 *
+	 * Uses WordPress HTTP API with sslverify enabled.
+	 * If the request fails due to SSL issues, certificate is invalid.
+	 *
+	 * @since 1.6.4
+	 * @param string $url The URL to check.
+	 * @return bool True if SSL certificate is valid.
+	 */
+	private function is_ssl_certificate_valid( string $url ): bool {
+		if ( empty( $url ) ) {
+			return true;
+		}
+
+		$response = wp_safe_remote_head(
+			$url,
+			[
+				'sslverify' => true,
+				'timeout'   => 10, // phpcs:ignore WordPressVIPMinimum.Performance.RemoteRequestTimeout.timeout_timeout
+			]
+		);
+
+		return ! is_wp_error( $response );
 	}
 
 	/**

@@ -8,6 +8,7 @@ import { useNavigate } from '@tanstack/react-router';
 import UpgradeToPro from '@AdminDashboard/upgrade-to-pro';
 import WelcomeCard from './welcome-card';
 import { isProActive } from '@/functions/nudges';
+import currentUserCan from '@/functions/role-capabilities';
 
 const quickLinks = [
 	{
@@ -46,7 +47,8 @@ const onboardingSetup = [
 ];
 
 const quickAccessLinks =
-	'yes' !== surerank_admin_common?.onboarding_complete_status
+	'yes' !== surerank_admin_common?.onboarding_complete_status &&
+	currentUserCan( 'manage_options' )
 		? [ ...onboardingSetup, ...quickLinks ]
 		: [ ...quickLinks ];
 

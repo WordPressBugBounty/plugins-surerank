@@ -5,6 +5,7 @@ import {
 	useMatchRoute,
 	useLocation,
 	useNavigate,
+	useChildMatches,
 } from '@tanstack/react-router';
 import {
 	Badge,
@@ -46,6 +47,7 @@ import VersionBadge from '../version-badge';
 
 // Stylesheets
 import '@Global/style.scss';
+import currentUserCan from '@/functions/role-capabilities';
 
 const NavLink = ( { path, children } ) => {
 	const matchRoute = useMatchRoute();
@@ -306,6 +308,9 @@ const useRouteConfig = ( routes ) => {
 
 	// Function to recursively search for route configuration
 	const findRouteConfig = ( routesList, path, parentPath = '' ) => {
+		if ( ! Array.isArray( routesList ) ) {
+			return null;
+		}
 		for ( const route of routesList ) {
 			// Build the full path by combining parent path with current route path
 			const fullPath = parentPath + route.path;
@@ -344,6 +349,8 @@ const SidebarLayout = ( {
 	const { activeSection, navbarLinks: topNavbarLinks } =
 		useNavbarLinks( navLinks );
 	const location = useLocation();
+	const childMatches = useChildMatches();
+	const isNotFound = ! childMatches.length;
 	// Get route configuration using the unified hook
 	const { isNavbarOnly: routeNavbarOnly, isFullWidth } =
 		useRouteConfig( routes );
@@ -408,7 +415,10 @@ const SidebarLayout = ( {
 
 	return (
 		<Fragment>
-			<div id="surerank-admin-dashboard" className="grid grid-rows-[64px_auto] min-h-full bg-background-secondary">
+			<div
+				id="surerank-admin-dashboard"
+				className="grid grid-rows-[64px_auto] min-h-full bg-background-secondary"
+			>
 				{ /* Header */ }
 				<Topbar
 					className="w-auto min-h-[unset] h-16 shadow-sm p-0 relative z-[2]"
@@ -478,11 +488,17 @@ const SidebarLayout = ( {
 							<VersionBadge />
 						</Topbar.Item>
 						<Topbar.Item>
-							<Suspense
-								fallback={ <Skeleton className="w-20 h-6" /> }
-							>
-								<SiteSeoAnalysisBadge />
-							</Suspense>
+							{ currentUserCan(
+								'surerank_global_setting'
+							) && (
+								<Suspense
+									fallback={
+										<Skeleton className="w-20 h-6" />
+									}
+								>
+									<SiteSeoAnalysisBadge />
+								</Suspense>
+							) }
 						</Topbar.Item>
 						<Topbar.Item>
 							<Tooltip
@@ -522,7 +538,7 @@ const SidebarLayout = ( {
 				</Topbar>
 				{
 					// Sidebar Navigation
-					! isNavbarOnly && (
+					( ! isNavbarOnly && ! isNotFound ) && (
 						<div className="w-full h-full grid grid-cols-[290px_1fr] max-[782px]:min-h-[calc(100dvh_-_110px)] min-h-[calc(100dvh_-_96px)]">
 							{ ! isNavbarOnly && (
 								<SuspenseNavbar navLinks={ filteredNavLinks } />
@@ -544,7 +560,7 @@ const SidebarLayout = ( {
 				}
 				{
 					// Without sidebar navigation
-					isNavbarOnly && (
+					( isNavbarOnly || isNotFound ) && (
 						<div className="w-full h-fit max-[782px]:min-h-[calc(100dvh_-_110px)] min-h-[calc(100dvh_-_96px)] bg-background-secondary">
 							<main className="w-full h-full mx-auto relative">
 								<Outlet />

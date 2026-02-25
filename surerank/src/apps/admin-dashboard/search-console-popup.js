@@ -1,12 +1,15 @@
 import { Button, Text } from '@bsf/force-ui';
 import { __ } from '@wordpress/i18n';
 import ModalWrapper from '@AdminComponents/modal-wrapper';
+import { cn } from '@Functions/utils';
+import NotAllowedMessage from '@AdminComponents/not-allowed';
 
 const SearchConsolePopup = ( { isOpen = true } ) => {
 	if ( ! isOpen ) {
 		return null;
 	}
 
+	const auth_url = surerank_admin_common.auth_url || '';
 	return (
 		<ModalWrapper isOpen={ isOpen } className="top-[40%] z-[1]">
 			<div className="bg-background-primary rounded-lg shadow-2xl w-full p-5 pointer-events-auto border-0.5 border-solid border-border-subtle">
@@ -61,19 +64,24 @@ const SearchConsolePopup = ( { isOpen = true } ) => {
 						<Button
 							variant="primary"
 							size="md"
-							className="w-full"
+							className={ cn(
+								'w-full',
+								auth_url === '' && 'cursor-not-allowed'
+							) }
 							onClick={ () =>
 								window.open(
-									surerank_admin_common.auth_url,
+									auth_url,
 									'_self'
 								)
 							}
+							disabled={ auth_url === '' }
 						>
 							{ __(
 								'Connect to Search Console - It’s Free',
 								'surerank'
 							) }
 						</Button>
+						{ auth_url === '' && <NotAllowedMessage /> }
 					</div>
 				</div>
 			</div>

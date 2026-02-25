@@ -449,7 +449,16 @@ class Loader {
 	 * @return void
 	 */
 	private function load_admin_components(): void {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		/**
+		 * Filter the required capability to load SureRank admin components.
+		 * Allows Pro plugin to grant access based on role capabilities.
+		 *
+		 * @since 1.6.4
+		 * @param string $capability Required capability. Default: 'manage_options'.
+		 */
+		$required_capability = apply_filters( 'surerank_admin_components_capability', 'manage_options' );
+
+		if ( ! current_user_can( $required_capability ) ) {
 			return;
 		}
 

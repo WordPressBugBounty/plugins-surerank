@@ -264,6 +264,7 @@ class Post extends Api_Base {
 				'callback'            => [ $this, 'get_post_seo_data' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
 				'args'                => $this->get_post_seo_data_args(),
+				'role_capability'     => 'content_setting',
 			]
 		);
 	}
@@ -283,6 +284,7 @@ class Post extends Api_Base {
 				'callback'            => [ $this, 'update_post_seo_data' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
 				'args'                => $this->get_update_post_seo_data_args(),
+				'role_capability'     => 'content_setting',
 			]
 		);
 	}
@@ -301,6 +303,7 @@ class Post extends Api_Base {
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'get_post_type_data' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
+				'role_capability'     => 'content_setting',
 			]
 		);
 	}

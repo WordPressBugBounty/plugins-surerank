@@ -11,7 +11,7 @@ import {
 } from '@bsf/force-ui';
 import { Link } from '@tanstack/react-router';
 import PageContentWrapper from '@AdminComponents/page-content-wrapper';
-import GeneratePageContent from '@Functions/page-content-generator';
+import { GeneratePageContentOnly } from '@Functions/page-content-generator';
 import WEEK_DAYS from '@Global/constants/week-days';
 import withSuspense from '@AdminComponents/hoc/with-suspense';
 import { STORE_NAME } from '@AdminStore/constants';
@@ -449,8 +449,8 @@ export const PAGE_CONTENT = [
 
 const EmailReports = () => {
 	return (
-		<PageContentWrapper title={ __( 'Email Summary', 'surerank' ) }>
-			<GeneratePageContent
+		<PageContentWrapper title={ __( 'Email Reports', 'surerank' ) }>
+			<GeneratePageContentOnly
 				json={ PAGE_CONTENT }
 				hideGlobalSaveButton={ true }
 			/>

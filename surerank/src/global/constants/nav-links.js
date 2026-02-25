@@ -16,6 +16,7 @@ import {
 	Waypoints,
 	Mail,
 	Image,
+	Users,
 	Ellipsis,
 } from 'lucide-react';
 import { applyFilters } from '@wordpress/hooks';
@@ -302,6 +303,12 @@ export const getNavLinks = () => {
 					path: '/tools/miscellaneous',
 					label: __( 'Miscellaneous', 'surerank' ),
 					icon: Settings,
+					migratable: false,
+				},
+				{
+					path: '/tools/role-manager',
+					label: __( 'Role Manager', 'surerank' ),
+					icon: Users,
 					migratable: false,
 				},
 			],

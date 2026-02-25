@@ -18,10 +18,12 @@ import {
 } from '../icons';
 import { Button, DropdownMenu, Title, Text } from '@bsf/force-ui';
 import { PlusIcon, LinkIcon } from 'lucide-react';
+import { useNavigate } from '@tanstack/react-router';
 import StepNavButtons from '../components/nav-buttons';
 import { useOnboardingState } from '@Onboarding/store';
-import { focusHelper } from '../utils';
+import useOnboardingAuth from '../hooks/use-onboarding-auth';
 import { submitOnboardingData } from './user-details';
+import { focusHelper } from '../utils';
 
 const iconMap = {
 	facebook: FacebookIcon,
@@ -81,6 +83,8 @@ const getInitialList = ( formState ) => {
 const SocialProfiles = () => {
 	const [ { socialProfilesURLs = {}, websiteDetails = {} }, dispatch ] =
 		useOnboardingState();
+	const { isAuthenticated } = useOnboardingAuth();
+	const navigate = useNavigate();
 	// Local states
 	const [ formState, setFormState ] = useState( socialProfilesURLs );
 	const [ socialProfileLists, setSocialProfileLists ] = useState(
@@ -122,16 +126,21 @@ const SocialProfiles = () => {
 	};
 
 	const handleClickNext = async ( setIsLoading ) => {
-		setIsLoading( ( prevState ) => ( { ...prevState, next: true } ) );
-
 		dispatch( {
 			socialProfilesURLs: formState,
 		} );
 
-		try {
-			await submitOnboardingData( websiteDetails, formState );
-		} catch ( error ) {
-			// Silently handle errors.
+		// If authenticated, skip user-details and submit data directly
+		if ( isAuthenticated ) {
+			setIsLoading( ( prev ) => ( { ...prev, next: true } ) );
+			try {
+				await submitOnboardingData( websiteDetails, formState, {} );
+			} catch ( error ) {
+				// Silently handle API errors.
+			}
+			navigate( { to: '/finish' } );
+			// Throw to prevent default navigation to user-details
+			throw new Error( '', { cause: 'form-validation' } );
 		}
 	};
 
@@ -258,7 +267,6 @@ const SocialProfiles = () => {
 				} }
 				nextProps={ {
 					onClick: handleClickNext,
-					children: __( 'Finish', 'surerank' ),
 				} }
 				backProps={ {
 					onClick: handleSaveForm,

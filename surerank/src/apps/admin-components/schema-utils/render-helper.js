@@ -56,13 +56,12 @@ const createDefaultItem = ( fields ) => {
 	return defaultItem;
 };
 
-const renderFieldLabel = ( field, required = false ) => (
+const renderFieldLabel = ( field ) => (
 	<div className="flex items-center justify-start gap-1.5 w-full">
 		<Label
 			tag="span"
 			size="sm"
 			className="space-x-0.5"
-			required={ required }
 		>
 			{ field.label }
 		</Label>
@@ -395,10 +394,7 @@ export const renderCloneableGroupField = ( {
 										) }
 									>
 										{ subField.label &&
-											renderFieldLabel(
-												subField,
-												subField.required
-											) }
+											renderFieldLabel( subField ) }
 										<div className="grid grid-cols-12 gap-4 w-full">
 											{ subField.fields.map(
 												( nestedField ) => {
@@ -423,10 +419,7 @@ export const renderCloneableGroupField = ( {
 																)
 															) }
 														>
-															{ renderFieldLabel(
-																nestedField,
-																nestedField.required
-															) }
+															{ renderFieldLabel( nestedField ) }
 															<div className="flex items-center justify-start gap-1.5 w-full">
 																{ renderFieldCommon(
 																	{
@@ -508,10 +501,7 @@ export const renderCloneableGroupField = ( {
 										)
 									) }
 								>
-									{ renderFieldLabel(
-										subField,
-										subField.required
-									) }
+									{ renderFieldLabel( subField ) }
 									<div className="flex items-center justify-start gap-1.5 w-full">
 										{ renderFieldCommon( {
 											field: {
@@ -611,7 +601,7 @@ export const GroupFieldRenderer = ( {
 								widthToTailwindClass( subField.width || 'full' )
 							) }
 						>
-							{ renderFieldLabel( subField, subField.required ) }
+							{ renderFieldLabel( subField ) }
 							<div className="flex items-center justify-start gap-1.5 w-full">
 								{ renderFieldCommon( {
 									field: subField,

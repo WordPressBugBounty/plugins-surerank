@@ -144,6 +144,7 @@ const AdvancedTab = ( {
 						<Checkbox
 							key={ option.id }
 							size="sm"
+							className="!w-4"
 							label={ {
 								heading: (
 									<div className="flex items-center gap-1">

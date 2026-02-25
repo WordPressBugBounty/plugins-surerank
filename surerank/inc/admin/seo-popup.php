@@ -37,6 +37,10 @@ class Seo_Popup {
 	 * @return void
 	 */
 	public function __construct() {
+		// Check if user has permission to access content optimization related features.
+		if ( ! current_user_can( 'surerank_content_setting' ) ) {
+			return;
+		}
 		$this->enqueue_scripts_admin();
 		add_action( 'category_term_edit_form_top', [ $this, 'add_meta_box_trigger' ] );
 		add_action( 'created_category', [ $this, 'update_category_seo_values' ] );

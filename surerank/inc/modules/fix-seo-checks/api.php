@@ -73,6 +73,7 @@ class Api extends Api_Base {
 						'sanitize_callback' => 'rest_sanitize_boolean',
 					],
 				],
+				'role_capability'     => 'content_setting',
 			]
 		);
 	}

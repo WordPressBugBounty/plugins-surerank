@@ -5,7 +5,7 @@ Tags: seo, wordpress seo, xml sitemap, schema, google search console
 Requires at least: 6.8
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.6.3
+Stable tag: 1.6.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -294,8 +294,10 @@ Brainstorm Force
 
 
 == Changelog ==
-
-## 1.6.3 - 09-February-2026 ###
+= 1.6.4 - 25-February-2026 =
+* Improvement: Site SEO Checks - Improve SSL check to verify if the SSL certificate is valid and properly configured, rather than just checking if the site is using HTTPS.
+* Improvement: Onboarding - UI/UX improvements.
+= 1.6.3 - 09-February-2026 =
 * New: Multilingual: Added support for WPML and Polylang for multilingual sitemap.
 * Improvement: Google Search Console - Show average position of post and pages in content analysis table.
 * Improvement: Site SEO Checks - Added better visuals and updated content for Site SEO checks help guide.
@@ -305,9 +307,7 @@ Brainstorm Force
 * Fix: Fixed an issue with NewsPaper theme and Event plugin.
 * Fix: Fixed an issue in Sitemap where images column where adding even if the option was disabled.
 * Fix: Fixed an issue with metadata not getting applied if homepage is set to a shop page in WooCommerce.
-
-### 1.6.2 - 14-January-2026 ###
-
+= 1.6.2 - 14-January-2026 =
 * New: Introduced an option to get Email Reports on Monthly basis.
 * New: Ability to add or remove Schema field with a better control.
 * Improvement: Onboarding flow has been improved for a better user experience.
@@ -316,23 +316,19 @@ Brainstorm Force
 * Improvement: Generating sitemap as soon as any migration gets completed.
 * Improvement: Displaying an indicator and a notice in the Schema editor if any Display Rule is not being set, to avoid blank schemas without any rulesets.
 * Fix: Resolved a few issues in Rankmath migration like - global image gets set to featured image of every post, validations of search engine title and description for a social title and description.
-
-### 1.6.1 - 23-December-2025 ###
+= 1.6.1 - 23-December-2025 =
 * Improvement: Removed default title prefixes from taxonomy, archive, and post type archive pages.
 * Fix: Fixed an issue where onboarding settings were not updated correctly in an edge case.
-
-### 1.6.0 - 22-December-2025 ###
+= 1.6.0 - 22-December-2025 =
 * New: Introduced Email Summary with site performance insights from Google Search Console.
 * Improvement: Improved user experience in SureRank Meta box and other additional components.
 * Improvement: Optimized Page SEO checks in the SEO bar.
 * Improvement: Added custom field support (text and image) for ACF, SCF, Pods, and Metabox in meta templates, schemas, and social settings.
 * Fix: Fixed an issue where schema was not displaying in metabox when the display condition was set to the front page.
-
-### 1.5.1 - 09-December-2025 ###
+= 1.5.1 - 09-December-2025 =
 * Improvement: Enhanced content generation to provide more accurate and relevant results.
 * Improvement: Google Search Console Dashboard Widget - updated the UI for a better user experience.
-
-### 1.5.0 - 25-November-2025 ###
+= 1.5.0 - 25-November-2025 =
 * Improvement: Schema - Added option to reset display conditions defined in the first condition.
 * Improvement: Ability to add business information during onboarding.
 * Improvement: Added noindex robots settings for WooCommerce pages.
@@ -341,8 +337,7 @@ Brainstorm Force
 * Fix: Onboarding - Solved an issue where the onboarding form wasn't getting submitted in an edge case.
 * Fix: Fixed an issue where SEO Meta Box page checks were not updated in Classic Editor.
 * Fix: SureRank Schema now deactivates when WP Schema Pro plugin is enabled.
-
-### 1.4.3 - 29-October-2025 ###
+= 1.4.3 - 29-October-2025 =
 * Improvement: Improved UI for Google Site Verification, Site SEO Checks, Page SEO Checks, and Focus Keyword.
 * Improvement: Improved sitemap cache generation process.
 * Improvement: Improved content generation to show results based on the site’s language.
@@ -350,31 +345,25 @@ Brainstorm Force
 * Fix: Fixed inconsistent page SEO checks in the metabox and SEO bar.
 * Fix: Fixed the issue with false detection of broken links and updated it to include only 404 and 410 status codes.
 * Fix: Fixed the issue where the onboarding screen appeared every time after activation.
-
-### 1.4.2 - 13-October-2025 ###
+= 1.4.2 - 13-October-2025 =
 * Improvement: Improved the SEO Popup and SEO Bar loading performance.
 * Improvement: Added a filter to change the default sitemap slug.
 * Improvement: Improved the UX for the Date Picker field in Schemas.
 * Fix: Site Level Checks - Resolved an issue where robots.txt accessibility checks were unnecessarily validating file content. The check now only verifies accessibility.
 * Fix: Page Level Checks - Fixed a bug that caused SureRank to mistakenly identify mailto:, tel:, and sms: links as broken, even though they were valid.
-
-### 1.4.1 - 26-September-2025 ###
+= 1.4.1 - 26-September-2025 =
 * Fix: Fixed an issue where the WooCommerce product image wasn't opening when clicked on zoom in due to a conflict with the SureRank plugin.
-
-### 1.4.0 - 23-September-2025 ###
+= 1.4.0 - 23-September-2025 =
 * New: Added Focus Keyword Checks for Page-level SEO.
 * Improvement: SureRank now automatically adds alt and title text to images on the frontend.
 * Improvement: Enhanced code quality and UI/UX.
 * Improvement: SureRank settings are now only accessible to users with the required capability.
 * Improvement: Google Search Console: The current site can now be verified directly from the SureRank dashboard.
 * Security Fix: This release addressed an important security bug. Props to Darius from Patchstack for reporting it responsibly. Please make sure you are using the latest version on your website.
-
-### 1.3.2 - 16-September-2025 ###
+= 1.3.2 - 16-September-2025 =
 * Fix: Fixed an issue where SureRank Pro components won't get loaded in some edge cases.
-
 = 1.3.1 - 11-September-2025 =
 * Fix: Fixed an issue where Product Schema was not showing correctly on SureCart products.
-
 = 1.3.0 - 04-September-2025 =
 * New: Import/Export functionality for SureRank settings
 * New: Migration – Ability to migrate from the SEOPress plugin to SureRank
@@ -386,10 +375,8 @@ Brainstorm Force
 * Fix: Ensured the Gutenberg sidebar doesn’t close when the SureRank panel is closed
 * Fix: Resolved an issue with the SEO Bar that displayed an incorrect status despite the page being optimized
 * Fix: Resolved an issue where duplicate canonical meta tags were printed on front page.
-
 = 1.2.1 - 28-August-2025 =
 * Fix: Fixed an issue where the index sitemap date was in an incorrect format.
-
 = 1.2.0 - 18-August-2025 =
 * New: Added the ability to edit the robots.txt file via the SureRank Robots Settings Editor.
 * Improvement: Enhanced code quality and UI/UX.
@@ -398,14 +385,11 @@ Brainstorm Force
 * Improvement: Implemented caching for the sitemap XML and its related sync feature, resulting in faster sitemap rendering.
 * Fix: Resolved an issue where broken links were not displaying the correct status.
 * Fix: Resolved an issue with meta descriptions on websites using the Avada theme where a shortcode was used on the homepage.
-
 = 1.1.2 - 29-July-2025 =
 * Improvement: Enhanced error handling and UI feedback for broken or slow-loading external links during Page SEO checks.
 * Fix: Resolved UI glitch in Dia Browser
-
 = 1.1.1 - 24-July-2025 =
 * Fix: Resolved an issue where migration to SureRank from the Rank Math SEO plugin triggered an error in a specific edge case.
-
 = 1.1.0 - 21-July-2025 =
 * New: Migration – Ability to migrate from the Rank Math SEO plugin to SureRank
 * New: Migration – Ability to migrate from the Yoast SEO plugin to SureRank
@@ -413,13 +397,10 @@ Brainstorm Force
 * New: SEO Meta Box compatibility with the Bricks Page Builder
 * Improvement: Improved the performance of the frontend application for SureRank
 * Fix: Resolved an issue where some SEO Meta Box options were not saved in the correct format
-
 = 1.0.2 - 10-July-2025 =
 * Fix: Fixed an issue where the SureRank Onboarding details won't get saved in an edge case.
-
 = 1.0.1 - 08-July-2025 =
 * Improvement: Enhanced the performance of the SureRank SEO Popup on Elementor pages.
-
 = 1.0.0 - 01-July-2025 =
 * Initial release
 
