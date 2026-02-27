@@ -36,7 +36,7 @@ class Search_Console_Widget {
 	 * @return void
 	 */
 	public function __construct() {
-		if ( ! current_user_can( 'surerank_global_setting' ) || ! Settings::get( 'enable_google_console' ) ) {
+		if ( ! apply_filters( 'surerank_global_setting_access', current_user_can( 'manage_options' ) ) || ! Settings::get( 'enable_google_console' ) ) {
 			return;
 		}
 

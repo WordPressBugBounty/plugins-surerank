@@ -1,10 +1,8 @@
 import { __ } from '@wordpress/i18n';
+import { useState, useEffect } from '@wordpress/element';
 import { Button, Container, Label, Title } from '@bsf/force-ui';
-import { Check, ChevronRight } from 'lucide-react';
+import { Check, ChevronRight, X } from 'lucide-react';
 import { useNavigateStep } from '@Onboarding/hooks';
-
-const onboardingBanner =
-	surerank_globals.admin_assets_url + '/images/onboarding-welcome-banner.svg';
 
 const features = [
 	__( 'Identify and fix SEO issues effortlessly', 'surerank' ),
@@ -19,6 +17,17 @@ const features = [
 
 const Welcome = () => {
 	const { nextStep } = useNavigateStep();
+	const [ isVideoOpen, setIsVideoOpen ] = useState( false );
+
+	useEffect( () => {
+		const handleKeyDown = ( e ) => {
+			if ( e.key === 'Escape' ) {
+				setIsVideoOpen( false );
+			}
+		};
+		window.addEventListener( 'keydown', handleKeyDown );
+		return () => window.removeEventListener( 'keydown', handleKeyDown );
+	}, [] );
 
 	const handleSubmit = ( event ) => {
 		event.preventDefault();
@@ -40,14 +49,57 @@ const Welcome = () => {
 					) }
 				</Label>
 			</Container>
-			{ /* Banner */ }
+			{ /* Inline muted autoplay video */ }
 			<div className="p-1">
-				<img
-					src={ onboardingBanner }
-					alt="Onboarding Welcome Banner"
-					className="w-full h-full object-cover"
-				/>
+				<div
+					className="relative w-full cursor-pointer"
+					style={ { paddingBottom: '56.25%' } }
+					onClick={ () => setIsVideoOpen( true ) }
+				>
+					<iframe
+						className="absolute top-0 left-0 w-full h-full rounded-md pointer-events-none"
+						src="https://www.youtube-nocookie.com/embed/GEeTu2D74Z8?autoplay=1&mute=1&loop=1&playlist=GEeTu2D74Z8"
+						title={ __(
+							'SureRank Introduction Video',
+							'surerank'
+						) }
+						allow="accelerometer; autoplay; encrypted-media"
+						tabIndex="-1"
+					/>
+				</div>
 			</div>
+			{ /* Video popup */ }
+			{ isVideoOpen && (
+				<div
+					className="fixed inset-0 flex items-center justify-center bg-black/70 cursor-pointer z-[9999]"
+					onClick={ () => setIsVideoOpen( false ) }
+				>
+					<div className="flex absolute top-10 right-8 text-white cursor-pointer hover:bg-white/10 p-2 rounded-full transition-colors">
+						<X
+							size={ 24 }
+							onClick={ ( event ) => {
+								event.stopPropagation();
+								setIsVideoOpen( false );
+							} }
+						/>
+					</div>
+					<div
+						className="relative rounded-lg shadow-2xl cursor-default w-full max-w-4xl aspect-video mx-4"
+						onClick={ ( event ) => event.stopPropagation() }
+					>
+						<iframe
+							className="w-full h-full rounded-lg"
+							src="https://www.youtube-nocookie.com/embed/GEeTu2D74Z8?autoplay=1&start=0"
+							title={ __(
+								'SureRank Introduction Video',
+								'surerank'
+							) }
+							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+							allowFullScreen
+						/>
+					</div>
+				</div>
+			) }
 			{ /* Feature list */ }
 			<ul
 				className="space-y-1.5 p-1"

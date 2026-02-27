@@ -31,8 +31,7 @@ class Seo_Bar {
 			return;
 		}
 
-		// Check if user has permission to access content optimization related features.
-		if ( ! current_user_can( 'surerank_content_setting' ) ) {
+		if ( ! apply_filters( 'surerank_content_setting_access', current_user_can( 'manage_options' ) ) ) {
 			return;
 		}
 
