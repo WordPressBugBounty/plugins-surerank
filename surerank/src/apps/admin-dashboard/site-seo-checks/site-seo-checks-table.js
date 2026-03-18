@@ -20,7 +20,6 @@ import { useState, useCallback, useMemo } from '@wordpress/element';
 import { Link } from '@tanstack/react-router';
 import apiFetch from '@wordpress/api-fetch';
 import { Tooltip } from '@/apps/admin-components/tooltip';
-import { cn } from '@/functions/utils';
 
 const ITEMS_PER_PAGE = 20;
 const SUMMARY_ITEMS_COUNT = 5;
@@ -122,29 +121,25 @@ const SiteSeoChecksActionButtons = ( {
 				</>
 			) }
 			<>
-				<Tooltip
-					content={ __( 'View Details', 'surerank' ) }
-					placement="top"
-					arrow
-				>
-					<Button
-						size="xs"
-						className={ cn(
-							item.status === 'success' &&
-								'bg-badge-background-green text-badge-color-green hover:bg-badge-hover-green'
-						) }
-						variant="outline"
-						icon={
-							item.status === 'success' ? (
-								<Check />
-							) : (
-								<ArrowRight />
-							)
-						}
-						iconPosition="right"
-						onClick={ onViewItem }
-					/>
-				</Tooltip>
+				{ item.status !== 'success' ? (
+					<Tooltip
+						content={ __( 'View Details', 'surerank' ) }
+						placement="top"
+						arrow
+					>
+						<Button
+							size="xs"
+							variant="outline"
+							icon={ <ArrowRight /> }
+							iconPosition="right"
+							onClick={ onViewItem }
+						/>
+					</Tooltip>
+				) : (
+					<div className="inline-flex ring-1 ring-offset-0 ring-border-subtle shadow-sm rounded p-1 bg-badge-background-green text-badge-color-green hover:bg-badge-hover-green cursor-default">
+						<Check size={ 16 } />
+					</div>
+				) }
 			</>
 		</Container>
 	);

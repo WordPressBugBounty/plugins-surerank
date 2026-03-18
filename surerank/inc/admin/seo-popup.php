@@ -114,9 +114,9 @@ class Seo_Popup {
 		wp_enqueue_media();
 
 		$screen      = $this->get_current_screen_safe();
-		$editor_type = $this->detect_editor_type( $screen );
+		$editor_type = self::detect_editor_type( $screen );
 
-		if ( ! $this->should_enqueue_scripts( $editor_type, $screen ) ) {
+		if ( ! self::should_enqueue_scripts( $editor_type, $screen ) ) {
 			return;
 		}
 
@@ -220,21 +220,12 @@ class Seo_Popup {
 	}
 
 	/**
-	 * Get current screen safely.
-	 *
-	 * @return \WP_Screen|null
-	 */
-	private function get_current_screen_safe() {
-		return function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-	}
-
-	/**
 	 * Detect the current editor type.
 	 *
 	 * @param \WP_Screen|null $screen Current screen object.
 	 * @return string Editor type.
 	 */
-	private function detect_editor_type( $screen ): string {
+	public static function detect_editor_type( $screen ): string {
 		if ( class_exists( \Elementor\Plugin::class ) && \Elementor\Plugin::instance()->editor->is_edit_mode() ) {
 			return 'elementor';
 		}
@@ -257,7 +248,7 @@ class Seo_Popup {
 	 * @param \WP_Screen|null $screen Current screen object.
 	 * @return bool True if scripts should be enqueued.
 	 */
-	private function should_enqueue_scripts( string $editor_type, $screen ): bool {
+	public static function should_enqueue_scripts( string $editor_type, $screen ): bool {
 		if ( $editor_type === 'bricks' ) {
 			return true;
 		}
@@ -279,6 +270,15 @@ class Seo_Popup {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Get current screen safely.
+	 *
+	 * @return \WP_Screen|null
+	 */
+	private function get_current_screen_safe() {
+		return function_exists( 'get_current_screen' ) ? get_current_screen() : null;
 	}
 
 	/**

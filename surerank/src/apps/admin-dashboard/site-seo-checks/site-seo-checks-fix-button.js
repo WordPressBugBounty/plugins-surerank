@@ -2,7 +2,10 @@ import { useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { applyFilters } from '@wordpress/hooks';
 import FixButton from '@GlobalComponents/fix-button';
+import { redirectToPricingPage } from '@Functions/nudges';
 import { isFixItForMeButton } from '@Global/constants';
+import { Button } from '@bsf/force-ui';
+import { ArrowUpRight } from 'lucide-react';
 
 /**
  * SiteSeoChecksFixButton component that renders a FixButton with consistent logic
@@ -54,6 +57,25 @@ const SiteSeoChecksFixButton = ( { selectedItem, ...additionalProps } ) => {
 	const ProFixButton = applyFilters(
 		'surerank-pro.dashboard.site-seo-checks-fix-it-button'
 	);
+
+	if ( ProFixButton && selectedItem?.status === 'success' ) {
+		return null; // Don't show any button if the check is already successful
+	}
+
+	// Show the Get Pro button if license key is not active.
+	if ( ! ProFixButton && additionalProps?.showUpgradeButton ) {
+		return (
+			<Button
+				className="w-fit"
+				size="sm"
+				icon={ <ArrowUpRight /> }
+				iconPosition="right"
+				onClick={ () => redirectToPricingPage( 'site_analysis_get_pro' ) }
+			>
+				{ __( 'Get Pro', 'surerank' ) }
+			</Button>
+		);
+	}
 
 	return ProFixButton && ! selectedItem?.not_locked ? (
 		<ProFixButton { ...fixItButtonProps } />

@@ -1,14 +1,23 @@
 import { __ } from '@wordpress/i18n';
-import { renderField } from '../utils';
-import StepNavButtons from '../components/nav-buttons';
-import { Fragment, useState, useEffect, useMemo, useRef } from '@wordpress/element';
-import { useOnboardingState } from '@Onboarding/store';
-import { Title, Label } from '@bsf/force-ui';
+import { renderField } from '@Onboarding/utils';
+import {
+	Fragment,
+	useState,
+	useEffect,
+	useMemo,
+	useRef,
+} from '@wordpress/element';
+import { Label, Button, toast } from '@bsf/force-ui';
+import apiFetch from '@wordpress/api-fetch';
 import { InfoTooltip } from '@AdminComponents/tooltip';
-import { fetchPages } from '@Functions/api';
+import AdminLoadingSkeleton from '@AdminComponents/loading-skeleton';
+import { cn } from '@/functions/utils';
 import useOnboardingAuth from '@Onboarding/hooks/use-onboarding-auth';
 import useImproveDescription from '@Global/hooks/use-improve-description';
 import { ImproveWithAiButton } from '@AdminComponents/improve-with-ai-button';
+import useUnsavedChanges from '@Global/hooks/use-unsaved-changes';
+import PageContentWrapper from '@AdminComponents/page-content-wrapper';
+import withSuspense from '@AdminComponents/hoc/with-suspense';
 
 const websiteTypes = [
 	{
@@ -37,20 +46,29 @@ const websiteTypes = [
 	},
 ];
 
-const WebsiteDetails = () => {
-	const [ { pages = [], websiteDetails = {} }, dispatch ] =
-		useOnboardingState();
+const SiteInformationSettings = () => {
+	const [ formState, setFormState ] = useState( {} );
+	const [ isSaving, setIsSaving ] = useState( false );
+	const [ isLoading, setIsLoading ] = useState( true );
 
 	const organizationOptions = Object.values(
 		surerank_globals?.schema_type_options?.Organization || {}
 	);
 
-	const [ formState, setFormState ] = useState( websiteDetails );
-	const [ pageOptions, setPageOptions ] = useState( pages ); // Local state for pages
-
 	const { isAuthenticated, isConnecting, handleConnect } = useOnboardingAuth(
-		{ skipCheck: true }
+		{
+			skipCheck: true,
+		}
 	);
+
+	// Use the unsaved changes hook for tracking and navigation blocking
+	const { resetInitialSettings, getButtonIcon, getSaveButtonClassName } =
+		useUnsavedChanges( {
+			currentSettings: formState,
+			enableNavigationBlock: false,
+			enableBeforeUnload: true,
+			isUpdating: isSaving,
+		} );
 
 	const shouldAutoImprove = useRef( false );
 
@@ -68,66 +86,51 @@ const WebsiteDetails = () => {
 			},
 		} );
 
+	/**
+	 * Fetch Knowledge Graph settings from API on mount
+	 */
 	useEffect( () => {
-		const loadInitialPages = async () => {
+		const fetchSettings = async () => {
+			setIsLoading( true );
 			try {
-				const pagesData = await fetchPages();
-				dispatch( { pages: pagesData } );
-				setPageOptions( pagesData ); // Update local state
+				const response = await apiFetch( {
+					path: '/surerank/v1/knowledge-graph',
+					method: 'GET',
+				} );
+
+				if ( response?.success && response?.data ) {
+					setFormState( response.data );
+
+					// Reset initial settings after loading data to avoid showing unsaved changes indicator
+					setTimeout( () => {
+						resetInitialSettings();
+					}, 100 );
+				}
 			} catch ( error ) {
-				dispatch( { pages: [] } );
-				setPageOptions( [] );
+				toast.error(
+					__( 'Failed to load Knowledge Graph settings.', 'surerank' )
+				);
+			} finally {
+				setIsLoading( false );
 			}
 		};
-		loadInitialPages();
-	}, [] );
 
-	// Sync formState and dispatch websiteDetails
-	useEffect( () => {
-		const details = surerank_admin_common?.website_details;
-		const data = {
-			website_type:
-				websiteDetails?.website_type ||
-				details?.website_represents ||
-				'',
-			website_name:
-				websiteDetails?.website_name || details?.website_name || '',
-			website_owner_name:
-				websiteDetails?.website_owner_name ||
-				details?.website_owner_name ||
-				'',
-			organization_type:
-				websiteDetails?.organization_type || 'Organization',
-			website_owner_phone:
-				websiteDetails?.website_owner_phone ||
-				details?.website_owner_phone ||
-				'',
-			business_description:
-				websiteDetails?.business_description ||
-				details?.business_description ||
-				'',
-			website_logo:
-				websiteDetails?.website_logo || details?.website_logo || '',
-			about_page:
-				websiteDetails?.about_page || details?.website_about_us || '',
-			contact_page:
-				websiteDetails?.contact_page ||
-				details?.website_contact_us ||
-				'',
-		};
-
-		dispatch( {
-			websiteDetails: data,
-		} );
-
-		setFormState( data );
-	}, [] );
+		fetchSettings();
+	}, [ resetInitialSettings ] );
 
 	const handleChangeSelection = ( name ) => ( value ) => {
-		setFormState( ( prev ) => ( {
-			...prev,
-			[ name ]: value?.value ?? value,
-		} ) );
+		setFormState( ( prev ) => {
+			if ( name === 'website_logo' ) {
+				return {
+					...prev,
+					[ name ]: value?.url ?? '',
+				};
+			}
+			return {
+				...prev,
+				[ name ]: value?.value ?? value,
+			};
+		} );
 	};
 
 	useEffect( () => {
@@ -142,17 +145,14 @@ const WebsiteDetails = () => {
 		handleConnect();
 	};
 
-	// Calculate textarea rows dynamically based on content (min 4, max 8)
 	const textareaRows = useMemo( () => {
 		const text = formState.business_description || '';
 		const lineBreaks = ( text.match( /\n/g ) || [] ).length + 1;
 		const textLength = text.length;
-
 		const calculatedRows = Math.max(
 			lineBreaks,
 			Math.ceil( textLength / 60 )
 		);
-
 		return Math.min( Math.max( calculatedRows, 4 ), 8 );
 	}, [ formState.business_description ] );
 
@@ -162,14 +162,12 @@ const WebsiteDetails = () => {
 			name: 'website_type',
 			type: 'select',
 			options: websiteTypes || [],
-			width: 'half',
 		},
 		{
 			label: __( 'Organization Type', 'surerank' ),
 			name: 'organization_type',
 			type: 'selectGroup',
 			options: organizationOptions,
-			width: 'half',
 			conditionalOn: 'website_type',
 			conditionalValues: [
 				'business',
@@ -182,7 +180,6 @@ const WebsiteDetails = () => {
 			label: __( 'Website Name', 'surerank' ),
 			name: 'website_name',
 			type: 'text',
-			width: 'half',
 			conditionalOn: 'website_type',
 			conditionalValues: [
 				'business',
@@ -195,7 +192,6 @@ const WebsiteDetails = () => {
 			label: __( 'Phone Number (Optional)', 'surerank' ),
 			name: 'website_owner_phone',
 			type: 'text',
-			width: 'half',
 		},
 		{
 			label: (
@@ -232,7 +228,6 @@ const WebsiteDetails = () => {
 			label: __( 'Website Owner Name', 'surerank' ),
 			name: 'website_owner_name',
 			type: 'text',
-			width: 'half',
 			conditionalOn: 'website_type',
 			conditionalValues: [ 'personal', 'blog' ],
 		},
@@ -249,39 +244,6 @@ const WebsiteDetails = () => {
 		},
 	];
 
-	const loadingFields = useMemo(
-		() => [
-			{
-				label: __( 'Select About Page', 'surerank' ),
-				name: 'about_page',
-				type: 'select',
-				defaultValue: formState?.about_page || {},
-				options: pageOptions || [],
-				width: 'half',
-				combobox: true,
-				by: 'value',
-				searchFn: fetchPages,
-			},
-			{
-				label: __( 'Select Contact Page', 'surerank' ),
-				name: 'contact_page',
-				type: 'select',
-				defaultValue: formState?.contact_page || {},
-				options: pageOptions || [],
-				width: 'half',
-				combobox: true,
-				searchFn: fetchPages,
-				by: 'value',
-			},
-		],
-		[ pageOptions, formState ]
-	);
-
-	const handleSaveForm = () => {
-		dispatch( { websiteDetails: formState } );
-	};
-
-	// Filter fields based on their conditions
 	const filteredFields = baseFields.filter( ( field ) => {
 		if ( field.conditionalOn === undefined ) {
 			return true;
@@ -291,56 +253,85 @@ const WebsiteDetails = () => {
 		);
 	} );
 
-	return (
-		<div className="flex flex-col gap-6">
-			<div className="space-y-1">
-				<Title
-					tag="h4"
-					title={ __( 'Your Website Basic Details', 'surerank' ) }
-					size="md"
-				/>
-				<p>
-					{ __(
-						'Let’s start with some basic information about your website. This info helps personalize your site and may be used in things like search results, structured data, and public details about your site.',
-						'surerank'
-					) }
-				</p>
-			</div>
+	const handleSaveChanges = async () => {
+		setIsSaving( true );
+		try {
+			const response = await apiFetch( {
+				path: '/surerank/v1/knowledge-graph',
+				method: 'POST',
+				data: formState,
+			} );
 
-			<div className="flex flex-wrap gap-6">
-				{ filteredFields.map( ( field, index ) => (
-					<Fragment key={ field.name }>
-						{ renderField(
-							field,
-							formState[ field.name ],
-							handleChangeSelection( field.name ),
-							null,
-							{
-								initialFocus: index === 0,
-							}
-						) }
-					</Fragment>
-				) ) }
-				{ loadingFields.map( ( field ) => (
-					<Fragment key={ field.name }>
-						{ renderField(
-							field,
-							formState[ field.name ] ?? '',
-							handleChangeSelection( field.name )
-						) }
-					</Fragment>
-				) ) }
+			if ( response?.success ) {
+				toast.success(
+					__( 'Settings saved successfully!', 'surerank' )
+				);
+
+				// Reset after a small delay to ensure state has updated
+				setTimeout( () => {
+					resetInitialSettings();
+				}, 100 );
+			} else {
+				throw new Error(
+					response?.message || 'Failed to save settings'
+				);
+			}
+		} catch ( error ) {
+			toast.error(
+				error?.message || __( 'Error saving settings', 'surerank' )
+			);
+		} finally {
+			setIsSaving( false );
+		}
+	};
+
+	if ( isLoading ) {
+		return <AdminLoadingSkeleton />;
+	}
+
+	return (
+		<PageContentWrapper
+			title={ __( 'Site Information', 'surerank' ) }
+			description={ __(
+				'Configure site information for schema settings',
+				'surerank'
+			) }
+		>
+			<div className="p-6 bg-white shadow-sm rounded-xl">
+				<div className="flex flex-col gap-6 max-w-4xl">
+					<div className="flex flex-wrap gap-6">
+						{ filteredFields.map( ( field, index ) => (
+							<Fragment key={ field.name }>
+								{ renderField(
+									field,
+									formState[ field.name ],
+									handleChangeSelection( field.name ),
+									null,
+									{
+										initialFocus: index === 0,
+									}
+								) }
+							</Fragment>
+						) ) }
+					</div>
+
+					<div className="flex justify-start pt-4">
+						<Button
+							variant="primary"
+							onClick={ handleSaveChanges }
+							loading={ isSaving }
+							icon={ getButtonIcon() }
+							className={ cn( getSaveButtonClassName() ) }
+						>
+							{ isSaving
+								? __( 'Saving…', 'surerank' )
+								: __( 'Save', 'surerank' ) }
+						</Button>
+					</div>
+				</div>
 			</div>
-			<StepNavButtons
-				nextProps={ {
-					onClick: handleSaveForm,
-				} }
-				backProps={ {
-					onClick: handleSaveForm,
-				} }
-			/>
-		</div>
+		</PageContentWrapper>
 	);
 };
 
-export default WebsiteDetails;
+export default withSuspense( SiteInformationSettings );

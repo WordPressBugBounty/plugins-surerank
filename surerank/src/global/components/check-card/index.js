@@ -1,5 +1,5 @@
 import { Badge, Label, Button, toast } from '@bsf/force-ui';
-import { cn, isURL } from '@/functions/utils';
+import { cn, isURL, sanitizeHTML } from '@/functions/utils';
 import FixButton from '@GlobalComponents/fix-button';
 import { __ } from '@wordpress/i18n';
 import { CircleAlert, CircleCheck, Info, TriangleAlert } from 'lucide-react';
@@ -9,7 +9,6 @@ import {
 } from '@/apps/admin-components/tooltip';
 import { Fragment } from '@wordpress/element';
 import { fetchImageDataByUrl } from '@/functions/api';
-import DOMPurify from 'dompurify';
 
 const IMAGE_ID_CACHE = new Map();
 
@@ -82,7 +81,7 @@ const formatBrokenLinkTooltip = ( item ) => {
 	}
 
 	// Sanitize the content to prevent XSS attacks
-	const purifiedContent = DOMPurify.sanitize( tooltipContent );
+	const purifiedContent = sanitizeHTML( tooltipContent );
 
 	return (
 		<div className="space-y-1">

@@ -70,6 +70,27 @@ class Init {
 	}
 
 	/**
+	 * Register SureRank settings as translatable options with Polylang.
+	 *
+	 * This allows Polylang's String Translation screen to display and
+	 * translate SureRank settings per language.
+	 *
+	 * @since 1.6.6
+	 * @return void
+	 */
+	public function register_polylang_string_translations() {
+		if ( ! class_exists( 'PLL_Translate_Option' ) ) {
+			return;
+		}
+
+		new \PLL_Translate_Option(
+			SURERANK_SETTINGS,
+			[ '*' => 1 ],
+			[ 'context' => 'SureRank' ]
+		);
+	}
+
+	/**
 	 * Check if translation plugin is active
 	 *
 	 * @since 1.6.3
@@ -90,6 +111,10 @@ class Init {
 	private function init_classes() {
 		Translation_Manager::get_instance();
 		Hreflang_Generator::get_instance();
+
+		if ( function_exists( 'pll_default_language' ) ) {
+			$this->register_polylang_string_translations();
+		}
 	}
 
 	/**

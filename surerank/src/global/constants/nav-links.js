@@ -18,6 +18,7 @@ import {
 	Image,
 	Users,
 	Ellipsis,
+	File,
 } from 'lucide-react';
 import { applyFilters } from '@wordpress/hooks';
 import { __ } from '@wordpress/i18n';
@@ -129,6 +130,12 @@ export const getNavLinks = () => {
 					icon: Paperclip,
 					migratable: true,
 					pageContent: ARCHIVE_PAGES_PAGE_CONTENT,
+				},
+				{
+					path: '/general/site-information',
+					label: __( 'Site Information', 'surerank' ),
+					icon: File,
+					migratable: true,
 				},
 			],
 		},

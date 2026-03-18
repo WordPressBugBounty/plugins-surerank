@@ -750,7 +750,13 @@ class Onboarding extends Api_Base {
 				'headers' => [
 					'Content-Type' => 'application/json',
 				],
-				'body'    => wp_json_encode( $lead ),
+				'body'    => wp_json_encode(
+					[
+						'EMAIL'     => $lead['email'],
+						'FIRSTNAME' => $lead['first_name'],
+						'LASTNAME'  => $lead['last_name'],
+					]
+				),
 			]
 		);
 

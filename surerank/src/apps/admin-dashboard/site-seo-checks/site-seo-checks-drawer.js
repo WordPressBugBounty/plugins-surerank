@@ -8,9 +8,8 @@ import {
 	getSeverityLabel,
 } from '@GlobalComponents/seo-checks';
 import SiteSeoChecksFixButton from './site-seo-checks-fix-button';
-import DOMPurify from 'dompurify';
 import { ArrowLeftIcon } from 'lucide-react';
-import { cn, isURL } from '@/functions/utils';
+import { cn, isURL, sanitizeHTML } from '@/functions/utils';
 import { ImageGrid } from '@/global/components/check-card';
 
 /**
@@ -105,7 +104,7 @@ const CheckOverview = ( { selectedItem } ) => {
 							className="m-0 text-text-secondary text-sm mb-0.5"
 							key={ item }
 							dangerouslySetInnerHTML={ {
-								__html: DOMPurify.sanitize( item ),
+								__html: sanitizeHTML( item ),
 							} }
 						/>
 					);
@@ -122,7 +121,7 @@ const CheckOverview = ( { selectedItem } ) => {
 					<p
 						className="m-0 text-text-primary"
 						dangerouslySetInnerHTML={ {
-							__html: DOMPurify.sanitize( list ),
+							__html: sanitizeHTML( list ),
 						} }
 					/>
 				);
@@ -159,7 +158,7 @@ const CheckOverview = ( { selectedItem } ) => {
 							return null;
 						}
 
-						const purifiedItem = DOMPurify.sanitize( item );
+						const purifiedItem = sanitizeHTML( item );
 						const itemClassName =
 							'm-0 text-text-secondary text-sm font-normal [&_a]:no-underline [&_a]:ring-0';
 
@@ -207,12 +206,11 @@ const CheckOverview = ( { selectedItem } ) => {
 				) }
 			</div>
 			{ /* Only show fix button if check hasn't passed */ }
-			{ selectedItem?.status !== 'success' && (
-				<SiteSeoChecksFixButton
-					selectedItem={ selectedItem }
-					size="sm"
-				/>
-			) }
+			<SiteSeoChecksFixButton
+				selectedItem={ selectedItem }
+				size="sm"
+				showUpgradeButton
+			/>
 		</>
 	);
 };
@@ -272,6 +270,7 @@ const SiteSeoChecksDrawer = () => {
 						selectedItem={ selectedItem }
 						showBack={ showBack }
 						onBackClick={ handleBack }
+						{ ...( selectedItem?.heading && { title: selectedItem.heading } ) }
 					/>
 				</Drawer.Header>
 				<Drawer.Body className="overflow-x-hidden space-y-3">

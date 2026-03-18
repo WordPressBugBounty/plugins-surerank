@@ -142,6 +142,29 @@ export const fetchImageDataByUrl = async ( imageUrl ) => {
 };
 
 /**
+ * Fetch pages from the custom posts-list API
+ * This searches only by page title (not content) for more accurate results
+ *
+ * @param {string} search - Search query
+ * @return {Promise<Array>} Array of page objects with label and value
+ */
+export const fetchPages = async ( search = '' ) => {
+	try {
+		const response = await apiFetch( {
+			path: `/surerank/v1/posts-list?post_type=page&per_page=200${
+				search ? `&search=${ encodeURIComponent( search ) }` : ''
+			}`,
+			method: 'GET',
+		} );
+
+		// Response is already in {label, value} format from the backend
+		return response;
+	} catch ( error ) {
+		return [];
+	}
+};
+
+/**
  * Get migrated data for onboarding steps after migration done successfully.
  *
  * @return {Promise<Object>} A promise that resolves to the migrated data.

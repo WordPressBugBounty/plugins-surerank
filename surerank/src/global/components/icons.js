@@ -1,3 +1,9 @@
+/**
+ * SureRank Full Logo.
+ *
+ * @param {import('react').SVGAttributes<SVGSVGElement>} props Component props.
+ * @return {JSX.Element} Returns the SureRank full logo as an SVG element.
+ */
 export const SureRankFullLogo = ( props ) => (
 	<svg
 		width="538"
@@ -46,6 +52,13 @@ export const SureRankFullLogo = ( props ) => (
 	</svg>
 );
 
+/**
+ * SureRank Logo.
+ *
+ * @param {import('react').SVGAttributes<SVGSVGElement>} props                   Component props.
+ * @param {boolean}                                      [props.enableFill=true] Whether to enable the white background fill.
+ * @return {JSX.Element} Returns the SureRank logo as an SVG element.
+ */
 export const SureRankLogo = ( { enableFill = true, ...props } ) => (
 	<svg
 		width="128"
@@ -63,6 +76,12 @@ export const SureRankLogo = ( { enableFill = true, ...props } ) => (
 	</svg>
 );
 
+/**
+ * SureRank Mono Logo.
+ *
+ * @param {import('react').SVGAttributes<SVGSVGElement>} props Component props.
+ * @return {JSX.Element} Returns the SureRank logo as an SVG element.
+ */
 export const SureRankMonoLogo = ( props ) => (
 	<svg
 		width="128"

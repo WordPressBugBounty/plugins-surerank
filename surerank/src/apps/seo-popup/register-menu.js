@@ -276,39 +276,16 @@ const SpectraPageSettingsPopup = () => {
 
 			{ /* Post-Publish Panel Message - Gutenberg only */ }
 			{ isNotPageBuilder && ! initializing && (
-				<PluginPostPublishPanel title={ null } initialOpen={ true }>
+				<PluginPostPublishPanel title={ null } initialOpen={ true } className="surerank-root">
 					<div
-						style={ {
-							display: 'flex',
-							flexDirection: 'column',
-							gap: '16px',
-						} }
+						className="flex gap-4 flex-col"
 					>
-						<div
-							style={ {
-								display: 'flex',
-								alignItems: 'center',
-								gap: '8px',
-							} }
-						>
-							<h3
-								style={ {
-									margin: 0,
-									fontSize: '14px',
-									fontWeight: 600,
-								} }
-							>
+						<div className="flex items-center gap-2">
+							<h3 className="m-0 text-sm font-semibold">
 								{ __( 'Manage your SEO', 'surerank' ) }
 							</h3>
 						</div>
-						<p
-							style={ {
-								margin: 0,
-								fontSize: '13px',
-								lineHeight: '1.4',
-								color: '#1e1e1e',
-							} }
-						>
+						<p className="m-0 text-[13px] leading-[1.4] text-[#1e1e1e]">
 							<PostPublishSEOMessage />
 						</p>
 						<WPButton

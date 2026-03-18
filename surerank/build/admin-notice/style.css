@@ -1426,6 +1426,12 @@
 #surerank-root .appearance-none, .surerank-root .appearance-none {
 	appearance: none;
 }
+#surerank-root .columns-3, .surerank-root .columns-3 {
+	columns: 3;
+}
+#surerank-root .break-inside-avoid, .surerank-root .break-inside-avoid {
+	break-inside: avoid;
+}
 #surerank-root .auto-cols-auto, .surerank-root .auto-cols-auto {
 	grid-auto-columns: auto;
 }
@@ -1801,11 +1807,18 @@
 #surerank-root .whitespace-pre-line, .surerank-root .whitespace-pre-line {
 	white-space: pre-line;
 }
+#surerank-root .whitespace-pre-wrap, .surerank-root .whitespace-pre-wrap {
+	white-space: pre-wrap;
+}
 #surerank-root .text-wrap, .surerank-root .text-wrap {
 	text-wrap: wrap;
 }
 #surerank-root .text-nowrap, .surerank-root .text-nowrap {
 	text-wrap: nowrap;
+}
+#surerank-root .break-normal, .surerank-root .break-normal {
+	overflow-wrap: normal;
+	word-break: normal;
 }
 #surerank-root .break-words, .surerank-root .break-words {
 	overflow-wrap: break-word;
@@ -2719,6 +2732,9 @@
 #surerank-root .text-\[0\.9375rem\], .surerank-root .text-\[0\.9375rem\] {
 	font-size: 0.9375rem;
 }
+#surerank-root .text-\[13px\], .surerank-root .text-\[13px\] {
+	font-size: 13px;
+}
 #surerank-root .text-base, .surerank-root .text-base {
 	font-size: 1rem;
 	line-height: 1.5rem;
@@ -2835,6 +2851,10 @@
 #surerank-root .text-\[\#1d9bf0\], .surerank-root .text-\[\#1d9bf0\] {
 	--tw-text-opacity: 1;
 	color: rgb(29 155 240 / var(--tw-text-opacity, 1));
+}
+#surerank-root .text-\[\#1e1e1e\], .surerank-root .text-\[\#1e1e1e\] {
+	--tw-text-opacity: 1;
+	color: rgb(30 30 30 / var(--tw-text-opacity, 1));
 }
 #surerank-root .text-amber-500, .surerank-root .text-amber-500 {
 	--tw-text-opacity: 1;

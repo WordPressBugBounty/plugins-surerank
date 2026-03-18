@@ -18,6 +18,7 @@ use SureRank\Inc\Functions\Requests;
 use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Functions\Update;
 use SureRank\Inc\GoogleSearchConsole\Controller;
+use SureRank\Inc\Modules\Nudges\Utils as Nudge_Utils;
 use SureRank\Inc\Traits\Get_Instance;
 use SureRank\Inc\Traits\Logger;
 use WP_Error;
@@ -447,69 +448,53 @@ class Analyzer extends Api_Base {
 	 */
 	public function get_auth_status() {
 		$auth_status       = Controller::get_instance()->get_auth_status() && Settings::get( 'enable_google_console' );
-		$working_label     = __( 'Google Search Console is connected.', 'surerank' );
-		$not_working_label = __( 'Google Search Console is not connected.', 'surerank' );
+		$working_label     = __( 'Google Search Console is currently connected to your site.', 'surerank' );
+		$not_working_label = __( 'Google Search Console is not currently connected to your site.', 'surerank' );
 
 		$helptext = [
-			sprintf(
-				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/why-Google-Search-Console-Connection-matters.webp' ),
-				esc_attr( 'Google Search Console' )
-			),
+			__( 'Search Console helps you understand how your site appears in Google search results. It shows which pages are indexed, how your site is performing, and whether Google is reporting any issues.', 'surerank' ),
+			__( 'Without it connected, you miss important visibility into how Google sees your site.', 'surerank' ),
 
 			sprintf(
-				'<h6> %s </h6>',
-				__( 'Google Search Console Connection', 'surerank' )
+				'<h6>🛠️ %s </h6>',
+				__( 'Where to Update It', 'surerank' )
 			),
-			__( 'Google Search Console is a free tool that shows how your site appears in Google search. It helps you understand what people are searching for, which pages they visit, and how often your site shows up. Connecting it doesn\'t change anything on your site, but it gives you a helpful view of what\'s happening behind the scenes.', 'surerank' ),
-
-			sprintf(
-				'<h6> %s </h6>',
-				__( '💡 Why this matters:', 'surerank' )
-			),
-			__( 'Without Search Console, you miss important information about how your site performs in search. With it, you can see your visibility, clicks, and which pages attract the most attention. These insights help you make smarter decisions and understand what\'s working well.', 'surerank' ),
-
-			sprintf(
-				'<h6> %s </h6>',
-				__( '✅ How to keep things smooth', 'surerank' )
-			),
+			__( 'You can connect Google Search Console directly from the SureRank Dashboard.', 'surerank' ),
 			[
 				'list' => [
-					__( 'Go to the Search Console tab in SureRank.', 'surerank' ),
-					__( 'Click Connect Now to sign in with your Google account.', 'surerank' ),
-					__( 'Select your site from the list inside the popup.', 'surerank' ),
-					__( 'SureRank will take care of the verification steps and connect your site.', 'surerank' ),
+					sprintf(
+						// translators: %s is the Search Console URL.
+						__( 'Go to SureRank ⇾ <a href="%s">Search Console</a>', 'surerank' ),
+						$this->get_search_console_url()
+					),
+					__( 'Sign in with your Google account', 'surerank' ),
+					__( 'Select your site and complete the connection', 'surerank' ),
 				],
 			],
 
 			sprintf(
-				'<h6> %s </h6>',
-				__( '🚀 Example', 'surerank' )
-			),
-			__( 'Once connected, you might learn that a helpful guide you wrote months ago is one of your strongest pages, or that people often find your site through topics you hadn\'t expected.', 'surerank' ),
-
-			sprintf(
-				'<h6> %s </h6>',
-				__( '🔧 Where to update it', 'surerank' )
-			),
-			sprintf(
-				/* translators: %s is the URL of the Search Console tab */
-				__( 'You can manage or reconnect Google Search Console anytime from the <a href="%s">Search Console tab</a> inside SureRank.', 'surerank' ),
-				$this->get_search_console_url()
+				'<h6>✏️ %s </h6>',
+				__( 'Update Here', 'surerank' )
 			),
 
 			sprintf(
 				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/Where-to-update-Google-Search-Console.webp' ),
-				esc_attr( 'Connect to Search Console' )
+				esc_attr( 'https://surerank.com/wp-content/uploads/2026/02/google-search-console-is-not-connected.webp' ),
+				esc_attr( 'Search Console Connection' )
 			),
 
-			sprintf(
-				'<h6> %s </h6>',
-				__( '🌟 How SureRank helps', 'surerank' )
-			),
-			__( 'SureRank SEO Analysis checks whether your site is connected to Google Search Console. When it is, SureRank brings your key insights into your dashboard so you can understand your search performance without leaving WordPress.', 'surerank' ),
+			__( 'Once connected, SureRank will start using Search Console data to show search performance and indexing insights.', 'surerank' ),
 		];
+
+		if ( ! Nudge_Utils::get_instance()->is_pro_active() ) {
+			$helptext[] = sprintf(
+				'<h6>💬 %s </h6>',
+				__( 'Need More?', 'surerank' )
+			);
+			$helptext[] = __( 'SureRank Pro unlocks advanced insights and recommendations powered by Google Search Console data.', 'surerank' );
+		}
+
+		$heading = $auth_status ? __( 'Google Search Console is connected.', 'surerank' ) : __( 'Google Search Console is not connected.', 'surerank' );
 
 		return [
 			'exists'       => true,
@@ -519,6 +504,7 @@ class Analyzer extends Api_Base {
 			'status'       => $auth_status ? 'success' : 'suggestion',
 			'description'  => $helptext,
 			'message'      => $auth_status ? $working_label : $not_working_label,
+			'heading'      => $heading,
 		];
 	}
 
@@ -585,14 +571,6 @@ class Analyzer extends Api_Base {
 	 * @return array<string, mixed>
 	 */
 	public function get_installed_seo_plugins(): array {
-		$description = [
-			sprintf( '<img class="w-full h-full" src="%s" alt="%s" />', esc_attr( 'https://surerank.com/wp-content/uploads/2025/12/other-seo-plugin-banner.webp' ), esc_attr__( 'Other SEO Plugin Banner', 'surerank' ) ),
-			sprintf(
-				'<h6>%s</h6>',
-				__( 'SEO Plugin Conflicts', 'surerank' )
-			),
-			__( 'SEO plugins decide how your site appears in search results by managing titles, descriptions, and structured information. They help search engines understand your content, but also make your site easier for people to find.', 'surerank' ),
-		];
 
 		$plugin_data      = $this->get_installed_seo_plugins_data();
 		$detected_plugins = array_map(
@@ -603,57 +581,66 @@ class Analyzer extends Api_Base {
 		);
 
 		$active_count = count( $detected_plugins );
-		$title        = __( 'No other SEO plugin detected on the site.', 'surerank' );
+		$heading      = $active_count > 0 ? __( 'Other SEO Plugin Detected', 'surerank' ) : __( 'No other SEO plugin detected', 'surerank' );
+		$title        = __( 'No other SEO plugin detected on your site.', 'surerank' );
 
 		if ( $active_count > 0 ) {
 			if ( $active_count > 1 ) {
-				$title = __( 'More than one SEO plugin detected on the site.', 'surerank' );
+				$title = __( 'More than one SEO plugin is currently active on your site.', 'surerank' );
 			} else {
 				/* translators: %s is the list of active plugins */
-				$title = sprintf( __( 'Another SEO plugin, %s, detected on the site.', 'surerank' ), implode( ', ', array_column( $detected_plugins, 'name' ) ) );
+				$title = sprintf( __( 'Another SEO plugin, %s, is currently active on your site.', 'surerank' ), implode( ', ', array_column( $detected_plugins, 'name' ) ) );
 			}
-
-			/* translators: %s is the list of active plugins */
-			$description[] = sprintf( __( 'Currently active plugins : %s', 'surerank' ), implode( ', ', array_column( $detected_plugins, 'name' ) ) );
 		}
 
-		$description[] = sprintf( '<h6>💡 %s </h6>', __( 'Why this matters:', 'surerank' ) );
-		$description[] = __( 'Having more than one SEO plugin active can create confusion. Each plugin might try to change the same things, sending mixed signals to search engines. This can affect how clearly your site appears in search results and make it harder for visitors to find what they’re looking for.', 'surerank' );
+		$description = [
+			__( 'SEO plugins manage things like page titles, descriptions, schema, and indexing settings. These signals help search engines understand how your site appears in search results.', 'surerank' ),
+			__( 'When multiple SEO plugins are active, they can create duplicate or conflicting signals. This makes it harder for search engines to understand which information to trust.', 'surerank' ),
+			__( 'Using a single SEO plugin helps keep everything consistent and easier to manage.', 'surerank' ),
 
-		$description[]         = sprintf( '<h6>✅ %s </h6>', __( 'How to keep things smooth:', 'surerank' ) );
-		$description[]['list'] = [
-			__( 'Use only one SEO plugin at a time to keep your settings clean and consistent.', 'surerank' ),
-			__( 'Let that plugin handle everything in one place, so there’s no overlap or conflict.', 'surerank' ),
-			__( 'Check your plugin settings regularly to make sure nothing is accidentally duplicated.', 'surerank' ),
+			sprintf(
+				'<h6>🛠️ %s </h6>',
+				__( 'Where to Update It', 'surerank' )
+			),
+			__( 'You can manage this from your WordPress plugins list.', 'surerank' ),
+			[
+				'list' => [
+					sprintf(
+						// translators: %s is the Plugins menu URL.
+						__( 'Go to <a href="%s">Plugins ⇾ Installed Plugins</a>', 'surerank' ),
+						admin_url( 'plugins.php' )
+					),
+					__( 'Identify any other active SEO plugins', 'surerank' ),
+					__( 'Deactivate the ones you are not using', 'surerank' ),
+				],
+			],
+
+			sprintf(
+				'<h6>✏️ %s </h6>',
+				__( 'Deactivate Here', 'surerank' )
+			),
+
+			sprintf(
+				"<img class='w-full h-full' src='%s' alt='%s' />",
+				esc_attr( 'https://surerank.com/wp-content/uploads/2026/02/other-seo-plugin-detected.webp' ),
+				esc_attr( 'Other SEO Plugin Detected' )
+			),
 		];
 
-		$description[] = sprintf(
-			'<h6>📌 %s </h6>',
-			__( 'Example', 'surerank' )
-		);
-		$description[] = __( 'If two plugins try to set your homepage description differently, search engines may receive mixed information, resulting in inconsistent search results or snippets.', 'surerank' );
-
-		$description[] = sprintf(
-			'<h6>🛠️ %s </h6>',
-			__( 'Where to update it', 'surerank' )
-		);
-		$description[] = sprintf(
-			"<img class='w-full h-full' src='%s' />",
-			esc_attr( 'https://surerank.com/wp-content/uploads/2025/12/other-seo-plugin-sub-image.webp' )
-		);
-		$description[] = __( 'You can review your active plugins from your WordPress plugins page and deactivate extras. Then manage all your SEO settings from your main SEO plugin for a clear and single source of truth.', 'surerank' );
-
-		$description[] = sprintf(
-			'<h6>🌟 %s </h6>',
-			__( 'How SureRank helps', 'surerank' )
-		);
-		$description[] = __( 'SureRank keeps your SEO setup simple and reliable. It explains why using a single plugin matters, helping you maintain clarity for both search engines and your visitors, without unnecessary confusion.', 'surerank' );
+		if ( ! Nudge_Utils::get_instance()->is_pro_active() ) {
+			$description[] = sprintf(
+				'<h6>💬 %s </h6>',
+				__( 'Need Help?', 'surerank' )
+			);
+			$description[] = __( 'SureRank Premium users get access to our support team, available 24×7, to help review plugin conflicts and guide you through cleanup.', 'surerank' );
+		}
 
 		return [
 			'exists'      => true,
 			'status'      => $active_count > 0 ? 'error' : 'success',
 			'description' => $description,
 			'message'     => $title,
+			'heading'     => $heading,
 		];
 	}
 
@@ -666,78 +653,66 @@ class Analyzer extends Api_Base {
 		$tagline = get_bloginfo( 'description' );
 		$is_set  = ! empty( $tagline );
 
-		$title       = $is_set ? __( 'Site tagline is set in WordPress settings.', 'surerank' ) : __( 'Site tagline is not set in WordPress settings.', 'surerank' );
+		$heading = __( 'Site Tagline', 'surerank' );
+		$title   = $is_set ? __( 'Your site does currently have a tagline set.', 'surerank' ) : __( 'Your site does not currently have a tagline set.', 'surerank' );
+
 		$description = [
-			sprintf(
-				'<h6> %s </h6>',
-				__( 'Site Tagline', 'surerank' )
-			),
-			__( 'Your site tagline is a short sentence that explains what your website is about. It can appear in the browser tab, on your homepage, or in search snippets, depending on your theme and settings. Think of it as a simple introduction that sits beside your site name.', 'surerank' ),
+			__( 'A site tagline is a short line that describes what your website is about.', 'surerank' ),
+			__( 'It often appears alongside your site title and helps visitors quickly understand your purpose.', 'surerank' ),
+			__( 'A clear tagline sets context, supports your brand, and makes your site feel more intentional.', 'surerank' ),
 
 			sprintf(
-				'<h6> %s </h6>',
-				__( '💡 Why this matters:', 'surerank' )
-			),
-			__( 'A clear tagline helps visitors understand your site at a glance and makes search results more inviting. If the field is blank or still shows a default message like "Just another WordPress site," it doesn\'t tell people or search engines anything meaningful. A thoughtful tagline works like a small pitch that highlights what your site offers.', 'surerank' ),
-
-			sprintf(
-				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/Site-tagline.webp' ),
-				esc_attr( 'Site Tagline Comparison' )
-			),
-
-			sprintf(
-				'<h6> %s </h6>',
-				__( '✅ How to keep things smooth', 'surerank' )
+				'<h6>✅ %s </h6>',
+				__( 'Best Practice', 'surerank' )
 			),
 			[
 				'list' => [
-					__( 'Write one short sentence that describes your site\'s purpose or audience.', 'surerank' ),
-					__( 'Keep it friendly, specific and easy to understand.', 'surerank' ),
-					__( 'Avoid long phrases or generic lines that don\'t add clarity.', 'surerank' ),
-					__( 'Make sure the tagline reflects what your site focuses on today.', 'surerank' ),
+					__( 'A good tagline is simple and easy to understand.', 'surerank' ),
+					__( 'It should describe what you do or who your site is for.', 'surerank' ),
+					__( 'Aim for a single clear sentence that feels natural and human.', 'surerank' ),
+				],
+			],
+			__( 'Avoid buzzwords or vague phrases that do not say much about your site.', 'surerank' ),
+
+			sprintf(
+				'<h6>🛠️ %s </h6>',
+				__( 'Where to Update It', 'surerank' )
+			),
+			__( 'You can update your site tagline from the WordPress settings.', 'surerank' ),
+			[
+				'list' => [
+					__( 'Go to Settings ⇾ General', 'surerank' ),
+					__( 'Update the Tagline field', 'surerank' ),
+					__( 'Save your changes', 'surerank' ),
 				],
 			],
 
 			sprintf(
-				'<h6> %s </h6>',
-				__( '🚀 Example', 'surerank' )
-			),
-			[
-				'list' => [
-					__( 'Simple budgeting tools for everyday people', 'surerank' ),
-					__( 'Home workouts and fitness tips that fit your schedule', 'surerank' ),
-				],
-			],
-
-			sprintf(
-				'<h6> %s </h6>',
-				__( '🔧 Where to update it', 'surerank' )
-			),
-			sprintf(
-				/* translators: %s is the URL of the WordPress General Settings page */
-				__( 'You can update your tagline from the <a href="%s">WordPress General Settings page</a>.', 'surerank' ),
-				$this->get_wordpress_settings_url( 'general' )
+				'<h6>✏️ %s </h6>',
+				__( 'Update Here', 'surerank' )
 			),
 
 			sprintf(
 				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/Site-tagline-example.webp' ),
-				esc_attr( 'Tagline Settings' )
+				esc_attr( 'https://surerank.com/wp-content/uploads/2026/02/site-tagline.webp' ),
+				esc_attr( 'Site Tagline Settings' )
 			),
-
-			sprintf(
-				'<h6> %s </h6>',
-				__( '🌟 How SureRank helps', 'surerank' )
-			),
-			__( 'SureRank SEO Analysis checks whether your site has a meaningful tagline and highlights when it is missing or unclear. This gives you a gentle reminder to add a line that helps visitors understand your site before they even land on it.', 'surerank' ),
 		];
+
+		if ( ! Nudge_Utils::get_instance()->is_pro_active() ) {
+			$description[] = sprintf(
+				'<h6>💬 %s </h6>',
+				__( 'Need Help?', 'surerank' )
+			);
+			$description[] = __( 'SureRank Pro helps fix SEO issues across your website using AI, without manual effort.', 'surerank' );
+		}
 
 		return [
 			'exists'      => true,
 			'status'      => $is_set ? 'success' : 'warning',
 			'description' => $description,
 			'message'     => $title,
+			'heading'     => $heading,
 		];
 	}
 
@@ -747,62 +722,47 @@ class Analyzer extends Api_Base {
 	 * @return array<string, mixed>
 	 */
 	public function robots_txt() {
-		$robots_url        = home_url( '/robots.txt' );
-		$working_label     = __( 'Robots.txt file is accessible.', 'surerank' );
-		$not_working_label = __( 'Robots.txt file is not accessible.', 'surerank' );
-		$helptext          = [
-			sprintf(
-				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2025/12/robots.txt-check-banner.webp' ),
-				esc_attr( 'Robots.txt' )
-			),
-			sprintf(
-				'<h6> %s </h6>',
-				__( 'Robots.txt File', 'surerank' )
-			),
-			__( 'Your site has a small file called robots.txt that acts like a guide for search engines, showing them where they’re welcome to explore and where they should stay away. Think of it as a polite set of instructions for visitors who want to browse your site.', 'surerank' ),
+		$robots_url = home_url( '/robots.txt' );
+
+		$working_heading = __( 'Robots.txt is accessible.', 'surerank' );
+		$working_label   = __( 'Your site has an accessible robots.txt file.', 'surerank' );
+
+		$not_working_heading = __( 'Robots.txt is missing or inaccessible.', 'surerank' );
+		$not_working_label   = __( 'Your site does not currently have an accessible robots.txt file.', 'surerank' );
+
+		$helptext = [
+			__( 'The robots.txt file tells search engines which parts of your site they are allowed to crawl and index.', 'surerank' ),
+			__( 'When this file is missing or inaccessible, search engines may have trouble understanding how to properly crawl your site.', 'surerank' ),
+			__( 'Having a valid robots.txt file helps avoid crawling issues and ensures search engines focus on the right pages.', 'surerank' ),
 
 			sprintf(
-				'<h6>💡 %s </h6>',
-				__( 'Why this matters:', 'surerank' )
+				'<h6>🛠️ %s </h6>',
+				__( 'Where to Update It', 'surerank' )
 			),
-			sprintf(
-				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2025/12/robots.txt-sub-banner.webp' ),
-				esc_attr( 'Robots.txt sub banner' )
-			),
-			__( 'If the robots.txt file is missing or set up incorrectly, search engines might skip pages they should see, or spend time on pages that aren’t important. A proper file helps your site get noticed efficiently and ensures the content that matters most is visible to both search engines and people.', 'surerank' ),
-
-			sprintf(
-				'<h6>✅ %s </h6>',
-				__( 'How to keep things smooth', 'surerank' )
-			),
+			__( 'You can create or edit your robots.txt file directly from SureRank.', 'surerank' ),
 			[
 				'list' => [
-					__( 'Check your robots.txt by visiting yoursite.com/robots.txt , if it opens with some rules, it’s active.', 'surerank' ),
-					__( 'Make sure it doesn’t block pages you want visitors to find.', 'surerank' ),
-					__( 'Even if the rules look complicated, having the file is better than not having one.', 'surerank' ),
-					__( 'Use the built-in robots.txt editor in SureRank to view or adjust the file safely.', 'surerank' ),
+					__( 'Go to SureRank ⇾ Advanced ⇾ Robots.txt Editor', 'surerank' ),
+					__( 'Review or add the required rules', 'surerank' ),
+					__( 'Save your changes', 'surerank' ),
 				],
 			],
 
 			sprintf(
-				'<h6>📌 %s </h6>',
-				__( 'Example', 'surerank' )
+				'<h6>✏️ %s </h6>',
+				__( 'Update Here', 'surerank' )
 			),
 			sprintf(
 				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2025/12/robot-example.webp' ),
+				esc_attr( 'https://surerank.com/wp-content/uploads/2026/02/robotstxt-is-missing-or-inaccessible.webp' ),
 				esc_attr( 'Robots.txt example' )
 			),
-			__( 'If your robots.txt accidentally blocks your “Shop” or “Pricing” pages, search engines won’t see them, and people searching for your products or services might never find them.', 'surerank' ),
-
-			sprintf( '<h6>🛠️ %s </h6>', __( 'Where to update it', 'surerank' ) ),
-			__( 'The robots.txt file can be edited directly from the SureRank settings using the built-in editor.', 'surerank' ),
-
-			sprintf( '<h6>🌟 %s </h6>', __( 'How SureRank helps', 'surerank' ) ),
-			__( 'SureRank automatically creates a working robots.txt file and lets you manage it directly within the plugin. This keeps your site clear for search engines and ensures important pages are always discoverable.', 'surerank' ),
 		];
+
+		if ( ! Nudge_Utils::get_instance()->is_pro_active() ) {
+			$helptext[] = sprintf( '<h6>💬 %s </h6>', __( 'Need Help?', 'surerank' ) );
+			$helptext[] = __( 'SureRank Pro helps fix SEO issues across your website using AI, without manual effort.', 'surerank' );
+		}
 
 		$response = Scraper::get_instance()->fetch_status( $robots_url );
 		if ( is_wp_error( $response ) || $response !== 200 ) {
@@ -811,6 +771,7 @@ class Analyzer extends Api_Base {
 				'status'      => 'warning',
 				'description' => $helptext,
 				'message'     => $not_working_label,
+				'heading'     => $not_working_heading,
 			];
 		}
 
@@ -819,6 +780,7 @@ class Analyzer extends Api_Base {
 			'status'      => 'success',
 			'description' => $helptext,
 			'message'     => $working_label,
+			'heading'     => $working_heading,
 		];
 	}
 
@@ -828,70 +790,59 @@ class Analyzer extends Api_Base {
 	 * @return array<string, mixed>
 	 */
 	public function index_status() {
-		$index_status      = get_option( 'blog_public' );
-		$no_index          = $this->settings['no_index'] ?? [];
-		$working_label     = __( 'Search engine visibility is not blocked in WordPress settings.', 'surerank' );
-		$not_working_label = __( 'Search engine visibility is blocked in WordPress settings.', 'surerank' );
-		$helptext          = [
-			sprintf(
-				'<h6> %s </h6>',
-				__( 'Site Indexing Setting', 'surerank' )
-			),
-			__( 'WordPress includes a setting that tells search engines whether they should try to index your site. Indexing simply means your pages can appear in search results. This setting is often used while a site is still being built or kept private, because it asks search engines not to index the content yet.', 'surerank' ),
+		$index_status = get_option( 'blog_public' );
+		$no_index     = $this->settings['no_index'] ?? [];
+
+		$working_heading = __( 'Search engine visibility is enabled.', 'surerank' );
+		$working_label   = __( 'Search engine visibility is currently enabled in your WordPress settings.', 'surerank' );
+
+		$not_working_heading = __( 'Search engine visibility is disabled.', 'surerank' );
+		$not_working_label   = __( 'Search engine visibility is currently disabled in your WordPress settings.', 'surerank' );
+
+		$helptext = [
+			__( 'WordPress includes a setting that tells search engines whether they are allowed to index your site. Indexing means your pages can appear in search results.', 'surerank' ),
+			__( 'This setting is commonly used while a site is being built or kept private. When enabled, it asks search engines not to index new pages.', 'surerank' ),
+			__( 'If this setting remains enabled by mistake, your site may not appear in search results even if everything else is set up correctly. It can quietly limit visibility without showing obvious errors.', 'surerank' ),
 
 			sprintf(
-				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/Site-Indexing-Setting.webp' ),
-				esc_attr( 'Indexing Comparison' )
+				'<h6>🛠️ %s </h6>',
+				__( 'Where to Update It', 'surerank' )
 			),
+			__( 'You can change this setting from your WordPress dashboard.', 'surerank' ),
 
-			sprintf(
-				'<h6> %s </h6>',
-				__( '💡 Why this matters:', 'surerank' )
-			),
-			__( 'If this setting stays enabled by accident, your site may not appear in search results even if everything else is set up correctly. It doesn\'t remove pages that were already indexed, but it quietly discourages search engines from indexing new ones. This can hold back visibility without you noticing.', 'surerank' ),
-
-			sprintf(
-				'<h6> %s </h6>',
-				__( '✅ How to keep things smooth', 'surerank' )
-			),
 			[
 				'list' => [
-					__( 'Go to Settings → Reading in WordPress.', 'surerank' ),
-					__( 'Look for the option labeled "Discourage search engines from indexing this site."', 'surerank' ),
-					__( 'If your site is live and ready for visitors, make sure this box is not checked.', 'surerank' ),
-					__( 'Save your changes so search engines know they can index your site normally.', 'surerank' ),
+					sprintf(
+						/* translators: %s is the URL of the WordPress Reading settings page */
+						__( 'Go to <a href="%s">Settings ⇾ Reading</a>', 'surerank' ),
+						$this->get_wordpress_settings_url( 'reading' )
+					),
+					__( 'Find the option labeled “Search engine visibility”', 'surerank' ),
+					__( 'Make sure the checkbox is not selected', 'surerank' ),
+					__( 'Save your changes', 'surerank' ),
 				],
 			],
 
 			sprintf(
-				'<h6> %s </h6>',
-				__( '🚀 Example', 'surerank' )
-			),
-			__( 'If you built your site on a staging server and published it, this setting may still be enabled. Unchecking it tells search engines they can start indexing your content.', 'surerank' ),
-
-			sprintf(
-				'<h6> %s </h6>',
-				__( '🔧 Where to update it', 'surerank' )
-			),
-			sprintf(
 				/* translators: %s is the URL of the WordPress Reading settings page */
-				__( 'You can find this option in <a href="%s">WordPress → Settings → Reading</a>. It should be unchecked for a live site.', 'surerank' ),
-				$this->get_wordpress_settings_url( 'reading' )
+				'<h6>✏️ %s </h6>',
+				__( 'Update Here', 'surerank' )
 			),
 
 			sprintf(
 				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/Where-to-update-it-Site-Indexing.webp' ),
-				esc_attr( 'Search Engine Visibility Setting' )
+				esc_attr( 'https://surerank.com/wp-content/uploads/2026/02/search-engine-visibility-is-disabled.webp' ),
+				esc_attr( 'Search engine visibility setting' )
 			),
-
-			sprintf(
-				'<h6> %s </h6>',
-				__( '🌟 How SureRank helps', 'surerank' )
-			),
-			__( 'SureRank SEO Analysis checks whether your site is accidentally blocking search engines. If it is, SureRank shows a clear reminder so you can review the setting and make sure your site is ready to be indexed normally.', 'surerank' ),
 		];
+
+		if ( ! Nudge_Utils::get_instance()->is_pro_active() ) {
+			$helptext[] = sprintf(
+				'<h6>💬 %s </h6>',
+				__( 'Need Help?', 'surerank' )
+			);
+			$helptext[] = __( 'SureRank Pro users get access to our support team, available 24×7, to help detect visibility and indexing issues before they affect your site.', 'surerank' );
+		}
 
 		$sensitive_post_types = [ 'post', 'page', 'product', 'product_variation', 'product_category', 'product_tag' ];
 		$noindex_types        = array_intersect( $no_index, $sensitive_post_types );
@@ -902,6 +853,7 @@ class Analyzer extends Api_Base {
 				'status'      => 'error',
 				'description' => $helptext,
 				'message'     => $not_working_label,
+				'heading'     => $not_working_heading,
 			];
 		}
 
@@ -911,6 +863,7 @@ class Analyzer extends Api_Base {
 				'status'      => 'error',
 				'description' => $helptext,
 				'message'     => $not_working_label,
+				'heading'     => $not_working_heading,
 			];
 		}
 
@@ -919,6 +872,7 @@ class Analyzer extends Api_Base {
 			'status'      => 'success',
 			'description' => $helptext,
 			'message'     => $working_label,
+			'heading'     => $working_heading,
 		];
 	}
 
@@ -928,52 +882,51 @@ class Analyzer extends Api_Base {
 	 * @return array<string, mixed>
 	 */
 	public function sitemaps(): array {
-		$working_label     = __( 'XML sitemap is accessible to search engines.', 'surerank' );
-		$not_working_label = __( 'XML sitemap is not accessible to search engines.', 'surerank' );
-		$helptext          = [
-			sprintf(
-				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2025/12/sitemap-example.webp' ),
-				esc_attr( __( 'why this matters', 'surerank' ) )
-			),
-			sprintf(
-				'<h6> %s </h6>',
-				__( 'Sitemap', 'surerank' )
-			),
-			__( 'A sitemap is like a guide or floor plan for your website that helps search engines explore it efficiently. It lists your important pages and shows search engines the path to follow, making sure nothing essential gets missed. Think of it as a chapter list in a book - it doesn’t change how your site looks to visitors, but it helps search engines understand your content quickly and clearly.', 'surerank' ),
+		$working_heading = __( 'XML sitemap is accessible.', 'surerank' );
+		$working_label   = __( 'The XML sitemap for this site is accessible to search engines.', 'surerank' );
+
+		$not_working_heading = __( 'XML sitemap is missing or inaccessible.', 'surerank' );
+		$not_working_label   = __( 'The XML sitemap for this site is missing or cannot be accessed.', 'surerank' );
+
+		$helptext = [
+			__( 'An XML sitemap helps search engines discover and understand the pages on your site.', 'surerank' ),
+			__( 'When the sitemap is missing or cannot be accessed, search engines may take longer to find new or updated pages.', 'surerank' ),
+			__( 'Having a sitemap makes it easier for search engines to crawl your site efficiently.', 'surerank' ),
+			__( 'It also helps ensure important pages are not missed during indexing.', 'surerank' ),
 
 			sprintf(
-				'<h6>💡 %s </h6>',
-				__( 'Why this matters:', 'surerank' )
+				'<h6>🛠️ %s </h6>',
+				__( 'Where to Update It', 'surerank' )
 			),
-			__( 'Without a sitemap, search engines might overlook some pages or take longer to notice updates. This can slow down how quickly your new content appears in search results. A well-maintained sitemap gives search engines a clear overview of your site, helping your content get indexed faster and more accurately, which improves visibility.', 'surerank' ),
-
-			__( 'Think of it like this: if your website was a story, the sitemap would be the chapter list - helping Google and other search engines jump to the right sections. It doesn’t change how your site looks to visitors, but it makes a big difference in how your site is discovered and understood behind the scenes.', 'surerank' ),
-
-			sprintf( '<h6>✅ %s </h6>', __( 'How to keep things smooth', 'surerank' ) ),
+			__( 'You can enable and manage your XML sitemap directly from SureRank.', 'surerank' ),
 			[
 				'list' => [
-					__( 'Make sure your sitemap is active and accessible by visiting yoursite.com/sitemap.xml.', 'surerank' ),
-					__( 'Even if it looks technical, having a list of your pages means search engines know where to go.', 'surerank' ),
-					__( 'Keep the sitemap up to date whenever you add new pages or make major changes', 'surerank' ),
-					__( 'Use the built-in sitemap management in SureRank to create and maintain it automatically.', 'surerank' ),
+					__( 'Go to SureRank ⇾ Advanced ⇾ Sitemap', 'surerank' ),
+					__( 'Enable the XML Sitemap toggle', 'surerank' ),
+					__( 'Click on Regenerate Button', 'surerank' ),
+					__( 'Save your changes', 'surerank' ),
 				],
 			],
+
 			sprintf(
-				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/sitemap-2.webp' ),
-				esc_attr( __( 'XML Sitemap Example', 'surerank' ) )
+				'<h6>✏️ %s </h6>',
+				__( 'Update Here', 'surerank' )
 			),
 
-			sprintf( '<h6>📌 %s </h6>', __( 'Example', 'surerank' ) ),
-			__( 'If you add a new blog post but don’t have a sitemap, search engines might take longer to find it. With a sitemap, your new post appears in search results more quickly, helping readers discover your content sooner.', 'surerank' ),
-
-			sprintf( '<h6>🛠️ %s </h6>', __( 'Where to update it', 'surerank' ) ),
-			__( 'You can manage and update your sitemap directly from the SureRank settings using the built-in sitemap tool.', 'surerank' ),
-
-			sprintf( '<h6>🌟 %s </h6>', __( 'How SureRank helps', 'surerank' ) ),
-			__( 'SureRank automatically generates and updates your sitemap, so search engines always have a clear path to your important content. This keeps your site organized and ensures nothing valuable gets overlooked, without requiring extra work from you.', 'surerank' ),
+			sprintf(
+				"<img class='w-full h-full' src='%s' alt='%s' />",
+				esc_attr( 'https://surerank.com/wp-content/uploads/2026/02/xml-sitemap-is-missing-or-inaccessible.webp' ),
+				esc_attr( 'XML Sitemap Settings' )
+			),
 		];
+
+		if ( ! Nudge_Utils::get_instance()->is_pro_active() ) {
+			$helptext[] = sprintf(
+				'<h6>💬 %s </h6>',
+				__( 'Need More?', 'surerank' )
+			);
+			$helptext[] = __( 'Upgrade to SureRank Pro to unlock advanced sitemap types like Video, News, HTML, and Author sitemaps for better search visibility.', 'surerank' );
+		}
 
 		$sitemap_url = home_url( '/sitemap_index.xml' );
 		$sitemap     = Scraper::get_instance()->fetch( $sitemap_url );
@@ -984,6 +937,7 @@ class Analyzer extends Api_Base {
 				'status'      => 'warning',
 				'description' => $helptext,
 				'message'     => $not_working_label,
+				'heading'     => $not_working_heading,
 			];
 		}
 
@@ -993,6 +947,7 @@ class Analyzer extends Api_Base {
 				'status'      => 'warning',
 				'description' => $helptext,
 				'message'     => $not_working_label,
+				'heading'     => $not_working_heading,
 			];
 		}
 
@@ -1001,6 +956,7 @@ class Analyzer extends Api_Base {
 			'status'      => 'success',
 			'description' => $helptext,
 			'message'     => $working_label,
+			'heading'     => $working_heading,
 		];
 	}
 

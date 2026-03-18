@@ -9,7 +9,6 @@ import SiteSeoChecksTableSkeleton, {
 } from './site-seo-checks-table-skeleton';
 import SiteSeoChecksTable from './site-seo-checks-table';
 import SiteSeoChecksDrawer from './site-seo-checks-drawer';
-import { createLazyRoute } from '@tanstack/react-router';
 import { useRunSeoChecks } from './use-run-seo-checks';
 import { cn } from '@Functions/utils';
 import SaveAuthToken from '@/global/components/save-auth-token';
@@ -142,9 +141,5 @@ const SiteSeoChecks = () => {
 		</div>
 	);
 };
-
-export const LazyRoute = createLazyRoute( '/site-seo-analysis' )( {
-	component: SiteSeoChecks,
-} );
 
 export default SiteSeoChecks;

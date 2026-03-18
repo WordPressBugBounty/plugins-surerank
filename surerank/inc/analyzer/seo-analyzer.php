@@ -16,6 +16,7 @@ use DOMNodeList;
 use DOMXPath;
 use SureRank\Inc\API\Analyzer;
 use SureRank\Inc\Functions\Get;
+use SureRank\Inc\Modules\Nudges\Utils;
 use WP_Error;
 
 /**
@@ -125,73 +126,86 @@ class SeoAnalyzer {
 	 * @return array<string, mixed>
 	 */
 	public function analyze_title( DOMXPath $xpath ) {
+		$show_static_page = get_option( 'show_on_front' ) === 'page';
 
 		$helptext = [
-			sprintf(
-				'<h6> %s </h6>',
-				__( 'Homepage SEO Title', 'surerank' )
-			),
-			__( 'Your homepage SEO title is one of the most important signals you share with search engines and visitors. It becomes the main clickable headline that appears in search results, almost like your site\'s introduction card to the world. A clear and thoughtful title helps people understand what your site is about before they visit, and gives search engines a strong sense of how to categorize your homepage.', 'surerank' ),
+			__( 'A homepage SEO title is the main headline that appears for your site in search results.', 'surerank' ),
 			sprintf(
 				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/Homepage-SEO-Title.webp' ),
+				esc_attr( 'https://surerank.com/wp-content/uploads/2026/02/homepage-seo-title.webp' ),
 				esc_attr( 'Homepage SEO Title' )
 			),
-			sprintf(
-				'<h6>💡 %s </h6>',
-				__( 'Why this matters:', 'surerank' )
-			),
-			__( 'Your homepage title shapes the first impression your site makes in search results. Search engines use it to understand what your homepage represents, and visitors rely on it to decide whether your site matches what they\'re looking for.', 'surerank' ),
-			__( 'If the title is missing, unclear, or too long to display fully, your site may not stand out the way it should. A meaningful title makes your listing easier to read, more relevant, and more inviting.', 'surerank' ),
-			__( 'A good homepage title also helps set expectations. It tells visitors who you are and what you offer in just a few words, helping your site feel more familiar and approachable before they even arrive.', 'surerank' ),
+			__( 'It is often the first thing people read before deciding whether to click.', 'surerank' ),
+			__( 'A clear and well written title helps search engines understand your homepage and improves click through rate by setting the right expectation.', 'surerank' ),
 
 			sprintf(
 				'<h6>✅ %s </h6>',
-				__( 'How to keep things smooth', 'surerank' )
+				__( 'Best Practice', 'surerank' )
 			),
 			[
 				'list' => [
-					__( 'Start with your site or brand name so visitors immediately know who you are.', 'surerank' ),
-					__( 'Add a short, descriptive phrase that explains what your site offers and who it\'s for.', 'surerank' ),
-					__( 'Keep the title under 60 characters so it displays cleanly in search results.', 'surerank' ),
-					__( 'Use clear, friendly language that matches the tone of your site.', 'surerank' ),
-					__( 'Write with real people in mind since this is often their first interaction with your content.', 'surerank' ),
+					__( 'Good titles are short, specific, and easy to scan.', 'surerank' ),
+					__( 'Make sure to keep it between 50 and 60 characters.', 'surerank' ),
+					__( 'Include your brand name and main keyword where it makes sense.', 'surerank' ),
+					__( 'A simple, honest title usually performs better than a long or generic one.', 'surerank' ),
 				],
 			],
 
 			sprintf(
-				'<h6>📌 %s </h6>',
-				__( 'Example', 'surerank' )
-			),
-			__( 'Bright Bakes – Easy Baking Recipes for Everyone', 'surerank' ),
-			__( 'This simple title explains the brand, the purpose and the value in one quick line.', 'surerank' ),
-			sprintf(
-				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/Homepage-SEO-Title-example.webp' ),
-				esc_attr( 'Homepage SEO Title Example' )
-			),
-			sprintf(
 				'<h6>🛠️ %s </h6>',
-				__( 'Where to update it', 'surerank' )
+				__( 'Where to Update It', 'surerank' )
 			),
-			__( 'Where you edit your homepage title depends on how your homepage is set up in WordPress.', 'surerank' ),
-			sprintf(
-				/* translators: %s is the URL of the homepage settings page */
-				__( 'You can <a href="%s">edit that page directly</a> and update the title from the Surerank Meta Box or page settings.', 'surerank' ),
-				$this->get_homepage_settings_url()
-			),
-
-			sprintf(
-				'<h6>🌟 %s </h6>',
-				__( 'How SureRank helps', 'surerank' )
-			),
-			__( 'SureRank SEO Analysis checks whether your homepage has an SEO title and highlights when one is missing. This gives you a clear reminder to set a meaningful, human-friendly title that helps search engines understand your page and gives visitors a confident first impression.', 'surerank' ),
 		];
+
+		if ( ! $show_static_page ) {
+			$helptext[] = sprintf(
+				/* translators: %1$s: URL to the SureRank homepage general settings, %2$s: Anchor text "General" */
+				__( "From the SureRank Dashboard, go to General ⇾ Home Page ⇾ <a href='%1\$s' target='_blank' rel='noopener'>%2\$s</a>.", 'surerank' ),
+				$this->get_homepage_settings_url(),
+				__( 'General', 'surerank' )
+			);
+			$helptext[] = __( 'Here, you can update the title, description, and social image for your home page. SureRank will also show a preview of your website.', 'surerank' );
+		} else {
+			$helptext[] = sprintf(
+				/* translators: %1$s: URL to the Home Page settings, %2$s: Anchor text "Home Page" */
+				__( "Go to Pages ⇾ <a href='%1\$s' target='_blank' rel='noopener'>%2\$s</a> ⇾ SureRank ⇾ Optimize ⇾ General.", 'surerank' ),
+				$this->get_homepage_settings_url(),
+				__( 'Home Page', 'surerank' )
+			);
+			$helptext[] = __( 'Here, you can update the title, description, and social metadata with image for your home page. SureRank will also show a preview of your website.', 'surerank' );
+		}
+
+		$helptext[] = sprintf(
+			'<h6>✏️ %s </h6>',
+			__( 'Update Here', 'surerank' )
+		);
+
+		if ( ! $show_static_page ) {
+			$helptext[] = sprintf(
+				"<img class='w-full h-full' src='%s' alt='%s' />",
+				esc_attr( 'https://surerank.com/wp-content/uploads/2026/02/homepage-seo-title-general-update.webp' ),
+				esc_attr( 'Homepage SEO Title General Update' )
+			);
+		} else {
+			$helptext[] = sprintf(
+				"<img class='w-full h-full' src='%s' alt='%s' />",
+				esc_attr( 'https://surerank.com/wp-content/uploads/2026/02/homepage-seo-title-page-update.webp' ),
+				esc_attr( 'Homepage SEO Title Page Update' )
+			);
+		}
+
+		if ( ! Utils::get_instance()->is_pro_active() ) {
+			$helptext[] = sprintf(
+				'<h6>💬 %s </h6>',
+				__( 'Need Help?', 'surerank' )
+			);
+			$helptext[] = __( 'SureRank Pro helps you generate SEO titles using AI, following best practices for length, clarity, and click through rate.', 'surerank' );
+		}
 
 		$titles = $xpath->query( '//title' );
 		if ( ! $titles instanceof DOMNodeList ) {
 			return $this->build_error_response(
-				__( 'Search engine title is missing on the homepage.', 'surerank' ),
+				__( 'Homepage SEO Title', 'surerank' ),
 				$helptext,
 				__( 'Search engine title is missing on the homepage.', 'surerank' ),
 				'error'
@@ -223,6 +237,7 @@ class SeoAnalyzer {
 			'status'      => $status,
 			'description' => $helptext,
 			'message'     => $this->get_title_message( $exists, $length, $status ),
+			'heading'     => __( 'Homepage SEO Title', 'surerank' ),
 		];
 	}
 
@@ -233,70 +248,87 @@ class SeoAnalyzer {
 	 * @return array<string, mixed>
 	 */
 	public function analyze_meta_description( DOMXPath $xpath ) {
-
+		$heading     = __( 'Homepage SEO Description', 'surerank' );
 		$description = [
-			sprintf(
-				'<h6> %s </h6>',
-				__( 'Homepage SEO Description', 'surerank' )
-			),
-			__( 'Your homepage description is the short text that appears below your title in search results. It acts like a quick summary that helps people understand what your site offers. Think of it as a one sentence pitch that gives visitors a clear idea of what to expect and why your site is worth opening.', 'surerank' ),
+			__( 'A homepage SEO description is the short text that appears below your site title in search results.', 'surerank' ),
 			sprintf(
 				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/Homepage-SEO-Description.webp' ),
+				esc_attr( 'https://surerank.com/wp-content/uploads/2026/02/homepage-seo-description-visual.webp' ),
 				esc_attr( 'Homepage SEO Description' )
 			),
-			sprintf(
-				'<h6>💡 %s </h6>',
-				__( 'Why this matters:', 'surerank' )
-			),
-			__( 'A strong description helps search engines understand your homepage and gives visitors helpful context before they decide to explore your site.', 'surerank' ),
-			__( 'When the description is missing, too long, or unclear, your search result may feel incomplete or get cut off, which can make it less appealing. A well written description improves how your listing looks and can directly influence how many people choose to visit your site.', 'surerank' ),
-			__( 'Keeping the description between 150 to 160 characters works best. This gives you enough space to say something meaningful while staying short enough to show fully in search results.', 'surerank' ),
+			__( 'It gives people a quick idea of what your site is about before they decide to click.', 'surerank' ),
+			__( 'A clear and well written description helps search engines understand your homepage and makes your result more appealing.', 'surerank' ),
 
 			sprintf(
 				'<h6>✅ %s </h6>',
-				__( 'How to keep things smooth', 'surerank' )
+				__( 'Best Practice', 'surerank' )
 			),
 			[
 				'list' => [
-					__( 'Describe your site the way you would to someone who has never visited it before.', 'surerank' ),
-					__( 'Focus on what your site offers and who it is for.', 'surerank' ),
-					__( 'Keep it short, specific and friendly.', 'surerank' ),
-					__( 'Avoid long phrases that might get cut off in search results.', 'surerank' ),
+					__( 'Good descriptions are clear and easy to read.', 'surerank' ),
+					__( 'Make sure to keep it between 150 and 160 characters.', 'surerank' ),
+					__( 'Write it in natural language with your keywords where it makes sense.', 'surerank' ),
+					__( 'A simple, helpful description performs better than a vague or overly long one.', 'surerank' ),
 				],
 			],
 
 			sprintf(
-				'<h6>📌 %s </h6>',
-				__( 'Example', 'surerank' )
-			),
-			__( 'Discover simple, healthy meals you can cook at home, even if you\'re short on time.', 'surerank' ),
-			sprintf(
-				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/Homepage-SEO-Description-Example.webp' ),
-				esc_attr( 'Homepage SEO Description Example' )
-			),
-			sprintf(
 				'<h6>🛠️ %s </h6>',
-				__( 'Where to update it', 'surerank' )
+				__( 'Where to Update It', 'surerank' )
 			),
-			__( 'Where you edit your homepage description depends on how your homepage is set up.', 'surerank' ),
-			sprintf(
-				/* translators: %s is the URL of the homepage settings page */
-				__( 'You can <a href="%s">edit that page directly</a> to update the description.', 'surerank' ),
-				$this->get_homepage_settings_url()
-			),
-
-			sprintf(
-				'<h6>🌟 %s </h6>',
-				__( 'How SureRank helps', 'surerank' )
-			),
-			__( 'SureRank SEO Analysis checks whether your homepage description is present and the right length. It highlights when the description is missing or too long, giving you a clear reminder to keep it readable, helpful, and easy for both visitors and search engines to understand.', 'surerank' ),
 		];
+
+		$show_static_page = get_option( 'show_on_front' ) === 'page';
+
+		if ( ! $show_static_page ) {
+			$description[] = sprintf(
+				/* translators: %1$s: URL to the SureRank homepage general settings, %2$s: Anchor text "General" */
+				__( "From the SureRank Dashboard, go to General ⇾ Home Page ⇾ <a href='%1\$s' target='_blank' rel='noopener'>%2\$s</a>.", 'surerank' ),
+				$this->get_homepage_settings_url(),
+				__( 'General', 'surerank' )
+			);
+			$description[] = __( 'Here, you can update the title, description, and image for your home page. SureRank will also show a preview of your website.', 'surerank' );
+		} else {
+			$description[] = sprintf(
+				/* translators: %1$s: URL to the Home Page settings, %2$s: Anchor text "Home Page" */
+				__( "Go to Pages ⇾ <a href='%1\$s' target='_blank' rel='noopener'>%2\$s</a> ⇾ SureRank ⇾ Optimize ⇾ General.", 'surerank' ),
+				$this->get_homepage_settings_url(),
+				__( 'Home Page', 'surerank' )
+			);
+			$description[] = __( 'Here, you can update the title, description, and image for your home page. SureRank will also show a preview of your website.', 'surerank' );
+		}
+
+		$description[] = sprintf(
+			'<h6>✏️ %s </h6>',
+			__( 'Update Here', 'surerank' )
+		);
+
+		if ( ! $show_static_page ) {
+			$description[] = sprintf(
+				"<img class='w-full h-full' src='%s' alt='%s' />",
+				esc_attr( 'https://surerank.com/wp-content/uploads/2026/02/homepage-seo-description-general-update.webp' ),
+				esc_attr( 'Homepage SEO Description General Update' )
+			);
+		} else {
+			$description[] = sprintf(
+				"<img class='w-full h-full' src='%s' alt='%s' />",
+				esc_attr( 'https://surerank.com/wp-content/uploads/2026/02/homepage-seo-description-page-update.webp' ),
+				esc_attr( 'Homepage SEO Description Page Update' )
+			);
+		}
+
+		if ( ! Utils::get_instance()->is_pro_active() ) {
+			$description[] = sprintf(
+				'<h6>💬 %s </h6>',
+				__( 'Need Help?', 'surerank' )
+			);
+			$description[] = __( 'SureRank Pro helps you generate SEO titles and descriptions using AI, following best practices, so your pages look great in search results.', 'surerank' );
+		}
+
 		$meta_desc = $xpath->query( '//meta[@name="description"]/@content' );
 		if ( ! $meta_desc instanceof DOMNodeList ) {
 			return $this->build_error_response(
-				__( 'Search engine description is missing on the homepage.', 'surerank' ),
+				$heading,
 				$description,
 				__( 'Search engine description is missing on the homepage.', 'surerank' ),
 				'warning'
@@ -328,6 +360,7 @@ class SeoAnalyzer {
 			'status'      => $status,
 			'description' => $description,
 			'message'     => $this->get_meta_description_message( $exists, $length, $status ),
+			'heading'     => $heading,
 		];
 	}
 
@@ -345,77 +378,69 @@ class SeoAnalyzer {
 		$title  = __( 'Homepage contains one H1 heading', 'surerank' );
 
 		$descriptions = [
-			sprintf(
-				'<h6> %s </h6>',
-				__( 'Homepage H1 Heading', 'surerank' )
-			),
-			sprintf(
-				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/Homepage-H1-Heading.webp' ),
-				esc_attr( 'Homepage H1 Heading' )
-			),
-			__( 'The H1 heading is the main title that appears on your homepage. It is often the first piece of text visitors notice, and it helps search engines understand what the page represents. Think of it as the cover of a book that tells people exactly what they have opened.', 'surerank' ),
-
-			sprintf(
-				'<h6>💡 %s </h6>',
-				__( 'Why this matters:', 'surerank' )
-			),
-			__( 'Search engines rely on the H1 to understand the primary topic of the page. Visitors use it to quickly confirm they are in the right place. If the H1 is missing, unclear, or repeated several times, your homepage can feel confusing or unfinished.', 'surerank' ),
-			__( 'Having one clear H1 gives your page structure, makes your message easier to understand, and improves how search engines interpret your content.', 'surerank' ),
-			__( 'Keeping a single H1 on each page also helps establish a clean hierarchy. It shows what the page is mainly about, while other headings can support the content without competing with the primary message.', 'surerank' ),
+			__( 'The H1 is the main heading of a page. It tells visitors and search engines what the page is primarily about.', 'surerank' ),
+			__( 'When the H1 is missing, duplicated, or unclear, search engines get less context and visitors may struggle to quickly understand your site\'s purpose.', 'surerank' ),
 
 			sprintf(
 				'<h6>✅ %s </h6>',
-				__( 'How to keep things smooth', 'surerank' )
+				__( 'Best Practice', 'surerank' )
 			),
 			[
 				'list' => [
-					__( 'Use one H1 heading on your homepage and make sure it is the main title.', 'surerank' ),
-					__( 'Write it clearly so visitors immediately know what your site offers.', 'surerank' ),
-					__( 'Avoid generic phrases that do not communicate your purpose.', 'surerank' ),
-					__( 'Keep it short and focused so it feels natural and easy to read.', 'surerank' ),
+					__( 'Keep the H1 short and descriptive.', 'surerank' ),
+					__( 'Use plain language instead of marketing buzzwords.', 'surerank' ),
+					__( 'Make sure it reflects the main topic of your homepage.', 'surerank' ),
 				],
 			],
 
 			sprintf(
-				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/Homepage-H1-Heading-Example.webp' ),
-				esc_attr( 'H1 Heading Examples' )
-			),
-
-			sprintf(
-				'<h6>📌 %s </h6>',
-				__( 'Example', 'surerank' )
-			),
-			__( 'Helping You Learn to Code from Scratch', 'surerank' ),
-			__( 'Creative Interior Design for Modern Spaces', 'surerank' ),
-
-			sprintf(
 				'<h6>🛠️ %s </h6>',
-				__( 'Where to update it', 'surerank' )
+				__( 'Where to Update It', 'surerank' )
 			),
-			__( 'Where you add or edit your H1 depends on how your homepage is set up.', 'surerank' ),
+			[
+				'list' => [
+					sprintf(
+						/* translators: %1$s: URL to the Home Page settings, %2$s: Anchor text "Home Page" */
+						__( "Go to Pages ⇾ <a href='%1\$s' target='_blank' rel='noopener'>%2\$s</a>", 'surerank' ),
+						$this->get_homepage_settings_url(),
+						__( 'Home Page', 'surerank' ),
+					),
+					__( 'Edit the main heading and set it as an H1', 'surerank' ),
+					__( 'Update the page', 'surerank' ),
+				],
+			],
+
 			sprintf(
-				/* translators: %s is the URL of the homepage settings page */
-				__( 'You can <a href="%s">edit that page directly</a> to update the H1 heading.', 'surerank' ),
-				$this->get_homepage_settings_url()
+				'<h6>✏️ %s </h6>',
+				__( 'Update Here', 'surerank' )
 			),
 
 			sprintf(
-				'<h6>🌟 %s </h6>',
-				__( 'How SureRank helps', 'surerank' )
+				"<img class='w-full h-full' src='%s' alt='%s' />",
+				esc_attr( 'https://surerank.com/wp-content/uploads/2026/03/homepage-h1-heading-is-missing-img.webp' ),
+				esc_attr( 'Homepage H1 Heading is Missing' )
 			),
-			__( 'SureRank SEO Analysis checks whether your homepage has a proper H1 heading and alerts you when it is missing. This gives you a simple reminder to create a clear, helpful title that improves your page structure for visitors and search engines.', 'surerank' ),
 		];
 
+		if ( ! Utils::get_instance()->is_pro_active() ) {
+			$descriptions[] = sprintf(
+				'<h6>💬 %s </h6>',
+				__( 'Need Help?', 'surerank' )
+			);
+			$descriptions[] = __( 'SureRank Pro helps you identify heading issues and suggests improvements using AI, so your pages stay clear and well structured.', 'surerank' );
+		}
+
 		if ( ! $h1_analysis['exists'] ) {
-			$status = 'warning';
-			$title  = __( 'No H1 heading found on the homepage.', 'surerank' );
+			$status  = 'warning';
+			$title   = __( 'Your homepage does not currently have a clear H1 heading.', 'surerank' );
+			$heading = __( 'Homepage H1 Heading Is Missing', 'surerank' );
 		} elseif ( ! $h1_analysis['is_optimized'] ) {
-			$status = 'warning';
-			$title  = __( 'Multiple H1 headings found on the homepage.', 'surerank' );
+			$status  = 'warning';
+			$title   = __( 'Your homepage currently contains multiple H1 headings.', 'surerank' );
+			$heading = __( 'Multiple H1 Headings Found', 'surerank' );
 		} else {
-			$title = __( 'Homepage contains one H1 heading.', 'surerank' );
+			$title   = __( 'Your homepage currently contains one H1 heading', 'surerank' );
+			$heading = __( 'Homepage H1 Heading Found', 'surerank' );
 		}
 
 		return [
@@ -423,6 +448,7 @@ class SeoAnalyzer {
 			'status'      => $status,
 			'description' => $descriptions,
 			'message'     => $title,
+			'heading'     => $heading,
 			'not_fixable' => true,
 		];
 	}
@@ -436,82 +462,72 @@ class SeoAnalyzer {
 	public function analyze_heading_h2( DOMXPath $xpath ) {
 
 		$descriptions = [
-			sprintf(
-				'<h6> %s </h6>',
-				__( 'Homepage H2 Headings', 'surerank' )
-			),
+			__( 'Subheadings help break your content into sections and make it easier for visitors to scan and understand your page.', 'surerank' ),
+			__( 'They also give search engines more context about the structure and topics covered on your homepage.', 'surerank' ),
 
 			sprintf(
-				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/h2-heading-image-1.webp' ),
-				esc_attr( 'H2 Heading Banner' )
-			),
-
-			__( 'H2 headings act like section titles that break your homepage into clear, readable parts. They help visitors understand what each section is about without having to read everything line by line. Think of them as signposts that guide people as they scroll, making it easier to spot what matters most.', 'surerank' ),
-			__( 'Search engines also pay attention to these subheadings. They use H2s to understand how your page is structured and what each section focuses on. Clear H2 headings help both visitors and search engines follow your content more naturally.', 'surerank' ),
-
-			sprintf(
-				'<h6> %s </h6>',
-				__( '💡 Why it matters', 'surerank' )
-			),
-
-			sprintf(
-				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/h2-heading-image-2.webp' ),
-				esc_attr( 'H2 Comparison' )
-			),
-
-			__( 'Most people scan a homepage before they read it. Without H2 headings, your content can feel flat or overwhelming, even if the information is good. Well-placed H2s make your homepage easier to scan, easier to understand, and more inviting to explore.', 'surerank' ),
-			__( 'From a search perspective, H2 headings give structure to your page. They help search engines understand the different topics covered on your homepage, which improves clarity and supports better visibility.', 'surerank' ),
-
-			sprintf(
-				'<h6> %s </h6>',
-				__( '✅ How to keep things smooth', 'surerank' )
+				'<h6>✅ %s </h6>',
+				__( 'Best Practice', 'surerank' )
 			),
 			[
 				'list' => [
-					__( 'Add at least one H2 heading to your homepage to introduce a section.', 'surerank' ),
-					__( 'Use H2s to separate key parts like services, features, or values.', 'surerank' ),
-					__( 'Keep each heading short and clear so it is easy to scan.', 'surerank' ),
-					__( 'Make sure each H2 matches the content that follows it.', 'surerank' ),
+					__( 'Use H2 headings to introduce major sections', 'surerank' ),
+					__( 'Each H2 should describe what the section is about', 'surerank' ),
+					__( 'Avoid using H2s just for styling.', 'surerank' ),
+					__( 'They should reflect the structure of your content.', 'surerank' ),
 				],
 			],
 
 			sprintf(
-				'<h6> %s </h6>',
-				__( '🚀 Example', 'surerank' )
+				'<h6>🛠️ %s </h6>',
+				__( 'Where to Update It', 'surerank' )
 			),
+			__( 'Edit your homepage content and add H2 headings where they naturally fit.', 'surerank' ),
+			__( 'If your homepage is a page:', 'surerank' ),
 			[
 				'list' => [
-					__( 'What We Do', 'surerank' ),
-					__( 'How It Works', 'surerank' ),
-					__( 'Trusted by 100+ Clients', 'surerank' ),
+					sprintf(
+						/* translators: %1$s: URL to the Home Page settings, %2$s: Anchor text "Home Page" */
+						__( "Go to Pages ⇾ <a href='%1\$s' target='_blank' rel='noopener'>%2\$s</a>", 'surerank' ),
+						$this->get_homepage_settings_url(),
+						__( 'Home Page', 'surerank' ),
+					),
+					__( 'Add or update section headings and set them as H2', 'surerank' ),
+					__( 'Update the page', 'surerank' ),
 				],
 			],
-			__( 'Each of these helps visitors understand the section before reading the details.', 'surerank' ),
 
 			sprintf(
-				'<h6> %s </h6>',
-				__( '🔧 Where to update it', 'surerank' )
+				'<h6>✏️ %s </h6>',
+				__( 'Update Here', 'surerank' )
 			),
-			__( 'Edit your homepage and look for natural section breaks where a heading makes sense. If your homepage shows your latest posts, you can add H2 headings through your homepage layout or content blocks.', 'surerank' ),
 
 			sprintf(
-				'<h6> %s </h6>',
-				__( '🌟 How SureRank helps', 'surerank' )
+				"<img class='w-full h-full' src='%s' alt='%s' />",
+				esc_attr( 'https://surerank.com/wp-content/uploads/2026/03/no-subheadings-found-on-the-homepage-img.webp' ),
+				esc_attr( 'No Subheadings Found on the Homepage' )
 			),
-			__( 'SureRank SEO Analysis checks whether your homepage includes at least one H2 heading. When none are found, it gently highlights this so you can add simple section headings for better readability for visitors and clarity for search engines.', 'surerank' ),
 		];
+
+		if ( ! Utils::get_instance()->is_pro_active() ) {
+			$descriptions[] = sprintf(
+				'<h6>💬 %s </h6>',
+				__( 'Need Help?', 'surerank' )
+			);
+			$descriptions[] = __( 'SureRank Pro helps you identify heading structure issues and suggests improvements using AI, so your pages stay clear and well organized.', 'surerank' );
+		}
 
 		$h2_analysis = $this->analyze_h2( $xpath );
 
-		$exists = $h2_analysis['exists'];
-		$status = 'success';
-		$title  = __( 'Homepage contains at least one H2 heading', 'surerank' );
+		$exists  = $h2_analysis['exists'];
+		$status  = 'success';
+		$title   = __( 'Your homepage contains at least one H2 heading', 'surerank' );
+		$heading = __( 'Subheadings Found on the Homepage', 'surerank' );
 
 		if ( ! $h2_analysis['exists'] ) {
-			$status = 'warning';
-			$title  = __( 'Homepage does not contain at least one H2 heading', 'surerank' );
+			$status  = 'warning';
+			$title   = __( 'Your homepage does not currently contain any H2 subheadings.', 'surerank' );
+			$heading = __( 'No Subheadings Found on the Homepage', 'surerank' );
 		}
 
 		return [
@@ -519,6 +535,7 @@ class SeoAnalyzer {
 			'status'      => $status,
 			'description' => $descriptions,
 			'message'     => $title,
+			'heading'     => $heading,
 			'not_fixable' => true,
 		];
 	}
@@ -560,21 +577,63 @@ class SeoAnalyzer {
 		$is_optimized = $missing_alt === 0;
 
 		if ( ! $exists ) {
+			$description = [
+				__( 'Images help visitors quickly understand what your site is about and make the page feel more engaging.', 'surerank' ),
+				__( 'They also play an important role in SEO. Images help break up content, add context, and can appear in image search results when optimized properly.', 'surerank' ),
+				sprintf(
+					'<h6>🛠️ %s </h6>',
+					__( 'Where to Update It', 'surerank' )
+				),
+				__( 'Edit your homepage content and add images where they naturally fit.', 'surerank' ),
+				__( 'If your homepage is a page:', 'surerank' ),
+				[
+					'list' => [
+						sprintf(
+							/* translators: %1$s: URL to the Home Page settings, %2$s: Anchor text "Home Page" */
+							__( "Go to Pages ⇾ <a href='%1\$s' target='_blank' rel='noopener'>%2\$s</a>", 'surerank' ),
+							$this->get_homepage_settings_url(),
+							__( 'Home Page', 'surerank' ),
+						),
+						__( 'Add images', 'surerank' ),
+						__( 'Update the page', 'surerank' ),
+					],
+				],
+				sprintf(
+					'<h6>✏️ %s </h6>',
+					__( 'Update Here', 'surerank' )
+				),
+				sprintf(
+					"<img class='w-full h-full' src='%s' alt='%s' />",
+					esc_attr( 'https://surerank.com/wp-content/uploads/2026/02/images-on-homepage.webp' ),
+					esc_attr( 'Images on Homepage' )
+				),
+			];
+
+			if ( ! Utils::get_instance()->is_pro_active() ) {
+				$description[] = sprintf(
+					'<h6>💬 %s </h6>',
+					__( 'Need Help?', 'surerank' )
+				);
+				$description[] = __( 'SureRank Pro helps you optimize images for SEO, including automatically generating alt text using AI, so your images are clear for both visitors and search engines.', 'surerank' );
+			}
+
 			return [
 				'exists'      => false,
 				'status'      => 'warning',
-				'description' => [ __( 'The homepage does not contain any images.', 'surerank' ) ],
-				'message'     => __( 'No images found on the homepage.', 'surerank' ),
+				'description' => $description,
+				'heading'     => __( 'Images on Homepage', 'surerank' ),
+				'message'     => __( 'Your homepage does not currently contain any images.', 'surerank' ),
 			];
 		}
 
-		$title = $is_optimized ? __( 'Images on the homepage have alt text attributes.', 'surerank' ) : __( 'Images on the homepage do not have alt text attributes.', 'surerank' );
+		$title = $is_optimized ? __( 'Images on the homepage have alt text attributes.', 'surerank' ) : __( 'One or more images on your homepage do not have ALT text.', 'surerank' );
 
 		return [
 			'exists'      => $exists,
 			'status'      => $is_optimized ? 'success' : 'warning',
 			'description' => $this->build_image_description( $exists, $total, $missing_alt, $missing_alt_images ),
 			'message'     => $title,
+			'heading'     => $is_optimized ? __( 'Images on Homepage', 'surerank' ) : __( 'Homepage Image ALT Text Is Missing', 'surerank' ),
 		];
 	}
 
@@ -587,69 +646,62 @@ class SeoAnalyzer {
 	public function analyze_links( DOMXPath $xpath ) {
 		$links    = $xpath->query( '//a[@href]' );
 		$helptext = [
-			sprintf(
-				'<h6> %s </h6>',
-				__( 'Homepage Internal Links', 'surerank' )
-			),
-			sprintf(
-				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/Internal-links-1.webp' ),
-				esc_attr( 'Homepage Internal Links' )
-			),
-			__( 'Your homepage is often the first place visitors arrive so should help them move easily to the most important parts of your site. Internal links act like gentle signposts that guide people toward key pages, whether that\'s your services, blog, or contact page. They also help search engines understand how your site is organized.', 'surerank' ),
-
-			sprintf(
-				'<h6>💡 %s </h6>',
-				__( 'Why this matters:', 'surerank' )
-			),
-			__( 'A homepage without internal links can feel like a dead end. Visitors may not know where to go next, and search engines may struggle to understand which pages matter most. When your homepage includes clear links to important sections, it guides visitors to take action and helps your site perform better in search.', 'surerank' ),
-
+			__( 'Internal links help visitors navigate your website and discover important content. They also help search engines understand how your pages are connected and which ones matter most.', 'surerank' ),
+			__( 'When a homepage has no internal links, visitors may not know where to go next. Search engines also have a harder time crawling and prioritizing your pages.', 'surerank' ),
 			sprintf(
 				'<h6>✅ %s </h6>',
-				__( 'How to keep things smooth', 'surerank' )
+				__( 'Best Practice', 'surerank' )
 			),
 			[
 				'list' => [
-					__( 'Add links to your about page, product or service pages, blog posts, or contact page.', 'surerank' ),
-					__( 'Use buttons, menus, or simple text links, whichever feels most natural.', 'surerank' ),
-					__( 'Choose links that help visitors understand what to do next.', 'surerank' ),
-					__( 'Keep links easy to spot so people don\'t miss them.', 'surerank' ),
+					__( 'Link from your homepage to key pages like about, products, etc.', 'surerank' ),
+					__( 'Use clear, descriptive link text so visitors know what to expect.', 'surerank' ),
+					__( 'Keep links natural and helpful. Avoid adding links just for SEO.', 'surerank' ),
 				],
 			],
-
-			sprintf(
-				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/Internal-links-2.webp' ),
-				esc_attr( 'Internal Links Comparison' )
-			),
-
-			sprintf(
-				'<h6>📌 %s </h6>',
-				__( 'Example', 'surerank' )
-			),
-			__( 'A short welcome section on your homepage might end with a button leading to your services page and another pointing to your latest blog post. This gives visitors clear next steps and helps search engines see those pages as important.', 'surerank' ),
-
 			sprintf(
 				'<h6>🛠️ %s </h6>',
-				__( 'Where to update it', 'surerank' )
+				__( 'Where to Update It', 'surerank' )
 			),
-			__( 'Edit your homepage and look for natural places to add links, such as under introductions, inside feature blocks, or near calls to action.', 'surerank' ),
-
+			__( 'Edit your homepage content and add links to relevant pages.', 'surerank' ),
+			[
+				'list' => [
+					__( 'If your homepage is a page:', 'surerank' ),
+					sprintf(
+						__( "Go to Pages ⇾ <a href='%1\$s' target='_blank' rel='noopener'>%2\$s</a>", 'surerank' ),
+						$this->get_homepage_settings_url(),
+						__( 'Home Page', 'surerank' ),
+					),
+					__( 'Add links within text, buttons, or navigation sections', 'surerank' ),
+					__( 'Update the page', 'surerank' ),
+				],
+			],
 			sprintf(
-				'<h6>🌟 %s </h6>',
-				__( 'How SureRank helps', 'surerank' )
+				'<h6>✏️ %s </h6>',
+				__( 'Update Here', 'surerank' )
 			),
-			__( 'SureRank checks whether your homepage includes helpful internal links and highlights it when none are found. This gives you a simple reminder to guide visitors forward and strengthen your site\'s structure without needing to think about technical SEO.', 'surerank' ),
+			sprintf(
+				"<img class='w-full h-full' src='%s' alt='%s' />",
+				esc_attr( 'https://surerank.com/wp-content/uploads/2026/02/no-internal-links-found-on-the-homepage.webp' ),
+				esc_attr( 'No Internal Links Found on the Homepage' )
+			),
 		];
+
+		if ( ! Utils::get_instance()->is_pro_active() ) {
+			$helptext[] = sprintf(
+				'<h6>💬 %s </h6>',
+				__( 'Need Help?', 'surerank' )
+			);
+			$helptext[] = __( 'SureRank Pro helps you find internal linking opportunities and suggests improvements using AI, so your site stays well connected and easy to explore.', 'surerank' );
+		}
 
 		if ( ! $links instanceof DOMNodeList ) {
 			return [
 				'exists'      => false,
 				'status'      => 'warning',
-				'description' => [
-					$helptext,
-				],
-				'message'     => __( 'Home Page does not contain internal links to other pages on the site.', 'surerank' ),
+				'description' => $helptext,
+				'heading'     => __( 'No Internal Links Found on the Homepage', 'surerank' ),
+				'message'     => __( 'Your homepage does not currently link to other pages on your site.', 'surerank' ),
 				'not_fixable' => true,
 			];
 		}
@@ -671,13 +723,15 @@ class SeoAnalyzer {
 			}
 		}
 
-		$exists = $internal > 0;
-		$title  = $exists ? __( 'Home Page contains internal links to other pages on the site.', 'surerank' ) : __( 'Home Page does not contain internal links to other pages on the site.', 'surerank' );
+		$exists  = $internal > 0;
+		$title   = $exists ? __( 'Your homepage currently links to other pages on your site.', 'surerank' ) : __( 'Your homepage does not currently link to other pages on your site.', 'surerank' );
+		$heading = $exists ? __( 'Internal Links Found on the Homepage', 'surerank' ) : __( 'No Internal Links Found on the Homepage', 'surerank' );
 		return [
 			'exists'      => $exists,
 			'status'      => $exists ? 'success' : 'warning',
 			'description' => $helptext,
 			'message'     => $title,
+			'heading'     => $heading,
 			'not_fixable' => true,
 		];
 	}
@@ -690,79 +744,62 @@ class SeoAnalyzer {
 	 */
 	public function analyze_canonical( DOMXPath $xpath ) {
 		$helptext = [
-			sprintf(
-				'<h6>💡 %s </h6>',
-				__( 'Homepage Canonical Tag', 'surerank' )
-			),
-			__( 'Your homepage can sometimes be reached through more than one URL, even if the page looks exactly the same. This can happen with or without a trailing slash, or when links add extra parameters. A canonical tag tells search engines which version of your homepage should be treated as the main one. It works like gently pointing to the correct doorway and saying, "This is the page to follow."', 'surerank' ),
+			__( 'A canonical URL tells search engines which version of a page should be treated as the main one.', 'surerank' ),
+			__( 'Without it, search engines may see multiple versions of your homepage as separate pages, which can dilute SEO signals and cause confusion.', 'surerank' ),
 
 			sprintf(
-				'<h6>💡 %s </h6>',
-				__( 'Why this matters:', 'surerank' )
+				'<h6>🛠️ %s </h6>',
+				__( 'Where to Update It', 'surerank' )
 			),
-			__( 'If search engines find several versions of your homepage, they may treat them as separate pages. This can split your ranking strength across multiple URLs and make your homepage look less important than it really is. A clear canonical tag keeps everything focused, helping search engines understand which version should receive full credit.', 'surerank' ),
-
-			sprintf(
-				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/Homepage-Canonical-Tag.webp' ),
-				esc_attr( 'Canonical Tag Comparison' )
-			),
-
-			sprintf(
-				'<h6>✅ %s </h6>',
-				__( 'How to keep things smooth', 'surerank' )
-			),
+			__( 'You can set the canonical URL directly from the SureRank meta box.', 'surerank' ),
 			[
 				'list' => [
-					__( 'Choose one preferred homepage URL, such as https://example.com/.', 'surerank' ),
-					__( 'Set a canonical tag that points to that exact URL.', 'surerank' ),
-					__( 'Keep the canonical link consistent so search engines aren\'t confused.', 'surerank' ),
-					__( 'Avoid sharing alternate homepage URLs with extra parameters when possible.', 'surerank' ),
+					__( 'Edit your homepage', 'surerank' ),
+					__( 'Open the Advanced tab in the SureRank meta box', 'surerank' ),
+					__( 'Enter the correct URL in the Canonical Tag field', 'surerank' ),
+					__( 'Save your changes', 'surerank' ),
 				],
 			],
 
 			sprintf(
-				'<h6>📌 %s </h6>',
-				__( 'Example', 'surerank' )
+				'<h6>✏️ %s </h6>',
+				__( 'Update Here', 'surerank' )
 			),
-			__( 'If your homepage loads at both https://example.com and https://example.com/?ref=newsletter, a canonical tag ensures search engines treat https://example.com as the main version.', 'surerank' ),
-
-			sprintf(
-				'<h6>🛠️ %s </h6>',
-				__( 'Where to update it', 'surerank' )
-			),
-			__( 'You can set your canonical tag directly from the SureRank Meta Box by opening the Advanced tab and filling in the Canonical Tag field.', 'surerank' ),
 
 			sprintf(
 				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/Homepage-Canonical-Tag-Example.webp' ),
-				esc_attr( 'Canonical URL Field' )
+				esc_attr( 'https://surerank.com/wp-content/uploads/2026/03/no-canonical-url-set-for-homepage-visual.webp' ),
+				esc_attr( 'No Canonical URL Set for Homepage' )
 			),
-
-			sprintf(
-				'<h6>🌟 %s </h6>',
-				__( 'How SureRank helps', 'surerank' )
-			),
-			__( 'SureRank SEO Analysis checks whether your homepage has a canonical tag and lets you know when one is missing. This gives you a clear, simple reminder to keep your homepage focused on a single, clean URL that search engines can trust.', 'surerank' ),
 		];
+
+		if ( ! Utils::get_instance()->is_pro_active() ) {
+			$helptext[] = sprintf(
+				'<h6>💬 %s </h6>',
+				__( 'Need Help?', 'surerank' )
+			);
+			$helptext[] = __( 'SureRank Pro helps fix SEO issues across your website using AI, without manual effort.', 'surerank' );
+		}
 
 		$canonical = $xpath->query( '//link[@rel="canonical"]/@href' );
 		if ( ! $canonical instanceof DOMNodeList ) {
 			return $this->build_error_response(
-				__( 'Canonical tag is not present on the homepage.', 'surerank' ),
+				__( 'No Canonical URL Set for Homepage', 'surerank' ),
 				$helptext,
 				__( 'Canonical tag is not present on the homepage.', 'surerank' ),
 				'warning'
 			);
 		}
 
-		$exists = $canonical->length > 0;
-		$title  = $exists ? __( 'Canonical tag is present on the homepage.', 'surerank' ) : __( 'Canonical tag is not present on the homepage.', 'surerank' );
+		$exists  = $canonical->length > 0;
+		$heading = $exists ? __( 'Canonical URL Set for Homepage', 'surerank' ) : __( 'No Canonical URL Set for Homepage', 'surerank' );
+		$title   = $exists ? __( 'Your homepage currently has a canonical URL set.', 'surerank' ) : __( 'Your homepage does not currently have a canonical URL set.', 'surerank' );
 		return [
 			'exists'      => $exists,
 			'status'      => $exists ? 'success' : 'warning',
 			'description' => $helptext,
 			'message'     => $title,
+			'heading'     => $heading,
 		];
 	}
 
@@ -773,70 +810,75 @@ class SeoAnalyzer {
 	 * @return array<string, mixed>
 	 */
 	public function analyze_indexing( DOMXPath $xpath ) {
-		$robots      = $xpath->query( '//meta[@name="robots"]/@content' );
+		$robots = $xpath->query( '//meta[@name="robots"]/@content' );
+
 		$description = [
-			sprintf(
-				'<h6> %s </h6>',
-				__( 'Homepage Indexing', 'surerank' )
-			),
-			__( 'For your site to appear in search results, your homepage needs to be indexable. Indexing means giving search engines permission to include your homepage in their listings so people can find it. If indexing is turned off, your homepage becomes invisible to search engines even if everything else on your site looks correct.', 'surerank' ),
-			sprintf(
-				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/Homepage-Indexing.webp' ),
-				esc_attr( 'Homepage Indexing' )
-			),
-			sprintf(
-				'<h6>💡 %s </h6>',
-				__( 'Why this matters:', 'surerank' )
-			),
-			__( 'Your homepage is often the first place search engines and visitors try to reach. When indexing is blocked, search engines cannot list your homepage at all. This can make your entire site harder to discover, especially for people searching for your brand or business by name.', 'surerank' ),
-			__( 'A homepage that is indexable gives search engines a clear invitation to include your site in search results.', 'surerank' ),
-			__( 'Indexing issues can happen by accident during setup, theme changes, or plugin settings. It is important to check that your homepage is allowed to be indexed so nothing holds back your visibility.', 'surerank' ),
-
-			sprintf(
-				'<h6>✅ %s </h6>',
-				__( 'How to keep things smooth', 'surerank' )
-			),
-			[
-				'list' => [
-					__( 'Make sure your homepage is set to allow indexing in your SEO settings.', 'surerank' ),
-					__( 'Review your global visibility settings to confirm nothing is blocking your site.', 'surerank' ),
-					__( 'Check the Advanced section inside your SureRank Meta Box to ensure indexing is enabled.', 'surerank' ),
-					__( 'After updating your settings, open your homepage and confirm it loads normally.', 'surerank' ),
-				],
-			],
-
-			sprintf(
-				'<h6>📌 %s </h6>',
-				__( 'Example', 'surerank' )
-			),
-			__( 'If indexing was turned off while your site was being built, your homepage may never appear in search results after launch. Enabling indexing allows search engines to include it again.', 'surerank' ),
-
-			sprintf(
-				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/Homepage-Indexing-Example.webp' ),
-				esc_attr( 'Robot Instructions' )
-			),
-
-			sprintf(
-				'<h6>🛠️ %s </h6>',
-				__( 'Where to update it', 'surerank' )
-			),
-			__( 'You can check and update your homepage indexing preferences from the Advanced settings inside the SureRank Meta Box. You can also review your global visibility settings in WordPress to make sure nothing is preventing your site from being indexed.', 'surerank' ),
-
-			sprintf(
-				'<h6>🌟 %s </h6>',
-				__( 'How SureRank helps', 'surerank' )
-			),
-			__( 'SureRank SEO Analysis checks whether your homepage is indexable and alerts you when it is blocked. This gives you a clear and simple reminder to allow indexing so search engines can include your site and help more people find what you offer.', 'surerank' ),
+			__( 'This means search engines are not allowed to show your homepage in search results.', 'surerank' ),
+			__( 'When a homepage is not indexable, people searching for your site may not find it at all, even if your content is published and live.', 'surerank' ),
+			__( 'In most cases, this happens when indexing is turned off by mistake.', 'surerank' ),
 		];
+
+		$show_static_page = get_option( 'show_on_front' ) === 'page';
+
+		// Provide different instructions depending on the reading settings.
+		if ( $show_static_page ) {
+			$description[] = sprintf(
+				'<h6>🛠️ %s </h6>',
+				__( 'Where to Update It', 'surerank' )
+			);
+			$description[] = [
+				'list' => [
+					sprintf(
+					/* translators: %1$s: URL to the Home Page settings, %2$s: Anchor text "Home Page" */
+						__( "Go to Pages ⇾ <a href='%1\$s' target='_blank' rel='noopener'>%2\$s</a> ⇾ SureRank ⇾ Optimize ⇾ Advanced.", 'surerank' ),
+						$this->get_homepage_settings_url(),
+						__( 'Home Page', 'surerank' )
+					),
+					__( 'Make sure the option to prevent indexing of No Index is turned off.', 'surerank' ),
+				],
+			];
+		} else {
+			$description[] = sprintf(
+				'<h6>🛠️ %s </h6>',
+				__( 'Where to Update It', 'surerank' )
+			);
+			$description[] = [
+				'list' => [
+					sprintf(
+					/* translators: %1$s: URL to the SureRank homepage advanced settings, %2$s: Anchor text "Advanced" */
+						__( "From the SureRank Dashboard, go to General ⇾ Home Page ⇾ <a href='%1\$s' target='_blank' rel='noopener'>%2\$s</a>", 'surerank' ),
+						$this->get_homepage_settings_url( 'homepage/advanced' ),
+						__( 'Advanced', 'surerank' )
+					),
+					__( 'Here, you can update the Robot Instructions for your Home Page to control how search engines interact with it.', 'surerank' ),
+				],
+			];
+		}
+
+		$description[] = sprintf(
+			'<h6>✏️ %s </h6>',
+			__( 'Update Here', 'surerank' )
+		);
+		$description[] = sprintf(
+			"<img class='w-full h-full' src='%s' alt='%s' />",
+			$show_static_page ? esc_attr( 'https://surerank.com/wp-content/uploads/2026/02/home-page-indexable.webp' ) : esc_attr( 'https://surerank.com/wp-content/uploads/2026/03/homepage-indexable-when-set-as-latest-post.webp' ),
+			esc_attr( 'Home Page Indexable' )
+		);
+
+		if ( ! Utils::get_instance()->is_pro_active() ) {
+			$description[] = sprintf(
+				'<h6>💬 %s </h6>',
+				__( 'Need Help?', 'surerank' )
+			);
+			$description[] = __( 'SureRank Pro helps you detect and fix indexing issues using AI assistant, so your pages are visible and searchable.', 'surerank' );
+		}
 
 		if ( ! $robots instanceof DOMNodeList ) {
 			return [
 				'exists'      => false,
 				'status'      => 'warning',
 				'description' => $description,
-				'message'     => __( 'Homepage is not indexable by search engines.', 'surerank' ),
+				'message'     => __( 'Your homepage is currently not indexable by search engines. ', 'surerank' ),
 			];
 		}
 
@@ -852,13 +894,15 @@ class SeoAnalyzer {
 		}
 
 		$is_indexable = $exists ? strpos( $content, 'noindex' ) === false : true;
-		$title        = $is_indexable ? __( 'Homepage is indexable by search engines.', 'surerank' ) : __( 'Homepage is not indexable by search engines.', 'surerank' );
+		$title        = $is_indexable ? __( 'Your homepage is currently indexable by search engines. ', 'surerank' ) : __( 'Your homepage is currently not indexable by search engines. ', 'surerank' );
+		$heading      = __( 'Home Page Indexable', 'surerank' );
 
 		return [
 			'exists'      => $exists,
 			'status'      => $is_indexable ? 'success' : 'error',
 			'description' => $description,
 			'message'     => $title,
+			'heading'     => $heading,
 		];
 	}
 
@@ -868,65 +912,54 @@ class SeoAnalyzer {
 	 * @return array<string, mixed>
 	 */
 	public function analyze_reachability() {
-		$home_url          = home_url();
-		$is_reachable      = $this->base_url === wp_parse_url( $home_url, PHP_URL_HOST ) && ! is_wp_error( $this->html_content );
-		$working_label     = __( 'Home Page is loading correctly.', 'surerank' );
-		$not_working_label = __( 'Home Page is not loading correctly.', 'surerank' );
+		$home_url     = home_url();
+		$is_reachable = $this->base_url === wp_parse_url( $home_url, PHP_URL_HOST ) && ! is_wp_error( $this->html_content );
+
+		$working_heading = __( 'Home Page is Reachable', 'surerank' );
+		$working_label   = __( 'Your homepage is currently accessible and loading correctly.', 'surerank' );
+
+		$not_working_heading = __( 'Home Page is Not Reachable', 'surerank' );
+		$not_working_label   = __( 'Your homepage is currently not accessible or is returning an error.', 'surerank' );
 
 		$description = [
-			sprintf(
-				'<h6> %s </h6>',
-				__( 'Homepage Is Reachable', 'surerank' )
-			),
-			sprintf(
-				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/Homepage-Reachable.webp' ),
-				esc_attr( 'Homepage Is Reachable' )
-			),
-			__( 'Your homepage is often the first page visitors see and the starting point search engines use to understand your site. If the homepage doesn\'t load or shows an error, both visitors and search engines may have trouble reaching your content.', 'surerank' ),
+			__( 'Your homepage is usually the first page visitors see and the main entry point search engines use to understand your site. It acts as the starting point for crawling and navigation.', 'surerank' ),
+			__( 'When the homepage cannot be reached, visitors may see an error page and leave immediately. Search engines may also struggle to crawl or index your site properly if they cannot access this page.', 'surerank' ),
+			__( 'This issue can affect the visibility of your entire site, not just the homepage.', 'surerank' ),
 
 			sprintf(
-				'<h6>💡 %s </h6>',
-				__( 'Why this matters:', 'surerank' )
+				'<h6>🛠️ %s </h6>',
+				__( 'Where to Update It', 'surerank' )
 			),
-			__( 'When your homepage isn\'t reachable, it affects more than just one page. Search engines may not be able to crawl or index your site properly and visitors may leave before seeing anything else. A working homepage sets the tone for your entire site and makes sure people and search engines can explore it without problems.', 'surerank' ),
-
-			sprintf(
-				'<h6>✅ %s </h6>',
-				__( 'How to keep things smooth', 'surerank' )
-			),
+			__( 'You can review and fix this from your WordPress settings.', 'surerank' ),
 			[
 				'list' => [
-					__( 'Open your homepage in a browser and make sure it loads without errors.', 'surerank' ),
-					__( 'Confirm that the page is published and not set to private or draft.', 'surerank' ),
-					__( 'Check that no redirects or plugins are accidentally blocking access.', 'surerank' ),
-					__( 'Review your WordPress homepage settings to ensure the correct page is selected.', 'surerank' ),
+					__( 'Go to Settings ⇾ Reading', 'surerank' ),
+					__( 'Check which page is set as your homepage', 'surerank' ),
+					__( 'Make sure the selected page exists and is published', 'surerank' ),
 				],
 			],
 
 			sprintf(
-				'<h6>📌 %s </h6>',
-				__( 'Example', 'surerank' )
+				'<h6>✏️ %s </h6>',
+				__( 'Update Here', 'surerank' )
 			),
+
 			sprintf(
 				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/Homepage-not-Reachable.webp' ),
-				esc_attr( '503 Service Unavailable' )
+				esc_attr( 'https://surerank.com/wp-content/uploads/2026/02/homepage-is-not-reachable.webp' ),
+				esc_attr( 'Homepage is Not Reachable' )
 			),
-			__( 'If your homepage was deleted or changed to draft by mistake, visitors may see a 404 page instead.', 'surerank' ),
 
-			sprintf(
-				'<h6>🛠️ %s </h6>',
-				__( 'Where to update it', 'surerank' )
-			),
-			__( 'In WordPress, go to Settings → Reading and make sure the correct homepage is selected. If you use a static homepage, confirm that the page still exists, is published and loads normally when opened directly.', 'surerank' ),
-
-			sprintf(
-				'<h6>🌟 %s </h6>',
-				__( 'How SureRank helps', 'surerank' )
-			),
-			__( 'SureRank SEO Analysis checks whether your homepage is reachable and flags it when it isn’t. This gives you a clear reminder to fix any loading issues so both visitors and search engines can access your site without interruption.', 'surerank' ),
+			__( 'If you are using a static homepage, open the page directly and confirm it loads without errors. Also check that no redirects, maintenance plugins, or access restrictions are blocking it.', 'surerank' ),
 		];
+
+		if ( ! Utils::get_instance()->is_pro_active() ) {
+			$description[] = sprintf(
+				'<h6>💬 %s </h6>',
+				__( 'Need Help?', 'surerank' )
+			);
+			$description[] = __( 'SureRank Pro users get access to our support team, available 24×7, to help identify homepage access and visibility issues.', 'surerank' );
+		}
 
 		if ( ! $is_reachable ) {
 			$response     = $this->scraper->fetch( $home_url );
@@ -939,6 +972,7 @@ class SeoAnalyzer {
 			'status'      => $is_reachable ? 'success' : 'error',
 			'description' => $description,
 			'message'     => $title,
+			'heading'     => $is_reachable ? $working_heading : $not_working_heading,
 			'not_fixable' => true,
 		];
 	}
@@ -949,74 +983,62 @@ class SeoAnalyzer {
 	 * @return array<string, mixed>
 	 */
 	public function analyze_secure_connection(): array {
-		$header_url        = $this->fetch_header( 'x-final-url' );
-		$effective_url     = $header_url !== '' ? $header_url : home_url();
-		$is_https          = strpos( $effective_url, 'https://' ) === 0;
-		$working_label     = __( 'Site is served over a secure HTTPS connection.', 'surerank' );
-		$not_working_label = __( 'Site is not served over a secure HTTPS connection.', 'surerank' );
+		$header_url    = $this->fetch_header( 'x-final-url' );
+		$effective_url = $header_url !== '' ? $header_url : home_url();
+		$is_https      = strpos( $effective_url, 'https://' ) === 0;
+
+		$working_heading = __( 'This site is using HTTPS.', 'surerank' );
+		$working_label   = __( 'Your site is currently served over a secure HTTPS connection.', 'surerank' );
+
+		$not_working_heading = __( 'This site is not using HTTPS.', 'surerank' );
+		$not_working_label   = __( 'Your site is not currently served over a secure HTTPS connection.', 'surerank' );
 
 		$description = [
 			sprintf(
-				'<h6> %s </h6>',
-				__( 'Secure Connection (HTTPS)', 'surerank' )
-			),
-			sprintf(
 				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/HTTPS-1.webp' ),
+				esc_attr( 'https://surerank.com/wp-content/uploads/2026/02/this-site-is-not-using-https.webp' ),
 				esc_attr( 'Secure Connection (HTTPS)' )
 			),
-			__( 'A secure connection means your website uses HTTPS, which is shown by the little padlock icon next to your site\'s address in a browser. It tells visitors and search engines that your site is safe and any information shared is protected.', 'surerank' ),
-
-			sprintf(
-				'<h6>💡 %s </h6>',
-				__( 'Why it matters', 'surerank' )
-			),
-			__( 'Security is important for every site, even if you don\'t collect sensitive information. HTTPS helps protect visitors, builds trust, and signals to search engines that your site is reliable. Modern browsers may also warn visitors when a site isn\'t secure, so using HTTPS keeps people confident in your site.', 'surerank' ),
-
-			sprintf(
-				'<h6>✅ %s </h6>',
-				__( 'How to keep things smooth', 'surerank' )
-			),
-			[
-				'list' => [
-					__( 'Check your site shows the padlock icon in the browser address bar.', 'surerank' ),
-					__( 'Make sure HTTPS is active by using an SSL certificate. Many hosting providers offer them for free.', 'surerank' ),
-					__( 'Keep your certificate up to date so your connection remains secure.', 'surerank' ),
-				],
-			],
-
-			sprintf(
-				'<h6>📌 %s </h6>',
-				__( 'Example', 'surerank' )
-			),
-			sprintf(
-				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/HTTPS-2.webp' ),
-				esc_attr( 'HTTPS Example' )
-			),
-			__( 'A visitor sees the padlock on your blog or store and feels confident browsing or signing up for your newsletter. Without HTTPS, the same visitor might get a warning and leave immediately.', 'surerank' ),
+			__( 'HTTPS encrypts the data between your site and its visitors. This helps protect sensitive information and keeps your site secure.', 'surerank' ),
+			__( 'Search engines also prefer secure websites. Browsers may show a warning for sites without HTTPS, which can make visitors hesitant to continue.', 'surerank' ),
+			__( 'Enabling HTTPS is an important step for trust and SEO.', 'surerank' ),
 
 			sprintf(
 				'<h6>🛠️ %s </h6>',
-				__( 'Where to update it', 'surerank' )
+				__( 'Where to Update It', 'surerank' )
 			),
-			__( 'Most hosting dashboards include an option to enable SSL or HTTPS for your site. This is often found under sections like Security, SSL, or Domains.', 'surerank' ),
+			__( 'HTTPS is set up at the hosting or server level.', 'surerank' ),
+			__( 'Most hosting providers offer free SSL certificates and can enable HTTPS for you.', 'surerank' ),
+			__( 'If you are unsure how to set this up, your hosting provider can help. You can send them the message below:', 'surerank' ),
 
-			sprintf(
-				'<h6>🌟 %s </h6>',
-				__( 'How SureRank helps', 'surerank' )
-			),
-			__( 'SureRank confirms whether your site has HTTPS or not, so you can see the status clearly and see at a glance whether your connection is secure.', 'surerank' ),
+			'<div class="bg-gray-200 p-2 rounded"><pre class="whitespace-pre-wrap break-normal">' .
+				esc_html__( 'Hello,', 'surerank' ) . "\n" .
+				esc_html__( 'I need help enabling HTTPS on my website: [enter-your-website-URL-here]', 'surerank' ) . "\n" .
+				esc_html__( 'Currently, my site is not being served over a secure HTTPS connection.', 'surerank' ) . "\n" .
+				esc_html__( 'I would like you to enable an SSL certificate for my domain and ensure that all traffic is redirected from HTTP to HTTPS.', 'surerank' ) . "\n" .
+				esc_html__( 'Please feel free to set this up for me directly.', 'surerank' ) . "\n" .
+				esc_html__( 'Thank you for your help.', 'surerank' ) .
+			'</pre></div>',
 		];
+
+		if ( ! Utils::get_instance()->is_pro_active() ) {
+			$description[] = sprintf(
+				'<h6>💬 %s </h6>',
+				__( 'Need Help?', 'surerank' )
+			);
+			$description[] = __( 'SureRank Pro users get access to our support team, available 24×7, to help with setup and plugin related questions.', 'surerank' );
+		}
 
 		$is_secure = $is_https && $this->is_ssl_certificate_valid( $effective_url );
 		$title     = $is_secure ? $working_label : $not_working_label;
+		$heading   = $is_secure ? $working_heading : $not_working_heading;
 
 		return [
 			'exists'      => true,
 			'status'      => $is_secure ? 'success' : 'warning',
 			'description' => $description,
 			'message'     => $title,
+			'heading'     => $heading,
 			'not_fixable' => true,
 		];
 	}
@@ -1029,64 +1051,81 @@ class SeoAnalyzer {
 	 */
 	public function open_graph_tags( DOMXPath $xpath ): array {
 		$og_tags           = $xpath->query( "//meta[starts-with(@property, 'og:')]" );
-		$working_label     = __( 'Open Graph tags are present on your homepage.', 'surerank' );
-		$not_working_label = __( 'Open Graph tags are not present on your homepage.', 'surerank' );
+		$heading           = __( 'Homepage Open Graph Tags', 'surerank' );
+		$working_label     = __( 'Open Graph tags are set for the homepage.', 'surerank' );
+		$not_working_label = __( 'Open Graph tags are not set for the homepage.', 'surerank' );
 		$helptext          = [
-			sprintf(
-				'<h6> %s </h6>',
-				__( 'Homepage Open Graph Tags', 'surerank' )
-			),
-			__( 'When someone shares your site on social media or in a messaging app, the platform tries to show a preview with a title, description and image. Without Open Graph tags, they may pull random content or show no preview at all. Open Graph tags let you choose exactly what people see when your site is shared.', 'surerank' ),
-
-			sprintf(
-				'<h6> %s </h6>',
-				__( '💡 Why this matters:', 'surerank' )
-			),
-			__( 'A clean and attractive preview helps your site look more trustworthy and encourages people to click. If the preview is missing or doesn\'t show the right information, it can be harder for visitors to engage with your content. Setting these tags helps your site look polished wherever it appears.', 'surerank' ),
+			__( 'When someone shares your site on social media or in a messaging app, the platform shows a preview of your website.', 'surerank' ),
+			__( 'Without Open Graph tags, the platform may pull random content or images for the preview.', 'surerank' ),
 
 			sprintf(
 				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/Homepage-Open-Graph-Tags-Why-this-matters.webp' ),
-				esc_attr( 'Open Graph Tags Comparison' )
+				esc_attr( 'https://surerank.com/wp-content/uploads/2026/03/homepage-open-graph-tags-before-img.webp ' ),
+				esc_attr( 'Where to Update Open Graph Tags' )
 			),
 
-			sprintf(
-				'<h6> %s </h6>',
-				__( '✅ How to keep things smooth', 'surerank' )
-			),
-			[
-				'list' => [
-					__( 'Add a short, clear title that matches what your site is about.', 'surerank' ),
-					__( 'Write a brief description that introduces your site in a friendly way.', 'surerank' ),
-					__( 'Choose an image that represents your brand or homepage well.', 'surerank' ),
-					__( 'Keep all three elements simple so the preview feels inviting.', 'surerank' ),
-				],
-			],
-
-			sprintf(
-				'<h6> %s </h6>',
-				__( '🚀 Example', 'surerank' )
-			),
-			__( 'A homepage preview might show your site name, a short tagline and a clean image that reflects your brand or main topic.', 'surerank' ),
-
-			sprintf(
-				'<h6> %s </h6>',
-				__( '🔧 Where to update it', 'surerank' )
-			),
-			__( 'You can configure your homepage Open Graph settings from your Home Page Social settings or your global social settings, depending on how your homepage is set up.', 'surerank' ),
+			__( 'Open Graph tags help you control what people see when your site is shared.', 'surerank' ),
 
 			sprintf(
 				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/Where-to-update-Open-Graph-Tags.webp' ),
-				esc_attr( 'Social Settings' )
+				esc_attr( 'https://surerank.com/wp-content/uploads/2026/03/homepage-open-graph-tags-before-after-img.webp' ),
+				esc_attr( 'Where to Update Open Graph Tags' )
 			),
 
+			__( 'A clean and attractive preview makes your site look more trustworthy and encourages people to click.', 'surerank' ),
+
 			sprintf(
-				'<h6> %s </h6>',
-				__( '🌟 How SureRank helps', 'surerank' )
+				'<h6>🛠️ %s </h6>',
+				__( 'Where to Update It', 'surerank' )
 			),
-			__( 'SureRank SEO Analysis checks whether your homepage has Open Graph tags and shows when they are missing. This gives you a simple reminder to set a clear title, description, and image so your homepage always looks good when shared.', 'surerank' ),
 		];
+
+		$show_static_page = get_option( 'show_on_front' ) === 'page';
+
+		if ( ! $show_static_page ) {
+			$helptext[] = sprintf(
+				/* translators: %1$s: URL to the SureRank homepage social settings, %2$s: Anchor text "Social" */
+				__( "From the SureRank Dashboard, go to General ⇾ Home Page ⇾ <a href='%1\$s' target='_blank' rel='noopener'>%2\$s</a>.", 'surerank' ),
+				$this->get_homepage_settings_url( 'homepage/social' ),
+				__( 'Social', 'surerank' )
+			);
+			$helptext[] = __( 'Here, you can update the title, description, and image for your home page. SureRank will also show a preview of how your website will look on Facebook and X.', 'surerank' );
+		} else {
+			$helptext[] = sprintf(
+				/* translators: %1$s: URL to the Home Page settings, %2$s: Anchor text "Home Page" */
+				__( "Go to Pages ⇾ <a href='%1\$s' target='_blank' rel='noopener'>%2\$s</a> ⇾ SureRank ⇾ Optimize ⇾ Social.", 'surerank' ),
+				$this->get_homepage_settings_url(),
+				__( 'Home Page', 'surerank' )
+			);
+			$helptext[] = __( 'Here, you can update the title, description, and image for your home page. SureRank will also show a preview of how your website will look on Facebook and X.', 'surerank' );
+		}
+
+		$helptext[] = sprintf(
+			'<h6>✏️ %s </h6>',
+			__( 'Update Here', 'surerank' )
+		);
+
+		if ( ! $show_static_page ) {
+			$helptext[] = sprintf(
+				"<img class='w-full h-full' src='%s' alt='%s' />",
+				esc_attr( 'https://surerank.com/wp-content/uploads/2026/02/homepage-open-graph-general-setting.webp' ),
+				esc_attr( 'Where to Update Open Graph Tags' )
+			);
+		} else {
+			$helptext[] = sprintf(
+				"<img class='w-full h-full' src='%s' alt='%s' />",
+				esc_attr( 'https://surerank.com/wp-content/uploads/2026/02/homepage-open-graph-general-on-page.webp' ),
+				esc_attr( 'Where to Update Open Graph Tags' )
+			);
+		}
+
+		if ( ! Utils::get_instance()->is_pro_active() ) {
+			$helptext[] = sprintf(
+				'<h6>💬 %s </h6>',
+				__( 'Need Help?', 'surerank' )
+			);
+			$helptext[] = __( 'SureRank Pro helps you optimize your homepage for social sharing with AI-powered suggestions and previews.', 'surerank' );
+		}
 
 		if ( ! $og_tags instanceof DOMNodeList ) {
 			return [
@@ -1094,6 +1133,7 @@ class SeoAnalyzer {
 				'status'      => 'warning',
 				'description' => $helptext,
 				'message'     => $not_working_label,
+				'heading'     => $heading,
 			];
 		}
 
@@ -1124,6 +1164,7 @@ class SeoAnalyzer {
 				'status'      => 'warning',
 				'description' => $helptext,
 				'message'     => $not_working_label,
+				'heading'     => $heading,
 			];
 		}
 
@@ -1132,6 +1173,7 @@ class SeoAnalyzer {
 			'status'      => 'success',
 			'description' => $helptext,
 			'message'     => $working_label,
+			'heading'     => $heading,
 		];
 	}
 
@@ -1142,73 +1184,94 @@ class SeoAnalyzer {
 	 * @return array<string, mixed>
 	 */
 	public function schema_meta_data( DOMXPath $xpath ) {
-		$schema_meta_data  = $xpath->query( "//script[@type='application/ld+json']" );
-		$working_label     = __( 'Structured data (schema) is present on the home page.', 'surerank' );
-		$not_working_label = __( 'Structured data (schema) is not present on the home page.', 'surerank' );
-		$helptext          = [
-			sprintf(
-				'<h6> %s </h6>',
-				__( 'Homepage Schema Metadata', 'surerank' )
-			),
-			__( 'Schema works like a small cheat sheet your homepage shares with search engines. It quietly explains what type of page it is, such as a website homepage or a blog, so search engines can understand the content more clearly. This extra context helps them interpret your page better and can lead to richer details in search results.', 'surerank' ),
+		$schema_meta_data = $xpath->query( "//script[@type='application/ld+json']" );
+		$show_static_page = get_option( 'show_on_front' ) === 'page';
 
-			sprintf(
-				'<h6> %s </h6>',
-				__( '💡 Why this matters:', 'surerank' )
-			),
-			__( 'Search engines use signals beyond page text to understand your site. Schema provides those signals in a structured format. When your homepage includes the right schema, search results can show clearer details, like your site name or breadcrumb paths, before users click.', 'surerank' ),
+		$working_heading = __( 'Structured Data Found on the Homepage', 'surerank' );
+		$working_label   = __( 'The homepage currently includes structured data (schema).', 'surerank' );
 
-			sprintf(
-				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/Why-Homepage-Schema-Metadata-maters.webp' ),
-				esc_attr( 'Schema Comparison' )
-			),
+		$not_working_heading = __( 'No Structured Data Found on the Homepage', 'surerank' );
+		$not_working_label   = __( 'The homepage does not currently include any structured data (schema).', 'surerank' );
 
-			sprintf(
-				'<h6> %s </h6>',
-				__( '✅ How to keep things smooth', 'surerank' )
-			),
-			[
-				'list' => [
-					__( 'Ensure your homepage includes essential structured data like WebPage schema.', 'surerank' ),
-					__( 'Keep the schema feature enabled so search engines always receive the right signals.', 'surerank' ),
-					__( 'Confirm that the schema being applied matches what your homepage represents.', 'surerank' ),
-				],
-			],
-
-			sprintf(
-				'<h6> %s </h6>',
-				__( '🚀 Example', 'surerank' )
-			),
-
-			sprintf(
-				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/homepage-schema-example.webp' ),
-				esc_attr( 'Schema Example' )
-			),
-
-			__( 'A homepage using WebPage schema will show context such as your site name or breadcrumb information in search results, helping visitors understand your site before they click.', 'surerank' ),
-
-			sprintf(
-				'<h6> %s </h6>',
-				__( '🔧 Where to update it', 'surerank' )
-			),
-			__( 'Schema is generated automatically by SureRank when the feature is enabled. To verify that it\'s being applied correctly, you can:', 'surerank' ),
-			[
-				'list' => [
-					__( 'View the live page source and search for "schema" or "application/ld+json."', 'surerank' ),
-					__( 'Use a schema validation tool to check what search engines can read.', 'surerank' ),
-					__( 'Use the Schema Builder to see the schema SureRank prepares, then confirm it appears on the live page.', 'surerank' ),
-				],
-			],
-			__( 'This helps you understand what should be output, but the live page check is the real confirmation.', 'surerank' ),
-
-			sprintf(
-				'<h6> %s </h6>',
-				__( '🌟 How SureRank helps', 'surerank' )
-			),
-			__( 'SureRank SEO Analysis checks whether your homepage schema is active and present. Once enabled, the plugin builds the structured data for you and gives you simple ways to confirm that search engines can read it correctly.', 'surerank' ),
+		$helptext = [
+			__( 'Structured data helps search engines better understand your content and can enable enhanced search results, like rich snippets.', 'surerank' ),
+			__( 'SureRank generates structured data automatically when the feature is enabled.', 'surerank' ),
+			__( 'Once active, the schema is added to your page behind the scenes and becomes readable by search engines.', 'surerank' ),
 		];
+
+		$helptext[] = sprintf(
+			'<h6>🛠️ %s </h6>',
+			__( 'Where to Update It', 'surerank' )
+		);
+
+		if ( $show_static_page ) {
+			$helptext[] = [
+				'list' => [
+					__( 'Go to SureRank → Advanced → Schema', 'surerank' ),
+					__( 'Review the Schema or add new', 'surerank' ),
+					__( 'Save your changes', 'surerank' ),
+				],
+			];
+			$helptext[] = sprintf(
+				'<h6>✏️ %s </h6>',
+				__( 'Update Here', 'surerank' )
+			);
+			$helptext[] = sprintf(
+				"<img class='w-full h-full' src='%s' alt='%s' />",
+				esc_attr( 'https://surerank.com/wp-content/uploads/2026/03/schema.webp' ),
+				esc_attr( 'No Structured Data Found on the Homepage' )
+			);
+		} else {
+			$helptext[] = [
+				'list' => [
+					__( 'Edit your homepage', 'surerank' ),
+					__( 'Open the Schema tab in the SureRank meta box', 'surerank' ),
+					__( 'Review the Schema or add new', 'surerank' ),
+					__( 'Save your changes', 'surerank' ),
+				],
+			];
+			$helptext[] = sprintf(
+				'<h6>✏️ %s </h6>',
+				__( 'Update Here', 'surerank' )
+			);
+			$helptext[] = sprintf(
+				"<img class='w-full h-full' src='%s' alt='%s' />",
+				esc_attr( 'https://surerank.com/wp-content/uploads/2026/02/no-structured-data-found-on-the-homepage.webp' ),
+				esc_attr( 'No Structured Data Found on the Homepage' )
+			);
+		}
+
+		$helptext[] = sprintf(
+			'<h6>🔍 %s </h6>',
+			__( 'How to Check It', 'surerank' )
+		);
+		$helptext[] = __( 'After enabling schema, you can confirm that it is working by checking the live page source and search for schema or application/ld+json.', 'surerank' );
+		$helptext[] = __( 'You can also test your page using these tools:', 'surerank' );
+		$helptext[] = [
+			'list' => [
+				sprintf(
+					"%s <a href='%s' target='_blank' rel='noopener noreferrer'>%s</a>",
+					'Schema Validator:',
+					esc_url( 'https://validator.schema.org/' ),
+					esc_url( 'https://validator.schema.org/' ),
+				),
+				sprintf(
+					"%s <a href='%s' target='_blank' rel='noopener noreferrer'>%s</a>",
+					'Google Rich Results Test:',
+					esc_url( 'https://search.google.com/test/rich-results' ),
+					esc_url( 'https://search.google.com/test/rich-results' ),
+				),
+			],
+		];
+		$helptext[] = __( 'These tools show what structured data search engines can read from your page.', 'surerank' );
+
+		if ( ! Utils::get_instance()->is_pro_active() ) {
+			$helptext[] = sprintf(
+				'<h6>💬 %s </h6>',
+				__( 'Want More?', 'surerank' )
+			);
+			$helptext[] = __( 'Upgrade to SureRank Pro to unlock advanced schema types like FAQ, How To, and more powerful structured data options to improve your search appearance.', 'surerank' );
+		}
 
 		if ( ! $schema_meta_data instanceof DOMNodeList ) {
 			return [
@@ -1216,6 +1279,7 @@ class SeoAnalyzer {
 				'status'      => 'suggestion',
 				'description' => $helptext,
 				'message'     => $not_working_label,
+				'heading'     => $not_working_heading,
 			];
 		}
 
@@ -1225,6 +1289,7 @@ class SeoAnalyzer {
 				'status'      => 'suggestion',
 				'description' => $helptext,
 				'message'     => $not_working_label,
+				'heading'     => $not_working_heading,
 			];
 		}
 
@@ -1233,6 +1298,7 @@ class SeoAnalyzer {
 			'status'      => 'success',
 			'description' => $helptext,
 			'message'     => $working_label,
+			'heading'     => $working_heading,
 		];
 	}
 
@@ -1246,53 +1312,45 @@ class SeoAnalyzer {
 		$parsed   = wp_parse_url( $home_url );
 
 		$helptext = [
-			sprintf(
-				'<h6> %s </h6>',
-				__( '🌐 WWW Canonicalization', 'surerank' )
-			),
-			__( 'Your site can usually be accessed in two ways. One version uses www at the front of the address and the other does not. For example, https://example.com and https://www.example.com might both load your site, even though they look identical. Search engines see these as two separate versions unless one automatically redirects to the other.', 'surerank' ),
+			__( 'Your website can usually be accessed in two ways. One with www and one without it.', 'surerank' ),
+			__( 'https://example.com', 'surerank' ),
+			__( 'https://www.example.com', 'surerank' ),
+
+			__( 'Even though both show the same site, search engines treat them as different versions. This can look like duplicate pages and split your SEO strength across both URLs.', 'surerank' ),
+			__( 'To keep things clean, choose one version as your main address.', 'surerank' ),
+			__( 'Decide whether you want to use www or non www, then set up a redirect so all traffic goes to that version.', 'surerank' ),
 
 			sprintf(
 				'<h6> %s </h6>',
-				__( '💡 Why it matters', 'surerank' )
+				__( '🔧 Where to set it', 'surerank' )
 			),
-			__( 'When both versions load without a redirect, search engines may think you have duplicate copies of every page on your site. This can spread your SEO strength across two versions and make it harder for search engines to know which one to focus on. A single preferred version keeps everything consistent and helps search engines understand your site more clearly.', 'surerank' ),
-			__( 'Choosing one version also gives visitors a cleaner experience. Visitors always land on the same address, which builds trust and avoids confusion.', 'surerank' ),
+			__( 'This is usually handled at the server or hosting level.', 'surerank' ),
+			__( 'If you are unsure how to set this up, your hosting provider can help. You can send them the message below:', 'surerank' ),
 
-			sprintf(
-				'<h6> %s </h6>',
-				__( '✅ How to keep things smooth', 'surerank' )
-			),
-			[
-				'list' => [
-					__( 'Decide whether you want to use www or non www as your main address.', 'surerank' ),
-					__( 'Set up a redirect so all traffic goes to your preferred version.', 'surerank' ),
-					__( 'Make sure your internal links and sitemap match the version you choose.', 'surerank' ),
-					__( 'Ask your hosting provider for help if you are unsure how to set up the redirect.', 'surerank' ),
-				],
-			],
-
-			sprintf(
-				'<h6> %s </h6>',
-				__( '🚀 Example', 'surerank' )
-			),
-			__( 'If someone visits https://www.example.com but your preferred version is https://example.com, a redirect will automatically send them to the correct version. This keeps everything clean and consistent for search engines and visitors.', 'surerank' ),
-
-			sprintf(
-				'<h6> %s </h6>',
-				__( '🔧 Where to update it', 'surerank' )
-			),
-			__( 'You can configure this from your hosting panel or by adjusting your domain settings. Some hosts offer a simple toggle to enforce either www or non www. You can also ask your hosting support to set it up if you prefer an easier option.', 'surerank' ),
-
-			sprintf(
-				'<h6> %s </h6>',
-				__( '🌟 How SureRank helps', 'surerank' )
-			),
-			__( 'SureRank SEO Analysis checks whether your site redirects properly between the www and non www versions. When it detects that both versions load separately, it gives you a clear reminder to set a single preferred version so your site stays consistent and easy for search engines to understand.', 'surerank' ),
+			'<div class="bg-gray-200 p-2 rounded"><pre class="whitespace-pre-wrap break-normal">' .
+				esc_html__( 'Hello,', 'surerank' ) . "\n" .
+				esc_html__( 'I need help setting a preferred version of my website URL.', 'surerank' ) . "\n" .
+				esc_html__( 'Right now, my site loads on both versions:', 'surerank' ) . "\n" .
+				esc_html__( 'https://example.com', 'surerank' ) . "\n" .
+				esc_html__( 'https://www.example.com', 'surerank' ) . "\n" .
+				esc_html__( 'I would like to redirect all traffic from https://www.example.com to https://example.com and use the non WWW version as my main address.', 'surerank' ) . "\n" .
+				esc_html__( 'Please feel free to set this up for me directly. Thank you for your help.', 'surerank' ) .
+			'</pre></div>',
 		];
 
-		$working_label     = __( 'Site correctly redirects between www and non-www versions.', 'surerank' );
-		$not_working_label = __( 'Site does not correctly redirect between www and non-www versions.', 'surerank' );
+		if ( ! Utils::get_instance()->is_pro_active() ) {
+			$helptext[] = sprintf(
+				'<h6> %s </h6>',
+				__( '💬 Need Help?', 'surerank' )
+			);
+			$helptext[] = __( 'SureRank Pro users get access to our support team, available 24×7, for setup and plugin related questions.', 'surerank' );
+		}
+
+		$working_heading = __( 'WWW and non-WWW versions are redirecting properly.', 'surerank' );
+		$working_label   = __( 'The site correctly redirects between the www and non-www versions.', 'surerank' );
+
+		$not_working_heading = __( 'WWW and non-WWW versions are not redirecting properly.', 'surerank' );
+		$not_working_label   = __( 'The site does not correctly redirect between the www and non-www versions.', 'surerank' );
 
 		if ( ! is_array( $parsed ) || ! isset( $parsed['host'], $parsed['scheme'] ) ) {
 			return [
@@ -1300,6 +1358,7 @@ class SeoAnalyzer {
 				'status'      => 'error',
 				'description' => $helptext,
 				'message'     => $not_working_label,
+				'heading'     => $not_working_heading,
 				'not_fixable' => true,
 			];
 		}
@@ -1319,6 +1378,7 @@ class SeoAnalyzer {
 				'status'      => 'success',
 				'description' => $helptext,
 				'message'     => $working_label,
+				'heading'     => $working_heading,
 				'not_fixable' => true,
 			];
 		}
@@ -1342,6 +1402,7 @@ class SeoAnalyzer {
 				'status'      => 'error',
 				'description' => $helptext,
 				'message'     => $not_working_label,
+				'heading'     => $not_working_heading,
 				'not_fixable' => true,
 			];
 		}
@@ -1369,12 +1430,14 @@ class SeoAnalyzer {
 
 		$all_good = $redirect_ok && $request_ok;
 
-		$title = $all_good ? $working_label : $not_working_label;
+		$title   = $all_good ? $working_label : $not_working_label;
+		$heading = $all_good ? $working_heading : $not_working_heading;
 		return [
 			'exists'      => true,
 			'status'      => $all_good ? 'success' : 'warning',
 			'description' => $helptext,
 			'message'     => $title,
+			'heading'     => $heading,
 			'not_fixable' => true,
 		];
 	}
@@ -1596,73 +1659,75 @@ class SeoAnalyzer {
 			}
 		}
 
-		return [
-			sprintf(
-				'<h6> %s </h6>',
-				__( 'Homepage Image ALT Text', 'surerank' )
-			),
-			__( 'Images add personality and meaning to your homepage, but search engines cannot understand them on their own. ALT text is a short written description that tells screen readers what an image shows, making your site more accessible for visitors who rely on assistive tools. It also gives search engines a bit more context, which can help them understand your page more clearly.', 'surerank' ),
+		$grid_html = '';
+		if ( ! empty( $missing_alt_images ) ) {
+			$grid_html = '<div class="columns-3 gap-2 my-4">';
+			foreach ( $missing_alt_images as $src ) {
+				$grid_html .= sprintf(
+					'<img src="%s" alt="%s" class="w-full h-auto object-cover border border-solid border-border-subtle rounded mb-4 break-inside-avoid" />',
+					esc_attr( $src ),
+					esc_attr( __( 'Image missing ALT text', 'surerank' ) )
+				);
+			}
+			$grid_html .= '</div>';
+		}
+
+		$description = [
+			__( 'Images help communicate your message visually, but search engines and screen readers cannot understand images on their own. ALT text is a short written description that explains what an image shows.', 'surerank' ),
+			__( 'When ALT text is missing, visitors who rely on assistive tools may not understand the content of the image. Search engines also lose helpful context about what the image represents.', 'surerank' ),
+			__( 'On the homepage, where images often support your main message, missing ALT text can affect both accessibility and clarity.', 'surerank' ),
 
 			sprintf(
-				'<h6>💡 %s </h6>',
-				__( 'Why this matters:', 'surerank' )
+				'<h6>📷 %s </h6>',
+				__( 'Images Missing ALT Text', 'surerank' )
 			),
-			__( 'ALT text plays an important role in accessibility by helping people who cannot see the images understand what is being shown. It also adds helpful context for search engines, especially when they try to understand the purpose of the images on your page. On your homepage, where key visuals often support your main message, clear ALT text makes your site more inclusive and easier to understand for everyone.', 'surerank' ),
-
-			sprintf(
-				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/Homepage-img-alt-text.webp' ),
-				esc_attr( 'ALT Text Comparison' )
-			),
-
-			sprintf(
-				'<h6>✅ %s </h6>',
-				__( 'How to keep things smooth', 'surerank' )
-			),
-			[
-				'list' => [
-					__( 'Describe what the image is showing in clear, simple words.', 'surerank' ),
-					__( 'Add ALT text to images that have meaning and skip for purely decorative ones.', 'surerank' ),
-					__( 'Keep descriptions short so they feel natural when read aloud.', 'surerank' ),
-					__( 'Write as if helping someone who cannot see the image.', 'surerank' ),
-				],
-			],
-
-			sprintf(
-				'<h6>📌 %s </h6>',
-				__( 'Example', 'surerank' )
-			),
-			[
-				'list' => [
-					__( 'Woman doing yoga in a sunny room.', 'surerank' ),
-					__( 'Handmade ceramic mug on wooden table.', 'surerank' ),
-				],
-			],
-
-			sprintf(
-				'<h6>🛠️ %s </h6>',
-				__( 'Where to update it', 'surerank' )
-			),
-			sprintf(
-			/* translators: %s is the URL of the WordPress Media Library */
-				__( 'You can add ALT text in the <a href="%s">media settings</a> when you upload or edit an image.', 'surerank' ),
-				admin_url( 'upload.php' )
-			),
-			__( 'Depending on your page builder, updating ALT text in the media library may not change images that are already placed on a page. Builders often store that information inside the block so you may need to open each image block and update the ALT text manually. New uploads usually apply the ALT text correctly from the start.', 'surerank' ),
-
-			sprintf(
-				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/01/Homepage-img-alt-text-2.webp' ),
-				esc_attr( 'Alternative Text Field' )
-			),
-
-			sprintf(
-				'<h6>🌟 %s </h6>',
-				__( 'How SureRank helps', 'surerank' )
-			),
-			__( 'SureRank checks whether your homepage images have ALT text and shows which ones are missing it. This helps you keep your site more accessible and ensures your important images are described clearly for every visitor.', 'surerank' ),
-			[ 'list' => $list ],
+			__( 'The following images on your homepage do not currently have ALT text:', 'surerank' ),
 		];
+
+		if ( ! empty( $grid_html ) ) {
+			$description[] = $grid_html;
+		}
+
+		$additional_help = [];
+		if ( ! Utils::get_instance()->is_pro_active() ) {
+			$additional_help = [
+				sprintf(
+					'<h6>💬 %s </h6>',
+					__( 'Need Help?', 'surerank' )
+				),
+				__( 'SureRank Pro users get access to our support team, available 24×7, to help review accessibility and content clarity issues across your site.', 'surerank' ),
+			];
+		}
+
+		return array_merge(
+			$description,
+			[
+				sprintf(
+					'<h6>🔧 %s </h6>',
+					__( 'Where to Update It', 'surerank' )
+				),
+				__( 'You can add or update ALT text when editing images in WordPress.', 'surerank' ),
+				[
+					'list' => [
+						__( 'Open the page or post where the image appears', 'surerank' ),
+						__( 'Click on the image block', 'surerank' ),
+						__( 'Add a short, clear description in the ALT text field', 'surerank' ),
+					],
+				],
+
+				sprintf(
+					'<h6>✏️ %s </h6>',
+					__( 'Update Here', 'surerank' )
+				),
+
+				sprintf(
+					"<img class='w-full h-full' src='%s' alt='%s' />",
+					esc_attr( 'https://surerank.com/wp-content/uploads/2026/02/homepage-image-alt-text-is-missing.webp' ),
+					esc_attr( 'Homepage Image ALT Text is Missing' )
+				),
+			],
+			$additional_help
+		);
 	}
 
 	/**
@@ -1674,13 +1739,18 @@ class SeoAnalyzer {
 	 * @param string                                           $status Error status.
 	 * @return array<string, mixed>
 	 */
-	private function build_error_response( string $title, array $helptext, string $message, string $status = 'error' ) {
-		return [
+	private function build_error_response( string $title, array $helptext, string $message, string $status = 'error' ): array {
+		$response = [
 			'exists'      => false,
 			'status'      => $status,
 			'description' => $helptext,
 			'message'     => $message,
 		];
+		if ( ! empty( $title ) ) {
+			$response['heading'] = $title;
+		}
+
+		return $response;
 	}
 
 	/**
@@ -1701,13 +1771,14 @@ class SeoAnalyzer {
 	/**
 	 * Get the URL of the home page social settings page.
 	 *
-	 * @return string
+	 * @param string $target_page Optional. Specific target page within the settings (e.g., 'homepage/social'). Defaults to ''.
+	 * @return string URL to the home page settings or specific section within it.
 	 */
-	private function get_homepage_settings_url() {
+	private function get_homepage_settings_url( string $target_page = '' ) {
 		$page_on_front = intval( Get::option( 'page_on_front' ) );
 		if ( get_edit_post_link( $page_on_front ) ) {
 			return get_edit_post_link( $page_on_front );
 		}
-		return Analyzer::get_instance()->get_surerank_settings_url( 'homepage', 'general' );
+		return Analyzer::get_instance()->get_surerank_settings_url( ! empty( $target_page ) ? $target_page : 'homepage', 'general' );
 	}
 }

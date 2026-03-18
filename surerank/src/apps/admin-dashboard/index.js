@@ -23,6 +23,7 @@ import RedirectToFirstRoute from '@Global/components/redirect-to-first-route';
 
 // Import all the components directly
 import TitleAndDescriptionRoute from '@AdminGeneral/general/title-and-description/title-and-description';
+import SiteInformationRoute from '@AdminGeneral/general/site-information';
 import HomePageRoute from '@AdminGeneral/general/home-page/home-page';
 import ArchivePagesRoute from '@AdminGeneral/advanced/archive-pages/archive-pages';
 import SocialGeneralRoute from '@AdminGeneral/social/general/general';
@@ -80,9 +81,17 @@ const dashboardRoutes = [
 
 const generalAndAdvancedRoutes = [
 	// General routes
-	createRoute( '/general', TitleAndDescriptionRoute, [], {
-		capability: 'surerank_global_setting',
-	} ),
+	createRoute(
+		'/general',
+		null,
+		[
+			createChildRoute( '/', TitleAndDescriptionRoute ),
+			createChildRoute( '/site-information', SiteInformationRoute ),
+		],
+		{
+			capability: 'surerank_global_setting',
+		}
+	),
 	createRoute(
 		'/general/homepage',
 		null,

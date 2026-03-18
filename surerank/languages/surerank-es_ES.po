@@ -38,6 +38,8 @@ msgid "Dashboard"
 msgstr "Tablero"
 
 #: inc/admin/dashboard.php:276
+#: inc/analyzer/seo-analyzer.php:165
+#: inc/analyzer/seo-analyzer.php:288
 #: inc/schema/types/organization.php:678
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
@@ -46,6 +48,7 @@ msgid "General"
 msgstr "General"
 
 #: inc/admin/dashboard.php:280
+#: inc/analyzer/seo-analyzer.php:851
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 #: build/seo-popup/index.js:1
@@ -130,124 +133,38 @@ msgstr "No hay respuesta disponible para recuperar el encabezado."
 msgid "No response body available."
 msgstr "No hay cuerpo de respuesta disponible."
 
-#: inc/analyzer/seo-analyzer.php:114
+#: inc/analyzer/seo-analyzer.php:115
 msgid "Failed to load DOM for analysis."
 msgstr "Error al cargar el DOM para análisis."
 
-#: inc/analyzer/seo-analyzer.php:194
-#: inc/analyzer/seo-analyzer.php:196
-#: inc/analyzer/seo-analyzer.php:1449
+#: inc/analyzer/seo-analyzer.php:210
+#: inc/analyzer/seo-analyzer.php:1512
 msgid "Search engine title is missing on the homepage."
 msgstr "Falta el título del motor de búsqueda en la página de inicio."
 
-#: inc/analyzer/seo-analyzer.php:299
-#: inc/analyzer/seo-analyzer.php:301
-#: inc/analyzer/seo-analyzer.php:1475
-#: inc/analyzer/seo-analyzer.php:1488
+#: inc/analyzer/seo-analyzer.php:333
+#: inc/analyzer/seo-analyzer.php:1538
+#: inc/analyzer/seo-analyzer.php:1551
 msgid "Search engine description is missing on the homepage."
 msgstr "La descripción del motor de búsqueda falta en la página de inicio."
 
-#: inc/analyzer/seo-analyzer.php:345
+#: inc/analyzer/seo-analyzer.php:378
 msgid "Homepage contains one H1 heading"
 msgstr "La página de inicio contiene un encabezado H1"
 
-#: inc/analyzer/seo-analyzer.php:413
-msgid "No H1 heading found on the homepage."
-msgstr "No se encontró ningún encabezado H1 en la página de inicio."
-
-#: inc/analyzer/seo-analyzer.php:416
-msgid "Multiple H1 headings found on the homepage."
-msgstr "Se encontraron múltiples encabezados H1 en la página de inicio."
-
-#: inc/analyzer/seo-analyzer.php:418
-msgid "Homepage contains one H1 heading."
-msgstr "La página de inicio contiene un encabezado H1."
-
-#: inc/analyzer/seo-analyzer.php:510
-msgid "Homepage contains at least one H2 heading"
-msgstr "La página de inicio contiene al menos un encabezado H2"
-
-#: inc/analyzer/seo-analyzer.php:514
-msgid "Homepage does not contain at least one H2 heading"
-msgstr "La página de inicio no contiene al menos un encabezado H2"
-
-#: inc/analyzer/seo-analyzer.php:566
-msgid "The homepage does not contain any images."
-msgstr "La página de inicio no contiene imágenes."
-
-#: inc/analyzer/seo-analyzer.php:539
-#: inc/analyzer/seo-analyzer.php:567
+#: inc/analyzer/seo-analyzer.php:556
 msgid "No images found on the homepage."
 msgstr "No se encontraron imágenes en la página de inicio."
 
-#: inc/analyzer/seo-analyzer.php:571
+#: inc/analyzer/seo-analyzer.php:629
 msgid "Images on the homepage have alt text attributes."
 msgstr "Las imágenes en la página de inicio tienen atributos de texto alternativo."
 
-#: inc/analyzer/seo-analyzer.php:571
-msgid "Images on the homepage do not have alt text attributes."
-msgstr "Las imágenes en la página de inicio no tienen atributos de texto alternativo."
-
-#: inc/analyzer/seo-analyzer.php:675
-msgid "Home Page contains internal links to other pages on the site."
-msgstr "La página de inicio contiene enlaces internos a otras páginas del sitio."
-
-#: inc/analyzer/seo-analyzer.php:752
-#: inc/analyzer/seo-analyzer.php:754
-#: inc/analyzer/seo-analyzer.php:760
+#: inc/analyzer/seo-analyzer.php:789
 msgid "Canonical tag is not present on the homepage."
 msgstr "La etiqueta canónica no está presente en la página de inicio."
 
-#: inc/analyzer/seo-analyzer.php:760
-msgid "Canonical tag is present on the homepage."
-msgstr "La etiqueta canónica está presente en la página de inicio."
-
-#: inc/analyzer/seo-analyzer.php:839
-#: inc/analyzer/seo-analyzer.php:855
-msgid "Homepage is not indexable by search engines."
-msgstr "La página de inicio no es indexable por los motores de búsqueda."
-
-#: inc/analyzer/seo-analyzer.php:855
-msgid "Homepage is indexable by search engines."
-msgstr "La página de inicio es indexable por los motores de búsqueda."
-
-#: inc/analyzer/seo-analyzer.php:873
-msgid "Home Page is loading correctly."
-msgstr "La página de inicio se está cargando correctamente."
-
-#: inc/analyzer/seo-analyzer.php:874
-msgid "Home Page is not loading correctly."
-msgstr "La página de inicio no se está cargando correctamente."
-
-#: inc/analyzer/seo-analyzer.php:955
-msgid "Site is served over a secure HTTPS connection."
-msgstr "El sitio se sirve a través de una conexión HTTPS segura."
-
-#: inc/analyzer/seo-analyzer.php:956
-msgid "Site is not served over a secure HTTPS connection."
-msgstr "El sitio no se sirve a través de una conexión HTTPS segura."
-
-#: inc/analyzer/seo-analyzer.php:1032
-msgid "Open Graph tags are present on your homepage."
-msgstr "Las etiquetas Open Graph están presentes en tu página de inicio."
-
-#: inc/analyzer/seo-analyzer.php:1033
-msgid "Open Graph tags are not present on your homepage."
-msgstr "Las etiquetas Open Graph no están presentes en tu página de inicio."
-
-#: inc/analyzer/seo-analyzer.php:1146
-msgid "Structured data (schema) is present on the home page."
-msgstr "Los datos estructurados (schema) están presentes en la página de inicio."
-
-#: inc/analyzer/seo-analyzer.php:1147
-msgid "Structured data (schema) is not present on the home page."
-msgstr "Los datos estructurados (schema) no están presentes en la página de inicio."
-
-#: inc/analyzer/seo-analyzer.php:1294
-msgid "Site correctly redirects between www and non-www versions."
-msgstr "El sitio redirige correctamente entre las versiones www y no-www."
-
-#: inc/analyzer/seo-analyzer.php:1417
+#: inc/analyzer/seo-analyzer.php:1480
 msgid "Invalid URL."
 msgstr "URL inválida."
 
@@ -256,7 +173,7 @@ msgstr "URL inválida."
 msgid "Search engine title exceeds %1$d characters."
 msgstr "El título del motor de búsqueda excede %1$d caracteres."
 
-#: inc/analyzer/seo-analyzer.php:1462
+#: inc/analyzer/seo-analyzer.php:1525
 msgid "Search engine title is present and under 60 characters."
 msgstr "El título del motor de búsqueda está presente y tiene menos de 60 caracteres."
 
@@ -294,64 +211,24 @@ msgstr "No se encontraron datos"
 msgid "Settings updated"
 msgstr "Configuraciones actualizadas"
 
-#: inc/api/analyzer.php:450
+#: inc/api/analyzer.php:497
 msgid "Google Search Console is connected."
 msgstr "Google Search Console está conectado."
 
-#: inc/api/analyzer.php:451
+#: inc/api/analyzer.php:497
 msgid "Google Search Console is not connected."
 msgstr "Google Search Console no está conectado."
 
-#: inc/api/analyzer.php:606
-msgid "No other SEO plugin detected on the site."
-msgstr "No se detectó ningún otro plugin SEO en el sitio."
-
-#: inc/api/analyzer.php:610
-msgid "More than one SEO plugin detected on the site."
-msgstr "Se detectaron más de un plugin SEO en el sitio."
-
-#: inc/api/analyzer.php:669
-msgid "Site tagline is set in WordPress settings."
-msgstr "El eslogan del sitio está configurado en la configuración de WordPress."
-
-#: inc/api/analyzer.php:669
-msgid "Site tagline is not set in WordPress settings."
-msgstr "El eslogan del sitio no está configurado en la configuración de WordPress."
-
-#: inc/api/analyzer.php:751
-msgid "Robots.txt file is accessible."
-msgstr "El archivo Robots.txt es accesible."
-
-#: inc/api/analyzer.php:752
-msgid "Robots.txt file is not accessible."
-msgstr "El archivo Robots.txt no es accesible."
-
-#: inc/api/analyzer.php:833
-msgid "Search engine visibility is not blocked in WordPress settings."
-msgstr "La visibilidad del motor de búsqueda no está bloqueada en la configuración de WordPress."
-
-#: inc/api/analyzer.php:834
-msgid "Search engine visibility is blocked in WordPress settings."
-msgstr "La visibilidad del motor de búsqueda está bloqueada en la configuración de WordPress."
-
-#: inc/api/analyzer.php:931
-msgid "XML sitemap is accessible to search engines."
-msgstr "El mapa del sitio XML es accesible para los motores de búsqueda."
-
-#: inc/api/analyzer.php:932
-msgid "XML sitemap is not accessible to search engines."
-msgstr "El mapa del sitio XML no es accesible para los motores de búsqueda."
-
-#: inc/api/analyzer.php:1037
+#: inc/api/analyzer.php:993
 msgid "Post not found"
 msgstr "Publicación no encontrada"
 
-#: inc/api/analyzer.php:2087
-#: inc/api/analyzer.php:2110
+#: inc/api/analyzer.php:2043
+#: inc/api/analyzer.php:2066
 msgid "Link is broken"
 msgstr "El enlace está roto"
 
-#: inc/api/analyzer.php:1054
+#: inc/api/analyzer.php:1010
 msgid "Link is not broken"
 msgstr "El enlace no está roto"
 
@@ -372,14 +249,17 @@ msgid "Sample Post"
 msgstr "Publicación de muestra"
 
 #: inc/api/onboarding.php:286
+#: inc/modules/knowledge-graph/controller.php:66
 msgid "Invalid data provided"
 msgstr "Datos inválidos proporcionados"
 
 #: inc/api/onboarding.php:290
+#: inc/modules/knowledge-graph/api.php:115
 msgid "Settings updated successfully"
 msgstr "Configuraciones actualizadas con éxito"
 
 #: inc/api/onboarding.php:295
+#: inc/modules/knowledge-graph/controller.php:73
 msgid "Failed to update settings"
 msgstr "Error al actualizar configuraciones"
 
@@ -566,7 +446,7 @@ msgstr "El enlace permanente del sitio."
 msgid "Separator"
 msgstr "Separador"
 
-#: inc/api/analyzer.php:673
+#: inc/api/analyzer.php:656
 #: inc/meta-variables/site.php:64
 msgid "Site Tagline"
 msgstr "Eslogan del sitio"
@@ -2047,6 +1927,7 @@ msgid "Provide the full URL of the specific business location. This should be a 
 msgstr "Proporcione la URL completa de la ubicación específica del negocio. Este debe ser un enlace funcional que represente la página oficial de esa ubicación."
 
 #: inc/schema/types/organization.php:680
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Organization"
 msgstr "Organización"
@@ -2809,6 +2690,7 @@ msgstr "URL canónica"
 msgid "The Canonical URL tells search engines which version of a page should be indexed to avoid duplicate content issues. Leave blank to let SureRank set it automatically."
 msgstr "La URL canónica indica a los motores de búsqueda qué versión de una página debe ser indexada para evitar problemas de contenido duplicado. Déjalo en blanco para que SureRank lo establezca automáticamente."
 
+#: inc/analyzer/seo-analyzer.php:1090
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 #: build/seo-popup/index.js:1
@@ -2906,7 +2788,7 @@ msgstr "%1$d de %2$d verificaciones están completas."
 msgid "Passed"
 msgstr "Aprobado"
 
-#: loader.php:313
+#: loader.php:314
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 #: build/seo-popup/index.js:1
@@ -3022,11 +2904,11 @@ msgstr "La URL de la página es corta y amigable para SEO."
 msgid "Page URL is longer than %s characters and may affect SEO and readability."
 msgstr "La URL de la página es más larga que %s caracteres y puede afectar el SEO y la legibilidad."
 
-#: inc/api/analyzer.php:1712
+#: inc/api/analyzer.php:1668
 msgid "These broken links were found on the page: "
 msgstr "Se encontraron estos enlaces rotos en la página:"
 
-#: inc/api/analyzer.php:1717
+#: inc/api/analyzer.php:1673
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
@@ -3270,6 +3152,14 @@ msgstr "(Últimos 90 días)"
 msgid "All"
 msgstr "Todo"
 
+#: inc/analyzer/seo-analyzer.php:173
+#: inc/analyzer/seo-analyzer.php:296
+#: inc/analyzer/seo-analyzer.php:406
+#: inc/analyzer/seo-analyzer.php:493
+#: inc/analyzer/seo-analyzer.php:595
+#: inc/analyzer/seo-analyzer.php:673
+#: inc/analyzer/seo-analyzer.php:835
+#: inc/analyzer/seo-analyzer.php:1098
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Home Page"
@@ -3720,42 +3610,51 @@ msgstr "Ir al panel de control"
 msgid "Finish"
 msgstr "Finalizar"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Personal Website"
 msgstr "Sitio web personal"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Business Website"
 msgstr "Sitio web de negocios"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Personal Blog"
 msgstr "Blog personal"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Community Blog/News Website"
 msgstr "Blog/comunicado de noticias comunitario"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "This Website Represents"
 msgstr "Este sitio web representa"
 
 #: inc/schema/variables.php:223
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Organization Type"
 msgstr "Tipo de organización"
 
 #: inc/schema/variables.php:220
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Website Name"
 msgstr "Nombre del sitio web"
 
 #: inc/schema/variables.php:222
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Website Owner Name"
 msgstr "Nombre del propietario del sitio web"
 
 #: inc/schema/variables.php:225
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Website Logo"
 msgstr "Logo del sitio web"
@@ -3807,8 +3706,8 @@ msgstr "Comencemos"
 msgid "Invalid term ID or term object."
 msgstr "ID de término o objeto de término no válido."
 
-#: inc/api/analyzer.php:117
-#: inc/api/analyzer.php:1258
+#: inc/api/analyzer.php:118
+#: inc/api/analyzer.php:1214
 msgid "Invalid Post ID."
 msgstr "ID de publicación no válido."
 
@@ -3839,22 +3738,22 @@ msgid "Page does not contain at least one subheading."
 msgstr "La página no contiene al menos un subtítulo."
 
 #. translators: %1$d is the maximum recommended length of the title.
-#: inc/analyzer/seo-analyzer.php:1454
+#: inc/analyzer/seo-analyzer.php:1517
 #, php-format
 msgid "Search engine title of the home page exceeds %1$d characters."
 msgstr "El título del motor de búsqueda de la página de inicio excede %1$d caracteres."
 
-#: inc/analyzer/seo-analyzer.php:1459
+#: inc/analyzer/seo-analyzer.php:1522
 msgid "Search engine title of the home page is present and under 60 characters."
 msgstr "El título del motor de búsqueda de la página de inicio está presente y tiene menos de 60 caracteres."
 
 #. translators: %1$d is the maximum length of the meta description.
-#: inc/analyzer/seo-analyzer.php:1480
+#: inc/analyzer/seo-analyzer.php:1543
 #, php-format
 msgid "Search engine description of the home page exceeds %1$d characters."
 msgstr "La descripción del motor de búsqueda de la página de inicio excede %1$d caracteres."
 
-#: inc/analyzer/seo-analyzer.php:1485
+#: inc/analyzer/seo-analyzer.php:1548
 msgid "Search engine description of the home page is present and under 160 characters."
 msgstr "La descripción del motor de búsqueda de la página de inicio está presente y tiene menos de 160 caracteres."
 
@@ -3882,6 +3781,7 @@ msgstr "Seleccionar Página Acerca"
 msgid "Select Contact Page"
 msgstr "Seleccionar Página de Contacto"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "No options available"
 msgstr "No hay opciones disponibles"
@@ -4058,7 +3958,7 @@ msgstr "Consulta de búsqueda"
 msgid "Search query (only available on search results page)"
 msgstr "Consulta de búsqueda (solo disponible en la página de resultados de búsqueda)"
 
-#: loader.php:293
+#: loader.php:294
 msgid "Rate our plugin"
 msgstr "Califica nuestro plugin"
 
@@ -4066,6 +3966,7 @@ msgstr "Califica nuestro plugin"
 msgid "Learn about Google Search Console and how SureRank uses it for optimizing your website."
 msgstr "Aprende sobre Google Search Console y cómo SureRank lo utiliza para optimizar tu sitio web."
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Phone Number (Optional)"
 msgstr "Número de teléfono (opcional)"
@@ -4158,80 +4059,53 @@ msgstr "Controla cómo los motores de búsqueda tratan tu página de inicio. Est
 msgid "Adds structured data to your content so search engines can better understand and present it. Most fields are already filled in to make setup easier and help your site show up better in search results."
 msgstr "Agrega datos estructurados a tu contenido para que los motores de búsqueda puedan entenderlo y presentarlo mejor. La mayoría de los campos ya están llenos para facilitar la configuración y ayudar a que tu sitio aparezca mejor en los resultados de búsqueda."
 
-#: inc/analyzer/seo-analyzer.php:142
-#: inc/analyzer/seo-analyzer.php:250
-#: inc/analyzer/seo-analyzer.php:361
-#: inc/analyzer/seo-analyzer.php:603
-#: inc/analyzer/seo-analyzer.php:701
-#: inc/analyzer/seo-analyzer.php:790
-#: inc/analyzer/seo-analyzer.php:890
-#: inc/analyzer/seo-analyzer.php:1608
-#: inc/api/analyzer.php:620
-#: inc/api/analyzer.php:767
-#: inc/api/analyzer.php:947
-msgid "Why this matters:"
-msgstr "Por qué esto importa:"
-
-#: inc/analyzer/seo-analyzer.php:486
-msgid "What We Do"
-msgstr "Lo que hacemos"
-
-#: inc/analyzer/seo-analyzer.php:487
-msgid "How It Works"
-msgstr "Cómo funciona"
-
-#: inc/analyzer/seo-analyzer.php:488
-msgid "Trusted by 100+ Clients"
-msgstr "Confiado por más de 100 clientes"
-
-#: inc/api/analyzer.php:1927
-#: inc/api/analyzer.php:1950
+#: inc/api/analyzer.php:1883
+#: inc/api/analyzer.php:1906
 msgid "Type of check to delete. Can be \"post\" or \"taxonomy\"."
 msgstr "Tipo de verificación para eliminar. Puede ser \"post\" o \"taxonomy\"."
 
-#: inc/api/analyzer.php:224
+#: inc/api/analyzer.php:225
 msgid "Checks ignored."
 msgstr "Verificaciones ignoradas."
 
-#: inc/api/analyzer.php:261
+#: inc/api/analyzer.php:262
 msgid "Checks unignored."
 msgstr "Verificaciones no ignoradas."
 
-#: inc/api/analyzer.php:346
+#: inc/api/analyzer.php:347
 msgid "Check ignored for post."
 msgstr "Verificación ignorada para el post."
 
-#: inc/api/analyzer.php:374
+#: inc/api/analyzer.php:375
 msgid "Check unignored for post."
 msgstr "Verificación no ignorada para el post."
 
-#: inc/api/analyzer.php:397
+#: inc/api/analyzer.php:398
 msgid "Ignored checks retrieved."
 msgstr "Verificaciones ignoradas recuperadas."
 
-#. translators: %s is the list of active plugins
-#: inc/api/analyzer.php:617
-#, php-format
-msgid "Currently active plugins : %s"
-msgstr "Plugins activos actualmente: %s"
-
 #: inc/api/onboarding.php:74
+#: inc/modules/knowledge-graph/api.php:129
 msgid "Type of the website."
 msgstr "Tipo de sitio web."
 
 #: inc/api/onboarding.php:83
+#: inc/modules/knowledge-graph/api.php:138
 msgid "Name of the website."
 msgstr "Nombre del sitio web."
 
 #: inc/api/onboarding.php:101
+#: inc/modules/knowledge-graph/api.php:156
 msgid "Name of the website owner."
 msgstr "Nombre del propietario del sitio web."
 
 #: inc/api/onboarding.php:110
+#: inc/modules/knowledge-graph/api.php:165
 msgid "Phone number of the website owner."
 msgstr "Número de teléfono del propietario del sitio web."
 
 #: inc/api/onboarding.php:119
+#: inc/modules/knowledge-graph/api.php:174
 msgid "Type of the organization."
 msgstr "Tipo de organización."
 
@@ -4282,6 +4156,7 @@ msgstr "Sugerencia"
 msgid "Search Console"
 msgstr "Search Console"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "This is required"
 msgstr "Esto es obligatorio"
@@ -4302,136 +4177,123 @@ msgstr "Restaurar esta verificación"
 msgid "The page does not contain any subheadings."
 msgstr "La página no contiene ningún subtítulo."
 
-#: inc/analyzer/seo-analyzer.php:652
-#: inc/analyzer/seo-analyzer.php:675
-msgid "Home Page does not contain internal links to other pages on the site."
-msgstr "La página de inicio no contiene enlaces internos a otras páginas del sitio."
-
-#: inc/analyzer/seo-analyzer.php:1295
-msgid "Site does not correctly redirect between www and non-www versions."
-msgstr "El sitio no redirige correctamente entre las versiones con y sin www."
-
-#. translators: %s is the list of active plugins
-#: inc/api/analyzer.php:613
-#, php-format
-msgid "Another SEO plugin, %s, detected on the site."
-msgstr "Se detectó otro plugin SEO, %s, en el sitio."
-
 #: inc/admin/dashboard.php:298
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Tools"
 msgstr "Herramientas"
 
-#: inc/api/migrations.php:118
+#: inc/api/migrations.php:120
 msgid "Post IDs to migrate."
 msgstr "IDs de publicaciones para migrar."
 
-#: inc/api/migrations.php:125
-#: inc/api/migrations.php:182
+#: inc/api/migrations.php:127
+#: inc/api/migrations.php:184
 msgid "Whether to clean up source data after import."
 msgstr "Si se debe limpiar los datos de origen después de la importación."
 
-#: inc/api/migrations.php:139
-#: inc/api/migrations.php:196
+#: inc/api/migrations.php:141
+#: inc/api/migrations.php:198
 msgid "Page number for pagination."
 msgstr "Número de página para la paginación."
 
-#: inc/api/migrations.php:175
+#: inc/api/migrations.php:177
 msgid "Term IDs to migrate."
 msgstr "IDs de términos para migrar."
 
-#: inc/api/migrations.php:232
+#: inc/api/migrations.php:234
 msgid "Whether to clean up source global data after import."
 msgstr "Si se debe limpiar los datos globales de origen después de la importación."
 
-#: inc/api/migrations.php:251
+#: inc/api/migrations.php:253
 msgid "Plugin slug to deactivate."
 msgstr "Slug del plugin para desactivar."
 
-#: inc/api/migrations.php:323
-#: inc/api/migrations.php:349
+#: inc/api/migrations.php:325
+#: inc/api/migrations.php:351
 msgid "Invalid importer methods."
 msgstr "Métodos de importador inválidos."
 
-#: inc/api/migrations.php:400
+#: inc/api/migrations.php:402
 msgid "Invalid response from importer."
 msgstr "Respuesta inválida del importador."
 
 #. translators: 1: import status, 2: plugin name
-#: inc/api/migrations.php:418
+#: inc/api/migrations.php:420
 #, php-format
 msgid "Global settings %1$s from %2$s."
 msgstr "Configuraciones globales %1$s de %2$s."
 
-#: inc/api/migrations.php:419
+#: inc/api/migrations.php:421
 msgid "imported successfully"
 msgstr "importado con éxito"
 
-#: inc/api/migrations.php:419
+#: inc/api/migrations.php:421
 msgid "failed to import"
 msgstr "falló al importar"
 
-#: inc/api/migrations.php:498
+#: inc/api/migrations.php:500
 msgid "No public taxonomies found."
 msgstr "No se encontraron taxonomías públicas."
 
-#: inc/api/migrations.php:623
+#: inc/api/migrations.php:625
 msgid "You do not have permission to deactivate plugins."
 msgstr "No tienes permiso para desactivar plugins."
 
-#: inc/api/migrations.php:629
+#: inc/api/migrations.php:631
 msgid "Plugin not found."
 msgstr "Plugin no encontrado."
 
-#: inc/api/migrations.php:633
+#: inc/api/migrations.php:635
 msgid "Plugin is already inactive."
 msgstr "El plugin ya está inactivo."
 
-#: inc/api/migrations.php:641
+#: inc/api/migrations.php:643
 msgid "Plugin deactivated successfully."
 msgstr "Plugin desactivado con éxito."
 
-#: inc/api/migrations.php:1047
+#: inc/api/migrations.php:1052
 msgid "Invalid plugin slug specified."
 msgstr "Slug de plugin especificado inválido."
 
-#: inc/api/migrations.php:1148
+#: inc/api/migrations.php:1153
 msgid "No data found for this item."
 msgstr "No se encontraron datos para este ítem."
 
-#: inc/api/migrations.php:1154
+#: inc/api/migrations.php:1159
 msgid "Detection failed."
 msgstr "Fallo en la detección."
 
-#: inc/api/migrations.php:1161
+#: inc/api/migrations.php:1166
 msgid "Invalid import response."
 msgstr "Respuesta de importación inválida."
 
-#: inc/api/migrations.php:1170
+#: inc/api/migrations.php:1175
 msgid "Import failed."
 msgstr "Fallo en la importación."
 
 #. translators: %s: error message.
-#: inc/api/migrations.php:1175
+#: inc/api/migrations.php:1180
 #, php-format
 msgid "Error: %s"
 msgstr "Error: %s"
 
 #. translators: 1: imported count, 2: total count, 3: item type, 4: plugin name.
-#: inc/api/migrations.php:1218
+#: inc/api/migrations.php:1223
 #, php-format
 msgid "Imported %1$d of %2$d %3$s from %4$s."
 msgstr "Importados %1$d de %2$d %3$s desde %4$s."
 
 #. translators: 1: plugin name, 2: post ID.
 #: inc/importers/base-importer.php:105
+#: inc/importers/squirrly/squirrly.php:88
 #, php-format
 msgid "%1$s data detected for post %2$d."
 msgstr "Datos %1$s detectados para la publicación %2$d."
 
 #. translators: 1: plugin name, 2: post ID.
 #: inc/importers/base-importer.php:118
+#: inc/importers/squirrly/squirrly.php:102
 #, php-format
 msgid "No %1$s data found for post %2$d."
 msgstr "No se encontraron datos %1$s para la publicación %2$d."
@@ -4535,37 +4397,49 @@ msgid "No meta-robots settings to import for %1$s %2$d."
 msgstr "No hay configuraciones meta-robots para importar para %1$s %2$d."
 
 #. translators: %d: ID, %s: type.
+#. translators: %1$s: type (post|term), %2$d: ID.
 #: inc/importers/rankmath/rank-math.php:275
+#: inc/importers/squirrly/squirrly.php:404
 #, php-format
 msgid "Meta-robots imported for %1$s %2$d."
 msgstr "Meta-robots importados para %1$s %2$d."
 
 #. translators: 1: ID, 2: type, 3: error message.
+#. translators: 1: ID, 2: type, 3: error message
 #: inc/importers/rankmath/rank-math.php:285
+#: inc/importers/squirrly/squirrly.php:414
 #, php-format
 msgid "Error importing meta-robots for %2$s %1$d: %3$s"
 msgstr "Error al importar meta-robots para %2$s %1$d: %3$s"
 
 #. translators: %d: ID, %s: type.
+#. translators: %1$s: type (post|term), %2$d: ID.
 #: inc/importers/rankmath/rank-math.php:345
+#: inc/importers/squirrly/squirrly.php:472
 #, php-format
 msgid "General settings imported for %1$s %2$d."
 msgstr "Configuraciones generales importadas para %1$s %2$d."
 
 #. translators: %d: ID, %s: type.
+#. translators: %1$s: type (post|term), %2$d: ID.
 #: inc/importers/rankmath/rank-math.php:356
+#: inc/importers/squirrly/squirrly.php:483
 #, php-format
 msgid "No general settings to import for %1$s %2$d."
 msgstr "No hay configuraciones generales para importar para %1$s %2$d."
 
 #. translators: %d: ID, %s: type.
+#. translators: %1$s: type (post|term), %2$d: ID.
 #: inc/importers/rankmath/rank-math.php:396
+#: inc/importers/squirrly/squirrly.php:594
 #, php-format
 msgid "Social metadata imported for %1$s %2$d."
 msgstr "Metadatos sociales importados para %1$s %2$d."
 
 #. translators: %d: ID, %s: type.
+#. translators: %1$s: type (post|term), %2$d: ID.
 #: inc/importers/rankmath/rank-math.php:407
+#: inc/importers/squirrly/squirrly.php:605
 #, php-format
 msgid "No social metadata to import for %1$s %2$d."
 msgstr "No hay metadatos sociales para importar para %1$s %2$d."
@@ -4939,7 +4813,7 @@ msgid "Done"
 msgstr "Hecho"
 
 #: inc/analyzer/utils.php:252
-#: inc/api/analyzer.php:1692
+#: inc/api/analyzer.php:1648
 msgid "The link is broken."
 msgstr "El enlace está roto."
 
@@ -5043,8 +4917,8 @@ msgstr "No Follow -"
 msgid "No Archive -"
 msgstr "No Archive -"
 
-#: inc/admin/seo-bar.php:121
-#: inc/admin/seo-bar.php:141
+#: inc/admin/seo-bar.php:120
+#: inc/admin/seo-bar.php:140
 #: build/admin-seo-bar/index.js:1
 msgid "SEO Checks"
 msgstr "Verificaciones SEO"
@@ -5061,146 +4935,146 @@ msgstr "Error de exportación: %s"
 msgid "Import failed: %s"
 msgstr "Error de importación: %s"
 
-#: inc/api/migrations.php:271
+#: inc/api/migrations.php:273
 msgid "Plugin slug that was migrated from."
 msgstr "Nombre de la clase del importador desde la cual se migró."
 
 #. translators: %s: importer class name
 #. translators: %s: importer class name.
-#: inc/api/migrations.php:384
-#: inc/api/migrations.php:1064
+#: inc/api/migrations.php:386
+#: inc/api/migrations.php:1069
 #, php-format
 msgid "Invalid importer class: %s does not implement Importer."
 msgstr "Clase de importador inválida: %s no implementa Importer."
 
-#: inc/api/migrations.php:655
+#: inc/api/migrations.php:657
 msgid "Invalid plugin slug."
 msgstr "Slug del plugin inválido."
 
 #. translators: %s: plugin slug.
-#: inc/api/migrations.php:668
+#: inc/api/migrations.php:670
 #, php-format
 msgid "Migration from %s marked as completed successfully."
 msgstr "Migración desde %s marcada como completada con éxito."
 
-#: inc/api/migrations.php:768
+#: inc/api/migrations.php:770
 msgid "WP Rocket"
 msgstr "WP Rocket"
 
-#: inc/api/migrations.php:774
+#: inc/api/migrations.php:776
 msgid "FlyingPress"
 msgstr "FlyingPress"
 
-#: inc/api/migrations.php:780
+#: inc/api/migrations.php:782
 msgid "NitroPack"
 msgstr "NitroPack"
 
-#: inc/api/migrations.php:786
+#: inc/api/migrations.php:788
 msgid "WP-Optimize Premium"
 msgstr "WP-Optimize Premium"
 
-#: inc/api/migrations.php:792
+#: inc/api/migrations.php:794
 msgid "Swift Performance"
 msgstr "Swift Performance"
 
-#: inc/api/migrations.php:800
+#: inc/api/migrations.php:802
 msgid "LiteSpeed Cache"
 msgstr "LiteSpeed Cache"
 
-#: inc/api/migrations.php:806
+#: inc/api/migrations.php:808
 msgid "W3 Total Cache"
 msgstr "W3 Total Cache"
 
-#: inc/api/migrations.php:812
+#: inc/api/migrations.php:814
 msgid "WP Super Cache"
 msgstr "WP Super Cache"
 
-#: inc/api/migrations.php:818
+#: inc/api/migrations.php:820
 msgid "WP Fastest Cache"
 msgstr "WP Fastest Cache"
 
-#: inc/api/migrations.php:824
+#: inc/api/migrations.php:826
 msgid "WP-Optimize"
 msgstr "WP-Optimize"
 
-#: inc/api/migrations.php:830
+#: inc/api/migrations.php:832
 msgid "Breeze"
 msgstr "Breeze"
 
-#: inc/api/migrations.php:836
+#: inc/api/migrations.php:838
 msgid "Cache Enabler"
 msgstr "Cache Enabler"
 
-#: inc/api/migrations.php:842
+#: inc/api/migrations.php:844
 msgid "Comet Cache"
 msgstr "Comet Cache"
 
-#: inc/api/migrations.php:848
+#: inc/api/migrations.php:850
 msgid "Swift Performance Lite"
 msgstr "Swift Performance Lite"
 
-#: inc/api/migrations.php:856
+#: inc/api/migrations.php:858
 msgid "Redis Object Cache"
 msgstr "Redis Object Cache"
 
-#: inc/api/migrations.php:864
+#: inc/api/migrations.php:866
 msgid "Hummingbird Performance"
 msgstr "Hummingbird Performance"
 
-#: inc/api/migrations.php:870
+#: inc/api/migrations.php:872
 msgid "Autoptimize"
 msgstr "Autoptimize"
 
-#: inc/api/migrations.php:876
+#: inc/api/migrations.php:878
 msgid "SiteGround Speed Optimizer"
 msgstr "SiteGround Speed Optimizer"
 
-#: inc/api/migrations.php:882
+#: inc/api/migrations.php:884
 msgid "Cloudflare"
 msgstr "Cloudflare"
 
-#: inc/api/migrations.php:888
+#: inc/api/migrations.php:890
 msgid "Hyper Cache"
 msgstr "Hyper Cache"
 
-#: inc/api/migrations.php:894
+#: inc/api/migrations.php:896
 msgid "Perfmatters"
 msgstr "Perfmatters"
 
-#: inc/api/migrations.php:902
+#: inc/api/migrations.php:904
 msgid "SpeedyCache"
 msgstr "SpeedyCache"
 
-#: inc/api/migrations.php:908
+#: inc/api/migrations.php:910
 msgid "Docket Cache"
 msgstr "Docket Cache"
 
-#: inc/api/migrations.php:914
+#: inc/api/migrations.php:916
 msgid "10Web Booster"
 msgstr "10Web Booster"
 
-#: inc/api/migrations.php:920
+#: inc/api/migrations.php:922
 msgid "Super Page Cache"
 msgstr "Super Page Cache"
 
-#: inc/api/migrations.php:926
+#: inc/api/migrations.php:928
 msgid "WP REST Cache"
 msgstr "WP REST Cache"
 
-#: inc/api/migrations.php:932
+#: inc/api/migrations.php:934
 msgid "Cache Control"
 msgstr "Control de Caché"
 
-#: inc/api/migrations.php:940
+#: inc/api/migrations.php:942
 msgid "Aruba HiSpeed Cache"
 msgstr "Aruba HiSpeed Cache"
 
-#: inc/api/migrations.php:946
+#: inc/api/migrations.php:948
 msgid "atec Cache APCu"
 msgstr "atec Cache APCu"
 
 #. translators: 1: detection method, 2: detection value
-#: inc/api/migrations.php:982
+#: inc/api/migrations.php:984
 #, php-format
 msgid "Detected via %1$s: %2$s"
 msgstr "Detectado vía %1$s: %2$s"
@@ -5580,6 +5454,7 @@ msgstr "Migración completada"
 msgid "Your SEO settings have been successfully migrated to SureRank. However, we noticed your previous SEO plugin is still active. Would you like us to deactivate it to avoid conflicts?"
 msgstr "Sus configuraciones de SEO se han migrado con éxito a SureRank. Sin embargo, hemos notado que su plugin SEO anterior todavía está activo. ¿Desea que lo desactivemos para evitar conflictos?"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "E-commerce Store"
 msgstr "Tienda en línea"
@@ -5592,6 +5467,7 @@ msgstr "Lleva tus configuraciones de SEO a SureRank"
 msgid "We found other SEO plugins installed on your website. Choose the ones you'd like to import data from into SureRank."
 msgstr "Encontramos otros plugins de SEO instalados en tu sitio web. Elige desde cuáles te gustaría importar datos a SureRank."
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Recommended Logo size 112 X 112 or more, PNG / JPG format"
 msgstr "Tamaño recomendado del logo 112 X 112 o más, formato PNG / JPG"
@@ -5606,26 +5482,26 @@ msgid "SureRank SEO"
 msgstr "SureRank SEO"
 
 #. translators: %s: list of plugin slugs
-#: inc/api/migrations.php:112
-#: inc/api/migrations.php:169
+#: inc/api/migrations.php:114
+#: inc/api/migrations.php:171
 #, php-format
 msgid "Plugin slug to migrate from (e.g. %s)."
 msgstr "Etiqueta del plugin para migrar desde (p. ej., %s)."
 
 #. translators: %s: list of plugin slugs
-#: inc/api/migrations.php:145
+#: inc/api/migrations.php:147
 #, php-format
 msgid "Plugin slug to filter posts by (e.g. %s)."
 msgstr "Etiqueta del plugin para filtrar publicaciones por (p. ej., %s)."
 
 #. translators: %s: list of plugin slugs
-#: inc/api/migrations.php:203
+#: inc/api/migrations.php:205
 #, php-format
 msgid "Plugin slug to filter terms by (e.g. %s)."
 msgstr "Etiqueta del plugin para filtrar términos por (p. ej., %s)."
 
 #. translators: %s: list of plugin slugs
-#: inc/api/migrations.php:225
+#: inc/api/migrations.php:227
 #, php-format
 msgid "Plugin slug to migrate global settings from (e.g. %s)."
 msgstr "Etiqueta del plugin para migrar configuraciones globales desde (p. ej., %s)."
@@ -6426,7 +6302,7 @@ msgstr "No se puede generar contenido en este momento. Por favor, inténtelo de 
 msgid "Click here to contact support."
 msgstr "Haga clic aquí para contactar con soporte."
 
-#: inc/api/analyzer.php:517
+#: inc/api/analyzer.php:502
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Connect Now"
@@ -6653,6 +6529,7 @@ msgid "SureRank Website Insights"
 msgstr "Información del sitio web de SureRank"
 
 #: inc/api/onboarding.php:92
+#: inc/modules/knowledge-graph/api.php:147
 msgid "Business description of the website."
 msgstr "Descripción del negocio del sitio web."
 
@@ -6976,10 +6853,12 @@ msgstr "SureRank puede migrar configuraciones desde muchos plugins de SEO popula
 msgid "Changed a permalink? SureRank Pro automatically redirects old URLs to keep your SEO intact."
 msgstr "¿Cambiaste un enlace permanente? SureRank Pro redirige automáticamente URLs antiguas para mantener tu SEO intacto."
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Describe what you do"
 msgstr "Describe qué haces"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Please describe what you do in a few sentences. This description will be used for content generation and other purposes."
 msgstr "Por favor, describe qué haces en unas pocas frases. Esta descripción se usará para generación de contenido y otros propósitos."
@@ -7114,200 +6993,17 @@ msgstr "Optimizar SEO de imágenes sin IA"
 msgid "Generate SEO-friendly image alt text automatically with SureRank AI to improve accessibility and boost your image search visibility."
 msgstr "Genera automáticamente texto alternativo amigable para SEO con SureRank AI para mejorar la accesibilidad y aumentar la visibilidad en búsquedas de imágenes."
 
-#: inc/api/analyzer.php:135
-#: inc/api/analyzer.php:169
+#: inc/api/analyzer.php:136
+#: inc/api/analyzer.php:170
 msgid "SEO checks retrieved."
 msgstr "Se recuperaron las comprobaciones de SEO."
 
-#: inc/api/analyzer.php:151
+#: inc/api/analyzer.php:152
 msgid "Invalid Term ID."
 msgstr "ID de término inválido."
 
-#: inc/api/analyzer.php:589
-msgid "Other SEO Plugin Banner"
-msgstr "Otro banner del plugin SEO"
-
-#: inc/api/analyzer.php:592
-msgid "SEO Plugin Conflicts"
-msgstr "Conflictos de plugins SEO"
-
-#: inc/api/analyzer.php:594
-msgid "SEO plugins decide how your site appears in search results by managing titles, descriptions, and structured information. They help search engines understand your content, but also make your site easier for people to find."
-msgstr "Los plugins SEO deciden cómo aparece tu sitio en los resultados de búsqueda gestionando títulos, descripciones e información estructurada. Ayudan a los motores de búsqueda a entender tu contenido, pero también facilitan que las personas encuentren tu sitio."
-
-#: inc/api/analyzer.php:621
-msgid "Having more than one SEO plugin active can create confusion. Each plugin might try to change the same things, sending mixed signals to search engines. This can affect how clearly your site appears in search results and make it harder for visitors to find what they’re looking for."
-msgstr "Tener más de un plugin SEO activo puede crear confusión. Cada plugin podría intentar cambiar las mismas cosas, enviando señales contradictorias a los motores de búsqueda. Esto puede afectar la claridad con la que aparece tu sitio en los resultados de búsqueda y dificultar que los visitantes encuentren lo que buscan."
-
-#: inc/api/analyzer.php:623
-msgid "How to keep things smooth:"
-msgstr "Cómo mantener las cosas fluidas:"
-
-#: inc/api/analyzer.php:625
-msgid "Use only one SEO plugin at a time to keep your settings clean and consistent."
-msgstr "Usa solo un plugin SEO a la vez para mantener tus configuraciones limpias y coherentes."
-
-#: inc/api/analyzer.php:626
-msgid "Let that plugin handle everything in one place, so there’s no overlap or conflict."
-msgstr "Deja que ese plugin maneje todo en un solo lugar, para que no haya solapamientos ni conflictos."
-
-#: inc/api/analyzer.php:627
-msgid "Check your plugin settings regularly to make sure nothing is accidentally duplicated."
-msgstr "Revisa regularmente la configuración de tus plugins para asegurarte de que nada se duplique accidentalmente."
-
-#: inc/analyzer/seo-analyzer.php:164
-#: inc/analyzer/seo-analyzer.php:271
-#: inc/analyzer/seo-analyzer.php:388
-#: inc/analyzer/seo-analyzer.php:628
-#: inc/analyzer/seo-analyzer.php:726
-#: inc/analyzer/seo-analyzer.php:811
-#: inc/analyzer/seo-analyzer.php:909
-#: inc/analyzer/seo-analyzer.php:990
-#: inc/analyzer/seo-analyzer.php:1633
-#: inc/api/analyzer.php:632
-#: inc/api/analyzer.php:791
-#: inc/api/analyzer.php:968
-msgid "Example"
-msgstr "Ejemplo"
-
-#: inc/api/analyzer.php:634
-msgid "If two plugins try to set your homepage description differently, search engines may receive mixed information, resulting in inconsistent search results or snippets."
-msgstr "Si dos plugins intentan establecer la descripción de tu página principal de manera diferente, los motores de búsqueda pueden recibir información contradictoria, lo que resulta en resultados de búsqueda o fragmentos inconsistentes."
-
-#: inc/analyzer/seo-analyzer.php:175
-#: inc/analyzer/seo-analyzer.php:281
-#: inc/analyzer/seo-analyzer.php:395
-#: inc/analyzer/seo-analyzer.php:634
-#: inc/analyzer/seo-analyzer.php:732
-#: inc/analyzer/seo-analyzer.php:823
-#: inc/analyzer/seo-analyzer.php:920
-#: inc/analyzer/seo-analyzer.php:1001
-#: inc/analyzer/seo-analyzer.php:1644
-#: inc/api/analyzer.php:638
-#: inc/api/analyzer.php:800
-#: inc/api/analyzer.php:971
-msgid "Where to update it"
-msgstr "Dónde actualizarlo"
-
-#: inc/api/analyzer.php:644
-msgid "You can review your active plugins from your WordPress plugins page and deactivate extras. Then manage all your SEO settings from your main SEO plugin for a clear and single source of truth."
-msgstr "Puedes revisar tus plugins activos desde la página de plugins de WordPress y desactivar los extras. Luego, gestiona todas tus configuraciones de SEO desde tu plugin principal de SEO para tener una fuente única y clara de verdad."
-
-#: inc/analyzer/seo-analyzer.php:186
-#: inc/analyzer/seo-analyzer.php:292
-#: inc/analyzer/seo-analyzer.php:406
-#: inc/analyzer/seo-analyzer.php:640
-#: inc/analyzer/seo-analyzer.php:744
-#: inc/analyzer/seo-analyzer.php:829
-#: inc/analyzer/seo-analyzer.php:926
-#: inc/analyzer/seo-analyzer.php:1007
-#: inc/analyzer/seo-analyzer.php:1661
-#: inc/api/analyzer.php:648
-#: inc/api/analyzer.php:803
-#: inc/api/analyzer.php:974
-msgid "How SureRank helps"
-msgstr "Cómo ayuda SureRank"
-
-#: inc/api/analyzer.php:650
-msgid "SureRank keeps your SEO setup simple and reliable. It explains why using a single plugin matters, helping you maintain clarity for both search engines and your visitors, without unnecessary confusion."
-msgstr "SureRank mantiene tu configuración de SEO simple y confiable. Explica por qué usar un solo plugin importa, ayudándote a mantener claridad tanto para los motores de búsqueda como para tus visitantes, sin confusiones innecesarias."
-
-#: inc/api/analyzer.php:761
-msgid "Robots.txt File"
-msgstr "Archivo Robots.txt"
-
-#: inc/api/analyzer.php:763
-msgid "Your site has a small file called robots.txt that acts like a guide for search engines, showing them where they’re welcome to explore and where they should stay away. Think of it as a polite set of instructions for visitors who want to browse your site."
-msgstr "Tu sitio tiene un archivo pequeño llamado robots.txt que actúa como una guía para los motores de búsqueda, mostrando dónde pueden explorar y dónde deben mantenerse alejados. Piénsalo como un conjunto de instrucciones corteses para los visitantes que desean navegar por tu sitio."
-
-#: inc/api/analyzer.php:774
-msgid "If the robots.txt file is missing or set up incorrectly, search engines might skip pages they should see, or spend time on pages that aren’t important. A proper file helps your site get noticed efficiently and ensures the content that matters most is visible to both search engines and people."
-msgstr "Si el archivo robots.txt falta o está configurado incorrectamente, los motores de búsqueda podrían omitir páginas que deberían ver, o gastar tiempo en páginas que no son importantes. Un archivo adecuado ayuda a que tu sitio sea notado de manera eficiente y asegura que el contenido más importante sea visible tanto para los motores de búsqueda como para las personas."
-
-#: inc/analyzer/seo-analyzer.php:150
-#: inc/analyzer/seo-analyzer.php:258
-#: inc/analyzer/seo-analyzer.php:369
-#: inc/analyzer/seo-analyzer.php:609
-#: inc/analyzer/seo-analyzer.php:713
-#: inc/analyzer/seo-analyzer.php:798
-#: inc/analyzer/seo-analyzer.php:896
-#: inc/analyzer/seo-analyzer.php:978
-#: inc/analyzer/seo-analyzer.php:1620
-#: inc/api/analyzer.php:778
-#: inc/api/analyzer.php:953
-msgid "How to keep things smooth"
-msgstr "Cómo mantener las cosas fluidas"
-
-#: inc/api/analyzer.php:782
-msgid "Check your robots.txt by visiting yoursite.com/robots.txt , if it opens with some rules, it’s active."
-msgstr "Verifica tu archivo robots.txt visitando yoursite.com/robots.txt, si se abre con algunas reglas, está activo."
-
-#: inc/api/analyzer.php:783
-msgid "Make sure it doesn’t block pages you want visitors to find."
-msgstr "Asegúrate de que no bloquee las páginas que quieres que los visitantes encuentren."
-
-#: inc/api/analyzer.php:784
-msgid "Even if the rules look complicated, having the file is better than not having one."
-msgstr "Incluso si las reglas parecen complicadas, tener el archivo es mejor que no tener uno."
-
-#: inc/api/analyzer.php:785
-msgid "Use the built-in robots.txt editor in SureRank to view or adjust the file safely."
-msgstr "Usa el editor integrado de robots.txt en SureRank para ver o ajustar el archivo de forma segura."
-
-#: inc/api/analyzer.php:798
-msgid "If your robots.txt accidentally blocks your “Shop” or “Pricing” pages, search engines won’t see them, and people searching for your products or services might never find them."
-msgstr "Si tu robots.txt bloquea accidentalmente tus páginas “Tienda” o “Precios”, los motores de búsqueda no las verán, y las personas que busquen tus productos o servicios quizás nunca las encuentren."
-
-#: inc/api/analyzer.php:801
-msgid "The robots.txt file can be edited directly from the SureRank settings using the built-in editor."
-msgstr "El archivo robots.txt se puede editar directamente desde la configuración de SureRank usando el editor integrado."
-
-#: inc/api/analyzer.php:804
-msgid "SureRank automatically creates a working robots.txt file and lets you manage it directly within the plugin. This keeps your site clear for search engines and ensures important pages are always discoverable."
-msgstr "SureRank crea automáticamente un archivo robots.txt funcional y te permite gestionarlo directamente desde el plugin. Esto mantiene tu sitio claro para los motores de búsqueda y asegura que las páginas importantes siempre sean descubiertas."
-
-#: inc/api/analyzer.php:941
-msgid "Sitemap"
-msgstr "Mapa del sitio"
-
-#: inc/api/analyzer.php:937
-msgid "why this matters"
-msgstr "por qué esto importa"
-
-#: inc/api/analyzer.php:949
-msgid "Without a sitemap, search engines might overlook some pages or take longer to notice updates. This can slow down how quickly your new content appears in search results. A well-maintained sitemap gives search engines a clear overview of your site, helping your content get indexed faster and more accurately, which improves visibility."
-msgstr "Sin un mapa del sitio, los motores de búsqueda podrían pasar por alto algunas páginas o tardar más en notar actualizaciones. Esto puede ralentizar la aparición de tu nuevo contenido en los resultados de búsqueda. Un mapa del sitio bien mantenido da a los motores de búsqueda una visión clara de tu sitio, ayudando a que tu contenido se indexe más rápido y con mayor precisión, lo que mejora la visibilidad."
-
-#: inc/api/analyzer.php:956
-msgid "Make sure your sitemap is active and accessible by visiting yoursite.com/sitemap.xml."
-msgstr "Asegúrate de que tu mapa del sitio esté activo y accesible visitando yoursite.com/sitemap.xml."
-
-#: inc/api/analyzer.php:957
-msgid "Even if it looks technical, having a list of your pages means search engines know where to go."
-msgstr "Incluso si parece técnico, tener una lista de tus páginas significa que los motores de búsqueda saben a dónde ir."
-
-#: inc/api/analyzer.php:958
-msgid "Keep the sitemap up to date whenever you add new pages or make major changes"
-msgstr "Mantén el mapa del sitio actualizado cada vez que agregues nuevas páginas o hagas cambios importantes"
-
-#: inc/api/analyzer.php:959
-msgid "Use the built-in sitemap management in SureRank to create and maintain it automatically."
-msgstr "Usa la gestión de mapas del sitio integrada en SureRank para crear y mantenerlo automáticamente."
-
-#: inc/api/analyzer.php:969
-msgid "If you add a new blog post but don’t have a sitemap, search engines might take longer to find it. With a sitemap, your new post appears in search results more quickly, helping readers discover your content sooner."
-msgstr "Si agregas una nueva publicación en el blog pero no tienes un mapa del sitio, los motores de búsqueda podrían tardar más en encontrarla. Con un mapa del sitio, tu nueva publicación aparece en los resultados de búsqueda más rápidamente, ayudando a los lectores a descubrir tu contenido antes."
-
-#: inc/api/analyzer.php:972
-msgid "You can manage and update your sitemap directly from the SureRank settings using the built-in sitemap tool."
-msgstr "Puedes gestionar y actualizar tu mapa del sitio directamente desde la configuración de SureRank usando la herramienta de mapa del sitio incorporada."
-
-#: inc/api/analyzer.php:975
-msgid "SureRank automatically generates and updates your sitemap, so search engines always have a clear path to your important content. This keeps your site organized and ensures nothing valuable gets overlooked, without requiring extra work from you."
-msgstr "SureRank genera y actualiza automáticamente tu mapa del sitio, para que los motores de búsqueda siempre tengan un camino claro hacia tu contenido importante. Esto mantiene tu sitio organizado y asegura que nada valioso se pase por alto, sin requerir trabajo adicional de tu parte."
-
-#: inc/api/analyzer.php:2001
-#: inc/api/analyzer.php:2035
+#: inc/api/analyzer.php:1957
+#: inc/api/analyzer.php:1991
 msgid "No cached checks found."
 msgstr "No se encontraron verificaciones en caché."
 
@@ -7768,18 +7464,22 @@ msgstr "Configura qué tipos de publicaciones y estados incluir"
 msgid "Link Suggestions"
 msgstr "Sugerencias de enlaces"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Failed to get authentication URL"
 msgstr "Error al obtener la URL de autenticación"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "An error occurred while connecting"
 msgstr "Ocurrió un error al conectar"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Improve with AI"
 msgstr "Mejorar con IA"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Improving…"
 msgstr "Mejorando…"
@@ -7856,26 +7556,32 @@ msgstr "Esto es lo que SureRank AI puede hacer:"
 msgid "List of AI capabilities"
 msgstr "Lista de capacidades de IA"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Please add at least 5 words to your description before improving."
 msgstr "Por favor, añade al menos 5 palabras a tu descripción antes de mejorar."
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Description improved successfully!"
 msgstr "¡Descripción mejorada con éxito!"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Failed to improve description. Please try again."
 msgstr "No se pudo mejorar la descripción. Por favor, inténtalo de nuevo."
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Minimum word count required"
 msgstr "Se requiere un número mínimo de palabras"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Connect with AI to improve this"
 msgstr "Conéctate con la IA para mejorar esto"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "To generate better content with AI, you'll need to connect your AI provider first. It only takes a minute and unlocks all AI-powered features."
 msgstr "Para generar mejor contenido con IA, primero necesitarás conectar tu proveedor de IA. Solo toma un minuto y desbloquea todas las funciones impulsadas por IA."
@@ -7928,814 +7634,20 @@ msgstr "Aumenta el tráfico de tu sitio web con SureRank: un plugin de herramien
 msgid "- No Change -"
 msgstr "- Sin cambios -"
 
-#: inc/analyzer/seo-analyzer.php:132
+#: inc/analyzer/seo-analyzer.php:208
+#: inc/analyzer/seo-analyzer.php:240
 msgid "Homepage SEO Title"
 msgstr "Título SEO de la página de inicio"
 
-#: inc/analyzer/seo-analyzer.php:134
-msgid "Your homepage SEO title is one of the most important signals you share with search engines and visitors. It becomes the main clickable headline that appears in search results, almost like your site's introduction card to the world. A clear and thoughtful title helps people understand what your site is about before they visit, and gives search engines a strong sense of how to categorize your homepage."
-msgstr "El título SEO de tu página de inicio es una de las señales más importantes que compartes con los motores de búsqueda y los visitantes. Se convierte en el principal encabezado clicable que aparece en los resultados de búsqueda, casi como la tarjeta de presentación de tu sitio ante el mundo. Un título claro y reflexivo ayuda a las personas a entender de qué trata tu sitio antes de visitarlo y le da a los motores de búsqueda una fuerte sensación de cómo categorizar tu página de inicio."
-
-#: inc/analyzer/seo-analyzer.php:144
-msgid "Your homepage title shapes the first impression your site makes in search results. Search engines use it to understand what your homepage represents, and visitors rely on it to decide whether your site matches what they're looking for."
-msgstr "El título de tu página de inicio da forma a la primera impresión que tu sitio causa en los resultados de búsqueda. Los motores de búsqueda lo utilizan para entender lo que representa tu página de inicio, y los visitantes confían en él para decidir si tu sitio coincide con lo que están buscando."
-
-#: inc/analyzer/seo-analyzer.php:145
-msgid "If the title is missing, unclear, or too long to display fully, your site may not stand out the way it should. A meaningful title makes your listing easier to read, more relevant, and more inviting."
-msgstr "Si el título falta, es poco claro o demasiado largo para mostrarse completamente, tu sitio puede no destacar como debería. Un título significativo hace que tu listado sea más fácil de leer, más relevante y más atractivo."
-
-#: inc/analyzer/seo-analyzer.php:146
-msgid "A good homepage title also helps set expectations. It tells visitors who you are and what you offer in just a few words, helping your site feel more familiar and approachable before they even arrive."
-msgstr "Un buen título de página de inicio también ayuda a establecer expectativas. Le dice a los visitantes quién eres y qué ofreces en solo unas pocas palabras, ayudando a que tu sitio se sienta más familiar y accesible antes de que incluso lleguen."
-
-#: inc/analyzer/seo-analyzer.php:154
-msgid "Start with your site or brand name so visitors immediately know who you are."
-msgstr "Comienza con el nombre de tu sitio o marca para que los visitantes sepan de inmediato quién eres."
-
-#: inc/analyzer/seo-analyzer.php:155
-msgid "Add a short, descriptive phrase that explains what your site offers and who it's for."
-msgstr "Agrega una frase corta y descriptiva que explique lo que ofrece tu sitio y para quién es."
-
-#: inc/analyzer/seo-analyzer.php:156
-msgid "Keep the title under 60 characters so it displays cleanly in search results."
-msgstr "Mantén el título por debajo de 60 caracteres para que se muestre de manera clara en los resultados de búsqueda."
-
-#: inc/analyzer/seo-analyzer.php:157
-msgid "Use clear, friendly language that matches the tone of your site."
-msgstr "Utiliza un lenguaje claro y amigable que coincida con el tono de tu sitio."
-
-#: inc/analyzer/seo-analyzer.php:158
-msgid "Write with real people in mind since this is often their first interaction with your content."
-msgstr "Escribe pensando en personas reales, ya que esta suele ser su primera interacción con tu contenido."
-
-#: inc/analyzer/seo-analyzer.php:166
-msgid "Bright Bakes – Easy Baking Recipes for Everyone"
-msgstr "Bright Bakes – Recetas de repostería fáciles para todos"
-
-#: inc/analyzer/seo-analyzer.php:167
-msgid "This simple title explains the brand, the purpose and the value in one quick line."
-msgstr "Este título simple explica la marca, el propósito y el valor en una línea rápida."
-
-#: inc/analyzer/seo-analyzer.php:177
-msgid "Where you edit your homepage title depends on how your homepage is set up in WordPress."
-msgstr "Dónde editas el título de tu página de inicio depende de cómo esté configurada tu página de inicio en WordPress."
-
-#. translators: %s is the URL of the homepage settings page
-#: inc/analyzer/seo-analyzer.php:180
-#, php-format
-msgid "You can <a href=\"%s\">edit that page directly</a> and update the title from the Surerank Meta Box or page settings."
-msgstr "Puedes <a href=\"%s\">editar esa página directamente</a> y actualizar el título desde el cuadro de meta de Surerank o la configuración de la página."
-
-#: inc/analyzer/seo-analyzer.php:188
-msgid "SureRank SEO Analysis checks whether your homepage has an SEO title and highlights when one is missing. This gives you a clear reminder to set a meaningful, human-friendly title that helps search engines understand your page and gives visitors a confident first impression."
-msgstr "El análisis SEO de SureRank verifica si tu página de inicio tiene un título SEO y destaca cuando falta uno. Esto te da un recordatorio claro para establecer un título significativo y amigable para los humanos que ayuda a los motores de búsqueda a entender tu página y le da a los visitantes una primera impresión confiada."
-
-#: inc/analyzer/seo-analyzer.php:240
+#: inc/analyzer/seo-analyzer.php:251
 msgid "Homepage SEO Description"
 msgstr "Descripción SEO de la página de inicio"
 
-#: inc/analyzer/seo-analyzer.php:242
-msgid "Your homepage description is the short text that appears below your title in search results. It acts like a quick summary that helps people understand what your site offers. Think of it as a one sentence pitch that gives visitors a clear idea of what to expect and why your site is worth opening."
-msgstr "La descripción de tu página de inicio es el texto corto que aparece debajo de tu título en los resultados de búsqueda. Actúa como un resumen rápido que ayuda a las personas a entender lo que ofrece tu sitio. Piénsalo como una presentación de una frase que da a los visitantes una idea clara de qué esperar y por qué vale la pena abrir tu sitio."
-
-#: inc/analyzer/seo-analyzer.php:252
-msgid "A strong description helps search engines understand your homepage and gives visitors helpful context before they decide to explore your site."
-msgstr "Una descripción sólida ayuda a los motores de búsqueda a entender tu página de inicio y proporciona a los visitantes un contexto útil antes de decidir explorar tu sitio."
-
-#: inc/analyzer/seo-analyzer.php:253
-msgid "When the description is missing, too long, or unclear, your search result may feel incomplete or get cut off, which can make it less appealing. A well written description improves how your listing looks and can directly influence how many people choose to visit your site."
-msgstr "Cuando falta la descripción, es demasiado larga o poco clara, tu resultado de búsqueda puede parecer incompleto o cortarse, lo que puede hacerlo menos atractivo. Una descripción bien escrita mejora la apariencia de tu listado y puede influir directamente en cuántas personas eligen visitar tu sitio."
-
-#: inc/analyzer/seo-analyzer.php:254
-msgid "Keeping the description between 150 to 160 characters works best. This gives you enough space to say something meaningful while staying short enough to show fully in search results."
-msgstr "Mantener la descripción entre 150 y 160 caracteres funciona mejor. Esto te da suficiente espacio para decir algo significativo mientras te mantienes lo suficientemente corto como para mostrarse completamente en los resultados de búsqueda."
-
-#: inc/analyzer/seo-analyzer.php:262
-msgid "Describe your site the way you would to someone who has never visited it before."
-msgstr "Describe tu sitio como lo harías con alguien que nunca lo ha visitado antes."
-
-#: inc/analyzer/seo-analyzer.php:263
-msgid "Focus on what your site offers and who it is for."
-msgstr "Enfócate en lo que ofrece tu sitio y a quién está dirigido."
-
-#: inc/analyzer/seo-analyzer.php:264
-msgid "Keep it short, specific and friendly."
-msgstr "Mantenlo corto, específico y amigable."
-
-#: inc/analyzer/seo-analyzer.php:265
-msgid "Avoid long phrases that might get cut off in search results."
-msgstr "Evita frases largas que puedan cortarse en los resultados de búsqueda."
-
-#: inc/analyzer/seo-analyzer.php:273
-msgid "Discover simple, healthy meals you can cook at home, even if you're short on time."
-msgstr "Descubre comidas simples y saludables que puedes cocinar en casa, incluso si tienes poco tiempo."
-
-#: inc/analyzer/seo-analyzer.php:283
-msgid "Where you edit your homepage description depends on how your homepage is set up."
-msgstr "Dónde editas la descripción de tu página de inicio depende de cómo esté configurada tu página de inicio."
-
-#. translators: %s is the URL of the homepage settings page
-#: inc/analyzer/seo-analyzer.php:286
-#, php-format
-msgid "You can <a href=\"%s\">edit that page directly</a> to update the description."
-msgstr "Puedes <a href=\"%s\">editar esa página directamente</a> para actualizar la descripción."
-
-#: inc/analyzer/seo-analyzer.php:294
-msgid "SureRank SEO Analysis checks whether your homepage description is present and the right length. It highlights when the description is missing or too long, giving you a clear reminder to keep it readable, helpful, and easy for both visitors and search engines to understand."
-msgstr "SureRank SEO Analysis verifica si la descripción de tu página de inicio está presente y tiene la longitud adecuada. Destaca cuando falta la descripción o es demasiado larga, dándote un recordatorio claro para mantenerla legible, útil y fácil de entender tanto para los visitantes como para los motores de búsqueda."
-
-#: inc/analyzer/seo-analyzer.php:350
-msgid "Homepage H1 Heading"
-msgstr "Encabezado H1 de la página de inicio"
-
-#: inc/analyzer/seo-analyzer.php:357
-msgid "The H1 heading is the main title that appears on your homepage. It is often the first piece of text visitors notice, and it helps search engines understand what the page represents. Think of it as the cover of a book that tells people exactly what they have opened."
-msgstr "El encabezado H1 es el título principal que aparece en tu página de inicio. A menudo es la primera pieza de texto que los visitantes notan y ayuda a los motores de búsqueda a entender lo que representa la página. Piénsalo como la portada de un libro que le dice a la gente exactamente qué han abierto."
-
-#: inc/analyzer/seo-analyzer.php:363
-msgid "Search engines rely on the H1 to understand the primary topic of the page. Visitors use it to quickly confirm they are in the right place. If the H1 is missing, unclear, or repeated several times, your homepage can feel confusing or unfinished."
-msgstr "Los motores de búsqueda dependen del H1 para entender el tema principal de la página. Los visitantes lo utilizan para confirmar rápidamente que están en el lugar correcto. Si falta el H1, es poco claro o se repite varias veces, tu página de inicio puede parecer confusa o incompleta."
-
-#: inc/analyzer/seo-analyzer.php:364
-msgid "Having one clear H1 gives your page structure, makes your message easier to understand, and improves how search engines interpret your content."
-msgstr "Tener un H1 claro le da estructura a su página, hace que su mensaje sea más fácil de entender y mejora la forma en que los motores de búsqueda interpretan su contenido."
-
-#: inc/analyzer/seo-analyzer.php:365
-msgid "Keeping a single H1 on each page also helps establish a clean hierarchy. It shows what the page is mainly about, while other headings can support the content without competing with the primary message."
-msgstr "Mantener un solo H1 en cada página también ayuda a establecer una jerarquía clara. Muestra de qué trata principalmente la página, mientras que otros encabezados pueden apoyar el contenido sin competir con el mensaje principal."
-
-#: inc/analyzer/seo-analyzer.php:373
-msgid "Use one H1 heading on your homepage and make sure it is the main title."
-msgstr "Utilice un encabezado H1 en su página de inicio y asegúrese de que sea el título principal."
-
-#: inc/analyzer/seo-analyzer.php:374
-msgid "Write it clearly so visitors immediately know what your site offers."
-msgstr "Escríbalo claramente para que los visitantes sepan de inmediato qué ofrece su sitio."
-
-#: inc/analyzer/seo-analyzer.php:375
-msgid "Avoid generic phrases that do not communicate your purpose."
-msgstr "Evite frases genéricas que no comuniquen su propósito."
-
-#: inc/analyzer/seo-analyzer.php:376
-msgid "Keep it short and focused so it feels natural and easy to read."
-msgstr "Mantenlo corto y enfocado para que se sienta natural y fácil de leer."
-
-#: inc/analyzer/seo-analyzer.php:390
-msgid "Helping You Learn to Code from Scratch"
-msgstr "Ayudándote a aprender a programar desde cero"
-
-#: inc/analyzer/seo-analyzer.php:391
-msgid "Creative Interior Design for Modern Spaces"
-msgstr "Diseño interior creativo para espacios modernos"
-
-#: inc/analyzer/seo-analyzer.php:397
-msgid "Where you add or edit your H1 depends on how your homepage is set up."
-msgstr "Dónde agregue o edite su H1 depende de cómo esté configurada su página de inicio."
-
-#. translators: %s is the URL of the homepage settings page
-#: inc/analyzer/seo-analyzer.php:400
-#, php-format
-msgid "You can <a href=\"%s\">edit that page directly</a> to update the H1 heading."
-msgstr "Puede <a href=\"%s\">editar esa página directamente</a> para actualizar el encabezado H1."
-
-#: inc/analyzer/seo-analyzer.php:408
-msgid "SureRank SEO Analysis checks whether your homepage has a proper H1 heading and alerts you when it is missing. This gives you a simple reminder to create a clear, helpful title that improves your page structure for visitors and search engines."
-msgstr "SureRank SEO Analysis verifica si su página de inicio tiene un encabezado H1 adecuado y le alerta cuando falta. Esto le da un recordatorio simple para crear un título claro y útil que mejore la estructura de su página para los visitantes y los motores de búsqueda."
-
-#: inc/analyzer/seo-analyzer.php:441
-msgid "Homepage H2 Headings"
-msgstr "Encabezados H2 de la página de inicio"
-
-#: inc/analyzer/seo-analyzer.php:450
-msgid "H2 headings act like section titles that break your homepage into clear, readable parts. They help visitors understand what each section is about without having to read everything line by line. Think of them as signposts that guide people as they scroll, making it easier to spot what matters most."
-msgstr "Los encabezados H2 actúan como títulos de sección que dividen su página de inicio en partes claras y legibles. Ayudan a los visitantes a entender de qué trata cada sección sin tener que leer todo línea por línea. Piense en ellos como señales que guían a las personas mientras se desplazan, facilitando la identificación de lo que más importa."
-
-#: inc/analyzer/seo-analyzer.php:451
-msgid "Search engines also pay attention to these subheadings. They use H2s to understand how your page is structured and what each section focuses on. Clear H2 headings help both visitors and search engines follow your content more naturally."
-msgstr "Los motores de búsqueda también prestan atención a estos subtítulos. Utilizan los H2 para entender cómo está estructurada su página y en qué se centra cada sección. Encabezados H2 claros ayudan tanto a los visitantes como a los motores de búsqueda a seguir su contenido de manera más natural."
-
-#: inc/analyzer/seo-analyzer.php:455
-#: inc/analyzer/seo-analyzer.php:1257
-msgid "💡 Why it matters"
-msgstr "💡 Por qué es importante"
-
-#: inc/analyzer/seo-analyzer.php:464
-msgid "Most people scan a homepage before they read it. Without H2 headings, your content can feel flat or overwhelming, even if the information is good. Well-placed H2s make your homepage easier to scan, easier to understand, and more inviting to explore."
-msgstr "La mayoría de las personas escanean una página de inicio antes de leerla. Sin encabezados H2, su contenido puede parecer plano o abrumador, incluso si la información es buena. Los H2 bien colocados hacen que su página de inicio sea más fácil de escanear, más fácil de entender y más atractiva para explorar."
-
-#: inc/analyzer/seo-analyzer.php:465
-msgid "From a search perspective, H2 headings give structure to your page. They help search engines understand the different topics covered on your homepage, which improves clarity and supports better visibility."
-msgstr "Desde una perspectiva de búsqueda, los encabezados H2 dan estructura a su página. Ayudan a los motores de búsqueda a entender los diferentes temas cubiertos en su página de inicio, lo que mejora la claridad y apoya una mejor visibilidad."
-
-#: inc/analyzer/seo-analyzer.php:469
-#: inc/analyzer/seo-analyzer.php:1055
-#: inc/analyzer/seo-analyzer.php:1169
-#: inc/analyzer/seo-analyzer.php:1264
-#: inc/api/analyzer.php:474
-#: inc/api/analyzer.php:691
-#: inc/api/analyzer.php:856
-msgid "✅ How to keep things smooth"
-msgstr "✅ Cómo mantener las cosas fluidas"
-
-#: inc/analyzer/seo-analyzer.php:473
-msgid "Add at least one H2 heading to your homepage to introduce a section."
-msgstr "Agrega al menos un encabezado H2 a tu página de inicio para introducir una sección."
-
-#: inc/analyzer/seo-analyzer.php:474
-msgid "Use H2s to separate key parts like services, features, or values."
-msgstr "Usa H2 para separar partes clave como servicios, características o valores."
-
-#: inc/analyzer/seo-analyzer.php:475
-msgid "Keep each heading short and clear so it is easy to scan."
-msgstr "Mantén cada encabezado corto y claro para que sea fácil de escanear."
-
-#: inc/analyzer/seo-analyzer.php:476
-msgid "Make sure each H2 matches the content that follows it."
-msgstr "Asegúrate de que cada H2 coincida con el contenido que le sigue."
-
-#: inc/analyzer/seo-analyzer.php:482
-#: inc/analyzer/seo-analyzer.php:1068
-#: inc/analyzer/seo-analyzer.php:1181
-#: inc/analyzer/seo-analyzer.php:1277
-#: inc/api/analyzer.php:487
-#: inc/api/analyzer.php:704
-#: inc/api/analyzer.php:869
-msgid "🚀 Example"
-msgstr "🚀 Ejemplo"
-
-#: inc/analyzer/seo-analyzer.php:491
-msgid "Each of these helps visitors understand the section before reading the details."
-msgstr "Cada uno de estos ayuda a los visitantes a entender la sección antes de leer los detalles."
-
-#: inc/analyzer/seo-analyzer.php:495
-#: inc/analyzer/seo-analyzer.php:1074
-#: inc/analyzer/seo-analyzer.php:1194
-#: inc/analyzer/seo-analyzer.php:1283
-#: inc/api/analyzer.php:493
-#: inc/api/analyzer.php:715
-#: inc/api/analyzer.php:875
-msgid "🔧 Where to update it"
-msgstr "🔧 Dónde actualizarlo"
-
-#: inc/analyzer/seo-analyzer.php:497
-msgid "Edit your homepage and look for natural section breaks where a heading makes sense. If your homepage shows your latest posts, you can add H2 headings through your homepage layout or content blocks."
-msgstr "Edita tu página de inicio y busca pausas naturales en la sección donde un encabezado tenga sentido. Si tu página de inicio muestra tus publicaciones más recientes, puedes agregar encabezados H2 a través del diseño de tu página de inicio o bloques de contenido."
-
-#: inc/analyzer/seo-analyzer.php:501
-#: inc/analyzer/seo-analyzer.php:1086
-#: inc/analyzer/seo-analyzer.php:1208
-#: inc/analyzer/seo-analyzer.php:1289
-#: inc/api/analyzer.php:509
-#: inc/api/analyzer.php:731
-#: inc/api/analyzer.php:891
-msgid "🌟 How SureRank helps"
-msgstr "🌟 Cómo SureRank ayuda"
-
-#: inc/analyzer/seo-analyzer.php:503
-msgid "SureRank SEO Analysis checks whether your homepage includes at least one H2 heading. When none are found, it gently highlights this so you can add simple section headings for better readability for visitors and clarity for search engines."
-msgstr "SureRank SEO Analysis verifica si tu página de inicio incluye al menos un encabezado H2. Cuando no se encuentran, lo resalta suavemente para que puedas agregar encabezados de sección simples para una mejor legibilidad para los visitantes y claridad para los motores de búsqueda."
-
-#: inc/analyzer/seo-analyzer.php:592
-msgid "Homepage Internal Links"
-msgstr "Enlaces internos de la página de inicio"
-
-#: inc/analyzer/seo-analyzer.php:599
-msgid "Your homepage is often the first place visitors arrive so should help them move easily to the most important parts of your site. Internal links act like gentle signposts that guide people toward key pages, whether that's your services, blog, or contact page. They also help search engines understand how your site is organized."
-msgstr "Tu página de inicio es a menudo el primer lugar al que llegan los visitantes, por lo que debe ayudarles a moverse fácilmente a las partes más importantes de tu sitio. Los enlaces internos actúan como suaves señales que guían a las personas hacia páginas clave, ya sea tus servicios, blog o página de contacto. También ayudan a los motores de búsqueda a entender cómo está organizado tu sitio."
-
-#: inc/analyzer/seo-analyzer.php:605
-msgid "A homepage without internal links can feel like a dead end. Visitors may not know where to go next, and search engines may struggle to understand which pages matter most. When your homepage includes clear links to important sections, it guides visitors to take action and helps your site perform better in search."
-msgstr "Una página de inicio sin enlaces internos puede sentirse como un callejón sin salida. Los visitantes pueden no saber a dónde ir a continuación, y los motores de búsqueda pueden tener dificultades para entender qué páginas son las más importantes. Cuando tu página de inicio incluye enlaces claros a secciones importantes, guía a los visitantes a tomar acción y ayuda a que tu sitio tenga un mejor rendimiento en la búsqueda."
-
-#: inc/analyzer/seo-analyzer.php:613
-msgid "Add links to your about page, product or service pages, blog posts, or contact page."
-msgstr "Agrega enlaces a tu página \"Acerca de\", páginas de productos o servicios, publicaciones de blog o página de contacto."
-
-#: inc/analyzer/seo-analyzer.php:614
-msgid "Use buttons, menus, or simple text links, whichever feels most natural."
-msgstr "Usa botones, menús o enlaces de texto simples, lo que te parezca más natural."
-
-#: inc/analyzer/seo-analyzer.php:615
-msgid "Choose links that help visitors understand what to do next."
-msgstr "Elige enlaces que ayuden a los visitantes a entender qué hacer a continuación."
-
-#: inc/analyzer/seo-analyzer.php:616
-msgid "Keep links easy to spot so people don't miss them."
-msgstr "Mantén los enlaces fáciles de detectar para que las personas no los pasen por alto."
-
-#: inc/analyzer/seo-analyzer.php:630
-msgid "A short welcome section on your homepage might end with a button leading to your services page and another pointing to your latest blog post. This gives visitors clear next steps and helps search engines see those pages as important."
-msgstr "Una breve sección de bienvenida en tu página de inicio podría terminar con un botón que dirija a tu página de servicios y otro que apunte a tu publicación de blog más reciente. Esto brinda a los visitantes pasos claros a seguir y ayuda a los motores de búsqueda a ver esas páginas como importantes."
-
-#: inc/analyzer/seo-analyzer.php:636
-msgid "Edit your homepage and look for natural places to add links, such as under introductions, inside feature blocks, or near calls to action."
-msgstr "Edita tu página de inicio y busca lugares naturales para agregar enlaces, como debajo de introducciones, dentro de bloques de características o cerca de llamadas a la acción."
-
-#: inc/analyzer/seo-analyzer.php:642
-msgid "SureRank checks whether your homepage includes helpful internal links and highlights it when none are found. This gives you a simple reminder to guide visitors forward and strengthen your site's structure without needing to think about technical SEO."
-msgstr "SureRank verifica si tu página de inicio incluye enlaces internos útiles y lo resalta cuando no se encuentran. Esto te da un recordatorio simple para guiar a los visitantes hacia adelante y fortalecer la estructura de tu sitio sin necesidad de pensar en SEO técnico."
-
-#: inc/analyzer/seo-analyzer.php:695
-msgid "Homepage Canonical Tag"
-msgstr "Etiqueta canónica de la página de inicio"
-
-#: inc/analyzer/seo-analyzer.php:697
-msgid "Your homepage can sometimes be reached through more than one URL, even if the page looks exactly the same. This can happen with or without a trailing slash, or when links add extra parameters. A canonical tag tells search engines which version of your homepage should be treated as the main one. It works like gently pointing to the correct doorway and saying, \"This is the page to follow.\""
-msgstr "Tu página de inicio a veces puede ser accesible a través de más de una URL, incluso si la página se ve exactamente igual. Esto puede suceder con o sin una barra diagonal al final, o cuando los enlaces añaden parámetros adicionales. Una etiqueta canónica le dice a los motores de búsqueda qué versión de tu página de inicio debe ser tratada como la principal. Funciona como señalar suavemente la puerta correcta y decir: \"Esta es la página a seguir.\""
-
-#: inc/analyzer/seo-analyzer.php:703
-msgid "If search engines find several versions of your homepage, they may treat them as separate pages. This can split your ranking strength across multiple URLs and make your homepage look less important than it really is. A clear canonical tag keeps everything focused, helping search engines understand which version should receive full credit."
-msgstr "Si los motores de búsqueda encuentran varias versiones de tu página de inicio, pueden tratarlas como páginas separadas. Esto puede dividir tu fuerza de clasificación entre múltiples URLs y hacer que tu página de inicio parezca menos importante de lo que realmente es. Una etiqueta canónica clara mantiene todo enfocado, ayudando a los motores de búsqueda a entender qué versión debe recibir el crédito completo."
-
-#: inc/analyzer/seo-analyzer.php:717
-msgid "Choose one preferred homepage URL, such as https://example.com/."
-msgstr "Elige una URL de página de inicio preferida, como https://example.com/."
-
-#: inc/analyzer/seo-analyzer.php:718
-msgid "Set a canonical tag that points to that exact URL."
-msgstr "Establece una etiqueta canónica que apunte a esa URL exacta."
-
-#: inc/analyzer/seo-analyzer.php:719
-msgid "Keep the canonical link consistent so search engines aren't confused."
-msgstr "Mantén el enlace canónico consistente para que los motores de búsqueda no se confundan."
-
-#: inc/analyzer/seo-analyzer.php:720
-msgid "Avoid sharing alternate homepage URLs with extra parameters when possible."
-msgstr "Evita compartir URLs alternativas de la página de inicio con parámetros adicionales cuando sea posible."
-
-#: inc/analyzer/seo-analyzer.php:728
-msgid "If your homepage loads at both https://example.com and https://example.com/?ref=newsletter, a canonical tag ensures search engines treat https://example.com as the main version."
-msgstr "Si tu página de inicio se carga tanto en https://example.com como en https://example.com/?ref=newsletter, una etiqueta canónica asegura que los motores de búsqueda traten https://example.com como la versión principal."
-
-#: inc/analyzer/seo-analyzer.php:734
-msgid "You can set your canonical tag directly from the SureRank Meta Box by opening the Advanced tab and filling in the Canonical Tag field."
-msgstr "Puedes establecer tu etiqueta canónica directamente desde el cuadro de meta de SureRank abriendo la pestaña Avanzado y completando el campo de etiqueta canónica."
-
-#: inc/analyzer/seo-analyzer.php:746
-msgid "SureRank SEO Analysis checks whether your homepage has a canonical tag and lets you know when one is missing. This gives you a clear, simple reminder to keep your homepage focused on a single, clean URL that search engines can trust."
-msgstr "El análisis SEO de SureRank verifica si tu página de inicio tiene una etiqueta canónica y te avisa cuando falta una. Esto te da un recordatorio claro y simple para mantener tu página de inicio enfocada en una única URL limpia en la que los motores de búsqueda puedan confiar."
-
-#: inc/analyzer/seo-analyzer.php:780
-msgid "Homepage Indexing"
-msgstr "Indexación de la página de inicio"
-
-#: inc/analyzer/seo-analyzer.php:782
-msgid "For your site to appear in search results, your homepage needs to be indexable. Indexing means giving search engines permission to include your homepage in their listings so people can find it. If indexing is turned off, your homepage becomes invisible to search engines even if everything else on your site looks correct."
-msgstr "Para que tu sitio aparezca en los resultados de búsqueda, tu página de inicio necesita ser indexable. Indexar significa dar permiso a los motores de búsqueda para incluir tu página de inicio en sus listados para que las personas puedan encontrarla. Si la indexación está desactivada, tu página de inicio se vuelve invisible para los motores de búsqueda, incluso si todo lo demás en tu sitio parece correcto."
-
-#: inc/analyzer/seo-analyzer.php:792
-msgid "Your homepage is often the first place search engines and visitors try to reach. When indexing is blocked, search engines cannot list your homepage at all. This can make your entire site harder to discover, especially for people searching for your brand or business by name."
-msgstr "Tu página de inicio es a menudo el primer lugar al que los motores de búsqueda y los visitantes intentan acceder. Cuando el indexado está bloqueado, los motores de búsqueda no pueden listar tu página de inicio en absoluto. Esto puede hacer que todo tu sitio sea más difícil de descubrir, especialmente para las personas que buscan tu marca o negocio por nombre."
-
-#: inc/analyzer/seo-analyzer.php:793
-msgid "A homepage that is indexable gives search engines a clear invitation to include your site in search results."
-msgstr "Una página de inicio que es indexable le da a los motores de búsqueda una clara invitación para incluir tu sitio en los resultados de búsqueda."
-
-#: inc/analyzer/seo-analyzer.php:794
-msgid "Indexing issues can happen by accident during setup, theme changes, or plugin settings. It is important to check that your homepage is allowed to be indexed so nothing holds back your visibility."
-msgstr "Los problemas de indexación pueden ocurrir accidentalmente durante la configuración, cambios de tema o ajustes de plugins. Es importante verificar que tu página de inicio esté permitida para ser indexada para que nada limite tu visibilidad."
-
-#: inc/analyzer/seo-analyzer.php:802
-msgid "Make sure your homepage is set to allow indexing in your SEO settings."
-msgstr "Asegúrate de que tu página de inicio esté configurada para permitir la indexación en tus ajustes de SEO."
-
-#: inc/analyzer/seo-analyzer.php:803
-msgid "Review your global visibility settings to confirm nothing is blocking your site."
-msgstr "Revisa tus ajustes de visibilidad global para confirmar que nada esté bloqueando tu sitio."
-
-#: inc/analyzer/seo-analyzer.php:804
-msgid "Check the Advanced section inside your SureRank Meta Box to ensure indexing is enabled."
-msgstr "Verifica la sección Avanzada dentro de tu Caja Meta SureRank para asegurarte de que la indexación esté habilitada."
-
-#: inc/analyzer/seo-analyzer.php:805
-msgid "After updating your settings, open your homepage and confirm it loads normally."
-msgstr "Después de actualizar tus ajustes, abre tu página de inicio y confirma que se carga normalmente."
-
-#: inc/analyzer/seo-analyzer.php:813
-msgid "If indexing was turned off while your site was being built, your homepage may never appear in search results after launch. Enabling indexing allows search engines to include it again."
-msgstr "Si la indexación se desactivó mientras se construía tu sitio, es posible que tu página de inicio nunca aparezca en los resultados de búsqueda después del lanzamiento. Habilitar la indexación permite que los motores de búsqueda la incluyan nuevamente."
-
-#: inc/analyzer/seo-analyzer.php:825
-msgid "You can check and update your homepage indexing preferences from the Advanced settings inside the SureRank Meta Box. You can also review your global visibility settings in WordPress to make sure nothing is preventing your site from being indexed."
-msgstr "Puedes verificar y actualizar tus preferencias de indexación de la página de inicio desde los ajustes Avanzados dentro de la Caja Meta SureRank. También puedes revisar tus ajustes de visibilidad global en WordPress para asegurarte de que nada esté impidiendo que tu sitio sea indexado."
-
-#: inc/analyzer/seo-analyzer.php:831
-msgid "SureRank SEO Analysis checks whether your homepage is indexable and alerts you when it is blocked. This gives you a clear and simple reminder to allow indexing so search engines can include your site and help more people find what you offer."
-msgstr "El Análisis SEO de SureRank verifica si tu página de inicio es indexable y te alerta cuando está bloqueada. Esto te da un recordatorio claro y simple para permitir la indexación para que los motores de búsqueda puedan incluir tu sitio y ayudar a más personas a encontrar lo que ofreces."
-
-#: inc/analyzer/seo-analyzer.php:879
-msgid "Homepage Is Reachable"
-msgstr "La Página de Inicio es Accesible"
-
-#: inc/analyzer/seo-analyzer.php:886
-msgid "Your homepage is often the first page visitors see and the starting point search engines use to understand your site. If the homepage doesn't load or shows an error, both visitors and search engines may have trouble reaching your content."
-msgstr "Tu página de inicio es a menudo la primera página que los visitantes ven y el punto de partida que los motores de búsqueda utilizan para entender tu sitio. Si la página de inicio no se carga o muestra un error, tanto los visitantes como los motores de búsqueda pueden tener problemas para acceder a tu contenido."
-
-#: inc/analyzer/seo-analyzer.php:892
-msgid "When your homepage isn't reachable, it affects more than just one page. Search engines may not be able to crawl or index your site properly and visitors may leave before seeing anything else. A working homepage sets the tone for your entire site and makes sure people and search engines can explore it without problems."
-msgstr "Cuando tu página de inicio no es accesible, afecta más que solo una página. Los motores de búsqueda pueden no ser capaces de rastrear o indexar tu sitio correctamente y los visitantes pueden irse antes de ver algo más. Una página de inicio funcional establece el tono para todo tu sitio y asegura que las personas y los motores de búsqueda puedan explorarlo sin problemas."
-
-#: inc/analyzer/seo-analyzer.php:900
-msgid "Open your homepage in a browser and make sure it loads without errors."
-msgstr "Abre tu página de inicio en un navegador y asegúrate de que se carga sin errores."
-
-#: inc/analyzer/seo-analyzer.php:901
-msgid "Confirm that the page is published and not set to private or draft."
-msgstr "Confirma que la página está publicada y no configurada como privada o borrador."
-
-#: inc/analyzer/seo-analyzer.php:902
-msgid "Check that no redirects or plugins are accidentally blocking access."
-msgstr "Verifica que no haya redireccionamientos o complementos que estén bloqueando el acceso accidentalmente."
-
-#: inc/analyzer/seo-analyzer.php:903
-msgid "Review your WordPress homepage settings to ensure the correct page is selected."
-msgstr "Revisa la configuración de tu página de inicio de WordPress para asegurarte de que se ha seleccionado la página correcta."
-
-#: inc/analyzer/seo-analyzer.php:916
-msgid "If your homepage was deleted or changed to draft by mistake, visitors may see a 404 page instead."
-msgstr "Si tu página de inicio fue eliminada o cambiada a borrador por error, los visitantes pueden ver una página 404 en su lugar."
-
-#: inc/analyzer/seo-analyzer.php:922
-msgid "In WordPress, go to Settings → Reading and make sure the correct homepage is selected. If you use a static homepage, confirm that the page still exists, is published and loads normally when opened directly."
-msgstr "En WordPress, ve a Configuración → Lectura y asegúrate de que se ha seleccionado la página de inicio correcta. Si usas una página de inicio estática, confirma que la página aún existe, está publicada y se carga normalmente cuando se abre directamente."
-
-#: inc/analyzer/seo-analyzer.php:928
-msgid "SureRank SEO Analysis checks whether your homepage is reachable and flags it when it isn’t. This gives you a clear reminder to fix any loading issues so both visitors and search engines can access your site without interruption."
-msgstr "SureRank SEO Analysis verifica si tu página de inicio es accesible y la marca cuando no lo es. Esto te da un recordatorio claro para solucionar cualquier problema de carga para que tanto los visitantes como los motores de búsqueda puedan acceder a tu sitio sin interrupciones."
-
-#: inc/analyzer/seo-analyzer.php:961
-msgid "Secure Connection (HTTPS)"
-msgstr "Conexión Segura (HTTPS)"
-
-#: inc/analyzer/seo-analyzer.php:968
-msgid "A secure connection means your website uses HTTPS, which is shown by the little padlock icon next to your site's address in a browser. It tells visitors and search engines that your site is safe and any information shared is protected."
-msgstr "Una conexión segura significa que tu sitio web utiliza HTTPS, lo cual se muestra con el pequeño ícono de candado junto a la dirección de tu sitio en un navegador. Informa a los visitantes y motores de búsqueda que tu sitio es seguro y que cualquier información compartida está protegida."
-
-#: inc/analyzer/seo-analyzer.php:972
-msgid "Why it matters"
-msgstr "Por qué es importante"
-
-#: inc/analyzer/seo-analyzer.php:974
-msgid "Security is important for every site, even if you don't collect sensitive information. HTTPS helps protect visitors, builds trust, and signals to search engines that your site is reliable. Modern browsers may also warn visitors when a site isn't secure, so using HTTPS keeps people confident in your site."
-msgstr "La seguridad es importante para cada sitio, incluso si no recopilas información sensible. HTTPS ayuda a proteger a los visitantes, genera confianza y señala a los motores de búsqueda que tu sitio es confiable. Los navegadores modernos también pueden advertir a los visitantes cuando un sitio no es seguro, por lo que usar HTTPS mantiene a las personas confiadas en tu sitio."
-
-#: inc/analyzer/seo-analyzer.php:982
-msgid "Check your site shows the padlock icon in the browser address bar."
-msgstr "Verifica que tu sitio muestre el ícono de candado en la barra de direcciones del navegador."
-
-#: inc/analyzer/seo-analyzer.php:983
-msgid "Make sure HTTPS is active by using an SSL certificate. Many hosting providers offer them for free."
-msgstr "Asegúrate de que HTTPS esté activo utilizando un certificado SSL. Muchos proveedores de alojamiento los ofrecen de forma gratuita."
-
-#: inc/analyzer/seo-analyzer.php:984
-msgid "Keep your certificate up to date so your connection remains secure."
-msgstr "Mantén tu certificado actualizado para que tu conexión siga siendo segura."
-
-#: inc/analyzer/seo-analyzer.php:997
-msgid "A visitor sees the padlock on your blog or store and feels confident browsing or signing up for your newsletter. Without HTTPS, the same visitor might get a warning and leave immediately."
-msgstr "Un visitante ve el candado en tu blog o tienda y se siente seguro navegando o registrándose para tu boletín. Sin HTTPS, el mismo visitante podría recibir una advertencia y salir inmediatamente."
-
-#: inc/analyzer/seo-analyzer.php:1003
-msgid "Most hosting dashboards include an option to enable SSL or HTTPS for your site. This is often found under sections like Security, SSL, or Domains."
-msgstr "La mayoría de los paneles de control de alojamiento incluyen una opción para habilitar SSL o HTTPS para tu sitio. Esto a menudo se encuentra en secciones como Seguridad, SSL o Dominios."
-
-#: inc/analyzer/seo-analyzer.php:1009
-msgid "SureRank confirms whether your site has HTTPS or not, so you can see the status clearly and see at a glance whether your connection is secure."
-msgstr "SureRank confirma si tu sitio tiene HTTPS o no, para que puedas ver el estado claramente y comprobar de un vistazo si tu conexión es segura."
-
-#: inc/analyzer/seo-analyzer.php:1037
+#: inc/analyzer/seo-analyzer.php:1054
 msgid "Homepage Open Graph Tags"
 msgstr "Etiquetas Open Graph de la página de inicio"
 
-#: inc/analyzer/seo-analyzer.php:1039
-msgid "When someone shares your site on social media or in a messaging app, the platform tries to show a preview with a title, description and image. Without Open Graph tags, they may pull random content or show no preview at all. Open Graph tags let you choose exactly what people see when your site is shared."
-msgstr "Cuando alguien comparte tu sitio en redes sociales o en una aplicación de mensajería, la plataforma intenta mostrar una vista previa con un título, descripción e imagen. Sin etiquetas Open Graph, pueden extraer contenido aleatorio o no mostrar ninguna vista previa. Las etiquetas Open Graph te permiten elegir exactamente lo que la gente ve cuando se comparte tu sitio."
-
-#: inc/analyzer/seo-analyzer.php:1043
-#: inc/analyzer/seo-analyzer.php:1157
-#: inc/api/analyzer.php:468
-#: inc/api/analyzer.php:679
-#: inc/api/analyzer.php:850
-msgid "💡 Why this matters:"
-msgstr "💡 Por qué esto es importante:"
-
-#: inc/analyzer/seo-analyzer.php:1045
-msgid "A clean and attractive preview helps your site look more trustworthy and encourages people to click. If the preview is missing or doesn't show the right information, it can be harder for visitors to engage with your content. Setting these tags helps your site look polished wherever it appears."
-msgstr "Una vista previa limpia y atractiva ayuda a que tu sitio parezca más confiable y anima a las personas a hacer clic. Si la vista previa falta o no muestra la información correcta, puede ser más difícil para los visitantes interactuar con tu contenido. Configurar estas etiquetas ayuda a que tu sitio se vea pulido dondequiera que aparezca."
-
-#: inc/analyzer/seo-analyzer.php:1059
-msgid "Add a short, clear title that matches what your site is about."
-msgstr "Agrega un título corto y claro que coincida con lo que trata tu sitio."
-
-#: inc/analyzer/seo-analyzer.php:1060
-msgid "Write a brief description that introduces your site in a friendly way."
-msgstr "Escribe una breve descripción que presente tu sitio de manera amigable."
-
-#: inc/analyzer/seo-analyzer.php:1061
-msgid "Choose an image that represents your brand or homepage well."
-msgstr "Elige una imagen que represente bien tu marca o la página de inicio."
-
-#: inc/analyzer/seo-analyzer.php:1062
-msgid "Keep all three elements simple so the preview feels inviting."
-msgstr "Mantén los tres elementos simples para que la vista previa se sienta acogedora."
-
-#: inc/analyzer/seo-analyzer.php:1070
-msgid "A homepage preview might show your site name, a short tagline and a clean image that reflects your brand or main topic."
-msgstr "Una vista previa de la página de inicio podría mostrar el nombre de tu sitio, un eslogan corto y una imagen limpia que refleje tu marca o tema principal."
-
-#: inc/analyzer/seo-analyzer.php:1076
-msgid "You can configure your homepage Open Graph settings from your Home Page Social settings or your global social settings, depending on how your homepage is set up."
-msgstr "Puedes configurar la configuración de Open Graph de tu página de inicio desde la configuración social de tu página de inicio o desde tu configuración social global, dependiendo de cómo esté configurada tu página de inicio."
-
-#: inc/analyzer/seo-analyzer.php:1088
-msgid "SureRank SEO Analysis checks whether your homepage has Open Graph tags and shows when they are missing. This gives you a simple reminder to set a clear title, description, and image so your homepage always looks good when shared."
-msgstr "SureRank SEO Analysis verifica si tu página de inicio tiene etiquetas Open Graph y muestra cuándo faltan. Esto te da un recordatorio simple para establecer un título, descripción e imagen claros para que tu página de inicio siempre se vea bien cuando se comparta."
-
-#: inc/analyzer/seo-analyzer.php:1151
-msgid "Homepage Schema Metadata"
-msgstr "Metadatos de esquema de la página de inicio"
-
-#: inc/analyzer/seo-analyzer.php:1153
-msgid "Schema works like a small cheat sheet your homepage shares with search engines. It quietly explains what type of page it is, such as a website homepage or a blog, so search engines can understand the content more clearly. This extra context helps them interpret your page better and can lead to richer details in search results."
-msgstr "El esquema funciona como una pequeña hoja de trucos que tu página de inicio comparte con los motores de búsqueda. Explica en silencio qué tipo de página es, como una página de inicio de un sitio web o un blog, para que los motores de búsqueda puedan entender el contenido más claramente. Este contexto adicional les ayuda a interpretar mejor tu página y puede llevar a detalles más ricos en los resultados de búsqueda."
-
-#: inc/analyzer/seo-analyzer.php:1159
-msgid "Search engines use signals beyond page text to understand your site. Schema provides those signals in a structured format. When your homepage includes the right schema, search results can show clearer details, like your site name or breadcrumb paths, before users click."
-msgstr "Los motores de búsqueda utilizan señales más allá del texto de la página para entender tu sitio. El esquema proporciona esas señales en un formato estructurado. Cuando tu página de inicio incluye el esquema correcto, los resultados de búsqueda pueden mostrar detalles más claros, como el nombre de tu sitio o rutas de migas de pan, antes de que los usuarios hagan clic."
-
-#: inc/analyzer/seo-analyzer.php:1173
-msgid "Ensure your homepage includes essential structured data like WebPage schema."
-msgstr "Asegúrate de que tu página de inicio incluya datos estructurados esenciales como el esquema WebPage."
-
-#: inc/analyzer/seo-analyzer.php:1174
-msgid "Keep the schema feature enabled so search engines always receive the right signals."
-msgstr "Mantén habilitada la función de esquema para que los motores de búsqueda siempre reciban las señales correctas."
-
-#: inc/analyzer/seo-analyzer.php:1175
-msgid "Confirm that the schema being applied matches what your homepage represents."
-msgstr "Confirma que el esquema que se está aplicando coincide con lo que representa tu página de inicio."
-
-#: inc/analyzer/seo-analyzer.php:1190
-msgid "A homepage using WebPage schema will show context such as your site name or breadcrumb information in search results, helping visitors understand your site before they click."
-msgstr "Una página de inicio que utiliza el esquema WebPage mostrará contexto como el nombre de tu sitio o información de migas de pan en los resultados de búsqueda, ayudando a los visitantes a entender tu sitio antes de hacer clic."
-
-#: inc/analyzer/seo-analyzer.php:1196
-msgid "Schema is generated automatically by SureRank when the feature is enabled. To verify that it's being applied correctly, you can:"
-msgstr "El esquema se genera automáticamente por SureRank cuando la función está habilitada. Para verificar que se está aplicando correctamente, puedes:"
-
-#: inc/analyzer/seo-analyzer.php:1199
-msgid "View the live page source and search for \"schema\" or \"application/ld+json.\""
-msgstr "Ver el código fuente de la página en vivo y buscar \"schema\" o \"application/ld+json\"."
-
-#: inc/analyzer/seo-analyzer.php:1200
-msgid "Use a schema validation tool to check what search engines can read."
-msgstr "Usar una herramienta de validación de esquema para comprobar qué pueden leer los motores de búsqueda."
-
-#: inc/analyzer/seo-analyzer.php:1201
-msgid "Use the Schema Builder to see the schema SureRank prepares, then confirm it appears on the live page."
-msgstr "Usar el Constructor de Esquemas para ver el esquema que prepara SureRank, luego confirmar que aparece en la página en vivo."
-
-#: inc/analyzer/seo-analyzer.php:1204
-msgid "This helps you understand what should be output, but the live page check is the real confirmation."
-msgstr "Esto te ayuda a entender qué debería ser la salida, pero la verificación de la página en vivo es la verdadera confirmación."
-
-#: inc/analyzer/seo-analyzer.php:1210
-msgid "SureRank SEO Analysis checks whether your homepage schema is active and present. Once enabled, the plugin builds the structured data for you and gives you simple ways to confirm that search engines can read it correctly."
-msgstr "El Análisis SEO de SureRank verifica si el esquema de tu página de inicio está activo y presente. Una vez habilitado, el complemento construye los datos estructurados por ti y te ofrece formas simples de confirmar que los motores de búsqueda pueden leerlo correctamente."
-
-#: inc/analyzer/seo-analyzer.php:1251
-msgid "🌐 WWW Canonicalization"
-msgstr "🌐 Canonicalización WWW"
-
-#: inc/analyzer/seo-analyzer.php:1253
-msgid "Your site can usually be accessed in two ways. One version uses www at the front of the address and the other does not. For example, https://example.com and https://www.example.com might both load your site, even though they look identical. Search engines see these as two separate versions unless one automatically redirects to the other."
-msgstr "Tu sitio generalmente se puede acceder de dos maneras. Una versión utiliza www al principio de la dirección y la otra no. Por ejemplo, https://example.com y https://www.example.com pueden cargar tu sitio, aunque parezcan idénticos. Los motores de búsqueda ven estas como dos versiones separadas a menos que una redirija automáticamente a la otra."
-
-#: inc/analyzer/seo-analyzer.php:1259
-msgid "When both versions load without a redirect, search engines may think you have duplicate copies of every page on your site. This can spread your SEO strength across two versions and make it harder for search engines to know which one to focus on. A single preferred version keeps everything consistent and helps search engines understand your site more clearly."
-msgstr "Cuando ambas versiones se cargan sin una redirección, los motores de búsqueda pueden pensar que tienes copias duplicadas de cada página en tu sitio. Esto puede dispersar tu fuerza SEO entre dos versiones y dificultar que los motores de búsqueda sepan en cuál centrarse. Una única versión preferida mantiene todo consistente y ayuda a los motores de búsqueda a entender tu sitio más claramente."
-
-#: inc/analyzer/seo-analyzer.php:1260
-msgid "Choosing one version also gives visitors a cleaner experience. Visitors always land on the same address, which builds trust and avoids confusion."
-msgstr "Elegir una versión también brinda a los visitantes una experiencia más limpia. Los visitantes siempre aterrizan en la misma dirección, lo que genera confianza y evita confusiones."
-
-#: inc/analyzer/seo-analyzer.php:1268
-msgid "Decide whether you want to use www or non www as your main address."
-msgstr "Decide si deseas usar www o no www como tu dirección principal."
-
-#: inc/analyzer/seo-analyzer.php:1269
-msgid "Set up a redirect so all traffic goes to your preferred version."
-msgstr "Configura una redirección para que todo el tráfico vaya a tu versión preferida."
-
-#: inc/analyzer/seo-analyzer.php:1270
-msgid "Make sure your internal links and sitemap match the version you choose."
-msgstr "Asegúrate de que tus enlaces internos y el mapa del sitio coincidan con la versión que elijas."
-
-#: inc/analyzer/seo-analyzer.php:1271
-msgid "Ask your hosting provider for help if you are unsure how to set up the redirect."
-msgstr "Pide ayuda a tu proveedor de hosting si no estás seguro de cómo configurar la redirección."
-
-#: inc/analyzer/seo-analyzer.php:1279
-msgid "If someone visits https://www.example.com but your preferred version is https://example.com, a redirect will automatically send them to the correct version. This keeps everything clean and consistent for search engines and visitors."
-msgstr "Si alguien visita https://www.example.com pero tu versión preferida es https://example.com, una redirección los enviará automáticamente a la versión correcta. Esto mantiene todo limpio y consistente para los motores de búsqueda y los visitantes."
-
-#: inc/analyzer/seo-analyzer.php:1285
-msgid "You can configure this from your hosting panel or by adjusting your domain settings. Some hosts offer a simple toggle to enforce either www or non www. You can also ask your hosting support to set it up if you prefer an easier option."
-msgstr "Puedes configurar esto desde tu panel de hosting o ajustando la configuración de tu dominio. Algunos hosts ofrecen un simple interruptor para forzar ya sea www o no www. También puedes pedir a tu soporte de hosting que lo configure si prefieres una opción más fácil."
-
-#: inc/analyzer/seo-analyzer.php:1291
-msgid "SureRank SEO Analysis checks whether your site redirects properly between the www and non www versions. When it detects that both versions load separately, it gives you a clear reminder to set a single preferred version so your site stays consistent and easy for search engines to understand."
-msgstr "SureRank SEO Analysis verifica si tu sitio redirige correctamente entre las versiones www y no www. Cuando detecta que ambas versiones se cargan por separado, te da un recordatorio claro para establecer una única versión preferida para que tu sitio se mantenga consistente y fácil de entender para los motores de búsqueda."
-
-#: inc/analyzer/seo-analyzer.php:1602
-msgid "Homepage Image ALT Text"
-msgstr "Texto ALT de la imagen de la página de inicio"
-
-#: inc/analyzer/seo-analyzer.php:1604
-msgid "Images add personality and meaning to your homepage, but search engines cannot understand them on their own. ALT text is a short written description that tells screen readers what an image shows, making your site more accessible for visitors who rely on assistive tools. It also gives search engines a bit more context, which can help them understand your page more clearly."
-msgstr "Las imágenes añaden personalidad y significado a tu página de inicio, pero los motores de búsqueda no pueden entenderlas por sí solas. El texto ALT es una breve descripción escrita que le dice a los lectores de pantalla lo que muestra una imagen, haciendo que tu sitio sea más accesible para los visitantes que dependen de herramientas de asistencia. También le da a los motores de búsqueda un poco más de contexto, lo que puede ayudarles a entender tu página más claramente."
-
-#: inc/analyzer/seo-analyzer.php:1610
-msgid "ALT text plays an important role in accessibility by helping people who cannot see the images understand what is being shown. It also adds helpful context for search engines, especially when they try to understand the purpose of the images on your page. On your homepage, where key visuals often support your main message, clear ALT text makes your site more inclusive and easier to understand for everyone."
-msgstr "El texto ALT juega un papel importante en la accesibilidad al ayudar a las personas que no pueden ver las imágenes a entender lo que se está mostrando. También añade contexto útil para los motores de búsqueda, especialmente cuando intentan entender el propósito de las imágenes en tu página. En tu página de inicio, donde los visuales clave a menudo apoyan tu mensaje principal, un texto ALT claro hace que tu sitio sea más inclusivo y más fácil de entender para todos."
-
-#: inc/analyzer/seo-analyzer.php:1624
-msgid "Describe what the image is showing in clear, simple words."
-msgstr "Describe lo que la imagen está mostrando con palabras claras y simples."
-
-#: inc/analyzer/seo-analyzer.php:1625
-msgid "Add ALT text to images that have meaning and skip for purely decorative ones."
-msgstr "Añade texto ALT a las imágenes que tienen significado y omite las puramente decorativas."
-
-#: inc/analyzer/seo-analyzer.php:1626
-msgid "Keep descriptions short so they feel natural when read aloud."
-msgstr "Mantén las descripciones cortas para que suenen naturales al ser leídas en voz alta."
-
-#: inc/analyzer/seo-analyzer.php:1627
-msgid "Write as if helping someone who cannot see the image."
-msgstr "Escribe como si estuvieras ayudando a alguien que no puede ver la imagen."
-
-#: inc/analyzer/seo-analyzer.php:1637
-msgid "Woman doing yoga in a sunny room."
-msgstr "Mujer haciendo yoga en una habitación soleada."
-
-#: inc/analyzer/seo-analyzer.php:1638
-msgid "Handmade ceramic mug on wooden table."
-msgstr "Taza de cerámica hecha a mano sobre una mesa de madera."
-
-#. translators: %s is the URL of the WordPress Media Library
-#: inc/analyzer/seo-analyzer.php:1648
-#, php-format
-msgid "You can add ALT text in the <a href=\"%s\">media settings</a> when you upload or edit an image."
-msgstr "Puedes agregar texto ALT en la <a href=\"%s\">configuración de medios</a> cuando subes o editas una imagen."
-
-#: inc/analyzer/seo-analyzer.php:1651
-msgid "Depending on your page builder, updating ALT text in the media library may not change images that are already placed on a page. Builders often store that information inside the block so you may need to open each image block and update the ALT text manually. New uploads usually apply the ALT text correctly from the start."
-msgstr "Dependiendo de tu constructor de páginas, actualizar el texto ALT en la biblioteca de medios puede no cambiar las imágenes que ya están colocadas en una página. Los constructores a menudo almacenan esa información dentro del bloque, por lo que es posible que necesites abrir cada bloque de imagen y actualizar el texto ALT manualmente. Las nuevas cargas suelen aplicar el texto ALT correctamente desde el principio."
-
-#: inc/analyzer/seo-analyzer.php:1663
-msgid "SureRank checks whether your homepage images have ALT text and shows which ones are missing it. This helps you keep your site more accessible and ensures your important images are described clearly for every visitor."
-msgstr "SureRank verifica si las imágenes de tu página de inicio tienen texto ALT y muestra cuáles le faltan. Esto te ayuda a mantener tu sitio más accesible y asegura que tus imágenes importantes estén descritas claramente para cada visitante."
-
-#: inc/api/analyzer.php:462
-msgid "Google Search Console Connection"
-msgstr "Conexión de Google Search Console"
-
-#: inc/api/analyzer.php:464
-msgid "Google Search Console is a free tool that shows how your site appears in Google search. It helps you understand what people are searching for, which pages they visit, and how often your site shows up. Connecting it doesn't change anything on your site, but it gives you a helpful view of what's happening behind the scenes."
-msgstr "Google Search Console es una herramienta gratuita que muestra cómo aparece tu sitio en la búsqueda de Google. Te ayuda a entender qué buscan las personas, qué páginas visitan y con qué frecuencia aparece tu sitio. Conectarlo no cambia nada en tu sitio, pero te brinda una vista útil de lo que está sucediendo detrás de escena."
-
-#: inc/api/analyzer.php:470
-msgid "Without Search Console, you miss important information about how your site performs in search. With it, you can see your visibility, clicks, and which pages attract the most attention. These insights help you make smarter decisions and understand what's working well."
-msgstr "Sin Search Console, te pierdes información importante sobre cómo se desempeña tu sitio en la búsqueda. Con él, puedes ver tu visibilidad, clics y qué páginas atraen más atención. Estas ideas te ayudan a tomar decisiones más inteligentes y entender qué está funcionando bien."
-
-#: inc/api/analyzer.php:478
-msgid "Go to the Search Console tab in SureRank."
-msgstr "Ve a la pestaña de Search Console en SureRank."
-
-#: inc/api/analyzer.php:479
-msgid "Click Connect Now to sign in with your Google account."
-msgstr "Haz clic en Conectar ahora para iniciar sesión con tu cuenta de Google."
-
-#: inc/api/analyzer.php:480
-msgid "Select your site from the list inside the popup."
-msgstr "Selecciona tu sitio de la lista dentro del popup."
-
-#: inc/api/analyzer.php:481
-msgid "SureRank will take care of the verification steps and connect your site."
-msgstr "SureRank se encargará de los pasos de verificación y conectará tu sitio."
-
-#: inc/api/analyzer.php:489
-msgid "Once connected, you might learn that a helpful guide you wrote months ago is one of your strongest pages, or that people often find your site through topics you hadn't expected."
-msgstr "Una vez conectado, podrías descubrir que una guía útil que escribiste hace meses es una de tus páginas más fuertes, o que las personas a menudo encuentran tu sitio a través de temas que no esperabas."
-
-#. translators: %s is the URL of the Search Console tab
-#: inc/api/analyzer.php:497
-#, php-format
-msgid "You can manage or reconnect Google Search Console anytime from the <a href=\"%s\">Search Console tab</a> inside SureRank."
-msgstr "Puedes gestionar o reconectar Google Search Console en cualquier momento desde la <a href=\"%s\">pestaña de Search Console</a> dentro de SureRank."
-
-#: inc/api/analyzer.php:511
-msgid "SureRank SEO Analysis checks whether your site is connected to Google Search Console. When it is, SureRank brings your key insights into your dashboard so you can understand your search performance without leaving WordPress."
-msgstr "El análisis SEO de SureRank verifica si tu sitio está conectado a Google Search Console. Cuando lo está, SureRank trae tus ideas clave a tu panel para que puedas entender tu rendimiento en búsqueda sin salir de WordPress."
-
-#: inc/api/analyzer.php:675
-msgid "Your site tagline is a short sentence that explains what your website is about. It can appear in the browser tab, on your homepage, or in search snippets, depending on your theme and settings. Think of it as a simple introduction that sits beside your site name."
-msgstr "La etiqueta de tu sitio es una frase corta que explica de qué trata tu sitio web. Puede aparecer en la pestaña del navegador, en tu página de inicio o en fragmentos de búsqueda, dependiendo de tu tema y configuraciones. Piénsalo como una simple introducción que se sitúa al lado del nombre de tu sitio."
-
-#: inc/api/analyzer.php:681
-msgid "A clear tagline helps visitors understand your site at a glance and makes search results more inviting. If the field is blank or still shows a default message like \"Just another WordPress site,\" it doesn't tell people or search engines anything meaningful. A thoughtful tagline works like a small pitch that highlights what your site offers."
-msgstr "Una etiqueta clara ayuda a los visitantes a entender tu sitio de un vistazo y hace que los resultados de búsqueda sean más atractivos. Si el campo está vacío o aún muestra un mensaje predeterminado como \"Solo otro sitio de WordPress\", no le dice a las personas ni a los motores de búsqueda nada significativo. Una etiqueta bien pensada funciona como un pequeño discurso que destaca lo que tu sitio ofrece."
-
-#: inc/api/analyzer.php:695
-msgid "Write one short sentence that describes your site's purpose or audience."
-msgstr "Escribe una frase corta que describa el propósito o la audiencia de tu sitio."
-
-#: inc/api/analyzer.php:696
-msgid "Keep it friendly, specific and easy to understand."
-msgstr "Mantenlo amigable, específico y fácil de entender."
-
-#: inc/api/analyzer.php:697
-msgid "Avoid long phrases or generic lines that don't add clarity."
-msgstr "Evita frases largas o líneas genéricas que no añaden claridad."
-
-#: inc/api/analyzer.php:698
-msgid "Make sure the tagline reflects what your site focuses on today."
-msgstr "Asegúrate de que la etiqueta refleje en qué se enfoca tu sitio hoy."
-
-#: inc/api/analyzer.php:708
-msgid "Simple budgeting tools for everyday people"
-msgstr "Herramientas de presupuesto simples para personas comunes"
-
-#: inc/api/analyzer.php:709
-msgid "Home workouts and fitness tips that fit your schedule"
-msgstr "Entrenamientos en casa y consejos de fitness que se adaptan a tu horario"
-
-#. translators: %s is the URL of the WordPress General Settings page
-#: inc/api/analyzer.php:719
-#, php-format
-msgid "You can update your tagline from the <a href=\"%s\">WordPress General Settings page</a>."
-msgstr "Puedes actualizar tu etiqueta desde la <a href=\"%s\">página de Configuración General de WordPress</a>."
-
-#: inc/api/analyzer.php:733
-msgid "SureRank SEO Analysis checks whether your site has a meaningful tagline and highlights when it is missing or unclear. This gives you a gentle reminder to add a line that helps visitors understand your site before they even land on it."
-msgstr "El análisis SEO de SureRank verifica si tu sitio tiene una etiqueta significativa y destaca cuando falta o no está clara. Esto te da un recordatorio suave para agregar una línea que ayude a los visitantes a entender tu sitio antes de que incluso lleguen a él."
-
-#: inc/api/analyzer.php:838
-msgid "Site Indexing Setting"
-msgstr "Configuración de Indexación del Sitio"
-
-#: inc/api/analyzer.php:840
-msgid "WordPress includes a setting that tells search engines whether they should try to index your site. Indexing simply means your pages can appear in search results. This setting is often used while a site is still being built or kept private, because it asks search engines not to index the content yet."
-msgstr "WordPress incluye una configuración que indica a los motores de búsqueda si deben intentar indexar tu sitio. La indexación simplemente significa que tus páginas pueden aparecer en los resultados de búsqueda. Esta configuración se utiliza a menudo mientras un sitio aún se está construyendo o se mantiene privado, porque pide a los motores de búsqueda que no indexen el contenido todavía."
-
-#: inc/api/analyzer.php:852
-msgid "If this setting stays enabled by accident, your site may not appear in search results even if everything else is set up correctly. It doesn't remove pages that were already indexed, but it quietly discourages search engines from indexing new ones. This can hold back visibility without you noticing."
-msgstr "Si esta configuración permanece habilitada por accidente, tu sitio puede no aparecer en los resultados de búsqueda incluso si todo lo demás está configurado correctamente. No elimina las páginas que ya fueron indexadas, pero desanima silenciosamente a los motores de búsqueda a indexar nuevas. Esto puede frenar la visibilidad sin que te des cuenta."
-
-#: inc/api/analyzer.php:860
-msgid "Go to Settings → Reading in WordPress."
-msgstr "Ve a Configuración → Lectura en WordPress."
-
-#: inc/api/analyzer.php:861
-msgid "Look for the option labeled \"Discourage search engines from indexing this site.\""
-msgstr "Busca la opción etiquetada como \"Desalentar a los motores de búsqueda de indexar este sitio\"."
-
-#: inc/api/analyzer.php:862
-msgid "If your site is live and ready for visitors, make sure this box is not checked."
-msgstr "Si tu sitio está en vivo y listo para visitantes, asegúrate de que esta casilla no esté marcada."
-
-#: inc/api/analyzer.php:863
-msgid "Save your changes so search engines know they can index your site normally."
-msgstr "Guarda tus cambios para que los motores de búsqueda sepan que pueden indexar tu sitio normalmente."
-
-#: inc/api/analyzer.php:871
-msgid "If you built your site on a staging server and published it, this setting may still be enabled. Unchecking it tells search engines they can start indexing your content."
-msgstr "Si construiste tu sitio en un servidor de pruebas y lo publicaste, esta configuración puede seguir habilitada. Desmarcarla indica a los motores de búsqueda que pueden comenzar a indexar tu contenido."
-
-#. translators: %s is the URL of the WordPress Reading settings page
-#: inc/api/analyzer.php:879
-#, php-format
-msgid "You can find this option in <a href=\"%s\">WordPress → Settings → Reading</a>. It should be unchecked for a live site."
-msgstr "Puedes encontrar esta opción en <a href=\"%s\">WordPress → Configuración → Lectura</a>. Debe estar desmarcada para un sitio en vivo."
-
-#: inc/api/analyzer.php:893
-msgid "SureRank SEO Analysis checks whether your site is accidentally blocking search engines. If it is, SureRank shows a clear reminder so you can review the setting and make sure your site is ready to be indexed normally."
-msgstr "SureRank SEO Analysis verifica si tu sitio está bloqueando accidentalmente a los motores de búsqueda. Si es así, SureRank muestra un recordatorio claro para que puedas revisar la configuración y asegurarte de que tu sitio esté listo para ser indexado normalmente."
-
-#: inc/api/analyzer.php:943
-msgid "A sitemap is like a guide or floor plan for your website that helps search engines explore it efficiently. It lists your important pages and shows search engines the path to follow, making sure nothing essential gets missed. Think of it as a chapter list in a book - it doesn’t change how your site looks to visitors, but it helps search engines understand your content quickly and clearly."
-msgstr "Un mapa del sitio es como una guía o plano de tu sitio web que ayuda a los motores de búsqueda a explorarlo de manera eficiente. Enumera tus páginas importantes y muestra a los motores de búsqueda el camino a seguir, asegurando que nada esencial se pierda. Piensa en ello como una lista de capítulos en un libro: no cambia cómo se ve tu sitio para los visitantes, pero ayuda a los motores de búsqueda a entender tu contenido de manera rápida y clara."
-
-#: inc/api/analyzer.php:951
-msgid "Think of it like this: if your website was a story, the sitemap would be the chapter list - helping Google and other search engines jump to the right sections. It doesn’t change how your site looks to visitors, but it makes a big difference in how your site is discovered and understood behind the scenes."
-msgstr "Piensa en ello así: si tu sitio web fuera una historia, el mapa del sitio sería la lista de capítulos, ayudando a Google y otros motores de búsqueda a saltar a las secciones correctas. No cambia cómo se ve tu sitio para los visitantes, pero hace una gran diferencia en cómo se descubre y se entiende tu sitio tras bambalinas."
-
-#: inc/api/analyzer.php:965
-msgid "XML Sitemap Example"
-msgstr "Ejemplo de Mapa del Sitio XML"
-
-#: inc/api/analyzer.php:1223
+#: inc/api/analyzer.php:1179
 msgid "No focus keyword set. Add one to analyze title, description, URL, and content."
 msgstr "No se ha establecido ninguna palabra clave de enfoque. Agrega una para analizar el título, la descripción, la URL y el contenido."
 
@@ -9095,7 +8007,7 @@ msgstr "Conoce idiomas"
 msgid "Specify languages in which the organization provides services. Use standard IETF BCP 47 language codes (e.g., en, en-US, fr, es)."
 msgstr "Especifica los idiomas en los que la organización ofrece servicios. Usa códigos de idioma estándar IETF BCP 47 (por ejemplo, en, en-US, fr, es)."
 
-#: loader.php:366
+#: loader.php:367
 msgid "Get SureRank Pro"
 msgstr "Obtén SureRank Pro"
 
@@ -9381,3 +8293,1180 @@ msgstr "Está bien, solo un último paso…"
 #: build/admin-onboarding/index.js:1
 msgid "Help us tailor your SureRank experience and keep you updated with SEO tips, feature improvements, and helpful recommendations."
 msgstr "Ayúdanos a personalizar tu experiencia en SureRank y mantente actualizado con consejos de SEO, mejoras de funciones y recomendaciones útiles."
+
+#: inc/analyzer/seo-analyzer.php:132
+msgid "A homepage SEO title is the main headline that appears for your site in search results."
+msgstr "Un título SEO de la página de inicio es el encabezado principal que aparece para su sitio en los resultados de búsqueda."
+
+#: inc/analyzer/seo-analyzer.php:138
+msgid "It is often the first thing people read before deciding whether to click."
+msgstr "A menudo es lo primero que las personas leen antes de decidir si hacer clic."
+
+#: inc/analyzer/seo-analyzer.php:139
+msgid "A clear and well written title helps search engines understand your homepage and improves click through rate by setting the right expectation."
+msgstr "Un título claro y bien escrito ayuda a los motores de búsqueda a entender su página de inicio y mejora la tasa de clics al establecer la expectativa correcta."
+
+#: inc/analyzer/seo-analyzer.php:143
+#: inc/analyzer/seo-analyzer.php:264
+#: inc/analyzer/seo-analyzer.php:386
+#: inc/analyzer/seo-analyzer.php:470
+#: inc/analyzer/seo-analyzer.php:653
+#: inc/api/analyzer.php:666
+msgid "Best Practice"
+msgstr "Mejor Práctica"
+
+#: inc/analyzer/seo-analyzer.php:147
+msgid "Good titles are short, specific, and easy to scan."
+msgstr "Los buenos títulos son cortos, específicos y fáciles de escanear."
+
+#: inc/analyzer/seo-analyzer.php:148
+msgid "Make sure to keep it between 50 and 60 characters."
+msgstr "Asegúrese de mantenerlo entre 50 y 60 caracteres."
+
+#: inc/analyzer/seo-analyzer.php:149
+msgid "Include your brand name and main keyword where it makes sense."
+msgstr "Incluya el nombre de su marca y la palabra clave principal donde tenga sentido."
+
+#: inc/analyzer/seo-analyzer.php:150
+msgid "A simple, honest title usually performs better than a long or generic one."
+msgstr "Un título simple y honesto generalmente tiene un mejor rendimiento que uno largo o genérico."
+
+#: inc/analyzer/seo-analyzer.php:156
+#: inc/analyzer/seo-analyzer.php:277
+#: inc/analyzer/seo-analyzer.php:398
+#: inc/analyzer/seo-analyzer.php:483
+#: inc/analyzer/seo-analyzer.php:585
+#: inc/analyzer/seo-analyzer.php:664
+#: inc/analyzer/seo-analyzer.php:752
+#: inc/analyzer/seo-analyzer.php:827
+#: inc/analyzer/seo-analyzer.php:843
+#: inc/analyzer/seo-analyzer.php:931
+#: inc/analyzer/seo-analyzer.php:1008
+#: inc/analyzer/seo-analyzer.php:1079
+#: inc/analyzer/seo-analyzer.php:1204
+#: inc/analyzer/seo-analyzer.php:1707
+#: inc/api/analyzer.php:460
+#: inc/api/analyzer.php:603
+#: inc/api/analyzer.php:679
+#: inc/api/analyzer.php:740
+#: inc/api/analyzer.php:809
+#: inc/api/analyzer.php:899
+msgid "Where to Update It"
+msgstr "Dónde Actualizarlo"
+
+#. translators: %1$s: URL to the SureRank homepage general settings, %2$s: Anchor text "General"
+#. translators: %1$s: URL to the SureRank homepage social settings, %2$s: Anchor text "Social"
+#: inc/analyzer/seo-analyzer.php:163
+#: inc/analyzer/seo-analyzer.php:286
+#: inc/analyzer/seo-analyzer.php:1088
+#, php-format
+msgid "From the SureRank Dashboard, go to General ⇾ Home Page ⇾ <a href='%1$s' target='_blank' rel='noopener'>%2$s</a>."
+msgstr "Desde el Panel de Control de SureRank, vaya a General ⇾ Página de Inicio ⇾ <a href='%1$s' target='_blank' rel='noopener'>%2$s</a>."
+
+#: inc/analyzer/seo-analyzer.php:167
+msgid "Here, you can update the title, description, and social image for your home page. SureRank will also show a preview of your website."
+msgstr "Aquí, puede actualizar el título, la descripción y la imagen social para su página de inicio. SureRank también mostrará una vista previa de su sitio web."
+
+#. translators: %1$s: URL to the Home Page settings, %2$s: Anchor text "Home Page"
+#: inc/analyzer/seo-analyzer.php:171
+#: inc/analyzer/seo-analyzer.php:294
+#, php-format
+msgid "Go to Pages ⇾ <a href='%1$s' target='_blank' rel='noopener'>%2$s</a> ⇾ SureRank ⇾ Optimize ⇾ General."
+msgstr "Vaya a Páginas ⇾ <a href='%1$s' target='_blank' rel='noopener'>%2$s</a> ⇾ SureRank ⇾ Optimizar ⇾ General."
+
+#: inc/analyzer/seo-analyzer.php:175
+msgid "Here, you can update the title, description, and social metadata with image for your home page. SureRank will also show a preview of your website."
+msgstr "Aquí, puede actualizar el título, la descripción y los metadatos sociales con imagen para su página de inicio. SureRank también mostrará una vista previa de su sitio web."
+
+#: inc/analyzer/seo-analyzer.php:180
+#: inc/analyzer/seo-analyzer.php:303
+#: inc/analyzer/seo-analyzer.php:415
+#: inc/analyzer/seo-analyzer.php:502
+#: inc/analyzer/seo-analyzer.php:603
+#: inc/analyzer/seo-analyzer.php:681
+#: inc/analyzer/seo-analyzer.php:766
+#: inc/analyzer/seo-analyzer.php:860
+#: inc/analyzer/seo-analyzer.php:944
+#: inc/analyzer/seo-analyzer.php:1105
+#: inc/analyzer/seo-analyzer.php:1217
+#: inc/analyzer/seo-analyzer.php:1235
+#: inc/analyzer/seo-analyzer.php:1720
+#: inc/api/analyzer.php:477
+#: inc/api/analyzer.php:692
+#: inc/api/analyzer.php:753
+#: inc/api/analyzer.php:829
+#: inc/api/analyzer.php:913
+msgid "Update Here"
+msgstr "Actualizar Aquí"
+
+#: inc/analyzer/seo-analyzer.php:200
+#: inc/analyzer/seo-analyzer.php:323
+#: inc/analyzer/seo-analyzer.php:428
+#: inc/analyzer/seo-analyzer.php:515
+#: inc/analyzer/seo-analyzer.php:615
+#: inc/analyzer/seo-analyzer.php:693
+#: inc/analyzer/seo-analyzer.php:779
+#: inc/analyzer/seo-analyzer.php:871
+#: inc/analyzer/seo-analyzer.php:959
+#: inc/analyzer/seo-analyzer.php:1027
+#: inc/analyzer/seo-analyzer.php:1125
+#: inc/analyzer/seo-analyzer.php:1696
+#: inc/api/analyzer.php:633
+#: inc/api/analyzer.php:705
+#: inc/api/analyzer.php:763
+#: inc/api/analyzer.php:842
+msgid "Need Help?"
+msgstr "¿Necesita Ayuda?"
+
+#: inc/analyzer/seo-analyzer.php:202
+msgid "SureRank Pro helps you generate SEO titles using AI, following best practices for length, clarity, and click through rate."
+msgstr "SureRank Pro le ayuda a generar títulos SEO utilizando IA, siguiendo las mejores prácticas para longitud, claridad y tasa de clics."
+
+#: inc/analyzer/seo-analyzer.php:253
+msgid "A homepage SEO description is the short text that appears below your site title in search results."
+msgstr "Una descripción SEO de la página de inicio es el texto corto que aparece debajo del título de su sitio en los resultados de búsqueda."
+
+#: inc/analyzer/seo-analyzer.php:259
+msgid "It gives people a quick idea of what your site is about before they decide to click."
+msgstr "Le da a las personas una idea rápida de qué trata su sitio antes de que decidan hacer clic."
+
+#: inc/analyzer/seo-analyzer.php:260
+msgid "A clear and well written description helps search engines understand your homepage and makes your result more appealing."
+msgstr "Una descripción clara y bien escrita ayuda a los motores de búsqueda a entender su página de inicio y hace que su resultado sea más atractivo."
+
+#: inc/analyzer/seo-analyzer.php:268
+msgid "Good descriptions are clear and easy to read."
+msgstr "Las buenas descripciones son claras y fáciles de leer."
+
+#: inc/analyzer/seo-analyzer.php:269
+msgid "Make sure to keep it between 150 and 160 characters."
+msgstr "Asegúrese de mantenerlo entre 150 y 160 caracteres."
+
+#: inc/analyzer/seo-analyzer.php:270
+msgid "Write it in natural language with your keywords where it makes sense."
+msgstr "Escríbalo en un lenguaje natural con sus palabras clave donde tenga sentido."
+
+#: inc/analyzer/seo-analyzer.php:271
+msgid "A simple, helpful description performs better than a vague or overly long one."
+msgstr "Una descripción simple y útil tiene un mejor rendimiento que una vaga o excesivamente larga."
+
+#: inc/analyzer/seo-analyzer.php:290
+#: inc/analyzer/seo-analyzer.php:298
+msgid "Here, you can update the title, description, and image for your home page. SureRank will also show a preview of your website."
+msgstr "Aquí, puede actualizar el título, la descripción y la imagen para su página de inicio. SureRank también mostrará una vista previa de su sitio web."
+
+#: inc/analyzer/seo-analyzer.php:325
+msgid "SureRank Pro helps you generate SEO titles and descriptions using AI, following best practices, so your pages look great in search results."
+msgstr "SureRank Pro le ayuda a generar títulos y descripciones SEO utilizando IA, siguiendo las mejores prácticas, para que sus páginas se vean geniales en los resultados de búsqueda."
+
+#: inc/analyzer/seo-analyzer.php:381
+msgid "The H1 is the main heading of a page. It tells visitors and search engines what the page is primarily about."
+msgstr "El H1 es el encabezado principal de una página. Informa a los visitantes y a los motores de búsqueda sobre el tema principal de la página."
+
+#: inc/analyzer/seo-analyzer.php:382
+msgid "When the H1 is missing, duplicated, or unclear, search engines get less context and visitors may struggle to quickly understand your site's purpose."
+msgstr "Cuando falta el H1, está duplicado o es poco claro, los motores de búsqueda obtienen menos contexto y los visitantes pueden tener dificultades para entender rápidamente el propósito de su sitio."
+
+#: inc/analyzer/seo-analyzer.php:390
+msgid "Keep the H1 short and descriptive."
+msgstr "Mantenga el H1 corto y descriptivo."
+
+#: inc/analyzer/seo-analyzer.php:391
+msgid "Use plain language instead of marketing buzzwords."
+msgstr "Utilice un lenguaje sencillo en lugar de palabras de moda de marketing."
+
+#: inc/analyzer/seo-analyzer.php:392
+msgid "Make sure it reflects the main topic of your homepage."
+msgstr "Asegúrese de que refleje el tema principal de su página de inicio."
+
+#. translators: %1$s: URL to the Home Page settings, %2$s: Anchor text "Home Page"
+#: inc/analyzer/seo-analyzer.php:404
+#: inc/analyzer/seo-analyzer.php:491
+#: inc/analyzer/seo-analyzer.php:593
+#: inc/analyzer/seo-analyzer.php:671
+#, php-format
+msgid "Go to Pages ⇾ <a href='%1$s' target='_blank' rel='noopener'>%2$s</a>"
+msgstr "Ir a Páginas ⇾ <a href='%1$s' target='_blank' rel='noopener'>%2$s</a>"
+
+#: inc/analyzer/seo-analyzer.php:408
+msgid "Edit the main heading and set it as an H1"
+msgstr "Edite el encabezado principal y configúrelo como H1"
+
+#: inc/analyzer/seo-analyzer.php:409
+#: inc/analyzer/seo-analyzer.php:496
+#: inc/analyzer/seo-analyzer.php:598
+#: inc/analyzer/seo-analyzer.php:676
+msgid "Update the page"
+msgstr "Actualizar la página"
+
+#: inc/analyzer/seo-analyzer.php:430
+msgid "SureRank Pro helps you identify heading issues and suggests improvements using AI, so your pages stay clear and well structured."
+msgstr "SureRank Pro le ayuda a identificar problemas con los encabezados y sugiere mejoras utilizando IA, para que sus páginas se mantengan claras y bien estructuradas."
+
+#: inc/analyzer/seo-analyzer.php:435
+msgid "Your homepage does not currently have a clear H1 heading."
+msgstr "Su página de inicio actualmente no tiene un encabezado H1 claro."
+
+#: inc/analyzer/seo-analyzer.php:436
+msgid "Homepage H1 Heading Is Missing"
+msgstr "Falta el Encabezado H1 de la Página de Inicio"
+
+#: inc/analyzer/seo-analyzer.php:439
+msgid "Your homepage currently contains multiple H1 headings."
+msgstr "Su página de inicio actualmente contiene múltiples encabezados H1."
+
+#: inc/analyzer/seo-analyzer.php:440
+msgid "Multiple H1 Headings Found"
+msgstr "Se Encontraron Múltiples Encabezados H1"
+
+#: inc/analyzer/seo-analyzer.php:442
+msgid "Your homepage currently contains one H1 heading"
+msgstr "Su página de inicio actualmente contiene un encabezado H1"
+
+#: inc/analyzer/seo-analyzer.php:443
+msgid "Homepage H1 Heading Found"
+msgstr "Encabezado H1 de la Página de Inicio Encontrado"
+
+#: inc/analyzer/seo-analyzer.php:465
+msgid "Subheadings help break your content into sections and make it easier for visitors to scan and understand your page."
+msgstr "Los subtítulos ayudan a dividir su contenido en secciones y facilitan a los visitantes escanear y entender su página."
+
+#: inc/analyzer/seo-analyzer.php:466
+msgid "They also give search engines more context about the structure and topics covered on your homepage."
+msgstr "También le dan a los motores de búsqueda más contexto sobre la estructura y los temas cubiertos en su página de inicio."
+
+#: inc/analyzer/seo-analyzer.php:474
+msgid "Use H2 headings to introduce major sections"
+msgstr "Utilice encabezados H2 para introducir secciones principales"
+
+#: inc/analyzer/seo-analyzer.php:475
+msgid "Each H2 should describe what the section is about"
+msgstr "Cada H2 debe describir de qué trata la sección"
+
+#: inc/analyzer/seo-analyzer.php:476
+msgid "Avoid using H2s just for styling."
+msgstr "Evite usar H2 solo por estilo."
+
+#: inc/analyzer/seo-analyzer.php:477
+msgid "They should reflect the structure of your content."
+msgstr "Deben reflejar la estructura de su contenido."
+
+#: inc/analyzer/seo-analyzer.php:485
+msgid "Edit your homepage content and add H2 headings where they naturally fit."
+msgstr "Edite el contenido de su página de inicio y agregue encabezados H2 donde encajen naturalmente."
+
+#: inc/analyzer/seo-analyzer.php:486
+#: inc/analyzer/seo-analyzer.php:588
+#: inc/analyzer/seo-analyzer.php:669
+msgid "If your homepage is a page:"
+msgstr "Si su página de inicio es una página:"
+
+#: inc/analyzer/seo-analyzer.php:495
+msgid "Add or update section headings and set them as H2"
+msgstr "Agregue o actualice los encabezados de sección y configúrelos como H2"
+
+#: inc/analyzer/seo-analyzer.php:517
+msgid "SureRank Pro helps you identify heading structure issues and suggests improvements using AI, so your pages stay clear and well organized."
+msgstr "SureRank Pro le ayuda a identificar problemas con la estructura de los encabezados y sugiere mejoras utilizando IA, para que sus páginas se mantengan claras y bien organizadas."
+
+#: inc/analyzer/seo-analyzer.php:524
+msgid "Your homepage contains at least one H2 heading"
+msgstr "Su página de inicio contiene al menos un encabezado H2"
+
+#: inc/analyzer/seo-analyzer.php:525
+msgid "Subheadings Found on the Homepage"
+msgstr "Subtítulos Encontrados en la Página de Inicio"
+
+#: inc/analyzer/seo-analyzer.php:529
+msgid "Your homepage does not currently contain any H2 subheadings."
+msgstr "Su página de inicio actualmente no contiene subtítulos H2."
+
+#: inc/analyzer/seo-analyzer.php:530
+msgid "No Subheadings Found on the Homepage"
+msgstr "No se Encontraron Subtítulos en la Página de Inicio"
+
+#: inc/analyzer/seo-analyzer.php:581
+msgid "Images help visitors quickly understand what your site is about and make the page feel more engaging."
+msgstr "Las imágenes ayudan a los visitantes a entender rápidamente de qué trata su sitio y hacen que la página se sienta más atractiva."
+
+#: inc/analyzer/seo-analyzer.php:582
+msgid "They also play an important role in SEO. Images help break up content, add context, and can appear in image search results when optimized properly."
+msgstr "También juegan un papel importante en SEO. Las imágenes ayudan a dividir el contenido, agregar contexto y pueden aparecer en los resultados de búsqueda de imágenes cuando se optimizan correctamente."
+
+#: inc/analyzer/seo-analyzer.php:587
+msgid "Edit your homepage content and add images where they naturally fit."
+msgstr "Edite el contenido de su página de inicio y agregue imágenes donde encajen naturalmente."
+
+#: inc/analyzer/seo-analyzer.php:597
+msgid "Add images"
+msgstr "Agregar imágenes"
+
+#: inc/analyzer/seo-analyzer.php:617
+msgid "SureRank Pro helps you optimize images for SEO, including automatically generating alt text using AI, so your images are clear for both visitors and search engines."
+msgstr "SureRank Pro te ayuda a optimizar imágenes para SEO, incluyendo la generación automática de texto alternativo usando IA, para que tus imágenes sean claras tanto para los visitantes como para los motores de búsqueda."
+
+#: inc/analyzer/seo-analyzer.php:624
+#: inc/analyzer/seo-analyzer.php:636
+msgid "Images on Homepage"
+msgstr "Imágenes en la página de inicio"
+
+#: inc/analyzer/seo-analyzer.php:625
+msgid "Your homepage does not currently contain any images."
+msgstr "Tu página de inicio actualmente no contiene ninguna imagen."
+
+#: inc/analyzer/seo-analyzer.php:629
+msgid "One or more images on your homepage do not have ALT text."
+msgstr "Una o más imágenes en tu página de inicio no tienen texto ALT."
+
+#: inc/analyzer/seo-analyzer.php:636
+msgid "Homepage Image ALT Text Is Missing"
+msgstr "Falta texto ALT en la imagen de la página de inicio"
+
+#: inc/analyzer/seo-analyzer.php:649
+msgid "Internal links help visitors navigate your website and discover important content. They also help search engines understand how your pages are connected and which ones matter most."
+msgstr "Los enlaces internos ayudan a los visitantes a navegar por tu sitio web y descubrir contenido importante. También ayudan a los motores de búsqueda a entender cómo están conectadas tus páginas y cuáles son las más relevantes."
+
+#: inc/analyzer/seo-analyzer.php:650
+msgid "When a homepage has no internal links, visitors may not know where to go next. Search engines also have a harder time crawling and prioritizing your pages."
+msgstr "Cuando una página de inicio no tiene enlaces internos, los visitantes pueden no saber a dónde ir a continuación. Los motores de búsqueda también tienen más dificultades para rastrear y priorizar tus páginas."
+
+#: inc/analyzer/seo-analyzer.php:657
+msgid "Link from your homepage to key pages like about, products, etc."
+msgstr "Enlaza desde tu página de inicio a páginas clave como acerca de, productos, etc."
+
+#: inc/analyzer/seo-analyzer.php:658
+msgid "Use clear, descriptive link text so visitors know what to expect."
+msgstr "Usa texto de enlace claro y descriptivo para que los visitantes sepan qué esperar."
+
+#: inc/analyzer/seo-analyzer.php:659
+msgid "Keep links natural and helpful. Avoid adding links just for SEO."
+msgstr "Mantén los enlaces naturales y útiles. Evita agregar enlaces solo por SEO."
+
+#: inc/analyzer/seo-analyzer.php:666
+msgid "Edit your homepage content and add links to relevant pages."
+msgstr "Edita el contenido de tu página de inicio y agrega enlaces a páginas relevantes."
+
+#: inc/analyzer/seo-analyzer.php:675
+msgid "Add links within text, buttons, or navigation sections"
+msgstr "Agrega enlaces dentro del texto, botones o secciones de navegación"
+
+#: inc/analyzer/seo-analyzer.php:695
+msgid "SureRank Pro helps you find internal linking opportunities and suggests improvements using AI, so your site stays well connected and easy to explore."
+msgstr "SureRank Pro te ayuda a encontrar oportunidades de enlaces internos y sugiere mejoras usando IA, para que tu sitio se mantenga bien conectado y fácil de explorar."
+
+#: inc/analyzer/seo-analyzer.php:703
+#: inc/analyzer/seo-analyzer.php:728
+msgid "No Internal Links Found on the Homepage"
+msgstr "No se encontraron enlaces internos en la página de inicio"
+
+#: inc/analyzer/seo-analyzer.php:704
+#: inc/analyzer/seo-analyzer.php:727
+msgid "Your homepage does not currently link to other pages on your site."
+msgstr "Tu página de inicio actualmente no enlaza a otras páginas de tu sitio."
+
+#: inc/analyzer/seo-analyzer.php:727
+msgid "Your homepage currently links to other pages on your site."
+msgstr "Tu página de inicio actualmente enlaza a otras páginas de tu sitio."
+
+#: inc/analyzer/seo-analyzer.php:728
+msgid "Internal Links Found on the Homepage"
+msgstr "Enlaces internos encontrados en la página de inicio"
+
+#: inc/analyzer/seo-analyzer.php:747
+msgid "A canonical URL tells search engines which version of a page should be treated as the main one."
+msgstr "Una URL canónica le dice a los motores de búsqueda qué versión de una página debe ser tratada como la principal."
+
+#: inc/analyzer/seo-analyzer.php:748
+msgid "Without it, search engines may see multiple versions of your homepage as separate pages, which can dilute SEO signals and cause confusion."
+msgstr "Sin ella, los motores de búsqueda pueden ver múltiples versiones de tu página de inicio como páginas separadas, lo que puede diluir las señales de SEO y causar confusión."
+
+#: inc/analyzer/seo-analyzer.php:754
+msgid "You can set the canonical URL directly from the SureRank meta box."
+msgstr "Puedes establecer la URL canónica directamente desde el cuadro meta de SureRank."
+
+#: inc/analyzer/seo-analyzer.php:757
+#: inc/analyzer/seo-analyzer.php:1227
+msgid "Edit your homepage"
+msgstr "Edita tu página de inicio"
+
+#: inc/analyzer/seo-analyzer.php:758
+msgid "Open the Advanced tab in the SureRank meta box"
+msgstr "Abre la pestaña Avanzada en el cuadro meta de SureRank"
+
+#: inc/analyzer/seo-analyzer.php:759
+msgid "Enter the correct URL in the Canonical Tag field"
+msgstr "Ingresa la URL correcta en el campo de la etiqueta canónica"
+
+#: inc/analyzer/seo-analyzer.php:760
+#: inc/analyzer/seo-analyzer.php:1212
+#: inc/analyzer/seo-analyzer.php:1230
+#: inc/api/analyzer.php:686
+#: inc/api/analyzer.php:747
+#: inc/api/analyzer.php:822
+#: inc/api/analyzer.php:907
+msgid "Save your changes"
+msgstr "Guarda tus cambios"
+
+#: inc/analyzer/seo-analyzer.php:781
+#: inc/api/analyzer.php:707
+#: inc/api/analyzer.php:764
+msgid "SureRank Pro helps fix SEO issues across your website using AI, without manual effort."
+msgstr "SureRank Pro ayuda a solucionar problemas de SEO en todo tu sitio web usando IA, sin esfuerzo manual."
+
+#: inc/analyzer/seo-analyzer.php:787
+#: inc/analyzer/seo-analyzer.php:795
+msgid "No Canonical URL Set for Homepage"
+msgstr "No se ha establecido URL canónica para la página de inicio"
+
+#: inc/analyzer/seo-analyzer.php:795
+msgid "Canonical URL Set for Homepage"
+msgstr "URL canónica establecida para la página de inicio"
+
+#: inc/analyzer/seo-analyzer.php:796
+msgid "Your homepage currently has a canonical URL set."
+msgstr "Tu página de inicio actualmente tiene una URL canónica establecida."
+
+#: inc/analyzer/seo-analyzer.php:796
+msgid "Your homepage does not currently have a canonical URL set."
+msgstr "Tu página de inicio actualmente no tiene una URL canónica establecida."
+
+#: inc/analyzer/seo-analyzer.php:816
+msgid "This means search engines are not allowed to show your homepage in search results."
+msgstr "Esto significa que los motores de búsqueda no pueden mostrar tu página de inicio en los resultados de búsqueda."
+
+#: inc/analyzer/seo-analyzer.php:817
+msgid "When a homepage is not indexable, people searching for your site may not find it at all, even if your content is published and live."
+msgstr "Cuando una página de inicio no es indexable, las personas que buscan tu sitio pueden no encontrarlo en absoluto, incluso si tu contenido está publicado y en vivo."
+
+#: inc/analyzer/seo-analyzer.php:818
+msgid "In most cases, this happens when indexing is turned off by mistake."
+msgstr "En la mayoría de los casos, esto sucede cuando la indexación está desactivada por error."
+
+#. translators: %1$s: URL to the Home Page settings, %2$s: Anchor text "Home Page"
+#: inc/analyzer/seo-analyzer.php:833
+#, php-format
+msgid "Go to Pages ⇾ <a href='%1$s' target='_blank' rel='noopener'>%2$s</a> ⇾ SureRank ⇾ Optimize ⇾ Advanced."
+msgstr "Ve a Páginas ⇾ <a href='%1$s' target='_blank' rel='noopener'>%2$s</a> ⇾ SureRank ⇾ Optimizar ⇾ Avanzado."
+
+#: inc/analyzer/seo-analyzer.php:837
+msgid "Make sure the option to prevent indexing of No Index is turned off."
+msgstr "Asegúrate de que la opción para prevenir la indexación de No Index esté desactivada."
+
+#. translators: %1$s: URL to the SureRank homepage advanced settings, %2$s: Anchor text "Advanced"
+#: inc/analyzer/seo-analyzer.php:849
+#, php-format
+msgid "From the SureRank Dashboard, go to General ⇾ Home Page ⇾ <a href='%1$s' target='_blank' rel='noopener'>%2$s</a>"
+msgstr "Desde el Panel de Control de SureRank, ve a General ⇾ Página de Inicio ⇾ <a href='%1$s' target='_blank' rel='noopener'>%2$s</a>"
+
+#: inc/analyzer/seo-analyzer.php:853
+msgid "Here, you can update the Robot Instructions for your Home Page to control how search engines interact with it."
+msgstr "Aquí, puedes actualizar las Instrucciones de Robots para tu Página de Inicio para controlar cómo interactúan los motores de búsqueda con ella."
+
+#: inc/analyzer/seo-analyzer.php:873
+msgid "SureRank Pro helps you detect and fix indexing issues using AI assistant, so your pages are visible and searchable."
+msgstr "SureRank Pro te ayuda a detectar y solucionar problemas de indexación utilizando un asistente de IA, para que tus páginas sean visibles y buscables."
+
+#: inc/analyzer/seo-analyzer.php:881
+#: inc/analyzer/seo-analyzer.php:897
+msgid "Your homepage is currently not indexable by search engines. "
+msgstr "Tu página de inicio actualmente no es indexable por los motores de búsqueda."
+
+#: inc/analyzer/seo-analyzer.php:897
+msgid "Your homepage is currently indexable by search engines. "
+msgstr "Tu página de inicio actualmente es indexable por los motores de búsqueda."
+
+#: inc/analyzer/seo-analyzer.php:898
+msgid "Home Page Indexable"
+msgstr "Página de Inicio Indexable"
+
+#: inc/analyzer/seo-analyzer.php:918
+msgid "Home Page is Reachable"
+msgstr "Página de Inicio es Alcanzable"
+
+#: inc/analyzer/seo-analyzer.php:919
+msgid "Your homepage is currently accessible and loading correctly."
+msgstr "Tu página de inicio es actualmente accesible y se carga correctamente."
+
+#: inc/analyzer/seo-analyzer.php:921
+msgid "Home Page is Not Reachable"
+msgstr "Página de Inicio No es Alcanzable"
+
+#: inc/analyzer/seo-analyzer.php:922
+msgid "Your homepage is currently not accessible or is returning an error."
+msgstr "Tu página de inicio actualmente no es accesible o está devolviendo un error."
+
+#: inc/analyzer/seo-analyzer.php:925
+msgid "Your homepage is usually the first page visitors see and the main entry point search engines use to understand your site. It acts as the starting point for crawling and navigation."
+msgstr "Tu página de inicio suele ser la primera página que ven los visitantes y el principal punto de entrada que utilizan los motores de búsqueda para entender tu sitio. Actúa como el punto de partida para el rastreo y la navegación."
+
+#: inc/analyzer/seo-analyzer.php:926
+msgid "When the homepage cannot be reached, visitors may see an error page and leave immediately. Search engines may also struggle to crawl or index your site properly if they cannot access this page."
+msgstr "Cuando la página de inicio no se puede alcanzar, los visitantes pueden ver una página de error y salir inmediatamente. Los motores de búsqueda también pueden tener dificultades para rastrear o indexar tu sitio correctamente si no pueden acceder a esta página."
+
+#: inc/analyzer/seo-analyzer.php:927
+msgid "This issue can affect the visibility of your entire site, not just the homepage."
+msgstr "Este problema puede afectar la visibilidad de todo tu sitio, no solo de la página de inicio."
+
+#: inc/analyzer/seo-analyzer.php:933
+msgid "You can review and fix this from your WordPress settings."
+msgstr "Puedes revisar y solucionar esto desde la configuración de tu WordPress."
+
+#: inc/analyzer/seo-analyzer.php:936
+msgid "Go to Settings ⇾ Reading"
+msgstr "Ve a Configuración ⇾ Lectura"
+
+#: inc/analyzer/seo-analyzer.php:937
+msgid "Check which page is set as your homepage"
+msgstr "Verifica qué página está configurada como tu página de inicio"
+
+#: inc/analyzer/seo-analyzer.php:938
+msgid "Make sure the selected page exists and is published"
+msgstr "Asegúrate de que la página seleccionada exista y esté publicada"
+
+#: inc/analyzer/seo-analyzer.php:953
+msgid "If you are using a static homepage, open the page directly and confirm it loads without errors. Also check that no redirects, maintenance plugins, or access restrictions are blocking it."
+msgstr "Si estás utilizando una página de inicio estática, abre la página directamente y confirma que se carga sin errores. También verifica que no haya redirecciones, complementos de mantenimiento o restricciones de acceso que la bloqueen."
+
+#: inc/analyzer/seo-analyzer.php:961
+msgid "SureRank Pro users get access to our support team, available 24×7, to help identify homepage access and visibility issues."
+msgstr "Los usuarios de SureRank Pro tienen acceso a nuestro equipo de soporte, disponible 24×7, para ayudar a identificar problemas de acceso y visibilidad de la página de inicio."
+
+#: inc/analyzer/seo-analyzer.php:990
+msgid "This site is using HTTPS."
+msgstr ""
+
+#: inc/analyzer/seo-analyzer.php:991
+msgid "Your site is currently served over a secure HTTPS connection."
+msgstr "Tu sitio se está sirviendo actualmente a través de una conexión segura HTTPS."
+
+#: inc/analyzer/seo-analyzer.php:993
+msgid "This site is not using HTTPS."
+msgstr "Este sitio no está utilizando HTTPS."
+
+#: inc/analyzer/seo-analyzer.php:994
+msgid "Your site is not currently served over a secure HTTPS connection."
+msgstr "Tu sitio no se está sirviendo actualmente a través de una conexión segura HTTPS."
+
+#: inc/analyzer/seo-analyzer.php:1002
+msgid "HTTPS encrypts the data between your site and its visitors. This helps protect sensitive information and keeps your site secure."
+msgstr "HTTPS cifra los datos entre tu sitio y sus visitantes. Esto ayuda a proteger información sensible y mantiene tu sitio seguro."
+
+#: inc/analyzer/seo-analyzer.php:1003
+msgid "Search engines also prefer secure websites. Browsers may show a warning for sites without HTTPS, which can make visitors hesitant to continue."
+msgstr "Los motores de búsqueda también prefieren sitios web seguros. Los navegadores pueden mostrar una advertencia para los sitios sin HTTPS, lo que puede hacer que los visitantes duden en continuar."
+
+#: inc/analyzer/seo-analyzer.php:1004
+msgid "Enabling HTTPS is an important step for trust and SEO."
+msgstr "Habilitar HTTPS es un paso importante para la confianza y el SEO."
+
+#: inc/analyzer/seo-analyzer.php:1010
+msgid "HTTPS is set up at the hosting or server level."
+msgstr "HTTPS se configura a nivel de hosting o servidor."
+
+#: inc/analyzer/seo-analyzer.php:1011
+msgid "Most hosting providers offer free SSL certificates and can enable HTTPS for you."
+msgstr "La mayoría de los proveedores de hosting ofrecen certificados SSL gratuitos y pueden habilitar HTTPS por ti."
+
+#: inc/analyzer/seo-analyzer.php:1012
+#: inc/analyzer/seo-analyzer.php:1328
+msgid "If you are unsure how to set this up, your hosting provider can help. You can send them the message below:"
+msgstr "Si no estás seguro de cómo configurarlo, tu proveedor de hosting puede ayudar. Puedes enviarles el mensaje a continuación:"
+
+#: inc/analyzer/seo-analyzer.php:1015
+#: inc/analyzer/seo-analyzer.php:1331
+msgid "Hello,"
+msgstr "Hola,"
+
+#: inc/analyzer/seo-analyzer.php:1016
+msgid "I need help enabling HTTPS on my website: [enter-your-website-URL-here]"
+msgstr "Necesito ayuda para habilitar HTTPS en mi sitio web: [introduce-tu-URL-del-sitio-aquí]"
+
+#: inc/analyzer/seo-analyzer.php:1017
+msgid "Currently, my site is not being served over a secure HTTPS connection."
+msgstr "Actualmente, mi sitio no se está sirviendo a través de una conexión segura HTTPS."
+
+#: inc/analyzer/seo-analyzer.php:1018
+msgid "I would like you to enable an SSL certificate for my domain and ensure that all traffic is redirected from HTTP to HTTPS."
+msgstr "Me gustaría que habilitaras un certificado SSL para mi dominio y asegurarte de que todo el tráfico se redirija de HTTP a HTTPS."
+
+#: inc/analyzer/seo-analyzer.php:1019
+msgid "Please feel free to set this up for me directly."
+msgstr "Por favor, siéntete libre de configurarlo directamente para mí."
+
+#: inc/analyzer/seo-analyzer.php:1020
+msgid "Thank you for your help."
+msgstr "Gracias por tu ayuda."
+
+#: inc/analyzer/seo-analyzer.php:1029
+msgid "SureRank Pro users get access to our support team, available 24×7, to help with setup and plugin related questions."
+msgstr "Los usuarios de SureRank Pro tienen acceso a nuestro equipo de soporte, disponible 24×7, para ayudar con preguntas sobre configuración y plugins."
+
+#: inc/analyzer/seo-analyzer.php:1055
+msgid "Open Graph tags are set for the homepage."
+msgstr "Las etiquetas Open Graph están configuradas para la página de inicio."
+
+#: inc/analyzer/seo-analyzer.php:1056
+msgid "Open Graph tags are not set for the homepage."
+msgstr "Las etiquetas Open Graph no están configuradas para la página de inicio."
+
+#: inc/analyzer/seo-analyzer.php:1058
+msgid "When someone shares your site on social media or in a messaging app, the platform shows a preview of your website."
+msgstr "Cuando alguien comparte tu sitio en redes sociales o en una aplicación de mensajería, la plataforma muestra una vista previa de tu sitio web."
+
+#: inc/analyzer/seo-analyzer.php:1059
+msgid "Without Open Graph tags, the platform may pull random content or images for the preview."
+msgstr "Sin etiquetas Open Graph, la plataforma puede extraer contenido o imágenes aleatorias para la vista previa."
+
+#: inc/analyzer/seo-analyzer.php:1067
+msgid "Open Graph tags help you control what people see when your site is shared."
+msgstr "Las etiquetas Open Graph te ayudan a controlar lo que la gente ve cuando se comparte tu sitio."
+
+#: inc/analyzer/seo-analyzer.php:1075
+msgid "A clean and attractive preview makes your site look more trustworthy and encourages people to click."
+msgstr "Una vista previa limpia y atractiva hace que tu sitio parezca más confiable y anima a las personas a hacer clic."
+
+#: inc/analyzer/seo-analyzer.php:1092
+#: inc/analyzer/seo-analyzer.php:1100
+msgid "Here, you can update the title, description, and image for your home page. SureRank will also show a preview of how your website will look on Facebook and X."
+msgstr "Aquí, puedes actualizar el título, la descripción y la imagen de tu página de inicio. SureRank también mostrará una vista previa de cómo se verá tu sitio web en Facebook y X."
+
+#. translators: %1$s: URL to the Home Page settings, %2$s: Anchor text "Home Page"
+#: inc/analyzer/seo-analyzer.php:1096
+#, php-format
+msgid "Go to Pages ⇾ <a href='%1$s' target='_blank' rel='noopener'>%2$s</a> ⇾ SureRank ⇾ Optimize ⇾ Social."
+msgstr "Ve a Páginas ⇾ <a href='%1$s' target='_blank' rel='noopener'>%2$s</a> ⇾ SureRank ⇾ Optimizar ⇾ Social."
+
+#: inc/analyzer/seo-analyzer.php:1127
+msgid "SureRank Pro helps you optimize your homepage for social sharing with AI-powered suggestions and previews."
+msgstr "SureRank Pro te ayuda a optimizar tu página de inicio para compartir en redes sociales con sugerencias y vistas previas impulsadas por IA."
+
+#: inc/analyzer/seo-analyzer.php:1190
+msgid "Structured Data Found on the Homepage"
+msgstr "Datos Estructurados Encontrados en la Página de Inicio"
+
+#: inc/analyzer/seo-analyzer.php:1191
+msgid "The homepage currently includes structured data (schema)."
+msgstr "La página de inicio actualmente incluye datos estructurados (schema)."
+
+#: inc/analyzer/seo-analyzer.php:1193
+msgid "No Structured Data Found on the Homepage"
+msgstr "No se encontraron datos estructurados en la página de inicio."
+
+#: inc/analyzer/seo-analyzer.php:1194
+msgid "The homepage does not currently include any structured data (schema)."
+msgstr "La página de inicio no incluye actualmente ningún dato estructurado (schema)."
+
+#: inc/analyzer/seo-analyzer.php:1197
+msgid "Structured data helps search engines better understand your content and can enable enhanced search results, like rich snippets."
+msgstr "Los datos estructurados ayudan a los motores de búsqueda a comprender mejor tu contenido y pueden habilitar resultados de búsqueda mejorados, como fragmentos enriquecidos."
+
+#: inc/analyzer/seo-analyzer.php:1198
+msgid "SureRank generates structured data automatically when the feature is enabled."
+msgstr "SureRank genera datos estructurados automáticamente cuando la función está habilitada."
+
+#: inc/analyzer/seo-analyzer.php:1199
+msgid "Once active, the schema is added to your page behind the scenes and becomes readable by search engines."
+msgstr "Una vez activado, el schema se añade a tu página en segundo plano y se vuelve legible por los motores de búsqueda."
+
+#: inc/analyzer/seo-analyzer.php:1210
+msgid "Go to SureRank → Advanced → Schema"
+msgstr "Ve a SureRank → Avanzado → Schema"
+
+#: inc/analyzer/seo-analyzer.php:1211
+#: inc/analyzer/seo-analyzer.php:1229
+msgid "Review the Schema or add new"
+msgstr "Revisa el Schema o añade uno nuevo."
+
+#: inc/analyzer/seo-analyzer.php:1228
+msgid "Open the Schema tab in the SureRank meta box"
+msgstr "Abre la pestaña de Schema en el cuadro meta de SureRank."
+
+#: inc/analyzer/seo-analyzer.php:1246
+msgid "How to Check It"
+msgstr "Cómo comprobarlo"
+
+#: inc/analyzer/seo-analyzer.php:1248
+msgid "After enabling schema, you can confirm that it is working by checking the live page source and search for schema or application/ld+json."
+msgstr "Después de habilitar el schema, puedes confirmar que está funcionando revisando el código fuente de la página en vivo y buscando schema o application/ld+json."
+
+#: inc/analyzer/seo-analyzer.php:1249
+msgid "You can also test your page using these tools:"
+msgstr "También puedes probar tu página usando estas herramientas:"
+
+#: inc/analyzer/seo-analyzer.php:1266
+msgid "These tools show what structured data search engines can read from your page."
+msgstr "Estas herramientas muestran qué datos estructurados pueden leer los motores de búsqueda de tu página."
+
+#: inc/analyzer/seo-analyzer.php:1271
+msgid "Want More?"
+msgstr "¿Quieres más?"
+
+#: inc/analyzer/seo-analyzer.php:1273
+msgid "Upgrade to SureRank Pro to unlock advanced schema types like FAQ, How To, and more powerful structured data options to improve your search appearance."
+msgstr "Actualiza a SureRank Pro para desbloquear tipos de schema avanzados como FAQ, Cómo hacer, y más opciones de datos estructurados poderosas para mejorar tu apariencia en la búsqueda."
+
+#: inc/analyzer/seo-analyzer.php:1315
+msgid "Your website can usually be accessed in two ways. One with www and one without it."
+msgstr "Tu sitio web generalmente se puede acceder de dos maneras. Una con www y otra sin él."
+
+#: inc/analyzer/seo-analyzer.php:1316
+#: inc/analyzer/seo-analyzer.php:1334
+msgid "https://example.com"
+msgstr "https://example.com"
+
+#: inc/analyzer/seo-analyzer.php:1317
+#: inc/analyzer/seo-analyzer.php:1335
+msgid "https://www.example.com"
+msgstr "https://www.example.com"
+
+#: inc/analyzer/seo-analyzer.php:1319
+msgid "Even though both show the same site, search engines treat them as different versions. This can look like duplicate pages and split your SEO strength across both URLs."
+msgstr "Aunque ambos muestran el mismo sitio, los motores de búsqueda los tratan como versiones diferentes. Esto puede parecer páginas duplicadas y dividir tu fuerza SEO entre ambas URL."
+
+#: inc/analyzer/seo-analyzer.php:1320
+msgid "To keep things clean, choose one version as your main address."
+msgstr "Para mantener las cosas limpias, elige una versión como tu dirección principal."
+
+#: inc/analyzer/seo-analyzer.php:1321
+msgid "Decide whether you want to use www or non www, then set up a redirect so all traffic goes to that version."
+msgstr "Decide si quieres usar www o no-www, luego configura una redirección para que todo el tráfico vaya a esa versión."
+
+#: inc/analyzer/seo-analyzer.php:1325
+msgid "🔧 Where to set it"
+msgstr "🔧 Dónde configurarlo"
+
+#: inc/analyzer/seo-analyzer.php:1327
+msgid "This is usually handled at the server or hosting level."
+msgstr "Esto generalmente se maneja a nivel de servidor o de hosting."
+
+#: inc/analyzer/seo-analyzer.php:1332
+msgid "I need help setting a preferred version of my website URL."
+msgstr "Necesito ayuda para establecer una versión preferida de la URL de mi sitio web."
+
+#: inc/analyzer/seo-analyzer.php:1333
+msgid "Right now, my site loads on both versions:"
+msgstr "En este momento, mi sitio se carga en ambas versiones:"
+
+#: inc/analyzer/seo-analyzer.php:1336
+msgid "I would like to redirect all traffic from https://www.example.com to https://example.com and use the non WWW version as my main address."
+msgstr "Me gustaría redirigir todo el tráfico de https://www.example.com a https://example.com y usar la versión sin WWW como mi dirección principal."
+
+#: inc/analyzer/seo-analyzer.php:1337
+msgid "Please feel free to set this up for me directly. Thank you for your help."
+msgstr "Por favor, siéntete libre de configurarlo directamente para mí. Gracias por tu ayuda."
+
+#: inc/analyzer/seo-analyzer.php:1344
+msgid "💬 Need Help?"
+msgstr "💬 ¿Necesitas ayuda?"
+
+#: inc/analyzer/seo-analyzer.php:1346
+msgid "SureRank Pro users get access to our support team, available 24×7, for setup and plugin related questions."
+msgstr "Los usuarios de SureRank Pro tienen acceso a nuestro equipo de soporte, disponible 24×7, para preguntas relacionadas con la configuración y el plugin."
+
+#: inc/analyzer/seo-analyzer.php:1349
+msgid "WWW and non-WWW versions are redirecting properly."
+msgstr "Las versiones WWW y no-WWW se están redirigiendo correctamente."
+
+#: inc/analyzer/seo-analyzer.php:1350
+msgid "The site correctly redirects between the www and non-www versions."
+msgstr "El sitio redirige correctamente entre las versiones www y no-www."
+
+#: inc/analyzer/seo-analyzer.php:1352
+msgid "WWW and non-WWW versions are not redirecting properly."
+msgstr "Las versiones WWW y no-WWW no están redirigiendo correctamente."
+
+#: inc/analyzer/seo-analyzer.php:1353
+msgid "The site does not correctly redirect between the www and non-www versions."
+msgstr "El sitio no redirige correctamente entre las versiones www y no-www."
+
+#: inc/analyzer/seo-analyzer.php:1669
+msgid "Image missing ALT text"
+msgstr "Falta texto ALT en la imagen"
+
+#: inc/analyzer/seo-analyzer.php:1676
+msgid "Images help communicate your message visually, but search engines and screen readers cannot understand images on their own. ALT text is a short written description that explains what an image shows."
+msgstr "Las imágenes ayudan a comunicar tu mensaje visualmente, pero los motores de búsqueda y los lectores de pantalla no pueden entender las imágenes por sí solos. El texto ALT es una breve descripción escrita que explica lo que muestra una imagen."
+
+#: inc/analyzer/seo-analyzer.php:1677
+msgid "When ALT text is missing, visitors who rely on assistive tools may not understand the content of the image. Search engines also lose helpful context about what the image represents."
+msgstr "Cuando falta el texto ALT, los visitantes que dependen de herramientas de asistencia pueden no entender el contenido de la imagen. Los motores de búsqueda también pierden un contexto útil sobre lo que representa la imagen."
+
+#: inc/analyzer/seo-analyzer.php:1678
+msgid "On the homepage, where images often support your main message, missing ALT text can affect both accessibility and clarity."
+msgstr "En la página de inicio, donde las imágenes a menudo apoyan tu mensaje principal, la falta de texto ALT puede afectar tanto la accesibilidad como la claridad."
+
+#: inc/analyzer/seo-analyzer.php:1682
+msgid "Images Missing ALT Text"
+msgstr "Imágenes que faltan texto ALT"
+
+#: inc/analyzer/seo-analyzer.php:1684
+msgid "The following images on your homepage do not currently have ALT text:"
+msgstr "Las siguientes imágenes en tu página de inicio no tienen actualmente texto ALT:"
+
+#: inc/analyzer/seo-analyzer.php:1698
+msgid "SureRank Pro users get access to our support team, available 24×7, to help review accessibility and content clarity issues across your site."
+msgstr "Los usuarios de SureRank Pro tienen acceso a nuestro equipo de soporte, disponible 24×7, para ayudar a revisar problemas de accesibilidad y claridad de contenido en tu sitio."
+
+#: inc/analyzer/seo-analyzer.php:1709
+msgid "You can add or update ALT text when editing images in WordPress."
+msgstr "Puedes agregar o actualizar el texto ALT al editar imágenes en WordPress."
+
+#: inc/analyzer/seo-analyzer.php:1712
+msgid "Open the page or post where the image appears"
+msgstr "Abre la página o publicación donde aparece la imagen"
+
+#: inc/analyzer/seo-analyzer.php:1713
+msgid "Click on the image block"
+msgstr "Haz clic en el bloque de imagen"
+
+#: inc/analyzer/seo-analyzer.php:1714
+msgid "Add a short, clear description in the ALT text field"
+msgstr "Agrega una descripción corta y clara en el campo de texto ALT"
+
+#: inc/api/analyzer.php:451
+msgid "Google Search Console is currently connected to your site."
+msgstr "Google Search Console está actualmente conectado a tu sitio."
+
+#: inc/api/analyzer.php:452
+msgid "Google Search Console is not currently connected to your site."
+msgstr "Google Search Console no está actualmente conectado a tu sitio."
+
+#: inc/api/analyzer.php:455
+msgid "Search Console helps you understand how your site appears in Google search results. It shows which pages are indexed, how your site is performing, and whether Google is reporting any issues."
+msgstr "Search Console te ayuda a entender cómo aparece tu sitio en los resultados de búsqueda de Google. Muestra qué páginas están indexadas, cómo está funcionando tu sitio y si Google está informando algún problema."
+
+#: inc/api/analyzer.php:456
+msgid "Without it connected, you miss important visibility into how Google sees your site."
+msgstr "Sin estar conectado, pierdes visibilidad importante sobre cómo Google ve tu sitio."
+
+#: inc/api/analyzer.php:462
+msgid "You can connect Google Search Console directly from the SureRank Dashboard."
+msgstr "Puedes conectar Google Search Console directamente desde el panel de control de SureRank."
+
+#. translators: %s is the Search Console URL.
+#: inc/api/analyzer.php:467
+#, php-format
+msgid "Go to SureRank ⇾ <a href=\"%s\">Search Console</a>"
+msgstr "Ve a SureRank ⇾ <a href=\"%s\">Search Console</a>"
+
+#: inc/api/analyzer.php:470
+msgid "Sign in with your Google account"
+msgstr "Inicia sesión con tu cuenta de Google"
+
+#: inc/api/analyzer.php:471
+msgid "Select your site and complete the connection"
+msgstr "Selecciona tu sitio y completa la conexión"
+
+#: inc/api/analyzer.php:486
+msgid "Once connected, SureRank will start using Search Console data to show search performance and indexing insights."
+msgstr "Una vez conectado, SureRank comenzará a utilizar los datos de Search Console para mostrar el rendimiento de búsqueda y las ideas de indexación."
+
+#: inc/api/analyzer.php:492
+#: inc/api/analyzer.php:926
+msgid "Need More?"
+msgstr "¿Necesitas más?"
+
+#: inc/api/analyzer.php:494
+msgid "SureRank Pro unlocks advanced insights and recommendations powered by Google Search Console data."
+msgstr "SureRank Pro desbloquea información avanzada y recomendaciones impulsadas por los datos de Google Search Console."
+
+#: inc/api/analyzer.php:584
+msgid "Other SEO Plugin Detected"
+msgstr "Otro plugin de SEO detectado"
+
+#: inc/api/analyzer.php:584
+msgid "No other SEO plugin detected"
+msgstr "No se detectó ningún otro plugin de SEO"
+
+#: inc/api/analyzer.php:585
+msgid "No other SEO plugin detected on your site."
+msgstr "No se detectó ningún otro plugin de SEO en tu sitio."
+
+#: inc/api/analyzer.php:589
+msgid "More than one SEO plugin is currently active on your site."
+msgstr "Más de un plugin de SEO está actualmente activo en su sitio."
+
+#. translators: %s is the list of active plugins
+#: inc/api/analyzer.php:592
+#, php-format
+msgid "Another SEO plugin, %s, is currently active on your site."
+msgstr "Otro plugin de SEO, %s, está actualmente activo en su sitio."
+
+#: inc/api/analyzer.php:597
+msgid "SEO plugins manage things like page titles, descriptions, schema, and indexing settings. These signals help search engines understand how your site appears in search results."
+msgstr "Los plugins de SEO gestionan cosas como títulos de página, descripciones, esquemas y configuraciones de indexación. Estas señales ayudan a los motores de búsqueda a entender cómo aparece su sitio en los resultados de búsqueda."
+
+#: inc/api/analyzer.php:598
+msgid "When multiple SEO plugins are active, they can create duplicate or conflicting signals. This makes it harder for search engines to understand which information to trust."
+msgstr "Cuando múltiples plugins de SEO están activos, pueden crear señales duplicadas o conflictivas. Esto dificulta que los motores de búsqueda entiendan qué información confiar."
+
+#: inc/api/analyzer.php:599
+msgid "Using a single SEO plugin helps keep everything consistent and easier to manage."
+msgstr "Usar un solo plugin de SEO ayuda a mantener todo consistente y más fácil de gestionar."
+
+#: inc/api/analyzer.php:605
+msgid "You can manage this from your WordPress plugins list."
+msgstr "Puede gestionar esto desde la lista de plugins de WordPress."
+
+#. translators: %s is the Plugins menu URL.
+#: inc/api/analyzer.php:610
+#, php-format
+msgid "Go to <a href=\"%s\">Plugins ⇾ Installed Plugins</a>"
+msgstr "Vaya a <a href=\"%s\">Plugins ⇾ Plugins instalados</a>"
+
+#: inc/api/analyzer.php:613
+msgid "Identify any other active SEO plugins"
+msgstr "Identifique cualquier otro plugin de SEO activo"
+
+#: inc/api/analyzer.php:614
+msgid "Deactivate the ones you are not using"
+msgstr "Desactive los que no está utilizando"
+
+#: inc/api/analyzer.php:620
+msgid "Deactivate Here"
+msgstr "Desactivar aquí"
+
+#: inc/api/analyzer.php:635
+msgid "SureRank Premium users get access to our support team, available 24×7, to help review plugin conflicts and guide you through cleanup."
+msgstr "Los usuarios de SureRank Premium tienen acceso a nuestro equipo de soporte, disponible 24×7, para ayudar a revisar conflictos de plugins y guiarlo a través de la limpieza."
+
+#: inc/api/analyzer.php:657
+msgid "Your site does currently have a tagline set."
+msgstr "Su sitio tiene actualmente un eslogan establecido."
+
+#: inc/api/analyzer.php:657
+msgid "Your site does not currently have a tagline set."
+msgstr "Su sitio no tiene actualmente un eslogan establecido."
+
+#: inc/api/analyzer.php:660
+msgid "A site tagline is a short line that describes what your website is about."
+msgstr "Un eslogan del sitio es una línea corta que describe de qué trata su sitio web."
+
+#: inc/api/analyzer.php:661
+msgid "It often appears alongside your site title and helps visitors quickly understand your purpose."
+msgstr "A menudo aparece junto al título de su sitio y ayuda a los visitantes a entender rápidamente su propósito."
+
+#: inc/api/analyzer.php:662
+msgid "A clear tagline sets context, supports your brand, and makes your site feel more intentional."
+msgstr "Un eslogan claro establece contexto, apoya su marca y hace que su sitio se sienta más intencional."
+
+#: inc/api/analyzer.php:670
+msgid "A good tagline is simple and easy to understand."
+msgstr "Un buen eslogan es simple y fácil de entender."
+
+#: inc/api/analyzer.php:671
+msgid "It should describe what you do or who your site is for."
+msgstr "Debería describir lo que hace o para quién es su sitio."
+
+#: inc/api/analyzer.php:672
+msgid "Aim for a single clear sentence that feels natural and human."
+msgstr "Apunte a una sola frase clara que se sienta natural y humana."
+
+#: inc/api/analyzer.php:675
+msgid "Avoid buzzwords or vague phrases that do not say much about your site."
+msgstr "Evite palabras de moda o frases vagas que no digan mucho sobre su sitio."
+
+#: inc/api/analyzer.php:681
+msgid "You can update your site tagline from the WordPress settings."
+msgstr "Puede actualizar el eslogan de su sitio desde la configuración de WordPress."
+
+#: inc/api/analyzer.php:684
+msgid "Go to Settings ⇾ General"
+msgstr "Vaya a Configuración ⇾ General"
+
+#: inc/api/analyzer.php:685
+msgid "Update the Tagline field"
+msgstr "Actualice el campo del eslogan"
+
+#: inc/api/analyzer.php:727
+msgid "Robots.txt is accessible."
+msgstr "Robots.txt es accesible."
+
+#: inc/api/analyzer.php:728
+msgid "Your site has an accessible robots.txt file."
+msgstr "Su sitio tiene un archivo robots.txt accesible."
+
+#: inc/api/analyzer.php:730
+msgid "Robots.txt is missing or inaccessible."
+msgstr "Robots.txt falta o es inaccesible."
+
+#: inc/api/analyzer.php:731
+msgid "Your site does not currently have an accessible robots.txt file."
+msgstr "Su sitio no tiene actualmente un archivo robots.txt accesible."
+
+#: inc/api/analyzer.php:734
+msgid "The robots.txt file tells search engines which parts of your site they are allowed to crawl and index."
+msgstr "El archivo robots.txt indica a los motores de búsqueda qué partes de su sitio pueden rastrear e indexar."
+
+#: inc/api/analyzer.php:735
+msgid "When this file is missing or inaccessible, search engines may have trouble understanding how to properly crawl your site."
+msgstr "Cuando este archivo falta o es inaccesible, los motores de búsqueda pueden tener problemas para entender cómo rastrear correctamente su sitio."
+
+#: inc/api/analyzer.php:736
+msgid "Having a valid robots.txt file helps avoid crawling issues and ensures search engines focus on the right pages."
+msgstr "Tener un archivo robots.txt válido ayuda a evitar problemas de rastreo y asegura que los motores de búsqueda se concentren en las páginas correctas."
+
+#: inc/api/analyzer.php:742
+msgid "You can create or edit your robots.txt file directly from SureRank."
+msgstr "Puedes crear o editar tu archivo robots.txt directamente desde SureRank."
+
+#: inc/api/analyzer.php:745
+msgid "Go to SureRank ⇾ Advanced ⇾ Robots.txt Editor"
+msgstr "Ve a SureRank ⇾ Avanzado ⇾ Editor de Robots.txt"
+
+#: inc/api/analyzer.php:746
+msgid "Review or add the required rules"
+msgstr "Revisa o añade las reglas requeridas"
+
+#: inc/api/analyzer.php:796
+msgid "Search engine visibility is enabled."
+msgstr "La visibilidad en motores de búsqueda está habilitada."
+
+#: inc/api/analyzer.php:797
+msgid "Search engine visibility is currently enabled in your WordPress settings."
+msgstr "La visibilidad en motores de búsqueda está actualmente habilitada en la configuración de tu WordPress."
+
+#: inc/api/analyzer.php:799
+msgid "Search engine visibility is disabled."
+msgstr "La visibilidad en motores de búsqueda está deshabilitada."
+
+#: inc/api/analyzer.php:800
+msgid "Search engine visibility is currently disabled in your WordPress settings."
+msgstr "La visibilidad en motores de búsqueda está actualmente deshabilitada en la configuración de tu WordPress."
+
+#: inc/api/analyzer.php:803
+msgid "WordPress includes a setting that tells search engines whether they are allowed to index your site. Indexing means your pages can appear in search results."
+msgstr "WordPress incluye una configuración que indica a los motores de búsqueda si se les permite indexar tu sitio. La indexación significa que tus páginas pueden aparecer en los resultados de búsqueda."
+
+#: inc/api/analyzer.php:804
+msgid "This setting is commonly used while a site is being built or kept private. When enabled, it asks search engines not to index new pages."
+msgstr "Esta configuración se utiliza comúnmente mientras se construye un sitio o se mantiene privado. Cuando está habilitada, solicita a los motores de búsqueda que no indexen nuevas páginas."
+
+#: inc/api/analyzer.php:805
+msgid "If this setting remains enabled by mistake, your site may not appear in search results even if everything else is set up correctly. It can quietly limit visibility without showing obvious errors."
+msgstr "Si esta configuración permanece habilitada por error, tu sitio puede no aparecer en los resultados de búsqueda incluso si todo lo demás está configurado correctamente. Puede limitar silenciosamente la visibilidad sin mostrar errores obvios."
+
+#: inc/api/analyzer.php:811
+msgid "You can change this setting from your WordPress dashboard."
+msgstr "Puedes cambiar esta configuración desde tu panel de control de WordPress."
+
+#. translators: %s is the URL of the WordPress Reading settings page
+#: inc/api/analyzer.php:817
+#, php-format
+msgid "Go to <a href=\"%s\">Settings ⇾ Reading</a>"
+msgstr "Ve a <a href=\"%s\">Configuración ⇾ Lectura</a>"
+
+#: inc/api/analyzer.php:820
+msgid "Find the option labeled “Search engine visibility”"
+msgstr "Encuentra la opción etiquetada como “Visibilidad en motores de búsqueda”"
+
+#: inc/api/analyzer.php:821
+msgid "Make sure the checkbox is not selected"
+msgstr "Asegúrate de que la casilla no esté seleccionada"
+
+#: inc/api/analyzer.php:844
+msgid "SureRank Pro users get access to our support team, available 24×7, to help detect visibility and indexing issues before they affect your site."
+msgstr "Los usuarios de SureRank Pro tienen acceso a nuestro equipo de soporte, disponible 24×7, para ayudar a detectar problemas de visibilidad e indexación antes de que afecten tu sitio."
+
+#: inc/api/analyzer.php:885
+msgid "XML sitemap is accessible."
+msgstr "El sitemap XML es accesible."
+
+#: inc/api/analyzer.php:886
+msgid "The XML sitemap for this site is accessible to search engines."
+msgstr "El sitemap XML para este sitio es accesible para los motores de búsqueda."
+
+#: inc/api/analyzer.php:888
+msgid "XML sitemap is missing or inaccessible."
+msgstr "El sitemap XML está ausente o es inaccesible."
+
+#: inc/api/analyzer.php:889
+msgid "The XML sitemap for this site is missing or cannot be accessed."
+msgstr "El sitemap XML para este sitio está ausente o no se puede acceder."
+
+#: inc/api/analyzer.php:892
+msgid "An XML sitemap helps search engines discover and understand the pages on your site."
+msgstr "Un sitemap XML ayuda a los motores de búsqueda a descubrir y entender las páginas de tu sitio."
+
+#: inc/api/analyzer.php:893
+msgid "When the sitemap is missing or cannot be accessed, search engines may take longer to find new or updated pages."
+msgstr "Cuando el sitemap está ausente o no se puede acceder, los motores de búsqueda pueden tardar más en encontrar nuevas páginas o páginas actualizadas."
+
+#: inc/api/analyzer.php:894
+msgid "Having a sitemap makes it easier for search engines to crawl your site efficiently."
+msgstr "Tener un sitemap facilita que los motores de búsqueda rastreen tu sitio de manera eficiente."
+
+#: inc/api/analyzer.php:895
+msgid "It also helps ensure important pages are not missed during indexing."
+msgstr "También ayuda a asegurar que las páginas importantes no se pasen por alto durante la indexación."
+
+#: inc/api/analyzer.php:901
+msgid "You can enable and manage your XML sitemap directly from SureRank."
+msgstr "Puedes habilitar y gestionar tu sitemap XML directamente desde SureRank."
+
+#: inc/api/analyzer.php:904
+msgid "Go to SureRank ⇾ Advanced ⇾ Sitemap"
+msgstr "Ve a SureRank ⇾ Avanzado ⇾ Sitemap"
+
+#: inc/api/analyzer.php:905
+msgid "Enable the XML Sitemap toggle"
+msgstr "Habilita el interruptor del Sitemap XML"
+
+#: inc/api/analyzer.php:906
+msgid "Click on Regenerate Button"
+msgstr "Haz clic en el botón Regenerar"
+
+#: inc/api/analyzer.php:928
+msgid "Upgrade to SureRank Pro to unlock advanced sitemap types like Video, News, HTML, and Author sitemaps for better search visibility."
+msgstr "Actualiza a SureRank Pro para desbloquear tipos avanzados de sitemaps como Video, Noticias, HTML y sitemaps de Autor para una mejor visibilidad en búsqueda."
+
+#. translators: 1: plugin name, 2: term ID.
+#: inc/importers/squirrly/squirrly.php:127
+#, php-format
+msgid "%1$s data detected for term %2$d."
+msgstr "Datos de %1$s detectados para el término %2$d."
+
+#. translators: 1: plugin name, 2: term ID.
+#: inc/importers/squirrly/squirrly.php:140
+#, php-format
+msgid "No %1$s data found for term %2$d."
+msgstr "No se encontraron datos de %1$s para el término %2$d."
+
+#: inc/importers/squirrly/squirrly.php:235
+msgid "No Squirrly SEO global settings found to import."
+msgstr "No se encontraron configuraciones globales de Squirrly SEO para importar."
+
+#: inc/importers/squirrly/squirrly.php:255
+msgid "Squirrly SEO global settings imported successfully."
+msgstr "Configuraciones globales de Squirrly SEO importadas con éxito."
+
+#. translators: %s: error message
+#: inc/importers/squirrly/squirrly.php:262
+#, php-format
+msgid "Error importing Squirrly SEO global settings: %s"
+msgstr "Error al importar configuraciones globales de Squirrly SEO: %s"
+
+#: build/admin-dashboard/index.js:1
+msgid "Get Pro"
+msgstr "Obtener Pro"
+
+#: build/admin-dashboard/index.js:1
+msgid "Failed to load Knowledge Graph settings."
+msgstr "Error al cargar la configuración del Knowledge Graph."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Site Information"
+msgstr "Información del sitio"
+
+#: build/admin-dashboard/index.js:1
+msgid "Configure site information for schema settings"
+msgstr "Configurar la información del sitio para la configuración del esquema"
+
+#: build/admin-dashboard/index.js:1
+msgid "Error saving settings"
+msgstr "Error al guardar la configuración"
+
+#: build/admin-onboarding/index.js:1
+msgid "SureRank Introduction Video"
+msgstr "Video de introducción a SureRank"

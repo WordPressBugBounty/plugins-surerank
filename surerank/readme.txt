@@ -5,7 +5,7 @@ Tags: seo, wordpress seo, xml sitemap, schema, google search console
 Requires at least: 6.8
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.6.5
+Stable tag: 1.6.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -294,6 +294,10 @@ Brainstorm Force
 
 
 == Changelog ==
+= 1.6.6 - 18-March-2026 =
+* New: Migration - Ability to migrate from the Squirrly SEO plugin to SureRank.
+* Improvement: Onboarding - UI/UX improvements.
+* Improvement: Polylang - Improved compatibility with the Polylang plugin to have manual string translations support.
 = 1.6.5 - 27-February-2026 =
 * Improvement: Onboarding - UI/UX improvements.
 * Fix: Fixed an issue where SEO Bar and SEO Metabox were hidden for some cases.

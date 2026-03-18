@@ -38,6 +38,8 @@ msgid "Dashboard"
 msgstr "Dasbor"
 
 #: inc/admin/dashboard.php:276
+#: inc/analyzer/seo-analyzer.php:165
+#: inc/analyzer/seo-analyzer.php:288
 #: inc/schema/types/organization.php:678
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
@@ -46,6 +48,7 @@ msgid "General"
 msgstr "Umum"
 
 #: inc/admin/dashboard.php:280
+#: inc/analyzer/seo-analyzer.php:851
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 #: build/seo-popup/index.js:1
@@ -130,124 +133,38 @@ msgstr "Tidak ada respon yang tersedia untuk mengambil header."
 msgid "No response body available."
 msgstr "Tidak ada body respon yang tersedia."
 
-#: inc/analyzer/seo-analyzer.php:114
+#: inc/analyzer/seo-analyzer.php:115
 msgid "Failed to load DOM for analysis."
 msgstr "Gagal memuat DOM untuk analisis."
 
-#: inc/analyzer/seo-analyzer.php:194
-#: inc/analyzer/seo-analyzer.php:196
-#: inc/analyzer/seo-analyzer.php:1449
+#: inc/analyzer/seo-analyzer.php:210
+#: inc/analyzer/seo-analyzer.php:1512
 msgid "Search engine title is missing on the homepage."
 msgstr "Judul mesin pencari hilang di halaman utama."
 
-#: inc/analyzer/seo-analyzer.php:299
-#: inc/analyzer/seo-analyzer.php:301
-#: inc/analyzer/seo-analyzer.php:1475
-#: inc/analyzer/seo-analyzer.php:1488
+#: inc/analyzer/seo-analyzer.php:333
+#: inc/analyzer/seo-analyzer.php:1538
+#: inc/analyzer/seo-analyzer.php:1551
 msgid "Search engine description is missing on the homepage."
 msgstr "Deskripsi mesin pencari tidak ada di halaman utama."
 
-#: inc/analyzer/seo-analyzer.php:345
+#: inc/analyzer/seo-analyzer.php:378
 msgid "Homepage contains one H1 heading"
 msgstr "Halaman utama berisi satu judul H1"
 
-#: inc/analyzer/seo-analyzer.php:413
-msgid "No H1 heading found on the homepage."
-msgstr "Tidak ada judul H1 ditemukan di halaman utama."
-
-#: inc/analyzer/seo-analyzer.php:416
-msgid "Multiple H1 headings found on the homepage."
-msgstr "Ditemukan beberapa judul H1 di halaman utama."
-
-#: inc/analyzer/seo-analyzer.php:418
-msgid "Homepage contains one H1 heading."
-msgstr "Halaman utama berisi satu judul H1."
-
-#: inc/analyzer/seo-analyzer.php:510
-msgid "Homepage contains at least one H2 heading"
-msgstr "Halaman utama mengandung setidaknya satu judul H2"
-
-#: inc/analyzer/seo-analyzer.php:514
-msgid "Homepage does not contain at least one H2 heading"
-msgstr "Halaman utama tidak mengandung setidaknya satu judul H2"
-
-#: inc/analyzer/seo-analyzer.php:566
-msgid "The homepage does not contain any images."
-msgstr "Halaman utama tidak mengandung gambar."
-
-#: inc/analyzer/seo-analyzer.php:539
-#: inc/analyzer/seo-analyzer.php:567
+#: inc/analyzer/seo-analyzer.php:556
 msgid "No images found on the homepage."
 msgstr "Tidak ada gambar ditemukan di halaman utama."
 
-#: inc/analyzer/seo-analyzer.php:571
+#: inc/analyzer/seo-analyzer.php:629
 msgid "Images on the homepage have alt text attributes."
 msgstr "Gambar di halaman utama memiliki atribut teks alt."
 
-#: inc/analyzer/seo-analyzer.php:571
-msgid "Images on the homepage do not have alt text attributes."
-msgstr "Gambar di halaman utama tidak memiliki atribut teks alt."
-
-#: inc/analyzer/seo-analyzer.php:675
-msgid "Home Page contains internal links to other pages on the site."
-msgstr "Halaman Utama mengandung tautan internal ke halaman lain di situs."
-
-#: inc/analyzer/seo-analyzer.php:752
-#: inc/analyzer/seo-analyzer.php:754
-#: inc/analyzer/seo-analyzer.php:760
+#: inc/analyzer/seo-analyzer.php:789
 msgid "Canonical tag is not present on the homepage."
 msgstr "Tag kanonik tidak ada di halaman utama."
 
-#: inc/analyzer/seo-analyzer.php:760
-msgid "Canonical tag is present on the homepage."
-msgstr "Tag kanonik ada di halaman utama."
-
-#: inc/analyzer/seo-analyzer.php:839
-#: inc/analyzer/seo-analyzer.php:855
-msgid "Homepage is not indexable by search engines."
-msgstr "Halaman Utama tidak dapat diindeks oleh mesin pencari."
-
-#: inc/analyzer/seo-analyzer.php:855
-msgid "Homepage is indexable by search engines."
-msgstr "Halaman Utama dapat diindeks oleh mesin pencari."
-
-#: inc/analyzer/seo-analyzer.php:873
-msgid "Home Page is loading correctly."
-msgstr "Halaman Utama sedang dimuat dengan benar."
-
-#: inc/analyzer/seo-analyzer.php:874
-msgid "Home Page is not loading correctly."
-msgstr "Halaman Utama tidak dimuat dengan benar."
-
-#: inc/analyzer/seo-analyzer.php:955
-msgid "Site is served over a secure HTTPS connection."
-msgstr "Situs disajikan melalui koneksi HTTPS yang aman."
-
-#: inc/analyzer/seo-analyzer.php:956
-msgid "Site is not served over a secure HTTPS connection."
-msgstr "Situs tidak disajikan melalui koneksi HTTPS yang aman."
-
-#: inc/analyzer/seo-analyzer.php:1032
-msgid "Open Graph tags are present on your homepage."
-msgstr "Tag Open Graph ada di halaman utama Anda."
-
-#: inc/analyzer/seo-analyzer.php:1033
-msgid "Open Graph tags are not present on your homepage."
-msgstr "Tag Open Graph tidak ada di halaman utama Anda."
-
-#: inc/analyzer/seo-analyzer.php:1146
-msgid "Structured data (schema) is present on the home page."
-msgstr "Data terstruktur (skema) ada di halaman utama."
-
-#: inc/analyzer/seo-analyzer.php:1147
-msgid "Structured data (schema) is not present on the home page."
-msgstr "Data terstruktur (skema) tidak ada di halaman utama."
-
-#: inc/analyzer/seo-analyzer.php:1294
-msgid "Site correctly redirects between www and non-www versions."
-msgstr "Situs mengalihkan dengan benar antara versi www dan non-www."
-
-#: inc/analyzer/seo-analyzer.php:1417
+#: inc/analyzer/seo-analyzer.php:1480
 msgid "Invalid URL."
 msgstr "URL tidak valid."
 
@@ -256,7 +173,7 @@ msgstr "URL tidak valid."
 msgid "Search engine title exceeds %1$d characters."
 msgstr "Judul mesin pencari melebihi %1$d karakter."
 
-#: inc/analyzer/seo-analyzer.php:1462
+#: inc/analyzer/seo-analyzer.php:1525
 msgid "Search engine title is present and under 60 characters."
 msgstr "Judul mesin pencari ada dan kurang dari 60 karakter."
 
@@ -294,64 +211,24 @@ msgstr "Tidak ada data ditemukan"
 msgid "Settings updated"
 msgstr "Pengaturan diperbarui"
 
-#: inc/api/analyzer.php:450
+#: inc/api/analyzer.php:497
 msgid "Google Search Console is connected."
 msgstr "Google Search Console terhubung."
 
-#: inc/api/analyzer.php:451
+#: inc/api/analyzer.php:497
 msgid "Google Search Console is not connected."
 msgstr "Google Search Console tidak terhubung."
 
-#: inc/api/analyzer.php:606
-msgid "No other SEO plugin detected on the site."
-msgstr "Tidak ada plugin SEO lain yang terdeteksi di situs."
-
-#: inc/api/analyzer.php:610
-msgid "More than one SEO plugin detected on the site."
-msgstr "Lebih dari satu plugin SEO terdeteksi di situs."
-
-#: inc/api/analyzer.php:669
-msgid "Site tagline is set in WordPress settings."
-msgstr "Tagline situs diatur di pengaturan WordPress."
-
-#: inc/api/analyzer.php:669
-msgid "Site tagline is not set in WordPress settings."
-msgstr "Tagline situs tidak diatur di pengaturan WordPress."
-
-#: inc/api/analyzer.php:751
-msgid "Robots.txt file is accessible."
-msgstr "File Robots.txt dapat diakses."
-
-#: inc/api/analyzer.php:752
-msgid "Robots.txt file is not accessible."
-msgstr "File Robots.txt tidak dapat diakses."
-
-#: inc/api/analyzer.php:833
-msgid "Search engine visibility is not blocked in WordPress settings."
-msgstr "Visibilitas mesin pencari tidak diblokir di pengaturan WordPress."
-
-#: inc/api/analyzer.php:834
-msgid "Search engine visibility is blocked in WordPress settings."
-msgstr "Visibilitas mesin pencari diblokir di pengaturan WordPress."
-
-#: inc/api/analyzer.php:931
-msgid "XML sitemap is accessible to search engines."
-msgstr "Peta situs XML dapat diakses oleh mesin pencari."
-
-#: inc/api/analyzer.php:932
-msgid "XML sitemap is not accessible to search engines."
-msgstr "Peta situs XML tidak dapat diakses oleh mesin pencari."
-
-#: inc/api/analyzer.php:1037
+#: inc/api/analyzer.php:993
 msgid "Post not found"
 msgstr "Pos tidak ditemukan"
 
-#: inc/api/analyzer.php:2087
-#: inc/api/analyzer.php:2110
+#: inc/api/analyzer.php:2043
+#: inc/api/analyzer.php:2066
 msgid "Link is broken"
 msgstr "Tautan rusak"
 
-#: inc/api/analyzer.php:1054
+#: inc/api/analyzer.php:1010
 msgid "Link is not broken"
 msgstr "Tautan tidak rusak"
 
@@ -372,14 +249,17 @@ msgid "Sample Post"
 msgstr "Pos Contoh"
 
 #: inc/api/onboarding.php:286
+#: inc/modules/knowledge-graph/controller.php:66
 msgid "Invalid data provided"
 msgstr "Data yang diberikan tidak valid"
 
 #: inc/api/onboarding.php:290
+#: inc/modules/knowledge-graph/api.php:115
 msgid "Settings updated successfully"
 msgstr "Pengaturan berhasil diperbarui"
 
 #: inc/api/onboarding.php:295
+#: inc/modules/knowledge-graph/controller.php:73
 msgid "Failed to update settings"
 msgstr "Gagal memperbarui pengaturan"
 
@@ -566,7 +446,7 @@ msgstr "Permalink situs."
 msgid "Separator"
 msgstr "Pemisah"
 
-#: inc/api/analyzer.php:673
+#: inc/api/analyzer.php:656
 #: inc/meta-variables/site.php:64
 msgid "Site Tagline"
 msgstr "Tagline Situs"
@@ -2047,6 +1927,7 @@ msgid "Provide the full URL of the specific business location. This should be a 
 msgstr "Berikan URL lengkap dari lokasi bisnis tertentu. Ini harus menjadi tautan yang berfungsi yang mewakili halaman resmi untuk lokasi tersebut."
 
 #: inc/schema/types/organization.php:680
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Organization"
 msgstr "Organisasi"
@@ -2809,6 +2690,7 @@ msgstr "URL Kanonik"
 msgid "The Canonical URL tells search engines which version of a page should be indexed to avoid duplicate content issues. Leave blank to let SureRank set it automatically."
 msgstr "URL Kanonik memberi tahu mesin pencari versi mana dari halaman yang harus diindeks untuk menghindari masalah konten duplikat. Biarkan kosong agar SureRank mengaturnya secara otomatis."
 
+#: inc/analyzer/seo-analyzer.php:1090
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 #: build/seo-popup/index.js:1
@@ -2906,7 +2788,7 @@ msgstr "%1$d dari %2$d pemeriksaan telah dilakukan."
 msgid "Passed"
 msgstr "Lulus"
 
-#: loader.php:313
+#: loader.php:314
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 #: build/seo-popup/index.js:1
@@ -3022,11 +2904,11 @@ msgstr "URL halaman pendek dan ramah SEO."
 msgid "Page URL is longer than %s characters and may affect SEO and readability."
 msgstr "URL halaman lebih panjang dari %s karakter dan dapat memengaruhi SEO dan keterbacaan."
 
-#: inc/api/analyzer.php:1712
+#: inc/api/analyzer.php:1668
 msgid "These broken links were found on the page: "
 msgstr "Tautan yang rusak ditemukan di halaman:"
 
-#: inc/api/analyzer.php:1717
+#: inc/api/analyzer.php:1673
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
@@ -3270,6 +3152,14 @@ msgstr "(90 hari terakhir)"
 msgid "All"
 msgstr "Semua"
 
+#: inc/analyzer/seo-analyzer.php:173
+#: inc/analyzer/seo-analyzer.php:296
+#: inc/analyzer/seo-analyzer.php:406
+#: inc/analyzer/seo-analyzer.php:493
+#: inc/analyzer/seo-analyzer.php:595
+#: inc/analyzer/seo-analyzer.php:673
+#: inc/analyzer/seo-analyzer.php:835
+#: inc/analyzer/seo-analyzer.php:1098
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Home Page"
@@ -3720,42 +3610,51 @@ msgstr "Pergi ke Dashboard"
 msgid "Finish"
 msgstr "Selesai"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Personal Website"
 msgstr "Situs Web Pribadi"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Business Website"
 msgstr "Situs Web Bisnis"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Personal Blog"
 msgstr "Blog Pribadi"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Community Blog/News Website"
 msgstr "Blog/Website Berita Komunitas"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "This Website Represents"
 msgstr "Situs Web Ini Mewakili"
 
 #: inc/schema/variables.php:223
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Organization Type"
 msgstr "Tipe Organisasi"
 
 #: inc/schema/variables.php:220
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Website Name"
 msgstr "Nama Situs Web"
 
 #: inc/schema/variables.php:222
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Website Owner Name"
 msgstr "Nama Pemilik Situs Web"
 
 #: inc/schema/variables.php:225
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Website Logo"
 msgstr "Logo Situs Web"
@@ -3807,8 +3706,8 @@ msgstr "Mari Kita Mulai"
 msgid "Invalid term ID or term object."
 msgstr "ID istilah atau objek istilah tidak valid."
 
-#: inc/api/analyzer.php:117
-#: inc/api/analyzer.php:1258
+#: inc/api/analyzer.php:118
+#: inc/api/analyzer.php:1214
 msgid "Invalid Post ID."
 msgstr "ID Pos tidak valid."
 
@@ -3839,22 +3738,22 @@ msgid "Page does not contain at least one subheading."
 msgstr "Halaman tidak mengandung setidaknya satu subjudul."
 
 #. translators: %1$d is the maximum recommended length of the title.
-#: inc/analyzer/seo-analyzer.php:1454
+#: inc/analyzer/seo-analyzer.php:1517
 #, php-format
 msgid "Search engine title of the home page exceeds %1$d characters."
 msgstr "Judul mesin pencari halaman beranda melebihi %1$d karakter."
 
-#: inc/analyzer/seo-analyzer.php:1459
+#: inc/analyzer/seo-analyzer.php:1522
 msgid "Search engine title of the home page is present and under 60 characters."
 msgstr "Judul mesin pencari halaman beranda ada dan kurang dari 60 karakter."
 
 #. translators: %1$d is the maximum length of the meta description.
-#: inc/analyzer/seo-analyzer.php:1480
+#: inc/analyzer/seo-analyzer.php:1543
 #, php-format
 msgid "Search engine description of the home page exceeds %1$d characters."
 msgstr "Deskripsi mesin pencari halaman beranda melebihi %1$d karakter."
 
-#: inc/analyzer/seo-analyzer.php:1485
+#: inc/analyzer/seo-analyzer.php:1548
 msgid "Search engine description of the home page is present and under 160 characters."
 msgstr "Deskripsi mesin pencari halaman beranda ada dan kurang dari 160 karakter."
 
@@ -3882,6 +3781,7 @@ msgstr "Pilih Halaman Tentang"
 msgid "Select Contact Page"
 msgstr "Pilih Halaman Kontak"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "No options available"
 msgstr "Tidak ada opsi yang tersedia"
@@ -4058,7 +3958,7 @@ msgstr "Kueri Pencarian"
 msgid "Search query (only available on search results page)"
 msgstr "Kueri pencarian (hanya tersedia di halaman hasil pencarian)"
 
-#: loader.php:293
+#: loader.php:294
 msgid "Rate our plugin"
 msgstr "Beri nilai plugin kami"
 
@@ -4066,6 +3966,7 @@ msgstr "Beri nilai plugin kami"
 msgid "Learn about Google Search Console and how SureRank uses it for optimizing your website."
 msgstr "Pelajari tentang Google Search Console dan bagaimana SureRank menggunakannya untuk mengoptimalkan situs web Anda."
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Phone Number (Optional)"
 msgstr "Nomor Telepon (Opsional)"
@@ -4158,80 +4059,53 @@ msgstr "Kontrol bagaimana mesin pencari memperlakukan halaman utama Anda. Opsi i
 msgid "Adds structured data to your content so search engines can better understand and present it. Most fields are already filled in to make setup easier and help your site show up better in search results."
 msgstr "Menambahkan data terstruktur ke konten Anda sehingga mesin pencari dapat lebih memahami dan menyajikannya. Sebagian besar bidang sudah diisi untuk memudahkan pengaturan dan membantu situs Anda tampil lebih baik di hasil pencarian."
 
-#: inc/analyzer/seo-analyzer.php:142
-#: inc/analyzer/seo-analyzer.php:250
-#: inc/analyzer/seo-analyzer.php:361
-#: inc/analyzer/seo-analyzer.php:603
-#: inc/analyzer/seo-analyzer.php:701
-#: inc/analyzer/seo-analyzer.php:790
-#: inc/analyzer/seo-analyzer.php:890
-#: inc/analyzer/seo-analyzer.php:1608
-#: inc/api/analyzer.php:620
-#: inc/api/analyzer.php:767
-#: inc/api/analyzer.php:947
-msgid "Why this matters:"
-msgstr "Mengapa ini penting:"
-
-#: inc/analyzer/seo-analyzer.php:486
-msgid "What We Do"
-msgstr "Apa yang Kami Lakukan"
-
-#: inc/analyzer/seo-analyzer.php:487
-msgid "How It Works"
-msgstr "Bagaimana Cara Kerjanya"
-
-#: inc/analyzer/seo-analyzer.php:488
-msgid "Trusted by 100+ Clients"
-msgstr "Dipercaya oleh 100+ Klien"
-
-#: inc/api/analyzer.php:1927
-#: inc/api/analyzer.php:1950
+#: inc/api/analyzer.php:1883
+#: inc/api/analyzer.php:1906
 msgid "Type of check to delete. Can be \"post\" or \"taxonomy\"."
 msgstr "Jenis pemeriksaan untuk dihapus. Bisa \"pos\" atau \"taksonomi\"."
 
-#: inc/api/analyzer.php:224
+#: inc/api/analyzer.php:225
 msgid "Checks ignored."
 msgstr "Pemeriksaan diabaikan."
 
-#: inc/api/analyzer.php:261
+#: inc/api/analyzer.php:262
 msgid "Checks unignored."
 msgstr "Pemeriksaan tidak diabaikan."
 
-#: inc/api/analyzer.php:346
+#: inc/api/analyzer.php:347
 msgid "Check ignored for post."
 msgstr "Pemeriksaan diabaikan untuk pos."
 
-#: inc/api/analyzer.php:374
+#: inc/api/analyzer.php:375
 msgid "Check unignored for post."
 msgstr "Pemeriksaan tidak diabaikan untuk pos."
 
-#: inc/api/analyzer.php:397
+#: inc/api/analyzer.php:398
 msgid "Ignored checks retrieved."
 msgstr "Pemeriksaan yang diabaikan diambil."
 
-#. translators: %s is the list of active plugins
-#: inc/api/analyzer.php:617
-#, php-format
-msgid "Currently active plugins : %s"
-msgstr "Plugin aktif saat ini: %s"
-
 #: inc/api/onboarding.php:74
+#: inc/modules/knowledge-graph/api.php:129
 msgid "Type of the website."
 msgstr "Jenis situs web."
 
 #: inc/api/onboarding.php:83
+#: inc/modules/knowledge-graph/api.php:138
 msgid "Name of the website."
 msgstr "Nama situs web."
 
 #: inc/api/onboarding.php:101
+#: inc/modules/knowledge-graph/api.php:156
 msgid "Name of the website owner."
 msgstr "Nama pemilik situs web."
 
 #: inc/api/onboarding.php:110
+#: inc/modules/knowledge-graph/api.php:165
 msgid "Phone number of the website owner."
 msgstr "Nomor telepon pemilik situs web."
 
 #: inc/api/onboarding.php:119
+#: inc/modules/knowledge-graph/api.php:174
 msgid "Type of the organization."
 msgstr "Jenis organisasi."
 
@@ -4282,6 +4156,7 @@ msgstr "Saran"
 msgid "Search Console"
 msgstr "Konsol Pencarian"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "This is required"
 msgstr "Ini diperlukan"
@@ -4302,136 +4177,123 @@ msgstr "Pulihkan pemeriksaan ini"
 msgid "The page does not contain any subheadings."
 msgstr "Halaman tidak mengandung subjudul apa pun."
 
-#: inc/analyzer/seo-analyzer.php:652
-#: inc/analyzer/seo-analyzer.php:675
-msgid "Home Page does not contain internal links to other pages on the site."
-msgstr "Halaman Beranda tidak mengandung tautan internal ke halaman lain di situs."
-
-#: inc/analyzer/seo-analyzer.php:1295
-msgid "Site does not correctly redirect between www and non-www versions."
-msgstr "Situs tidak mengalihkan dengan benar antara versi www dan non-www."
-
-#. translators: %s is the list of active plugins
-#: inc/api/analyzer.php:613
-#, php-format
-msgid "Another SEO plugin, %s, detected on the site."
-msgstr "Plugin SEO lain, %s, terdeteksi di situs."
-
 #: inc/admin/dashboard.php:298
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Tools"
 msgstr "Alat"
 
-#: inc/api/migrations.php:118
+#: inc/api/migrations.php:120
 msgid "Post IDs to migrate."
 msgstr "ID posting untuk dimigrasi."
 
-#: inc/api/migrations.php:125
-#: inc/api/migrations.php:182
+#: inc/api/migrations.php:127
+#: inc/api/migrations.php:184
 msgid "Whether to clean up source data after import."
 msgstr "Apakah akan membersihkan data sumber setelah impor."
 
-#: inc/api/migrations.php:139
-#: inc/api/migrations.php:196
+#: inc/api/migrations.php:141
+#: inc/api/migrations.php:198
 msgid "Page number for pagination."
 msgstr "Nomor halaman untuk paginasi."
 
-#: inc/api/migrations.php:175
+#: inc/api/migrations.php:177
 msgid "Term IDs to migrate."
 msgstr "ID istilah untuk dimigrasi."
 
-#: inc/api/migrations.php:232
+#: inc/api/migrations.php:234
 msgid "Whether to clean up source global data after import."
 msgstr "Apakah akan membersihkan data global sumber setelah impor."
 
-#: inc/api/migrations.php:251
+#: inc/api/migrations.php:253
 msgid "Plugin slug to deactivate."
 msgstr "Slug plugin untuk menonaktifkan."
 
-#: inc/api/migrations.php:323
-#: inc/api/migrations.php:349
+#: inc/api/migrations.php:325
+#: inc/api/migrations.php:351
 msgid "Invalid importer methods."
 msgstr "Metode importer tidak valid."
 
-#: inc/api/migrations.php:400
+#: inc/api/migrations.php:402
 msgid "Invalid response from importer."
 msgstr "Respons dari importer tidak valid."
 
 #. translators: 1: import status, 2: plugin name
-#: inc/api/migrations.php:418
+#: inc/api/migrations.php:420
 #, php-format
 msgid "Global settings %1$s from %2$s."
 msgstr "Pengaturan global %1$s dari %2$s."
 
-#: inc/api/migrations.php:419
+#: inc/api/migrations.php:421
 msgid "imported successfully"
 msgstr "berhasil diimpor"
 
-#: inc/api/migrations.php:419
+#: inc/api/migrations.php:421
 msgid "failed to import"
 msgstr "gagal mengimpor"
 
-#: inc/api/migrations.php:498
+#: inc/api/migrations.php:500
 msgid "No public taxonomies found."
 msgstr "Tidak ditemukan taksonomi publik."
 
-#: inc/api/migrations.php:623
+#: inc/api/migrations.php:625
 msgid "You do not have permission to deactivate plugins."
 msgstr "Anda tidak memiliki izin untuk menonaktifkan plugin."
 
-#: inc/api/migrations.php:629
+#: inc/api/migrations.php:631
 msgid "Plugin not found."
 msgstr "Plugin tidak ditemukan."
 
-#: inc/api/migrations.php:633
+#: inc/api/migrations.php:635
 msgid "Plugin is already inactive."
 msgstr "Plugin sudah tidak aktif."
 
-#: inc/api/migrations.php:641
+#: inc/api/migrations.php:643
 msgid "Plugin deactivated successfully."
 msgstr "Plugin berhasil dinonaktifkan."
 
-#: inc/api/migrations.php:1047
+#: inc/api/migrations.php:1052
 msgid "Invalid plugin slug specified."
 msgstr "Slug plugin yang tidak valid ditentukan."
 
-#: inc/api/migrations.php:1148
+#: inc/api/migrations.php:1153
 msgid "No data found for this item."
 msgstr "Tidak ditemukan data untuk item ini."
 
-#: inc/api/migrations.php:1154
+#: inc/api/migrations.php:1159
 msgid "Detection failed."
 msgstr "Deteksi gagal."
 
-#: inc/api/migrations.php:1161
+#: inc/api/migrations.php:1166
 msgid "Invalid import response."
 msgstr "Respons impor tidak valid."
 
-#: inc/api/migrations.php:1170
+#: inc/api/migrations.php:1175
 msgid "Import failed."
 msgstr "Impor gagal."
 
 #. translators: %s: error message.
-#: inc/api/migrations.php:1175
+#: inc/api/migrations.php:1180
 #, php-format
 msgid "Error: %s"
 msgstr "Kesalahan: %s"
 
 #. translators: 1: imported count, 2: total count, 3: item type, 4: plugin name.
-#: inc/api/migrations.php:1218
+#: inc/api/migrations.php:1223
 #, php-format
 msgid "Imported %1$d of %2$d %3$s from %4$s."
 msgstr "Berhasil mengimpor %1$d dari %2$d %3$s dari %4$s."
 
 #. translators: 1: plugin name, 2: post ID.
 #: inc/importers/base-importer.php:105
+#: inc/importers/squirrly/squirrly.php:88
 #, php-format
 msgid "%1$s data detected for post %2$d."
 msgstr "Data %1$s terdeteksi untuk posting %2$d."
 
 #. translators: 1: plugin name, 2: post ID.
 #: inc/importers/base-importer.php:118
+#: inc/importers/squirrly/squirrly.php:102
 #, php-format
 msgid "No %1$s data found for post %2$d."
 msgstr "Tidak ditemukan data %1$s untuk posting %2$d."
@@ -4535,37 +4397,49 @@ msgid "No meta-robots settings to import for %1$s %2$d."
 msgstr "Tidak ada pengaturan meta-robots untuk diimpor untuk %1$s %2$d."
 
 #. translators: %d: ID, %s: type.
+#. translators: %1$s: type (post|term), %2$d: ID.
 #: inc/importers/rankmath/rank-math.php:275
+#: inc/importers/squirrly/squirrly.php:404
 #, php-format
 msgid "Meta-robots imported for %1$s %2$d."
 msgstr "Meta-robots diimpor untuk %1$s %2$d."
 
 #. translators: 1: ID, 2: type, 3: error message.
+#. translators: 1: ID, 2: type, 3: error message
 #: inc/importers/rankmath/rank-math.php:285
+#: inc/importers/squirrly/squirrly.php:414
 #, php-format
 msgid "Error importing meta-robots for %2$s %1$d: %3$s"
 msgstr "Kesalahan saat mengimpor meta-robots untuk %2$s %1$d: %3$s"
 
 #. translators: %d: ID, %s: type.
+#. translators: %1$s: type (post|term), %2$d: ID.
 #: inc/importers/rankmath/rank-math.php:345
+#: inc/importers/squirrly/squirrly.php:472
 #, php-format
 msgid "General settings imported for %1$s %2$d."
 msgstr "Pengaturan umum diimpor untuk %1$s %2$d."
 
 #. translators: %d: ID, %s: type.
+#. translators: %1$s: type (post|term), %2$d: ID.
 #: inc/importers/rankmath/rank-math.php:356
+#: inc/importers/squirrly/squirrly.php:483
 #, php-format
 msgid "No general settings to import for %1$s %2$d."
 msgstr "Tidak ada pengaturan umum untuk diimpor untuk %1$s %2$d."
 
 #. translators: %d: ID, %s: type.
+#. translators: %1$s: type (post|term), %2$d: ID.
 #: inc/importers/rankmath/rank-math.php:396
+#: inc/importers/squirrly/squirrly.php:594
 #, php-format
 msgid "Social metadata imported for %1$s %2$d."
 msgstr "Metadata sosial diimpor untuk %1$s %2$d."
 
 #. translators: %d: ID, %s: type.
+#. translators: %1$s: type (post|term), %2$d: ID.
 #: inc/importers/rankmath/rank-math.php:407
+#: inc/importers/squirrly/squirrly.php:605
 #, php-format
 msgid "No social metadata to import for %1$s %2$d."
 msgstr "Tidak ada metadata sosial untuk diimpor untuk %1$s %2$d."
@@ -4939,7 +4813,7 @@ msgid "Done"
 msgstr "Selesai"
 
 #: inc/analyzer/utils.php:252
-#: inc/api/analyzer.php:1692
+#: inc/api/analyzer.php:1648
 msgid "The link is broken."
 msgstr "Tautan rusak."
 
@@ -5043,8 +4917,8 @@ msgstr "Tidak Follow -"
 msgid "No Archive -"
 msgstr "Tidak Archive -"
 
-#: inc/admin/seo-bar.php:121
-#: inc/admin/seo-bar.php:141
+#: inc/admin/seo-bar.php:120
+#: inc/admin/seo-bar.php:140
 #: build/admin-seo-bar/index.js:1
 msgid "SEO Checks"
 msgstr "Pemeriksaan SEO"
@@ -5061,146 +4935,146 @@ msgstr "Gagal ekspor: %s"
 msgid "Import failed: %s"
 msgstr "Gagal impor: %s"
 
-#: inc/api/migrations.php:271
+#: inc/api/migrations.php:273
 msgid "Plugin slug that was migrated from."
 msgstr "Slug plugin yang dimigrasi dari."
 
 #. translators: %s: importer class name
 #. translators: %s: importer class name.
-#: inc/api/migrations.php:384
-#: inc/api/migrations.php:1064
+#: inc/api/migrations.php:386
+#: inc/api/migrations.php:1069
 #, php-format
 msgid "Invalid importer class: %s does not implement Importer."
 msgstr "Importer kelas tidak valid: %s tidak mengimplementasikan Importer."
 
-#: inc/api/migrations.php:655
+#: inc/api/migrations.php:657
 msgid "Invalid plugin slug."
 msgstr "Slug plugin tidak valid."
 
 #. translators: %s: plugin slug.
-#: inc/api/migrations.php:668
+#: inc/api/migrations.php:670
 #, php-format
 msgid "Migration from %s marked as completed successfully."
 msgstr "Migrasi dari %s berhasil ditandai sebagai selesai."
 
-#: inc/api/migrations.php:768
+#: inc/api/migrations.php:770
 msgid "WP Rocket"
 msgstr "WP Rocket"
 
-#: inc/api/migrations.php:774
+#: inc/api/migrations.php:776
 msgid "FlyingPress"
 msgstr "FlyingPress"
 
-#: inc/api/migrations.php:780
+#: inc/api/migrations.php:782
 msgid "NitroPack"
 msgstr "NitroPack"
 
-#: inc/api/migrations.php:786
+#: inc/api/migrations.php:788
 msgid "WP-Optimize Premium"
 msgstr "WP-Optimize Premium"
 
-#: inc/api/migrations.php:792
+#: inc/api/migrations.php:794
 msgid "Swift Performance"
 msgstr "Swift Performance"
 
-#: inc/api/migrations.php:800
+#: inc/api/migrations.php:802
 msgid "LiteSpeed Cache"
 msgstr "LiteSpeed Cache"
 
-#: inc/api/migrations.php:806
+#: inc/api/migrations.php:808
 msgid "W3 Total Cache"
 msgstr "W3 Total Cache"
 
-#: inc/api/migrations.php:812
+#: inc/api/migrations.php:814
 msgid "WP Super Cache"
 msgstr "WP Super Cache"
 
-#: inc/api/migrations.php:818
+#: inc/api/migrations.php:820
 msgid "WP Fastest Cache"
 msgstr "WP Fastest Cache"
 
-#: inc/api/migrations.php:824
+#: inc/api/migrations.php:826
 msgid "WP-Optimize"
 msgstr "WP-Optimize"
 
-#: inc/api/migrations.php:830
+#: inc/api/migrations.php:832
 msgid "Breeze"
 msgstr "Breeze"
 
-#: inc/api/migrations.php:836
+#: inc/api/migrations.php:838
 msgid "Cache Enabler"
 msgstr "Cache Enabler"
 
-#: inc/api/migrations.php:842
+#: inc/api/migrations.php:844
 msgid "Comet Cache"
 msgstr "Comet Cache"
 
-#: inc/api/migrations.php:848
+#: inc/api/migrations.php:850
 msgid "Swift Performance Lite"
 msgstr "Swift Performance Lite"
 
-#: inc/api/migrations.php:856
+#: inc/api/migrations.php:858
 msgid "Redis Object Cache"
 msgstr "Redis Object Cache"
 
-#: inc/api/migrations.php:864
+#: inc/api/migrations.php:866
 msgid "Hummingbird Performance"
 msgstr "Hummingbird Performance"
 
-#: inc/api/migrations.php:870
+#: inc/api/migrations.php:872
 msgid "Autoptimize"
 msgstr "Autoptimize"
 
-#: inc/api/migrations.php:876
+#: inc/api/migrations.php:878
 msgid "SiteGround Speed Optimizer"
 msgstr "SiteGround Speed Optimizer"
 
-#: inc/api/migrations.php:882
+#: inc/api/migrations.php:884
 msgid "Cloudflare"
 msgstr "Cloudflare"
 
-#: inc/api/migrations.php:888
+#: inc/api/migrations.php:890
 msgid "Hyper Cache"
 msgstr "Hyper Cache"
 
-#: inc/api/migrations.php:894
+#: inc/api/migrations.php:896
 msgid "Perfmatters"
 msgstr "Perfmatters"
 
-#: inc/api/migrations.php:902
+#: inc/api/migrations.php:904
 msgid "SpeedyCache"
 msgstr "SpeedyCache"
 
-#: inc/api/migrations.php:908
+#: inc/api/migrations.php:910
 msgid "Docket Cache"
 msgstr "Docket Cache"
 
-#: inc/api/migrations.php:914
+#: inc/api/migrations.php:916
 msgid "10Web Booster"
 msgstr "10Web Booster"
 
-#: inc/api/migrations.php:920
+#: inc/api/migrations.php:922
 msgid "Super Page Cache"
 msgstr "Super Page Cache"
 
-#: inc/api/migrations.php:926
+#: inc/api/migrations.php:928
 msgid "WP REST Cache"
 msgstr "WP REST Cache"
 
-#: inc/api/migrations.php:932
+#: inc/api/migrations.php:934
 msgid "Cache Control"
 msgstr "Cache Control"
 
-#: inc/api/migrations.php:940
+#: inc/api/migrations.php:942
 msgid "Aruba HiSpeed Cache"
 msgstr "Aruba HiSpeed Cache"
 
-#: inc/api/migrations.php:946
+#: inc/api/migrations.php:948
 msgid "atec Cache APCu"
 msgstr "atec Cache APCu"
 
 #. translators: 1: detection method, 2: detection value
-#: inc/api/migrations.php:982
+#: inc/api/migrations.php:984
 #, php-format
 msgid "Detected via %1$s: %2$s"
 msgstr "Terdeteksi melalui %1$s: %2$s"
@@ -5580,6 +5454,7 @@ msgstr "Migrasi Selesai"
 msgid "Your SEO settings have been successfully migrated to SureRank. However, we noticed your previous SEO plugin is still active. Would you like us to deactivate it to avoid conflicts?"
 msgstr "Pengaturan SEO Anda telah berhasil dimigrasikan ke SureRank. Namun, kami melihat plugin SEO Anda sebelumnya masih aktif. Apakah Anda ingin kami menonaktifkannya untuk menghindari konflik?"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "E-commerce Store"
 msgstr "Toko E-commerce"
@@ -5592,6 +5467,7 @@ msgstr "Bawa Pengaturan SEO Anda ke SureRank"
 msgid "We found other SEO plugins installed on your website. Choose the ones you'd like to import data from into SureRank."
 msgstr "Kami menemukan plugin SEO lain yang terpasang di situs web Anda. Pilih yang ingin Anda impor data dari mereka ke SureRank."
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Recommended Logo size 112 X 112 or more, PNG / JPG format"
 msgstr "Ukuran Logo yang Disarankan 112 X 112 atau lebih, format PNG / JPG"
@@ -5606,26 +5482,26 @@ msgid "SureRank SEO"
 msgstr "SureRank SEO"
 
 #. translators: %s: list of plugin slugs
-#: inc/api/migrations.php:112
-#: inc/api/migrations.php:169
+#: inc/api/migrations.php:114
+#: inc/api/migrations.php:171
 #, php-format
 msgid "Plugin slug to migrate from (e.g. %s)."
 msgstr "Plugin slug untuk migrasi dari (misalnya %s)."
 
 #. translators: %s: list of plugin slugs
-#: inc/api/migrations.php:145
+#: inc/api/migrations.php:147
 #, php-format
 msgid "Plugin slug to filter posts by (e.g. %s)."
 msgstr "Plugin slug untuk memfilter postingan berdasarkan (misalnya %s)."
 
 #. translators: %s: list of plugin slugs
-#: inc/api/migrations.php:203
+#: inc/api/migrations.php:205
 #, php-format
 msgid "Plugin slug to filter terms by (e.g. %s)."
 msgstr "Plugin slug untuk memfilter istilah berdasarkan (misalnya %s)."
 
 #. translators: %s: list of plugin slugs
-#: inc/api/migrations.php:225
+#: inc/api/migrations.php:227
 #, php-format
 msgid "Plugin slug to migrate global settings from (e.g. %s)."
 msgstr "Plugin slug untuk migrasi pengaturan global dari (misalnya %s)."
@@ -6426,7 +6302,7 @@ msgstr "Tidak dapat menghasilkan konten saat ini. Silakan coba lagi, atau hubung
 msgid "Click here to contact support."
 msgstr "Klik di sini untuk menghubungi dukungan."
 
-#: inc/api/analyzer.php:517
+#: inc/api/analyzer.php:502
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Connect Now"
@@ -6653,6 +6529,7 @@ msgid "SureRank Website Insights"
 msgstr "Wawasan Situs SureRank"
 
 #: inc/api/onboarding.php:92
+#: inc/modules/knowledge-graph/api.php:147
 msgid "Business description of the website."
 msgstr "Deskripsi bisnis dari situs web."
 
@@ -6976,10 +6853,12 @@ msgstr "SureRank dapat memigrasi pengaturan dari banyak plugin SEO populer. Kare
 msgid "Changed a permalink? SureRank Pro automatically redirects old URLs to keep your SEO intact."
 msgstr "Mengganti permalink? SureRank Pro secara otomatis mengalihkan URL lama untuk menjaga SEO Anda tetap utuh."
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Describe what you do"
 msgstr "Jelaskan apa yang Anda lakukan"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Please describe what you do in a few sentences. This description will be used for content generation and other purposes."
 msgstr "Harap jelaskan apa yang Anda lakukan dalam beberapa kalimat. Deskripsi ini akan digunakan untuk pembuatan konten dan tujuan lainnya."
@@ -7114,200 +6993,17 @@ msgstr "Optimalkan SEO Gambar tanpa AI"
 msgid "Generate SEO-friendly image alt text automatically with SureRank AI to improve accessibility and boost your image search visibility."
 msgstr "Hasilkan teks alt gambar yang ramah SEO secara otomatis dengan SureRank AI untuk meningkatkan aksesibilitas dan visibilitas pencarian gambar Anda."
 
-#: inc/api/analyzer.php:135
-#: inc/api/analyzer.php:169
+#: inc/api/analyzer.php:136
+#: inc/api/analyzer.php:170
 msgid "SEO checks retrieved."
 msgstr "Pemeriksaan SEO berhasil diambil."
 
-#: inc/api/analyzer.php:151
+#: inc/api/analyzer.php:152
 msgid "Invalid Term ID."
 msgstr "ID Term Tidak Valid."
 
-#: inc/api/analyzer.php:589
-msgid "Other SEO Plugin Banner"
-msgstr "Banner Plugin SEO Lainnya"
-
-#: inc/api/analyzer.php:592
-msgid "SEO Plugin Conflicts"
-msgstr "Konflik Plugin SEO"
-
-#: inc/api/analyzer.php:594
-msgid "SEO plugins decide how your site appears in search results by managing titles, descriptions, and structured information. They help search engines understand your content, but also make your site easier for people to find."
-msgstr "Plugin SEO menentukan bagaimana tampilan situs Anda dalam hasil pencarian dengan mengelola judul, deskripsi, dan informasi terstruktur. Mereka membantu mesin pencari memahami konten Anda, tetapi juga membuat situs Anda lebih mudah ditemukan orang."
-
-#: inc/api/analyzer.php:621
-msgid "Having more than one SEO plugin active can create confusion. Each plugin might try to change the same things, sending mixed signals to search engines. This can affect how clearly your site appears in search results and make it harder for visitors to find what they’re looking for."
-msgstr "Mengaktifkan lebih dari satu plugin SEO dapat menyebabkan kebingungan. Setiap plugin mungkin mencoba mengubah hal yang sama, mengirim sinyal yang bercampur ke mesin pencari. Ini dapat mempengaruhi kejelasan tampilan situs Anda dalam hasil pencarian dan menyulitkan pengunjung menemukan apa yang mereka cari."
-
-#: inc/api/analyzer.php:623
-msgid "How to keep things smooth:"
-msgstr "Cara menjaga semuanya lancar:"
-
-#: inc/api/analyzer.php:625
-msgid "Use only one SEO plugin at a time to keep your settings clean and consistent."
-msgstr "Gunakan hanya satu plugin SEO pada satu waktu untuk menjaga pengaturan tetap bersih dan konsisten."
-
-#: inc/api/analyzer.php:626
-msgid "Let that plugin handle everything in one place, so there’s no overlap or conflict."
-msgstr "Biarkan plugin tersebut mengelola semuanya dalam satu tempat, sehingga tidak ada tumpang tindih atau konflik."
-
-#: inc/api/analyzer.php:627
-msgid "Check your plugin settings regularly to make sure nothing is accidentally duplicated."
-msgstr "Periksa pengaturan plugin Anda secara berkala untuk memastikan tidak ada yang secara tidak sengaja diduplikasi."
-
-#: inc/analyzer/seo-analyzer.php:164
-#: inc/analyzer/seo-analyzer.php:271
-#: inc/analyzer/seo-analyzer.php:388
-#: inc/analyzer/seo-analyzer.php:628
-#: inc/analyzer/seo-analyzer.php:726
-#: inc/analyzer/seo-analyzer.php:811
-#: inc/analyzer/seo-analyzer.php:909
-#: inc/analyzer/seo-analyzer.php:990
-#: inc/analyzer/seo-analyzer.php:1633
-#: inc/api/analyzer.php:632
-#: inc/api/analyzer.php:791
-#: inc/api/analyzer.php:968
-msgid "Example"
-msgstr "Contoh"
-
-#: inc/api/analyzer.php:634
-msgid "If two plugins try to set your homepage description differently, search engines may receive mixed information, resulting in inconsistent search results or snippets."
-msgstr "Jika dua plugin mencoba mengatur deskripsi beranda Anda secara berbeda, mesin pencari mungkin menerima informasi yang bercampur, menghasilkan hasil pencarian atau cuplikan yang tidak konsisten."
-
-#: inc/analyzer/seo-analyzer.php:175
-#: inc/analyzer/seo-analyzer.php:281
-#: inc/analyzer/seo-analyzer.php:395
-#: inc/analyzer/seo-analyzer.php:634
-#: inc/analyzer/seo-analyzer.php:732
-#: inc/analyzer/seo-analyzer.php:823
-#: inc/analyzer/seo-analyzer.php:920
-#: inc/analyzer/seo-analyzer.php:1001
-#: inc/analyzer/seo-analyzer.php:1644
-#: inc/api/analyzer.php:638
-#: inc/api/analyzer.php:800
-#: inc/api/analyzer.php:971
-msgid "Where to update it"
-msgstr "Di mana memperbaruinya"
-
-#: inc/api/analyzer.php:644
-msgid "You can review your active plugins from your WordPress plugins page and deactivate extras. Then manage all your SEO settings from your main SEO plugin for a clear and single source of truth."
-msgstr "Anda dapat meninjau plugin aktif dari halaman plugin WordPress Anda dan menonaktifkan yang tidak perlu. Kemudian kelola semua pengaturan SEO Anda dari plugin SEO utama Anda untuk sumber kebenaran yang jelas dan tunggal."
-
-#: inc/analyzer/seo-analyzer.php:186
-#: inc/analyzer/seo-analyzer.php:292
-#: inc/analyzer/seo-analyzer.php:406
-#: inc/analyzer/seo-analyzer.php:640
-#: inc/analyzer/seo-analyzer.php:744
-#: inc/analyzer/seo-analyzer.php:829
-#: inc/analyzer/seo-analyzer.php:926
-#: inc/analyzer/seo-analyzer.php:1007
-#: inc/analyzer/seo-analyzer.php:1661
-#: inc/api/analyzer.php:648
-#: inc/api/analyzer.php:803
-#: inc/api/analyzer.php:974
-msgid "How SureRank helps"
-msgstr "Bagaimana SureRank membantu"
-
-#: inc/api/analyzer.php:650
-msgid "SureRank keeps your SEO setup simple and reliable. It explains why using a single plugin matters, helping you maintain clarity for both search engines and your visitors, without unnecessary confusion."
-msgstr "SureRank menjaga pengaturan SEO Anda sederhana dan dapat diandalkan. Ini menjelaskan mengapa menggunakan satu plugin penting, membantu Anda menjaga kejelasan untuk mesin pencari dan pengunjung Anda, tanpa kebingungan yang tidak perlu."
-
-#: inc/api/analyzer.php:761
-msgid "Robots.txt File"
-msgstr "File Robots.txt"
-
-#: inc/api/analyzer.php:763
-msgid "Your site has a small file called robots.txt that acts like a guide for search engines, showing them where they’re welcome to explore and where they should stay away. Think of it as a polite set of instructions for visitors who want to browse your site."
-msgstr "Situs Anda memiliki file kecil bernama robots.txt yang berfungsi sebagai panduan untuk mesin pencari, menunjukkan di mana mereka diundang untuk menjelajah dan di mana mereka harus menjauh. Anggap saja sebagai instruksi sopan untuk pengunjung yang ingin menjelajah situs Anda."
-
-#: inc/api/analyzer.php:774
-msgid "If the robots.txt file is missing or set up incorrectly, search engines might skip pages they should see, or spend time on pages that aren’t important. A proper file helps your site get noticed efficiently and ensures the content that matters most is visible to both search engines and people."
-msgstr "Jika file robots.txt hilang atau dikonfigurasi secara tidak benar, mesin pencari mungkin melewatkan halaman yang seharusnya mereka lihat, atau menghabiskan waktu di halaman yang tidak penting. File yang tepat membantu situs Anda dikenali secara efisien dan memastikan konten yang paling penting terlihat oleh mesin pencari dan orang."
-
-#: inc/analyzer/seo-analyzer.php:150
-#: inc/analyzer/seo-analyzer.php:258
-#: inc/analyzer/seo-analyzer.php:369
-#: inc/analyzer/seo-analyzer.php:609
-#: inc/analyzer/seo-analyzer.php:713
-#: inc/analyzer/seo-analyzer.php:798
-#: inc/analyzer/seo-analyzer.php:896
-#: inc/analyzer/seo-analyzer.php:978
-#: inc/analyzer/seo-analyzer.php:1620
-#: inc/api/analyzer.php:778
-#: inc/api/analyzer.php:953
-msgid "How to keep things smooth"
-msgstr "Cara menjaga semuanya tetap lancar"
-
-#: inc/api/analyzer.php:782
-msgid "Check your robots.txt by visiting yoursite.com/robots.txt , if it opens with some rules, it’s active."
-msgstr "Periksa robots.txt Anda dengan mengunjungi yoursite.com/robots.txt, jika terbuka dengan beberapa aturan, itu aktif."
-
-#: inc/api/analyzer.php:783
-msgid "Make sure it doesn’t block pages you want visitors to find."
-msgstr "Pastikan itu tidak memblokir halaman yang ingin Anda temukan pengunjung."
-
-#: inc/api/analyzer.php:784
-msgid "Even if the rules look complicated, having the file is better than not having one."
-msgstr "Bahkan jika aturan terlihat rumit, memiliki file tersebut lebih baik daripada tidak memilikinya."
-
-#: inc/api/analyzer.php:785
-msgid "Use the built-in robots.txt editor in SureRank to view or adjust the file safely."
-msgstr "Gunakan editor robots.txt bawaan di SureRank untuk melihat atau menyesuaikan file dengan aman."
-
-#: inc/api/analyzer.php:798
-msgid "If your robots.txt accidentally blocks your “Shop” or “Pricing” pages, search engines won’t see them, and people searching for your products or services might never find them."
-msgstr "Jika robots.txt Anda secara tidak sengaja memblokir halaman “Shop” atau “Pricing”, mesin pencari tidak akan melihatnya, dan orang yang mencari produk atau layanan Anda mungkin tidak pernah menemukannya."
-
-#: inc/api/analyzer.php:801
-msgid "The robots.txt file can be edited directly from the SureRank settings using the built-in editor."
-msgstr "File robots.txt dapat diedit langsung dari pengaturan SureRank menggunakan editor bawaan."
-
-#: inc/api/analyzer.php:804
-msgid "SureRank automatically creates a working robots.txt file and lets you manage it directly within the plugin. This keeps your site clear for search engines and ensures important pages are always discoverable."
-msgstr "SureRank secara otomatis membuat file robots.txt yang berfungsi dan memungkinkan Anda mengelolanya langsung di dalam plugin. Ini menjaga situs Anda bersih untuk mesin pencari dan memastikan halaman penting selalu dapat ditemukan."
-
-#: inc/api/analyzer.php:941
-msgid "Sitemap"
-msgstr "Peta Situs"
-
-#: inc/api/analyzer.php:937
-msgid "why this matters"
-msgstr "mengapa ini penting"
-
-#: inc/api/analyzer.php:949
-msgid "Without a sitemap, search engines might overlook some pages or take longer to notice updates. This can slow down how quickly your new content appears in search results. A well-maintained sitemap gives search engines a clear overview of your site, helping your content get indexed faster and more accurately, which improves visibility."
-msgstr "Tanpa peta situs, mesin pencari mungkin melewatkan beberapa halaman atau membutuhkan waktu lebih lama untuk memperhatikan pembaruan. Ini dapat memperlambat munculnya konten baru Anda di hasil pencarian. Peta situs yang terkelola dengan baik memberi mesin pencari gambaran yang jelas tentang situs Anda, membantu konten Anda diindeks lebih cepat dan lebih akurat, yang meningkatkan visibilitas."
-
-#: inc/api/analyzer.php:956
-msgid "Make sure your sitemap is active and accessible by visiting yoursite.com/sitemap.xml."
-msgstr "Pastikan peta situs Anda aktif dan dapat diakses dengan mengunjungi yoursite.com/sitemap.xml."
-
-#: inc/api/analyzer.php:957
-msgid "Even if it looks technical, having a list of your pages means search engines know where to go."
-msgstr "Bahkan jika terlihat teknis, memiliki daftar halaman Anda berarti mesin pencari tahu ke mana harus pergi."
-
-#: inc/api/analyzer.php:958
-msgid "Keep the sitemap up to date whenever you add new pages or make major changes"
-msgstr "Perbarui peta situs setiap kali Anda menambahkan halaman baru atau melakukan perubahan besar"
-
-#: inc/api/analyzer.php:959
-msgid "Use the built-in sitemap management in SureRank to create and maintain it automatically."
-msgstr "Gunakan pengelolaan peta situs bawaan di SureRank untuk membuat dan memeliharanya secara otomatis."
-
-#: inc/api/analyzer.php:969
-msgid "If you add a new blog post but don’t have a sitemap, search engines might take longer to find it. With a sitemap, your new post appears in search results more quickly, helping readers discover your content sooner."
-msgstr "Jika Anda menambahkan posting blog baru tetapi tidak memiliki peta situs, mesin pencari mungkin membutuhkan waktu lebih lama untuk menemukannya. Dengan peta situs, posting baru Anda muncul di hasil pencarian lebih cepat, membantu pembaca menemukan konten Anda lebih awal."
-
-#: inc/api/analyzer.php:972
-msgid "You can manage and update your sitemap directly from the SureRank settings using the built-in sitemap tool."
-msgstr "Anda dapat mengelola dan memperbarui peta situs Anda langsung dari pengaturan SureRank menggunakan alat peta situs bawaan."
-
-#: inc/api/analyzer.php:975
-msgid "SureRank automatically generates and updates your sitemap, so search engines always have a clear path to your important content. This keeps your site organized and ensures nothing valuable gets overlooked, without requiring extra work from you."
-msgstr "SureRank secara otomatis menghasilkan dan memperbarui peta situs Anda, sehingga mesin pencari selalu memiliki jalur yang jelas ke konten penting Anda. Ini menjaga situs Anda tetap terorganisir dan memastikan tidak ada yang berharga terlewatkan, tanpa memerlukan pekerjaan tambahan dari Anda."
-
-#: inc/api/analyzer.php:2001
-#: inc/api/analyzer.php:2035
+#: inc/api/analyzer.php:1957
+#: inc/api/analyzer.php:1991
 msgid "No cached checks found."
 msgstr "Tidak ditemukan pemeriksaan cache."
 
@@ -7768,18 +7464,22 @@ msgstr "Konfigurasikan jenis dan status pos yang akan disertakan"
 msgid "Link Suggestions"
 msgstr "Saran Tautan"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Failed to get authentication URL"
 msgstr "Gagal mendapatkan URL otentikasi"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "An error occurred while connecting"
 msgstr "Terjadi kesalahan saat menghubungkan"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Improve with AI"
 msgstr "Tingkatkan dengan AI"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Improving…"
 msgstr "Sedang meningkatkan…"
@@ -7856,26 +7556,32 @@ msgstr "Inilah yang dapat dilakukan SureRank AI:"
 msgid "List of AI capabilities"
 msgstr "Daftar kemampuan AI"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Please add at least 5 words to your description before improving."
 msgstr "Silakan tambahkan setidaknya 5 kata ke deskripsi Anda sebelum memperbaiki."
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Description improved successfully!"
 msgstr "Deskripsi berhasil diperbaiki!"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Failed to improve description. Please try again."
 msgstr "Gagal memperbaiki deskripsi. Silakan coba lagi."
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Minimum word count required"
 msgstr "Jumlah kata minimum diperlukan"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Connect with AI to improve this"
 msgstr "Hubungkan dengan AI untuk memperbaiki ini"
 
+#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "To generate better content with AI, you'll need to connect your AI provider first. It only takes a minute and unlocks all AI-powered features."
 msgstr "Untuk menghasilkan konten yang lebih baik dengan AI, Anda perlu menghubungkan penyedia AI Anda terlebih dahulu. Ini hanya memerlukan satu menit dan membuka semua fitur bertenaga AI."
@@ -7928,814 +7634,20 @@ msgstr "Tingkatkan lalu lintas situs web Anda dengan SureRank - plugin toolkit S
 msgid "- No Change -"
 msgstr "- Tidak Ada Perubahan -"
 
-#: inc/analyzer/seo-analyzer.php:132
+#: inc/analyzer/seo-analyzer.php:208
+#: inc/analyzer/seo-analyzer.php:240
 msgid "Homepage SEO Title"
 msgstr "Judul SEO Beranda"
 
-#: inc/analyzer/seo-analyzer.php:134
-msgid "Your homepage SEO title is one of the most important signals you share with search engines and visitors. It becomes the main clickable headline that appears in search results, almost like your site's introduction card to the world. A clear and thoughtful title helps people understand what your site is about before they visit, and gives search engines a strong sense of how to categorize your homepage."
-msgstr "Judul SEO beranda Anda adalah salah satu sinyal terpenting yang Anda bagikan dengan mesin pencari dan pengunjung. Ini menjadi judul utama yang dapat diklik yang muncul dalam hasil pencarian, hampir seperti kartu pengantar situs Anda ke dunia. Judul yang jelas dan dipikirkan dengan baik membantu orang memahami apa yang situs Anda tawarkan sebelum mereka mengunjungi, dan memberi mesin pencari pemahaman yang kuat tentang cara mengkategorikan beranda Anda."
-
-#: inc/analyzer/seo-analyzer.php:144
-msgid "Your homepage title shapes the first impression your site makes in search results. Search engines use it to understand what your homepage represents, and visitors rely on it to decide whether your site matches what they're looking for."
-msgstr "Judul beranda Anda membentuk kesan pertama yang dibuat situs Anda dalam hasil pencarian. Mesin pencari menggunakannya untuk memahami apa yang diwakili oleh beranda Anda, dan pengunjung mengandalkannya untuk memutuskan apakah situs Anda sesuai dengan apa yang mereka cari."
-
-#: inc/analyzer/seo-analyzer.php:145
-msgid "If the title is missing, unclear, or too long to display fully, your site may not stand out the way it should. A meaningful title makes your listing easier to read, more relevant, and more inviting."
-msgstr "Jika judul hilang, tidak jelas, atau terlalu panjang untuk ditampilkan sepenuhnya, situs Anda mungkin tidak menonjol seperti seharusnya. Judul yang bermakna membuat daftar Anda lebih mudah dibaca, lebih relevan, dan lebih mengundang."
-
-#: inc/analyzer/seo-analyzer.php:146
-msgid "A good homepage title also helps set expectations. It tells visitors who you are and what you offer in just a few words, helping your site feel more familiar and approachable before they even arrive."
-msgstr "Judul beranda yang baik juga membantu menetapkan ekspektasi. Ini memberi tahu pengunjung siapa Anda dan apa yang Anda tawarkan dalam beberapa kata, membantu situs Anda terasa lebih akrab dan mudah didekati sebelum mereka bahkan tiba."
-
-#: inc/analyzer/seo-analyzer.php:154
-msgid "Start with your site or brand name so visitors immediately know who you are."
-msgstr "Mulailah dengan nama situs atau merek Anda sehingga pengunjung segera tahu siapa Anda."
-
-#: inc/analyzer/seo-analyzer.php:155
-msgid "Add a short, descriptive phrase that explains what your site offers and who it's for."
-msgstr "Tambahkan frasa deskriptif singkat yang menjelaskan apa yang ditawarkan situs Anda dan untuk siapa itu."
-
-#: inc/analyzer/seo-analyzer.php:156
-msgid "Keep the title under 60 characters so it displays cleanly in search results."
-msgstr "Jaga judul di bawah 60 karakter agar ditampilkan dengan rapi dalam hasil pencarian."
-
-#: inc/analyzer/seo-analyzer.php:157
-msgid "Use clear, friendly language that matches the tone of your site."
-msgstr "Gunakan bahasa yang jelas dan ramah yang sesuai dengan nada situs Anda."
-
-#: inc/analyzer/seo-analyzer.php:158
-msgid "Write with real people in mind since this is often their first interaction with your content."
-msgstr "Tulis dengan mempertimbangkan orang-orang nyata karena ini sering kali merupakan interaksi pertama mereka dengan konten Anda."
-
-#: inc/analyzer/seo-analyzer.php:166
-msgid "Bright Bakes – Easy Baking Recipes for Everyone"
-msgstr "Bright Bakes – Resep Memasak Mudah untuk Semua Orang"
-
-#: inc/analyzer/seo-analyzer.php:167
-msgid "This simple title explains the brand, the purpose and the value in one quick line."
-msgstr "Judul sederhana ini menjelaskan merek, tujuan, dan nilai dalam satu baris cepat."
-
-#: inc/analyzer/seo-analyzer.php:177
-msgid "Where you edit your homepage title depends on how your homepage is set up in WordPress."
-msgstr "Di mana Anda mengedit judul beranda Anda tergantung pada bagaimana beranda Anda diatur di WordPress."
-
-#. translators: %s is the URL of the homepage settings page
-#: inc/analyzer/seo-analyzer.php:180
-#, php-format
-msgid "You can <a href=\"%s\">edit that page directly</a> and update the title from the Surerank Meta Box or page settings."
-msgstr "Anda dapat <a href=\"%s\">mengedit halaman itu secara langsung</a> dan memperbarui judul dari Surerank Meta Box atau pengaturan halaman."
-
-#: inc/analyzer/seo-analyzer.php:188
-msgid "SureRank SEO Analysis checks whether your homepage has an SEO title and highlights when one is missing. This gives you a clear reminder to set a meaningful, human-friendly title that helps search engines understand your page and gives visitors a confident first impression."
-msgstr "Analisis SEO SureRank memeriksa apakah beranda Anda memiliki judul SEO dan menyoroti ketika satu judul hilang. Ini memberi Anda pengingat yang jelas untuk menetapkan judul yang bermakna dan ramah manusia yang membantu mesin pencari memahami halaman Anda dan memberi pengunjung kesan pertama yang percaya diri."
-
-#: inc/analyzer/seo-analyzer.php:240
+#: inc/analyzer/seo-analyzer.php:251
 msgid "Homepage SEO Description"
 msgstr "Deskripsi SEO Halaman Utama"
 
-#: inc/analyzer/seo-analyzer.php:242
-msgid "Your homepage description is the short text that appears below your title in search results. It acts like a quick summary that helps people understand what your site offers. Think of it as a one sentence pitch that gives visitors a clear idea of what to expect and why your site is worth opening."
-msgstr "Deskripsi halaman utama Anda adalah teks singkat yang muncul di bawah judul Anda dalam hasil pencarian. Ini berfungsi sebagai ringkasan cepat yang membantu orang memahami apa yang ditawarkan situs Anda. Anggaplah ini sebagai pitch satu kalimat yang memberikan pengunjung ide yang jelas tentang apa yang diharapkan dan mengapa situs Anda layak dibuka."
-
-#: inc/analyzer/seo-analyzer.php:252
-msgid "A strong description helps search engines understand your homepage and gives visitors helpful context before they decide to explore your site."
-msgstr "Deskripsi yang kuat membantu mesin pencari memahami halaman utama Anda dan memberikan konteks yang berguna bagi pengunjung sebelum mereka memutuskan untuk menjelajahi situs Anda."
-
-#: inc/analyzer/seo-analyzer.php:253
-msgid "When the description is missing, too long, or unclear, your search result may feel incomplete or get cut off, which can make it less appealing. A well written description improves how your listing looks and can directly influence how many people choose to visit your site."
-msgstr "Ketika deskripsi hilang, terlalu panjang, atau tidak jelas, hasil pencarian Anda mungkin terasa tidak lengkap atau terpotong, yang dapat membuatnya kurang menarik. Deskripsi yang ditulis dengan baik meningkatkan penampilan daftar Anda dan dapat langsung mempengaruhi berapa banyak orang yang memilih untuk mengunjungi situs Anda."
-
-#: inc/analyzer/seo-analyzer.php:254
-msgid "Keeping the description between 150 to 160 characters works best. This gives you enough space to say something meaningful while staying short enough to show fully in search results."
-msgstr "Menjaga deskripsi antara 150 hingga 160 karakter adalah yang terbaik. Ini memberi Anda cukup ruang untuk mengatakan sesuatu yang berarti sambil tetap cukup singkat untuk ditampilkan sepenuhnya dalam hasil pencarian."
-
-#: inc/analyzer/seo-analyzer.php:262
-msgid "Describe your site the way you would to someone who has never visited it before."
-msgstr "Jelaskan situs Anda seperti yang Anda lakukan kepada seseorang yang belum pernah mengunjunginya sebelumnya."
-
-#: inc/analyzer/seo-analyzer.php:263
-msgid "Focus on what your site offers and who it is for."
-msgstr "Fokus pada apa yang ditawarkan situs Anda dan siapa yang menjadi targetnya."
-
-#: inc/analyzer/seo-analyzer.php:264
-msgid "Keep it short, specific and friendly."
-msgstr "Jaga agar tetap singkat, spesifik, dan ramah."
-
-#: inc/analyzer/seo-analyzer.php:265
-msgid "Avoid long phrases that might get cut off in search results."
-msgstr "Hindari frasa panjang yang mungkin terpotong dalam hasil pencarian."
-
-#: inc/analyzer/seo-analyzer.php:273
-msgid "Discover simple, healthy meals you can cook at home, even if you're short on time."
-msgstr "Temukan makanan sederhana dan sehat yang dapat Anda masak di rumah, bahkan jika Anda kekurangan waktu."
-
-#: inc/analyzer/seo-analyzer.php:283
-msgid "Where you edit your homepage description depends on how your homepage is set up."
-msgstr "Di mana Anda mengedit deskripsi halaman utama Anda tergantung pada bagaimana halaman utama Anda disiapkan."
-
-#. translators: %s is the URL of the homepage settings page
-#: inc/analyzer/seo-analyzer.php:286
-#, php-format
-msgid "You can <a href=\"%s\">edit that page directly</a> to update the description."
-msgstr "Anda dapat <a href=\"%s\">mengedit halaman itu langsung</a> untuk memperbarui deskripsi."
-
-#: inc/analyzer/seo-analyzer.php:294
-msgid "SureRank SEO Analysis checks whether your homepage description is present and the right length. It highlights when the description is missing or too long, giving you a clear reminder to keep it readable, helpful, and easy for both visitors and search engines to understand."
-msgstr "Analisis SEO SureRank memeriksa apakah deskripsi halaman utama Anda ada dan panjangnya tepat. Ini menyoroti ketika deskripsi hilang atau terlalu panjang, memberikan Anda pengingat yang jelas untuk menjaga agar tetap dapat dibaca, berguna, dan mudah dipahami oleh pengunjung dan mesin pencari."
-
-#: inc/analyzer/seo-analyzer.php:350
-msgid "Homepage H1 Heading"
-msgstr "Judul H1 Halaman Utama"
-
-#: inc/analyzer/seo-analyzer.php:357
-msgid "The H1 heading is the main title that appears on your homepage. It is often the first piece of text visitors notice, and it helps search engines understand what the page represents. Think of it as the cover of a book that tells people exactly what they have opened."
-msgstr "Judul H1 adalah judul utama yang muncul di halaman utama Anda. Ini sering kali menjadi teks pertama yang diperhatikan pengunjung, dan membantu mesin pencari memahami apa yang diwakili halaman tersebut. Anggaplah ini sebagai sampul buku yang memberi tahu orang-orang dengan tepat apa yang mereka buka."
-
-#: inc/analyzer/seo-analyzer.php:363
-msgid "Search engines rely on the H1 to understand the primary topic of the page. Visitors use it to quickly confirm they are in the right place. If the H1 is missing, unclear, or repeated several times, your homepage can feel confusing or unfinished."
-msgstr "Mesin pencari bergantung pada H1 untuk memahami topik utama halaman. Pengunjung menggunakannya untuk dengan cepat mengonfirmasi bahwa mereka berada di tempat yang tepat. Jika H1 hilang, tidak jelas, atau diulang beberapa kali, halaman utama Anda dapat terasa membingungkan atau belum selesai."
-
-#: inc/analyzer/seo-analyzer.php:364
-msgid "Having one clear H1 gives your page structure, makes your message easier to understand, and improves how search engines interpret your content."
-msgstr "Memiliki satu H1 yang jelas memberikan struktur pada halaman Anda, membuat pesan Anda lebih mudah dipahami, dan meningkatkan cara mesin pencari menginterpretasikan konten Anda."
-
-#: inc/analyzer/seo-analyzer.php:365
-msgid "Keeping a single H1 on each page also helps establish a clean hierarchy. It shows what the page is mainly about, while other headings can support the content without competing with the primary message."
-msgstr "Menjaga satu H1 di setiap halaman juga membantu membangun hierarki yang bersih. Ini menunjukkan apa yang menjadi fokus utama halaman, sementara judul lainnya dapat mendukung konten tanpa bersaing dengan pesan utama."
-
-#: inc/analyzer/seo-analyzer.php:373
-msgid "Use one H1 heading on your homepage and make sure it is the main title."
-msgstr "Gunakan satu judul H1 di beranda Anda dan pastikan itu adalah judul utama."
-
-#: inc/analyzer/seo-analyzer.php:374
-msgid "Write it clearly so visitors immediately know what your site offers."
-msgstr "Tulis dengan jelas sehingga pengunjung segera tahu apa yang ditawarkan situs Anda."
-
-#: inc/analyzer/seo-analyzer.php:375
-msgid "Avoid generic phrases that do not communicate your purpose."
-msgstr "Hindari frasa umum yang tidak mengkomunikasikan tujuan Anda."
-
-#: inc/analyzer/seo-analyzer.php:376
-msgid "Keep it short and focused so it feels natural and easy to read."
-msgstr "Jaga agar tetap singkat dan fokus sehingga terasa alami dan mudah dibaca."
-
-#: inc/analyzer/seo-analyzer.php:390
-msgid "Helping You Learn to Code from Scratch"
-msgstr "Membantu Anda Belajar Kode dari Awal"
-
-#: inc/analyzer/seo-analyzer.php:391
-msgid "Creative Interior Design for Modern Spaces"
-msgstr "Desain Interior Kreatif untuk Ruang Modern"
-
-#: inc/analyzer/seo-analyzer.php:397
-msgid "Where you add or edit your H1 depends on how your homepage is set up."
-msgstr "Di mana Anda menambahkan atau mengedit H1 tergantung pada bagaimana beranda Anda disusun."
-
-#. translators: %s is the URL of the homepage settings page
-#: inc/analyzer/seo-analyzer.php:400
-#, php-format
-msgid "You can <a href=\"%s\">edit that page directly</a> to update the H1 heading."
-msgstr "Anda dapat <a href=\"%s\">mengedit halaman itu langsung</a> untuk memperbarui judul H1."
-
-#: inc/analyzer/seo-analyzer.php:408
-msgid "SureRank SEO Analysis checks whether your homepage has a proper H1 heading and alerts you when it is missing. This gives you a simple reminder to create a clear, helpful title that improves your page structure for visitors and search engines."
-msgstr "Analisis SEO SureRank memeriksa apakah beranda Anda memiliki judul H1 yang tepat dan memberi tahu Anda ketika itu hilang. Ini memberi Anda pengingat sederhana untuk membuat judul yang jelas dan membantu yang meningkatkan struktur halaman Anda untuk pengunjung dan mesin pencari."
-
-#: inc/analyzer/seo-analyzer.php:441
-msgid "Homepage H2 Headings"
-msgstr "Judul H2 Beranda"
-
-#: inc/analyzer/seo-analyzer.php:450
-msgid "H2 headings act like section titles that break your homepage into clear, readable parts. They help visitors understand what each section is about without having to read everything line by line. Think of them as signposts that guide people as they scroll, making it easier to spot what matters most."
-msgstr "Judul H2 berfungsi seperti judul bagian yang membagi beranda Anda menjadi bagian-bagian yang jelas dan dapat dibaca. Mereka membantu pengunjung memahami apa yang dibahas di setiap bagian tanpa harus membaca semuanya baris demi baris. Anggap saja mereka sebagai penunjuk arah yang membimbing orang saat mereka menggulir, membuatnya lebih mudah untuk menemukan apa yang paling penting."
-
-#: inc/analyzer/seo-analyzer.php:451
-msgid "Search engines also pay attention to these subheadings. They use H2s to understand how your page is structured and what each section focuses on. Clear H2 headings help both visitors and search engines follow your content more naturally."
-msgstr "Mesin pencari juga memperhatikan subjudul ini. Mereka menggunakan H2 untuk memahami bagaimana halaman Anda disusun dan apa yang difokuskan di setiap bagian. Judul H2 yang jelas membantu baik pengunjung maupun mesin pencari mengikuti konten Anda dengan lebih alami."
-
-#: inc/analyzer/seo-analyzer.php:455
-#: inc/analyzer/seo-analyzer.php:1257
-msgid "💡 Why it matters"
-msgstr "💡 Mengapa ini penting"
-
-#: inc/analyzer/seo-analyzer.php:464
-msgid "Most people scan a homepage before they read it. Without H2 headings, your content can feel flat or overwhelming, even if the information is good. Well-placed H2s make your homepage easier to scan, easier to understand, and more inviting to explore."
-msgstr "Kebanyakan orang memindai beranda sebelum mereka membacanya. Tanpa judul H2, konten Anda bisa terasa datar atau membingungkan, bahkan jika informasinya bagus. H2 yang ditempatkan dengan baik membuat beranda Anda lebih mudah dipindai, lebih mudah dipahami, dan lebih menarik untuk dijelajahi."
-
-#: inc/analyzer/seo-analyzer.php:465
-msgid "From a search perspective, H2 headings give structure to your page. They help search engines understand the different topics covered on your homepage, which improves clarity and supports better visibility."
-msgstr "Dari perspektif pencarian, judul H2 memberikan struktur pada halaman Anda. Mereka membantu mesin pencari memahami berbagai topik yang dibahas di beranda Anda, yang meningkatkan kejelasan dan mendukung visibilitas yang lebih baik."
-
-#: inc/analyzer/seo-analyzer.php:469
-#: inc/analyzer/seo-analyzer.php:1055
-#: inc/analyzer/seo-analyzer.php:1169
-#: inc/analyzer/seo-analyzer.php:1264
-#: inc/api/analyzer.php:474
-#: inc/api/analyzer.php:691
-#: inc/api/analyzer.php:856
-msgid "✅ How to keep things smooth"
-msgstr "✅ Cara menjaga semuanya tetap lancar"
-
-#: inc/analyzer/seo-analyzer.php:473
-msgid "Add at least one H2 heading to your homepage to introduce a section."
-msgstr "Tambahkan setidaknya satu judul H2 ke beranda Anda untuk memperkenalkan sebuah bagian."
-
-#: inc/analyzer/seo-analyzer.php:474
-msgid "Use H2s to separate key parts like services, features, or values."
-msgstr "Gunakan H2 untuk memisahkan bagian-bagian penting seperti layanan, fitur, atau nilai."
-
-#: inc/analyzer/seo-analyzer.php:475
-msgid "Keep each heading short and clear so it is easy to scan."
-msgstr "Jaga setiap judul tetap singkat dan jelas agar mudah dipindai."
-
-#: inc/analyzer/seo-analyzer.php:476
-msgid "Make sure each H2 matches the content that follows it."
-msgstr "Pastikan setiap H2 sesuai dengan konten yang mengikutinya."
-
-#: inc/analyzer/seo-analyzer.php:482
-#: inc/analyzer/seo-analyzer.php:1068
-#: inc/analyzer/seo-analyzer.php:1181
-#: inc/analyzer/seo-analyzer.php:1277
-#: inc/api/analyzer.php:487
-#: inc/api/analyzer.php:704
-#: inc/api/analyzer.php:869
-msgid "🚀 Example"
-msgstr "🚀 Contoh"
-
-#: inc/analyzer/seo-analyzer.php:491
-msgid "Each of these helps visitors understand the section before reading the details."
-msgstr "Setiap ini membantu pengunjung memahami bagian sebelum membaca detailnya."
-
-#: inc/analyzer/seo-analyzer.php:495
-#: inc/analyzer/seo-analyzer.php:1074
-#: inc/analyzer/seo-analyzer.php:1194
-#: inc/analyzer/seo-analyzer.php:1283
-#: inc/api/analyzer.php:493
-#: inc/api/analyzer.php:715
-#: inc/api/analyzer.php:875
-msgid "🔧 Where to update it"
-msgstr "🔧 Di mana untuk memperbarui"
-
-#: inc/analyzer/seo-analyzer.php:497
-msgid "Edit your homepage and look for natural section breaks where a heading makes sense. If your homepage shows your latest posts, you can add H2 headings through your homepage layout or content blocks."
-msgstr "Edit beranda Anda dan cari pemisahan bagian yang alami di mana judul masuk akal. Jika beranda Anda menampilkan pos terbaru Anda, Anda dapat menambahkan judul H2 melalui tata letak beranda atau blok konten Anda."
-
-#: inc/analyzer/seo-analyzer.php:501
-#: inc/analyzer/seo-analyzer.php:1086
-#: inc/analyzer/seo-analyzer.php:1208
-#: inc/analyzer/seo-analyzer.php:1289
-#: inc/api/analyzer.php:509
-#: inc/api/analyzer.php:731
-#: inc/api/analyzer.php:891
-msgid "🌟 How SureRank helps"
-msgstr "🌟 Bagaimana SureRank membantu"
-
-#: inc/analyzer/seo-analyzer.php:503
-msgid "SureRank SEO Analysis checks whether your homepage includes at least one H2 heading. When none are found, it gently highlights this so you can add simple section headings for better readability for visitors and clarity for search engines."
-msgstr "Analisis SEO SureRank memeriksa apakah beranda Anda mencakup setidaknya satu judul H2. Ketika tidak ada yang ditemukan, ini dengan lembut menyoroti hal ini sehingga Anda dapat menambahkan judul bagian sederhana untuk meningkatkan keterbacaan bagi pengunjung dan kejelasan bagi mesin pencari."
-
-#: inc/analyzer/seo-analyzer.php:592
-msgid "Homepage Internal Links"
-msgstr "Tautan Internal Beranda"
-
-#: inc/analyzer/seo-analyzer.php:599
-msgid "Your homepage is often the first place visitors arrive so should help them move easily to the most important parts of your site. Internal links act like gentle signposts that guide people toward key pages, whether that's your services, blog, or contact page. They also help search engines understand how your site is organized."
-msgstr "Beranda Anda sering kali menjadi tempat pertama pengunjung tiba, jadi harus membantu mereka bergerak dengan mudah ke bagian terpenting dari situs Anda. Tautan internal bertindak seperti papan petunjuk lembut yang mengarahkan orang ke halaman kunci, apakah itu layanan Anda, blog, atau halaman kontak. Mereka juga membantu mesin pencari memahami bagaimana situs Anda terorganisir."
-
-#: inc/analyzer/seo-analyzer.php:605
-msgid "A homepage without internal links can feel like a dead end. Visitors may not know where to go next, and search engines may struggle to understand which pages matter most. When your homepage includes clear links to important sections, it guides visitors to take action and helps your site perform better in search."
-msgstr "Beranda tanpa tautan internal dapat terasa seperti jalan buntu. Pengunjung mungkin tidak tahu ke mana harus pergi selanjutnya, dan mesin pencari mungkin kesulitan memahami halaman mana yang paling penting. Ketika beranda Anda mencakup tautan yang jelas ke bagian penting, itu mengarahkan pengunjung untuk mengambil tindakan dan membantu situs Anda berkinerja lebih baik dalam pencarian."
-
-#: inc/analyzer/seo-analyzer.php:613
-msgid "Add links to your about page, product or service pages, blog posts, or contact page."
-msgstr "Tambahkan tautan ke halaman tentang Anda, halaman produk atau layanan, pos blog, atau halaman kontak."
-
-#: inc/analyzer/seo-analyzer.php:614
-msgid "Use buttons, menus, or simple text links, whichever feels most natural."
-msgstr "Gunakan tombol, menu, atau tautan teks sederhana, mana pun yang terasa paling alami."
-
-#: inc/analyzer/seo-analyzer.php:615
-msgid "Choose links that help visitors understand what to do next."
-msgstr "Pilih tautan yang membantu pengunjung memahami apa yang harus dilakukan selanjutnya."
-
-#: inc/analyzer/seo-analyzer.php:616
-msgid "Keep links easy to spot so people don't miss them."
-msgstr "Jaga tautan tetap mudah terlihat agar orang tidak melewatkannya."
-
-#: inc/analyzer/seo-analyzer.php:630
-msgid "A short welcome section on your homepage might end with a button leading to your services page and another pointing to your latest blog post. This gives visitors clear next steps and helps search engines see those pages as important."
-msgstr "Bagian sambutan singkat di beranda Anda mungkin diakhiri dengan tombol yang mengarah ke halaman layanan Anda dan yang lain mengarah ke pos blog terbaru Anda. Ini memberikan langkah selanjutnya yang jelas bagi pengunjung dan membantu mesin pencari melihat halaman-halaman tersebut sebagai penting."
-
-#: inc/analyzer/seo-analyzer.php:636
-msgid "Edit your homepage and look for natural places to add links, such as under introductions, inside feature blocks, or near calls to action."
-msgstr "Edit beranda Anda dan cari tempat alami untuk menambahkan tautan, seperti di bawah pengantar, di dalam blok fitur, atau dekat dengan ajakan untuk bertindak."
-
-#: inc/analyzer/seo-analyzer.php:642
-msgid "SureRank checks whether your homepage includes helpful internal links and highlights it when none are found. This gives you a simple reminder to guide visitors forward and strengthen your site's structure without needing to think about technical SEO."
-msgstr "SureRank memeriksa apakah beranda Anda menyertakan tautan internal yang berguna dan menyorotnya ketika tidak ada yang ditemukan. Ini memberi Anda pengingat sederhana untuk membimbing pengunjung ke depan dan memperkuat struktur situs Anda tanpa perlu memikirkan SEO teknis."
-
-#: inc/analyzer/seo-analyzer.php:695
-msgid "Homepage Canonical Tag"
-msgstr "Tag Kanonik Beranda"
-
-#: inc/analyzer/seo-analyzer.php:697
-msgid "Your homepage can sometimes be reached through more than one URL, even if the page looks exactly the same. This can happen with or without a trailing slash, or when links add extra parameters. A canonical tag tells search engines which version of your homepage should be treated as the main one. It works like gently pointing to the correct doorway and saying, \"This is the page to follow.\""
-msgstr "Beranda Anda terkadang dapat diakses melalui lebih dari satu URL, meskipun halaman tersebut terlihat persis sama. Ini dapat terjadi dengan atau tanpa garis miring di akhir, atau ketika tautan menambahkan parameter tambahan. Tag kanonik memberi tahu mesin pencari versi mana dari beranda Anda yang harus diperlakukan sebagai yang utama. Ini bekerja seperti menunjuk dengan lembut ke pintu yang benar dan mengatakan, \"Ini adalah halaman yang harus diikuti.\""
-
-#: inc/analyzer/seo-analyzer.php:703
-msgid "If search engines find several versions of your homepage, they may treat them as separate pages. This can split your ranking strength across multiple URLs and make your homepage look less important than it really is. A clear canonical tag keeps everything focused, helping search engines understand which version should receive full credit."
-msgstr "Jika mesin pencari menemukan beberapa versi dari beranda Anda, mereka mungkin memperlakukannya sebagai halaman terpisah. Ini dapat membagi kekuatan peringkat Anda di berbagai URL dan membuat beranda Anda terlihat kurang penting daripada yang sebenarnya. Tag kanonik yang jelas menjaga semuanya tetap fokus, membantu mesin pencari memahami versi mana yang harus menerima kredit penuh."
-
-#: inc/analyzer/seo-analyzer.php:717
-msgid "Choose one preferred homepage URL, such as https://example.com/."
-msgstr "Pilih satu URL beranda yang diinginkan, seperti https://example.com/."
-
-#: inc/analyzer/seo-analyzer.php:718
-msgid "Set a canonical tag that points to that exact URL."
-msgstr "Atur tag kanonik yang mengarah ke URL tersebut."
-
-#: inc/analyzer/seo-analyzer.php:719
-msgid "Keep the canonical link consistent so search engines aren't confused."
-msgstr "Jaga tautan kanonik tetap konsisten agar mesin pencari tidak bingung."
-
-#: inc/analyzer/seo-analyzer.php:720
-msgid "Avoid sharing alternate homepage URLs with extra parameters when possible."
-msgstr "Hindari membagikan URL beranda alternatif dengan parameter tambahan jika memungkinkan."
-
-#: inc/analyzer/seo-analyzer.php:728
-msgid "If your homepage loads at both https://example.com and https://example.com/?ref=newsletter, a canonical tag ensures search engines treat https://example.com as the main version."
-msgstr "Jika beranda Anda dimuat di https://example.com dan https://example.com/?ref=newsletter, tag kanonik memastikan mesin pencari memperlakukan https://example.com sebagai versi utama."
-
-#: inc/analyzer/seo-analyzer.php:734
-msgid "You can set your canonical tag directly from the SureRank Meta Box by opening the Advanced tab and filling in the Canonical Tag field."
-msgstr "Anda dapat mengatur tag kanonik Anda langsung dari SureRank Meta Box dengan membuka tab Lanjutan dan mengisi kolom Tag Kanonik."
-
-#: inc/analyzer/seo-analyzer.php:746
-msgid "SureRank SEO Analysis checks whether your homepage has a canonical tag and lets you know when one is missing. This gives you a clear, simple reminder to keep your homepage focused on a single, clean URL that search engines can trust."
-msgstr "Analisis SEO SureRank memeriksa apakah beranda Anda memiliki tag kanonik dan memberi tahu Anda ketika satu tidak ada. Ini memberi Anda pengingat yang jelas dan sederhana untuk menjaga beranda Anda fokus pada satu URL bersih yang dapat dipercaya oleh mesin pencari."
-
-#: inc/analyzer/seo-analyzer.php:780
-msgid "Homepage Indexing"
-msgstr "Pengindeksan Beranda"
-
-#: inc/analyzer/seo-analyzer.php:782
-msgid "For your site to appear in search results, your homepage needs to be indexable. Indexing means giving search engines permission to include your homepage in their listings so people can find it. If indexing is turned off, your homepage becomes invisible to search engines even if everything else on your site looks correct."
-msgstr "Agar situs Anda muncul dalam hasil pencarian, beranda Anda perlu dapat diindeks. Pengindeksan berarti memberikan izin kepada mesin pencari untuk menyertakan beranda Anda dalam daftar mereka sehingga orang dapat menemukannya. Jika pengindeksan dimatikan, beranda Anda menjadi tidak terlihat bagi mesin pencari meskipun segala sesuatu yang lain di situs Anda terlihat benar."
-
-#: inc/analyzer/seo-analyzer.php:792
-msgid "Your homepage is often the first place search engines and visitors try to reach. When indexing is blocked, search engines cannot list your homepage at all. This can make your entire site harder to discover, especially for people searching for your brand or business by name."
-msgstr "Beranda Anda sering kali menjadi tempat pertama yang dicoba oleh mesin pencari dan pengunjung untuk dijangkau. Ketika pengindeksan diblokir, mesin pencari tidak dapat mencantumkan beranda Anda sama sekali. Ini dapat membuat seluruh situs Anda lebih sulit ditemukan, terutama bagi orang-orang yang mencari merek atau bisnis Anda dengan nama."
-
-#: inc/analyzer/seo-analyzer.php:793
-msgid "A homepage that is indexable gives search engines a clear invitation to include your site in search results."
-msgstr "Beranda yang dapat diindeks memberikan undangan yang jelas kepada mesin pencari untuk menyertakan situs Anda dalam hasil pencarian."
-
-#: inc/analyzer/seo-analyzer.php:794
-msgid "Indexing issues can happen by accident during setup, theme changes, or plugin settings. It is important to check that your homepage is allowed to be indexed so nothing holds back your visibility."
-msgstr "Masalah pengindeksan dapat terjadi secara tidak sengaja selama pengaturan, perubahan tema, atau pengaturan plugin. Penting untuk memeriksa bahwa beranda Anda diizinkan untuk diindeks sehingga tidak ada yang menghalangi visibilitas Anda."
-
-#: inc/analyzer/seo-analyzer.php:802
-msgid "Make sure your homepage is set to allow indexing in your SEO settings."
-msgstr "Pastikan beranda Anda diatur untuk mengizinkan pengindeksan dalam pengaturan SEO Anda."
-
-#: inc/analyzer/seo-analyzer.php:803
-msgid "Review your global visibility settings to confirm nothing is blocking your site."
-msgstr "Tinjau pengaturan visibilitas global Anda untuk memastikan tidak ada yang memblokir situs Anda."
-
-#: inc/analyzer/seo-analyzer.php:804
-msgid "Check the Advanced section inside your SureRank Meta Box to ensure indexing is enabled."
-msgstr "Periksa bagian Lanjutan di dalam Kotak Meta SureRank Anda untuk memastikan pengindeksan diaktifkan."
-
-#: inc/analyzer/seo-analyzer.php:805
-msgid "After updating your settings, open your homepage and confirm it loads normally."
-msgstr "Setelah memperbarui pengaturan Anda, buka beranda Anda dan pastikan itu dimuat dengan normal."
-
-#: inc/analyzer/seo-analyzer.php:813
-msgid "If indexing was turned off while your site was being built, your homepage may never appear in search results after launch. Enabling indexing allows search engines to include it again."
-msgstr "Jika pengindeksan dimatikan saat situs Anda sedang dibangun, beranda Anda mungkin tidak pernah muncul dalam hasil pencarian setelah diluncurkan. Mengaktifkan pengindeksan memungkinkan mesin pencari untuk menyertakannya kembali."
-
-#: inc/analyzer/seo-analyzer.php:825
-msgid "You can check and update your homepage indexing preferences from the Advanced settings inside the SureRank Meta Box. You can also review your global visibility settings in WordPress to make sure nothing is preventing your site from being indexed."
-msgstr "Anda dapat memeriksa dan memperbarui preferensi pengindeksan beranda Anda dari pengaturan Lanjutan di dalam Kotak Meta SureRank. Anda juga dapat meninjau pengaturan visibilitas global Anda di WordPress untuk memastikan tidak ada yang mencegah situs Anda diindeks."
-
-#: inc/analyzer/seo-analyzer.php:831
-msgid "SureRank SEO Analysis checks whether your homepage is indexable and alerts you when it is blocked. This gives you a clear and simple reminder to allow indexing so search engines can include your site and help more people find what you offer."
-msgstr "Analisis SEO SureRank memeriksa apakah beranda Anda dapat diindeks dan memberi tahu Anda ketika itu diblokir. Ini memberi Anda pengingat yang jelas dan sederhana untuk mengizinkan pengindeksan sehingga mesin pencari dapat menyertakan situs Anda dan membantu lebih banyak orang menemukan apa yang Anda tawarkan."
-
-#: inc/analyzer/seo-analyzer.php:879
-msgid "Homepage Is Reachable"
-msgstr "Beranda Dapat Diakses"
-
-#: inc/analyzer/seo-analyzer.php:886
-msgid "Your homepage is often the first page visitors see and the starting point search engines use to understand your site. If the homepage doesn't load or shows an error, both visitors and search engines may have trouble reaching your content."
-msgstr "Beranda Anda sering kali menjadi halaman pertama yang dilihat pengunjung dan titik awal yang digunakan mesin pencari untuk memahami situs Anda. Jika beranda tidak dimuat atau menunjukkan kesalahan, baik pengunjung maupun mesin pencari mungkin mengalami kesulitan untuk menjangkau konten Anda."
-
-#: inc/analyzer/seo-analyzer.php:892
-msgid "When your homepage isn't reachable, it affects more than just one page. Search engines may not be able to crawl or index your site properly and visitors may leave before seeing anything else. A working homepage sets the tone for your entire site and makes sure people and search engines can explore it without problems."
-msgstr "Ketika beranda Anda tidak dapat diakses, itu mempengaruhi lebih dari sekadar satu halaman. Mesin pencari mungkin tidak dapat merayapi atau mengindeks situs Anda dengan benar dan pengunjung mungkin pergi sebelum melihat hal lain. Beranda yang berfungsi menetapkan nada untuk seluruh situs Anda dan memastikan orang serta mesin pencari dapat menjelajahinya tanpa masalah."
-
-#: inc/analyzer/seo-analyzer.php:900
-msgid "Open your homepage in a browser and make sure it loads without errors."
-msgstr "Buka halaman utama Anda di browser dan pastikan itu dimuat tanpa kesalahan."
-
-#: inc/analyzer/seo-analyzer.php:901
-msgid "Confirm that the page is published and not set to private or draft."
-msgstr "Konfirmasi bahwa halaman tersebut dipublikasikan dan tidak diatur sebagai pribadi atau draf."
-
-#: inc/analyzer/seo-analyzer.php:902
-msgid "Check that no redirects or plugins are accidentally blocking access."
-msgstr "Periksa bahwa tidak ada pengalihan atau plugin yang secara tidak sengaja memblokir akses."
-
-#: inc/analyzer/seo-analyzer.php:903
-msgid "Review your WordPress homepage settings to ensure the correct page is selected."
-msgstr "Tinjau pengaturan halaman utama WordPress Anda untuk memastikan halaman yang benar dipilih."
-
-#: inc/analyzer/seo-analyzer.php:916
-msgid "If your homepage was deleted or changed to draft by mistake, visitors may see a 404 page instead."
-msgstr "Jika halaman utama Anda dihapus atau diubah menjadi draf secara tidak sengaja, pengunjung mungkin melihat halaman 404 sebagai gantinya."
-
-#: inc/analyzer/seo-analyzer.php:922
-msgid "In WordPress, go to Settings → Reading and make sure the correct homepage is selected. If you use a static homepage, confirm that the page still exists, is published and loads normally when opened directly."
-msgstr "Di WordPress, pergi ke Pengaturan → Membaca dan pastikan halaman utama yang benar dipilih. Jika Anda menggunakan halaman utama statis, konfirmasikan bahwa halaman tersebut masih ada, dipublikasikan, dan dimuat dengan normal saat dibuka langsung."
-
-#: inc/analyzer/seo-analyzer.php:928
-msgid "SureRank SEO Analysis checks whether your homepage is reachable and flags it when it isn’t. This gives you a clear reminder to fix any loading issues so both visitors and search engines can access your site without interruption."
-msgstr "Analisis SEO SureRank memeriksa apakah halaman utama Anda dapat diakses dan menandainya ketika tidak dapat diakses. Ini memberi Anda pengingat yang jelas untuk memperbaiki masalah pemuatan sehingga baik pengunjung maupun mesin pencari dapat mengakses situs Anda tanpa gangguan."
-
-#: inc/analyzer/seo-analyzer.php:961
-msgid "Secure Connection (HTTPS)"
-msgstr "Koneksi Aman (HTTPS)"
-
-#: inc/analyzer/seo-analyzer.php:968
-msgid "A secure connection means your website uses HTTPS, which is shown by the little padlock icon next to your site's address in a browser. It tells visitors and search engines that your site is safe and any information shared is protected."
-msgstr "Koneksi yang aman berarti situs web Anda menggunakan HTTPS, yang ditunjukkan oleh ikon gembok kecil di samping alamat situs Anda di browser. Ini memberi tahu pengunjung dan mesin pencari bahwa situs Anda aman dan informasi yang dibagikan dilindungi."
-
-#: inc/analyzer/seo-analyzer.php:972
-msgid "Why it matters"
-msgstr "Mengapa ini penting"
-
-#: inc/analyzer/seo-analyzer.php:974
-msgid "Security is important for every site, even if you don't collect sensitive information. HTTPS helps protect visitors, builds trust, and signals to search engines that your site is reliable. Modern browsers may also warn visitors when a site isn't secure, so using HTTPS keeps people confident in your site."
-msgstr "Keamanan penting untuk setiap situs, bahkan jika Anda tidak mengumpulkan informasi sensitif. HTTPS membantu melindungi pengunjung, membangun kepercayaan, dan memberi sinyal kepada mesin pencari bahwa situs Anda dapat diandalkan. Browser modern juga dapat memperingatkan pengunjung ketika situs tidak aman, jadi menggunakan HTTPS membuat orang percaya pada situs Anda."
-
-#: inc/analyzer/seo-analyzer.php:982
-msgid "Check your site shows the padlock icon in the browser address bar."
-msgstr "Periksa apakah situs Anda menunjukkan ikon gembok di bilah alamat browser."
-
-#: inc/analyzer/seo-analyzer.php:983
-msgid "Make sure HTTPS is active by using an SSL certificate. Many hosting providers offer them for free."
-msgstr "Pastikan HTTPS aktif dengan menggunakan sertifikat SSL. Banyak penyedia hosting menawarkannya secara gratis."
-
-#: inc/analyzer/seo-analyzer.php:984
-msgid "Keep your certificate up to date so your connection remains secure."
-msgstr "Jaga agar sertifikat Anda tetap terbaru sehingga koneksi Anda tetap aman."
-
-#: inc/analyzer/seo-analyzer.php:997
-msgid "A visitor sees the padlock on your blog or store and feels confident browsing or signing up for your newsletter. Without HTTPS, the same visitor might get a warning and leave immediately."
-msgstr "Seorang pengunjung melihat gembok di blog atau toko Anda dan merasa percaya diri saat menjelajah atau mendaftar untuk buletin Anda. Tanpa HTTPS, pengunjung yang sama mungkin mendapatkan peringatan dan segera pergi."
-
-#: inc/analyzer/seo-analyzer.php:1003
-msgid "Most hosting dashboards include an option to enable SSL or HTTPS for your site. This is often found under sections like Security, SSL, or Domains."
-msgstr "Sebagian besar dasbor hosting menyertakan opsi untuk mengaktifkan SSL atau HTTPS untuk situs Anda. Ini sering ditemukan di bawah bagian seperti Keamanan, SSL, atau Domain."
-
-#: inc/analyzer/seo-analyzer.php:1009
-msgid "SureRank confirms whether your site has HTTPS or not, so you can see the status clearly and see at a glance whether your connection is secure."
-msgstr "SureRank mengonfirmasi apakah situs Anda memiliki HTTPS atau tidak, sehingga Anda dapat melihat statusnya dengan jelas dan melihat sekilas apakah koneksi Anda aman."
-
-#: inc/analyzer/seo-analyzer.php:1037
+#: inc/analyzer/seo-analyzer.php:1054
 msgid "Homepage Open Graph Tags"
 msgstr "Tag Open Graph Halaman Utama"
 
-#: inc/analyzer/seo-analyzer.php:1039
-msgid "When someone shares your site on social media or in a messaging app, the platform tries to show a preview with a title, description and image. Without Open Graph tags, they may pull random content or show no preview at all. Open Graph tags let you choose exactly what people see when your site is shared."
-msgstr "Ketika seseorang membagikan situs Anda di media sosial atau di aplikasi pesan, platform mencoba menampilkan pratinjau dengan judul, deskripsi, dan gambar. Tanpa tag Open Graph, mereka mungkin menarik konten acak atau tidak menampilkan pratinjau sama sekali. Tag Open Graph memungkinkan Anda memilih dengan tepat apa yang dilihat orang ketika situs Anda dibagikan."
-
-#: inc/analyzer/seo-analyzer.php:1043
-#: inc/analyzer/seo-analyzer.php:1157
-#: inc/api/analyzer.php:468
-#: inc/api/analyzer.php:679
-#: inc/api/analyzer.php:850
-msgid "💡 Why this matters:"
-msgstr "💡 Mengapa ini penting:"
-
-#: inc/analyzer/seo-analyzer.php:1045
-msgid "A clean and attractive preview helps your site look more trustworthy and encourages people to click. If the preview is missing or doesn't show the right information, it can be harder for visitors to engage with your content. Setting these tags helps your site look polished wherever it appears."
-msgstr "Pratinjau yang bersih dan menarik membantu situs Anda terlihat lebih dapat dipercaya dan mendorong orang untuk mengklik. Jika pratinjau hilang atau tidak menunjukkan informasi yang tepat, bisa lebih sulit bagi pengunjung untuk terlibat dengan konten Anda. Mengatur tag ini membantu situs Anda terlihat rapi di mana pun ia muncul."
-
-#: inc/analyzer/seo-analyzer.php:1059
-msgid "Add a short, clear title that matches what your site is about."
-msgstr "Tambahkan judul singkat dan jelas yang sesuai dengan apa yang dibahas situs Anda."
-
-#: inc/analyzer/seo-analyzer.php:1060
-msgid "Write a brief description that introduces your site in a friendly way."
-msgstr "Tulis deskripsi singkat yang memperkenalkan situs Anda dengan cara yang ramah."
-
-#: inc/analyzer/seo-analyzer.php:1061
-msgid "Choose an image that represents your brand or homepage well."
-msgstr "Pilih gambar yang mewakili merek atau halaman utama Anda dengan baik."
-
-#: inc/analyzer/seo-analyzer.php:1062
-msgid "Keep all three elements simple so the preview feels inviting."
-msgstr "Jaga ketiga elemen tetap sederhana agar pratinjau terasa mengundang."
-
-#: inc/analyzer/seo-analyzer.php:1070
-msgid "A homepage preview might show your site name, a short tagline and a clean image that reflects your brand or main topic."
-msgstr "Pratinjau halaman utama mungkin menunjukkan nama situs Anda, tagline singkat, dan gambar bersih yang mencerminkan merek atau topik utama Anda."
-
-#: inc/analyzer/seo-analyzer.php:1076
-msgid "You can configure your homepage Open Graph settings from your Home Page Social settings or your global social settings, depending on how your homepage is set up."
-msgstr "Anda dapat mengonfigurasi pengaturan Open Graph halaman utama Anda dari pengaturan Sosial Halaman Utama Anda atau pengaturan sosial global Anda, tergantung pada bagaimana halaman utama Anda diatur."
-
-#: inc/analyzer/seo-analyzer.php:1088
-msgid "SureRank SEO Analysis checks whether your homepage has Open Graph tags and shows when they are missing. This gives you a simple reminder to set a clear title, description, and image so your homepage always looks good when shared."
-msgstr "Analisis SEO SureRank memeriksa apakah halaman utama Anda memiliki tag Open Graph dan menunjukkan ketika tag tersebut hilang. Ini memberi Anda pengingat sederhana untuk mengatur judul, deskripsi, dan gambar yang jelas sehingga halaman utama Anda selalu terlihat baik saat dibagikan."
-
-#: inc/analyzer/seo-analyzer.php:1151
-msgid "Homepage Schema Metadata"
-msgstr "Metadata Skema Halaman Utama"
-
-#: inc/analyzer/seo-analyzer.php:1153
-msgid "Schema works like a small cheat sheet your homepage shares with search engines. It quietly explains what type of page it is, such as a website homepage or a blog, so search engines can understand the content more clearly. This extra context helps them interpret your page better and can lead to richer details in search results."
-msgstr "Skema berfungsi seperti lembar contekan kecil yang dibagikan halaman utama Anda dengan mesin pencari. Ini secara diam-diam menjelaskan jenis halaman apa itu, seperti halaman utama situs web atau blog, sehingga mesin pencari dapat memahami konten dengan lebih jelas. Konteks tambahan ini membantu mereka menginterpretasikan halaman Anda dengan lebih baik dan dapat menghasilkan detail yang lebih kaya dalam hasil pencarian."
-
-#: inc/analyzer/seo-analyzer.php:1159
-msgid "Search engines use signals beyond page text to understand your site. Schema provides those signals in a structured format. When your homepage includes the right schema, search results can show clearer details, like your site name or breadcrumb paths, before users click."
-msgstr "Mesin pencari menggunakan sinyal di luar teks halaman untuk memahami situs Anda. Skema menyediakan sinyal tersebut dalam format terstruktur. Ketika halaman utama Anda menyertakan skema yang tepat, hasil pencarian dapat menunjukkan detail yang lebih jelas, seperti nama situs Anda atau jalur remah roti, sebelum pengguna mengklik."
-
-#: inc/analyzer/seo-analyzer.php:1173
-msgid "Ensure your homepage includes essential structured data like WebPage schema."
-msgstr "Pastikan halaman beranda Anda mencakup data terstruktur penting seperti skema WebPage."
-
-#: inc/analyzer/seo-analyzer.php:1174
-msgid "Keep the schema feature enabled so search engines always receive the right signals."
-msgstr "Pertahankan fitur skema diaktifkan sehingga mesin pencari selalu menerima sinyal yang tepat."
-
-#: inc/analyzer/seo-analyzer.php:1175
-msgid "Confirm that the schema being applied matches what your homepage represents."
-msgstr "Konfirmasi bahwa skema yang diterapkan sesuai dengan apa yang diwakili oleh halaman beranda Anda."
-
-#: inc/analyzer/seo-analyzer.php:1190
-msgid "A homepage using WebPage schema will show context such as your site name or breadcrumb information in search results, helping visitors understand your site before they click."
-msgstr "Halaman beranda yang menggunakan skema WebPage akan menunjukkan konteks seperti nama situs Anda atau informasi breadcrumb dalam hasil pencarian, membantu pengunjung memahami situs Anda sebelum mereka mengklik."
-
-#: inc/analyzer/seo-analyzer.php:1196
-msgid "Schema is generated automatically by SureRank when the feature is enabled. To verify that it's being applied correctly, you can:"
-msgstr "Skema dihasilkan secara otomatis oleh SureRank ketika fitur diaktifkan. Untuk memverifikasi bahwa itu diterapkan dengan benar, Anda dapat:"
-
-#: inc/analyzer/seo-analyzer.php:1199
-msgid "View the live page source and search for \"schema\" or \"application/ld+json.\""
-msgstr "Lihat sumber halaman langsung dan cari \"skema\" atau \"application/ld+json.\""
-
-#: inc/analyzer/seo-analyzer.php:1200
-msgid "Use a schema validation tool to check what search engines can read."
-msgstr "Gunakan alat validasi skema untuk memeriksa apa yang dapat dibaca oleh mesin pencari."
-
-#: inc/analyzer/seo-analyzer.php:1201
-msgid "Use the Schema Builder to see the schema SureRank prepares, then confirm it appears on the live page."
-msgstr "Gunakan Pembuat Skema untuk melihat skema yang disiapkan oleh SureRank, lalu konfirmasi bahwa itu muncul di halaman langsung."
-
-#: inc/analyzer/seo-analyzer.php:1204
-msgid "This helps you understand what should be output, but the live page check is the real confirmation."
-msgstr "Ini membantu Anda memahami apa yang harus dikeluarkan, tetapi pemeriksaan halaman langsung adalah konfirmasi yang sebenarnya."
-
-#: inc/analyzer/seo-analyzer.php:1210
-msgid "SureRank SEO Analysis checks whether your homepage schema is active and present. Once enabled, the plugin builds the structured data for you and gives you simple ways to confirm that search engines can read it correctly."
-msgstr "Analisis SEO SureRank memeriksa apakah skema halaman beranda Anda aktif dan ada. Setelah diaktifkan, plugin membangun data terstruktur untuk Anda dan memberikan cara sederhana untuk mengonfirmasi bahwa mesin pencari dapat membacanya dengan benar."
-
-#: inc/analyzer/seo-analyzer.php:1251
-msgid "🌐 WWW Canonicalization"
-msgstr "🌐 Kanalisasi WWW"
-
-#: inc/analyzer/seo-analyzer.php:1253
-msgid "Your site can usually be accessed in two ways. One version uses www at the front of the address and the other does not. For example, https://example.com and https://www.example.com might both load your site, even though they look identical. Search engines see these as two separate versions unless one automatically redirects to the other."
-msgstr "Situs Anda biasanya dapat diakses dengan dua cara. Satu versi menggunakan www di depan alamat dan yang lainnya tidak. Misalnya, https://example.com dan https://www.example.com mungkin keduanya memuat situs Anda, meskipun terlihat identik. Mesin pencari melihat ini sebagai dua versi terpisah kecuali salah satunya secara otomatis mengalihkan ke yang lain."
-
-#: inc/analyzer/seo-analyzer.php:1259
-msgid "When both versions load without a redirect, search engines may think you have duplicate copies of every page on your site. This can spread your SEO strength across two versions and make it harder for search engines to know which one to focus on. A single preferred version keeps everything consistent and helps search engines understand your site more clearly."
-msgstr "Ketika kedua versi dimuat tanpa pengalihan, mesin pencari mungkin berpikir Anda memiliki salinan duplikat dari setiap halaman di situs Anda. Ini dapat menyebarkan kekuatan SEO Anda di dua versi dan membuat lebih sulit bagi mesin pencari untuk mengetahui yang mana yang harus difokuskan. Satu versi yang diutamakan menjaga semuanya konsisten dan membantu mesin pencari memahami situs Anda dengan lebih jelas."
-
-#: inc/analyzer/seo-analyzer.php:1260
-msgid "Choosing one version also gives visitors a cleaner experience. Visitors always land on the same address, which builds trust and avoids confusion."
-msgstr "Memilih satu versi juga memberikan pengalaman yang lebih bersih bagi pengunjung. Pengunjung selalu mendarat di alamat yang sama, yang membangun kepercayaan dan menghindari kebingungan."
-
-#: inc/analyzer/seo-analyzer.php:1268
-msgid "Decide whether you want to use www or non www as your main address."
-msgstr "Tentukan apakah Anda ingin menggunakan www atau non-www sebagai alamat utama Anda."
-
-#: inc/analyzer/seo-analyzer.php:1269
-msgid "Set up a redirect so all traffic goes to your preferred version."
-msgstr "Atur pengalihan sehingga semua lalu lintas menuju versi yang Anda pilih."
-
-#: inc/analyzer/seo-analyzer.php:1270
-msgid "Make sure your internal links and sitemap match the version you choose."
-msgstr "Pastikan tautan internal dan peta situs Anda sesuai dengan versi yang Anda pilih."
-
-#: inc/analyzer/seo-analyzer.php:1271
-msgid "Ask your hosting provider for help if you are unsure how to set up the redirect."
-msgstr "Tanyakan kepada penyedia hosting Anda untuk bantuan jika Anda tidak yakin cara mengatur pengalihan."
-
-#: inc/analyzer/seo-analyzer.php:1279
-msgid "If someone visits https://www.example.com but your preferred version is https://example.com, a redirect will automatically send them to the correct version. This keeps everything clean and consistent for search engines and visitors."
-msgstr "Jika seseorang mengunjungi https://www.example.com tetapi versi yang Anda pilih adalah https://example.com, pengalihan akan secara otomatis mengirim mereka ke versi yang benar. Ini menjaga semuanya tetap bersih dan konsisten untuk mesin pencari dan pengunjung."
-
-#: inc/analyzer/seo-analyzer.php:1285
-msgid "You can configure this from your hosting panel or by adjusting your domain settings. Some hosts offer a simple toggle to enforce either www or non www. You can also ask your hosting support to set it up if you prefer an easier option."
-msgstr "Anda dapat mengonfigurasi ini dari panel hosting Anda atau dengan menyesuaikan pengaturan domain Anda. Beberapa penyedia menawarkan saklar sederhana untuk menegakkan www atau non-www. Anda juga dapat meminta dukungan hosting Anda untuk mengaturnya jika Anda lebih suka opsi yang lebih mudah."
-
-#: inc/analyzer/seo-analyzer.php:1291
-msgid "SureRank SEO Analysis checks whether your site redirects properly between the www and non www versions. When it detects that both versions load separately, it gives you a clear reminder to set a single preferred version so your site stays consistent and easy for search engines to understand."
-msgstr "Analisis SEO SureRank memeriksa apakah situs Anda mengalihkan dengan benar antara versi www dan non-www. Ketika mendeteksi bahwa kedua versi dimuat secara terpisah, ia memberi Anda pengingat yang jelas untuk menetapkan satu versi yang diutamakan sehingga situs Anda tetap konsisten dan mudah dipahami oleh mesin pencari."
-
-#: inc/analyzer/seo-analyzer.php:1602
-msgid "Homepage Image ALT Text"
-msgstr "Teks ALT Gambar Beranda"
-
-#: inc/analyzer/seo-analyzer.php:1604
-msgid "Images add personality and meaning to your homepage, but search engines cannot understand them on their own. ALT text is a short written description that tells screen readers what an image shows, making your site more accessible for visitors who rely on assistive tools. It also gives search engines a bit more context, which can help them understand your page more clearly."
-msgstr "Gambar menambah kepribadian dan makna pada beranda Anda, tetapi mesin pencari tidak dapat memahaminya sendiri. Teks ALT adalah deskripsi tertulis singkat yang memberi tahu pembaca layar apa yang ditampilkan gambar, membuat situs Anda lebih dapat diakses bagi pengunjung yang bergantung pada alat bantu. Ini juga memberi mesin pencari sedikit lebih banyak konteks, yang dapat membantu mereka memahami halaman Anda dengan lebih jelas."
-
-#: inc/analyzer/seo-analyzer.php:1610
-msgid "ALT text plays an important role in accessibility by helping people who cannot see the images understand what is being shown. It also adds helpful context for search engines, especially when they try to understand the purpose of the images on your page. On your homepage, where key visuals often support your main message, clear ALT text makes your site more inclusive and easier to understand for everyone."
-msgstr "Teks ALT memainkan peran penting dalam aksesibilitas dengan membantu orang yang tidak dapat melihat gambar memahami apa yang ditampilkan. Ini juga menambahkan konteks yang berguna bagi mesin pencari, terutama ketika mereka mencoba memahami tujuan gambar di halaman Anda. Di beranda Anda, di mana visual kunci sering mendukung pesan utama Anda, teks ALT yang jelas membuat situs Anda lebih inklusif dan lebih mudah dipahami oleh semua orang."
-
-#: inc/analyzer/seo-analyzer.php:1624
-msgid "Describe what the image is showing in clear, simple words."
-msgstr "Deskripsikan apa yang ditampilkan gambar dengan kata-kata yang jelas dan sederhana."
-
-#: inc/analyzer/seo-analyzer.php:1625
-msgid "Add ALT text to images that have meaning and skip for purely decorative ones."
-msgstr "Tambahkan teks ALT ke gambar yang memiliki makna dan lewati untuk yang hanya dekoratif."
-
-#: inc/analyzer/seo-analyzer.php:1626
-msgid "Keep descriptions short so they feel natural when read aloud."
-msgstr "Jaga deskripsi tetap singkat sehingga terasa alami saat dibaca keras."
-
-#: inc/analyzer/seo-analyzer.php:1627
-msgid "Write as if helping someone who cannot see the image."
-msgstr "Tulis seolah-olah membantu seseorang yang tidak dapat melihat gambar."
-
-#: inc/analyzer/seo-analyzer.php:1637
-msgid "Woman doing yoga in a sunny room."
-msgstr "Wanita yang melakukan yoga di ruangan yang cerah."
-
-#: inc/analyzer/seo-analyzer.php:1638
-msgid "Handmade ceramic mug on wooden table."
-msgstr "Cangkir keramik buatan tangan di atas meja kayu."
-
-#. translators: %s is the URL of the WordPress Media Library
-#: inc/analyzer/seo-analyzer.php:1648
-#, php-format
-msgid "You can add ALT text in the <a href=\"%s\">media settings</a> when you upload or edit an image."
-msgstr "Anda dapat menambahkan teks ALT di <a href=\"%s\">pengaturan media</a> saat Anda mengunggah atau mengedit gambar."
-
-#: inc/analyzer/seo-analyzer.php:1651
-msgid "Depending on your page builder, updating ALT text in the media library may not change images that are already placed on a page. Builders often store that information inside the block so you may need to open each image block and update the ALT text manually. New uploads usually apply the ALT text correctly from the start."
-msgstr "Tergantung pada pembuat halaman Anda, memperbarui teks ALT di perpustakaan media mungkin tidak mengubah gambar yang sudah ditempatkan di halaman. Pembuat sering menyimpan informasi itu di dalam blok, jadi Anda mungkin perlu membuka setiap blok gambar dan memperbarui teks ALT secara manual. Unggahan baru biasanya menerapkan teks ALT dengan benar sejak awal."
-
-#: inc/analyzer/seo-analyzer.php:1663
-msgid "SureRank checks whether your homepage images have ALT text and shows which ones are missing it. This helps you keep your site more accessible and ensures your important images are described clearly for every visitor."
-msgstr "SureRank memeriksa apakah gambar di beranda Anda memiliki teks ALT dan menunjukkan mana yang hilang. Ini membantu Anda menjaga situs Anda lebih dapat diakses dan memastikan gambar penting Anda dijelaskan dengan jelas untuk setiap pengunjung."
-
-#: inc/api/analyzer.php:462
-msgid "Google Search Console Connection"
-msgstr "Koneksi Google Search Console"
-
-#: inc/api/analyzer.php:464
-msgid "Google Search Console is a free tool that shows how your site appears in Google search. It helps you understand what people are searching for, which pages they visit, and how often your site shows up. Connecting it doesn't change anything on your site, but it gives you a helpful view of what's happening behind the scenes."
-msgstr "Google Search Console adalah alat gratis yang menunjukkan bagaimana situs Anda muncul di pencarian Google. Ini membantu Anda memahami apa yang dicari orang, halaman mana yang mereka kunjungi, dan seberapa sering situs Anda muncul. Menghubungkannya tidak mengubah apa pun di situs Anda, tetapi memberi Anda pandangan yang berguna tentang apa yang terjadi di balik layar."
-
-#: inc/api/analyzer.php:470
-msgid "Without Search Console, you miss important information about how your site performs in search. With it, you can see your visibility, clicks, and which pages attract the most attention. These insights help you make smarter decisions and understand what's working well."
-msgstr "Tanpa Search Console, Anda kehilangan informasi penting tentang bagaimana kinerja situs Anda dalam pencarian. Dengan itu, Anda dapat melihat visibilitas Anda, klik, dan halaman mana yang menarik perhatian paling banyak. Wawasan ini membantu Anda membuat keputusan yang lebih cerdas dan memahami apa yang berjalan dengan baik."
-
-#: inc/api/analyzer.php:478
-msgid "Go to the Search Console tab in SureRank."
-msgstr "Pergi ke tab Search Console di SureRank."
-
-#: inc/api/analyzer.php:479
-msgid "Click Connect Now to sign in with your Google account."
-msgstr "Klik Hubungkan Sekarang untuk masuk dengan akun Google Anda."
-
-#: inc/api/analyzer.php:480
-msgid "Select your site from the list inside the popup."
-msgstr "Pilih situs Anda dari daftar di dalam popup."
-
-#: inc/api/analyzer.php:481
-msgid "SureRank will take care of the verification steps and connect your site."
-msgstr "SureRank akan menangani langkah verifikasi dan menghubungkan situs Anda."
-
-#: inc/api/analyzer.php:489
-msgid "Once connected, you might learn that a helpful guide you wrote months ago is one of your strongest pages, or that people often find your site through topics you hadn't expected."
-msgstr "Setelah terhubung, Anda mungkin mengetahui bahwa panduan berguna yang Anda tulis beberapa bulan lalu adalah salah satu halaman terkuat Anda, atau bahwa orang sering menemukan situs Anda melalui topik yang tidak Anda duga."
-
-#. translators: %s is the URL of the Search Console tab
-#: inc/api/analyzer.php:497
-#, php-format
-msgid "You can manage or reconnect Google Search Console anytime from the <a href=\"%s\">Search Console tab</a> inside SureRank."
-msgstr "Anda dapat mengelola atau menghubungkan kembali Google Search Console kapan saja dari <a href=\"%s\">tab Search Console</a> di dalam SureRank."
-
-#: inc/api/analyzer.php:511
-msgid "SureRank SEO Analysis checks whether your site is connected to Google Search Console. When it is, SureRank brings your key insights into your dashboard so you can understand your search performance without leaving WordPress."
-msgstr "Analisis SEO SureRank memeriksa apakah situs Anda terhubung ke Google Search Console. Ketika terhubung, SureRank membawa wawasan kunci Anda ke dalam dasbor Anda sehingga Anda dapat memahami kinerja pencarian Anda tanpa meninggalkan WordPress."
-
-#: inc/api/analyzer.php:675
-msgid "Your site tagline is a short sentence that explains what your website is about. It can appear in the browser tab, on your homepage, or in search snippets, depending on your theme and settings. Think of it as a simple introduction that sits beside your site name."
-msgstr "Tagline situs Anda adalah kalimat pendek yang menjelaskan tentang apa situs web Anda. Ini dapat muncul di tab browser, di beranda Anda, atau dalam cuplikan pencarian, tergantung pada tema dan pengaturan Anda. Anggaplah ini sebagai pengantar sederhana yang berada di samping nama situs Anda."
-
-#: inc/api/analyzer.php:681
-msgid "A clear tagline helps visitors understand your site at a glance and makes search results more inviting. If the field is blank or still shows a default message like \"Just another WordPress site,\" it doesn't tell people or search engines anything meaningful. A thoughtful tagline works like a small pitch that highlights what your site offers."
-msgstr "Tagline yang jelas membantu pengunjung memahami situs Anda dengan cepat dan membuat hasil pencarian lebih menarik. Jika kolomnya kosong atau masih menunjukkan pesan default seperti \"Hanya situs WordPress lainnya,\" itu tidak memberi tahu orang atau mesin pencari apa pun yang berarti. Tagline yang dipikirkan dengan baik berfungsi seperti pitch kecil yang menyoroti apa yang ditawarkan situs Anda."
-
-#: inc/api/analyzer.php:695
-msgid "Write one short sentence that describes your site's purpose or audience."
-msgstr "Tulis satu kalimat pendek yang menggambarkan tujuan atau audiens situs Anda."
-
-#: inc/api/analyzer.php:696
-msgid "Keep it friendly, specific and easy to understand."
-msgstr "Jaga agar tetap ramah, spesifik, dan mudah dipahami."
-
-#: inc/api/analyzer.php:697
-msgid "Avoid long phrases or generic lines that don't add clarity."
-msgstr "Hindari frasa panjang atau kalimat umum yang tidak menambah kejelasan."
-
-#: inc/api/analyzer.php:698
-msgid "Make sure the tagline reflects what your site focuses on today."
-msgstr "Pastikan tagline mencerminkan apa yang difokuskan situs Anda saat ini."
-
-#: inc/api/analyzer.php:708
-msgid "Simple budgeting tools for everyday people"
-msgstr "Alat anggaran sederhana untuk orang sehari-hari"
-
-#: inc/api/analyzer.php:709
-msgid "Home workouts and fitness tips that fit your schedule"
-msgstr "Latihan di rumah dan tips kebugaran yang sesuai dengan jadwal Anda"
-
-#. translators: %s is the URL of the WordPress General Settings page
-#: inc/api/analyzer.php:719
-#, php-format
-msgid "You can update your tagline from the <a href=\"%s\">WordPress General Settings page</a>."
-msgstr "Anda dapat memperbarui tagline Anda dari <a href=\"%s\">halaman Pengaturan Umum WordPress</a>."
-
-#: inc/api/analyzer.php:733
-msgid "SureRank SEO Analysis checks whether your site has a meaningful tagline and highlights when it is missing or unclear. This gives you a gentle reminder to add a line that helps visitors understand your site before they even land on it."
-msgstr "Analisis SEO SureRank memeriksa apakah situs Anda memiliki tagline yang berarti dan menyoroti ketika itu hilang atau tidak jelas. Ini memberi Anda pengingat lembut untuk menambahkan satu kalimat yang membantu pengunjung memahami situs Anda sebelum mereka bahkan mengunjunginya."
-
-#: inc/api/analyzer.php:838
-msgid "Site Indexing Setting"
-msgstr "Pengaturan Pengindeksan Situs"
-
-#: inc/api/analyzer.php:840
-msgid "WordPress includes a setting that tells search engines whether they should try to index your site. Indexing simply means your pages can appear in search results. This setting is often used while a site is still being built or kept private, because it asks search engines not to index the content yet."
-msgstr "WordPress menyertakan pengaturan yang memberi tahu mesin pencari apakah mereka harus mencoba mengindeks situs Anda. Pengindeksan berarti halaman Anda dapat muncul dalam hasil pencarian. Pengaturan ini sering digunakan saat situs masih dibangun atau dijaga tetap pribadi, karena meminta mesin pencari untuk tidak mengindeks konten terlebih dahulu."
-
-#: inc/api/analyzer.php:852
-msgid "If this setting stays enabled by accident, your site may not appear in search results even if everything else is set up correctly. It doesn't remove pages that were already indexed, but it quietly discourages search engines from indexing new ones. This can hold back visibility without you noticing."
-msgstr "Jika pengaturan ini tetap diaktifkan secara tidak sengaja, situs Anda mungkin tidak muncul dalam hasil pencarian meskipun semuanya diatur dengan benar. Ini tidak menghapus halaman yang sudah diindeks, tetapi dengan tenang mencegah mesin pencari mengindeks yang baru. Ini dapat menghambat visibilitas tanpa Anda sadari."
-
-#: inc/api/analyzer.php:860
-msgid "Go to Settings → Reading in WordPress."
-msgstr "Pergi ke Pengaturan → Membaca di WordPress."
-
-#: inc/api/analyzer.php:861
-msgid "Look for the option labeled \"Discourage search engines from indexing this site.\""
-msgstr "Cari opsi yang diberi label \"Mencegah mesin pencari mengindeks situs ini.\""
-
-#: inc/api/analyzer.php:862
-msgid "If your site is live and ready for visitors, make sure this box is not checked."
-msgstr "Jika situs Anda sudah aktif dan siap untuk pengunjung, pastikan kotak ini tidak dicentang."
-
-#: inc/api/analyzer.php:863
-msgid "Save your changes so search engines know they can index your site normally."
-msgstr "Simpan perubahan Anda agar mesin pencari tahu bahwa mereka dapat mengindeks situs Anda secara normal."
-
-#: inc/api/analyzer.php:871
-msgid "If you built your site on a staging server and published it, this setting may still be enabled. Unchecking it tells search engines they can start indexing your content."
-msgstr "Jika Anda membangun situs Anda di server staging dan menerbitkannya, pengaturan ini mungkin masih diaktifkan. Menghapus centang ini memberi tahu mesin pencari bahwa mereka dapat mulai mengindeks konten Anda."
-
-#. translators: %s is the URL of the WordPress Reading settings page
-#: inc/api/analyzer.php:879
-#, php-format
-msgid "You can find this option in <a href=\"%s\">WordPress → Settings → Reading</a>. It should be unchecked for a live site."
-msgstr "Anda dapat menemukan opsi ini di <a href=\"%s\">WordPress → Pengaturan → Membaca</a>. Ini harus tidak dicentang untuk situs yang aktif."
-
-#: inc/api/analyzer.php:893
-msgid "SureRank SEO Analysis checks whether your site is accidentally blocking search engines. If it is, SureRank shows a clear reminder so you can review the setting and make sure your site is ready to be indexed normally."
-msgstr "Analisis SEO SureRank memeriksa apakah situs Anda secara tidak sengaja memblokir mesin pencari. Jika iya, SureRank menunjukkan pengingat yang jelas sehingga Anda dapat meninjau pengaturan dan memastikan situs Anda siap untuk diindeks secara normal."
-
-#: inc/api/analyzer.php:943
-msgid "A sitemap is like a guide or floor plan for your website that helps search engines explore it efficiently. It lists your important pages and shows search engines the path to follow, making sure nothing essential gets missed. Think of it as a chapter list in a book - it doesn’t change how your site looks to visitors, but it helps search engines understand your content quickly and clearly."
-msgstr "Peta situs seperti panduan atau denah untuk situs web Anda yang membantu mesin pencari menjelajahinya dengan efisien. Ini mencantumkan halaman-halaman penting Anda dan menunjukkan kepada mesin pencari jalur yang harus diikuti, memastikan tidak ada yang penting terlewat. Anggap saja sebagai daftar bab dalam sebuah buku - itu tidak mengubah bagaimana situs Anda terlihat bagi pengunjung, tetapi membantu mesin pencari memahami konten Anda dengan cepat dan jelas."
-
-#: inc/api/analyzer.php:951
-msgid "Think of it like this: if your website was a story, the sitemap would be the chapter list - helping Google and other search engines jump to the right sections. It doesn’t change how your site looks to visitors, but it makes a big difference in how your site is discovered and understood behind the scenes."
-msgstr "Pikirkan seperti ini: jika situs web Anda adalah sebuah cerita, peta situs akan menjadi daftar bab - membantu Google dan mesin pencari lainnya melompat ke bagian yang tepat. Itu tidak mengubah bagaimana situs Anda terlihat bagi pengunjung, tetapi membuat perbedaan besar dalam bagaimana situs Anda ditemukan dan dipahami di balik layar."
-
-#: inc/api/analyzer.php:965
-msgid "XML Sitemap Example"
-msgstr "Contoh Peta Situs XML"
-
-#: inc/api/analyzer.php:1223
+#: inc/api/analyzer.php:1179
 msgid "No focus keyword set. Add one to analyze title, description, URL, and content."
 msgstr "Kata kunci fokus tidak diatur. Tambahkan satu untuk menganalisis judul, deskripsi, URL, dan konten."
 
@@ -9095,7 +8007,7 @@ msgstr "Mengetahui bahasa"
 msgid "Specify languages in which the organization provides services. Use standard IETF BCP 47 language codes (e.g., en, en-US, fr, es)."
 msgstr "Tentukan bahasa yang digunakan organisasi untuk memberikan layanan. Gunakan kode bahasa standar IETF BCP 47 (misalnya, en, en-US, fr, es)."
 
-#: loader.php:366
+#: loader.php:367
 msgid "Get SureRank Pro"
 msgstr "Dapatkan SureRank Pro"
 
@@ -9381,3 +8293,1180 @@ msgstr "Oke, hanya satu langkah terakhir…"
 #: build/admin-onboarding/index.js:1
 msgid "Help us tailor your SureRank experience and keep you updated with SEO tips, feature improvements, and helpful recommendations."
 msgstr "Bantu kami menyesuaikan pengalaman SureRank Anda dan tetap memberi Anda informasi terbaru dengan tips SEO, perbaikan fitur, dan rekomendasi yang berguna."
+
+#: inc/analyzer/seo-analyzer.php:132
+msgid "A homepage SEO title is the main headline that appears for your site in search results."
+msgstr "Judul SEO halaman utama adalah judul utama yang muncul untuk situs Anda di hasil pencarian."
+
+#: inc/analyzer/seo-analyzer.php:138
+msgid "It is often the first thing people read before deciding whether to click."
+msgstr "Ini sering kali adalah hal pertama yang dibaca orang sebelum memutuskan untuk mengklik."
+
+#: inc/analyzer/seo-analyzer.php:139
+msgid "A clear and well written title helps search engines understand your homepage and improves click through rate by setting the right expectation."
+msgstr "Judul yang jelas dan ditulis dengan baik membantu mesin pencari memahami halaman utama Anda dan meningkatkan rasio klik dengan menetapkan ekspektasi yang tepat."
+
+#: inc/analyzer/seo-analyzer.php:143
+#: inc/analyzer/seo-analyzer.php:264
+#: inc/analyzer/seo-analyzer.php:386
+#: inc/analyzer/seo-analyzer.php:470
+#: inc/analyzer/seo-analyzer.php:653
+#: inc/api/analyzer.php:666
+msgid "Best Practice"
+msgstr "Praktik Terbaik"
+
+#: inc/analyzer/seo-analyzer.php:147
+msgid "Good titles are short, specific, and easy to scan."
+msgstr "Judul yang baik singkat, spesifik, dan mudah dipindai."
+
+#: inc/analyzer/seo-analyzer.php:148
+msgid "Make sure to keep it between 50 and 60 characters."
+msgstr "Pastikan untuk menjaga panjangnya antara 50 dan 60 karakter."
+
+#: inc/analyzer/seo-analyzer.php:149
+msgid "Include your brand name and main keyword where it makes sense."
+msgstr "Sertakan nama merek Anda dan kata kunci utama di tempat yang tepat."
+
+#: inc/analyzer/seo-analyzer.php:150
+msgid "A simple, honest title usually performs better than a long or generic one."
+msgstr "Judul yang sederhana dan jujur biasanya berkinerja lebih baik daripada yang panjang atau umum."
+
+#: inc/analyzer/seo-analyzer.php:156
+#: inc/analyzer/seo-analyzer.php:277
+#: inc/analyzer/seo-analyzer.php:398
+#: inc/analyzer/seo-analyzer.php:483
+#: inc/analyzer/seo-analyzer.php:585
+#: inc/analyzer/seo-analyzer.php:664
+#: inc/analyzer/seo-analyzer.php:752
+#: inc/analyzer/seo-analyzer.php:827
+#: inc/analyzer/seo-analyzer.php:843
+#: inc/analyzer/seo-analyzer.php:931
+#: inc/analyzer/seo-analyzer.php:1008
+#: inc/analyzer/seo-analyzer.php:1079
+#: inc/analyzer/seo-analyzer.php:1204
+#: inc/analyzer/seo-analyzer.php:1707
+#: inc/api/analyzer.php:460
+#: inc/api/analyzer.php:603
+#: inc/api/analyzer.php:679
+#: inc/api/analyzer.php:740
+#: inc/api/analyzer.php:809
+#: inc/api/analyzer.php:899
+msgid "Where to Update It"
+msgstr "Di Mana Memperbarui"
+
+#. translators: %1$s: URL to the SureRank homepage general settings, %2$s: Anchor text "General"
+#. translators: %1$s: URL to the SureRank homepage social settings, %2$s: Anchor text "Social"
+#: inc/analyzer/seo-analyzer.php:163
+#: inc/analyzer/seo-analyzer.php:286
+#: inc/analyzer/seo-analyzer.php:1088
+#, php-format
+msgid "From the SureRank Dashboard, go to General ⇾ Home Page ⇾ <a href='%1$s' target='_blank' rel='noopener'>%2$s</a>."
+msgstr "Dari Dasbor SureRank, pergi ke Umum ⇾ Halaman Utama ⇾ <a href='%1$s' target='_blank' rel='noopener'>%2$s</a>."
+
+#: inc/analyzer/seo-analyzer.php:167
+msgid "Here, you can update the title, description, and social image for your home page. SureRank will also show a preview of your website."
+msgstr "Di sini, Anda dapat memperbarui judul, deskripsi, dan gambar sosial untuk halaman utama Anda. SureRank juga akan menampilkan pratinjau situs web Anda."
+
+#. translators: %1$s: URL to the Home Page settings, %2$s: Anchor text "Home Page"
+#: inc/analyzer/seo-analyzer.php:171
+#: inc/analyzer/seo-analyzer.php:294
+#, php-format
+msgid "Go to Pages ⇾ <a href='%1$s' target='_blank' rel='noopener'>%2$s</a> ⇾ SureRank ⇾ Optimize ⇾ General."
+msgstr "Pergi ke Halaman ⇾ <a href='%1$s' target='_blank' rel='noopener'>%2$s</a> ⇾ SureRank ⇾ Optimalkan ⇾ Umum."
+
+#: inc/analyzer/seo-analyzer.php:175
+msgid "Here, you can update the title, description, and social metadata with image for your home page. SureRank will also show a preview of your website."
+msgstr "Di sini, Anda dapat memperbarui judul, deskripsi, dan metadata sosial dengan gambar untuk halaman utama Anda. SureRank juga akan menampilkan pratinjau situs web Anda."
+
+#: inc/analyzer/seo-analyzer.php:180
+#: inc/analyzer/seo-analyzer.php:303
+#: inc/analyzer/seo-analyzer.php:415
+#: inc/analyzer/seo-analyzer.php:502
+#: inc/analyzer/seo-analyzer.php:603
+#: inc/analyzer/seo-analyzer.php:681
+#: inc/analyzer/seo-analyzer.php:766
+#: inc/analyzer/seo-analyzer.php:860
+#: inc/analyzer/seo-analyzer.php:944
+#: inc/analyzer/seo-analyzer.php:1105
+#: inc/analyzer/seo-analyzer.php:1217
+#: inc/analyzer/seo-analyzer.php:1235
+#: inc/analyzer/seo-analyzer.php:1720
+#: inc/api/analyzer.php:477
+#: inc/api/analyzer.php:692
+#: inc/api/analyzer.php:753
+#: inc/api/analyzer.php:829
+#: inc/api/analyzer.php:913
+msgid "Update Here"
+msgstr "Perbarui Di Sini"
+
+#: inc/analyzer/seo-analyzer.php:200
+#: inc/analyzer/seo-analyzer.php:323
+#: inc/analyzer/seo-analyzer.php:428
+#: inc/analyzer/seo-analyzer.php:515
+#: inc/analyzer/seo-analyzer.php:615
+#: inc/analyzer/seo-analyzer.php:693
+#: inc/analyzer/seo-analyzer.php:779
+#: inc/analyzer/seo-analyzer.php:871
+#: inc/analyzer/seo-analyzer.php:959
+#: inc/analyzer/seo-analyzer.php:1027
+#: inc/analyzer/seo-analyzer.php:1125
+#: inc/analyzer/seo-analyzer.php:1696
+#: inc/api/analyzer.php:633
+#: inc/api/analyzer.php:705
+#: inc/api/analyzer.php:763
+#: inc/api/analyzer.php:842
+msgid "Need Help?"
+msgstr "Butuh Bantuan?"
+
+#: inc/analyzer/seo-analyzer.php:202
+msgid "SureRank Pro helps you generate SEO titles using AI, following best practices for length, clarity, and click through rate."
+msgstr "SureRank Pro membantu Anda menghasilkan judul SEO menggunakan AI, mengikuti praktik terbaik untuk panjang, kejelasan, dan rasio klik."
+
+#: inc/analyzer/seo-analyzer.php:253
+msgid "A homepage SEO description is the short text that appears below your site title in search results."
+msgstr "Deskripsi SEO halaman utama adalah teks pendek yang muncul di bawah judul situs Anda di hasil pencarian."
+
+#: inc/analyzer/seo-analyzer.php:259
+msgid "It gives people a quick idea of what your site is about before they decide to click."
+msgstr "Ini memberi orang gambaran cepat tentang apa yang situs Anda tawarkan sebelum mereka memutuskan untuk mengklik."
+
+#: inc/analyzer/seo-analyzer.php:260
+msgid "A clear and well written description helps search engines understand your homepage and makes your result more appealing."
+msgstr "Deskripsi yang jelas dan ditulis dengan baik membantu mesin pencari memahami halaman utama Anda dan membuat hasil Anda lebih menarik."
+
+#: inc/analyzer/seo-analyzer.php:268
+msgid "Good descriptions are clear and easy to read."
+msgstr "Deskripsi yang baik jelas dan mudah dibaca."
+
+#: inc/analyzer/seo-analyzer.php:269
+msgid "Make sure to keep it between 150 and 160 characters."
+msgstr "Pastikan untuk menjaga panjangnya antara 150 dan 160 karakter."
+
+#: inc/analyzer/seo-analyzer.php:270
+msgid "Write it in natural language with your keywords where it makes sense."
+msgstr "Tulis dalam bahasa alami dengan kata kunci Anda di tempat yang tepat."
+
+#: inc/analyzer/seo-analyzer.php:271
+msgid "A simple, helpful description performs better than a vague or overly long one."
+msgstr "Deskripsi yang sederhana dan membantu berkinerja lebih baik daripada yang samar atau terlalu panjang."
+
+#: inc/analyzer/seo-analyzer.php:290
+#: inc/analyzer/seo-analyzer.php:298
+msgid "Here, you can update the title, description, and image for your home page. SureRank will also show a preview of your website."
+msgstr "Di sini, Anda dapat memperbarui judul, deskripsi, dan gambar untuk halaman utama Anda. SureRank juga akan menampilkan pratinjau situs web Anda."
+
+#: inc/analyzer/seo-analyzer.php:325
+msgid "SureRank Pro helps you generate SEO titles and descriptions using AI, following best practices, so your pages look great in search results."
+msgstr "SureRank Pro membantu Anda menghasilkan judul dan deskripsi SEO menggunakan AI, mengikuti praktik terbaik, sehingga halaman Anda terlihat bagus di hasil pencarian."
+
+#: inc/analyzer/seo-analyzer.php:381
+msgid "The H1 is the main heading of a page. It tells visitors and search engines what the page is primarily about."
+msgstr "H1 adalah judul utama dari sebuah halaman. Ini memberi tahu pengunjung dan mesin pencari tentang apa halaman tersebut terutama."
+
+#: inc/analyzer/seo-analyzer.php:382
+msgid "When the H1 is missing, duplicated, or unclear, search engines get less context and visitors may struggle to quickly understand your site's purpose."
+msgstr "Ketika H1 hilang, duplikat, atau tidak jelas, mesin pencari mendapatkan konteks yang lebih sedikit dan pengunjung mungkin kesulitan untuk dengan cepat memahami tujuan situs Anda."
+
+#: inc/analyzer/seo-analyzer.php:390
+msgid "Keep the H1 short and descriptive."
+msgstr "Jaga agar H1 tetap singkat dan deskriptif."
+
+#: inc/analyzer/seo-analyzer.php:391
+msgid "Use plain language instead of marketing buzzwords."
+msgstr "Gunakan bahasa yang sederhana alih-alih kata-kata pemasaran yang berlebihan."
+
+#: inc/analyzer/seo-analyzer.php:392
+msgid "Make sure it reflects the main topic of your homepage."
+msgstr "Pastikan itu mencerminkan topik utama dari halaman beranda Anda."
+
+#. translators: %1$s: URL to the Home Page settings, %2$s: Anchor text "Home Page"
+#: inc/analyzer/seo-analyzer.php:404
+#: inc/analyzer/seo-analyzer.php:491
+#: inc/analyzer/seo-analyzer.php:593
+#: inc/analyzer/seo-analyzer.php:671
+#, php-format
+msgid "Go to Pages ⇾ <a href='%1$s' target='_blank' rel='noopener'>%2$s</a>"
+msgstr "Pergi ke Halaman ⇾ <a href='%1$s' target='_blank' rel='noopener'>%2$s</a>"
+
+#: inc/analyzer/seo-analyzer.php:408
+msgid "Edit the main heading and set it as an H1"
+msgstr "Edit judul utama dan atur sebagai H1"
+
+#: inc/analyzer/seo-analyzer.php:409
+#: inc/analyzer/seo-analyzer.php:496
+#: inc/analyzer/seo-analyzer.php:598
+#: inc/analyzer/seo-analyzer.php:676
+msgid "Update the page"
+msgstr "Perbarui halaman"
+
+#: inc/analyzer/seo-analyzer.php:430
+msgid "SureRank Pro helps you identify heading issues and suggests improvements using AI, so your pages stay clear and well structured."
+msgstr "SureRank Pro membantu Anda mengidentifikasi masalah judul dan menyarankan perbaikan menggunakan AI, sehingga halaman Anda tetap jelas dan terstruktur dengan baik."
+
+#: inc/analyzer/seo-analyzer.php:435
+msgid "Your homepage does not currently have a clear H1 heading."
+msgstr "Halaman beranda Anda saat ini tidak memiliki judul H1 yang jelas."
+
+#: inc/analyzer/seo-analyzer.php:436
+msgid "Homepage H1 Heading Is Missing"
+msgstr "Judul H1 Halaman Beranda Hilang"
+
+#: inc/analyzer/seo-analyzer.php:439
+msgid "Your homepage currently contains multiple H1 headings."
+msgstr "Halaman beranda Anda saat ini mengandung beberapa judul H1."
+
+#: inc/analyzer/seo-analyzer.php:440
+msgid "Multiple H1 Headings Found"
+msgstr "Beberapa Judul H1 Ditemukan"
+
+#: inc/analyzer/seo-analyzer.php:442
+msgid "Your homepage currently contains one H1 heading"
+msgstr "Halaman beranda Anda saat ini mengandung satu judul H1"
+
+#: inc/analyzer/seo-analyzer.php:443
+msgid "Homepage H1 Heading Found"
+msgstr "Judul H1 Halaman Beranda Ditemukan"
+
+#: inc/analyzer/seo-analyzer.php:465
+msgid "Subheadings help break your content into sections and make it easier for visitors to scan and understand your page."
+msgstr "Subjudul membantu memecah konten Anda menjadi bagian-bagian dan membuatnya lebih mudah bagi pengunjung untuk memindai dan memahami halaman Anda."
+
+#: inc/analyzer/seo-analyzer.php:466
+msgid "They also give search engines more context about the structure and topics covered on your homepage."
+msgstr "Mereka juga memberikan lebih banyak konteks kepada mesin pencari tentang struktur dan topik yang dibahas di halaman beranda Anda."
+
+#: inc/analyzer/seo-analyzer.php:474
+msgid "Use H2 headings to introduce major sections"
+msgstr "Gunakan judul H2 untuk memperkenalkan bagian utama"
+
+#: inc/analyzer/seo-analyzer.php:475
+msgid "Each H2 should describe what the section is about"
+msgstr "Setiap H2 harus menggambarkan apa yang dibahas di bagian tersebut"
+
+#: inc/analyzer/seo-analyzer.php:476
+msgid "Avoid using H2s just for styling."
+msgstr "Hindari menggunakan H2 hanya untuk gaya."
+
+#: inc/analyzer/seo-analyzer.php:477
+msgid "They should reflect the structure of your content."
+msgstr "Mereka harus mencerminkan struktur konten Anda."
+
+#: inc/analyzer/seo-analyzer.php:485
+msgid "Edit your homepage content and add H2 headings where they naturally fit."
+msgstr "Edit konten halaman beranda Anda dan tambahkan judul H2 di tempat yang sesuai."
+
+#: inc/analyzer/seo-analyzer.php:486
+#: inc/analyzer/seo-analyzer.php:588
+#: inc/analyzer/seo-analyzer.php:669
+msgid "If your homepage is a page:"
+msgstr "Jika halaman beranda Anda adalah sebuah halaman:"
+
+#: inc/analyzer/seo-analyzer.php:495
+msgid "Add or update section headings and set them as H2"
+msgstr "Tambahkan atau perbarui judul bagian dan atur sebagai H2"
+
+#: inc/analyzer/seo-analyzer.php:517
+msgid "SureRank Pro helps you identify heading structure issues and suggests improvements using AI, so your pages stay clear and well organized."
+msgstr "SureRank Pro membantu Anda mengidentifikasi masalah struktur judul dan menyarankan perbaikan menggunakan AI, sehingga halaman Anda tetap jelas dan terorganisir dengan baik."
+
+#: inc/analyzer/seo-analyzer.php:524
+msgid "Your homepage contains at least one H2 heading"
+msgstr "Halaman beranda Anda mengandung setidaknya satu judul H2"
+
+#: inc/analyzer/seo-analyzer.php:525
+msgid "Subheadings Found on the Homepage"
+msgstr "Subjudul Ditemukan di Halaman Beranda"
+
+#: inc/analyzer/seo-analyzer.php:529
+msgid "Your homepage does not currently contain any H2 subheadings."
+msgstr "Halaman beranda Anda saat ini tidak mengandung subjudul H2."
+
+#: inc/analyzer/seo-analyzer.php:530
+msgid "No Subheadings Found on the Homepage"
+msgstr "Tidak Ada Subjudul Ditemukan di Halaman Beranda"
+
+#: inc/analyzer/seo-analyzer.php:581
+msgid "Images help visitors quickly understand what your site is about and make the page feel more engaging."
+msgstr "Gambar membantu pengunjung dengan cepat memahami apa yang situs Anda tentang dan membuat halaman terasa lebih menarik."
+
+#: inc/analyzer/seo-analyzer.php:582
+msgid "They also play an important role in SEO. Images help break up content, add context, and can appear in image search results when optimized properly."
+msgstr "Mereka juga memainkan peran penting dalam SEO. Gambar membantu memecah konten, menambah konteks, dan dapat muncul dalam hasil pencarian gambar ketika dioptimalkan dengan baik."
+
+#: inc/analyzer/seo-analyzer.php:587
+msgid "Edit your homepage content and add images where they naturally fit."
+msgstr "Edit konten halaman beranda Anda dan tambahkan gambar di tempat yang sesuai."
+
+#: inc/analyzer/seo-analyzer.php:597
+msgid "Add images"
+msgstr "Tambahkan gambar"
+
+#: inc/analyzer/seo-analyzer.php:617
+msgid "SureRank Pro helps you optimize images for SEO, including automatically generating alt text using AI, so your images are clear for both visitors and search engines."
+msgstr "SureRank Pro membantu Anda mengoptimalkan gambar untuk SEO, termasuk secara otomatis menghasilkan teks alt menggunakan AI, sehingga gambar Anda jelas untuk pengunjung dan mesin pencari."
+
+#: inc/analyzer/seo-analyzer.php:624
+#: inc/analyzer/seo-analyzer.php:636
+msgid "Images on Homepage"
+msgstr "Gambar di Beranda"
+
+#: inc/analyzer/seo-analyzer.php:625
+msgid "Your homepage does not currently contain any images."
+msgstr "Beranda Anda saat ini tidak mengandung gambar."
+
+#: inc/analyzer/seo-analyzer.php:629
+msgid "One or more images on your homepage do not have ALT text."
+msgstr "Satu atau lebih gambar di beranda Anda tidak memiliki teks ALT."
+
+#: inc/analyzer/seo-analyzer.php:636
+msgid "Homepage Image ALT Text Is Missing"
+msgstr "Teks ALT Gambar Beranda Hilang"
+
+#: inc/analyzer/seo-analyzer.php:649
+msgid "Internal links help visitors navigate your website and discover important content. They also help search engines understand how your pages are connected and which ones matter most."
+msgstr "Tautan internal membantu pengunjung menavigasi situs web Anda dan menemukan konten penting. Mereka juga membantu mesin pencari memahami bagaimana halaman Anda terhubung dan mana yang paling penting."
+
+#: inc/analyzer/seo-analyzer.php:650
+msgid "When a homepage has no internal links, visitors may not know where to go next. Search engines also have a harder time crawling and prioritizing your pages."
+msgstr "Ketika beranda tidak memiliki tautan internal, pengunjung mungkin tidak tahu ke mana harus pergi selanjutnya. Mesin pencari juga akan kesulitan menjelajahi dan memprioritaskan halaman Anda."
+
+#: inc/analyzer/seo-analyzer.php:657
+msgid "Link from your homepage to key pages like about, products, etc."
+msgstr "Tautkan dari beranda Anda ke halaman kunci seperti tentang, produk, dll."
+
+#: inc/analyzer/seo-analyzer.php:658
+msgid "Use clear, descriptive link text so visitors know what to expect."
+msgstr "Gunakan teks tautan yang jelas dan deskriptif sehingga pengunjung tahu apa yang diharapkan."
+
+#: inc/analyzer/seo-analyzer.php:659
+msgid "Keep links natural and helpful. Avoid adding links just for SEO."
+msgstr "Jaga tautan tetap alami dan membantu. Hindari menambahkan tautan hanya untuk SEO."
+
+#: inc/analyzer/seo-analyzer.php:666
+msgid "Edit your homepage content and add links to relevant pages."
+msgstr "Edit konten beranda Anda dan tambahkan tautan ke halaman yang relevan."
+
+#: inc/analyzer/seo-analyzer.php:675
+msgid "Add links within text, buttons, or navigation sections"
+msgstr "Tambahkan tautan dalam teks, tombol, atau bagian navigasi"
+
+#: inc/analyzer/seo-analyzer.php:695
+msgid "SureRank Pro helps you find internal linking opportunities and suggests improvements using AI, so your site stays well connected and easy to explore."
+msgstr "SureRank Pro membantu Anda menemukan peluang tautan internal dan menyarankan perbaikan menggunakan AI, sehingga situs Anda tetap terhubung dengan baik dan mudah dijelajahi."
+
+#: inc/analyzer/seo-analyzer.php:703
+#: inc/analyzer/seo-analyzer.php:728
+msgid "No Internal Links Found on the Homepage"
+msgstr "Tidak Ada Tautan Internal Ditemukan di Beranda"
+
+#: inc/analyzer/seo-analyzer.php:704
+#: inc/analyzer/seo-analyzer.php:727
+msgid "Your homepage does not currently link to other pages on your site."
+msgstr "Beranda Anda saat ini tidak menautkan ke halaman lain di situs Anda."
+
+#: inc/analyzer/seo-analyzer.php:727
+msgid "Your homepage currently links to other pages on your site."
+msgstr "Beranda Anda saat ini menautkan ke halaman lain di situs Anda."
+
+#: inc/analyzer/seo-analyzer.php:728
+msgid "Internal Links Found on the Homepage"
+msgstr "Tautan Internal Ditemukan di Beranda"
+
+#: inc/analyzer/seo-analyzer.php:747
+msgid "A canonical URL tells search engines which version of a page should be treated as the main one."
+msgstr "URL kanonik memberi tahu mesin pencari versi mana dari halaman yang harus diperlakukan sebagai yang utama."
+
+#: inc/analyzer/seo-analyzer.php:748
+msgid "Without it, search engines may see multiple versions of your homepage as separate pages, which can dilute SEO signals and cause confusion."
+msgstr "Tanpa itu, mesin pencari mungkin melihat beberapa versi beranda Anda sebagai halaman terpisah, yang dapat mengurangi sinyal SEO dan menyebabkan kebingungan."
+
+#: inc/analyzer/seo-analyzer.php:754
+msgid "You can set the canonical URL directly from the SureRank meta box."
+msgstr "Anda dapat mengatur URL kanonik langsung dari kotak meta SureRank."
+
+#: inc/analyzer/seo-analyzer.php:757
+#: inc/analyzer/seo-analyzer.php:1227
+msgid "Edit your homepage"
+msgstr "Edit beranda Anda"
+
+#: inc/analyzer/seo-analyzer.php:758
+msgid "Open the Advanced tab in the SureRank meta box"
+msgstr "Buka tab Lanjutan di kotak meta SureRank"
+
+#: inc/analyzer/seo-analyzer.php:759
+msgid "Enter the correct URL in the Canonical Tag field"
+msgstr "Masukkan URL yang benar di kolom Tag Kanonik"
+
+#: inc/analyzer/seo-analyzer.php:760
+#: inc/analyzer/seo-analyzer.php:1212
+#: inc/analyzer/seo-analyzer.php:1230
+#: inc/api/analyzer.php:686
+#: inc/api/analyzer.php:747
+#: inc/api/analyzer.php:822
+#: inc/api/analyzer.php:907
+msgid "Save your changes"
+msgstr "Simpan perubahan Anda"
+
+#: inc/analyzer/seo-analyzer.php:781
+#: inc/api/analyzer.php:707
+#: inc/api/analyzer.php:764
+msgid "SureRank Pro helps fix SEO issues across your website using AI, without manual effort."
+msgstr "SureRank Pro membantu memperbaiki masalah SEO di seluruh situs web Anda menggunakan AI, tanpa usaha manual."
+
+#: inc/analyzer/seo-analyzer.php:787
+#: inc/analyzer/seo-analyzer.php:795
+msgid "No Canonical URL Set for Homepage"
+msgstr "Tidak Ada URL Kanonik yang Ditetapkan untuk Beranda"
+
+#: inc/analyzer/seo-analyzer.php:795
+msgid "Canonical URL Set for Homepage"
+msgstr "URL Kanonik Ditetapkan untuk Beranda"
+
+#: inc/analyzer/seo-analyzer.php:796
+msgid "Your homepage currently has a canonical URL set."
+msgstr "Beranda Anda saat ini memiliki URL kanonik yang ditetapkan."
+
+#: inc/analyzer/seo-analyzer.php:796
+msgid "Your homepage does not currently have a canonical URL set."
+msgstr "Beranda Anda saat ini tidak memiliki URL kanonik yang ditetapkan."
+
+#: inc/analyzer/seo-analyzer.php:816
+msgid "This means search engines are not allowed to show your homepage in search results."
+msgstr "Ini berarti mesin pencari tidak diizinkan untuk menampilkan halaman beranda Anda dalam hasil pencarian."
+
+#: inc/analyzer/seo-analyzer.php:817
+msgid "When a homepage is not indexable, people searching for your site may not find it at all, even if your content is published and live."
+msgstr "Ketika halaman beranda tidak dapat diindeks, orang yang mencari situs Anda mungkin tidak menemukannya sama sekali, bahkan jika konten Anda diterbitkan dan aktif."
+
+#: inc/analyzer/seo-analyzer.php:818
+msgid "In most cases, this happens when indexing is turned off by mistake."
+msgstr "Dalam banyak kasus, ini terjadi ketika pengindeksan dimatikan secara tidak sengaja."
+
+#. translators: %1$s: URL to the Home Page settings, %2$s: Anchor text "Home Page"
+#: inc/analyzer/seo-analyzer.php:833
+#, php-format
+msgid "Go to Pages ⇾ <a href='%1$s' target='_blank' rel='noopener'>%2$s</a> ⇾ SureRank ⇾ Optimize ⇾ Advanced."
+msgstr "Pergi ke Halaman ⇾ <a href='%1$s' target='_blank' rel='noopener'>%2$s</a> ⇾ SureRank ⇾ Optimalkan ⇾ Lanjutan."
+
+#: inc/analyzer/seo-analyzer.php:837
+msgid "Make sure the option to prevent indexing of No Index is turned off."
+msgstr "Pastikan opsi untuk mencegah pengindeksan No Index dimatikan."
+
+#. translators: %1$s: URL to the SureRank homepage advanced settings, %2$s: Anchor text "Advanced"
+#: inc/analyzer/seo-analyzer.php:849
+#, php-format
+msgid "From the SureRank Dashboard, go to General ⇾ Home Page ⇾ <a href='%1$s' target='_blank' rel='noopener'>%2$s</a>"
+msgstr "Dari Dasbor SureRank, pergi ke Umum ⇾ Halaman Beranda ⇾ <a href='%1$s' target='_blank' rel='noopener'>%2$s</a>"
+
+#: inc/analyzer/seo-analyzer.php:853
+msgid "Here, you can update the Robot Instructions for your Home Page to control how search engines interact with it."
+msgstr "Di sini, Anda dapat memperbarui Instruksi Robot untuk Halaman Beranda Anda untuk mengontrol bagaimana mesin pencari berinteraksi dengannya."
+
+#: inc/analyzer/seo-analyzer.php:873
+msgid "SureRank Pro helps you detect and fix indexing issues using AI assistant, so your pages are visible and searchable."
+msgstr "SureRank Pro membantu Anda mendeteksi dan memperbaiki masalah pengindeksan menggunakan asisten AI, sehingga halaman Anda terlihat dan dapat dicari."
+
+#: inc/analyzer/seo-analyzer.php:881
+#: inc/analyzer/seo-analyzer.php:897
+msgid "Your homepage is currently not indexable by search engines. "
+msgstr "Halaman beranda Anda saat ini tidak dapat diindeks oleh mesin pencari."
+
+#: inc/analyzer/seo-analyzer.php:897
+msgid "Your homepage is currently indexable by search engines. "
+msgstr "Halaman beranda Anda saat ini dapat diindeks oleh mesin pencari."
+
+#: inc/analyzer/seo-analyzer.php:898
+msgid "Home Page Indexable"
+msgstr "Halaman Beranda Dapat Diindeks"
+
+#: inc/analyzer/seo-analyzer.php:918
+msgid "Home Page is Reachable"
+msgstr "Halaman Beranda Dapat Diakses"
+
+#: inc/analyzer/seo-analyzer.php:919
+msgid "Your homepage is currently accessible and loading correctly."
+msgstr "Halaman beranda Anda saat ini dapat diakses dan dimuat dengan benar."
+
+#: inc/analyzer/seo-analyzer.php:921
+msgid "Home Page is Not Reachable"
+msgstr "Halaman Beranda Tidak Dapat Diakses"
+
+#: inc/analyzer/seo-analyzer.php:922
+msgid "Your homepage is currently not accessible or is returning an error."
+msgstr "Halaman beranda Anda saat ini tidak dapat diakses atau mengembalikan kesalahan."
+
+#: inc/analyzer/seo-analyzer.php:925
+msgid "Your homepage is usually the first page visitors see and the main entry point search engines use to understand your site. It acts as the starting point for crawling and navigation."
+msgstr "Halaman beranda Anda biasanya adalah halaman pertama yang dilihat pengunjung dan titik masuk utama yang digunakan mesin pencari untuk memahami situs Anda. Ini berfungsi sebagai titik awal untuk crawling dan navigasi."
+
+#: inc/analyzer/seo-analyzer.php:926
+msgid "When the homepage cannot be reached, visitors may see an error page and leave immediately. Search engines may also struggle to crawl or index your site properly if they cannot access this page."
+msgstr "Ketika halaman beranda tidak dapat dijangkau, pengunjung mungkin melihat halaman kesalahan dan meninggalkan segera. Mesin pencari juga mungkin kesulitan untuk merayapi atau mengindeks situs Anda dengan benar jika mereka tidak dapat mengakses halaman ini."
+
+#: inc/analyzer/seo-analyzer.php:927
+msgid "This issue can affect the visibility of your entire site, not just the homepage."
+msgstr "Masalah ini dapat mempengaruhi visibilitas seluruh situs Anda, tidak hanya halaman beranda."
+
+#: inc/analyzer/seo-analyzer.php:933
+msgid "You can review and fix this from your WordPress settings."
+msgstr "Anda dapat meninjau dan memperbaiki ini dari pengaturan WordPress Anda."
+
+#: inc/analyzer/seo-analyzer.php:936
+msgid "Go to Settings ⇾ Reading"
+msgstr "Pergi ke Pengaturan ⇾ Membaca"
+
+#: inc/analyzer/seo-analyzer.php:937
+msgid "Check which page is set as your homepage"
+msgstr "Periksa halaman mana yang diatur sebagai halaman beranda Anda"
+
+#: inc/analyzer/seo-analyzer.php:938
+msgid "Make sure the selected page exists and is published"
+msgstr "Pastikan halaman yang dipilih ada dan diterbitkan"
+
+#: inc/analyzer/seo-analyzer.php:953
+msgid "If you are using a static homepage, open the page directly and confirm it loads without errors. Also check that no redirects, maintenance plugins, or access restrictions are blocking it."
+msgstr "Jika Anda menggunakan halaman beranda statis, buka halaman tersebut secara langsung dan pastikan itu dimuat tanpa kesalahan. Juga periksa bahwa tidak ada pengalihan, plugin pemeliharaan, atau pembatasan akses yang menghalanginya."
+
+#: inc/analyzer/seo-analyzer.php:961
+msgid "SureRank Pro users get access to our support team, available 24×7, to help identify homepage access and visibility issues."
+msgstr "Pengguna SureRank Pro mendapatkan akses ke tim dukungan kami, tersedia 24×7, untuk membantu mengidentifikasi masalah akses dan visibilitas halaman beranda."
+
+#: inc/analyzer/seo-analyzer.php:990
+msgid "This site is using HTTPS."
+msgstr "Situs ini menggunakan HTTPS."
+
+#: inc/analyzer/seo-analyzer.php:991
+msgid "Your site is currently served over a secure HTTPS connection."
+msgstr "Situs Anda saat ini disajikan melalui koneksi HTTPS yang aman."
+
+#: inc/analyzer/seo-analyzer.php:993
+msgid "This site is not using HTTPS."
+msgstr "Situs ini tidak menggunakan HTTPS."
+
+#: inc/analyzer/seo-analyzer.php:994
+msgid "Your site is not currently served over a secure HTTPS connection."
+msgstr "Situs Anda saat ini tidak disajikan melalui koneksi HTTPS yang aman."
+
+#: inc/analyzer/seo-analyzer.php:1002
+msgid "HTTPS encrypts the data between your site and its visitors. This helps protect sensitive information and keeps your site secure."
+msgstr "HTTPS mengenkripsi data antara situs Anda dan pengunjungnya. Ini membantu melindungi informasi sensitif dan menjaga situs Anda tetap aman."
+
+#: inc/analyzer/seo-analyzer.php:1003
+msgid "Search engines also prefer secure websites. Browsers may show a warning for sites without HTTPS, which can make visitors hesitant to continue."
+msgstr "Mesin pencari juga lebih menyukai situs web yang aman. Browser mungkin menampilkan peringatan untuk situs tanpa HTTPS, yang dapat membuat pengunjung ragu untuk melanjutkan."
+
+#: inc/analyzer/seo-analyzer.php:1004
+msgid "Enabling HTTPS is an important step for trust and SEO."
+msgstr "Mengaktifkan HTTPS adalah langkah penting untuk kepercayaan dan SEO."
+
+#: inc/analyzer/seo-analyzer.php:1010
+msgid "HTTPS is set up at the hosting or server level."
+msgstr "HTTPS diatur di tingkat hosting atau server."
+
+#: inc/analyzer/seo-analyzer.php:1011
+msgid "Most hosting providers offer free SSL certificates and can enable HTTPS for you."
+msgstr "Sebagian besar penyedia hosting menawarkan sertifikat SSL gratis dan dapat mengaktifkan HTTPS untuk Anda."
+
+#: inc/analyzer/seo-analyzer.php:1012
+#: inc/analyzer/seo-analyzer.php:1328
+msgid "If you are unsure how to set this up, your hosting provider can help. You can send them the message below:"
+msgstr "Jika Anda tidak yakin bagaimana cara mengaturnya, penyedia hosting Anda dapat membantu. Anda dapat mengirimkan pesan di bawah ini:"
+
+#: inc/analyzer/seo-analyzer.php:1015
+#: inc/analyzer/seo-analyzer.php:1331
+msgid "Hello,"
+msgstr "Halo,"
+
+#: inc/analyzer/seo-analyzer.php:1016
+msgid "I need help enabling HTTPS on my website: [enter-your-website-URL-here]"
+msgstr "Saya perlu bantuan mengaktifkan HTTPS di situs web saya: [masukkan-URL-situs-anda-di-sini]"
+
+#: inc/analyzer/seo-analyzer.php:1017
+msgid "Currently, my site is not being served over a secure HTTPS connection."
+msgstr "Saat ini, situs saya tidak disajikan melalui koneksi HTTPS yang aman."
+
+#: inc/analyzer/seo-analyzer.php:1018
+msgid "I would like you to enable an SSL certificate for my domain and ensure that all traffic is redirected from HTTP to HTTPS."
+msgstr "Saya ingin Anda mengaktifkan sertifikat SSL untuk domain saya dan memastikan bahwa semua lalu lintas diarahkan dari HTTP ke HTTPS."
+
+#: inc/analyzer/seo-analyzer.php:1019
+msgid "Please feel free to set this up for me directly."
+msgstr "Silakan langsung mengatur ini untuk saya."
+
+#: inc/analyzer/seo-analyzer.php:1020
+msgid "Thank you for your help."
+msgstr "Terima kasih atas bantuan Anda."
+
+#: inc/analyzer/seo-analyzer.php:1029
+msgid "SureRank Pro users get access to our support team, available 24×7, to help with setup and plugin related questions."
+msgstr "Pengguna SureRank Pro mendapatkan akses ke tim dukungan kami, tersedia 24×7, untuk membantu dengan pertanyaan terkait pengaturan dan plugin."
+
+#: inc/analyzer/seo-analyzer.php:1055
+msgid "Open Graph tags are set for the homepage."
+msgstr "Tag Open Graph telah diatur untuk halaman beranda."
+
+#: inc/analyzer/seo-analyzer.php:1056
+msgid "Open Graph tags are not set for the homepage."
+msgstr "Tag Open Graph tidak diatur untuk halaman beranda."
+
+#: inc/analyzer/seo-analyzer.php:1058
+msgid "When someone shares your site on social media or in a messaging app, the platform shows a preview of your website."
+msgstr "Ketika seseorang membagikan situs Anda di media sosial atau di aplikasi pesan, platform akan menampilkan pratinjau situs web Anda."
+
+#: inc/analyzer/seo-analyzer.php:1059
+msgid "Without Open Graph tags, the platform may pull random content or images for the preview."
+msgstr "Tanpa tag Open Graph, platform mungkin menarik konten atau gambar acak untuk pratinjau."
+
+#: inc/analyzer/seo-analyzer.php:1067
+msgid "Open Graph tags help you control what people see when your site is shared."
+msgstr "Tag Open Graph membantu Anda mengontrol apa yang orang lihat ketika situs Anda dibagikan."
+
+#: inc/analyzer/seo-analyzer.php:1075
+msgid "A clean and attractive preview makes your site look more trustworthy and encourages people to click."
+msgstr "Pratinjau yang bersih dan menarik membuat situs Anda terlihat lebih dapat dipercaya dan mendorong orang untuk mengklik."
+
+#: inc/analyzer/seo-analyzer.php:1092
+#: inc/analyzer/seo-analyzer.php:1100
+msgid "Here, you can update the title, description, and image for your home page. SureRank will also show a preview of how your website will look on Facebook and X."
+msgstr "Di sini, Anda dapat memperbarui judul, deskripsi, dan gambar untuk halaman beranda Anda. SureRank juga akan menampilkan pratinjau tentang bagaimana situs web Anda akan terlihat di Facebook dan X."
+
+#. translators: %1$s: URL to the Home Page settings, %2$s: Anchor text "Home Page"
+#: inc/analyzer/seo-analyzer.php:1096
+#, php-format
+msgid "Go to Pages ⇾ <a href='%1$s' target='_blank' rel='noopener'>%2$s</a> ⇾ SureRank ⇾ Optimize ⇾ Social."
+msgstr "Pergi ke Halaman ⇾ <a href='%1$s' target='_blank' rel='noopener'>%2$s</a> ⇾ SureRank ⇾ Optimalkan ⇾ Sosial."
+
+#: inc/analyzer/seo-analyzer.php:1127
+msgid "SureRank Pro helps you optimize your homepage for social sharing with AI-powered suggestions and previews."
+msgstr "SureRank Pro membantu Anda mengoptimalkan halaman beranda Anda untuk berbagi sosial dengan saran dan pratinjau yang didukung AI."
+
+#: inc/analyzer/seo-analyzer.php:1190
+msgid "Structured Data Found on the Homepage"
+msgstr "Data Terstruktur Ditemukan di Beranda"
+
+#: inc/analyzer/seo-analyzer.php:1191
+msgid "The homepage currently includes structured data (schema)."
+msgstr "Beranda saat ini mencakup data terstruktur (skema)."
+
+#: inc/analyzer/seo-analyzer.php:1193
+msgid "No Structured Data Found on the Homepage"
+msgstr "Tidak Ada Data Terstruktur Ditemukan di Beranda"
+
+#: inc/analyzer/seo-analyzer.php:1194
+msgid "The homepage does not currently include any structured data (schema)."
+msgstr "Beranda saat ini tidak mencakup data terstruktur (skema) apa pun."
+
+#: inc/analyzer/seo-analyzer.php:1197
+msgid "Structured data helps search engines better understand your content and can enable enhanced search results, like rich snippets."
+msgstr "Data terstruktur membantu mesin pencari memahami konten Anda dengan lebih baik dan dapat memungkinkan hasil pencarian yang ditingkatkan, seperti cuplikan kaya."
+
+#: inc/analyzer/seo-analyzer.php:1198
+msgid "SureRank generates structured data automatically when the feature is enabled."
+msgstr "SureRank menghasilkan data terstruktur secara otomatis ketika fitur diaktifkan."
+
+#: inc/analyzer/seo-analyzer.php:1199
+msgid "Once active, the schema is added to your page behind the scenes and becomes readable by search engines."
+msgstr "Setelah aktif, skema ditambahkan ke halaman Anda di belakang layar dan dapat dibaca oleh mesin pencari."
+
+#: inc/analyzer/seo-analyzer.php:1210
+msgid "Go to SureRank → Advanced → Schema"
+msgstr "Pergi ke SureRank → Lanjutan → Skema"
+
+#: inc/analyzer/seo-analyzer.php:1211
+#: inc/analyzer/seo-analyzer.php:1229
+msgid "Review the Schema or add new"
+msgstr "Tinjau Skema atau tambahkan yang baru"
+
+#: inc/analyzer/seo-analyzer.php:1228
+msgid "Open the Schema tab in the SureRank meta box"
+msgstr "Buka tab Skema di kotak meta SureRank"
+
+#: inc/analyzer/seo-analyzer.php:1246
+msgid "How to Check It"
+msgstr "Cara Memeriksanya"
+
+#: inc/analyzer/seo-analyzer.php:1248
+msgid "After enabling schema, you can confirm that it is working by checking the live page source and search for schema or application/ld+json."
+msgstr "Setelah mengaktifkan skema, Anda dapat memastikan bahwa itu berfungsi dengan memeriksa sumber halaman langsung dan mencari skema atau application/ld+json."
+
+#: inc/analyzer/seo-analyzer.php:1249
+msgid "You can also test your page using these tools:"
+msgstr "Anda juga dapat menguji halaman Anda menggunakan alat-alat ini:"
+
+#: inc/analyzer/seo-analyzer.php:1266
+msgid "These tools show what structured data search engines can read from your page."
+msgstr "Alat-alat ini menunjukkan data terstruktur apa yang dapat dibaca mesin pencari dari halaman Anda."
+
+#: inc/analyzer/seo-analyzer.php:1271
+msgid "Want More?"
+msgstr "Ingin Lebih Banyak?"
+
+#: inc/analyzer/seo-analyzer.php:1273
+msgid "Upgrade to SureRank Pro to unlock advanced schema types like FAQ, How To, and more powerful structured data options to improve your search appearance."
+msgstr "Tingkatkan ke SureRank Pro untuk membuka kunci jenis skema lanjutan seperti FAQ, Cara, dan opsi data terstruktur yang lebih kuat untuk meningkatkan penampilan pencarian Anda."
+
+#: inc/analyzer/seo-analyzer.php:1315
+msgid "Your website can usually be accessed in two ways. One with www and one without it."
+msgstr "Situs web Anda biasanya dapat diakses dengan dua cara. Satu dengan www dan satu tanpa itu."
+
+#: inc/analyzer/seo-analyzer.php:1316
+#: inc/analyzer/seo-analyzer.php:1334
+msgid "https://example.com"
+msgstr "https://example.com"
+
+#: inc/analyzer/seo-analyzer.php:1317
+#: inc/analyzer/seo-analyzer.php:1335
+msgid "https://www.example.com"
+msgstr "https://www.example.com"
+
+#: inc/analyzer/seo-analyzer.php:1319
+msgid "Even though both show the same site, search engines treat them as different versions. This can look like duplicate pages and split your SEO strength across both URLs."
+msgstr "Meskipun keduanya menunjukkan situs yang sama, mesin pencari memperlakukannya sebagai versi yang berbeda. Ini dapat terlihat seperti halaman duplikat dan membagi kekuatan SEO Anda di kedua URL."
+
+#: inc/analyzer/seo-analyzer.php:1320
+msgid "To keep things clean, choose one version as your main address."
+msgstr "Untuk menjaga semuanya tetap bersih, pilih satu versi sebagai alamat utama Anda."
+
+#: inc/analyzer/seo-analyzer.php:1321
+msgid "Decide whether you want to use www or non www, then set up a redirect so all traffic goes to that version."
+msgstr "Tentukan apakah Anda ingin menggunakan www atau non-www, lalu atur pengalihan sehingga semua lalu lintas menuju versi itu."
+
+#: inc/analyzer/seo-analyzer.php:1325
+msgid "🔧 Where to set it"
+msgstr "🔧 Di mana mengaturnya"
+
+#: inc/analyzer/seo-analyzer.php:1327
+msgid "This is usually handled at the server or hosting level."
+msgstr "Ini biasanya ditangani di tingkat server atau hosting."
+
+#: inc/analyzer/seo-analyzer.php:1332
+msgid "I need help setting a preferred version of my website URL."
+msgstr "Saya perlu bantuan untuk mengatur versi preferensi URL situs web saya."
+
+#: inc/analyzer/seo-analyzer.php:1333
+msgid "Right now, my site loads on both versions:"
+msgstr "Saat ini, situs saya dimuat di kedua versi:"
+
+#: inc/analyzer/seo-analyzer.php:1336
+msgid "I would like to redirect all traffic from https://www.example.com to https://example.com and use the non WWW version as my main address."
+msgstr "Saya ingin mengalihkan semua lalu lintas dari https://www.example.com ke https://example.com dan menggunakan versi non-www sebagai alamat utama saya."
+
+#: inc/analyzer/seo-analyzer.php:1337
+msgid "Please feel free to set this up for me directly. Thank you for your help."
+msgstr "Silakan atur ini untuk saya secara langsung. Terima kasih atas bantuan Anda."
+
+#: inc/analyzer/seo-analyzer.php:1344
+msgid "💬 Need Help?"
+msgstr "💬 Butuh Bantuan?"
+
+#: inc/analyzer/seo-analyzer.php:1346
+msgid "SureRank Pro users get access to our support team, available 24×7, for setup and plugin related questions."
+msgstr "Pengguna SureRank Pro mendapatkan akses ke tim dukungan kami, tersedia 24×7, untuk pertanyaan terkait pengaturan dan plugin."
+
+#: inc/analyzer/seo-analyzer.php:1349
+msgid "WWW and non-WWW versions are redirecting properly."
+msgstr "Versi WWW dan non-WWW sedang mengalihkan dengan benar."
+
+#: inc/analyzer/seo-analyzer.php:1350
+msgid "The site correctly redirects between the www and non-www versions."
+msgstr "Situs ini mengalihkan antara versi www dan non-www dengan benar."
+
+#: inc/analyzer/seo-analyzer.php:1352
+msgid "WWW and non-WWW versions are not redirecting properly."
+msgstr "Versi WWW dan non-WWW tidak mengalihkan dengan benar."
+
+#: inc/analyzer/seo-analyzer.php:1353
+msgid "The site does not correctly redirect between the www and non-www versions."
+msgstr "Situs ini tidak mengalihkan antara versi www dan non-www dengan benar."
+
+#: inc/analyzer/seo-analyzer.php:1669
+msgid "Image missing ALT text"
+msgstr "Gambar tidak memiliki teks ALT"
+
+#: inc/analyzer/seo-analyzer.php:1676
+msgid "Images help communicate your message visually, but search engines and screen readers cannot understand images on their own. ALT text is a short written description that explains what an image shows."
+msgstr "Gambar membantu menyampaikan pesan Anda secara visual, tetapi mesin pencari dan pembaca layar tidak dapat memahami gambar sendiri. Teks ALT adalah deskripsi tertulis singkat yang menjelaskan apa yang ditampilkan oleh gambar."
+
+#: inc/analyzer/seo-analyzer.php:1677
+msgid "When ALT text is missing, visitors who rely on assistive tools may not understand the content of the image. Search engines also lose helpful context about what the image represents."
+msgstr "Ketika teks ALT hilang, pengunjung yang bergantung pada alat bantu mungkin tidak memahami konten gambar. Mesin pencari juga kehilangan konteks yang berguna tentang apa yang diwakili gambar tersebut."
+
+#: inc/analyzer/seo-analyzer.php:1678
+msgid "On the homepage, where images often support your main message, missing ALT text can affect both accessibility and clarity."
+msgstr "Di beranda, di mana gambar sering mendukung pesan utama Anda, hilangnya teks ALT dapat mempengaruhi aksesibilitas dan kejelasan."
+
+#: inc/analyzer/seo-analyzer.php:1682
+msgid "Images Missing ALT Text"
+msgstr "Gambar Tidak Memiliki Teks ALT"
+
+#: inc/analyzer/seo-analyzer.php:1684
+msgid "The following images on your homepage do not currently have ALT text:"
+msgstr "Gambar berikut di beranda Anda saat ini tidak memiliki teks ALT:"
+
+#: inc/analyzer/seo-analyzer.php:1698
+msgid "SureRank Pro users get access to our support team, available 24×7, to help review accessibility and content clarity issues across your site."
+msgstr "Pengguna SureRank Pro mendapatkan akses ke tim dukungan kami, tersedia 24×7, untuk membantu meninjau masalah aksesibilitas dan kejelasan konten di seluruh situs Anda."
+
+#: inc/analyzer/seo-analyzer.php:1709
+msgid "You can add or update ALT text when editing images in WordPress."
+msgstr "Anda dapat menambahkan atau memperbarui teks ALT saat mengedit gambar di WordPress."
+
+#: inc/analyzer/seo-analyzer.php:1712
+msgid "Open the page or post where the image appears"
+msgstr "Buka halaman atau pos di mana gambar muncul"
+
+#: inc/analyzer/seo-analyzer.php:1713
+msgid "Click on the image block"
+msgstr "Klik pada blok gambar"
+
+#: inc/analyzer/seo-analyzer.php:1714
+msgid "Add a short, clear description in the ALT text field"
+msgstr "Tambahkan deskripsi singkat dan jelas di kolom teks ALT"
+
+#: inc/api/analyzer.php:451
+msgid "Google Search Console is currently connected to your site."
+msgstr "Google Search Console saat ini terhubung ke situs Anda."
+
+#: inc/api/analyzer.php:452
+msgid "Google Search Console is not currently connected to your site."
+msgstr "Google Search Console tidak saat ini terhubung ke situs Anda."
+
+#: inc/api/analyzer.php:455
+msgid "Search Console helps you understand how your site appears in Google search results. It shows which pages are indexed, how your site is performing, and whether Google is reporting any issues."
+msgstr "Search Console membantu Anda memahami bagaimana situs Anda muncul di hasil pencarian Google. Ini menunjukkan halaman mana yang diindeks, bagaimana kinerja situs Anda, dan apakah Google melaporkan masalah apa pun."
+
+#: inc/api/analyzer.php:456
+msgid "Without it connected, you miss important visibility into how Google sees your site."
+msgstr "Tanpa terhubung, Anda kehilangan visibilitas penting tentang bagaimana Google melihat situs Anda."
+
+#: inc/api/analyzer.php:462
+msgid "You can connect Google Search Console directly from the SureRank Dashboard."
+msgstr "Anda dapat menghubungkan Google Search Console langsung dari Dasbor SureRank."
+
+#. translators: %s is the Search Console URL.
+#: inc/api/analyzer.php:467
+#, php-format
+msgid "Go to SureRank ⇾ <a href=\"%s\">Search Console</a>"
+msgstr "Pergi ke SureRank ⇾ <a href=\"%s\">Search Console</a>"
+
+#: inc/api/analyzer.php:470
+msgid "Sign in with your Google account"
+msgstr "Masuk dengan akun Google Anda"
+
+#: inc/api/analyzer.php:471
+msgid "Select your site and complete the connection"
+msgstr "Pilih situs Anda dan selesaikan koneksi"
+
+#: inc/api/analyzer.php:486
+msgid "Once connected, SureRank will start using Search Console data to show search performance and indexing insights."
+msgstr "Setelah terhubung, SureRank akan mulai menggunakan data Search Console untuk menunjukkan kinerja pencarian dan wawasan pengindeksan."
+
+#: inc/api/analyzer.php:492
+#: inc/api/analyzer.php:926
+msgid "Need More?"
+msgstr "Butuh Lebih Banyak?"
+
+#: inc/api/analyzer.php:494
+msgid "SureRank Pro unlocks advanced insights and recommendations powered by Google Search Console data."
+msgstr "SureRank Pro membuka wawasan dan rekomendasi lanjutan yang didukung oleh data Google Search Console."
+
+#: inc/api/analyzer.php:584
+msgid "Other SEO Plugin Detected"
+msgstr "Plugin SEO Lain Terdeteksi"
+
+#: inc/api/analyzer.php:584
+msgid "No other SEO plugin detected"
+msgstr "Tidak ada plugin SEO lain yang terdeteksi"
+
+#: inc/api/analyzer.php:585
+msgid "No other SEO plugin detected on your site."
+msgstr "Tidak ada plugin SEO lain yang terdeteksi di situs Anda."
+
+#: inc/api/analyzer.php:589
+msgid "More than one SEO plugin is currently active on your site."
+msgstr "Lebih dari satu plugin SEO saat ini aktif di situs Anda."
+
+#. translators: %s is the list of active plugins
+#: inc/api/analyzer.php:592
+#, php-format
+msgid "Another SEO plugin, %s, is currently active on your site."
+msgstr "Plugin SEO lain, %s, saat ini aktif di situs Anda."
+
+#: inc/api/analyzer.php:597
+msgid "SEO plugins manage things like page titles, descriptions, schema, and indexing settings. These signals help search engines understand how your site appears in search results."
+msgstr "Plugin SEO mengelola hal-hal seperti judul halaman, deskripsi, skema, dan pengaturan pengindeksan. Sinyal-sinyal ini membantu mesin pencari memahami bagaimana situs Anda muncul di hasil pencarian."
+
+#: inc/api/analyzer.php:598
+msgid "When multiple SEO plugins are active, they can create duplicate or conflicting signals. This makes it harder for search engines to understand which information to trust."
+msgstr "Ketika beberapa plugin SEO aktif, mereka dapat membuat sinyal yang duplikat atau bertentangan. Ini membuat mesin pencari lebih sulit memahami informasi mana yang harus dipercaya."
+
+#: inc/api/analyzer.php:599
+msgid "Using a single SEO plugin helps keep everything consistent and easier to manage."
+msgstr "Menggunakan satu plugin SEO membantu menjaga semuanya konsisten dan lebih mudah dikelola."
+
+#: inc/api/analyzer.php:605
+msgid "You can manage this from your WordPress plugins list."
+msgstr "Anda dapat mengelola ini dari daftar plugin WordPress Anda."
+
+#. translators: %s is the Plugins menu URL.
+#: inc/api/analyzer.php:610
+#, php-format
+msgid "Go to <a href=\"%s\">Plugins ⇾ Installed Plugins</a>"
+msgstr "Pergi ke <a href=\"%s\">Plugins ⇾ Installed Plugins</a>"
+
+#: inc/api/analyzer.php:613
+msgid "Identify any other active SEO plugins"
+msgstr "Identifikasi plugin SEO aktif lainnya"
+
+#: inc/api/analyzer.php:614
+msgid "Deactivate the ones you are not using"
+msgstr "Nonaktifkan yang tidak Anda gunakan"
+
+#: inc/api/analyzer.php:620
+msgid "Deactivate Here"
+msgstr "Nonaktifkan Di Sini"
+
+#: inc/api/analyzer.php:635
+msgid "SureRank Premium users get access to our support team, available 24×7, to help review plugin conflicts and guide you through cleanup."
+msgstr "Pengguna SureRank Premium mendapatkan akses ke tim dukungan kami, tersedia 24×7, untuk membantu meninjau konflik plugin dan membimbing Anda melalui pembersihan."
+
+#: inc/api/analyzer.php:657
+msgid "Your site does currently have a tagline set."
+msgstr "Situs Anda saat ini memiliki tagline yang diatur."
+
+#: inc/api/analyzer.php:657
+msgid "Your site does not currently have a tagline set."
+msgstr "Situs Anda tidak saat ini memiliki tagline yang diatur."
+
+#: inc/api/analyzer.php:660
+msgid "A site tagline is a short line that describes what your website is about."
+msgstr "Tagline situs adalah garis pendek yang menggambarkan tentang apa situs web Anda."
+
+#: inc/api/analyzer.php:661
+msgid "It often appears alongside your site title and helps visitors quickly understand your purpose."
+msgstr "Ini sering muncul bersamaan dengan judul situs Anda dan membantu pengunjung dengan cepat memahami tujuan Anda."
+
+#: inc/api/analyzer.php:662
+msgid "A clear tagline sets context, supports your brand, and makes your site feel more intentional."
+msgstr "Tagline yang jelas menetapkan konteks, mendukung merek Anda, dan membuat situs Anda terasa lebih disengaja."
+
+#: inc/api/analyzer.php:670
+msgid "A good tagline is simple and easy to understand."
+msgstr "Tagline yang baik sederhana dan mudah dipahami."
+
+#: inc/api/analyzer.php:671
+msgid "It should describe what you do or who your site is for."
+msgstr "Ini harus menggambarkan apa yang Anda lakukan atau untuk siapa situs Anda."
+
+#: inc/api/analyzer.php:672
+msgid "Aim for a single clear sentence that feels natural and human."
+msgstr "Usahakan untuk satu kalimat jelas yang terasa alami dan manusiawi."
+
+#: inc/api/analyzer.php:675
+msgid "Avoid buzzwords or vague phrases that do not say much about your site."
+msgstr "Hindari kata-kata yang berlebihan atau frasa samar yang tidak banyak menjelaskan tentang situs Anda."
+
+#: inc/api/analyzer.php:681
+msgid "You can update your site tagline from the WordPress settings."
+msgstr "Anda dapat memperbarui tagline situs Anda dari pengaturan WordPress."
+
+#: inc/api/analyzer.php:684
+msgid "Go to Settings ⇾ General"
+msgstr "Pergi ke Pengaturan ⇾ Umum"
+
+#: inc/api/analyzer.php:685
+msgid "Update the Tagline field"
+msgstr "Perbarui kolom Tagline"
+
+#: inc/api/analyzer.php:727
+msgid "Robots.txt is accessible."
+msgstr "Robots.txt dapat diakses."
+
+#: inc/api/analyzer.php:728
+msgid "Your site has an accessible robots.txt file."
+msgstr "Situs Anda memiliki file robots.txt yang dapat diakses."
+
+#: inc/api/analyzer.php:730
+msgid "Robots.txt is missing or inaccessible."
+msgstr "Robots.txt hilang atau tidak dapat diakses."
+
+#: inc/api/analyzer.php:731
+msgid "Your site does not currently have an accessible robots.txt file."
+msgstr "Situs Anda tidak saat ini memiliki file robots.txt yang dapat diakses."
+
+#: inc/api/analyzer.php:734
+msgid "The robots.txt file tells search engines which parts of your site they are allowed to crawl and index."
+msgstr "File robots.txt memberi tahu mesin pencari bagian mana dari situs Anda yang diizinkan untuk dijelajahi dan diindeks."
+
+#: inc/api/analyzer.php:735
+msgid "When this file is missing or inaccessible, search engines may have trouble understanding how to properly crawl your site."
+msgstr "Ketika file ini hilang atau tidak dapat diakses, mesin pencari mungkin mengalami kesulitan memahami cara menjelajahi situs Anda dengan benar."
+
+#: inc/api/analyzer.php:736
+msgid "Having a valid robots.txt file helps avoid crawling issues and ensures search engines focus on the right pages."
+msgstr "Memiliki file robots.txt yang valid membantu menghindari masalah crawling dan memastikan mesin pencari fokus pada halaman yang tepat."
+
+#: inc/api/analyzer.php:742
+msgid "You can create or edit your robots.txt file directly from SureRank."
+msgstr "Anda dapat membuat atau mengedit file robots.txt Anda langsung dari SureRank."
+
+#: inc/api/analyzer.php:745
+msgid "Go to SureRank ⇾ Advanced ⇾ Robots.txt Editor"
+msgstr "Pergi ke SureRank ⇾ Advanced ⇾ Editor Robots.txt"
+
+#: inc/api/analyzer.php:746
+msgid "Review or add the required rules"
+msgstr "Tinjau atau tambahkan aturan yang diperlukan"
+
+#: inc/api/analyzer.php:796
+msgid "Search engine visibility is enabled."
+msgstr "Visibilitas mesin pencari diaktifkan."
+
+#: inc/api/analyzer.php:797
+msgid "Search engine visibility is currently enabled in your WordPress settings."
+msgstr "Visibilitas mesin pencari saat ini diaktifkan di pengaturan WordPress Anda."
+
+#: inc/api/analyzer.php:799
+msgid "Search engine visibility is disabled."
+msgstr "Visibilitas mesin pencari dinonaktifkan."
+
+#: inc/api/analyzer.php:800
+msgid "Search engine visibility is currently disabled in your WordPress settings."
+msgstr "Visibilitas mesin pencari saat ini dinonaktifkan di pengaturan WordPress Anda."
+
+#: inc/api/analyzer.php:803
+msgid "WordPress includes a setting that tells search engines whether they are allowed to index your site. Indexing means your pages can appear in search results."
+msgstr "WordPress menyertakan pengaturan yang memberi tahu mesin pencari apakah mereka diizinkan untuk mengindeks situs Anda. Pengindeksan berarti halaman Anda dapat muncul dalam hasil pencarian."
+
+#: inc/api/analyzer.php:804
+msgid "This setting is commonly used while a site is being built or kept private. When enabled, it asks search engines not to index new pages."
+msgstr "Pengaturan ini biasanya digunakan saat situs sedang dibangun atau dijaga tetap pribadi. Ketika diaktifkan, ini meminta mesin pencari untuk tidak mengindeks halaman baru."
+
+#: inc/api/analyzer.php:805
+msgid "If this setting remains enabled by mistake, your site may not appear in search results even if everything else is set up correctly. It can quietly limit visibility without showing obvious errors."
+msgstr "Jika pengaturan ini tetap diaktifkan secara tidak sengaja, situs Anda mungkin tidak muncul dalam hasil pencarian meskipun semuanya diatur dengan benar. Ini dapat membatasi visibilitas tanpa menunjukkan kesalahan yang jelas."
+
+#: inc/api/analyzer.php:811
+msgid "You can change this setting from your WordPress dashboard."
+msgstr "Anda dapat mengubah pengaturan ini dari dasbor WordPress Anda."
+
+#. translators: %s is the URL of the WordPress Reading settings page
+#: inc/api/analyzer.php:817
+#, php-format
+msgid "Go to <a href=\"%s\">Settings ⇾ Reading</a>"
+msgstr "Pergi ke <a href=\"%s\">Pengaturan ⇾ Membaca</a>"
+
+#: inc/api/analyzer.php:820
+msgid "Find the option labeled “Search engine visibility”"
+msgstr "Temukan opsi yang diberi label \"Visibilitas mesin pencari\""
+
+#: inc/api/analyzer.php:821
+msgid "Make sure the checkbox is not selected"
+msgstr "Pastikan kotak centang tidak terpilih"
+
+#: inc/api/analyzer.php:844
+msgid "SureRank Pro users get access to our support team, available 24×7, to help detect visibility and indexing issues before they affect your site."
+msgstr "Pengguna SureRank Pro mendapatkan akses ke tim dukungan kami, tersedia 24×7, untuk membantu mendeteksi masalah visibilitas dan pengindeksan sebelum mempengaruhi situs Anda."
+
+#: inc/api/analyzer.php:885
+msgid "XML sitemap is accessible."
+msgstr "Peta situs XML dapat diakses."
+
+#: inc/api/analyzer.php:886
+msgid "The XML sitemap for this site is accessible to search engines."
+msgstr "Peta situs XML untuk situs ini dapat diakses oleh mesin pencari."
+
+#: inc/api/analyzer.php:888
+msgid "XML sitemap is missing or inaccessible."
+msgstr "Peta situs XML hilang atau tidak dapat diakses."
+
+#: inc/api/analyzer.php:889
+msgid "The XML sitemap for this site is missing or cannot be accessed."
+msgstr "Peta situs XML untuk situs ini hilang atau tidak dapat diakses."
+
+#: inc/api/analyzer.php:892
+msgid "An XML sitemap helps search engines discover and understand the pages on your site."
+msgstr "Peta situs XML membantu mesin pencari menemukan dan memahami halaman di situs Anda."
+
+#: inc/api/analyzer.php:893
+msgid "When the sitemap is missing or cannot be accessed, search engines may take longer to find new or updated pages."
+msgstr "Ketika peta situs hilang atau tidak dapat diakses, mesin pencari mungkin memerlukan waktu lebih lama untuk menemukan halaman baru atau yang diperbarui."
+
+#: inc/api/analyzer.php:894
+msgid "Having a sitemap makes it easier for search engines to crawl your site efficiently."
+msgstr "Memiliki peta situs memudahkan mesin pencari untuk merayapi situs Anda dengan efisien."
+
+#: inc/api/analyzer.php:895
+msgid "It also helps ensure important pages are not missed during indexing."
+msgstr "Ini juga membantu memastikan halaman penting tidak terlewat selama pengindeksan."
+
+#: inc/api/analyzer.php:901
+msgid "You can enable and manage your XML sitemap directly from SureRank."
+msgstr "Anda dapat mengaktifkan dan mengelola peta situs XML Anda langsung dari SureRank."
+
+#: inc/api/analyzer.php:904
+msgid "Go to SureRank ⇾ Advanced ⇾ Sitemap"
+msgstr "Pergi ke SureRank ⇾ Advanced ⇾ Peta Situs"
+
+#: inc/api/analyzer.php:905
+msgid "Enable the XML Sitemap toggle"
+msgstr "Aktifkan toggle Peta Situs XML"
+
+#: inc/api/analyzer.php:906
+msgid "Click on Regenerate Button"
+msgstr "Klik pada Tombol Regenerasi"
+
+#: inc/api/analyzer.php:928
+msgid "Upgrade to SureRank Pro to unlock advanced sitemap types like Video, News, HTML, and Author sitemaps for better search visibility."
+msgstr "Tingkatkan ke SureRank Pro untuk membuka kunci jenis peta situs lanjutan seperti Video, Berita, HTML, dan peta situs Penulis untuk visibilitas pencarian yang lebih baik."
+
+#. translators: 1: plugin name, 2: term ID.
+#: inc/importers/squirrly/squirrly.php:127
+#, php-format
+msgid "%1$s data detected for term %2$d."
+msgstr "%1$s data terdeteksi untuk istilah %2$d."
+
+#. translators: 1: plugin name, 2: term ID.
+#: inc/importers/squirrly/squirrly.php:140
+#, php-format
+msgid "No %1$s data found for term %2$d."
+msgstr "Tidak ada %1$s data ditemukan untuk istilah %2$d."
+
+#: inc/importers/squirrly/squirrly.php:235
+msgid "No Squirrly SEO global settings found to import."
+msgstr "Tidak ada pengaturan global Squirrly SEO yang ditemukan untuk diimpor."
+
+#: inc/importers/squirrly/squirrly.php:255
+msgid "Squirrly SEO global settings imported successfully."
+msgstr "Pengaturan global Squirrly SEO berhasil diimpor."
+
+#. translators: %s: error message
+#: inc/importers/squirrly/squirrly.php:262
+#, php-format
+msgid "Error importing Squirrly SEO global settings: %s"
+msgstr "Kesalahan saat mengimpor pengaturan global Squirrly SEO: %s"
+
+#: build/admin-dashboard/index.js:1
+msgid "Get Pro"
+msgstr "Dapatkan Pro"
+
+#: build/admin-dashboard/index.js:1
+msgid "Failed to load Knowledge Graph settings."
+msgstr "Gagal memuat pengaturan Knowledge Graph."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Site Information"
+msgstr "Informasi Situs"
+
+#: build/admin-dashboard/index.js:1
+msgid "Configure site information for schema settings"
+msgstr "Konfigurasi informasi situs untuk pengaturan skema"
+
+#: build/admin-dashboard/index.js:1
+msgid "Error saving settings"
+msgstr "Kesalahan saat menyimpan pengaturan"
+
+#: build/admin-onboarding/index.js:1
+msgid "SureRank Introduction Video"
+msgstr "Video Pengenalan SureRank"

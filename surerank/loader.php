@@ -59,6 +59,7 @@ use SureRank\Inc\Modules\Ai_Auth\Init as Ai_Auth_Init;
 use SureRank\Inc\Modules\Content_Generation\Init as Content_Generation_Init;
 use SureRank\Inc\Modules\EmailReports\Init as EmailReports_Init;
 use SureRank\Inc\Modules\Fix_Seo_Checks\Init as Fix_Seo_Checks_Init;
+use SureRank\Inc\Modules\Knowledge_Graph\Init as Knowledge_Graph_Init;
 use SureRank\Inc\Modules\Nudges\Init as Nudges_Init;
 use SureRank\Inc\Nps_Notice;
 use SureRank\Inc\Routes;
@@ -421,6 +422,7 @@ class Loader {
 			Content_Generation_Init::class,
 			EmailReports_Init::class,
 			Fix_Seo_Checks_Init::class,
+			Knowledge_Graph_Init::class,
 			Nudges_Init::class,
 			Integrations_Init::class,
 			Process::class,
