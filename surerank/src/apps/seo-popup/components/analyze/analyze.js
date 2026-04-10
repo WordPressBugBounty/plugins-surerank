@@ -168,10 +168,12 @@ const Analyze = () => {
 		setRefreshCalled,
 	] );
 
-	// Determine default accordion value based on page check status
-	const defaultAccordionValue = hasAnyPageCheckIssues
-		? 'page-checks'
-		: 'keyword-checks';
+	// Determine default accordion value (Pro can override via filter).
+	const defaultAccordionValue = applyFilters(
+		'surerank.seo_popup.default_accordion',
+		hasAnyPageCheckIssues ? 'page-checks' : 'keyword-checks',
+		{ hasAnyPageCheckIssues }
+	);
 
 	// Early return if no valid component is found.
 	if ( isSeoAnalysisDisabled() ) {
@@ -193,8 +195,8 @@ const Analyze = () => {
 
 	return (
 		<div className="space-y-2">
-			{ /* Show save message only for Elementor */ }
-			{ ( isElementorBuilder() || isFrontend() ) && (
+			{ /* Show save message for Elementor and Bricks */ }
+			{ ( isElementorBuilder() || isBricksBuilder() || isFrontend() ) && (
 				<div className="[&_p.mr-10]:mr-0 m-1">
 					<Alert
 						variant="info"
@@ -249,7 +251,6 @@ const Analyze = () => {
 					<Accordion.Content>
 						<div className="pt-3">
 							{ ENABLE_PAGE_LEVEL_SEO &&
-								! isBricksBuilder() &&
 								! isAvadaBuilder() && (
 									<div className="flex items-center gap-2 mb-3">
 										<KeywordInput />

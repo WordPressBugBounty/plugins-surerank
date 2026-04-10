@@ -249,6 +249,18 @@ class Product extends Base {
 							'type'     => 'Text',
 						],
 						[
+							'id'      => 'priceValidUntil',
+							'label'   => __( 'Price valid until', 'surerank' ),
+							'default' => true,
+							'show'    => true,
+							'type'    => 'Date',
+							'tooltip' => __( 'The date (in ISO 8601 date format) after which the price is no longer available.', 'surerank' ),
+							'parent'  => 'offers',
+							'main'    => 'Offer',
+							'width'   => 'full',
+							'std'     => '%product.sale_to%',
+						],
+						[
 							'id'       => 'availability',
 							'label'    => __( 'Availability', 'surerank' ),
 							'required' => true,

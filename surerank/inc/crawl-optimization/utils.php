@@ -74,12 +74,19 @@ class Utils {
 	 * Get Full Category Slug Path
 	 * Retrieves the full slug path for a category, including parent categories.
 	 *
-	 * @param \WP_Term $category The category term object.
+	 * @param \WP_Term             $category The category term object.
+	 * @param array<int, \WP_Term> $term_map Optional pre-built term ID to term map to avoid N+1 queries.
 	 * @return string The category slug path, or empty if an error occurs.
+	 * @since 1.7.0 Added $term_map parameter.
 	 */
-	public static function get_full_category_slug_path( \WP_Term $category ) {
+	public static function get_full_category_slug_path( \WP_Term $category, array $term_map = [] ) {
 		if ( 0 === $category->parent ) {
 			return $category->slug;
+		}
+
+		// If a term map is provided, build path in-memory without extra DB queries.
+		if ( ! empty( $term_map ) ) {
+			return self::build_slug_path_from_map( $category, $term_map );
 		}
 
 		$parent_path = get_term_parents_list(
@@ -92,5 +99,26 @@ class Utils {
 		);
 
 		return is_wp_error( $parent_path ) ? '' : trim( $parent_path, '/' );
+	}
+
+	/**
+	 * Build slug path from a pre-fetched term map.
+	 * Walks the parent chain in-memory to avoid N+1 DB queries.
+	 *
+	 * @since 1.7.0
+	 * @param \WP_Term             $category The category term object.
+	 * @param array<int, \WP_Term> $term_map Term ID to term object map.
+	 * @return string The full slug path.
+	 */
+	private static function build_slug_path_from_map( \WP_Term $category, array $term_map ) {
+		$slugs   = [ $category->slug ];
+		$current = $category;
+
+		while ( $current->parent && isset( $term_map[ $current->parent ] ) ) {
+			$current = $term_map[ $current->parent ];
+			array_unshift( $slugs, $current->slug );
+		}
+
+		return implode( '/', $slugs );
 	}
 }

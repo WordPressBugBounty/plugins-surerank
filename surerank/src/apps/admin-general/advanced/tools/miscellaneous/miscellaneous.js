@@ -3,6 +3,7 @@ import { __ } from '@wordpress/i18n';
 import withSuspense from '@AdminComponents/hoc/with-suspense';
 import GeneratePageContent from '@Functions/page-content-generator';
 import { createLazyRoute } from '@tanstack/react-router';
+import { Text } from '@bsf/force-ui';
 
 export const PAGE_CONTENT = [
 	{
@@ -25,7 +26,7 @@ export const PAGE_CONTENT = [
 							<span>
 								<span>
 									{ __(
-										'Collect non-sensitive information from your website, such as the PHP version and features used, to help us fix bugs faster, make smarter decisions, and build features that actually matter to you. ',
+										'Help shape the future of SureRank. Share how you use the plugin so we can build features that matter, fix issues faster, and make smarter decisions. ',
 										'surerank'
 									) }
 								</span>
@@ -35,7 +36,13 @@ export const PAGE_CONTENT = [
 									rel="noopener noreferrer"
 									className="no-underline hover:no-underline ring-0"
 								>
-									{ __( 'Learn More', 'surerank' ) }
+									<Text
+										as="span"
+										color="link"
+										className="inline underline-offset-2 hover:underline"
+									>
+										{ __( 'Learn More', 'surerank' ) }
+									</Text>
 								</a>
 							</span>
 						),

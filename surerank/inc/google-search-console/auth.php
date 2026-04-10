@@ -177,7 +177,7 @@ class Auth {
 
 		$data['access_token']  = Utils::encrypt( $data['access_token'] );
 		$data['refresh_token'] = Utils::encrypt( $data['refresh_token'] );
-		update_option( 'surerank_google_console_credentials', $data );
+		update_option( 'surerank_google_console_credentials', $data, false );
 	}
 
 	/**

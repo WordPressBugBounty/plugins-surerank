@@ -60,6 +60,7 @@ class SiteVerification {
 			$original_error_message = $result['message'] ?? __( 'Unknown error', 'surerank' );
 			$response_code          = $result['code'] ?? 0;
 			$custom_error_message   = $original_error_message;
+			$error_type             = 'verification_failed';
 
 			switch ( $response_code ) {
 				case 400:
@@ -67,6 +68,7 @@ class SiteVerification {
 						$custom_error_message = __( 'This site is already verified with Google.', 'surerank' );
 					} elseif ( strpos( $original_error_message, 'invalid' ) !== false ) {
 						$custom_error_message = __( 'Invalid site URL format for verification. Please check the URL.', 'surerank' );
+						$error_type           = 'invalid_site_url';
 					}
 					break;
 				case 401:
@@ -106,6 +108,7 @@ class SiteVerification {
 				'original_message' => $original_error_message,
 				'code'             => $result['code'] ?? 0,
 				'http_code'        => $response_code,
+				'error_type'       => $error_type,
 			];
 		}
 

@@ -1,5 +1,5 @@
 import { useRef, useState } from '@wordpress/element';
-import { Button, toast } from '@bsf/force-ui';
+import { Button } from '@bsf/force-ui';
 import { LoaderCircle, Check } from 'lucide-react';
 import { __ } from '@wordpress/i18n';
 import { ADMIN_SETTINGS_URL } from '@/global/constants/api';
@@ -7,6 +7,8 @@ import { STORE_NAME } from '@/admin-store/constants';
 import { useSelect, useDispatch } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
 import { DotIcon } from '@/global/components/icons';
+
+/* global toast */
 
 const GlobalSaveButton = ( {
 	onClick,
@@ -39,7 +41,8 @@ const GlobalSaveButton = ( {
 				await onSuccess( response );
 			} else {
 				toast.success(
-					__( 'Settings saved successfully.', 'surerank' )
+					response?.message ||
+						__( 'Settings saved successfully.', 'surerank' )
 				);
 			}
 
@@ -52,7 +55,11 @@ const GlobalSaveButton = ( {
 				}, 1000 );
 			} );
 		} catch ( error ) {
-			toast.error( error.message );
+			toast.error( __( 'Failed to save settings.', 'surerank' ), {
+				description:
+					error?.message || __( 'Please try again.', 'surerank' ),
+			} );
+
 			setButtonText( buttonTextInitial );
 			saveCompleted.current = true;
 		} finally {

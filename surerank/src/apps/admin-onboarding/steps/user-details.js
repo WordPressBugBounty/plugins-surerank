@@ -1,5 +1,9 @@
 import { __ } from '@wordpress/i18n';
-import { Fragment, createInterpolateElement, useState } from '@wordpress/element';
+import {
+	Fragment,
+	createInterpolateElement,
+	useState,
+} from '@wordpress/element';
 import { Title, Text } from '@bsf/force-ui';
 import { useOnboardingState } from '@Onboarding/store';
 import { renderField } from '../utils';
@@ -31,31 +35,34 @@ const inputFields = [
 		required: true,
 	},
 	{
-		label: <span> {
-			createInterpolateElement(
-			__(
-				'Get notified about SEO issues on your website. Plus help improve SureRank by sharing how you use the plugin. <a>View our Privacy Policy</a>',
-				'surerank'
-			),
-			{
-				a: (
-					<Text
-						as="a"
-						tabIndex="0"
-						color="link"
-						href={ surerank_globals.privacy_policy_url }
-						target="_blank"
-						rel="noopener noreferrer"
-						className="no-underline focus:ring-0 focus:underline hover:no-underline"
-					/>
-				),
-			}
-		) }
-		</span>,
+		label: (
+			<span>
+				{ ' ' }
+				{ createInterpolateElement(
+					__(
+						'Stay in the loop and help shape SureRank! Get feature updates, and help us build a better SureRank by sharing how you use the plugin. <a>Privacy Policy</a>',
+						'surerank'
+					),
+					{
+						a: (
+							<Text
+								as="a"
+								tabIndex="0"
+								color="link"
+								href={ surerank_globals.privacy_policy_url }
+								target="_blank"
+								rel="noopener noreferrer"
+								className="no-underline focus:ring-0 focus:underline hover:no-underline"
+							/>
+						),
+					}
+				) }
+			</span>
+		),
 		name: 'agree_to_terms',
 		value: 'agree_to_terms',
 		type: 'checkbox',
-		required: true,
+		required: false,
 	},
 ];
 
@@ -91,6 +98,10 @@ export const submitOnboardingData = async (
 		first_name: userDetails.first_name || '',
 		last_name: userDetails.last_name || '',
 		email: userDetails.email || '',
+		agree_to_terms:
+			typeof userDetails.agree_to_terms === 'boolean'
+				? userDetails.agree_to_terms
+				: false,
 	};
 
 	return await apiFetch( {
@@ -108,12 +119,17 @@ const UserDetails = () => {
 		{ userDetails = {}, websiteDetails = {}, socialProfilesURLs = {} },
 		dispatch,
 	] = useOnboardingState();
+	const leadDetails =
+		surerank_admin_common?.website_details?.website_lead_details || {};
 	// Local form state
 	const [ formState, setFormState ] = useState( {
-		first_name: '',
-		last_name: '',
-		email: '',
-		agree_to_terms: false,
+		first_name: userDetails.first_name || leadDetails.first_name || '',
+		last_name: userDetails.last_name || leadDetails.last_name || '',
+		email: userDetails.email || leadDetails.email || '',
+		agree_to_terms:
+			typeof userDetails.agree_to_terms === 'boolean'
+				? userDetails.agree_to_terms
+				: true,
 		...userDetails,
 	} );
 	const { errors, validate, clearFieldError } = useFormValidation(
@@ -127,11 +143,12 @@ const UserDetails = () => {
 
 	const handleChangeSelection = ( name ) => ( value ) => {
 		clearFieldError( name );
-		setFormState( {
+		const newFormState = {
 			...formState,
 			[ name ]: value,
-		} );
-		handleSaveForm();
+		};
+		setFormState( newFormState );
+		dispatch( { userDetails: newFormState } );
 	};
 
 	const handleSubmit = ( event ) => {
@@ -162,8 +179,11 @@ const UserDetails = () => {
 								first_name: formState.first_name || '',
 								last_name: formState.last_name || '',
 								email: formState.email || '',
+								agree_to_terms: formState.agree_to_terms,
 						  }
-						: {}
+						: {
+								agree_to_terms: false,
+						  }
 				);
 			} catch ( error ) {
 				// Silently handle API errors.
@@ -209,7 +229,7 @@ const UserDetails = () => {
 			{ /* Nav Buttons */ }
 			<StepNavButtons
 				nextProps={ {
-					onClick: handleClickNext( false ),
+					onClick: handleClickNext( ! formState.agree_to_terms ),
 					children: __( 'Finish', 'surerank' ),
 				} }
 				backProps={ {

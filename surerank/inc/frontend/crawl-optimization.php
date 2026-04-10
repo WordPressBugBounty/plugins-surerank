@@ -165,9 +165,15 @@ class Crawl_Optimization {
 		);
 
 		if ( is_array( $categories ) && ! empty( $categories ) ) {
+			// Build term ID map once to avoid N+1 queries in get_full_category_slug_path().
+			$term_map = [];
+			foreach ( $categories as $category ) {
+				$term_map[ $category->term_id ] = $category;
+			}
+
 			$slugs = [];
 			foreach ( $categories as $category ) {
-				$slugs[] = Utils::get_full_category_slug_path( $category );
+				$slugs[] = Utils::get_full_category_slug_path( $category, $term_map );
 			}
 
 			$rules = [];
@@ -233,11 +239,37 @@ class Crawl_Optimization {
 		$categories    = Utils::get_all_categories();
 		$prefix        = Utils::get_blog_prefix();
 
+		// Build term ID map once to avoid N+1 queries from get_category_parents().
+		$term_map = [];
 		foreach ( $categories as $category ) {
-			$path          = Utils::get_category_path( $category ) . $category->slug;
+			$term_map[ $category->term_id ] = $category;
+		}
+
+		foreach ( $categories as $category ) {
+			$path          = $this->get_category_path_from_map( $category, $term_map );
 			$rewrite_rules = $this->append_category_rewrite( $rewrite_rules, $path, $prefix );
 		}
 		return $rewrite_rules;
+	}
+
+	/**
+	 * Build category path using in-memory term map to avoid N+1 queries.
+	 *
+	 * @param \WP_Term             $category The category term object.
+	 * @param array<int, \WP_Term> $term_map Term ID to term object map.
+	 * @return string The full slug path for the category.
+	 * @since 1.7.0
+	 */
+	private function get_category_path_from_map( $category, $term_map ) {
+		$slugs   = [ $category->slug ];
+		$current = $category;
+
+		while ( $current->parent && isset( $term_map[ $current->parent ] ) ) {
+			$current = $term_map[ $current->parent ];
+			array_unshift( $slugs, $current->slug );
+		}
+
+		return implode( '/', $slugs );
 	}
 
 	/**

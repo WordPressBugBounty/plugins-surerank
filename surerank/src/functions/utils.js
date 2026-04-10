@@ -11,6 +11,10 @@ import { twMerge } from 'tailwind-merge';
 import { CHECK_TYPES } from '@/global/constants';
 
 export { sanitizeHTML } from './sanitize-html';
+export {
+	filterHomepageChecks,
+	shouldFilterHomepageCheck,
+} from './homepage-filter';
 
 export const cleanContent = ( postContent ) => {
 	// Get first paragraph. tag will be <p>.

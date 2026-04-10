@@ -61,8 +61,19 @@ class Update {
 	 * @return bool
 	 */
 	public static function option( $option_name, $option_value, $autoload = false ) {
-		// Update the option.
-		return update_option( $option_name, $option_value, $autoload );
+		// Main settings should always be autoloaded — read on every page.
+		if ( defined( 'SURERANK_SETTINGS' ) && SURERANK_SETTINGS === $option_name ) {
+			$autoload = true;
+		}
+
+		$result = update_option( $option_name, $option_value, $autoload );
+
+		// Clear settings cache when the main settings option is updated.
+		if ( defined( 'SURERANK_SETTINGS' ) && SURERANK_SETTINGS === $option_name ) {
+			Settings::clear_cache();
+		}
+
+		return $result;
 	}
 
 	/**

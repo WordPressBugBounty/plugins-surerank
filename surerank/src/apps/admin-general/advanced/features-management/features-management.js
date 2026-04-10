@@ -77,7 +77,7 @@ const PERFORMANCE_INSIGHTS_FEATURES = [
 ];
 
 const getBaseToggles = () => [
-	...( currentUserCan( 'surerank_content_performance' )
+	...( currentUserCan( 'surerank_global_setting' )
 		? CONTENT_PERFORMANCE_FEATURES
 		: [] ),
 	...( currentUserCan( 'surerank_global_setting' )

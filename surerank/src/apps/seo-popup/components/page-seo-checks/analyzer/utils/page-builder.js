@@ -255,7 +255,7 @@ export const isPageBuilderActive = () => {
  * @return {boolean} True if SEO analysis should be disabled
  */
 export const isSeoAnalysisDisabled = () => {
-	return ! ENABLE_PAGE_LEVEL_SEO || isBricksBuilder() || isAvadaBuilder();
+	return ! ENABLE_PAGE_LEVEL_SEO || isAvadaBuilder();
 };
 
 export const RefreshButton = ( { isRefreshing, isChecking, onClick } ) => {

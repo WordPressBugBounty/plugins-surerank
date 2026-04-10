@@ -23,7 +23,7 @@ const SearchConsolePopup = ( { isOpen = true } ) => {
 					<div className="flex flex-col text-left space-y-1">
 						<Text size={ 18 } weight={ 600 } lineHeight={ 28 }>
 							{ __(
-								'Connect Your Site to Google Search Console',
+								'Connect to Google Search Console',
 								'surerank'
 							) }
 						</Text>
@@ -34,7 +34,7 @@ const SearchConsolePopup = ( { isOpen = true } ) => {
 							color="secondary"
 						>
 							{ __(
-								'Link your website to Google Search Console to access detailed search analytics, track performance, and optimize your site for better search rankings.',
+								'Get detailed search insights, analytics reports, track performance, and smart suggestions to optimize your site.',
 								'surerank'
 							) }
 						</Text>
@@ -42,8 +42,9 @@ const SearchConsolePopup = ( { isOpen = true } ) => {
 							size={ 14 }
 							weight={ 400 }
 							as="a"
-							href="https://surerank.com/docs/google-search-console-surerank/"
+							href="https://surerank.com/docs/google-search-console-surerank/?utm_source=surerank&utm_medium=search_console_connect&utm_campaign=docs"
 							target="_blank"
+							rel="noopener noreferrer"
 							color="link"
 							className="no-underline focus:ring-0"
 							aria-label={ __(
@@ -52,7 +53,7 @@ const SearchConsolePopup = ( { isOpen = true } ) => {
 							) }
 						>
 							{ __(
-								'Learn More about Google Search Console.',
+								'Learn about Google Search Console.',
 								'surerank'
 							) }
 						</Text>

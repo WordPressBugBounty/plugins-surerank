@@ -20,6 +20,12 @@ import { useState, useCallback, useMemo } from '@wordpress/element';
 import { Link } from '@tanstack/react-router';
 import apiFetch from '@wordpress/api-fetch';
 import { Tooltip } from '@/apps/admin-components/tooltip';
+import { useSuspenseSelect } from '@wordpress/data';
+import { STORE_NAME } from '@/admin-store/constants';
+import {
+	filterHomepageChecks,
+	shouldFilterHomepageCheck,
+} from '@/functions/homepage-filter';
 
 const ITEMS_PER_PAGE = 20;
 const SUMMARY_ITEMS_COUNT = 5;
@@ -196,6 +202,10 @@ const SiteSeoChecksTable = ( { limit, showViewAll = false } ) => {
 	const [ { searchKeyword, report = [] }, dispatch ] =
 		useSuspenseSiteSeoAnalysis();
 	const [ currentPage, setCurrentPage ] = useState( 1 );
+	const { siteSettings } = useSuspenseSelect( ( select ) => {
+		const { getSiteSettings } = select( STORE_NAME );
+		return { siteSettings: getSiteSettings() };
+	}, [] );
 
 	const itemsPerPage = limit
 		? Math.max( limit, SUMMARY_ITEMS_COUNT )
@@ -224,8 +234,9 @@ const SiteSeoChecksTable = ( { limit, showViewAll = false } ) => {
 			suggestion: 2,
 			success: 3,
 		};
+		const filteredReport = filterHomepageChecks( report, siteSettings );
 
-		return Object.entries( report )
+		return Object.entries( filteredReport || {} )
 			.filter( ( [ , item ] ) => {
 				if ( typeof item !== 'object' ) {
 					return false;
@@ -237,14 +248,14 @@ const SiteSeoChecksTable = ( { limit, showViewAll = false } ) => {
 			.map( ( [ key, item ] ) => ( { ...item, id: key } ) )
 			.sort( ( a, b ) => {
 				const aPriority = a.ignore
-					? 4
+					? 3
 					: statusPriority[ a.status ] ?? 4;
 				const bPriority = b.ignore
-					? 4
+					? 3
 					: statusPriority[ b.status ] ?? 4;
 				return aPriority - bPriority;
 			} );
-	}, [ searchKeyword, report ] );
+	}, [ searchKeyword, report, siteSettings ] );
 
 	const {
 		pages,
@@ -279,13 +290,29 @@ const SiteSeoChecksTable = ( { limit, showViewAll = false } ) => {
 	}, [ filteredContent, currentPage, itemsPerPage, limit ] );
 
 	if ( filteredContent.length === 0 ) {
+		const hasHomepageFilter = shouldFilterHomepageCheck( siteSettings );
+
 		return (
 			<ContentPerformanceEmptyState
-				title={ __( 'No Results Found', 'surerank' ) }
-				description={ __(
-					"Your search didn't match any results. Please try a different keyword or refine your search criteria.",
-					'surerank'
-				) }
+				title={
+					hasHomepageFilter
+						? __(
+								'Homepage checks moved to the page editor',
+								'surerank'
+						  )
+						: __( 'No Results Found', 'surerank' )
+				}
+				description={
+					hasHomepageFilter
+						? __(
+								'Homepage-specific SEO checks are now managed from the selected static homepage in the editor.',
+								'surerank'
+						  )
+						: __(
+								"Your search didn't match any results. Please try a different keyword or refine your search criteria.",
+								'surerank'
+						  )
+				}
 				icon={ <Search /> }
 			/>
 		);

@@ -95,7 +95,7 @@ const imageSeoContent = () => [
 		storeKey: 'auto_set_image_alt',
 		label: __( 'Optimize Image SEO without AI', 'surerank' ),
 		description: __(
-			'Automatically adds alt text to images that are missing one, using the image filename or post title as the source.',
+			'Automatically adds alt text to images that are missing one, using the image filename and post title as the source.',
 			'surerank'
 		),
 		searchKeywords: [
@@ -184,7 +184,7 @@ const ImageSeo = () => {
 		<PageContentWrapper
 			title={ __( 'Image SEO', 'surerank' ) }
 			description={ __(
-				'Generate SEO-friendly image alt text automatically with SureRank AI to improve accessibility and boost your image search visibility.',
+				'Generate SEO-friendly image alt text automatically to improve accessibility and boost image search visibility.',
 				'surerank'
 			) }
 		>

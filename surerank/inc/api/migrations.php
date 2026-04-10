@@ -16,10 +16,12 @@ use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Functions\Send_Json;
 use SureRank\Inc\Functions\Settings;
+use SureRank\Inc\Importers\Aioseo\Aioseo;
 use SureRank\Inc\Importers\Importer;
 use SureRank\Inc\Importers\ImporterUtils;
 use SureRank\Inc\Importers\Rankmath\RankMath;
 use SureRank\Inc\Importers\Seopress\Seopress;
+use SureRank\Inc\Importers\Slimseo;
 use SureRank\Inc\Importers\Squirrly\Squirrly;
 use SureRank\Inc\Importers\Yoast\Yoast;
 use SureRank\Inc\Traits\Get_Instance;
@@ -83,6 +85,8 @@ class Migrations extends Api_Base {
 		'rankmath' => RankMath::class,
 		'seopress' => Seopress::class,
 		'yoast'    => Yoast::class,
+		'slimseo'  => Slimseo\SlimSeo::class,
+		'aioseo'   => Aioseo::class,
 		'squirrly' => Squirrly::class,
 	];
 
@@ -697,6 +701,9 @@ class Migrations extends Api_Base {
 
 		// Set global flag that any migration has been completed.
 		update_option( 'surerank_migration_ever_completed', true );
+
+		// Flag for analytics: migration completed with source plugin slug.
+		update_option( 'surerank_migration_completed', $plugin_slug );
 	}
 
 	/**
@@ -1029,6 +1036,9 @@ class Migrations extends Api_Base {
 				break;
 			case 'wp-seopress/seopress.php':
 				$associated_plugins = [ 'wp-seopress/seopress.php', 'wp-seopress-pro/seopress-pro.php' ];
+				break;
+			case 'all-in-one-seo-pack/all_in_one_seo_pack.php':
+				$associated_plugins = [ 'all-in-one-seo-pack/all_in_one_seo_pack.php', 'all-in-one-seo-pack-pro/all_in_one_seo_pack.php' ];
 				break;
 			case 'squirrly-seo/squirrly.php':
 				$associated_plugins = [ 'squirrly-seo/squirrly.php', 'squirrly-seo-pack/index.php' ];

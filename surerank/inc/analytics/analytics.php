@@ -27,6 +27,13 @@ class Analytics {
 	use Get_Instance;
 
 	/**
+	 * Events tracker instance.
+	 *
+	 * @var \BSF_Analytics_Events|null
+	 */
+	private static $events = null;
+
+	/**
 	 * Class constructor.
 	 *
 	 * @return void
@@ -34,9 +41,21 @@ class Analytics {
 	 */
 	public function __construct() {
 
+		// Only run analytics in admin context.
+		if ( ! is_admin() ) {
+			return;
+		}
+
 		if ( ! class_exists( 'Astra_Notices' ) ) {
 			require_once SURERANK_DIR . 'inc/lib/astra-notices/class-astra-notices.php';
 		}
+
+		add_filter(
+			'uds_survey_allowed_screens',
+			static function () {
+				return [ 'plugins' ];
+			}
+		);
 
 		/*
 		* BSF Analytics.
@@ -58,12 +77,50 @@ class Analytics {
 					'path'                => SURERANK_DIR . 'inc/lib/bsf-analytics',
 					'author'              => 'SureRank',
 					'time_to_display'     => '+24 hours',
+					'deactivation_survey' => apply_filters(
+						'surerank_deactivation_survey_data',
+						[
+							[
+								'id'                => 'deactivation-survey-surerank',
+								'popup_logo'        => SURERANK_URL . 'inc/admin/assets/images/surerank.png',
+								'plugin_slug'       => 'surerank',
+								'popup_title'       => 'Quick Feedback',
+								'support_url'       => 'https://surerank.com/contact/',
+								'popup_description' => 'If you have a moment, please share why you are deactivating SureRank:',
+								'show_on_screens'   => [ 'plugins' ],
+								'plugin_version'    => SURERANK_VERSION,
+							],
+						]
+					),
 					'hide_optin_checkbox' => true,
 				],
 			]
 		);
 
 		add_filter( 'bsf_core_stats', [ $this, 'add_surerank_analytics_data' ] );
+
+		// State-based events — throttled to once per day.
+		// Transient is set inside detect_state_events() only after confirming
+		// BSF_Analytics_Events class is loaded, so it retries on next load if not ready.
+		if ( false === get_transient( 'surerank_state_events_checked' ) ) {
+			$this->detect_state_events();
+		}
+	}
+
+	/**
+	 * Get shared event tracker instance.
+	 *
+	 * @return \BSF_Analytics_Events|null
+	 * @since 1.7.0
+	 */
+	public static function events() {
+		if ( null === self::$events ) {
+			if ( ! class_exists( 'BSF_Analytics_Events' ) ) {
+				return null;
+			}
+			self::$events = new \BSF_Analytics_Events( 'surerank' );
+		}
+		return self::$events;
 	}
 
 	/**
@@ -77,7 +134,7 @@ class Analytics {
 		$settings    = Settings::get();
 		$pro_enabled = defined( 'SURERANK_PRO_VERSION' );
 
-		$other_stats               = [
+		$other_stats = [
 			'site_language'                            => get_locale(),
 			'gsc_connected'                            => $this->get_gsc_connected(),
 			'plugin_version'                           => SURERANK_VERSION,
@@ -87,24 +144,28 @@ class Analytics {
 			'enable_xml_sitemap'                       => $settings['enable_xml_sitemap'] ?? true,
 			'enable_xml_image_sitemap'                 => $settings['enable_xml_image_sitemap'] ?? true,
 			'enable_xml_news_sitemap'                  => $pro_enabled ? $settings['enable_xml_news_sitemap'] ?? false : false,
-			'robots_data'                              => Helper::get_robots_data(),
+			'robots_custom_rules'                      => $this->has_custom_robots_rules(),
 			'author_archive'                           => $settings['author_archive'] ?? true,
 			'date_archive'                             => $settings['date_archive'] ?? true,
 			'cron_available'                           => Helper::are_crons_available(),
 			'redirect_attachment_pages_to_post_parent' => $settings['redirect_attachment_pages_to_post_parent'] ?? true,
 			'auto_set_image_alt'                       => $settings['auto_set_image_alt'] ?? true,
-			'email_reports'                            => EmailReportsUtil::get_instance()->get_settings(),
+			'email_reports_enabled'                    => $this->is_email_reports_enabled(),
 			'site_type'                                => $this->get_site_type(),
+			'failed_seo_checks_count'                  => $this->get_failed_seo_checks_count(),
 			'kpi_records'                              => $this->get_kpi_tracking_data(),
+			'events_record'                            => null !== self::events() ? self::events()->flush_pending() : [],
 		];
-		$stats                     = array_merge(
+
+		$stats = array_merge(
 			$other_stats,
-			$this->get_failed_site_seo_checks(),
 			$this->get_enabled_features()
 		);
+
 		$stats_data['plugin_data'] = [
 			'surerank' => $stats,
 		];
+
 		return $stats_data;
 	}
 
@@ -151,21 +212,199 @@ class Analytics {
 	}
 
 	/**
-	 * Get failed site SEO checks.
+	 * Detect state-based events.
 	 *
-	 * @return array<string,int>
+	 * Checks conditions on admin load. BSF_Analytics_Events dedup prevents duplicates.
+	 * Throttled via transient so this only runs once per day.
+	 *
+	 * @return void
+	 * @since 1.7.0
 	 */
-	private function get_failed_site_seo_checks() {
-		$failed_checks      = Get::option( 'surerank_site_seo_checks', [] );
-		$failed_checks_list = [];
+	private function detect_state_events() {
+
+		$events = self::events();
+		if ( null === $events ) {
+			// BSF_Analytics_Events class not loaded yet — do NOT set transient,
+			// so this retries on the next admin page load.
+			return;
+		}
+
+		// Class is available — set throttle transient so we don't re-run for 24h.
+		set_transient( 'surerank_state_events_checked', 1, DAY_IN_SECONDS );
+
+		// Plugin activated.
+		$bsf_referrers = get_option( 'bsf_product_referers', [] );
+		$source        = ! empty( $bsf_referrers['surerank'] )
+			? sanitize_text_field( $bsf_referrers['surerank'] )
+			: 'self';
+		$events->track( 'plugin_activated', SURERANK_VERSION, [ 'source' => $source ] );
+
+		// Plugin updated (version change detection).
+		$stored_version = get_option( 'surerank_tracked_version', '' );
+		if ( SURERANK_VERSION !== $stored_version ) {
+			if ( ! empty( $stored_version ) ) {
+				$events->flush_pushed( [ 'plugin_updated' ] );
+				$events->track(
+					'plugin_updated',
+					SURERANK_VERSION,
+					[
+						'from_version' => $stored_version,
+					]
+				);
+			}
+			update_option( 'surerank_tracked_version', SURERANK_VERSION );
+		}
+
+		// Onboarding completed: detect completed or skipped state.
+		$settings           = Settings::get();
+		$website_type       = $settings['website_type'] ?? [];
+		$onboarding_done    = ! empty( $website_type );
+		$onboarding_skipped = get_option( 'surerank_onboarding_skipped', false ) && ! $onboarding_done;
+
+		if ( $onboarding_done || $onboarding_skipped ) {
+			$events->track(
+				'onboarding_completed',
+				'',
+				[
+					'skipped' => (string) (int) $onboarding_skipped,
+				]
+			);
+		}
+
+		// First post optimized (activation event).
+		if ( $this->is_active() ) {
+			$install_time = get_option( 'surerank_usage_installed_time', 0 );
+			$days         = 0;
+			if ( $install_time > 0 ) {
+				$days = (int) floor( ( time() - $install_time ) / DAY_IN_SECONDS );
+			}
+			$events->track(
+				'first_post_optimized',
+				'',
+				[
+					'days_since_install' => (string) $days,
+				]
+			);
+		}
+
+		// Google Search Console connected.
+		if ( $this->get_gsc_connected() ) {
+			$events->track( 'gsc_connected' );
+		}
+
+		// Pro license activated.
+		if ( defined( 'SURERANK_PRO_VERSION' ) ) {
+			$events->track( 'pro_license_activated' );
+		}
+
+		// Migration completed (check for migration option).
+		$migration_done = get_option( 'surerank_migration_completed', '' );
+		if ( ! empty( $migration_done ) ) {
+			$events->track(
+				'migration_completed',
+				'',
+				[
+					'source' => sanitize_text_field( $migration_done ),
+				]
+			);
+		}
+
+		// First AI content generated (Pro feature).
+		if ( defined( 'SURERANK_PRO_VERSION' ) ) {
+			$ai_used = get_option( 'surerank_ai_content_used', false );
+			if ( $ai_used ) {
+				$events->track( 'first_ai_content_generated' );
+			}
+		}
+
+		// First schema added.
+		$schemas_enabled = $settings['enable_schemas'] ?? false;
+		if ( $schemas_enabled ) {
+			$events->track( 'first_schema_added' );
+		}
+
+		// First redirect created (Pro feature).
+		if ( defined( 'SURERANK_PRO_VERSION' ) ) {
+			$redirect_count = $this->get_redirect_count();
+			if ( $redirect_count > 0 ) {
+				$events->track( 'first_redirect_created' );
+			}
+		}
+
+		// First bulk action used.
+		$bulk_used = get_option( 'surerank_bulk_action_used', false );
+		if ( $bulk_used ) {
+			$events->track( 'first_bulk_action_used' );
+		}
+
+		// First link scan completed (Pro feature).
+		if ( defined( 'SURERANK_PRO_VERSION' ) ) {
+			$scan_done = get_option( 'surerank_link_scan_completed', false );
+			if ( $scan_done ) {
+				$events->track( 'first_link_scan_completed' );
+			}
+		}
+	}
+
+	/**
+	 * Check if custom robots rules have been configured.
+	 *
+	 * @return bool
+	 * @since 1.7.0
+	 */
+	private function has_custom_robots_rules() {
+		$robots_data = Helper::get_robots_data();
+		return ! empty( $robots_data ) && is_array( $robots_data );
+	}
+
+	/**
+	 * Check if email reports are enabled.
+	 *
+	 * @return bool
+	 * @since 1.7.0
+	 */
+	private function is_email_reports_enabled() {
+		$email_settings = EmailReportsUtil::get_instance()->get_settings();
+		return ! empty( $email_settings['enabled'] );
+	}
+
+	/**
+	 * Get count of failed site SEO checks.
+	 *
+	 * @return int
+	 * @since 1.7.0
+	 */
+	private function get_failed_seo_checks_count() {
+		$failed_checks = Get::option( 'surerank_site_seo_checks', [] );
+		$count         = 0;
 		foreach ( $failed_checks as $check ) {
-			foreach ( $check as $key => $value ) {
-				if ( isset( $value['status'] ) && $value['status'] === 'error' ) {
-					$failed_checks_list[ $key ] = 0;
+			foreach ( $check as $value ) {
+				if ( isset( $value['status'] ) && 'error' === $value['status'] ) {
+					++$count;
 				}
 			}
 		}
-		return $failed_checks_list;
+		return $count;
+	}
+
+	/**
+	 * Get redirect count (Pro feature).
+	 *
+	 * @return int
+	 * @since 1.7.0
+	 */
+	private function get_redirect_count() {
+		global $wpdb;
+		$table = $wpdb->prefix . 'surerank_redirects';
+
+		// Check table exists before querying.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) );
+		if ( ! $table_exists ) {
+			return 0;
+		}
+
+		return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a hardcoded constant, not user input.
 	}
 
 	/**
@@ -197,6 +436,10 @@ class Analytics {
 	 * @since 1.5.0
 	 */
 	private function is_active() {
+		$cached = get_transient( 'surerank_analytics_is_active' );
+		if ( false !== $cached ) {
+			return 'yes' === $cached;
+		}
 
 		$surerank_defaults = Defaults::get_instance()->get_global_defaults();
 
@@ -205,6 +448,7 @@ class Analytics {
 		if ( is_array( $surerank_settings ) && is_array( $surerank_defaults ) ) {
 				$changed_settings = self::shallow_two_level_diff( $surerank_settings, $surerank_defaults );
 			if ( count( $changed_settings ) >= 1 ) {
+				set_transient( 'surerank_analytics_is_active', 'yes', DAY_IN_SECONDS );
 				return true;
 			}
 		}
@@ -243,73 +487,41 @@ class Analytics {
 				)
 			);
 
-		if ( ( ! empty( $posts ) && is_array( $posts ) ) || ( ! empty( $terms ) && is_array( $terms ) ) ) {
-			return true;
-		}
+		$is_active = ( ! empty( $posts ) && is_array( $posts ) ) || ( ! empty( $terms ) && is_array( $terms ) );
 
-		return false;
+		set_transient( 'surerank_analytics_is_active', $is_active ? 'yes' : 'no', DAY_IN_SECONDS );
+
+		return $is_active;
 	}
 
 	/**
 	 * Get site type - Inactive|Active|Super|Dormant|Super Dormant.
 	 *
-	 * This site type is used to determine the status of the site and further use of business logic.
-	 *
-	 * INACTIVE SITE
-	 * A site is considered "Inactive" if both of the following are true:
-	 * No page or post has ever been manually optimized
-	 * The plugin is active on the site
-	 *
-	 * ACTIVE SITE
-	 * A site is considered "Active" if all of the following are true:
-	 * At least 1 page or post has been manually optimized
-	 * The optimization happened in the last 180 days
-	 * The plugin is active on the site
-	 *
-	 * SUPER SITE
-	 * A site is considered a "Super Site" if both conditions are met:
-	 * At least 20 pages or posts have been manually optimized in the last 180 days
-	 * At least 50% of total pages or posts have been manually optimized in the last 180 days
-	 * The plugin is active on the site
-	 *
-	 * DORMANT SITE
-	 * A site is considered "Dormant" if all of the following are true:
-	 * At least 1 page or post was manually optimized in the past
-	 * No manual optimization has occurred in the last 180 days
-	 * The plugin is active on the site
-	 *
-	 * SUPER DORMANT SITE
-	 * A site is considered a "Dormant Super Site" if all of the following are true:
-	 * At least 20 pages or posts were manually optimized in the past
-	 * At least 50% of total pages or posts were manually optimized in the past
-	 * No manual optimization has occurred in the last 180 days
-	 * The plugin is active on the site
-	 *
-	 * @return string Site type: 'inactive', 'active', 'super', 'dormant', or 'super_dormant'.
+	 * @return string Site type.
 	 * @since 1.6.3
 	 */
 	private function get_site_type() {
-		// Get count of posts optimized in last 180 days.
+		$cached = get_transient( 'surerank_analytics_site_type' );
+		if ( false !== $cached ) {
+			return $cached;
+		}
+
 		$recent_optimized_count = $this->get_optimized_posts_count_last_180_days();
+		$total_optimized_count  = $this->get_optimized_posts_count();
 
-		// Get total optimized posts (ever).
-		$total_optimized_count = $this->get_optimized_posts_count();
-
-		// No posts ever optimized = inactive.
 		if ( 0 === $total_optimized_count ) {
-			return 'inactive';
+			$site_type = 'inactive';
+		} elseif ( 0 === $recent_optimized_count ) {
+			$is_super_past = $this->is_super_criteria_met( $total_optimized_count );
+			$site_type     = $is_super_past ? 'super_dormant' : 'dormant';
+		} else {
+			$is_super_recent = $this->is_super_criteria_met( $recent_optimized_count );
+			$site_type       = $is_super_recent ? 'super' : 'active';
 		}
 
-		// No recent optimizations = dormant or super_dormant.
-		if ( 0 === $recent_optimized_count ) {
-			// Check if site qualifies as "super" based on total optimizations.
-			$is_super_past = $this->is_super_site_past( $total_optimized_count );
-			return $is_super_past ? 'super_dormant' : 'dormant';
-		}
+		set_transient( 'surerank_analytics_site_type', $site_type, DAY_IN_SECONDS );
 
-		// Has recent optimizations = active or super.
-		$is_super_recent = $this->is_super_site_recent( $recent_optimized_count );
-		return $is_super_recent ? 'super' : 'active';
+		return $site_type;
 	}
 
 	/**
@@ -343,7 +555,6 @@ class Analytics {
 			);
 		}
 
-		// Count terms with sureRank settings.
 		$terms_like = $wpdb->esc_like( 'surerank_seo_checks' ) . '%';
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$term_count = $wpdb->get_var(
@@ -361,11 +572,9 @@ class Analytics {
 	}
 
 	/**
-	 * Get count of posts that have been optimized with SureRank within the last 180 days.
-	 * Uses per-post 'surerank_post_optimized_at' timestamps for accurate counting.
-	 * Uses per-term 'surerank_term_optimized_at' timestamps for accurate counting.
+	 * Get count of posts optimized within last 180 days.
 	 *
-	 * @return int Number of optimized posts and terms within the last 180 days.
+	 * @return int
 	 * @since 1.6.3
 	 */
 	private function get_optimized_posts_count_last_180_days() {
@@ -388,13 +597,12 @@ class Analytics {
 					WHERE pm.meta_key = 'surerank_post_optimized_at'
 					AND CAST(pm.meta_value AS UNSIGNED) > %d
 					AND p.post_status = 'publish'
-					AND p.post_type IN ({$placeholders})", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Safely handled.
+					AND p.post_type IN ({$placeholders})", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 					array_merge( [ $days_180_ago ], $public_post_types )
 				)
 			);
 		}
 
-		// Count terms optimized in the last 180 days.
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$term_count = $wpdb->get_var(
 			$wpdb->prepare(
@@ -412,37 +620,6 @@ class Analytics {
 	}
 
 	/**
-	 * Check if site qualifies as a "Super" site based on recent optimizations.
-	 *
-	 * Logic:
-	 * - If total posts >= 40: require 20+ optimized posts (20-post threshold).
-	 * - If total posts < 40: require 50%+ of total posts optimized (percentage threshold).
-	 *
-	 * This ensures small sites (e.g., 10 pages) can still qualify as "super"
-	 * if they have optimized a significant portion of their content.
-	 *
-	 * @param int $recent_optimized_count Number of recently optimized posts.
-	 * @return bool True if site qualifies as super.
-	 * @since 1.6.3
-	 */
-	private function is_super_site_recent( int $recent_optimized_count ) {
-		return $this->is_super_criteria_met( $recent_optimized_count );
-	}
-
-	/**
-	 * Check if site qualifies as a "Super" site based on past optimizations.
-	 *
-	 * Used for dormant/super_dormant classification.
-	 *
-	 * @param int $past_optimized_count Number of optimized posts (historical).
-	 * @return bool True if site qualifies as super.
-	 * @since 1.6.3
-	 */
-	private function is_super_site_past( int $past_optimized_count ) {
-		return $this->is_super_criteria_met( $past_optimized_count );
-	}
-
-	/**
 	 * Shared logic for super site criteria.
 	 *
 	 * @param int $optimized_count Number of optimized posts.
@@ -456,24 +633,21 @@ class Analytics {
 			return false;
 		}
 
-		// Threshold where 50% equals 20 posts (20 / 0.5 = 40).
 		$threshold = 40;
 
 		if ( $total_posts >= $threshold ) {
-			// For larger sites, require minimum 20 optimized posts.
 			return $optimized_count >= 20;
 		}
 
-		// For smaller sites, require 50% of total posts optimized.
 		$percentage = $optimized_count / $total_posts * 100;
 
 		return $percentage >= 50;
 	}
 
 	/**
-	 * Get total count of published posts across all public post types.
+	 * Get total count of published posts.
 	 *
-	 * @return int Total published posts count.
+	 * @return int
 	 * @since 1.6.3
 	 */
 	private function get_total_published_posts_count() {
@@ -493,7 +667,7 @@ class Analytics {
 				"SELECT COUNT(*)
 				FROM {$wpdb->posts}
 				WHERE post_status = 'publish'
-				AND post_type IN ({$placeholders})", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Safely handled.
+				AND post_type IN ({$placeholders})", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 				$public_post_types
 			)
 		);
@@ -502,17 +676,14 @@ class Analytics {
 	}
 
 	/**
-	 * Get public post types for database queries, excluding attachments and revisions.
+	 * Get public post types for database queries.
 	 *
-	 * @return array<string> Array of post type names.
+	 * @return array<string>
 	 * @since 1.6.3
 	 */
 	private function get_public_post_types_for_query() {
 		$post_types = get_post_types( [ 'public' => true ], 'names' );
-
-		// Exclude attachment and revision post types.
-		$excluded = [ 'attachment', 'revision' ];
-
+		$excluded   = [ 'attachment', 'revision' ];
 		return array_values( array_diff( $post_types, $excluded ) );
 	}
 
@@ -521,7 +692,7 @@ class Analytics {
 	 *
 	 * @param string $date Date in Y-m-d format.
 	 * @since 1.6.3
-	 * @return int Optimized posts count
+	 * @return int
 	 */
 	private function get_optimized_posts_count_within_date( $date ) {
 		global $wpdb;
@@ -536,10 +707,9 @@ class Analytics {
 		} else {
 			$placeholders = implode( ', ', array_fill( 0, count( $public_post_types ), '%s' ) );
 
-			// Count posts optimized on this specific date.
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$post_count = $wpdb->get_var(
-				// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- Dynamic placeholders for post types handled via array_merge.
+				// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
 				$wpdb->prepare(
 					"SELECT COUNT(DISTINCT pm.post_id)
 					FROM {$wpdb->postmeta} pm
@@ -548,13 +718,12 @@ class Analytics {
 					AND CAST(pm.meta_value AS UNSIGNED) >= %d
 					AND CAST(pm.meta_value AS UNSIGNED) <= %d
 					AND p.post_status = 'publish'
-					AND p.post_type IN ({$placeholders})", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Safely handled.
+					AND p.post_type IN ({$placeholders})", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 					array_merge( [ $start_timestamp, $end_timestamp ], $public_post_types )
 				)
 			);
 		}
 
-		// Count terms optimized on this specific date.
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$term_count = $wpdb->get_var(
 			$wpdb->prepare(
@@ -565,7 +734,8 @@ class Analytics {
 				WHERE tm.meta_key = 'surerank_term_optimized_at'
 				AND CAST(tm.meta_value AS UNSIGNED) >= %d
 				AND CAST(tm.meta_value AS UNSIGNED) <= %d",
-				[ $start_timestamp, $end_timestamp ]
+				$start_timestamp,
+				$end_timestamp
 			)
 		);
 
@@ -576,18 +746,21 @@ class Analytics {
 	 * Get KPI tracking data for the last 2 days.
 	 *
 	 * @since 1.6.3
-	 * @return array<string, array<string, array<string, int>>> KPI data organized by date
+	 * @return array<string, array<string, array<string, int>>>
 	 */
 	private function get_kpi_tracking_data() {
 		$kpi_data = [];
 		$today    = current_time( 'Y-m-d' );
 
-		// Get data for yesterday and day before yesterday.
 		for ( $i = 1; $i <= 2; $i++ ) {
-			$date            = gmdate( 'Y-m-d', absint( strtotime( $today . ' -' . $i . ' days' ) ) );
+			$timestamp = strtotime( $today . ' -' . $i . ' days' );
+			if ( false === $timestamp ) {
+				continue;
+			}
+			$date = (string) wp_date( 'Y-m-d', $timestamp );
+
 			$optimized_count = $this->get_optimized_posts_count_within_date( $date );
 
-			// Always include data, even if optimized_count is 0.
 			$kpi_data[ $date ] = [
 				'numeric_values' => [
 					'optimized_posts' => $optimized_count,

@@ -11,6 +11,7 @@ import {
 	Text,
 } from '@bsf/force-ui';
 import { __, sprintf } from '@wordpress/i18n';
+import { Tooltip } from '@/apps/admin-components/tooltip';
 import {
 	useEffect,
 	useState,
@@ -97,20 +98,33 @@ const ClicksAndImpressions = ( { item, isLoading } ) => {
 				{ isLoading ? (
 					<Skeleton variant="rectangular" className="w-16 h-6" />
 				) : (
-					<Label
-						tag="p"
-						size="sm"
-						className={ cn(
-							'font-medium',
-							differenceClassName,
-							fallbackClassName
+					<Tooltip
+						content={ sprintf(
+							// translators: %d: number of days in the previous comparison period.
+							__(
+								'Compared with the previous %d-day period',
+								'surerank'
+							),
+							DEFAULT_DATE_RANGE
 						) }
+						placement="top"
+						arrow
 					>
-						{ renderIcon }
-						<span className="text-inherit">
-							{ renderDifference }
-						</span>
-					</Label>
+						<Label
+							tag="p"
+							size="sm"
+							className={ cn(
+								'cursor-help font-medium',
+								differenceClassName,
+								fallbackClassName
+							) }
+						>
+							{ renderIcon }
+							<span className="text-inherit">
+								{ renderDifference }
+							</span>
+						</Label>
+					</Tooltip>
 				) }
 			</Container>
 		</Container.Item>

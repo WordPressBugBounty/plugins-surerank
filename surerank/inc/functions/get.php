@@ -174,12 +174,11 @@ class Get {
 	 * @return array<string, mixed>
 	 */
 	public static function fb_image_size( &$meta ) {
-		// GET facebook_image_url and height and width.
 		$facebook_image_url = $meta['facebook_image_url'] ?? '';
-		// get height and width of facebook image.
-		$facebook_image_details = self::get_image_dimensions( $facebook_image_url );
+		$facebook_image_id  = ! empty( $meta['facebook_image_id'] ) ? (int) $meta['facebook_image_id'] : 0;
 
-		// update facebook image height and width.
+		$facebook_image_details = self::get_image_dimensions( $facebook_image_url, $facebook_image_id );
+
 		$meta['facebook_image_height'] = $facebook_image_details['height'];
 		$meta['facebook_image_width']  = $facebook_image_details['width'];
 
@@ -189,43 +188,39 @@ class Get {
 	/**
 	 * Get image dimensions.
 	 *
-	 * @param string $image_url Image URL.
+	 * @param string $image_url      Image URL.
+	 * @param int    $attachment_id  Attachment ID (avoids expensive URL lookup when available).
 	 * @since 0.0.1
 	 * @return array<string, mixed>
 	 */
-	public static function get_image_dimensions( $image_url ) {
+	public static function get_image_dimensions( $image_url, $attachment_id = 0 ) {
 		$dimensions = [
 			'height' => 0,
 			'width'  => 0,
 		];
 
-		// If image url is empty then return.
-		if ( empty( $image_url ) ) {
+		if ( empty( $image_url ) && empty( $attachment_id ) ) {
 			return $dimensions;
 		}
 
-		/**
-		 * Image details type.
-		 *
-		 * @var array{
-		 *   height?: int,
-		 *   width?: int,
-		 *   filesize: int,
-		 *   file?: string,
-		 *   sizes?: array<string, mixed>,
-		 *   image_meta?: array<string, mixed>
-		 * }|false $image_details
-		 */
-		$image_details = wp_get_attachment_metadata( attachment_url_to_postid( $image_url ) ); // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.attachment_url_to_postid_attachment_url_to_postid
+		// Use attachment ID directly if available (avoids expensive URL lookup).
+		if ( ! $attachment_id ) {
+			$attachment_id = attachment_url_to_postid( $image_url ); // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.attachment_url_to_postid_attachment_url_to_postid
+		}
 
-		// If image details are empty then return.
+		if ( ! $attachment_id ) {
+			return $dimensions;
+		}
+
+		$image_details = wp_get_attachment_metadata( $attachment_id );
+
 		if ( empty( $image_details ) ) {
 			return $dimensions;
 		}
 
 		return [
-			'height' => $image_details['height'] ?? 0,
-			'width'  => $image_details['width'] ?? 0,
+			'height' => $image_details['height'],
+			'width'  => $image_details['width'],
 		];
 	}
 

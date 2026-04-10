@@ -154,11 +154,6 @@ class Seo_Bar {
 			return;
 		}
 
-		// Skip if the page is built with Bricks builder.
-		if ( get_post_meta( $id, '_bricks_page_content_2', true ) ) {
-			return;
-		}
-
 		$post_title = get_the_title( $id );
 
 		if ( $column_name === 'surerank-data' ) {

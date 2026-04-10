@@ -1,5 +1,6 @@
-import { Text } from '@bsf/force-ui';
+import { Text, Badge, Skeleton } from '@bsf/force-ui';
 import { __ } from '@wordpress/i18n';
+import { useEffect, useRef, useState } from '@wordpress/element';
 import { cn } from '@Functions/utils';
 import { isProActive } from '@/functions/nudges';
 import UpgradeButton from './upgrade-button';
@@ -21,6 +22,7 @@ import UpgradeButton from './upgrade-button';
  * @param {string}   props.headerBackground - Header background color class (default: brand-background-50)
  * @param {string}   props.plan             - Plan name (default: 'starter')
  * @param {string}   props.utmMedium        - UTM medium parameter for tracking (e.g., 'surerank_instant_indexing')
+ * @param {string}   props.utmContent       - UTM content parameter for tracking
  * @return {JSX.Element} UpgradeFeatureCard component
  */
 const UpgradeFeatureCard = ( {
@@ -42,14 +44,24 @@ const UpgradeFeatureCard = ( {
 	showHeader = true,
 	headerBackground = 'bg-brand-background-50',
 	utmMedium,
+	utmContent,
 	plan,
 	...props
 } ) => {
+	const [ isImageLoaded, setIsImageLoaded ] = useState( false );
+	const imageRef = useRef( null );
+
 	// Generate image URL if imageName is provided
 	const imageUrl =
 		imageName && window?.surerank_globals?.admin_assets_url
 			? `${ window.surerank_globals.admin_assets_url }/images/${ imageName }`
 			: null;
+
+	useEffect( () => {
+		if ( imageRef.current?.complete ) {
+			setIsImageLoaded( true );
+		}
+	}, [ imageUrl ] );
 
 	// Don't render if the required plan is already active
 	if ( plan && isProActive( plan ) ) {
@@ -68,23 +80,42 @@ const UpgradeFeatureCard = ( {
 			{ /* Wrapper */ }
 			<div className="flex flex-row flex-wrap gap-2 p-2 bg-background-secondary rounded-lg">
 				{ /* Modal Card */ }
-				<div className="flex flex-row gap-6 p-6 bg-background-primary rounded-md shadow-sm w-full">
+				<div className="flex flex-col gap-6 p-6 bg-background-primary rounded-md shadow-sm w-full sm:flex-row">
 					{ /* Header Section */ }
 					{ showHeader && (
 						<div className="flex flex-col gap-2 p-2">
 							<div
 								className={ cn(
-									'w-full h-auto rounded flex items-center justify-center',
+									'h-64 w-full rounded flex items-center justify-center flex-shrink-0 sm:w-64',
 									headerBackground
 								) }
 							>
 								{ headerContent ||
 									( imageUrl ? (
-										<img
-											src={ imageUrl }
-											alt={ title }
-											className="object-contain max-w-full max-h-full"
-										/>
+										<>
+											{ ! isImageLoaded && (
+												<Skeleton
+													variant="rectangular"
+													className="h-full w-full"
+													aria-label={ __(
+														'Loading feature image',
+														'surerank'
+													) }
+												/>
+											) }
+											<img
+												ref={ imageRef }
+												src={ imageUrl }
+												alt={ title }
+												className={ cn(
+													'h-full w-full object-contain',
+													! isImageLoaded && 'hidden'
+												) }
+												onLoad={ () =>
+													setIsImageLoaded( true )
+												}
+											/>
+										</>
 									) : (
 										<div className="text-center text-text-tertiary">
 											{ /* Placeholder for header content */ }
@@ -95,7 +126,7 @@ const UpgradeFeatureCard = ( {
 					) }
 
 					{ /* Content Section */ }
-					<div className="flex flex-col justify-center gap-2 flex-1">
+					<div className="flex flex-col justify-center gap-2 flex-1 min-w-0">
 						{ /* Title Section */ }
 						<div className="flex flex-col gap-2">
 							<div className="flex flex-row items-center gap-3">
@@ -108,6 +139,12 @@ const UpgradeFeatureCard = ( {
 								>
 									{ title }
 								</Text>
+								<Badge
+									label={ __( 'Pro', 'surerank' ) }
+									variant="blue"
+									size="sm"
+									type="pill"
+								/>
 							</div>
 							<div className="flex flex-row items-stretch">
 								<Text
@@ -162,6 +199,7 @@ const UpgradeFeatureCard = ( {
 									showIcon={ false }
 									onClick={ onButtonClick }
 									utmMedium={ utmMedium }
+									utmContent={ utmContent }
 								/>
 							</div>
 						</div>

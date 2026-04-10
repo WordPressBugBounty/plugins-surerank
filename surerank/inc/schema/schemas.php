@@ -107,6 +107,8 @@ class Schemas {
 			return;
 		}
 
+		$renderer = new Render( new Data() );
+
 		foreach ( $schemas as $schema ) {
 			if ( Validator::validate_schema_rules( $schema ) ) { // Validate schema rules.
 				$type         = $schema['fields']['@type'] ?? $schema['type'] ?? 'Thing';
@@ -114,7 +116,7 @@ class Schemas {
 
 				if ( $schema_class && class_exists( $schema_class ) ) {
 					$schema_instance = $schema_class::get_instance();
-					$rendered[]      = $schema_instance->render_schema( $schema, new Render( new Data() ) );
+					$rendered[]      = $schema_instance->render_schema( $schema, $renderer );
 				}
 			}
 		}

@@ -179,8 +179,14 @@ class Onboarding extends Api_Base {
 							if ( empty( $value ) ) {
 								return true;
 							}
-							return is_email( $value );
+								return is_email( $value );
 						},
+					],
+					'agree_to_terms'       => [
+						'type'              => 'boolean',
+						'required'          => false,
+						'description'       => __( 'Whether the user opted into usage updates.', 'surerank' ),
+						'sanitize_callback' => 'rest_sanitize_boolean',
 					],
 				],
 			]
@@ -234,7 +240,8 @@ class Onboarding extends Api_Base {
 
 		$instance = self::get_instance();
 
-		$auth_data = get_option( 'surerank_auth', [] );
+		$auth_data    = get_option( 'surerank_auth', [] );
+		$current_user = wp_get_current_user();
 
 		$defaults = [
 			'website_type'         => '',
@@ -247,9 +254,9 @@ class Onboarding extends Api_Base {
 			'about_page'           => 0,
 			'contact_page'         => 0,
 			'social_profiles'      => [],
-			'email'                => $auth_data['user_email'] ?? '',
-			'first_name'           => '',
-			'last_name'            => '',
+			'email'                => $auth_data['user_email'] ?? ( $current_user->user_email ?? '' ),
+			'first_name'           => $current_user->first_name ?? '',
+			'last_name'            => $current_user->last_name ?? '',
 		];
 
 		$data = wp_parse_args(
@@ -286,11 +293,12 @@ class Onboarding extends Api_Base {
 			Send_Json::error( [ 'message' => __( 'Invalid data provided', 'surerank' ) ] );
 		}
 
+		$this->process_usage_optin( $data );
+
 		if ( self::update_common_onboarding_data( $data ) ) {
+			Update::option( 'surerank_onboarding_completed', true );
 			Send_Json::success( [ 'message' => __( 'Settings updated successfully', 'surerank' ) ] );
 		}
-
-		Update::option( 'surerank_onboarding_completed', true );
 
 		Send_Json::error( [ 'message' => __( 'Failed to update settings', 'surerank' ) ] );
 	}
@@ -645,8 +653,28 @@ class Onboarding extends Api_Base {
 	 * @return bool
 	 */
 	public function set_user_details( $data ) {
-		$user_details = wp_parse_args( $data, self::DEFAULT_USER_DETAILS );
+		$existing     = get_option( 'surerank_onboarding_user_details', self::DEFAULT_USER_DETAILS );
+		$user_details = wp_parse_args( $data, $existing );
 		return update_option( 'surerank_onboarding_user_details', $user_details );
+	}
+
+	/**
+	 * Persist onboarding usage opt-in state.
+	 *
+	 * @param array<string, mixed> $data Request data.
+	 * @return void
+	 */
+	private function process_usage_optin( $data ) {
+		if ( ! isset( $data['agree_to_terms'] ) ) {
+			return;
+		}
+
+		$has_opted_in = rest_sanitize_boolean( (bool) $data['agree_to_terms'] );
+		Update::option( 'surerank_usage_optin', $has_opted_in ? 'yes' : 'no' );
+
+		if ( ! $has_opted_in ) {
+			$this->set_user_details( [ 'lead' => false ] );
+		}
 	}
 
 	/**
@@ -744,23 +772,30 @@ class Onboarding extends Api_Base {
 
 		$this->set_user_details( $lead );
 
+		$domain = wp_parse_url( home_url(), PHP_URL_HOST );
+		if ( ! is_string( $domain ) ) {
+			$domain = '';
+		}
+
 		$response = Requests::post(
-			'https://websitedemos.net/wp-json/surerank/v1/subscribe/',
+			'https://metrics.brainstormforce.com/wp-json/bsf-metrics-server/v1/subscribe/',
 			[
 				'headers' => [
 					'Content-Type' => 'application/json',
 				],
 				'body'    => wp_json_encode(
 					[
-						'EMAIL'     => $lead['email'],
-						'FIRSTNAME' => $lead['first_name'],
-						'LASTNAME'  => $lead['last_name'],
+						'email'      => $lead['email'],
+						'first_name' => $lead['first_name'],
+						'last_name'  => $lead['last_name'],
+						'domain'     => $domain,
+						'source'     => 'surerank',
 					]
 				),
 			]
 		);
 
-		if ( ! is_wp_error( $response ) && wp_remote_retrieve_response_code( $response ) === 200 ) {
+		if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 			$this->set_user_details( [ 'lead' => true ] );
 		}
 	}

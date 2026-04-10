@@ -43,7 +43,9 @@ class Angie extends Api_Base {
 			return;
 		}
 		// Elementor - Angie Integration.
-		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+		if ( is_user_logged_in() ) {
+			add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+		}
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
 	}

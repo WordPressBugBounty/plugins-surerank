@@ -97,11 +97,6 @@ export const fetchImageDataByUrl = async ( imageUrl ) => {
 				} );
 
 				if ( exactMatch ) {
-					// eslint-disable-next-line no-console
-					console.log(
-						`Search strategy: ${ strategy.search }`,
-						response
-					);
 					return exactMatch;
 				}
 

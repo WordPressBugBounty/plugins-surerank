@@ -90,7 +90,7 @@ const WelcomeCard = ( { className = '', isProActive = false } ) => {
 						'relative bg-gray-100 rounded-md overflow-hidden cursor-pointer group',
 						isProActive
 							? 'w-full aspect-video'
-							: 'w-[45%] flex-shrink-0 self-stretch'
+							: 'w-[45%] max-w-[390px] flex-shrink-0 aspect-video'
 					) }
 					onClick={ () => setPopupVideo( videoUrl ) }
 					role="button"

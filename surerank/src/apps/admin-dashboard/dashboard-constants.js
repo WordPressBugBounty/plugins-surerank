@@ -63,7 +63,7 @@ export const quickLinks = [
 			'surerank'
 		),
 		icon: Network,
-		link: '/advanced/sitemaps',
+		link: '/general/sitemaps',
 	},
 	{
 		label: __( 'Robot Instructions', 'surerank' ),

@@ -901,7 +901,7 @@ class Analyzer extends Api_Base {
 			__( 'You can enable and manage your XML sitemap directly from SureRank.', 'surerank' ),
 			[
 				'list' => [
-					__( 'Go to SureRank ⇾ Advanced ⇾ Sitemap', 'surerank' ),
+					__( 'Go to SureRank ⇾ General ⇾ Sitemaps', 'surerank' ),
 					__( 'Enable the XML Sitemap toggle', 'surerank' ),
 					__( 'Click on Regenerate Button', 'surerank' ),
 					__( 'Save your changes', 'surerank' ),
@@ -915,7 +915,7 @@ class Analyzer extends Api_Base {
 
 			sprintf(
 				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/02/xml-sitemap-is-missing-or-inaccessible.webp' ),
+				esc_attr( 'https://surerank.com/wp-content/uploads/2026/04/xml-sitemap-is-missing-or-inaccessible-visual.webp' ),
 				esc_attr( 'XML Sitemap Settings' )
 			),
 		];
@@ -1205,7 +1205,7 @@ class Analyzer extends Api_Base {
 	/**
 	 * Get post checks data (cached or fresh).
 	 *
-	 * @param int $post_id Post ID.
+	 * @param int $post_id       Post ID.
 	 * @return array<string, mixed>|WP_Error
 	 */
 	private function get_post_checks_data( $post_id ) {

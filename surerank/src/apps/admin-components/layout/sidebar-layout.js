@@ -1,4 +1,5 @@
 import { __ } from '@wordpress/i18n';
+import { useSuspenseSelect } from '@wordpress/data';
 import {
 	Outlet,
 	Link,
@@ -8,10 +9,10 @@ import {
 	useChildMatches,
 } from '@tanstack/react-router';
 import {
+	Accordion,
 	Badge,
 	Topbar,
 	Sidebar,
-	Accordion,
 	HamburgerMenu,
 	Button,
 	Skeleton,
@@ -24,6 +25,7 @@ import {
 import withSuspense from '@AdminComponents/hoc/with-suspense';
 import SidebarSkeleton from '../sidebar-skeleton';
 import { cn, getSeoCheckLabel } from '@Functions/utils';
+import { filterHomepageChecks } from '@/functions/homepage-filter';
 import { isProActive } from '@/functions/nudges';
 import useWhatsNewRSS from '../../../../lib/useWhatsNewRSS';
 import {
@@ -33,6 +35,7 @@ import {
 	Fragment,
 	useMemo,
 	useEffect,
+	useState,
 } from '@wordpress/element';
 import GlobalSearch from '@AdminComponents/global-search';
 import ConfirmationDialog from '@AdminComponents/confirmation-dialog';
@@ -41,9 +44,11 @@ import { getSeverityColor } from '@GlobalComponents/seo-checks';
 import Logo from '@AdminComponents/logo';
 import { Tooltip } from '@AdminComponents/tooltip';
 import TanStackRouterDevtools from '@AdminComponents/tanstack-router-dev-tools';
+import { STORE_NAME } from '@AdminStore/constants';
 import '@AdminStore/store';
 import { UpgradeButton } from '@/global/components/nudges';
 import VersionBadge from '../version-badge';
+import { HOME_PAGE_PATH } from '@Global/constants/nav-links';
 
 // Stylesheets
 import '@Global/style.scss';
@@ -71,11 +76,19 @@ const NavLink = ( { path, children } ) => {
 
 const SiteSeoAnalysisBadge = () => {
 	const [ { report } ] = useSuspenseSiteSeoAnalysis();
+	const { siteSettings } = useSuspenseSelect( ( select ) => {
+		const { getSiteSettings } = select( STORE_NAME );
+		return { siteSettings: getSiteSettings() };
+	}, [] );
+	const filteredReport = useMemo(
+		() => filterHomepageChecks( report, siteSettings ) || report,
+		[ report, siteSettings ]
+	);
 
 	// Check counts of error, warning and success
 	const counts = useMemo(
 		() =>
-			Object.values( report ).reduce(
+			Object.values( filteredReport ).reduce(
 				( acc, curr ) => {
 					//if ignore is true, then it is ignored
 					if ( curr.ignore ) {
@@ -87,7 +100,7 @@ const SiteSeoAnalysisBadge = () => {
 				},
 				{ error: 0, warning: 0, success: 0, ignored: 0 }
 			),
-		[ report ]
+		[ filteredReport ]
 	);
 
 	const selectedType =
@@ -158,57 +171,73 @@ const SubmenuAccordion = ( { label, icon: Icon, submenu } ) => {
 	const navigate = useNavigate();
 	const matchRoute = useMatchRoute();
 
-	const isActive = submenu?.some( ( { path: subPath } ) =>
+	const isRouteActive = submenu?.some( ( { path: subPath } ) =>
 		matchRoute( { to: subPath } )
 	);
 
+	const [ isOpen, setIsOpen ] = useState( isRouteActive );
+
+	// Sync with route changes: auto-expand on route match, auto-collapse when leaving
+	useEffect( () => {
+		setIsOpen( isRouteActive );
+	}, [ isRouteActive ] );
+
 	return (
-		<Accordion defaultValue="item1" iconType="arrow" type="simple">
-			<Accordion.Item value="item1">
-				<Accordion.Trigger
-					iconType="arrow"
-					className={ cn(
-						'p-2 pl-2.5 text-base font-normal [&_svg]:text-icon-secondary hover:bg-background-primary rounded-md no-underline cursor-pointer focus:outline-none focus:shadow-none transition ease-in-out duration-150 [&_svg]:size-5 [&_div]:font-normal [&_div]:text-text-primary',
-						isActive &&
-							'bg-background-secondary text-text-primary [&_svg]:text-brand-800'
-					) }
-					aria-label={ `${ label } submenu` }
-					onClick={ ( event ) => {
-						event.preventDefault();
-						event.stopPropagation();
+		<Accordion.Item isOpen={ isOpen } className="border-0">
+			<Accordion.Trigger
+				tag="div"
+				iconType="arrow"
+				className={ cn(
+					'p-2 pl-2.5 text-base font-normal [&_svg]:text-icon-secondary hover:bg-background-primary rounded-md no-underline cursor-pointer focus:outline-none focus:shadow-none transition ease-in-out duration-150 [&_svg]:size-5 [&_div]:font-normal [&_div]:text-text-primary',
+					isOpen && '[&_svg]:text-brand-800'
+				) }
+				aria-label={ `${ label } submenu` }
+				onClick={ ( event ) => {
+					event.preventDefault();
+					event.stopPropagation();
 
-						if ( submenu?.length <= 0 || ! submenu[ 0 ]?.path ) {
-							return;
-						}
+					if ( ! submenu?.length || ! submenu[ 0 ]?.path ) {
+						return;
+					}
 
-						// Redirect to the first item in the submenu.
-						navigate( {
-							to: submenu[ 0 ].path,
-						} );
-					} }
+					if ( isOpen ) {
+						// Collapse if currently expanded
+						setIsOpen( false );
+					} else {
+						// Expand and navigate to first submenu item
+						setIsOpen( true );
+						navigate( { to: submenu[ 0 ].path } );
+					}
+				} }
+			>
+				{ Icon && <Icon className="size-4" /> }
+				{ label }
+			</Accordion.Trigger>
+			<Accordion.Content className="p-2 [&>div]:pb-0">
+				<div
+					className="border-l border-solid border-r-0 border-t-0 border-b-0 border-border-subtle pl-2 ml-1 space-y-0.5"
+					role="menu"
 				>
-					{ Icon && <Icon className="size-4" /> }
-					{ label }
-				</Accordion.Trigger>
-				<Accordion.Content className="p-2 [&>div]:pb-0">
-					<div
-						className="border-l border-solid border-r-0 border-t-0 border-b-0 border-border-subtle pl-2 ml-1 space-y-0.5"
-						role="menu"
-					>
-						{ submenu.map(
-							( { path, label: subLabel, icon: SubIcon } ) => (
-								<NavLink key={ path } path={ path }>
-									{ SubIcon && (
-										<SubIcon className="size-4" />
-									) }
-									{ subLabel }
-								</NavLink>
-							)
-						) }
-					</div>
-				</Accordion.Content>
-			</Accordion.Item>
-		</Accordion>
+					{ submenu.map(
+						( {
+							path: submenuPath,
+							label: subLabel,
+							icon: SubIcon,
+						} ) => (
+							<NavLink
+								key={ submenuPath }
+								path={ submenuPath }
+							>
+								{ SubIcon && (
+									<SubIcon className="size-4" />
+								) }
+								{ subLabel }
+							</NavLink>
+						)
+					) }
+				</div>
+			</Accordion.Content>
+		</Accordion.Item>
 	);
 };
 
@@ -346,8 +375,31 @@ const SidebarLayout = ( {
 	routes = [],
 	navbarOnly = false,
 } ) => {
-	const { activeSection, navbarLinks: topNavbarLinks } =
-		useNavbarLinks( navLinks );
+	const { siteSettings } = useSuspenseSelect( ( select ) => {
+		const { getSiteSettings } = select( STORE_NAME );
+		return { siteSettings: getSiteSettings() };
+	}, [] );
+	const filteredNavLinksForStaticHome = useMemo( () => {
+		if ( siteSettings?.home_page_static !== 'page' ) {
+			return navLinks;
+		}
+
+		return navLinks.map( ( section ) => {
+			if ( section.sectionId !== 'general' ) {
+				return section;
+			}
+
+			return {
+				...section,
+				links: section.links.filter(
+					( link ) => link.path !== HOME_PAGE_PATH
+				),
+			};
+		} );
+	}, [ navLinks, siteSettings?.home_page_static ] );
+	const { activeSection, navbarLinks: topNavbarLinks } = useNavbarLinks(
+		filteredNavLinksForStaticHome
+	);
 	const location = useLocation();
 	const childMatches = useChildMatches();
 	const isNotFound = ! childMatches.length;
@@ -417,14 +469,14 @@ const SidebarLayout = ( {
 		<Fragment>
 			<div
 				id="surerank-admin-dashboard"
-				className="grid grid-rows-[64px_auto] min-h-full bg-background-secondary"
+				className="grid min-h-full grid-cols-1 grid-rows-[64px_auto] bg-background-secondary"
 			>
 				{ /* Header */ }
 				<Topbar
-					className="w-auto min-h-[unset] h-16 shadow-sm p-0 relative z-[2]"
+					className="relative z-[2] h-16 w-full max-w-full min-h-[unset] p-0 shadow-sm"
 					gap={ 0 }
-				>
-					<Topbar.Left className="p-5">
+					>
+					<Topbar.Left className="shrink-0 p-2 lg:p-5">
 						<Topbar.Item className="flex md:hidden">
 							<HamburgerMenu className="lg:hidden">
 								<HamburgerMenu.Toggle className="size-6" />
@@ -435,10 +487,10 @@ const SidebarLayout = ( {
 											to={ option.path }
 											tag={ Link }
 											active={ option.active }
-										>
+											>
 											{ option.label }
 										</HamburgerMenu.Option>
-									) ) }
+										) ) }
 								</HamburgerMenu.Options>
 							</HamburgerMenu>
 						</Topbar.Item>
@@ -446,106 +498,121 @@ const SidebarLayout = ( {
 							<Logo />
 						</Topbar.Item>
 					</Topbar.Left>
-					<Topbar.Middle align="left" className="h-full">
-						<Topbar.Item className="h-full gap-4 hidden md:flex">
+					<Topbar.Middle
+						align="left"
+						className="h-full min-w-0 overflow-hidden"
+						>
+						<Topbar.Item className="hidden h-full min-w-0 gap-4 overflow-x-auto md:flex">
 							{ topNavbarLinks.map(
-								( { path, label, active } ) => (
-									<Link
-										key={ path }
-										to={ path }
-										className={ cn(
-											'relative content-center no-underline h-full py-0 px-3 m-0 bg-transparent outline-none shadow-none border-0 focus:outline-none text-text-secondary text-sm font-medium cursor-pointer whitespace-nowrap',
-											active && 'text-text-primary'
-										) }
-									>
-										{ label }
-										{ active && (
-											<span className="absolute bottom-0 left-0 w-full h-px bg-brand-800" />
-										) }
-									</Link>
-								)
-							) }
+									( { path, label, active } ) => (
+										<Link
+											key={ path }
+											to={ path }
+											className={ cn(
+												'relative content-center no-underline h-full py-0 px-3 m-0 bg-transparent outline-none shadow-none border-0 focus:outline-none text-text-secondary text-sm font-medium cursor-pointer whitespace-nowrap',
+												active && 'text-text-primary'
+											) }
+										>
+											{ label }
+											{ active && (
+												<span className="absolute bottom-0 left-0 w-full h-px bg-brand-800" />
+											) }
+										</Link>
+									)
+								) }
 						</Topbar.Item>
 						{ ! isProActive() && (
-							<Topbar.Item>
-								<UpgradeButton
-									label={ __( 'Upgrade', 'surerank' ) }
-									variant="link"
-									size="md"
-									iconPosition="right"
-									showUnderLine={ true }
-									utmMedium="surerank_topbar"
-									className="hidden" // TODO: Remove this class to enable the button
-								/>
-							</Topbar.Item>
-						) }
-					</Topbar.Middle>
-					<Topbar.Right className="p-5">
 						<Topbar.Item>
-							<GlobalSearch navLinks={ navLinks } />
+							<UpgradeButton
+								label={ __( 'Upgrade', 'surerank' ) }
+								variant="link"
+								size="md"
+								iconPosition="right"
+								showUnderLine={ true }
+								utmMedium="dashboard"
+								utmContent="topbar_upgrade"
+								className="hidden" // TODO: Remove this class to enable the button
+									/>
 						</Topbar.Item>
-						<Topbar.Item className="space-x-3">
+							) }
+					</Topbar.Middle>
+					<Topbar.Right className="min-w-0 shrink p-2 lg:p-5">
+						<Topbar.Item className="hidden xl:flex">
+							<GlobalSearch
+								navLinks={ filteredNavLinksForStaticHome }
+								/>
+						</Topbar.Item>
+						<Topbar.Item className="hidden space-x-1 lg:flex lg:space-x-3">
 							<VersionBadge />
 						</Topbar.Item>
-						<Topbar.Item>
+						<Topbar.Item className="hidden md:flex">
 							{ currentUserCan(
-								'surerank_global_setting'
-							) && (
-								<Suspense
-									fallback={
-										<Skeleton className="w-20 h-6" />
-									}
-								>
-									<SiteSeoAnalysisBadge />
-								</Suspense>
-							) }
+									'surerank_global_setting'
+								) && (
+									<Suspense
+										fallback={
+											<Skeleton className="w-20 h-6" />
+										}
+									>
+										<SiteSeoAnalysisBadge />
+									</Suspense>
+								) }
 						</Topbar.Item>
-						<Topbar.Item>
+						<Topbar.Item className="hidden lg:flex">
 							<Tooltip
-								content={ __( 'Knowledge Base', 'surerank' ) }
+								content={ __(
+										'Knowledge Base',
+										'surerank'
+									) }
 								placement="bottom"
 								arrow
 								className="z-[99999]"
-							>
+								>
 								<Button
 									size="sm"
 									tag="a"
 									variant="link"
 									className="text-text-primary focus:[box-shadow:none]"
-									href={ surerank_globals?.help_link ?? '#' }
+									href={
+											surerank_globals?.help_link ?? '#'
+										}
 									target="_blank"
 									rel="noreferrer noopener"
 									aria-label={ __(
-										'Knowledge Base',
-										'surerank'
-									) }
+											'Knowledge Base',
+											'surerank'
+										) }
 									icon={
 										<BookOpenText
 											className="size-4 m-1"
 											strokeWidth="1.5"
-										/>
-									}
-								/>
+											/>
+										}
+									/>
 							</Tooltip>
 						</Topbar.Item>
-						<Topbar.Item>
+						<Topbar.Item className="hidden md:flex">
 							<div
 								id="surerank_whats_new"
 								className="[&>a]:p-0.5 [&>a]:pl-0"
-							></div>
+								></div>
 						</Topbar.Item>
 					</Topbar.Right>
 				</Topbar>
 				{
 					// Sidebar Navigation
-					( ! isNavbarOnly && ! isNotFound ) && (
-						<div className="w-full h-full grid grid-cols-[290px_1fr] max-[782px]:min-h-[calc(100dvh_-_110px)] min-h-[calc(100dvh_-_96px)]">
+					! isNavbarOnly && ! isNotFound && (
+						<div className="grid h-full w-full overflow-x-hidden max-[782px]:min-h-[calc(100dvh_-_110px)] max-[782px]:grid-cols-1 min-h-[calc(100dvh_-_96px)] grid-cols-[290px_1fr]">
 							{ ! isNavbarOnly && (
-								<SuspenseNavbar navLinks={ filteredNavLinks } />
+								<div className="max-[782px]:hidden">
+									<SuspenseNavbar
+										navLinks={ filteredNavLinks }
+									/>
+								</div>
 							) }
 
 							{ /* Main content */ }
-							<div className="bg-background-secondary p-5">
+							<div className="min-w-0 overflow-x-hidden bg-background-secondary p-5">
 								<main
 									className={ cn(
 										'mx-auto',
@@ -561,8 +628,8 @@ const SidebarLayout = ( {
 				{
 					// Without sidebar navigation
 					( isNavbarOnly || isNotFound ) && (
-						<div className="w-full h-fit max-[782px]:min-h-[calc(100dvh_-_110px)] min-h-[calc(100dvh_-_96px)] bg-background-secondary">
-							<main className="w-full h-full mx-auto relative">
+						<div className="h-fit w-full overflow-x-hidden bg-background-secondary max-[782px]:min-h-[calc(100dvh_-_110px)] min-h-[calc(100dvh_-_96px)]">
+							<main className="relative mx-auto h-full w-full overflow-hidden">
 								<Outlet />
 							</main>
 						</div>

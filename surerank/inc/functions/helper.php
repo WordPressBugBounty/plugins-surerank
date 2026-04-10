@@ -550,9 +550,10 @@ class Helper {
 	 * Check if crons are available and working.
 	 *
 	 * @since 1.4.3
+	 * @param bool $force Whether to bypass cached status and re-check cron.
 	 * @return bool True if cron is available, false if not.
 	 */
-	public static function are_crons_available() {
+	public static function are_crons_available( $force = false ) {
 		global $wp_version;
 
 		// If we're currently running within a cron, it's obviously working.
@@ -570,14 +571,13 @@ class Helper {
 			return false;
 		}
 
-		// Check cached status.
-		$cached_status = get_option( 'surerank_cron_test_ok' );
+		if ( ! $force ) {
+			// Check cached status.
+			$cached_status = get_option( 'surerank_cron_test_ok' );
 
-		if ( 'yes' === $cached_status ) {
-			return true;
-		}
-		if ( 'no' === $cached_status ) {
-			return false;
+			if ( $cached_status ) {
+				return 'yes' === $cached_status;
+			}
 		}
 
 		// Prepare cron test request.

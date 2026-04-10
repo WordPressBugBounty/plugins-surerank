@@ -32,7 +32,7 @@ class Image {
 	/**
 	 * Cache for image data
 	 *
-	 * @var array<string, string|null>
+	 * @var array<int|string, string|null>
 	 */
 	private $image_cache = [];
 
@@ -51,7 +51,7 @@ class Image {
 			return null;
 		}
 
-		$cache_key = md5( (string) wp_json_encode( get_queried_object_id() ) );
+		$cache_key = get_queried_object_id();
 		if ( isset( $this->image_cache[ $cache_key ] ) ) {
 			return $this->image_cache[ $cache_key ];
 		}
@@ -146,7 +146,7 @@ class Image {
 		$post_instance = Post::get_instance();
 		$post_instance->set_post( $post_id );
 
-		$content = $post_instance->get_content();
+		$content = $post_instance->get_block_contents();
 		return $content ? $this->get_first_content_image( $content ) : null;
 	}
 

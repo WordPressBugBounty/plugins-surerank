@@ -234,6 +234,12 @@ class Seo_Popup {
 			return 'bricks';
 		}
 
+		// Allow integrations (e.g. Divi BFB) to override before the block-editor check.
+		$filtered = apply_filters( 'surerank_detect_editor_type', 'classic', $screen );
+		if ( 'classic' !== $filtered ) {
+			return $filtered;
+		}
+
 		if ( $screen && $screen->is_block_editor ) {
 			return 'block';
 		}
@@ -462,7 +468,7 @@ class Seo_Popup {
 			}
 			$post_data = [
 				'post_id'     => $post_id,
-				'editor_type' => 'classic',
+				'editor_type' => apply_filters( 'surerank_frontend_editor_type', 'classic' ),
 				'link'        => get_the_permalink( $post_id ),
 			];
 		} elseif ( is_tax() || is_tag() || is_category() ) {

@@ -125,12 +125,25 @@ class Post extends Variables {
 	/**
 	 * Get current post excerpt.
 	 *
+	 * When the post has an explicit excerpt, return it directly. Otherwise fall back
+	 * to rendered content so that page-builder markup (e.g. Divi shortcodes or blocks)
+	 * is converted to real HTML before being sanitised — preventing empty output.
+	 *
+	 * The `surerank_meta_variable_post_content` filter lets page-builder integrations
+	 * hook in their own renderer (e.g. Divi::process_divi_content).
+	 *
 	 * @since 0.0.1
 	 * @return string
 	 */
 	public function get_excerpt() {
 		if ( ! empty( $this->post ) ) {
-			return Description::get_instance()->sanitize_description( get_the_excerpt( $this->post ) );
+			if ( ! empty( $this->post->post_excerpt ) ) {
+				return Description::get_instance()->sanitize_description( $this->post->post_excerpt );
+			}
+			// No explicit excerpt — generate from rendered content (handles page builders).
+			$content = get_the_content( null, false, $this->post );
+			$content = apply_filters( 'surerank_meta_variable_post_content', $content, $this->post );
+			return Description::get_instance()->sanitize_description( $content );
 		}
 		return Description::get_instance()->sanitize_description( get_the_excerpt() );
 	}
@@ -138,14 +151,33 @@ class Post extends Variables {
 	/**
 	 * Get content of current post.
 	 *
+	 * Applies the `surerank_meta_variable_post_content` filter before sanitising so
+	 * that page-builder integrations (e.g. Divi) can render raw shortcodes / blocks
+	 * into real HTML first — preventing empty output after tag-stripping.
+	 *
 	 * @since 0.0.1
 	 * @return string
 	 */
 	public function get_content() {
 		if ( ! empty( $this->post ) ) {
-			return Description::get_instance()->sanitize_description( get_the_content( null, false, $this->post ) );
+			$content = get_the_content( null, false, $this->post );
+			$content = apply_filters( 'surerank_meta_variable_post_content', $content, $this->post );
+			return Description::get_instance()->sanitize_description( $content );
 		}
 		return Description::get_instance()->sanitize_description( get_the_content() );
+	}
+
+	/**
+	 * Get content with blocks
+	 *
+	 * @since 1.7.0
+	 * @return string
+	 */
+	public function get_block_contents() {
+		if ( ! empty( $this->post ) ) {
+			return get_the_content( null, false, $this->post );
+		}
+		return get_the_content();
 	}
 
 	/**

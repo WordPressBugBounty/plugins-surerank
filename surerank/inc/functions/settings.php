@@ -25,6 +25,23 @@ use SureRank\Inc\Schema\Validator;
  * @since 1.0.0
  */
 class Settings {
+
+	/**
+	 * Cached merged settings (defaults + DB values).
+	 *
+	 * @var array<string, mixed>|null
+	 * @since 1.7.0
+	 */
+	private static $cached_settings = null;
+
+	/**
+	 * Cached default values.
+	 *
+	 * @var array<string, mixed>|null
+	 * @since 1.7.0
+	 */
+	private static $cached_defaults = null;
+
 	/**
 	 * Get settings.
 	 *
@@ -34,20 +51,45 @@ class Settings {
 	 * @return mixed
 	 */
 	public static function get( $key = '', $merge_with_db_value = true ) {
-		$default_values = self::default_values();
-
-		if ( ! is_array( $default_values ) ) {
-			return [];
-		}
 		if ( ! $merge_with_db_value ) {
-			return $default_values;
+			if ( null === self::$cached_defaults ) {
+				self::$cached_defaults = self::default_values();
+			}
+
+			if ( ! is_array( self::$cached_defaults ) ) {
+				return [];
+			}
+
+			return '' === $key ? self::$cached_defaults : ( self::$cached_defaults[ $key ] ?? null );
 		}
 
-		$setting_db = Get::option( SURERANK_SETTINGS, [], 'array' );
+		if ( null === self::$cached_settings ) {
+			$default_values = self::$cached_defaults ?? self::default_values();
 
-		$response = is_array( $setting_db ) && is_array( $default_values ) ? array_merge( $default_values, $setting_db ) : $default_values;
+			if ( ! is_array( $default_values ) ) {
+				self::$cached_settings = [];
+			} else {
+				$setting_db            = Get::option( SURERANK_SETTINGS, [], 'array' );
+				self::$cached_settings = is_array( $setting_db ) ? array_merge( $default_values, $setting_db ) : $default_values;
+			}
 
-		return '' === $key ? $response : ( $response[ $key ] ?? null );
+			self::$cached_defaults = $default_values;
+		}
+
+		return '' === $key ? self::$cached_settings : ( self::$cached_settings[ $key ] ?? null );
+	}
+
+	/**
+	 * Clear the settings cache.
+	 *
+	 * Call this when settings are updated to ensure fresh values on next access.
+	 *
+	 * @since 1.7.0
+	 * @return void
+	 */
+	public static function clear_cache() {
+		self::$cached_settings = null;
+		self::$cached_defaults = null;
 	}
 
 	/**
@@ -122,10 +164,9 @@ class Settings {
 			return $default_values;
 		}
 
-		$setting_db    = Get::option( SURERANK_SETTINGS, [], 'array' );
-		$setting_local = $default_values;
+		$all_settings = self::get();
 
-		return is_array( $setting_db ) && is_array( $setting_local ) ? array_merge( $setting_local, $setting_db ) : $setting_local;
+		return is_array( $all_settings ) ? array_merge( $default_values, $all_settings ) : $default_values;
 	}
 
 	/**
@@ -447,16 +488,16 @@ class Settings {
 		$meta['auto_generated_og_image'] = self::auto_generated_og_image( $post_id, false );
 		$meta['auto_description']        = self::get_description( $post_id, $meta, $global_values, 'post' );
 
+		$title              = ! empty( $meta['page_title'] ) ? $meta['page_title'] : ( $global_values['page_title'] ?? '' );
+		$featured_image_url = get_the_post_thumbnail_url( $post_id );
+		$featured_image_id  = (int) get_post_thumbnail_id( $post_id );
+
 		foreach ( $meta as $key => $value ) {
 
 			// If value is not empty then continue.
 			if ( ! empty( $value ) ) {
 				continue;
 			}
-			$title                  = ! empty( $meta['page_title'] ) ? $meta['page_title'] : ( $global_values['page_title'] ?? '' );
-			$featured_image         = get_the_post_thumbnail_url( $post_id );
-			$featured_image_id      = get_post_thumbnail_id( $post_id );
-			$featured_image_details = $featured_image_id ? wp_get_attachment_metadata( $featured_image_id, false ) : [];
 
 			switch ( $key ) {
 				case 'facebook_title':
@@ -468,7 +509,7 @@ class Settings {
 					break;
 
 				case 'facebook_image_url':
-					$meta['facebook_image_url'] = ! empty( $featured_image ) ? $featured_image : '';
+					$meta['facebook_image_url'] = ! empty( $featured_image_url ) ? $featured_image_url : '';
 					$meta['facebook_image_id']  = $featured_image_id;
 					break;
 
@@ -488,7 +529,7 @@ class Settings {
 						$meta['twitter_image_url'] = $meta['facebook_image_url'] ?? '';
 						$meta['twitter_image_id']  = $meta['facebook_image_id'] ?? '';
 					} else {
-						$meta['twitter_image_url'] = ! empty( $featured_image ) ? $featured_image : '';
+						$meta['twitter_image_url'] = ! empty( $featured_image_url ) ? $featured_image_url : '';
 						$meta['twitter_image_id']  = $featured_image_id;
 					}
 					break;

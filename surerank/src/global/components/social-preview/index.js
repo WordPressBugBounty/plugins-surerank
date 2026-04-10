@@ -66,7 +66,7 @@ const TwitterPreview = ( {
 		<div className="inline-flex items-center gap-1">
 			<Text
 				as="p"
-				className="m-0"
+				className="m-0 p-0"
 				size={ 16 }
 				weight={ 500 }
 				color="secondary"
@@ -79,7 +79,7 @@ const TwitterPreview = ( {
 			/>
 			<Text
 				as="p"
-				className="m-0"
+				className="m-0 p-0"
 				size={ 16 }
 				weight={ 400 }
 				color="secondary"
@@ -115,7 +115,7 @@ const TwitterPreview = ( {
 						{ postText ? (
 							<Text
 								as="p"
-								className="mt-0.5 mb-0 line-clamp-2"
+								className="mt-0.5 mb-0 p-0 line-clamp-2"
 								size={ 14 }
 								color="secondary"
 							>
@@ -126,7 +126,7 @@ const TwitterPreview = ( {
 								as="p"
 								color="secondary"
 								size={ 14 }
-								className="mt-0.5 mb-0 line-clamp-2"
+								className="mt-0.5 mb-0 p-0 line-clamp-2"
 								dangerouslySetInnerHTML={ {
 									__html: defaultPostText,
 								} }
@@ -161,7 +161,7 @@ const TwitterPreview = ( {
 							<div className="inline-block w-fit px-2 rounded absolute bottom-3 left-3 right-3 text-xs text-white bg-black/[0.77]">
 								<Text
 									as="p"
-									className="m-0 line-clamp-1 text-inherit"
+									className="m-0 p-0 line-clamp-1 text-inherit"
 								>
 									{ decodedTitle }
 								</Text>
@@ -173,7 +173,7 @@ const TwitterPreview = ( {
 							color="secondary"
 							size={ 14 }
 							weight={ 400 }
-							className="mt-2 mb-1"
+							className="mt-2 mb-1 p-0"
 						>
 							{ __( 'From', 'surerank' ) }{ ' ' }
 							<span className="hover:underline">{ siteURL }</span>
@@ -213,15 +213,15 @@ const TwitterPreview = ( {
 							<ImagePlaceholder className="border-y-0 border-l-0 border-r border-solid border-border-subtle" />
 						) }
 						<div className="inline-grid items-center justify-start gap-0.5 px-3 py-5">
-							<p className="m-0 font-normal text-text-secondary leading-4 text-xs">
+							<p className="m-0 p-0 font-normal text-text-secondary leading-4 text-xs">
 								{ siteURL }
 							</p>
 							<div className="w-full overflow-hidden">
-								<p className="m-0 text-[0.9375rem] font-semibold text-text-primary whitespace-nowrap leading-5">
+								<p className="m-0 p-0 text-[0.9375rem] font-semibold text-text-primary whitespace-nowrap leading-5">
 									{ decodedTitle }
 								</p>
 							</div>
-							<p className="m-0 font-normal text-text-secondary line-clamp-3 leading-5 text-sm">
+							<p className="m-0 p-0 font-normal text-text-secondary line-clamp-3 leading-5 text-sm">
 								{ decodedDescription || '' }
 							</p>
 						</div>
@@ -295,13 +295,13 @@ const SocialPreview = ( {
 
 					{ /* Footer */ }
 					<div className="p-3 w-full">
-						<p className="m-0 text-xs leading-4 font-normal text-text-secondary">
+						<p className="m-0 p-0 text-xs leading-4 font-normal text-text-secondary">
 							{ siteURL }
 						</p>
-						<p className="mt-1.5 mb-1 text-base leading-6 font-semibold text-text-primary line-clamp-2">
+						<p className="mt-1.5 mb-1 p-0 text-base leading-6 font-semibold text-text-primary line-clamp-2">
 							{ decoded_title }
 						</p>
-						<p className="m-0 text-sm leading-5 font-normal line-clamp-2">
+						<p className="m-0 p-0 text-sm leading-5 font-normal line-clamp-2">
 							{ descriptionContent }
 						</p>
 					</div>

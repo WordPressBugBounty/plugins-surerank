@@ -165,10 +165,15 @@ class Api extends Api_Base {
 			);
 		}
 
+		// Flag for analytics: first AI content generated.
+		if ( ! get_option( 'surerank_ai_content_used', false ) ) {
+			update_option( 'surerank_ai_content_used', true );
+		}
+
 		Send_Json::success(
 			[
 				'content' => $content,
-			] 
+			]
 		);
 	}
 

@@ -36,7 +36,7 @@ const TEXTS = {
 		'surerank'
 	),
 	CREATE_HELP: __(
-		'Click the button above to create and connect a new Google Search Console property for this domain in your Google account.',
+		'This domain is not linked with Google Search Console yet. Click the button above and we will take care of it.',
 		'surerank'
 	),
 	SELECT_EXISTING: __(
@@ -49,8 +49,14 @@ const TEXTS = {
 		'surerank'
 	),
 	DISCONNECT_BUTTON: __( 'Disconnect', 'surerank' ),
-	SWITCH_ACCOUNTS: __( 'Need to switch accounts?', 'surerank' ),
-	LINK_EXISTING: __( 'Prefer to link an existing property?', 'surerank' ),
+	SWITCH_ACCOUNTS: __(
+		'Sign in with a different Google account',
+		'surerank'
+	),
+	LINK_EXISTING: __(
+		'Link another Search Console property',
+		'surerank'
+	),
 	BACK: __( 'Back', 'surerank' ),
 	SELECT_SITE: __( 'Select a site', 'surerank' ),
 	CONNECT_SITE: __( 'Select site', 'surerank' ),
@@ -115,7 +121,7 @@ const getHelpText = (
 };
 
 // Component for handling site connection in connect mode
-const ConnectSiteButton = () => {
+const ConnectSiteButton = ( { setForceSelectMode } ) => {
 	const searchConsole = useSelect(
 		( select ) => select( STORE_NAME ).getSearchConsole(),
 		[]
@@ -176,7 +182,9 @@ const ConnectSiteButton = () => {
 			} );
 
 			if ( ! response.success ) {
-				throw new Error( response.message ?? TEXTS.FAILED_REQUEST );
+				const error = new Error( response.message ?? TEXTS.FAILED_REQUEST );
+				error.errorType = response.error_type;
+				throw error;
 			}
 
 			// Handle different response cases
@@ -212,7 +220,47 @@ const ConnectSiteButton = () => {
 				window.location.reload();
 			}, RELOAD_DELAY );
 		} catch ( error ) {
-			toast.error( error.message );
+			const isVerificationError =
+				error.errorType === 'verification_failed' ||
+				error.errorType === 'invalid_site_url';
+
+			if ( isVerificationError && setForceSelectMode ) {
+				const toastId = toast.error(
+					<div>
+						<p>{ error.message }</p>
+						<button
+							type="button"
+							className="mt-2 cursor-pointer border-0 bg-transparent p-0 text-sm font-semibold underline underline-offset-2 hover:opacity-80"
+							onClick={ () => {
+								toast.dismiss( toastId );
+								setForceSelectMode( true );
+							} }
+						>
+							{ TEXTS.LINK_EXISTING }
+						</button>
+					</div>,
+					{ autoDismiss: false }
+				);
+
+				const dismissOnOutsideClick = ( event ) => {
+					if ( ! event.target.closest( 'ul.fixed.list-none' ) ) {
+						toast.dismiss( toastId );
+						document.removeEventListener(
+							'pointerdown',
+							dismissOnOutsideClick
+						);
+					}
+				};
+
+				setTimeout( () => {
+					document.addEventListener(
+						'pointerdown',
+						dismissOnOutsideClick
+					);
+				}, 100 );
+			} else {
+				toast.error( error.message );
+			}
 		} finally {
 			setIsCreatingProperty( false );
 		}
@@ -243,7 +291,8 @@ const ConnectSiteButton = () => {
 			variant="primary"
 			size="sm"
 			onClick={ handleCreateProperty }
-			disabled={ isCreatingProperty }
+			className={ isCreatingProperty ? 'pointer-events-none opacity-80' : '' }
+			aria-disabled={ isCreatingProperty || undefined }
 			icon={ isCreatingProperty && <Loader variant="secondary" /> }
 			iconPosition="left"
 		>
@@ -341,7 +390,7 @@ export const ConnectMode = ( { setForceSelectMode } ) => {
 				{ /* Main Action */ }
 				<div className="space-y-4">
 					<Suspense fallback={ <Skeleton className="h-12 w-full" /> }>
-						<ConnectSiteButton />
+						<ConnectSiteButton setForceSelectMode={ setForceSelectMode } />
 					</Suspense>
 
 					{ /* Help Text - only show when action is needed */ }

@@ -136,7 +136,7 @@ class Sitemap extends Api_Base {
 			$item['class']         = get_class( $class );
 			$categories[ $type ][] = $item;
 		}
-		update_option( 'surerank_sitemap_classes', $categories );
+		update_option( 'surerank_sitemap_classes', $categories, false );
 		Send_Json::success(
 			[ 'data' => $items ]
 		);

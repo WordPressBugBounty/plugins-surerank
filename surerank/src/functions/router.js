@@ -121,6 +121,7 @@ const createNestedRoutes = (
 			loader,
 			action: routeConfig.action,
 			meta: routeConfig.meta,
+			validateSearch: routeConfig.validateSearch,
 		} );
 	}
 

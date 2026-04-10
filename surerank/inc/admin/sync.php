@@ -214,8 +214,9 @@ class Sync {
 		$args = [
 			'post_type'           => $post_type,
 			'post_status'         => 'publish',
-			'posts_per_page'      => -1,
+			'posts_per_page'      => 1,
 			'fields'              => 'ids',
+			'no_found_rows'       => false,
 			'ignore_sticky_posts' => true,
 			'meta_query'          => Utils::get_indexable_meta_query( $post_type ), //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		];
@@ -236,16 +237,16 @@ class Sync {
 			'taxonomy'   => $taxonomy,
 			'hide_empty' => true,
 			'number'     => 0,
-			'fields'     => 'ids',
+			'fields'     => 'count',
 			'meta_query' => Utils::get_indexable_meta_query( $taxonomy ), //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		];
 
-		$terms = get_terms( $args );
-		if ( is_wp_error( $terms ) ) {
+		$count = get_terms( $args );
+		if ( is_wp_error( $count ) ) {
 			return 0;
 		}
 
-		return count( $terms );
+		return (int) $count;
 	}
 
 	/**

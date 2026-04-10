@@ -24,6 +24,7 @@ import { fetchMetaSettings } from '@/functions/api';
 import { usePageChecks } from '@SeoPopup/hooks';
 import { SCREENS } from './screens';
 import { useKeywordChecks } from '@SeoPopup/components/keyword-checks/hooks/use-keyword-checks';
+import { applyFilters } from '@wordpress/hooks';
 
 // Define toast globally for PRO plugin.
 if ( window && ! window?.toast ) {
@@ -91,6 +92,7 @@ const SeoModal = ( props ) => {
 		setInitialized,
 		updateModalState,
 		appSettings,
+		updateAppSettings,
 	} = props;
 
 	const modalState = useSelect(
@@ -124,6 +126,24 @@ const SeoModal = ( props ) => {
 			calledOnceRef.current = true;
 		}
 	}, [ getSEOData ] );
+
+	// Allow Pro to inject auto-open logic. Link Manager.
+	useEffect( () => {
+		if ( ! initialized ) {
+			return;
+		}
+
+		const handler = applyFilters(
+			'surerank.seo_popup.handle_auto_open',
+			null
+		);
+		if ( typeof handler === 'function' ) {
+			handler( {
+				updateModalState,
+				updateAppSettings,
+			} );
+		}
+	}, [ initialized, updateModalState, updateAppSettings ] );
 
 	const closeModal = useCallback( () => {
 		updateModalState( false );

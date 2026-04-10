@@ -134,7 +134,9 @@ const SocialProfiles = () => {
 		if ( isAuthenticated ) {
 			setIsLoading( ( prev ) => ( { ...prev, next: true } ) );
 			try {
-				await submitOnboardingData( websiteDetails, formState, {} );
+				await submitOnboardingData( websiteDetails, formState, {
+					agree_to_terms: false,
+				} );
 			} catch ( error ) {
 				// Silently handle API errors.
 			}

@@ -223,6 +223,9 @@
 #surerank-root .right-0, .surerank-root .right-0 {
 	right: 0px;
 }
+#surerank-root .right-0\.5, .surerank-root .right-0\.5 {
+	right: 0.125rem;
+}
 #surerank-root .right-1, .surerank-root .right-1 {
 	right: 0.25rem;
 }
@@ -234,6 +237,9 @@
 }
 #surerank-root .right-2, .surerank-root .right-2 {
 	right: 0.5rem;
+}
+#surerank-root .right-2\.5, .surerank-root .right-2\.5 {
+	right: 0.625rem;
 }
 #surerank-root .right-3, .surerank-root .right-3 {
 	right: 0.75rem;
@@ -836,6 +842,9 @@
 #surerank-root .h-6, .surerank-root .h-6 {
 	height: 1.5rem;
 }
+#surerank-root .h-64, .surerank-root .h-64 {
+	height: 16rem;
+}
 #surerank-root .h-7, .surerank-root .h-7 {
 	height: 1.75rem;
 }
@@ -1235,6 +1244,9 @@
 #surerank-root .max-w-\[39\.875rem\], .surerank-root .max-w-\[39\.875rem\] {
 	max-width: 39.875rem;
 }
+#surerank-root .max-w-\[390px\], .surerank-root .max-w-\[390px\] {
+	max-width: 390px;
+}
 #surerank-root .max-w-\[464px\], .surerank-root .max-w-\[464px\] {
 	max-width: 464px;
 }
@@ -1394,6 +1406,9 @@
 }
 #surerank-root .cursor-default, .surerank-root .cursor-default {
 	cursor: default;
+}
+#surerank-root .cursor-help, .surerank-root .cursor-help {
+	cursor: help;
 }
 #surerank-root .cursor-not-allowed, .surerank-root .cursor-not-allowed {
 	cursor: not-allowed;
@@ -1670,11 +1685,6 @@
 	--tw-space-x-reverse: 0;
 	margin-right: calc(0.5rem * var(--tw-space-x-reverse));
 	margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
-}
-#surerank-root .space-x-3 > :not([hidden]) ~ :not([hidden]), .surerank-root .space-x-3 > :not([hidden]) ~ :not([hidden]) {
-	--tw-space-x-reverse: 0;
-	margin-right: calc(0.75rem * var(--tw-space-x-reverse));
-	margin-left: calc(0.75rem * calc(1 - var(--tw-space-x-reverse)));
 }
 #surerank-root .space-y-0\.5 > :not([hidden]) ~ :not([hidden]), .surerank-root .space-y-0\.5 > :not([hidden]) ~ :not([hidden]) {
 	--tw-space-y-reverse: 0;
@@ -2242,6 +2252,9 @@
 #surerank-root .bg-black\/70, .surerank-root .bg-black\/70 {
 	background-color: rgb(0 0 0 / 0.7);
 }
+#surerank-root .bg-black\/95, .surerank-root .bg-black\/95 {
+	background-color: rgb(0 0 0 / 0.95);
+}
 #surerank-root .bg-black\/\[0\.77\], .surerank-root .bg-black\/\[0\.77\] {
 	background-color: rgb(0 0 0 / 0.77);
 }
@@ -2573,6 +2586,10 @@
 	padding-top: 2rem;
 	padding-bottom: 2rem;
 }
+#surerank-root .py-\[0\.3125rem\], .surerank-root .py-\[0\.3125rem\] {
+	padding-top: 0.3125rem;
+	padding-bottom: 0.3125rem;
+}
 #surerank-root .py-\[2px\], .surerank-root .py-\[2px\] {
 	padding-top: 2px;
 	padding-bottom: 2px;
@@ -2820,6 +2837,9 @@
 }
 #surerank-root .leading-none, .surerank-root .leading-none {
 	line-height: 1;
+}
+#surerank-root .leading-normal, .surerank-root .leading-normal {
+	line-height: 1.5;
 }
 #surerank-root .leading-relaxed, .surerank-root .leading-relaxed {
 	line-height: 1.625;
@@ -3073,6 +3093,9 @@
 #surerank-root .no-underline, .surerank-root .no-underline {
 	text-decoration-line: none;
 }
+#surerank-root .underline-offset-2, .surerank-root .underline-offset-2 {
+	text-underline-offset: 2px;
+}
 #surerank-root .placeholder-text-tertiary::placeholder, .surerank-root .placeholder-text-tertiary::placeholder {
 	--tw-placeholder-opacity: 1;
 	color: rgb(156 163 175 / var(--tw-placeholder-opacity, 1));
@@ -3097,6 +3120,9 @@
 }
 #surerank-root .opacity-75, .surerank-root .opacity-75 {
 	opacity: 0.75;
+}
+#surerank-root .opacity-80, .surerank-root .opacity-80 {
+	opacity: 0.8;
 }
 #surerank-root .opacity-90, .surerank-root .opacity-90 {
 	opacity: 0.9;
@@ -3845,6 +3871,9 @@
 #surerank-root .hover\:no-underline:hover, .surerank-root .hover\:no-underline:hover {
 	text-decoration-line: none;
 }
+#surerank-root .hover\:opacity-80:hover, .surerank-root .hover\:opacity-80:hover {
+	opacity: 0.8;
+}
 #surerank-root .hover\:shadow-md:hover, .surerank-root .hover\:shadow-md:hover {
 	--tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 	--tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
@@ -4245,8 +4274,14 @@
 	}
 }
 @media (max-width: 782px) {
+	#surerank-root .max-\[782px\]\:hidden, .surerank-root .max-\[782px\]\:hidden {
+		display: none;
+	}
 	#surerank-root .max-\[782px\]\:min-h-\[calc\(100dvh_-_110px\)\], .surerank-root .max-\[782px\]\:min-h-\[calc\(100dvh_-_110px\)\] {
 		min-height: calc(100dvh - 110px);
+	}
+	#surerank-root .max-\[782px\]\:grid-cols-1, .surerank-root .max-\[782px\]\:grid-cols-1 {
+		grid-template-columns: repeat(1, minmax(0, 1fr));
 	}
 }
 @media (min-width: 640px) {
@@ -4259,6 +4294,9 @@
 	}
 	#surerank-root .sm\:w-64, .surerank-root .sm\:w-64 {
 		width: 16rem;
+	}
+	#surerank-root .sm\:flex-row, .surerank-root .sm\:flex-row {
+		flex-direction: row;
 	}
 	#surerank-root .sm\:gap-6, .surerank-root .sm\:gap-6 {
 		gap: 1.5rem;
@@ -4799,6 +4837,9 @@
 	#surerank-root .lg\:col-start-9, .surerank-root .lg\:col-start-9 {
 		grid-column-start: 9;
 	}
+	#surerank-root .lg\:flex, .surerank-root .lg\:flex {
+		display: flex;
+	}
 	#surerank-root .lg\:hidden, .surerank-root .lg\:hidden {
 		display: none;
 	}
@@ -5009,6 +5050,11 @@
 	#surerank-root .lg\:gap-y-8, .surerank-root .lg\:gap-y-8 {
 		row-gap: 2rem;
 	}
+	#surerank-root .lg\:space-x-3 > :not([hidden]) ~ :not([hidden]), .surerank-root .lg\:space-x-3 > :not([hidden]) ~ :not([hidden]) {
+		--tw-space-x-reverse: 0;
+		margin-right: calc(0.75rem * var(--tw-space-x-reverse));
+		margin-left: calc(0.75rem * calc(1 - var(--tw-space-x-reverse)));
+	}
 	#surerank-root .lg\:self-start, .surerank-root .lg\:self-start {
 		align-self: flex-start;
 	}
@@ -5039,8 +5085,14 @@
 	#surerank-root .lg\:justify-self-stretch, .surerank-root .lg\:justify-self-stretch {
 		justify-self: stretch;
 	}
+	#surerank-root .lg\:p-5, .surerank-root .lg\:p-5 {
+		padding: 1.25rem;
+	}
 }
 @media (min-width: 1280px) {
+	#surerank-root .xl\:flex, .surerank-root .xl\:flex {
+		display: flex;
+	}
 	#surerank-root .xl\:grid-cols-3, .surerank-root .xl\:grid-cols-3 {
 		grid-template-columns: repeat(3, minmax(0, 1fr));
 	}

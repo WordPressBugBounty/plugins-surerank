@@ -103,33 +103,44 @@ export const getNavLinks = () => {
 						},
 					],
 				},
-				{
-					path: '/general/homepage',
-					label: __( 'Home Page', 'surerank' ),
-					icon: House,
-					migratable: true,
-					submenu: [
-						{
-							path: '/general/homepage',
-							label: __( 'General', 'surerank' ),
-						},
-						{
-							path: '/general/homepage/social',
-							label: __( 'Social', 'surerank' ),
-						},
-						{
-							path: '/general/homepage/advanced',
-							label: __( 'Advanced', 'surerank' ),
-							pageContent: ADVANCED_PAGE_CONTENT,
-						},
-					],
-				},
+				...( window?.surerank_globals?.home_page_static !== 'page'
+					? [
+							{
+								path: HOME_PAGE_PATH,
+								label: __( 'Home Page', 'surerank' ),
+								icon: House,
+								migratable: true,
+								submenu: [
+									{
+										path: HOME_PAGE_PATH,
+										label: __( 'General', 'surerank' ),
+									},
+									{
+										path: '/general/homepage/social',
+										label: __( 'Social', 'surerank' ),
+									},
+									{
+										path: '/general/homepage/advanced',
+										label: __( 'Advanced', 'surerank' ),
+										pageContent: ADVANCED_PAGE_CONTENT,
+									},
+								],
+							},
+					  ]
+					: [] ),
 				{
 					path: '/general/archive_pages',
 					label: __( 'Archive Pages', 'surerank' ),
 					icon: Paperclip,
 					migratable: true,
 					pageContent: ARCHIVE_PAGES_PAGE_CONTENT,
+				},
+				{
+					path: '/general/sitemaps',
+					label: __( 'Sitemaps', 'surerank' ),
+					icon: Network,
+					pageContent: SITEMAPS_PAGE_CONTENT,
+					migratable: true,
 				},
 				{
 					path: '/general/site-information',
@@ -162,13 +173,6 @@ export const getNavLinks = () => {
 							label: __( 'No Archive', 'surerank' ),
 						},
 					],
-				},
-				{
-					path: '/advanced/sitemaps',
-					label: __( 'Sitemaps', 'surerank' ),
-					icon: Network,
-					pageContent: SITEMAPS_PAGE_CONTENT,
-					migratable: true,
 				},
 				...( ENABLE_SCHEMAS
 					? [
@@ -253,7 +257,7 @@ export const getNavLinks = () => {
 								migratable: false,
 							},
 							{
-								label: __( 'Content Performance', 'surerank' ),
+								label: __( 'Content Analysis', 'surerank' ),
 								path: '/content-performance',
 								icon: House,
 								migratable: false,
@@ -271,6 +275,22 @@ export const getNavLinks = () => {
 					label: __( 'Redirections', 'surerank' ),
 					icon: ExternalLink,
 					migratable: false,
+				},
+				{
+					path: '/link-manager/link-manager/dashboard',
+					label: __( 'Link Manager', 'surerank' ),
+					icon: Network,
+					migratable: false,
+					submenu: [
+						{
+							path: '/link-manager/link-manager/dashboard',
+							label: __( 'Dashboard', 'surerank' ),
+						},
+						{
+							path: '/link-manager/link-manager/settings',
+							label: __( 'Settings', 'surerank' ),
+						},
+					],
 				},
 				{
 					path: '/link-manager/link-suggestion',
@@ -342,3 +362,6 @@ export const getNavLinks = () => {
 
 	return Array.from( sectionMap.values() );
 };
+
+export const HOME_PAGE_PATH = '/general/homepage';
+export const GENERAL_SITEMAPS_PATH = '/general/sitemaps';

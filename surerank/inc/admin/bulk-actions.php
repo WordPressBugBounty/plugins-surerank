@@ -120,6 +120,11 @@ class BulkActions {
 
 		do_action( 'surerank_bulk_action_performed', $action, $ids );
 
+		// Flag for analytics: first bulk action used.
+		if ( ! get_option( 'surerank_bulk_action_used', false ) ) {
+			update_option( 'surerank_bulk_action_used', true );
+		}
+
 		$is_taxonomy = Helper::is_taxonomy_screen();
 
 		foreach ( $ids as $id ) {

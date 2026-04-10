@@ -57,14 +57,33 @@ class Init {
 	/**
 	 * Load frontend-specific integrations
 	 *
+	 * Only loads integration classes when the corresponding plugin is active,
+	 * avoiding unnecessary class autoloading and constructor overhead.
+	 *
 	 * @since 1.5.0
 	 * @return void
 	 */
 	public function load_frontend_integrations(): void {
-		Bricks::get_instance();
-		Woocommerce::get_instance();
-		Angie::get_instance();
-		CartFlows::get_instance();
+		if ( defined( 'BRICKS_VERSION' ) ) {
+			Bricks::get_instance();
+		}
+
+		if ( class_exists( 'WooCommerce' ) ) {
+			Woocommerce::get_instance();
+		}
+
+		if ( defined( 'ANGIE_VERSION' ) ) {
+			Angie::get_instance();
+		}
+
+		if ( defined( 'CARTFLOWS_VER' ) ) {
+			CartFlows::get_instance();
+		}
+
+		if ( defined( 'ET_BUILDER_VERSION' ) ) {
+			Divi::get_instance();
+		}
+
 		Multilingual::get_instance();
 	}
 }

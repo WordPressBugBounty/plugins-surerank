@@ -310,7 +310,7 @@ class Utils {
 			];
 		}
 
-		if ( self::keyword_exists_in_text( $title, $keyword ) ) {
+		if ( self::keyword_exists_in_text( $title, $keyword ) || self::keyword_matches_flexible( $title, $keyword ) ) {
 			return [
 				'status'  => 'success',
 				// translators: %s is the focus keyword.
@@ -351,7 +351,7 @@ class Utils {
 			];
 		}
 
-		if ( self::keyword_exists_in_text( $description, $keyword ) ) {
+		if ( self::keyword_exists_in_text( $description, $keyword ) || self::keyword_matches_flexible( $description, $keyword ) ) {
 			return [
 				'status'  => 'success',
 				// translators: %s is the focus keyword.
@@ -396,7 +396,12 @@ class Utils {
 		$url_friendly_keyword = strtolower( str_replace( ' ', '-', $keyword ) );
 		$url_lower            = strtolower( $url );
 
-		if ( strpos( $url_lower, $url_friendly_keyword ) !== false || self::keyword_exists_in_text( $url, $keyword ) ) {
+		if (
+			strpos( $url_lower, $url_friendly_keyword ) !== false ||
+			self::keyword_exists_in_text( $url, $keyword ) ||
+			self::keyword_matches_flexible( $url, $keyword ) ||
+			self::keyword_matches_flexible( str_replace( '-', ' ', $url ), $keyword )
+		) {
 			return [
 				'status'  => 'success',
 				// translators: %s is the focus keyword.
@@ -442,7 +447,7 @@ class Utils {
 		$clean_content = preg_replace( '/\s+/', ' ', $clean_content );
 		$clean_content = trim( (string) $clean_content );
 
-		if ( self::keyword_exists_in_text( $clean_content, $keyword ) ) {
+		if ( self::keyword_exists_in_text( $clean_content, $keyword ) || self::keyword_matches_flexible( $clean_content, $keyword ) ) {
 			return [
 				'status'  => 'success',
 				// translators: %s is the focus keyword.
@@ -470,6 +475,95 @@ class Utils {
 		if ( empty( $text ) || empty( $keyword ) ) {
 			return false;
 		}
-		return stripos( $text, $keyword ) !== false;
+		$escaped = preg_quote( $keyword, '/' );
+		return (bool) preg_match( '/\b' . $escaped . '\b/iu', $text );
+	}
+
+	/**
+	 * Normalize text by removing diacritical marks and converting to lowercase.
+	 *
+	 * @since 1.7.0
+	 * @param string $text Text to normalize.
+	 * @return string
+	 */
+	private static function normalize_text( $text ) {
+		if ( empty( $text ) ) {
+			return '';
+		}
+
+		// Use the Normalizer class (PHP intl extension) for NFD decomposition.
+		if ( class_exists( 'Normalizer' ) ) {
+			$normalized = \Normalizer::normalize( $text, \Normalizer::NFD );
+			if ( false !== $normalized ) {
+				// Remove combining diacritical marks (Unicode category Mn).
+				$stripped = preg_replace( '/\p{Mn}/u', '', $normalized );
+				if ( null !== $stripped ) {
+					return strtolower( $stripped );
+				}
+			}
+		}
+
+		// Fallback: iconv transliteration.
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		$normalized = @iconv( 'UTF-8', 'ASCII//TRANSLIT//IGNORE', $text );
+		if ( false !== $normalized ) {
+			return strtolower( $normalized );
+		}
+
+		return strtolower( $text );
+	}
+
+	/**
+	 * Check if keyword matches text using flexible, accent-insensitive comparison.
+	 *
+	 * Handles:
+	 * - Diacritics/accents (phronèsis matches phronesis)
+	 * - Compound word spacing (house keeper matches housekeeper)
+	 * - Phrase variations with inserted words (presentatie geven matches presentatie te geven)
+	 *
+	 * @since 1.7.0
+	 * @param string $text    Text to search in.
+	 * @param string $keyword Keyword to search for.
+	 * @return bool
+	 */
+	private static function keyword_matches_flexible( $text, $keyword ) {
+		if ( empty( $text ) || empty( $keyword ) ) {
+			return false;
+		}
+
+		$normalized_text    = self::normalize_text( $text );
+		$normalized_keyword = self::normalize_text( $keyword );
+
+		// Direct match after diacritics normalization (whole word only).
+		$escaped_normalized = preg_quote( $normalized_keyword, '/' );
+		if ( preg_match( '/\b' . $escaped_normalized . '\b/iu', $normalized_text ) ) {
+			return true;
+		}
+
+		$keyword_words = preg_split( '/\s+/', trim( $normalized_keyword ), -1, PREG_SPLIT_NO_EMPTY );
+
+		if ( is_array( $keyword_words ) && count( $keyword_words ) > 1 ) {
+			// Compound word matching: "house keeper" keyword matches "housekeeper" in text.
+			$keyword_no_spaces = implode( '', $keyword_words );
+			$escaped_compound  = preg_quote( $keyword_no_spaces, '/' );
+			if ( preg_match( '/\b' . $escaped_compound . '\b/iu', $normalized_text ) ) {
+				return true;
+			}
+
+			// Sequential word matching with up to 1 optional intervening word.
+			// e.g., "presentatie geven" matches "presentatie te geven".
+			$escaped_words = array_map(
+				static function ( $word ) {
+					return preg_quote( $word, '/' );
+				},
+				$keyword_words
+			);
+			$pattern       = '\b' . implode( '\s+(?:\S+\s+){0,1}', $escaped_words ) . '\b';
+			if ( preg_match( '/' . $pattern . '/iu', $normalized_text ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

@@ -2,7 +2,6 @@ import { useSelect, useDispatch } from '@wordpress/data';
 import { Suspense, useMemo } from '@wordpress/element';
 import { PageChecks } from '..';
 import { PAGE_SEO_CHECKS_ID_TO_STATE_MAPPING } from '@Global/constants/content-generation';
-import { isBricksBuilder } from './analyzer/utils/page-builder';
 import { STORE_NAME } from '@/store/constants';
 import PageChecksListSkeleton from './page-checks-list-skeleton';
 import { PROCESS_STATUSES } from '@/global/constants';
@@ -81,11 +80,6 @@ const PageBuilderPageSeoChecksHoc = ( { type = 'page' } ) => {
 			previousTab: currentTab,
 		} );
 	};
-
-	// Bricks builder doesn't support page level SEO checks
-	if ( isBricksBuilder() ) {
-		return null;
-	}
 
 	// Handle the case where no focus keyword is provided for keyword checks
 	if ( type === 'keyword' && ! focusKeyword ) {

@@ -450,6 +450,7 @@ class Dashboard {
 				'input_variable_suggestions' => $this->get_input_variable_suggestions(),
 				'nudges'                     => Utils::get_instance()->get_nudges(),
 				'wp_schema_pro_active'       => Helper::is_wp_schema_pro_active(),
+				'home_page_static'           => get_option( 'show_on_front', 'posts' ),
 			]
 		);
 	}

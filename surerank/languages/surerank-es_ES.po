@@ -248,17 +248,17 @@ msgstr "Nonce no válido."
 msgid "Sample Post"
 msgstr "Publicación de muestra"
 
-#: inc/api/onboarding.php:286
+#: inc/api/onboarding.php:293
 #: inc/modules/knowledge-graph/controller.php:66
 msgid "Invalid data provided"
 msgstr "Datos inválidos proporcionados"
 
-#: inc/api/onboarding.php:290
+#: inc/api/onboarding.php:300
 #: inc/modules/knowledge-graph/api.php:115
 msgid "Settings updated successfully"
 msgstr "Configuraciones actualizadas con éxito"
 
-#: inc/api/onboarding.php:295
+#: inc/api/onboarding.php:303
 #: inc/modules/knowledge-graph/controller.php:73
 msgid "Failed to update settings"
 msgstr "Error al actualizar configuraciones"
@@ -344,22 +344,22 @@ msgid "Tag: "
 msgstr "Etiqueta:"
 
 #: inc/frontend/title.php:146
-#: inc/meta-variables/post.php:245
+#: inc/meta-variables/post.php:277
 msgid "Author: "
 msgstr "Autor:"
 
 #: inc/frontend/title.php:155
-#: inc/meta-variables/post.php:249
+#: inc/meta-variables/post.php:281
 msgid "Day Archives: "
 msgstr "Archivos diarios:"
 
 #: inc/frontend/title.php:157
-#: inc/meta-variables/post.php:252
+#: inc/meta-variables/post.php:284
 msgid "Month Archives: "
 msgstr "Archivos mensuales:"
 
 #: inc/frontend/title.php:159
-#: inc/meta-variables/post.php:255
+#: inc/meta-variables/post.php:287
 msgid "Year Archives: "
 msgstr "Archivos anuales:"
 
@@ -401,14 +401,14 @@ msgstr "ID"
 msgid "The unique identifier for a post."
 msgstr "El identificador único para una publicación."
 
-#: inc/admin/dashboard.php:633
+#: inc/admin/dashboard.php:634
 #: inc/meta-variables/post.php:65
 #: inc/schema/variables.php:83
 #: build/admin-dashboard/index.js:1
 msgid "Post Title"
 msgstr "Título de la publicación"
 
-#: inc/admin/dashboard.php:635
+#: inc/admin/dashboard.php:636
 #: inc/meta-variables/post.php:66
 msgid "The title of the post."
 msgstr "El título de la publicación."
@@ -417,7 +417,7 @@ msgstr "El título de la publicación."
 msgid "Excerpt"
 msgstr "Extracto"
 
-#: inc/admin/dashboard.php:640
+#: inc/admin/dashboard.php:641
 #: inc/meta-variables/post.php:70
 msgid "The excerpt of the post."
 msgstr "El extracto de la publicación."
@@ -426,7 +426,7 @@ msgstr "El extracto de la publicación."
 msgid "Content"
 msgstr "Contenido"
 
-#: inc/admin/dashboard.php:645
+#: inc/admin/dashboard.php:646
 #: inc/meta-variables/post.php:74
 msgid "The content of the post."
 msgstr "El contenido de la publicación."
@@ -451,12 +451,12 @@ msgstr "Separador"
 msgid "Site Tagline"
 msgstr "Eslogan del sitio"
 
-#: inc/admin/dashboard.php:625
+#: inc/admin/dashboard.php:626
 #: inc/meta-variables/site.php:65
 msgid "The tagline of the site."
 msgstr "El eslogan del sitio."
 
-#: inc/admin/dashboard.php:618
+#: inc/admin/dashboard.php:619
 #: inc/meta-variables/site.php:68
 #: build/admin-dashboard/index.js:1
 msgid "Site Name"
@@ -492,7 +492,7 @@ msgstr "El identificador único para un término."
 msgid "Term Name"
 msgstr "Nombre del término"
 
-#: inc/admin/dashboard.php:630
+#: inc/admin/dashboard.php:631
 #: inc/meta-variables/term.php:63
 msgid "The name of the term."
 msgstr "El nombre del término."
@@ -506,7 +506,7 @@ msgstr "El nombre del término."
 msgid "Description"
 msgstr "Descripción"
 
-#: inc/admin/dashboard.php:650
+#: inc/admin/dashboard.php:651
 #: inc/meta-variables/term.php:67
 msgid "The description of the term."
 msgstr "La descripción del término."
@@ -1354,7 +1354,7 @@ msgid "An Amazon Standard Identification Number (ASIN) is a 10-character alphanu
 msgstr "Un Número de Identificación Estándar de Amazon (ASIN) es un identificador único alfanumérico de 10 caracteres asignado por Amazon.com y sus socios para la identificación de productos dentro de la organización de Amazon. Consulte la documentación de Amazon para obtener detalles autorizados."
 
 #: inc/schema/types/offer.php:133
-#: inc/schema/types/product.php:253
+#: inc/schema/types/product.php:265
 msgid "Availability"
 msgstr "Disponibilidad"
 
@@ -1795,10 +1795,12 @@ msgid "The currency of the price, or a price component when attached to PriceSpe
 msgstr "La moneda del precio, o un componente de precio cuando está adjunto a PriceSpecification y sus subtipos. Utiliza formatos estándar: formato de moneda ISO 4217, por ejemplo, \"USD\"; símbolo de ticker para criptomonedas, por ejemplo, \"BTC\"; nombres bien conocidos para Sistemas de Comercio Local (LETS) y otros tipos de moneda, por ejemplo, \"Ithaca HOUR\"."
 
 #: inc/schema/types/offer.php:586
+#: inc/schema/types/product.php:253
 msgid "Price valid until"
 msgstr "Precio válido hasta"
 
 #: inc/schema/types/offer.php:590
+#: inc/schema/types/product.php:257
 msgid "The date (in ISO 8601 date format) after which the price is no longer available."
 msgstr "La fecha (en formato de fecha ISO 8601) después de la cual el precio ya no está disponible."
 
@@ -2170,27 +2172,27 @@ msgstr "Oferta"
 msgid "Aggregate Offer"
 msgstr "Oferta agregada"
 
-#: inc/schema/types/product.php:263
+#: inc/schema/types/product.php:275
 msgid "Low price"
 msgstr "Precio bajo"
 
-#: inc/schema/types/product.php:267
+#: inc/schema/types/product.php:279
 msgid "Shows the lowest price available for the product across different sellers. Use a decimal format (e.g., 199.99) for consistency in structured data."
 msgstr "Muestra el precio más bajo disponible para el producto entre diferentes vendedores. Usa un formato decimal (por ejemplo, 199.99) para consistencia en los datos estructurados."
 
-#: inc/schema/types/product.php:274
+#: inc/schema/types/product.php:286
 msgid "High price"
 msgstr "Precio alto"
 
-#: inc/schema/types/product.php:278
+#: inc/schema/types/product.php:290
 msgid "Show the highest listed price for the product across all offers. Use a decimal format to ensure proper display in structured data."
 msgstr "Muestra el precio más alto listado para el producto entre todas las ofertas. Usa un formato decimal para asegurar una correcta visualización en los datos estructurados."
 
-#: inc/schema/types/product.php:284
+#: inc/schema/types/product.php:296
 msgid "Offer count"
 msgstr "Conteo de ofertas"
 
-#: inc/schema/types/product.php:287
+#: inc/schema/types/product.php:299
 msgid "Shows the stock status of the product, such as In Stock or Out of Stock. This information helps search engines show real-time availability."
 msgstr "Muestra el estado de stock del producto, como En Stock o Agotado. Esta información ayuda a los motores de búsqueda a mostrar la disponibilidad en tiempo real."
 
@@ -2316,17 +2318,17 @@ msgstr "Una imagen en miniatura relevante para el sitio web."
 msgid "Post ID"
 msgstr "ID de publicación"
 
-#: inc/admin/dashboard.php:638
+#: inc/admin/dashboard.php:639
 #: inc/schema/variables.php:85
 msgid "Post Excerpt"
 msgstr "Extracto de publicación"
 
-#: inc/admin/dashboard.php:643
+#: inc/admin/dashboard.php:644
 #: inc/schema/variables.php:86
 msgid "Post Content"
 msgstr "Contenido de publicación"
 
-#: inc/admin/dashboard.php:663
+#: inc/admin/dashboard.php:664
 #: inc/schema/variables.php:87
 msgid "Post URL"
 msgstr "URL de publicación"
@@ -2375,7 +2377,7 @@ msgstr "Slug de término"
 msgid "Term Taxonomy"
 msgstr "Taxonomía de término"
 
-#: inc/admin/dashboard.php:648
+#: inc/admin/dashboard.php:649
 #: inc/schema/variables.php:115
 msgid "Term Description"
 msgstr "Descripción de término"
@@ -2515,6 +2517,7 @@ msgid "%s Schema"
 msgstr "%s Esquema"
 
 #: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 msgid "Open SureRank SEO"
 msgstr "Abrir SureRank SEO"
@@ -2531,12 +2534,12 @@ msgstr "Arreglar problemas de SEO con IA"
 msgid "Fix It for Me"
 msgstr "Arreglarlo por mí"
 
-#: inc/admin/dashboard.php:623
+#: inc/admin/dashboard.php:624
 #: build/admin-dashboard/index.js:1
 msgid "Tagline"
 msgstr "Lema"
 
-#: inc/admin/dashboard.php:628
+#: inc/admin/dashboard.php:629
 msgid "Term Title"
 msgstr "Título del término"
 
@@ -2544,6 +2547,7 @@ msgstr "Título del término"
 #: build/admin-onboarding/index.js:1
 #: build/admin-seo-bar/index.js:1
 #: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/search-console-widget/index.js:1
@@ -2555,6 +2559,7 @@ msgstr "No indexar"
 #: build/admin-onboarding/index.js:1
 #: build/admin-seo-bar/index.js:1
 #: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/search-console-widget/index.js:1
@@ -2566,6 +2571,7 @@ msgstr "Evita que los motores de búsqueda enumeren tu página en los resultados
 #: build/admin-onboarding/index.js:1
 #: build/admin-seo-bar/index.js:1
 #: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/search-console-widget/index.js:1
@@ -2577,6 +2583,7 @@ msgstr "No seguir"
 #: build/admin-onboarding/index.js:1
 #: build/admin-seo-bar/index.js:1
 #: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/search-console-widget/index.js:1
@@ -2588,6 +2595,7 @@ msgstr "Indica a los motores de búsqueda que no sigan ningún enlace en tu pág
 #: build/admin-onboarding/index.js:1
 #: build/admin-seo-bar/index.js:1
 #: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/search-console-widget/index.js:1
@@ -2599,6 +2607,7 @@ msgstr "No archivar"
 #: build/admin-onboarding/index.js:1
 #: build/admin-seo-bar/index.js:1
 #: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/search-console-widget/index.js:1
@@ -2610,6 +2619,7 @@ msgstr "Bloquea a los motores de búsqueda de almacenar una versión en caché d
 #: build/admin-onboarding/index.js:1
 #: build/admin-seo-bar/index.js:1
 #: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/search-console-widget/index.js:1
@@ -2797,6 +2807,7 @@ msgstr "Configuraciones"
 
 #: inc/admin/seo-popup.php:144
 #: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 msgid "SureRank Meta Box"
@@ -2811,6 +2822,8 @@ msgid "BlogPosting"
 msgstr "PublicaciónDeBlog"
 
 #: inc/analyzer/post-analyzer.php:271
+#: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
@@ -2818,6 +2831,8 @@ msgid "Page contains at least one subheading."
 msgstr "La página contiene al menos un subtítulo."
 
 #: inc/analyzer/post-analyzer.php:405
+#: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
@@ -2833,6 +2848,8 @@ msgid "Images on the post/page have alt text attributes"
 msgstr "Las imágenes en la publicación/página tienen atributos de texto alternativo."
 
 #: inc/analyzer/post-analyzer.php:495
+#: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
@@ -2840,6 +2857,8 @@ msgid "This page includes images or videos to enhance content."
 msgstr "Esta página incluye imágenes o videos para mejorar el contenido."
 
 #: inc/analyzer/post-analyzer.php:495
+#: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
@@ -2875,6 +2894,8 @@ msgid "Search engine description exceeds %s characters."
 msgstr "La descripción del motor de búsqueda excede %s caracteres."
 
 #: inc/analyzer/utils.php:157
+#: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
@@ -2882,6 +2903,8 @@ msgid "Canonical tag is not present on the page."
 msgstr "La etiqueta canónica no está presente en la página."
 
 #: inc/analyzer/utils.php:164
+#: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
@@ -2889,6 +2912,8 @@ msgid "Canonical tag is present on the page."
 msgstr "La etiqueta canónica está presente en la página."
 
 #: inc/analyzer/utils.php:187
+#: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
@@ -2897,6 +2922,8 @@ msgstr "La URL de la página es corta y amigable para SEO."
 
 #. translators: %s is the URL length.
 #: inc/analyzer/utils.php:190
+#: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
@@ -2909,6 +2936,8 @@ msgid "These broken links were found on the page: "
 msgstr "Se encontraron estos enlaces rotos en la página:"
 
 #: inc/api/analyzer.php:1673
+#: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
@@ -2919,18 +2948,24 @@ msgstr "Se encontró uno o más enlaces rotos en la página."
 msgid "This setting is managed by the SureRank plugin, so you don’t need to configure indexing rules for funnels here."
 msgstr "Esta configuración es gestionada por el plugin SureRank, por lo que no necesitas configurar reglas de indexación para embudos aquí."
 
+#: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "This page includes video(s) but no images."
 msgstr "Esta página incluye video(s) pero no imágenes."
 
+#: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No links found on this page."
 msgstr "No se encontraron enlaces en esta página."
 
+#: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
@@ -2958,6 +2993,8 @@ msgid "Open Graph tags are not present on the page."
 msgstr "Las etiquetas Open Graph no están presentes en la página."
 
 #: inc/analyzer/post-analyzer.php:564
+#: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
@@ -3128,6 +3165,7 @@ msgid "View Full Report"
 msgstr "Ver informe completo"
 
 #: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
 msgid "Content Analysis"
 msgstr "Análisis de contenido"
 
@@ -3138,11 +3176,6 @@ msgstr "Buscar por URL o título"
 #: build/admin-dashboard/index.js:1
 msgid "Search"
 msgstr "Buscar"
-
-#: build/admin-dashboard/index.js:1
-#: build/admin-onboarding/index.js:1
-msgid "Content Performance"
-msgstr "Rendimiento del contenido"
 
 #: build/admin-dashboard/index.js:1
 msgid "(Last 90 days)"
@@ -3284,17 +3317,10 @@ msgid "No additional information to show."
 msgstr "No hay información adicional para mostrar."
 
 #: build/admin-dashboard/index.js:1
-msgid "No Results Found"
-msgstr "No se encontraron resultados"
-
-#: build/admin-dashboard/index.js:1
-msgid "Your search didn't match any results. Please try a different keyword or refine your search criteria."
-msgstr "Tu búsqueda no coincidió con ningún resultado. Por favor, intenta con una palabra clave diferente o refina tus criterios de búsqueda."
-
-#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 #: build/admin-seo-bar/index.js:1
 #: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/search-console-widget/index.js:1
@@ -3508,6 +3534,7 @@ msgstr "X"
 #: build/admin-onboarding/index.js:1
 #: build/admin-seo-bar/index.js:1
 #: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/search-console-widget/index.js:1
@@ -3519,6 +3546,7 @@ msgstr "Fecha inválida"
 #: build/admin-onboarding/index.js:1
 #: build/admin-seo-bar/index.js:1
 #: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/search-console-widget/index.js:1
@@ -3731,6 +3759,8 @@ msgstr "Sin datos"
 msgid "Issues Detected"
 msgstr "Problemas detectados"
 
+#: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
@@ -3795,6 +3825,7 @@ msgstr "Crítico"
 #: build/admin-onboarding/index.js:1
 #: build/admin-seo-bar/index.js:1
 #: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/search-console-widget/index.js:1
@@ -3804,6 +3835,8 @@ msgid_plural "Warnings"
 msgstr[0] "Advertencia"
 msgstr[1] ""
 
+#: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
@@ -3826,119 +3859,119 @@ msgstr "Taxonomías"
 msgid "Archives"
 msgstr "Archivos"
 
-#: inc/admin/dashboard.php:620
+#: inc/admin/dashboard.php:621
 msgid "The name of the site."
 msgstr "El nombre del sitio."
 
-#: inc/admin/dashboard.php:653
+#: inc/admin/dashboard.php:654
 #: inc/meta-variables/post.php:81
 msgid "Date Published"
 msgstr "Fecha de publicación"
 
-#: inc/admin/dashboard.php:655
+#: inc/admin/dashboard.php:656
 #: inc/meta-variables/post.php:82
 msgid "Publication date of the current post/page OR specified date on date archives"
 msgstr "Fecha de publicación de la entrada/página actual O fecha especificada en archivos de fecha"
 
-#: inc/admin/dashboard.php:658
+#: inc/admin/dashboard.php:659
 #: inc/meta-variables/post.php:85
 msgid "Date Modified"
 msgstr "Fecha de modificación"
 
-#: inc/admin/dashboard.php:660
+#: inc/admin/dashboard.php:661
 #: inc/meta-variables/post.php:86
 msgid "Last modification date of the current post/page"
 msgstr "Fecha de última modificación de la entrada/página actual"
 
-#: inc/admin/dashboard.php:665
+#: inc/admin/dashboard.php:666
 msgid "URL of the current post/page"
 msgstr "URL de la entrada/página actual"
 
-#: inc/admin/dashboard.php:668
+#: inc/admin/dashboard.php:669
 #: inc/meta-variables/site.php:84
 msgid "Current Date"
 msgstr "Fecha actual"
 
-#: inc/admin/dashboard.php:670
+#: inc/admin/dashboard.php:671
 #: inc/meta-variables/site.php:85
 msgid "Current server date"
 msgstr "Fecha del servidor actual"
 
-#: inc/admin/dashboard.php:673
+#: inc/admin/dashboard.php:674
 #: inc/meta-variables/site.php:88
 msgid "Current Day"
 msgstr "Día actual"
 
-#: inc/admin/dashboard.php:675
+#: inc/admin/dashboard.php:676
 #: inc/meta-variables/site.php:89
 msgid "Current server day"
 msgstr "Día del servidor actual"
 
-#: inc/admin/dashboard.php:678
+#: inc/admin/dashboard.php:679
 #: inc/meta-variables/site.php:92
 msgid "Current Month"
 msgstr "Mes actual"
 
-#: inc/admin/dashboard.php:680
+#: inc/admin/dashboard.php:681
 #: inc/meta-variables/site.php:93
 msgid "Current server month"
 msgstr "Mes del servidor actual"
 
-#: inc/admin/dashboard.php:683
+#: inc/admin/dashboard.php:684
 #: inc/meta-variables/site.php:96
 msgid "Current Year"
 msgstr "Año actual"
 
-#: inc/admin/dashboard.php:685
+#: inc/admin/dashboard.php:686
 #: inc/meta-variables/site.php:97
 msgid "Current server year"
 msgstr "Año del servidor actual"
 
-#: inc/admin/dashboard.php:688
+#: inc/admin/dashboard.php:689
 #: inc/meta-variables/site.php:100
 msgid "Current Time"
 msgstr "Hora actual"
 
-#: inc/admin/dashboard.php:690
+#: inc/admin/dashboard.php:691
 #: inc/meta-variables/site.php:101
 msgid "Current server time"
 msgstr "Hora del servidor actual"
 
-#: inc/admin/dashboard.php:693
+#: inc/admin/dashboard.php:694
 #: inc/meta-variables/site.php:104
 msgid "Organization Name"
 msgstr "Nombre de la organización"
 
-#: inc/admin/dashboard.php:695
+#: inc/admin/dashboard.php:696
 #: inc/meta-variables/site.php:105
 msgid "The Organization Name added in Local SEO Settings."
 msgstr "El nombre de la organización agregado en la configuración de SEO local."
 
-#: inc/admin/dashboard.php:698
+#: inc/admin/dashboard.php:699
 #: inc/meta-variables/site.php:108
 msgid "Organization Logo"
 msgstr "Logo de la organización"
 
-#: inc/admin/dashboard.php:700
+#: inc/admin/dashboard.php:701
 #: inc/meta-variables/site.php:109
 msgid "Organization Logo added in Local SEO Settings."
 msgstr "Logo de la organización agregado en la configuración de SEO local."
 
-#: inc/admin/dashboard.php:703
+#: inc/admin/dashboard.php:704
 #: inc/meta-variables/site.php:112
 msgid "Organization URL"
 msgstr "URL de la organización"
 
-#: inc/admin/dashboard.php:705
+#: inc/admin/dashboard.php:706
 #: inc/meta-variables/site.php:113
 msgid "Organization URL added in Local SEO Settings."
 msgstr "URL de la organización agregada en la configuración de SEO local."
 
-#: inc/admin/dashboard.php:708
+#: inc/admin/dashboard.php:709
 msgid "Post Author Name"
 msgstr "Nombre del autor de la publicación"
 
-#: inc/admin/dashboard.php:710
+#: inc/admin/dashboard.php:711
 msgid "Display author's nicename of the current post, page or author archive."
 msgstr "Mostrar el nombre de usuario del autor de la entrada, página o archivo de autor actual."
 
@@ -4010,6 +4043,7 @@ msgstr "Haz clic aquí para descubrir más detalles sobre esta verificación."
 #: build/admin-onboarding/index.js:1
 #: build/admin-seo-bar/index.js:1
 #: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/search-console-widget/index.js:1
@@ -4183,103 +4217,103 @@ msgstr "La página no contiene ningún subtítulo."
 msgid "Tools"
 msgstr "Herramientas"
 
-#: inc/api/migrations.php:120
+#: inc/api/migrations.php:124
 msgid "Post IDs to migrate."
 msgstr "IDs de publicaciones para migrar."
 
-#: inc/api/migrations.php:127
-#: inc/api/migrations.php:184
+#: inc/api/migrations.php:131
+#: inc/api/migrations.php:188
 msgid "Whether to clean up source data after import."
 msgstr "Si se debe limpiar los datos de origen después de la importación."
 
-#: inc/api/migrations.php:141
-#: inc/api/migrations.php:198
+#: inc/api/migrations.php:145
+#: inc/api/migrations.php:202
 msgid "Page number for pagination."
 msgstr "Número de página para la paginación."
 
-#: inc/api/migrations.php:177
+#: inc/api/migrations.php:181
 msgid "Term IDs to migrate."
 msgstr "IDs de términos para migrar."
 
-#: inc/api/migrations.php:234
+#: inc/api/migrations.php:238
 msgid "Whether to clean up source global data after import."
 msgstr "Si se debe limpiar los datos globales de origen después de la importación."
 
-#: inc/api/migrations.php:253
+#: inc/api/migrations.php:257
 msgid "Plugin slug to deactivate."
 msgstr "Slug del plugin para desactivar."
 
-#: inc/api/migrations.php:325
-#: inc/api/migrations.php:351
+#: inc/api/migrations.php:329
+#: inc/api/migrations.php:355
 msgid "Invalid importer methods."
 msgstr "Métodos de importador inválidos."
 
-#: inc/api/migrations.php:402
+#: inc/api/migrations.php:406
 msgid "Invalid response from importer."
 msgstr "Respuesta inválida del importador."
 
 #. translators: 1: import status, 2: plugin name
-#: inc/api/migrations.php:420
+#: inc/api/migrations.php:424
 #, php-format
 msgid "Global settings %1$s from %2$s."
 msgstr "Configuraciones globales %1$s de %2$s."
 
-#: inc/api/migrations.php:421
+#: inc/api/migrations.php:425
 msgid "imported successfully"
 msgstr "importado con éxito"
 
-#: inc/api/migrations.php:421
+#: inc/api/migrations.php:425
 msgid "failed to import"
 msgstr "falló al importar"
 
-#: inc/api/migrations.php:500
+#: inc/api/migrations.php:504
 msgid "No public taxonomies found."
 msgstr "No se encontraron taxonomías públicas."
 
-#: inc/api/migrations.php:625
+#: inc/api/migrations.php:629
 msgid "You do not have permission to deactivate plugins."
 msgstr "No tienes permiso para desactivar plugins."
 
-#: inc/api/migrations.php:631
+#: inc/api/migrations.php:635
 msgid "Plugin not found."
 msgstr "Plugin no encontrado."
 
-#: inc/api/migrations.php:635
+#: inc/api/migrations.php:639
 msgid "Plugin is already inactive."
 msgstr "El plugin ya está inactivo."
 
-#: inc/api/migrations.php:643
+#: inc/api/migrations.php:647
 msgid "Plugin deactivated successfully."
 msgstr "Plugin desactivado con éxito."
 
-#: inc/api/migrations.php:1052
+#: inc/api/migrations.php:1062
 msgid "Invalid plugin slug specified."
 msgstr "Slug de plugin especificado inválido."
 
-#: inc/api/migrations.php:1153
+#: inc/api/migrations.php:1163
 msgid "No data found for this item."
 msgstr "No se encontraron datos para este ítem."
 
-#: inc/api/migrations.php:1159
+#: inc/api/migrations.php:1169
 msgid "Detection failed."
 msgstr "Fallo en la detección."
 
-#: inc/api/migrations.php:1166
+#: inc/api/migrations.php:1176
 msgid "Invalid import response."
 msgstr "Respuesta de importación inválida."
 
-#: inc/api/migrations.php:1175
+#: inc/api/migrations.php:1185
 msgid "Import failed."
 msgstr "Fallo en la importación."
 
 #. translators: %s: error message.
-#: inc/api/migrations.php:1180
+#: inc/api/migrations.php:1190
 #, php-format
 msgid "Error: %s"
 msgstr "Error: %s"
 
 #. translators: 1: imported count, 2: total count, 3: item type, 4: plugin name.
-#: inc/api/migrations.php:1223
+#: inc/api/migrations.php:1233
 #, php-format
 msgid "Imported %1$d of %2$d %3$s from %4$s."
 msgstr "Importados %1$d de %2$d %3$s desde %4$s."
@@ -4391,60 +4425,88 @@ msgid "Error importing RankMath global settings: %s"
 msgstr "Error al importar configuraciones globales de RankMath: %s"
 
 #. translators: %d: ID, %s: type.
+#. translators: %s: type, %d: ID.
 #: inc/importers/rankmath/rank-math.php:260
+#: inc/importers/slimseo/slim-seo.php:291
 #, php-format
 msgid "No meta-robots settings to import for %1$s %2$d."
 msgstr "No hay configuraciones meta-robots para importar para %1$s %2$d."
 
+#. translators: 1: type (post/term), 2: ID
 #. translators: %d: ID, %s: type.
+#. translators: %s: type, %d: ID.
 #. translators: %1$s: type (post|term), %2$d: ID.
+#: inc/importers/aioseo/aioseo.php:522
 #: inc/importers/rankmath/rank-math.php:275
+#: inc/importers/slimseo/slim-seo.php:280
 #: inc/importers/squirrly/squirrly.php:404
 #, php-format
 msgid "Meta-robots imported for %1$s %2$d."
 msgstr "Meta-robots importados para %1$s %2$d."
 
+#. translators: 1: ID, 2: type (post/term), 3: error message
 #. translators: 1: ID, 2: type, 3: error message.
+#. translators: 1: ID (used second), 2: type (used first), 3: error message.
 #. translators: 1: ID, 2: type, 3: error message
+#: inc/importers/aioseo/aioseo.php:532
 #: inc/importers/rankmath/rank-math.php:285
+#: inc/importers/slimseo/slim-seo.php:301
 #: inc/importers/squirrly/squirrly.php:414
 #, php-format
 msgid "Error importing meta-robots for %2$s %1$d: %3$s"
 msgstr "Error al importar meta-robots para %2$s %1$d: %3$s"
 
+#. translators: 1: type (post/term), 2: ID
 #. translators: %d: ID, %s: type.
+#. translators: %s: type, %d: ID.
 #. translators: %1$s: type (post|term), %2$d: ID.
+#: inc/importers/aioseo/aioseo.php:592
 #: inc/importers/rankmath/rank-math.php:345
+#: inc/importers/slimseo/slim-seo.php:343
 #: inc/importers/squirrly/squirrly.php:472
 #, php-format
 msgid "General settings imported for %1$s %2$d."
 msgstr "Configuraciones generales importadas para %1$s %2$d."
 
+#. translators: 1: type (post/term), 2: ID
 #. translators: %d: ID, %s: type.
+#. translators: %s: type, %d: ID.
 #. translators: %1$s: type (post|term), %2$d: ID.
+#: inc/importers/aioseo/aioseo.php:594
 #: inc/importers/rankmath/rank-math.php:356
+#: inc/importers/slimseo/slim-seo.php:354
 #: inc/importers/squirrly/squirrly.php:483
 #, php-format
 msgid "No general settings to import for %1$s %2$d."
 msgstr "No hay configuraciones generales para importar para %1$s %2$d."
 
+#. translators: 1: type (post/term), 2: ID
 #. translators: %d: ID, %s: type.
+#. translators: %s: type, %d: ID.
 #. translators: %1$s: type (post|term), %2$d: ID.
+#: inc/importers/aioseo/aioseo.php:640
 #: inc/importers/rankmath/rank-math.php:396
+#: inc/importers/slimseo/slim-seo.php:409
 #: inc/importers/squirrly/squirrly.php:594
 #, php-format
 msgid "Social metadata imported for %1$s %2$d."
 msgstr "Metadatos sociales importados para %1$s %2$d."
 
+#. translators: 1: type (post/term), 2: ID
 #. translators: %d: ID, %s: type.
+#. translators: %s: type, %d: ID.
 #. translators: %1$s: type (post|term), %2$d: ID.
+#: inc/importers/aioseo/aioseo.php:642
 #: inc/importers/rankmath/rank-math.php:407
+#: inc/importers/slimseo/slim-seo.php:420
 #: inc/importers/squirrly/squirrly.php:605
 #, php-format
 msgid "No social metadata to import for %1$s %2$d."
 msgstr "No hay metadatos sociales para importar para %1$s %2$d."
 
+#. translators: %d: term ID
 #. translators: %d: term ID.
+#: inc/importers/aioseo/aioseo.php:137
 #: inc/importers/seopress/seopress.php:101
 #: inc/importers/yoast/yoast.php:85
 #, php-format
@@ -4796,10 +4858,6 @@ msgid "Contribute to SureRank"
 msgstr "Contribuir a SureRank"
 
 #: build/admin-dashboard/index.js:1
-msgid "Collect non-sensitive information from your website, such as the PHP version and features used, to help us fix bugs faster, make smarter decisions, and build features that actually matter to you. "
-msgstr "Recopilar información no sensible de su sitio web, como la versión de PHP y las funciones utilizadas, para ayudarnos a corregir errores más rápido, tomar decisiones más inteligentes y crear funciones que realmente le importen."
-
-#: build/admin-dashboard/index.js:1
 msgid "Learn More"
 msgstr "Aprender más"
 
@@ -4859,42 +4917,44 @@ msgstr "¿Por qué está roto este enlace?"
 msgid "Status:"
 msgstr "Estado:"
 
+#: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Failed to check link"
 msgstr "Error al verificar el enlace"
 
-#: inc/admin/bulk-actions.php:231
+#: inc/admin/bulk-actions.php:236
 msgid "SureRank Settings"
 msgstr "Configuraciones de SureRank"
 
-#: inc/admin/bulk-actions.php:232
+#: inc/admin/bulk-actions.php:237
 msgid "Set to index"
 msgstr "Establecer en índice"
 
-#: inc/admin/bulk-actions.php:233
+#: inc/admin/bulk-actions.php:238
 msgid "Set to noindex"
 msgstr "Establecer en noindex"
 
-#: inc/admin/bulk-actions.php:234
+#: inc/admin/bulk-actions.php:239
 msgid "Set to follow"
 msgstr "Establecer en seguir"
 
-#: inc/admin/bulk-actions.php:235
+#: inc/admin/bulk-actions.php:240
 msgid "Set to nofollow"
 msgstr "Establecer en noseguir"
 
-#: inc/admin/bulk-actions.php:236
+#: inc/admin/bulk-actions.php:241
 msgid "Set to archive"
 msgstr "Establecer en archivo"
 
-#: inc/admin/bulk-actions.php:237
+#: inc/admin/bulk-actions.php:242
 msgid "Set to noarchive"
 msgstr "Establecer en noarchivo"
 
 #. translators: %1$d: number of items updated, %2$s: action performed
-#: inc/admin/bulk-actions.php:190
+#: inc/admin/bulk-actions.php:195
 #, php-format
 msgid "%1$d item %2$s."
 msgid_plural "%1$d items %2$s."
@@ -4935,146 +4995,146 @@ msgstr "Error de exportación: %s"
 msgid "Import failed: %s"
 msgstr "Error de importación: %s"
 
-#: inc/api/migrations.php:273
+#: inc/api/migrations.php:277
 msgid "Plugin slug that was migrated from."
 msgstr "Nombre de la clase del importador desde la cual se migró."
 
 #. translators: %s: importer class name
 #. translators: %s: importer class name.
-#: inc/api/migrations.php:386
-#: inc/api/migrations.php:1069
+#: inc/api/migrations.php:390
+#: inc/api/migrations.php:1079
 #, php-format
 msgid "Invalid importer class: %s does not implement Importer."
 msgstr "Clase de importador inválida: %s no implementa Importer."
 
-#: inc/api/migrations.php:657
+#: inc/api/migrations.php:661
 msgid "Invalid plugin slug."
 msgstr "Slug del plugin inválido."
 
 #. translators: %s: plugin slug.
-#: inc/api/migrations.php:670
+#: inc/api/migrations.php:674
 #, php-format
 msgid "Migration from %s marked as completed successfully."
 msgstr "Migración desde %s marcada como completada con éxito."
 
-#: inc/api/migrations.php:770
+#: inc/api/migrations.php:777
 msgid "WP Rocket"
 msgstr "WP Rocket"
 
-#: inc/api/migrations.php:776
+#: inc/api/migrations.php:783
 msgid "FlyingPress"
 msgstr "FlyingPress"
 
-#: inc/api/migrations.php:782
+#: inc/api/migrations.php:789
 msgid "NitroPack"
 msgstr "NitroPack"
 
-#: inc/api/migrations.php:788
+#: inc/api/migrations.php:795
 msgid "WP-Optimize Premium"
 msgstr "WP-Optimize Premium"
 
-#: inc/api/migrations.php:794
+#: inc/api/migrations.php:801
 msgid "Swift Performance"
 msgstr "Swift Performance"
 
-#: inc/api/migrations.php:802
+#: inc/api/migrations.php:809
 msgid "LiteSpeed Cache"
 msgstr "LiteSpeed Cache"
 
-#: inc/api/migrations.php:808
+#: inc/api/migrations.php:815
 msgid "W3 Total Cache"
 msgstr "W3 Total Cache"
 
-#: inc/api/migrations.php:814
+#: inc/api/migrations.php:821
 msgid "WP Super Cache"
 msgstr "WP Super Cache"
 
-#: inc/api/migrations.php:820
+#: inc/api/migrations.php:827
 msgid "WP Fastest Cache"
 msgstr "WP Fastest Cache"
 
-#: inc/api/migrations.php:826
+#: inc/api/migrations.php:833
 msgid "WP-Optimize"
 msgstr "WP-Optimize"
 
-#: inc/api/migrations.php:832
+#: inc/api/migrations.php:839
 msgid "Breeze"
 msgstr "Breeze"
 
-#: inc/api/migrations.php:838
+#: inc/api/migrations.php:845
 msgid "Cache Enabler"
 msgstr "Cache Enabler"
 
-#: inc/api/migrations.php:844
+#: inc/api/migrations.php:851
 msgid "Comet Cache"
 msgstr "Comet Cache"
 
-#: inc/api/migrations.php:850
+#: inc/api/migrations.php:857
 msgid "Swift Performance Lite"
 msgstr "Swift Performance Lite"
 
-#: inc/api/migrations.php:858
+#: inc/api/migrations.php:865
 msgid "Redis Object Cache"
 msgstr "Redis Object Cache"
 
-#: inc/api/migrations.php:866
+#: inc/api/migrations.php:873
 msgid "Hummingbird Performance"
 msgstr "Hummingbird Performance"
 
-#: inc/api/migrations.php:872
+#: inc/api/migrations.php:879
 msgid "Autoptimize"
 msgstr "Autoptimize"
 
-#: inc/api/migrations.php:878
+#: inc/api/migrations.php:885
 msgid "SiteGround Speed Optimizer"
 msgstr "SiteGround Speed Optimizer"
 
-#: inc/api/migrations.php:884
+#: inc/api/migrations.php:891
 msgid "Cloudflare"
 msgstr "Cloudflare"
 
-#: inc/api/migrations.php:890
+#: inc/api/migrations.php:897
 msgid "Hyper Cache"
 msgstr "Hyper Cache"
 
-#: inc/api/migrations.php:896
+#: inc/api/migrations.php:903
 msgid "Perfmatters"
 msgstr "Perfmatters"
 
-#: inc/api/migrations.php:904
+#: inc/api/migrations.php:911
 msgid "SpeedyCache"
 msgstr "SpeedyCache"
 
-#: inc/api/migrations.php:910
+#: inc/api/migrations.php:917
 msgid "Docket Cache"
 msgstr "Docket Cache"
 
-#: inc/api/migrations.php:916
+#: inc/api/migrations.php:923
 msgid "10Web Booster"
 msgstr "10Web Booster"
 
-#: inc/api/migrations.php:922
+#: inc/api/migrations.php:929
 msgid "Super Page Cache"
 msgstr "Super Page Cache"
 
-#: inc/api/migrations.php:928
+#: inc/api/migrations.php:935
 msgid "WP REST Cache"
 msgstr "WP REST Cache"
 
-#: inc/api/migrations.php:934
+#: inc/api/migrations.php:941
 msgid "Cache Control"
 msgstr "Control de Caché"
 
-#: inc/api/migrations.php:942
+#: inc/api/migrations.php:949
 msgid "Aruba HiSpeed Cache"
 msgstr "Aruba HiSpeed Cache"
 
-#: inc/api/migrations.php:948
+#: inc/api/migrations.php:955
 msgid "atec Cache APCu"
 msgstr "atec Cache APCu"
 
 #. translators: 1: detection method, 2: detection value
-#: inc/api/migrations.php:984
+#: inc/api/migrations.php:991
 #, php-format
 msgid "Detected via %1$s: %2$s"
 msgstr "Detectado vía %1$s: %2$s"
@@ -5324,6 +5384,7 @@ msgstr "El plugin"
 #: build/admin-onboarding/index.js:1
 #: build/admin-seo-bar/index.js:1
 #: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/search-console-widget/index.js:1
@@ -5402,10 +5463,6 @@ msgid "Error generating sitemap cache. Please try again."
 msgstr "Error al generar la caché del mapa del sitio. Por favor, inténtelo de nuevo."
 
 #: build/admin-dashboard/index.js:1
-msgid "Learn More about Google Search Console."
-msgstr "Aprenda más sobre Google Search Console."
-
-#: build/admin-dashboard/index.js:1
 msgid "Connect to Search Console - It’s Free"
 msgstr "Conéctese a Search Console - Es gratis"
 
@@ -5482,26 +5539,26 @@ msgid "SureRank SEO"
 msgstr "SureRank SEO"
 
 #. translators: %s: list of plugin slugs
-#: inc/api/migrations.php:114
-#: inc/api/migrations.php:171
+#: inc/api/migrations.php:118
+#: inc/api/migrations.php:175
 #, php-format
 msgid "Plugin slug to migrate from (e.g. %s)."
 msgstr "Etiqueta del plugin para migrar desde (p. ej., %s)."
 
 #. translators: %s: list of plugin slugs
-#: inc/api/migrations.php:147
+#: inc/api/migrations.php:151
 #, php-format
 msgid "Plugin slug to filter posts by (e.g. %s)."
 msgstr "Etiqueta del plugin para filtrar publicaciones por (p. ej., %s)."
 
 #. translators: %s: list of plugin slugs
-#: inc/api/migrations.php:205
+#: inc/api/migrations.php:209
 #, php-format
 msgid "Plugin slug to filter terms by (e.g. %s)."
 msgstr "Etiqueta del plugin para filtrar términos por (p. ej., %s)."
 
 #. translators: %s: list of plugin slugs
-#: inc/api/migrations.php:227
+#: inc/api/migrations.php:231
 #, php-format
 msgid "Plugin slug to migrate global settings from (e.g. %s)."
 msgstr "Etiqueta del plugin para migrar configuraciones globales desde (p. ej., %s)."
@@ -5563,6 +5620,7 @@ msgstr "Error al importar configuraciones globales de SEOPress: %s"
 #: build/admin-onboarding/index.js:1
 #: build/admin-seo-bar/index.js:1
 #: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/search-console-widget/index.js:1
@@ -5575,6 +5633,7 @@ msgstr "%1$d %2$s requiere atención."
 #: build/admin-onboarding/index.js:1
 #: build/admin-seo-bar/index.js:1
 #: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/search-console-widget/index.js:1
@@ -5686,6 +5745,8 @@ msgid "Open SureRank Meta Box"
 msgstr "Abrir Meta Box de SureRank"
 
 #: inc/analyzer/post-analyzer.php:408
+#: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
@@ -5693,6 +5754,8 @@ msgid "One or more images are missing alt text attributes."
 msgstr "Una o más imágenes no tienen atributos alt text."
 
 #: inc/analyzer/post-analyzer.php:411
+#: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
@@ -5700,6 +5763,8 @@ msgid "But don't worry, we will add them automatically for you."
 msgstr "Pero no te preocupes, las añadiremos automáticamente por ti."
 
 #: inc/analyzer/post-analyzer.php:414
+#: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
@@ -5765,110 +5830,110 @@ msgid "No URL found to analyze."
 msgstr "No se encontró una URL para analizar."
 
 #. translators: %s is the focus keyword.
-#: inc/analyzer/utils.php:403
+#: inc/analyzer/utils.php:408
 #: build/seo-popup/index.js:1
 #, php-format,js-format
 msgid "Focus keyword \"%s\" found in URL."
 msgstr "Se encontró la palabra clave \"%s\" en la URL."
 
 #. translators: %s is the focus keyword.
-#: inc/analyzer/utils.php:411
+#: inc/analyzer/utils.php:416
 #: build/seo-popup/index.js:1
 #, php-format,js-format
 msgid "Focus keyword \"%s\" not found in URL."
 msgstr "No se encontró la palabra clave \"%s\" en la URL."
 
-#: inc/analyzer/utils.php:427
+#: inc/analyzer/utils.php:432
 #: build/seo-popup/index.js:1
 msgid "No focus keyword set to analyze content."
 msgstr "No se ha establecido una palabra clave de enfoque para analizar el contenido."
 
-#: inc/analyzer/utils.php:435
+#: inc/analyzer/utils.php:440
 #: build/seo-popup/index.js:1
 msgid "No content found to analyze."
 msgstr "No se encontró contenido para analizar."
 
 #. translators: %s is the focus keyword.
-#: inc/analyzer/utils.php:449
+#: inc/analyzer/utils.php:454
 #: build/seo-popup/index.js:1
 #, php-format,js-format
 msgid "Focus keyword \"%s\" found in content."
 msgstr "Se encontró la palabra clave \"%s\" en el contenido."
 
 #. translators: %s is the focus keyword.
-#: inc/analyzer/utils.php:457
+#: inc/analyzer/utils.php:462
 #: build/seo-popup/index.js:1
 #, php-format,js-format
 msgid "Focus keyword \"%s\" not found in content."
 msgstr "No se encontró la palabra clave \"%s\" en el contenido."
 
-#: inc/google-search-console/site-verification.php:67
+#: inc/google-search-console/site-verification.php:68
 msgid "This site is already verified with Google."
 msgstr "Este sitio ya está verificado con Google."
 
-#: inc/google-search-console/site-verification.php:69
+#: inc/google-search-console/site-verification.php:70
 msgid "Invalid site URL format for verification. Please check the URL."
 msgstr "Formato de URL del sitio inválido para verificación. Por favor, verifica la URL."
 
-#: inc/google-search-console/site-verification.php:73
+#: inc/google-search-console/site-verification.php:75
 msgid "Authentication expired. Please disconnect and reconnect your Google account."
 msgstr "La autenticación ha expirado. Por favor, desconecta y vuelve a conectar tu cuenta de Google."
 
-#: inc/google-search-console/site-verification.php:76
+#: inc/google-search-console/site-verification.php:78
 msgid "Access denied. Please disconnect and reconnect your Google account with the necessary permissions."
 msgstr "Acceso denegado. Por favor, desconecta y vuelve a conectar tu cuenta de Google con los permisos necesarios."
 
-#: inc/google-search-console/site-verification.php:79
+#: inc/google-search-console/site-verification.php:81
 msgid "Verification resource not found. Please try again."
 msgstr "Recurso de verificación no encontrado. Por favor, intenta nuevamente."
 
-#: inc/google-search-console/site-verification.php:82
+#: inc/google-search-console/site-verification.php:84
 msgid "Site verification conflict. This site may already be verified by another user."
 msgstr "Conflicto en la verificación del sitio. Este sitio puede ya estar verificado por otro usuario."
 
-#: inc/google-search-console/site-verification.php:85
+#: inc/google-search-console/site-verification.php:87
 msgid "Too many verification requests. Please wait a moment and try again."
 msgstr "Demasiadas solicitudes de verificación. Por favor, espera un momento y vuelve a intentarlo."
 
-#: inc/google-search-console/site-verification.php:90
+#: inc/google-search-console/site-verification.php:92
 msgid "Google Site Verification service is temporarily unavailable. Please try again later."
 msgstr "El servicio de verificación de sitios de Google está temporalmente no disponible. Por favor, intenta más tarde."
 
 #. translators: %d: HTTP status code
-#: inc/google-search-console/site-verification.php:96
+#: inc/google-search-console/site-verification.php:98
 #, php-format
 msgid "Site verification error (Code: %d). Please try again."
 msgstr "Error en la verificación del sitio (Código: %d). Por favor, intenta nuevamente."
 
-#: inc/google-search-console/site-verification.php:143
+#: inc/google-search-console/site-verification.php:146
 msgid "No verification token received"
 msgstr "No se recibió ningún token de verificación"
 
-#: inc/google-search-console/site-verification.php:228
+#: inc/google-search-console/site-verification.php:231
 msgid "Site verification is pending. Google needs time to crawl and verify your site. This may take 1-2 hours or up to 2 days."
 msgstr "La verificación del sitio está pendiente. Google necesita tiempo para rastrear y verificar tu sitio. Esto puede tomar de 1 a 2 horas o hasta 2 días."
 
-#: inc/google-search-console/site-verification.php:239
+#: inc/google-search-console/site-verification.php:242
 msgid "Site verified successfully"
 msgstr "Sitio verificado con éxito"
 
-#: inc/google-search-console/site-verification.php:262
+#: inc/google-search-console/site-verification.php:265
 msgid "Site added successfully"
 msgstr "Sitio añadido con éxito"
 
-#: inc/google-search-console/site-verification.php:331
+#: inc/google-search-console/site-verification.php:334
 msgid "Property created successfully. Verification is pending and may take 1-2 hours or up to 2 days."
 msgstr "Propiedad creada con éxito. La verificación está pendiente y puede tardar de 1 a 2 horas o hasta 2 días."
 
-#: inc/google-search-console/site-verification.php:332
+#: inc/google-search-console/site-verification.php:335
 msgid "Verification is pending and may take 1-2 hours or up to 2 days."
 msgstr "La verificación está pendiente y puede tardar de 1 a 2 horas o hasta 2 días."
 
-#: inc/google-search-console/site-verification.php:342
+#: inc/google-search-console/site-verification.php:345
 msgid "Property created and verified successfully"
 msgstr "Propiedad creada y verificada con éxito"
 
-#: inc/google-search-console/site-verification.php:343
+#: inc/google-search-console/site-verification.php:346
 msgid "Property verified successfully"
 msgstr "Propiedad verificada con éxito"
 
@@ -5995,6 +6060,8 @@ msgstr "La verificación está pendiente y puede tardar de 1 a 2 horas o hasta 2
 msgid "The changes will take effect after a page refresh. Reloading in 2 seconds…"
 msgstr "Los cambios surtirán efecto después de actualizar la página. Recargando en 2 segundos…"
 
+#: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
@@ -6003,6 +6070,8 @@ msgid_plural "%s Issues Detected"
 msgstr[0] "%s Problema detectado"
 msgstr[1] ""
 
+#: build/bricks/index.js:1
+#: build/divi/index.js:1
 #: build/elementor/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
@@ -6039,83 +6108,83 @@ msgstr "ID de término proporcionado inválido"
 msgid "No authentication token found. Please connect your account."
 msgstr "No se encontró token de autenticación. Por favor, conecta tu cuenta."
 
-#: inc/third-party-integrations/angie.php:224
+#: inc/third-party-integrations/angie.php:226
 msgid "XML Sitemap turned on successfully."
 msgstr "Sitemap XML activado correctamente."
 
-#: inc/third-party-integrations/angie.php:225
+#: inc/third-party-integrations/angie.php:227
 msgid "XML Sitemap turned off successfully."
 msgstr "Sitemap XML desactivado correctamente."
 
-#: inc/third-party-integrations/angie.php:246
+#: inc/third-party-integrations/angie.php:248
 msgid "Missing required parameters: type, action and name are required."
 msgstr "Faltan parámetros requeridos: se requieren tipo, acción y nombre."
 
-#: inc/third-party-integrations/angie.php:257
+#: inc/third-party-integrations/angie.php:259
 msgid "Invalid type. Must be a valid post type or taxonomy."
 msgstr "Tipo inválido. Debe ser un tipo de publicación o taxonomía válido."
 
 #. translators: %s: object type
-#: inc/third-party-integrations/angie.php:275
+#: inc/third-party-integrations/angie.php:277
 #, php-format
 msgid "No %s found for the specified type."
 msgstr "No se encontró %s para el tipo especificado."
 
 #. translators: %1$s: action performed, %2$d: number of objects_ids updated, %3$s: type
-#: inc/third-party-integrations/angie.php:291
+#: inc/third-party-integrations/angie.php:293
 #, php-format
 msgid "Applied %1$s to %2$d %3$s."
 msgstr "Se aplicó %1$s a %2$d %3$s."
 
-#: inc/third-party-integrations/angie.php:595
+#: inc/third-party-integrations/angie.php:597
 msgid "noindex"
 msgstr "noindex"
 
-#: inc/third-party-integrations/angie.php:596
+#: inc/third-party-integrations/angie.php:598
 msgid "index"
 msgstr "index"
 
-#: inc/third-party-integrations/angie.php:597
+#: inc/third-party-integrations/angie.php:599
 msgid "nofollow"
 msgstr "nofollow"
 
-#: inc/third-party-integrations/angie.php:598
+#: inc/third-party-integrations/angie.php:600
 msgid "follow"
 msgstr "follow"
 
-#: inc/third-party-integrations/angie.php:599
+#: inc/third-party-integrations/angie.php:601
 msgid "noarchive"
 msgstr "noarchive"
 
-#: inc/third-party-integrations/angie.php:600
+#: inc/third-party-integrations/angie.php:602
 msgid "archive"
 msgstr "archive"
 
-#: inc/third-party-integrations/angie.php:318
+#: inc/third-party-integrations/angie.php:320
 msgid "Post is indexable"
 msgstr "La publicación es indexable"
 
-#: inc/third-party-integrations/angie.php:320
+#: inc/third-party-integrations/angie.php:322
 msgid "This post is set to noindex by SureRank settings from SEO popup."
 msgstr "Esta publicación está configurada como noindex por la configuración de SureRank desde la ventana emergente de SEO."
 
-#: inc/third-party-integrations/angie.php:328
+#: inc/third-party-integrations/angie.php:330
 msgid "This post is set to noindex by SureRank Global Robots Settings."
 msgstr "Esta publicación está configurada como noindex por la Configuración Global de Robots de SureRank."
 
-#: inc/third-party-integrations/angie.php:363
+#: inc/third-party-integrations/angie.php:365
 msgid "Title or meta description is empty."
 msgstr "El título o la descripción meta están vacíos."
 
-#: inc/third-party-integrations/angie.php:375
+#: inc/third-party-integrations/angie.php:377
 msgid "Title and meta description updated successfully."
 msgstr "El título y la descripción meta se actualizaron correctamente."
 
-#: inc/third-party-integrations/angie.php:392
+#: inc/third-party-integrations/angie.php:394
 msgid "No valid settings provided."
 msgstr "No se proporcionaron configuraciones válidas."
 
-#: inc/third-party-integrations/angie.php:400
+#: inc/third-party-integrations/angie.php:402
 msgid "Settings updated successfully."
 msgstr "Configuraciones actualizadas correctamente."
 
@@ -6378,20 +6447,8 @@ msgid "Click the button above to verify in Google Search Console and connect to 
 msgstr "Haga clic en el botón de arriba para verificar en Google Search Console y conectarse a SureRank."
 
 #: build/admin-dashboard/index.js:1
-msgid "Click the button above to create and connect a new Google Search Console property for this domain in your Google account."
-msgstr "Haga clic en el botón de arriba para crear y conectar una nueva propiedad de Google Search Console para este dominio en su cuenta de Google."
-
-#: build/admin-dashboard/index.js:1
 msgid "Select an existing site from your Google Search Console account."
 msgstr "Seleccione un sitio existente de su cuenta de Google Search Console."
-
-#: build/admin-dashboard/index.js:1
-msgid "Need to switch accounts?"
-msgstr "¿Necesita cambiar de cuenta?"
-
-#: build/admin-dashboard/index.js:1
-msgid "Prefer to link an existing property?"
-msgstr "¿Prefiere vincular una propiedad existente?"
 
 #: build/admin-dashboard/index.js:1
 msgid "Select site"
@@ -6898,6 +6955,7 @@ msgstr "Desbloquea información de SEO con Google Search Console"
 msgid "Connect Google Search Console to unlock search insights and track your growth."
 msgstr "Conecta Google Search Console para desbloquear información de búsqueda y seguir tu crecimiento."
 
+#: build/admin-dashboard/index.js:1
 #: build/search-console-widget/index.js:1
 msgid "Connect to Google Search Console"
 msgstr "Conectar con Google Search Console"
@@ -6987,11 +7045,6 @@ msgstr "Habilita esto para redirigir todas las páginas de adjuntos a su publica
 #: build/admin-onboarding/index.js:1
 msgid "Optimize Image SEO without AI"
 msgstr "Optimizar SEO de imágenes sin IA"
-
-#: build/admin-dashboard/index.js:1
-#: build/admin-onboarding/index.js:1
-msgid "Generate SEO-friendly image alt text automatically with SureRank AI to improve accessibility and boost your image search visibility."
-msgstr "Genera automáticamente texto alternativo amigable para SEO con SureRank AI para mejorar la accesibilidad y aumentar la visibilidad en búsquedas de imágenes."
 
 #: inc/api/analyzer.php:136
 #: inc/api/analyzer.php:170
@@ -7257,20 +7310,20 @@ msgstr "Enviando…"
 msgid "Link Manager"
 msgstr "Administrador de enlaces"
 
-#: inc/api/onboarding.php:318
+#: inc/api/onboarding.php:326
 msgid "Failed to encode request data"
 msgstr "Error al codificar los datos de la solicitud"
 
-#: inc/api/onboarding.php:337
-#: inc/api/onboarding.php:349
+#: inc/api/onboarding.php:345
+#: inc/api/onboarding.php:357
 msgid "Failed to improve description"
 msgstr "Error al mejorar la descripción"
 
-#: inc/api/onboarding.php:360
+#: inc/api/onboarding.php:368
 msgid "Description improved successfully"
 msgstr "Descripción mejorada con éxito"
 
-#: inc/api/onboarding.php:366
+#: inc/api/onboarding.php:374
 msgid "Invalid response from AI service"
 msgstr "Respuesta no válida del servicio de IA"
 
@@ -8130,11 +8183,6 @@ msgstr "Actualiza a SureRank Pro para notificar a motores de búsqueda como Bing
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
-msgid "Automatically adds alt text to images that are missing one, using the image filename or post title as the source."
-msgstr "Agrega automáticamente texto alternativo a las imágenes que carecen de uno, utilizando el nombre del archivo de la imagen o el título de la publicación como fuente."
-
-#: build/admin-dashboard/index.js:1
-#: build/admin-onboarding/index.js:1
 msgid "Choose how your content will appear when shared on X. This setting determines the card type-either a summary or a summary with a large image-used in the post preview."
 msgstr "Elige cómo aparecerá tu contenido cuando se comparta en X. Esta configuración determina el tipo de tarjeta, ya sea un resumen o un resumen con una imagen grande, que se utiliza en la vista previa de la publicación."
 
@@ -8277,10 +8325,6 @@ msgstr "Apellido"
 #: build/admin-onboarding/index.js:1
 msgid "Email Address"
 msgstr "Dirección de Correo Electrónico"
-
-#: build/admin-onboarding/index.js:1
-msgid "Get notified about SEO issues on your website. Plus help improve SureRank by sharing how you use the plugin. <a>View our Privacy Policy</a>"
-msgstr "Recibe notificaciones sobre problemas de SEO en tu sitio web. Además, ayuda a mejorar SureRank compartiendo cómo usas el plugin. <a>Ver nuestra Política de Privacidad</a>"
 
 #: build/admin-onboarding/index.js:1
 msgid "Form validation error!"
@@ -8833,7 +8877,7 @@ msgstr "Los usuarios de SureRank Pro tienen acceso a nuestro equipo de soporte, 
 
 #: inc/analyzer/seo-analyzer.php:990
 msgid "This site is using HTTPS."
-msgstr ""
+msgstr "Este sitio está utilizando HTTPS."
 
 #: inc/analyzer/seo-analyzer.php:991
 msgid "Your site is currently served over a secure HTTPS connection."
@@ -9404,10 +9448,6 @@ msgstr "También ayuda a asegurar que las páginas importantes no se pasen por a
 msgid "You can enable and manage your XML sitemap directly from SureRank."
 msgstr "Puedes habilitar y gestionar tu sitemap XML directamente desde SureRank."
 
-#: inc/api/analyzer.php:904
-msgid "Go to SureRank ⇾ Advanced ⇾ Sitemap"
-msgstr "Ve a SureRank ⇾ Avanzado ⇾ Sitemap"
-
 #: inc/api/analyzer.php:905
 msgid "Enable the XML Sitemap toggle"
 msgstr "Habilita el interruptor del Sitemap XML"
@@ -9470,3 +9510,163 @@ msgstr "Error al guardar la configuración"
 #: build/admin-onboarding/index.js:1
 msgid "SureRank Introduction Video"
 msgstr "Video de introducción a SureRank"
+
+#. translators: %d: post ID
+#: inc/importers/aioseo/aioseo.php:111
+#, php-format
+msgid "AIOSEO data detected for post %d."
+msgstr "Datos de AIOSEO detectados para la publicación %d."
+
+#. translators: %d: term ID
+#: inc/importers/aioseo/aioseo.php:163
+#: inc/importers/aioseo/aioseo.php:178
+#, php-format
+msgid "AIOSEO data detected for term %d."
+msgstr "Datos de AIOSEO detectados para el término %d."
+
+#. translators: %d: term ID
+#: inc/importers/aioseo/aioseo.php:190
+#, php-format
+msgid "No AIOSEO data found for term %d."
+msgstr "No se encontraron datos de AIOSEO para el término %d."
+
+#: inc/importers/aioseo/aioseo.php:283
+msgid "No AIOSEO global settings found to import."
+msgstr "No se encontraron configuraciones globales de AIOSEO para importar."
+
+#: inc/importers/aioseo/aioseo.php:304
+msgid "AIOSEO global settings imported successfully."
+msgstr "Configuraciones globales de AIOSEO importadas con éxito."
+
+#. translators: %s: error message
+#: inc/importers/aioseo/aioseo.php:311
+#, php-format
+msgid "Error importing AIOSEO global settings: %s"
+msgstr "Error al importar configuraciones globales de AIOSEO: %s"
+
+#. translators: 1: type (post/term), 2: ID
+#: inc/importers/aioseo/aioseo.php:503
+#, php-format
+msgid "Using default robots for %1$s %2$d."
+msgstr "Usando robots predeterminados para %1$s %2$d."
+
+#. translators: %d: post ID.
+#: inc/importers/slimseo/slim-seo.php:70
+#, php-format
+msgid "Slim SEO data detected for post %d."
+msgstr "Datos de Slim SEO detectados para la publicación %d."
+
+#. translators: %d: post ID.
+#: inc/importers/slimseo/slim-seo.php:82
+#, php-format
+msgid "No Slim SEO data found for post %d."
+msgstr "No se encontraron datos de Slim SEO para la publicación %d."
+
+#. translators: %d: term ID.
+#: inc/importers/slimseo/slim-seo.php:104
+#, php-format
+msgid "Slim SEO data detected for term %d."
+msgstr "Datos de Slim SEO detectados para el término %d."
+
+#. translators: %d: term ID.
+#: inc/importers/slimseo/slim-seo.php:116
+#, php-format
+msgid "No Slim SEO data found for term %d."
+msgstr "No se encontraron datos de Slim SEO para el término %d."
+
+#: inc/importers/slimseo/slim-seo.php:195
+msgid "No Slim SEO global settings found to import."
+msgstr "No se encontraron configuraciones globales de Slim SEO para importar."
+
+#: inc/importers/slimseo/slim-seo.php:212
+msgid "Slim SEO global settings imported successfully."
+msgstr "Configuraciones globales de Slim SEO importadas con éxito."
+
+#. translators: %s: error message.
+#: inc/importers/slimseo/slim-seo.php:219
+#, php-format
+msgid "Error importing Slim SEO global settings: %s"
+msgstr "Error al importar configuraciones globales de Slim SEO: %s"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Failed to save settings."
+msgstr "Error al guardar configuraciones."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Please try again."
+msgstr "Por favor, inténtalo de nuevo."
+
+#: build/admin-dashboard/index.js:1
+msgid "Monitor and manage all internal and external links across your website. Track link health, broken links, and anchor texts."
+msgstr "Monitorea y gestiona todos los enlaces internos y externos en tu sitio web. Rastrea la salud de los enlaces, enlaces rotos y textos ancla."
+
+#: build/admin-dashboard/index.js:1
+msgid "Track internal and external links for all pages"
+msgstr "Rastrear enlaces internos y externos para todas las páginas"
+
+#: build/admin-dashboard/index.js:1
+msgid "Monitor HTTP status codes and detect broken links"
+msgstr "Monitorea los códigos de estado HTTP y detecta enlaces rotos"
+
+#: build/admin-dashboard/index.js:1
+msgid "Analyze anchor text distribution and optimization"
+msgstr "Analiza la distribución y optimización del texto ancla"
+
+#: build/admin-dashboard/index.js:1
+msgid "Get detailed search insights, analytics reports, track performance, and smart suggestions to optimize your site."
+msgstr "Obtén información detallada de búsqueda, informes de análisis, seguimiento del rendimiento y sugerencias inteligentes para optimizar tu sitio."
+
+#: build/admin-dashboard/index.js:1
+msgid "Learn about Google Search Console."
+msgstr "Aprende sobre Google Search Console."
+
+#: build/admin-dashboard/index.js:1
+msgid "This domain is not linked with Google Search Console yet. Click the button above and we will take care of it."
+msgstr "Este dominio aún no está vinculado con Google Search Console. Haz clic en el botón de arriba y nos encargaremos de ello."
+
+#: build/admin-dashboard/index.js:1
+msgid "Sign in with a different Google account"
+msgstr "Iniciar sesión con otra cuenta de Google"
+
+#: build/admin-dashboard/index.js:1
+msgid "Link another Search Console property"
+msgstr "Vincular otra propiedad de Search Console"
+
+#: build/admin-dashboard/index.js:1
+#, js-format
+msgid "Compared with the previous %d-day period"
+msgstr "Comparado con el período anterior de %d días"
+
+#: build/admin-dashboard/index.js:1
+msgid "Loading feature image"
+msgstr "Cargando imagen destacada"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Automatically adds alt text to images that are missing one, using the image filename and post title as the source."
+msgstr "Agrega automáticamente texto alternativo a las imágenes que no tienen uno, utilizando el nombre del archivo de la imagen y el título de la publicación como fuente."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Generate SEO-friendly image alt text automatically to improve accessibility and boost image search visibility."
+msgstr "Genera automáticamente texto alternativo para imágenes amigable con SEO para mejorar la accesibilidad y aumentar la visibilidad en la búsqueda de imágenes."
+
+#: inc/api/analyzer.php:904
+msgid "Go to SureRank ⇾ General ⇾ Sitemaps"
+msgstr "Ir a SureRank ⇾ General ⇾ Sitemaps"
+
+#: inc/api/onboarding.php:188
+msgid "Whether the user opted into usage updates."
+msgstr "Si el usuario optó por recibir actualizaciones de uso."
+
+#: build/admin-dashboard/index.js:1
+msgid "Help shape the future of SureRank. Share how you use the plugin so we can build features that matter, fix issues faster, and make smarter decisions. "
+msgstr "Ayuda a dar forma al futuro de SureRank. Comparte cómo usas el complemento para que podamos construir funciones que importan, solucionar problemas más rápido y tomar decisiones más inteligentes."
+
+#: build/admin-onboarding/index.js:1
+msgid "Stay in the loop and help shape SureRank! Get feature updates, and help us build a better SureRank by sharing how you use the plugin. <a>Privacy Policy</a>"
+msgstr "¡Mantente informado y ayuda a dar forma a SureRank! Recibe actualizaciones de funciones y ayúdanos a construir un mejor SureRank compartiendo cómo usas el complemento. <a>Política de Privacidad</a>"

@@ -38,7 +38,7 @@ const websiteTypes = [
 ];
 
 const WebsiteDetails = () => {
-	const [ { pages = [], websiteDetails = {} }, dispatch ] =
+	const [ { pages = [], websiteDetails = {}, userDetails = {} }, dispatch ] =
 		useOnboardingState();
 
 	const organizationOptions = Object.values(
@@ -85,6 +85,7 @@ const WebsiteDetails = () => {
 	// Sync formState and dispatch websiteDetails
 	useEffect( () => {
 		const details = surerank_admin_common?.website_details;
+		const leadDetails = details?.website_lead_details || {};
 		const data = {
 			website_type:
 				websiteDetails?.website_type ||
@@ -116,8 +117,17 @@ const WebsiteDetails = () => {
 				'',
 		};
 
+		const userData = {
+			first_name:
+				userDetails?.first_name || leadDetails?.first_name || '',
+			last_name:
+				userDetails?.last_name || leadDetails?.last_name || '',
+			email: userDetails?.email || leadDetails?.email || '',
+		};
+
 		dispatch( {
 			websiteDetails: data,
+			userDetails: userData,
 		} );
 
 		setFormState( data );

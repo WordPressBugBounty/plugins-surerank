@@ -5,7 +5,7 @@ Tags: seo, wordpress seo, xml sitemap, schema, google search console
 Requires at least: 6.8
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.6.6
+Stable tag: 1.7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -294,6 +294,18 @@ Brainstorm Force
 
 
 == Changelog ==
+= 1.7.0 - 10-April-2026 =
+* New: Migration - Ability to migrate from the All in One SEO (AIOSEO) plugin to SureRank.
+* New: Migration - Ability to migrate from the Slim SEO plugin to SureRank.
+* New: Compatibility - Added support for Divi 5 builder with SEO Metabox.
+* New: Compatibility - Added support for Bricks builder with SEO Checks and Link suggestion.
+* New: Settings - Added a settings screen to collect information for knowledge base and local business.
+* Improvement: Performance - Improved overall plugin performance.
+* Improvement: Focus Keyword - Improved keyword matching with diacritics-insensitive and flexible phrase handling.
+* Improvement: Site SEO Checks - Updated the Site Analysis content.
+* Improvement: Settings - Moved Sitemaps settings from Advanced to General settings.
+* Improvement: Sidebar - Sidebar submenu accordions now auto-expand and collapse based on the active route, and also support manual toggling.
+* Fix: Fixed an issue where the Product schema priceValidUntil field was not set to full width.
 = 1.6.6 - 18-March-2026 =
 * New: Migration - Ability to migrate from the Squirrly SEO plugin to SureRank.
 * Improvement: Onboarding - UI/UX improvements.
