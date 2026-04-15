@@ -372,6 +372,7 @@ class Divi {
 			[],
 			$asset_info['version']
 		);
+		wp_style_add_data( 'surerank-divi', 'rtl', 'replace' );
 		wp_enqueue_script( 'surerank-divi' );
 	}
 }

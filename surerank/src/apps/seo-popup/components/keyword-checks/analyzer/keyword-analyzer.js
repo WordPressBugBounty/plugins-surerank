@@ -26,7 +26,10 @@ const normalizeText = ( text ) => {
 	// then we strip all combining diacritical marks.
 	return text
 		.normalize( 'NFD' )
-		.replace( /[\u0300-\u036f\u1AB0-\u1AFF\u1DC0-\u1DFF\u20D0-\u20FF\uFE20-\uFE2F]/g, '' )
+		.replace(
+			/[\u0300-\u036f\u1AB0-\u1AFF\u1DC0-\u1DFF\u20D0-\u20FF\uFE20-\uFE2F]/g,
+			''
+		)
 		.toLowerCase();
 };
 
@@ -51,18 +54,35 @@ const keywordMatchesFlexible = ( text, keyword ) => {
 	const normalizedKeyword = normalizeText( keyword );
 
 	// Direct match after diacritics normalization (whole word only).
-	const escapedNormalized = normalizedKeyword.replace( /[.*+?^${}()|[\]\\]/g, '\\$&' );
-	if ( new RegExp( `\\b${ escapedNormalized }\\b`, 'iu' ).test( normalizedText ) ) {
+	const escapedNormalized = normalizedKeyword.replace(
+		/[.*+?^${}()|[\]\\]/g,
+		'\\$&'
+	);
+	if (
+		new RegExp( `\\b${ escapedNormalized }\\b`, 'iu' ).test(
+			normalizedText
+		)
+	) {
 		return true;
 	}
 
-	const keywordWords = normalizedKeyword.trim().split( /\s+/ ).filter( Boolean );
+	const keywordWords = normalizedKeyword
+		.trim()
+		.split( /\s+/ )
+		.filter( Boolean );
 
 	if ( keywordWords.length > 1 ) {
 		// Compound word matching: "house keeper" keyword matches "housekeeper" in text.
 		const keywordNoSpaces = keywordWords.join( '' );
-		const escapedCompound = keywordNoSpaces.replace( /[.*+?^${}()|[\]\\]/g, '\\$&' );
-		if ( new RegExp( `\\b${ escapedCompound }\\b`, 'iu' ).test( normalizedText ) ) {
+		const escapedCompound = keywordNoSpaces.replace(
+			/[.*+?^${}()|[\]\\]/g,
+			'\\$&'
+		);
+		if (
+			new RegExp( `\\b${ escapedCompound }\\b`, 'iu' ).test(
+				normalizedText
+			)
+		) {
 			return true;
 		}
 
@@ -71,7 +91,8 @@ const keywordMatchesFlexible = ( text, keyword ) => {
 		const escapedWords = keywordWords.map( ( w ) =>
 			w.replace( /[.*+?^${}()|[\]\\]/g, '\\$&' )
 		);
-		const pattern = '\\b' + escapedWords.join( '\\s+(?:\\S+\\s+){0,1}' ) + '\\b';
+		const pattern =
+			'\\b' + escapedWords.join( '\\s+(?:\\S+\\s+){0,1}' ) + '\\b';
 		if ( new RegExp( pattern, 'iu' ).test( normalizedText ) ) {
 			return true;
 		}
@@ -99,7 +120,10 @@ export const checkKeywordInTitle = ( title, keyword ) => {
 		} );
 	}
 
-	if ( keywordExistsInText( title, keyword ) || keywordMatchesFlexible( title, keyword ) ) {
+	if (
+		keywordExistsInText( title, keyword ) ||
+		keywordMatchesFlexible( title, keyword )
+	) {
 		return createCheck( {
 			id: 'keyword_in_title',
 			title: sprintf(
@@ -146,7 +170,10 @@ export const checkKeywordInDescription = ( description, keyword ) => {
 		} );
 	}
 
-	if ( keywordExistsInText( description, keyword ) || keywordMatchesFlexible( description, keyword ) ) {
+	if (
+		keywordExistsInText( description, keyword ) ||
+		keywordMatchesFlexible( description, keyword )
+	) {
 		return createCheck( {
 			id: 'keyword_in_description',
 			title: sprintf(
@@ -255,7 +282,10 @@ export const checkKeywordInContent = ( content, keyword ) => {
 		.replace( /\s+/g, ' ' )
 		.trim();
 
-	if ( keywordExistsInText( cleanContent, keyword ) || keywordMatchesFlexible( cleanContent, keyword ) ) {
+	if (
+		keywordExistsInText( cleanContent, keyword ) ||
+		keywordMatchesFlexible( cleanContent, keyword )
+	) {
 		return createCheck( {
 			id: 'keyword_in_content',
 			title: sprintf(

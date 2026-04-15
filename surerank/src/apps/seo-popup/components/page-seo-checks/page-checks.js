@@ -94,7 +94,7 @@ const PageChecks = ( {
 							<Loader size="sm" />
 							<Text size={ 14 } weight={ 500 } color="tertiary">
 								{ sprintf(
-									/* translators: %1$d: number of links */
+									/* translators: 1: number of completed checks, 2: total number of checks */
 									__(
 										'%1$d out of %2$d checks are done.',
 										'surerank'

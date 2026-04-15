@@ -847,7 +847,7 @@ export const getStatusIndicatorClasses = ( status ) => {
 export const getStatusIndicatorAriaLabel = ( errorAndWarnings ) => {
 	if ( errorAndWarnings > 0 ) {
 		return sprintf(
-			/* translators: %1$d: number of errors and warnings */
+			/* translators: 1: number of errors and warnings, 2: singular or plural "issue"/"issues" */
 			__( '%1$d %2$s need attention.', 'surerank' ),
 			errorAndWarnings,
 			_n( 'issue', 'issues', errorAndWarnings, 'surerank' )

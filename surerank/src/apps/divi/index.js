@@ -166,10 +166,7 @@ const setupDiviIntegration = () => {
 		const btn = document.createElement( 'button' );
 		btn.className = 'et-vb-page-bar-button';
 		btn.type = 'button';
-		btn.setAttribute(
-			'aria-label',
-			__( 'Open SureRank SEO', 'surerank' )
-		);
+		btn.setAttribute( 'aria-label', __( 'Open SureRank SEO', 'surerank' ) );
 		btn.tabIndex = 0;
 
 		// Wrapper with relative positioning for the status indicator
@@ -191,9 +188,7 @@ const setupDiviIntegration = () => {
 
 		// Function to update the status indicator
 		const updateStatusIndicator = () => {
-			const existing = wrap.querySelector(
-				'.surerank-status-indicator'
-			);
+			const existing = wrap.querySelector( '.surerank-status-indicator' );
 			if ( existing ) {
 				existing.remove();
 			}
@@ -230,10 +225,7 @@ const setupDiviIntegration = () => {
 
 		// Add tooltip to the button and store cleanup function
 		const { counts } = getPageCheckStatus();
-		tooltipCleanup = createSureRankTooltip(
-			btn,
-			getTooltipText( counts )
-		);
+		tooltipCleanup = createSureRankTooltip( btn, getTooltipText( counts ) );
 	};
 
 	// Try injecting immediately

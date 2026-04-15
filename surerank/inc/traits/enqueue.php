@@ -365,6 +365,7 @@ trait Enqueue {
 					[],
 					$version
 				);
+				wp_style_add_data( $this->enqueue_prefix . '-' . $name, 'rtl', 'replace' );
 			}
 		}
 	}

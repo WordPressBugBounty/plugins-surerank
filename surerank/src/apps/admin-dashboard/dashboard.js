@@ -110,7 +110,7 @@ const Dashboard = () => {
 			<div>
 				<p>{ errorMessage }</p>
 				<p>
-					{ __( 'Error code: ', 'surerank' ) }
+					{ __( 'Error code:', 'surerank' ) }
 					{ errorCode }
 				</p>
 				<a

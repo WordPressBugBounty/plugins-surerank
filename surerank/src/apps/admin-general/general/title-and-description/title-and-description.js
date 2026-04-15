@@ -27,7 +27,7 @@ import { UpgradeNotice } from '@/global/components/nudges';
 export const get_tooltip_content = () => {
 	return (
 		<>
-			<strong>{ __( 'Site Name: ', 'surerank' ) }</strong>{ ' ' }
+			<strong>{ __( 'Site Name:', 'surerank' ) }</strong>{ ' ' }
 			<span>
 				{ __(
 					'The site name used in meta titles and descriptions is taken from the WordPress General Settings, where it is defined under "Site Title."',

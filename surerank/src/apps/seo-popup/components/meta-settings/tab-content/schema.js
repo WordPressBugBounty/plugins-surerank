@@ -411,10 +411,7 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 							{ /* Label + tooltip + delete button */ }
 							<div className="flex items-center justify-between gap-1.5 w-full">
 								<div className="flex items-center gap-1.5">
-									<Label
-										tag="span"
-										size="sm"
-									>
+									<Label tag="span" size="sm">
 										{ field.label }
 									</Label>
 									{ field.tooltip && (
@@ -434,7 +431,10 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 								{ canDelete && (
 									<DeleteFieldButton
 										onDelete={ () =>
-											handleDeleteField( schemaId, field.id )
+											handleDeleteField(
+												schemaId,
+												field.id
+											)
 										}
 									/>
 								) }
@@ -446,27 +446,23 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 					);
 				} ) }
 
-				{ applyFilters(
-					'surerank.schema.properties.extensions',
-					null,
-					{
-						schemaId,
-						schemaType: schemas[ schemaId ]?.type || schemaTitle,
-						schema: schemaTitle,
-						metaSettings: { schemas },
-						currentSchema: schemas[ schemaId ] || {},
-						setMetaSetting: ( key, value ) => {
-							if ( key === 'schemas' ) {
-								updatePostMetaData( { schemas: value } );
-							}
-						},
-						variableSuggestions,
-						getFieldValue: ( fieldId ) =>
-							getFieldValue( schemaId, fieldId ),
-						onFieldChange: ( fieldId, newValue ) =>
-							onFieldChange( schemaId, fieldId, newValue ),
-					}
-				) }
+				{ applyFilters( 'surerank.schema.properties.extensions', null, {
+					schemaId,
+					schemaType: schemas[ schemaId ]?.type || schemaTitle,
+					schema: schemaTitle,
+					metaSettings: { schemas },
+					currentSchema: schemas[ schemaId ] || {},
+					setMetaSetting: ( key, value ) => {
+						if ( key === 'schemas' ) {
+							updatePostMetaData( { schemas: value } );
+						}
+					},
+					variableSuggestions,
+					getFieldValue: ( fieldId ) =>
+						getFieldValue( schemaId, fieldId ),
+					onFieldChange: ( fieldId, newValue ) =>
+						onFieldChange( schemaId, fieldId, newValue ),
+				} ) }
 
 				<AddFieldMenu
 					availableFields={ availableFields }

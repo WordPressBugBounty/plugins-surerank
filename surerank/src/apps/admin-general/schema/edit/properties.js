@@ -345,9 +345,7 @@ const Properties = ( { schema, type, handleFieldUpdate, schemaId } ) => {
 							key={ field.id }
 							className={ cn(
 								'space-y-1.5 p-2',
-								widthToTailwindClass(
-									field.width || 'full'
-								)
+								widthToTailwindClass( field.width || 'full' )
 							) }
 						>
 							{ /* Label row */ }
@@ -376,7 +374,9 @@ const Properties = ( { schema, type, handleFieldUpdate, schemaId } ) => {
 								</div>
 								{ canDeleteField( field ) && (
 									<DeleteFieldButton
-										onDelete={ () => deleteField( field.id ) }
+										onDelete={ () =>
+											deleteField( field.id )
+										}
 									/>
 								) }
 							</div>
@@ -389,21 +389,17 @@ const Properties = ( { schema, type, handleFieldUpdate, schemaId } ) => {
 				</div>
 			) ) }
 
-			{ applyFilters(
-				'surerank.schema.properties.extensions',
-				null,
-				{
-					schemaId,
-					schemaType,
-					schema,
-					metaSettings,
-					currentSchema: metaSettings.schemas[ schemaId ] || {},
-					setMetaSetting,
-					variableSuggestions,
-					getFieldValue,
-					onFieldChange,
-				}
-			) }
+			{ applyFilters( 'surerank.schema.properties.extensions', null, {
+				schemaId,
+				schemaType,
+				schema,
+				metaSettings,
+				currentSchema: metaSettings.schemas[ schemaId ] || {},
+				setMetaSetting,
+				variableSuggestions,
+				getFieldValue,
+				onFieldChange,
+			} ) }
 
 			<AddFieldMenu
 				availableFields={ availableFields }

@@ -31,3 +31,13 @@
 body:has( #surerank-admin-dashboard ) {
 	@apply bg-background-secondary;
 }
+
+/* Lexical auto-detects paragraph direction and sets dir="ltr" on <p> when
+   Latin characters are typed, breaking RTL layouts. `direction: inherit`
+   makes each paragraph follow the parent body/html direction instead.
+   Using `inherit` (not `rtl`) because rtlcss only swaps literal ltr/rtl
+   values — `inherit` passes through both style.css and style-rtl.css
+   unchanged, which is exactly what we need. */
+.editor-content > p {
+	direction: inherit;
+}

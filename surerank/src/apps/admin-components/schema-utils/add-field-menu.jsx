@@ -94,7 +94,10 @@ export const AddFieldMenu = ( {
 					/>
 					<Select.Options className="z-[99999]">
 						{ fieldOptions.map( ( option ) => (
-							<Select.Option key={ option.value } value={ option.value }>
+							<Select.Option
+								key={ option.value }
+								value={ option.value }
+							>
 								{ option.label }
 							</Select.Option>
 						) ) }

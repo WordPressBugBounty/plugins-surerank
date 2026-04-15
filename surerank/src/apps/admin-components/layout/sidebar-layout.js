@@ -224,13 +224,8 @@ const SubmenuAccordion = ( { label, icon: Icon, submenu } ) => {
 							label: subLabel,
 							icon: SubIcon,
 						} ) => (
-							<NavLink
-								key={ submenuPath }
-								path={ submenuPath }
-							>
-								{ SubIcon && (
-									<SubIcon className="size-4" />
-								) }
+							<NavLink key={ submenuPath } path={ submenuPath }>
+								{ SubIcon && <SubIcon className="size-4" /> }
 								{ subLabel }
 							</NavLink>
 						)
@@ -475,7 +470,7 @@ const SidebarLayout = ( {
 				<Topbar
 					className="relative z-[2] h-16 w-full max-w-full min-h-[unset] p-0 shadow-sm"
 					gap={ 0 }
-					>
+				>
 					<Topbar.Left className="shrink-0 p-2 lg:p-5">
 						<Topbar.Item className="flex md:hidden">
 							<HamburgerMenu className="lg:hidden">
@@ -487,10 +482,10 @@ const SidebarLayout = ( {
 											to={ option.path }
 											tag={ Link }
 											active={ option.active }
-											>
+										>
 											{ option.label }
 										</HamburgerMenu.Option>
-										) ) }
+									) ) }
 								</HamburgerMenu.Options>
 							</HamburgerMenu>
 						</Topbar.Item>
@@ -501,101 +496,94 @@ const SidebarLayout = ( {
 					<Topbar.Middle
 						align="left"
 						className="h-full min-w-0 overflow-hidden"
-						>
+					>
 						<Topbar.Item className="hidden h-full min-w-0 gap-4 overflow-x-auto md:flex">
 							{ topNavbarLinks.map(
-									( { path, label, active } ) => (
-										<Link
-											key={ path }
-											to={ path }
-											className={ cn(
-												'relative content-center no-underline h-full py-0 px-3 m-0 bg-transparent outline-none shadow-none border-0 focus:outline-none text-text-secondary text-sm font-medium cursor-pointer whitespace-nowrap',
-												active && 'text-text-primary'
-											) }
-										>
-											{ label }
-											{ active && (
-												<span className="absolute bottom-0 left-0 w-full h-px bg-brand-800" />
-											) }
-										</Link>
-									)
-								) }
+								( { path, label, active } ) => (
+									<Link
+										key={ path }
+										to={ path }
+										className={ cn(
+											'relative content-center no-underline h-full py-0 px-3 m-0 bg-transparent outline-none shadow-none border-0 focus:outline-none text-text-secondary text-sm font-medium cursor-pointer whitespace-nowrap',
+											active && 'text-text-primary'
+										) }
+									>
+										{ label }
+										{ active && (
+											<span className="absolute bottom-0 left-0 w-full h-px bg-brand-800" />
+										) }
+									</Link>
+								)
+							) }
 						</Topbar.Item>
 						{ ! isProActive() && (
-						<Topbar.Item>
-							<UpgradeButton
-								label={ __( 'Upgrade', 'surerank' ) }
-								variant="link"
-								size="md"
-								iconPosition="right"
-								showUnderLine={ true }
-								utmMedium="dashboard"
-								utmContent="topbar_upgrade"
-								className="hidden" // TODO: Remove this class to enable the button
-									/>
-						</Topbar.Item>
-							) }
+							<Topbar.Item>
+								<UpgradeButton
+									label={ __( 'Upgrade', 'surerank' ) }
+									variant="link"
+									size="md"
+									iconPosition="right"
+									showUnderLine={ true }
+									utmMedium="dashboard"
+									utmContent="topbar_upgrade"
+									className="hidden" // TODO: Remove this class to enable the button
+								/>
+							</Topbar.Item>
+						) }
 					</Topbar.Middle>
 					<Topbar.Right className="min-w-0 shrink p-2 lg:p-5">
 						<Topbar.Item className="hidden xl:flex">
 							<GlobalSearch
 								navLinks={ filteredNavLinksForStaticHome }
-								/>
+							/>
 						</Topbar.Item>
 						<Topbar.Item className="hidden space-x-1 lg:flex lg:space-x-3">
 							<VersionBadge />
 						</Topbar.Item>
 						<Topbar.Item className="hidden md:flex">
-							{ currentUserCan(
-									'surerank_global_setting'
-								) && (
-									<Suspense
-										fallback={
-											<Skeleton className="w-20 h-6" />
-										}
-									>
-										<SiteSeoAnalysisBadge />
-									</Suspense>
-								) }
+							{ currentUserCan( 'surerank_global_setting' ) && (
+								<Suspense
+									fallback={
+										<Skeleton className="w-20 h-6" />
+									}
+								>
+									<SiteSeoAnalysisBadge />
+								</Suspense>
+							) }
 						</Topbar.Item>
 						<Topbar.Item className="hidden lg:flex">
 							<Tooltip
-								content={ __(
-										'Knowledge Base',
-										'surerank'
-									) }
+								content={ __( 'Knowledge Base', 'surerank' ) }
 								placement="bottom"
 								arrow
 								className="z-[99999]"
-								>
+							>
 								<Button
 									size="sm"
 									tag="a"
 									variant="link"
 									className="text-text-primary focus:[box-shadow:none]"
-									href={
-											surerank_globals?.help_link ?? '#'
-										}
+									href={ surerank_globals?.help_link ?? '#' }
 									target="_blank"
 									rel="noreferrer noopener"
 									aria-label={ __(
-											'Knowledge Base',
-											'surerank'
-										) }
+										'Knowledge Base',
+										'surerank'
+									) }
 									icon={
 										<BookOpenText
 											className="size-4 m-1"
 											strokeWidth="1.5"
-											/>
-										}
-									/>
+										/>
+									}
+								/>
 							</Tooltip>
 						</Topbar.Item>
 						<Topbar.Item className="hidden md:flex">
 							<div
 								id="surerank_whats_new"
 								className="[&>a]:p-0.5 [&>a]:pl-0"
-								></div>
+							></div>
 						</Topbar.Item>
 					</Topbar.Right>
 				</Topbar>

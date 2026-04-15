@@ -14,3 +14,11 @@ html.wp-toolbar,
 #wpwrap:has( #surerank-root ) {
 	@apply bg-background-secondary;
 }
+
+input[type="email"],
+input[type="url"],
+input[type="tel"],
+input[type="number"] {
+	@apply text-left;
+	direction: ltr;
+}

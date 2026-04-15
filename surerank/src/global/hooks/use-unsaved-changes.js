@@ -30,13 +30,18 @@ const useUnsavedChanges = ( {
 	currentSettings,
 	enableNavigationBlock = false,
 	enableBeforeUnload = false,
-	blockMessage = __( 'You have unsaved changes. Are you sure you want to leave?', 'surerank' ),
+	blockMessage = __(
+		'You have unsaved changes. Are you sure you want to leave?',
+		'surerank'
+	),
 	isUpdating = false,
 } ) => {
 	// Store initial settings when the hook first runs
 	const initialSettingsRef = useRef( null );
 	if ( initialSettingsRef.current === null && currentSettings ) {
-		initialSettingsRef.current = JSON.parse( JSON.stringify( currentSettings ) );
+		initialSettingsRef.current = JSON.parse(
+			JSON.stringify( currentSettings )
+		);
 	}
 
 	// Keep a ref to the latest currentSettings so resetInitialSettings always has access to fresh value
@@ -53,14 +58,19 @@ const useUnsavedChanges = ( {
 		}
 
 		// Deep comparison using JSON.stringify for nested objects
-		return JSON.stringify( initialSettingsRef.current ) !== JSON.stringify( currentSettings );
+		return (
+			JSON.stringify( initialSettingsRef.current ) !==
+			JSON.stringify( currentSettings )
+		);
 	}, [ currentSettings, resetCounter ] );
 
 	// Reset initial settings (call after successful save)
 	// Uses ref to always get the latest currentSettings value
 	const resetInitialSettings = useCallback( () => {
 		if ( currentSettingsRef.current ) {
-			initialSettingsRef.current = JSON.parse( JSON.stringify( currentSettingsRef.current ) );
+			initialSettingsRef.current = JSON.parse(
+				JSON.stringify( currentSettingsRef.current )
+			);
 			// Trigger re-computation of hasUnsavedChanges
 			setResetCounter( ( n ) => n + 1 );
 		}
@@ -91,14 +101,20 @@ const useUnsavedChanges = ( {
 	}, [ isUpdating, hasUnsavedChanges ] );
 
 	// Generate className for save button
-	const getSaveButtonClassName = useCallback( ( additionalClasses = '' ) => {
-		const disabledClasses = isUpdating || ! hasUnsavedChanges
-			? 'bg-background-brand cursor-not-allowed pointer-events-none'
-			: '';
-        const opacity = ! hasUnsavedChanges ? 'opacity-60' : '';
+	const getSaveButtonClassName = useCallback(
+		( additionalClasses = '' ) => {
+			const disabledClasses =
+				isUpdating || ! hasUnsavedChanges
+					? 'bg-background-brand cursor-not-allowed pointer-events-none'
+					: '';
+			const opacity = ! hasUnsavedChanges ? 'opacity-60' : '';
 
-		return [ disabledClasses, opacity, additionalClasses ].filter( Boolean ).join( ' ' );
-	}, [ isUpdating, hasUnsavedChanges ] );
+			return [ disabledClasses, opacity, additionalClasses ]
+				.filter( Boolean )
+				.join( ' ' );
+		},
+		[ isUpdating, hasUnsavedChanges ]
+	);
 
 	return {
 		hasUnsavedChanges,

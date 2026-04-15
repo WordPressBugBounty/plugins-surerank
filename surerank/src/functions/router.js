@@ -225,10 +225,7 @@ export const createRoute = (
 	options = {}
 ) => {
 	// Handle - if capability is not allowed, return undefined
-	if (
-		options?.capability &&
-		! currentUserCan( options?.capability )
-	) {
+	if ( options?.capability && ! currentUserCan( options?.capability ) ) {
 		return;
 	}
 	// Handle - if third param is array, treat as children example : Advanced Settings
@@ -258,12 +255,14 @@ export const createRoute = (
  * @param {Object}    options   - Optional options
  * @return {Object|undefined} Child route configuration object
  */
-export const createChildRoute = ( path, component, children = null, options = {} ) => {
+export const createChildRoute = (
+	path,
+	component,
+	children = null,
+	options = {}
+) => {
 	// Handle - if capability is not allowed, return undefined
-	if (
-		options?.capability &&
-		! currentUserCan( options?.capability )
-	) {
+	if ( options?.capability && ! currentUserCan( options?.capability ) ) {
 		return;
 	}
 	// Handle - if third param is array, treat as children
@@ -360,8 +359,8 @@ export const filterNavLinksByRoutes = ( navLinks, routePaths ) => {
 
 				// Recursively filter submenu items
 				if ( link.submenu?.length ) {
-					const filteredSubmenu = link.submenu.filter( ( submenuItem ) =>
-						routePaths.has( submenuItem.path )
+					const filteredSubmenu = link.submenu.filter(
+						( submenuItem ) => routePaths.has( submenuItem.path )
 					);
 
 					// Only include the link if it has submenu items after filtering

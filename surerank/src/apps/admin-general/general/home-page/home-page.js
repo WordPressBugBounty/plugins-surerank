@@ -56,7 +56,7 @@ const HomePage = () => {
 		const labelWithLink = canEditPages ? (
 			<>
 				{ __(
-					'A static page is set as the home page of your website under WordPress Dashboard > Settings > Reading. ',
+					'A static page is set as the home page of your website under WordPress Dashboard > Settings > Reading.',
 					'surerank'
 				) }
 				<a
@@ -68,7 +68,7 @@ const HomePage = () => {
 					{ __( 'Edit the home page', 'surerank' ) }
 				</a>
 				{ __(
-					' to set its search engine and social settings.',
+					'to set its search engine and social settings.',
 					'surerank'
 				) }
 			</>

@@ -195,7 +195,7 @@ const MigrateToSureRank = () => {
 				{ !! ( ACTIVE_MIGRATED_PLUGINS.length && alreadyMigrated ) && (
 					<Alert
 						color="info"
-						title={ __( 'Migration Completed ', 'surerank' ) }
+						title={ __( 'Migration Completed', 'surerank' ) }
 						message={ __(
 							'Your SEO settings have been successfully migrated to SureRank. However, we noticed your previous SEO plugin is still active. Would you like us to deactivate it to avoid conflicts?',
 							'surerank'

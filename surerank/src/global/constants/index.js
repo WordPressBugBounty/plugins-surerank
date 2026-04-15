@@ -56,7 +56,7 @@ export const getSearchEnginePreviewInfoText = () => (
 			'surerank'
 		) }
 		<div className="mt-2">
-			<strong>{ __( 'Site Icon: ', 'surerank' ) }</strong>
+			<strong>{ __( 'Site Icon:', 'surerank' ) }</strong>
 			<span>
 				{ __(
 					'The site icon (favicon) appears in browser tabs, bookmarks, and mobile devices. To update it, go to General Settings → Site Icon and upload a new image under Site Identity.',

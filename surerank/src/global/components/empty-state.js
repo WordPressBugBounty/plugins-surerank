@@ -14,36 +14,47 @@ import { cn } from '@Functions/utils';
 const EmptyState = ( { message = '', title = '', icon = null, className } ) => {
 	if ( title && icon && message ) {
 		return (
-			<div className={ cn( 'p-2 rounded-lg bg-background-secondary', className ) }>
+			<div
+				className={ cn(
+					'p-2 rounded-lg bg-background-secondary',
+					className
+				) }
+			>
 				<div className="flex flex-col items-center text-center gap-2 p-4 bg-background-primary shadow-sm rounded-md">
 					{ icon }
 					<div className="space-y-1">
 						{ title && (
-							<Text as="h5" size={ 18 } weight={ 600 } color="primary">
+							<Text
+								as="h5"
+								size={ 18 }
+								weight={ 600 }
+								color="primary"
+							>
 								{ title }
 							</Text>
 						) }
 						<Text size={ 14 } weight={ 400 } color="secondary">
-							{ message ||
-									__( 'No data available', 'surerank' ) }
+							{ message || __( 'No data available', 'surerank' ) }
 						</Text>
 					</div>
 				</div>
 			</div>
 		);
 	}
-	return <Container
-		align="center"
-		justify="center"
-		className={ cn(
-			'p-8 bg-background-primary border border-solid border-border-subtle rounded-lg',
-			className
-		) }
-	>
-		<Text size={ 14 } weight={ 400 } color="secondary">
-			{ message || __( 'No data available', 'surerank' ) }
-		</Text>
-	</Container>;
+	return (
+		<Container
+			align="center"
+			justify="center"
+			className={ cn(
+				'p-8 bg-background-primary border border-solid border-border-subtle rounded-lg',
+				className
+			) }
+		>
+			<Text size={ 14 } weight={ 400 } color="secondary">
+				{ message || __( 'No data available', 'surerank' ) }
+			</Text>
+		</Container>
+	);
 };
 
 export default EmptyState;

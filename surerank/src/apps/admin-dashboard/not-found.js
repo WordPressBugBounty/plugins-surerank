@@ -19,7 +19,7 @@ const NotFound = () => {
 					</Text>
 					<Text size={ 14 } weight={ 400 } color="secondary">
 						{ __(
-							"Either the page does not exist or you don't have permission to access this page please contact your administrator. ",
+							"Either the page does not exist or you don't have permission to access this page please contact your administrator.",
 							'surerank'
 						) }
 					</Text>

@@ -250,12 +250,11 @@ const Analyze = () => {
 					</Accordion.Trigger>
 					<Accordion.Content>
 						<div className="pt-3">
-							{ ENABLE_PAGE_LEVEL_SEO &&
-								! isAvadaBuilder() && (
-									<div className="flex items-center gap-2 mb-3">
-										<KeywordInput />
-									</div>
-								) }
+							{ ENABLE_PAGE_LEVEL_SEO && ! isAvadaBuilder() && (
+								<div className="flex items-center gap-2 mb-3">
+									<KeywordInput />
+								</div>
+							) }
 							<ChecksComponent type="keyword" />
 						</div>
 					</Accordion.Content>

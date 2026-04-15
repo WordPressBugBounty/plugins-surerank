@@ -58,40 +58,40 @@ export const handleRefreshWithBrokenLinks = async () => {
 
 // Function to get page check status using WordPress data
 export const getPageCheckStatus = () => {
-    try {
-        const storeSelectors = select( STORE_NAME );
-        if (
-            ! storeSelectors ||
-            typeof storeSelectors.getPageSeoChecks !== 'function'
-        ) {
-            return {
-                status: null,
-                initializing: true,
-                counts: { errorAndWarnings: 0, error: 0, warning: 0 },
-            };
-        }
+	try {
+		const storeSelectors = select( STORE_NAME );
+		if (
+			! storeSelectors ||
+			typeof storeSelectors.getPageSeoChecks !== 'function'
+		) {
+			return {
+				status: null,
+				initializing: true,
+				counts: { errorAndWarnings: 0, error: 0, warning: 0 },
+			};
+		}
 
-        // Trigger ignored list retrieval
-        const pageSeoChecks = storeSelectors.getPageSeoChecks() || {};
-        const { categorizedChecks = {}, initializing = true } = pageSeoChecks;
+		// Trigger ignored list retrieval
+		const pageSeoChecks = storeSelectors.getPageSeoChecks() || {};
+		const { categorizedChecks = {}, initializing = true } = pageSeoChecks;
 
-        const { status, counts } = calculateCheckStatus( categorizedChecks );
+		const { status, counts } = calculateCheckStatus( categorizedChecks );
 
-        if ( initializing ) {
-            dispatch( STORE_NAME ).setPageSeoCheck( 'initializing', false );
-        }
+		if ( initializing ) {
+			dispatch( STORE_NAME ).setPageSeoCheck( 'initializing', false );
+		}
 
-        return {
-            status,
-            initializing,
-            counts,
-        };
-    } catch ( error ) {
-        // Return safe defaults if store is not available
-        return {
-            status: null,
-            initializing: false,
-            counts: { errorAndWarnings: 0, error: 0, warning: 0 },
-        };
-    }
+		return {
+			status,
+			initializing,
+			counts,
+		};
+	} catch ( error ) {
+		// Return safe defaults if store is not available
+		return {
+			status: null,
+			initializing: false,
+			counts: { errorAndWarnings: 0, error: 0, warning: 0 },
+		};
+	}
 };

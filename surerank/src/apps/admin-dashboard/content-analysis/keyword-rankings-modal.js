@@ -281,9 +281,14 @@ const KeywordRankingsModal = ( { open, setOpen, url, startDate, endDate } ) => {
 										<Table.Cell className="w-[20%]">
 											<div className="flex items-center gap-1">
 												<Text size={ 14 }>
-													{ item.position.toFixed( 1 ) }
+													{ item.position.toFixed(
+														1
+													) }
 												</Text>
-												{ getChangeIcon( item, 'position' ) }
+												{ getChangeIcon(
+													item,
+													'position'
+												) }
 											</div>
 										</Table.Cell>
 										<Table.Cell className="w-[20%]">
@@ -293,15 +298,23 @@ const KeywordRankingsModal = ( { open, setOpen, url, startDate, endDate } ) => {
 														item.impressions
 													) }
 												</Text>
-												{ getChangeIcon( item, 'impressions' ) }
+												{ getChangeIcon(
+													item,
+													'impressions'
+												) }
 											</div>
 										</Table.Cell>
 										<Table.Cell className="w-[20%]">
 											<div className="flex items-center gap-1">
 												<Text size={ 14 }>
-													{ formatNumber( item.clicks ) }
+													{ formatNumber(
+														item.clicks
+													) }
 												</Text>
-												{ getChangeIcon( item, 'clicks' ) }
+												{ getChangeIcon(
+													item,
+													'clicks'
+												) }
 											</div>
 										</Table.Cell>
 									</Table.Row>
@@ -313,10 +326,18 @@ const KeywordRankingsModal = ( { open, setOpen, url, startDate, endDate } ) => {
 										pages={ pagination.pages }
 										currentPage={ currentPage }
 										totalPages={ totalPages }
-										isPreviousDisabled={ pagination.isPreviousDisabled }
-										isNextDisabled={ pagination.isNextDisabled }
-										handlePageChange={ pagination.handlePageChange }
-										goToPreviousPage={ pagination.goToPreviousPage }
+										isPreviousDisabled={
+											pagination.isPreviousDisabled
+										}
+										isNextDisabled={
+											pagination.isNextDisabled
+										}
+										handlePageChange={
+											pagination.handlePageChange
+										}
+										goToPreviousPage={
+											pagination.goToPreviousPage
+										}
 										goToNextPage={ pagination.goToNextPage }
 									/>
 								</Table.Footer>

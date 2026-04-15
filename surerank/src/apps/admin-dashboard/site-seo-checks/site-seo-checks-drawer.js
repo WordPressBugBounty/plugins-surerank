@@ -270,7 +270,9 @@ const SiteSeoChecksDrawer = () => {
 						selectedItem={ selectedItem }
 						showBack={ showBack }
 						onBackClick={ handleBack }
-						{ ...( selectedItem?.heading && { title: selectedItem.heading } ) }
+						{ ...( selectedItem?.heading && {
+							title: selectedItem.heading,
+						} ) }
 					/>
 				</Drawer.Header>
 				<Drawer.Body className="overflow-x-hidden space-y-3">

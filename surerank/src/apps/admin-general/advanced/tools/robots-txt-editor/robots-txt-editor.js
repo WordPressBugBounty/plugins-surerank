@@ -50,7 +50,7 @@ const RobotsTxtEditorSettings = () => {
 				<>
 					<b>{ __( 'Warning:', 'surerank' ) }</b>{ ' ' }
 					{ __(
-						"Your site's search engine visibility is currently set to Hidden in ",
+						"Your site's search engine visibility is currently set to Hidden in",
 						'surerank'
 					) }
 					<a
@@ -73,7 +73,7 @@ const RobotsTxtEditorSettings = () => {
 			<div
 				dangerouslySetInnerHTML={ {
 					__html: sprintf(
-						/* translators: %s: robots.txt */
+						/* translators: 1: robots.txt link, 2: external tool link */
 						__(
 							'Open %1$s on your website. If you want to verify the contents of robots.txt, click %2$s',
 							'surerank'

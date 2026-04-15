@@ -70,7 +70,9 @@ const SiteSeoChecksFixButton = ( { selectedItem, ...additionalProps } ) => {
 				size="sm"
 				icon={ <ArrowUpRight /> }
 				iconPosition="right"
-				onClick={ () => redirectToPricingPage( 'site_analysis_get_pro' ) }
+				onClick={ () =>
+					redirectToPricingPage( 'site_analysis_get_pro' )
+				}
 			>
 				{ __( 'Get Pro', 'surerank' ) }
 			</Button>

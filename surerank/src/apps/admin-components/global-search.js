@@ -264,8 +264,12 @@ const GlobalSearch = ( { navLinks = [] } ) => {
 			// Check if main item matches - only if we haven't added it already due to custom components
 			if (
 				! itemAdded &&
-				( extractTextFromReactNode( item.label ).toLowerCase().includes( searchTerm ) ||
-					extractTextFromReactNode( item.section ).toLowerCase().includes( searchTerm ) )
+				( extractTextFromReactNode( item.label )
+					.toLowerCase()
+					.includes( searchTerm ) ||
+					extractTextFromReactNode( item.section )
+						.toLowerCase()
+						.includes( searchTerm ) )
 			) {
 				acc.push( item );
 			}

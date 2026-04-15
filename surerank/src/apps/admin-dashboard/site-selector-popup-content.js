@@ -53,10 +53,7 @@ const TEXTS = {
 		'Sign in with a different Google account',
 		'surerank'
 	),
-	LINK_EXISTING: __(
-		'Link another Search Console property',
-		'surerank'
-	),
+	LINK_EXISTING: __( 'Link another Search Console property', 'surerank' ),
 	BACK: __( 'Back', 'surerank' ),
 	SELECT_SITE: __( 'Select a site', 'surerank' ),
 	CONNECT_SITE: __( 'Select site', 'surerank' ),
@@ -86,7 +83,7 @@ const TEXTS = {
 		'surerank'
 	),
 	PENDING_DESC: __(
-		'Verification is pending and may take 1-2 hours or up to 2 days. Your site has been added to Search Console. Reloading in 2 seconds…',
+		'Verification is pending and may take 1–2 hours or up to 2 days. Your site has been added to Search Console. Reloading in 2 seconds…',
 		'surerank'
 	),
 };
@@ -182,7 +179,9 @@ const ConnectSiteButton = ( { setForceSelectMode } ) => {
 			} );
 
 			if ( ! response.success ) {
-				const error = new Error( response.message ?? TEXTS.FAILED_REQUEST );
+				const error = new Error(
+					response.message ?? TEXTS.FAILED_REQUEST
+				);
 				error.errorType = response.error_type;
 				throw error;
 			}
@@ -291,7 +290,9 @@ const ConnectSiteButton = ( { setForceSelectMode } ) => {
 			variant="primary"
 			size="sm"
 			onClick={ handleCreateProperty }
-			className={ isCreatingProperty ? 'pointer-events-none opacity-80' : '' }
+			className={
+				isCreatingProperty ? 'pointer-events-none opacity-80' : ''
+			}
 			aria-disabled={ isCreatingProperty || undefined }
 			icon={ isCreatingProperty && <Loader variant="secondary" /> }
 			iconPosition="left"
@@ -390,7 +391,9 @@ export const ConnectMode = ( { setForceSelectMode } ) => {
 				{ /* Main Action */ }
 				<div className="space-y-4">
 					<Suspense fallback={ <Skeleton className="h-12 w-full" /> }>
-						<ConnectSiteButton setForceSelectMode={ setForceSelectMode } />
+						<ConnectSiteButton
+							setForceSelectMode={ setForceSelectMode }
+						/>
 					</Suspense>
 
 					{ /* Help Text - only show when action is needed */ }

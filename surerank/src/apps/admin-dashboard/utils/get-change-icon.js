@@ -20,9 +20,7 @@ export const getChangeIcon = ( item, key ) => {
 				<ArrowUp className="size-3.5 text-support-success shrink-0" />
 			);
 		}
-		return (
-			<ArrowDown className="size-3.5 text-support-error shrink-0" />
-		);
+		return <ArrowDown className="size-3.5 text-support-error shrink-0" />;
 	}
 	return null;
 };

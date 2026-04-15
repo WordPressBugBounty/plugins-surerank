@@ -52,11 +52,7 @@ const EmptyState = () => {
 					) }
 				</Label>
 			</Container.Item>
-			<Button
-				variant="primary"
-				size="default"
-				onClick={ handleConnect }
-			>
+			<Button variant="primary" size="default" onClick={ handleConnect }>
 				{ __( 'Connect to Google Search Console', 'surerank' ) }
 			</Button>
 		</Container>

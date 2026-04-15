@@ -131,8 +131,11 @@ export const refreshPageChecks = async (
 			method: 'GET',
 		} );
 
-		const checks = formatSeoChecks( response?.data[ dynamicPostId ]?.checks );
-		const allLinks = response.data[ dynamicPostId ]?.checks?.all_links || [];
+		const checks = formatSeoChecks(
+			response?.data[ dynamicPostId ]?.checks
+		);
+		const allLinks =
+			response.data[ dynamicPostId ]?.checks?.all_links || [];
 
 		// Reset brokenLinkState, keeping only broken links that still exist
 		setBrokenLinkState( ( prev ) => {

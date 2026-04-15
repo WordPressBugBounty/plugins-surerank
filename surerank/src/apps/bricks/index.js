@@ -1,9 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
-import {
-	cn,
-	getStatusIndicatorClasses,
-} from '@/functions/utils';
+import { cn, getStatusIndicatorClasses } from '@/functions/utils';
 import { getTooltipText } from '@/apps/seo-popup/utils/page-checks-status-tooltip-text';
 import { ENABLE_PAGE_LEVEL_SEO } from '@/global/constants';
 import {
@@ -21,7 +18,6 @@ import {
 
 // eslint-disable-next-line wrap-iife
 ( function ( $ ) {
-
 	const createStatusIndicator = () => {
 		const { status } = getPageCheckStatus();
 
@@ -55,7 +51,6 @@ import {
 		}
 	};
 
-
 	/**
 	 * Get balloon text for the Bricks button. Relies on page-checks util.
 	 *
@@ -84,10 +79,11 @@ import {
 				return;
 			}
 
-			const button = $( `<li class="surerank-root" id="surerank-bricks-toolbar-button" aria-label="${ __(
-				'Open SureRank SEO',
-				'surerank'
-			) }" data-balloon-pos="bottom" data-balloon="${ getBalloonText() }" tabindex="0" class="relative">
+			const button =
+				$( `<li class="surerank-root" id="surerank-bricks-toolbar-button" aria-label="${ __(
+					'Open SureRank SEO',
+					'surerank'
+				) }" data-balloon-pos="bottom" data-balloon="${ getBalloonText() }" tabindex="0" class="relative">
 							<span class="bricks-svg-wrapper">${ sureRankLogoForBuilder(
 								'surerank'
 							) }</span>
@@ -110,7 +106,8 @@ import {
 
 			// Trigger page checks refresh on load, but only once post variables are ready.
 			unsubscribeRefresh = wp?.data?.subscribe?.( () => {
-				const postId = select( STORE_NAME )?.getVariables()?.post?.ID?.value;
+				const postId =
+					select( STORE_NAME )?.getVariables()?.post?.ID?.value;
 				if ( postId ) {
 					handleRefreshWithBrokenLinks();
 					unsubscribeRefresh?.();

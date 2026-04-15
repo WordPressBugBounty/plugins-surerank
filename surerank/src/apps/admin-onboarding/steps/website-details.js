@@ -1,7 +1,13 @@
 import { __ } from '@wordpress/i18n';
 import { renderField } from '../utils';
 import StepNavButtons from '../components/nav-buttons';
-import { Fragment, useState, useEffect, useMemo, useRef } from '@wordpress/element';
+import {
+	Fragment,
+	useState,
+	useEffect,
+	useMemo,
+	useRef,
+} from '@wordpress/element';
 import { useOnboardingState } from '@Onboarding/store';
 import { Title, Label } from '@bsf/force-ui';
 import { InfoTooltip } from '@AdminComponents/tooltip';
@@ -120,8 +126,7 @@ const WebsiteDetails = () => {
 		const userData = {
 			first_name:
 				userDetails?.first_name || leadDetails?.first_name || '',
-			last_name:
-				userDetails?.last_name || leadDetails?.last_name || '',
+			last_name: userDetails?.last_name || leadDetails?.last_name || '',
 			email: userDetails?.email || leadDetails?.email || '',
 		};
 

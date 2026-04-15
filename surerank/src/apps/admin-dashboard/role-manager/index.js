@@ -16,10 +16,7 @@ const RoleManager = () => {
 			) }
 		>
 			<UpgradeNotice
-				title={ __(
-					'Unlock Role Manager',
-					'surerank'
-				) }
+				title={ __( 'Unlock Role Manager', 'surerank' ) }
 				description={ __(
 					'Upgrade to SureRank Pro and manage user roles and their access to SureRank features.',
 					'surerank'

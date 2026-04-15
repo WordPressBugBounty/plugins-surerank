@@ -70,7 +70,7 @@ const UpgradeBanner = () => {
 					className="inline"
 				>
 					{ __(
-						' and unlock the full power of SureRank!',
+						'and unlock the full power of SureRank!',
 						'surerank'
 					) }
 				</Text>

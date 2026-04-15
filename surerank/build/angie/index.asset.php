@@ -1,1 +1,1 @@
-<?php return array('dependencies' => array('wp-i18n'), 'version' => '38a66bdf31c1a8efcc92');
+<?php return array('dependencies' => array('wp-i18n'), 'version' => 'ba30e2896e9a942481d1', 'handle' => 'undefined-angie/index');

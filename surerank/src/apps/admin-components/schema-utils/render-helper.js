@@ -58,11 +58,7 @@ const createDefaultItem = ( fields ) => {
 
 const renderFieldLabel = ( field ) => (
 	<div className="flex items-center justify-start gap-1.5 w-full">
-		<Label
-			tag="span"
-			size="sm"
-			className="space-x-0.5"
-		>
+		<Label tag="span" size="sm" className="space-x-0.5">
 			{ field.label }
 		</Label>
 		{ field.tooltip && (
@@ -419,7 +415,9 @@ export const renderCloneableGroupField = ( {
 																)
 															) }
 														>
-															{ renderFieldLabel( nestedField ) }
+															{ renderFieldLabel(
+																nestedField
+															) }
 															<div className="flex items-center justify-start gap-1.5 w-full">
 																{ renderFieldCommon(
 																	{

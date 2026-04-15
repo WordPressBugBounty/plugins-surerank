@@ -128,7 +128,9 @@ const AIAuthScreen = ( {
 					<Button
 						variant="primary"
 						onClick={ handleGetStarted }
-						className={ `[&>span]:flex [&>span]:items-center [&>span]:justify-center [&>span]:gap-2 ${ buttonConfig.className || '' }` }
+						className={ `[&>span]:flex [&>span]:items-center [&>span]:justify-center [&>span]:gap-2 ${
+							buttonConfig.className || ''
+						}` }
 						icon={
 							loading && <Loader size="sm" variant="secondary" />
 						}

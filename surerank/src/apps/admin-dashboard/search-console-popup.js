@@ -20,7 +20,7 @@ const SearchConsolePopup = ( { isOpen = true } ) => {
 						className="w-48 sm:w-56 md:w-64 h-auto mb-4"
 					/>
 
-					<div className="flex flex-col text-left space-y-1">
+					<div className="flex flex-col text-start space-y-1">
 						<Text size={ 18 } weight={ 600 } lineHeight={ 28 }>
 							{ __(
 								'Connect to Google Search Console',
@@ -69,12 +69,7 @@ const SearchConsolePopup = ( { isOpen = true } ) => {
 								'w-full',
 								auth_url === '' && 'cursor-not-allowed'
 							) }
-							onClick={ () =>
-								window.open(
-									auth_url,
-									'_self'
-								)
-							}
+							onClick={ () => window.open( auth_url, '_self' ) }
 							disabled={ auth_url === '' }
 						>
 							{ __(

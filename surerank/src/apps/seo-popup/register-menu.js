@@ -276,10 +276,12 @@ const SpectraPageSettingsPopup = () => {
 
 			{ /* Post-Publish Panel Message - Gutenberg only */ }
 			{ isNotPageBuilder && ! initializing && (
-				<PluginPostPublishPanel title={ null } initialOpen={ true } className="surerank-root">
-					<div
-						className="flex gap-4 flex-col"
-					>
+				<PluginPostPublishPanel
+					title={ null }
+					initialOpen={ true }
+					className="surerank-root"
+				>
+					<div className="flex gap-4 flex-col">
 						<div className="flex items-center gap-2">
 							<h3 className="m-0 text-sm font-semibold">
 								{ __( 'Manage your SEO', 'surerank' ) }

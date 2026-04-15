@@ -10,8 +10,5 @@ export default function currentUserCan( capability ) {
 	if ( ! surerank_admin_common?.roles_capabilities ) {
 		return true;
 	}
-	return surerank_admin_common?.roles_capabilities?.includes(
-		capability
-	);
+	return surerank_admin_common?.roles_capabilities?.includes( capability );
 }
-

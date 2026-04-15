@@ -32,4 +32,3 @@ const GoogleIndexingSettings = () => {
 };
 
 export default GoogleIndexingSettings;
-

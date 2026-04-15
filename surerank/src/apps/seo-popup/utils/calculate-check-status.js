@@ -23,8 +23,7 @@ export const calculateCheckStatus = ( categorizedChecks = {} ) => {
 
 	// Calculate counts
 	const counts = {
-		errorAndWarnings:
-			badChecks.length + fairChecks.length,
+		errorAndWarnings: badChecks.length + fairChecks.length,
 		success: passedChecks.length,
 		error: badChecks.length,
 		warning: fairChecks.length,

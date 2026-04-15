@@ -13,7 +13,10 @@ import {
 	sureRankLogoForBuilder,
 } from '@SeoPopup/utils/page-builder-functions';
 import { ENABLE_PAGE_LEVEL_SEO } from '@/global/constants';
-import { getPageCheckStatus, handleRefreshWithBrokenLinks } from './page-checks';
+import {
+	getPageCheckStatus,
+	handleRefreshWithBrokenLinks,
+} from './page-checks';
 
 /* global jQuery */
 

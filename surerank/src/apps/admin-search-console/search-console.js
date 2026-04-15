@@ -46,7 +46,13 @@ const SearchConsole = () => {
 
 			{ openSiteSelectorModal && isSiteSelected && <SiteSelectorPopup /> }
 
-			<div className={ cn( 'relative h-full', shouldShowOverlay && "after:content-[''] after:fixed after:block after:w-full after:h-full after:inset-0 after:bg-black/40 after:backdrop-blur-[5px] after:z-0" ) }>
+			<div
+				className={ cn(
+					'relative h-full',
+					shouldShowOverlay &&
+						"after:content-[''] after:fixed after:block after:w-full after:h-full after:inset-0 after:bg-black/40 after:backdrop-blur-[5px] after:z-0"
+				) }
+			>
 				<Container
 					className="h-full p-5 pb-8 xl:p-8 max-[1920px]:max-w-full mx-auto box-content bg-background-secondary"
 					cols={ 12 }

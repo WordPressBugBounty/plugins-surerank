@@ -100,10 +100,7 @@ export const useRunSeoChecks = ( options = {} ) => {
 
 	// Auto-trigger checks if pending action exists
 	useEffect( () => {
-		if (
-			runningChecks ||
-			! currentUserCan( 'surerank_global_setting' )
-		) {
+		if ( runningChecks || ! currentUserCan( 'surerank_global_setting' ) ) {
 			return;
 		}
 

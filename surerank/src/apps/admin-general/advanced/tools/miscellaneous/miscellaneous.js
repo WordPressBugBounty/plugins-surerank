@@ -26,7 +26,7 @@ export const PAGE_CONTENT = [
 							<span>
 								<span>
 									{ __(
-										'Help shape the future of SureRank. Share how you use the plugin so we can build features that matter, fix issues faster, and make smarter decisions. ',
+										'Help shape the future of SureRank. Share how you use the plugin so we can build features that matter, fix issues faster, and make smarter decisions.',
 										'surerank'
 									) }
 								</span>

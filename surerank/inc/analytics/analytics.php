@@ -8,16 +8,14 @@
 namespace SureRank\Inc\Analytics;
 
 use SureRank\Inc\Functions\Defaults;
-use SureRank\Inc\Functions\Get;
-use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\GoogleSearchConsole\Controller;
-use SureRank\Inc\Modules\EmailReports\Utils as EmailReportsUtil;
 use SureRank\Inc\Traits\Get_Instance;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
 /**
  * Analytics class.
  *
@@ -99,9 +97,14 @@ class Analytics {
 
 		add_filter( 'bsf_core_stats', [ $this, 'add_surerank_analytics_data' ] );
 
+		// Plugin version change detection — must run before throttle gate so updates are never missed between daily checks.
+		$stored_version = get_option( 'surerank_tracked_version', '' );
+		if ( ! empty( $stored_version ) && SURERANK_VERSION !== $stored_version ) {
+			delete_transient( 'surerank_state_events_checked' );
+		}
+
 		// State-based events — throttled to once per day.
-		// Transient is set inside detect_state_events() only after confirming
-		// BSF_Analytics_Events class is loaded, so it retries on next load if not ready.
+		// Transient is set inside detect_state_events() only after confirming BSF_Analytics_Events class is loaded, so it retries on next load if not ready.
 		if ( false === get_transient( 'surerank_state_events_checked' ) ) {
 			$this->detect_state_events();
 		}
@@ -131,39 +134,17 @@ class Analytics {
 	 * @return array<string, mixed>
 	 */
 	public function add_surerank_analytics_data( $stats_data ) {
-		$settings    = Settings::get();
-		$pro_enabled = defined( 'SURERANK_PRO_VERSION' );
+		$events = self::events();
 
-		$other_stats = [
-			'site_language'                            => get_locale(),
-			'gsc_connected'                            => $this->get_gsc_connected(),
-			'plugin_version'                           => SURERANK_VERSION,
-			'php_version'                              => phpversion(),
-			'wordpress_version'                        => get_bloginfo( 'version' ),
-			'is_active'                                => $this->is_active(),
-			'enable_xml_sitemap'                       => $settings['enable_xml_sitemap'] ?? true,
-			'enable_xml_image_sitemap'                 => $settings['enable_xml_image_sitemap'] ?? true,
-			'enable_xml_news_sitemap'                  => $pro_enabled ? $settings['enable_xml_news_sitemap'] ?? false : false,
-			'robots_custom_rules'                      => $this->has_custom_robots_rules(),
-			'author_archive'                           => $settings['author_archive'] ?? true,
-			'date_archive'                             => $settings['date_archive'] ?? true,
-			'cron_available'                           => Helper::are_crons_available(),
-			'redirect_attachment_pages_to_post_parent' => $settings['redirect_attachment_pages_to_post_parent'] ?? true,
-			'auto_set_image_alt'                       => $settings['auto_set_image_alt'] ?? true,
-			'email_reports_enabled'                    => $this->is_email_reports_enabled(),
-			'site_type'                                => $this->get_site_type(),
-			'failed_seo_checks_count'                  => $this->get_failed_seo_checks_count(),
-			'kpi_records'                              => $this->get_kpi_tracking_data(),
-			'events_record'                            => null !== self::events() ? self::events()->flush_pending() : [],
-		];
+		$stats_data['plugin_data']['surerank'] = [
+			'plugin_version' => SURERANK_VERSION,
+			'site_language'  => get_locale(),
 
-		$stats = array_merge(
-			$other_stats,
-			$this->get_enabled_features()
-		);
+			// One-time events (flushed from pending queue).
+			'events_record'  => $events ? $events->flush_pending() : [],
 
-		$stats_data['plugin_data'] = [
-			'surerank' => $stats,
+			// Daily KPIs (last 2 days).
+			'kpi_records'    => $this->get_kpi_tracking_data(),
 		];
 
 		return $stats_data;
@@ -224,13 +205,32 @@ class Analytics {
 
 		$events = self::events();
 		if ( null === $events ) {
-			// BSF_Analytics_Events class not loaded yet — do NOT set transient,
-			// so this retries on the next admin page load.
+			// BSF_Analytics_Events class not loaded yet — do NOT set transient, so this retries on the next admin page load.
 			return;
 		}
 
 		// Class is available — set throttle transient so we don't re-run for 24h.
 		set_transient( 'surerank_state_events_checked', 1, DAY_IN_SECONDS );
+
+		// One-time dedup flush so corrected events re-fire with proper values.
+		$fix_key = 'surerank_events_value_fix_v1';
+		if ( ! get_option( $fix_key, false ) ) {
+			$events->flush_pushed(
+				[
+					'onboarding_completed',
+					'onboarding_skipped',
+					'pro_license_activated',
+					'gsc_connected',
+					'migration_completed',
+					'first_ai_content_generated',
+					'first_schema_added',
+					'first_redirect_created',
+					'first_bulk_action_used',
+					'first_link_scan_completed',
+				]
+			);
+			update_option( $fix_key, true );
+		}
 
 		// Plugin activated.
 		$bsf_referrers = get_option( 'bsf_product_referers', [] );
@@ -255,18 +255,23 @@ class Analytics {
 			update_option( 'surerank_tracked_version', SURERANK_VERSION );
 		}
 
-		// Onboarding completed: detect completed or skipped state.
+		// Onboarding: track skip and completion as separate events.
 		$settings           = Settings::get();
 		$website_type       = $settings['website_type'] ?? [];
 		$onboarding_done    = ! empty( $website_type );
-		$onboarding_skipped = get_option( 'surerank_onboarding_skipped', false ) && ! $onboarding_done;
+		$onboarding_skipped = (bool) get_option( 'surerank_onboarding_skipped', false );
 
-		if ( $onboarding_done || $onboarding_skipped ) {
+		if ( $onboarding_skipped ) {
+			$events->track( 'onboarding_skipped', 'yes' );
+		}
+
+		if ( $onboarding_done ) {
+			$events->flush_pushed( [ 'onboarding_completed' ] );
 			$events->track(
 				'onboarding_completed',
-				'',
+				'completed',
 				[
-					'skipped' => (string) (int) $onboarding_skipped,
+					'previously_skipped' => (string) (int) $onboarding_skipped,
 				]
 			);
 		}
@@ -289,12 +294,12 @@ class Analytics {
 
 		// Google Search Console connected.
 		if ( $this->get_gsc_connected() ) {
-			$events->track( 'gsc_connected' );
+			$events->track( 'gsc_connected', 'yes' );
 		}
 
 		// Pro license activated.
-		if ( defined( 'SURERANK_PRO_VERSION' ) ) {
-			$events->track( 'pro_license_activated' );
+		if ( defined( 'SURERANK_PRO_VERSION' ) && 'licensed' === get_option( 'surerank_pro_license_status', 'unlicensed' ) ) {
+			$events->track( 'pro_license_activated', 'licensed' );
 		}
 
 		// Migration completed (check for migration option).
@@ -302,7 +307,7 @@ class Analytics {
 		if ( ! empty( $migration_done ) ) {
 			$events->track(
 				'migration_completed',
-				'',
+				sanitize_text_field( $migration_done ),
 				[
 					'source' => sanitize_text_field( $migration_done ),
 				]
@@ -313,111 +318,70 @@ class Analytics {
 		if ( defined( 'SURERANK_PRO_VERSION' ) ) {
 			$ai_used = get_option( 'surerank_ai_content_used', false );
 			if ( $ai_used ) {
-				$events->track( 'first_ai_content_generated' );
+				$events->track( 'first_ai_content_generated', 'yes' );
 			}
 		}
 
-		// First schema added.
-		$schemas_enabled = $settings['enable_schemas'] ?? false;
-		if ( $schemas_enabled ) {
-			$events->track( 'first_schema_added' );
+		// First schema added (site-wide or page-specific).
+		if ( $this->has_schema_usage() ) {
+			$events->track( 'first_schema_added', 'yes' );
 		}
 
 		// First redirect created (Pro feature).
-		if ( defined( 'SURERANK_PRO_VERSION' ) ) {
+		if ( defined( 'SURERANK_PRO_VERSION' ) && 'licensed' === get_option( 'surerank_pro_license_status', 'unlicensed' ) ) {
 			$redirect_count = $this->get_redirect_count();
 			if ( $redirect_count > 0 ) {
-				$events->track( 'first_redirect_created' );
+				$events->track( 'first_redirect_created', 'yes' );
 			}
 		}
 
 		// First bulk action used.
 		$bulk_used = get_option( 'surerank_bulk_action_used', false );
 		if ( $bulk_used ) {
-			$events->track( 'first_bulk_action_used' );
-		}
-
-		// First link scan completed (Pro feature).
-		if ( defined( 'SURERANK_PRO_VERSION' ) ) {
-			$scan_done = get_option( 'surerank_link_scan_completed', false );
-			if ( $scan_done ) {
-				$events->track( 'first_link_scan_completed' );
-			}
+			$events->track( 'first_bulk_action_used', 'yes' );
 		}
 	}
 
 	/**
-	 * Check if custom robots rules have been configured.
+	 * Check if schemas are actually in use (site-wide or page-specific).
+	 *
+	 * Checks for explicitly saved global schema settings or any
+	 * page-specific schemas added via Dashboard > Advanced > Schema.
 	 *
 	 * @return bool
-	 * @since 1.7.0
+	 * @since 1.7.1
 	 */
-	private function has_custom_robots_rules() {
-		$robots_data = Helper::get_robots_data();
-		return ! empty( $robots_data ) && is_array( $robots_data );
-	}
-
-	/**
-	 * Check if email reports are enabled.
-	 *
-	 * @return bool
-	 * @since 1.7.0
-	 */
-	private function is_email_reports_enabled() {
-		$email_settings = EmailReportsUtil::get_instance()->get_settings();
-		return ! empty( $email_settings['enabled'] );
-	}
-
-	/**
-	 * Get count of failed site SEO checks.
-	 *
-	 * @return int
-	 * @since 1.7.0
-	 */
-	private function get_failed_seo_checks_count() {
-		$failed_checks = Get::option( 'surerank_site_seo_checks', [] );
-		$count         = 0;
-		foreach ( $failed_checks as $check ) {
-			foreach ( $check as $value ) {
-				if ( isset( $value['status'] ) && 'error' === $value['status'] ) {
-					++$count;
-				}
-			}
+	private function has_schema_usage() {
+		// Check if global schemas have been explicitly saved in settings.
+		$raw_settings = get_option( SURERANK_SETTINGS, [] );
+		if ( is_array( $raw_settings ) && ! empty( $raw_settings['schemas'] ) ) {
+			return true;
 		}
-		return $count;
+
+		// Check if any post has page-specific schemas.
+		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$has_post_schemas = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT 1 FROM {$wpdb->postmeta} WHERE meta_key = %s LIMIT 1",
+				'surerank_settings_schemas'
+			)
+		);
+
+		return ! empty( $has_post_schemas );
 	}
 
 	/**
 	 * Get redirect count (Pro feature).
 	 *
+	 * Redirects are stored in the 'surerank_redirections' option as an array.
+	 *
 	 * @return int
 	 * @since 1.7.0
 	 */
 	private function get_redirect_count() {
-		global $wpdb;
-		$table = $wpdb->prefix . 'surerank_redirects';
-
-		// Check table exists before querying.
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) );
-		if ( ! $table_exists ) {
-			return 0;
-		}
-
-		return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is a hardcoded constant, not user input.
-	}
-
-	/**
-	 * Get enabled features.
-	 *
-	 * @return array<string, mixed>
-	 */
-	private function get_enabled_features() {
-		return [
-			'enable_page_level_seo' => Settings::get( 'enable_page_level_seo' ),
-			'enable_google_console' => Settings::get( 'enable_google_console' ),
-			'enable_schemas'        => Settings::get( 'enable_schemas' ),
-		];
+		$redirects = get_option( 'surerank_redirections', [] );
+		return is_array( $redirects ) ? count( $redirects ) : 0;
 	}
 
 	/**
@@ -492,187 +456,6 @@ class Analytics {
 		set_transient( 'surerank_analytics_is_active', $is_active ? 'yes' : 'no', DAY_IN_SECONDS );
 
 		return $is_active;
-	}
-
-	/**
-	 * Get site type - Inactive|Active|Super|Dormant|Super Dormant.
-	 *
-	 * @return string Site type.
-	 * @since 1.6.3
-	 */
-	private function get_site_type() {
-		$cached = get_transient( 'surerank_analytics_site_type' );
-		if ( false !== $cached ) {
-			return $cached;
-		}
-
-		$recent_optimized_count = $this->get_optimized_posts_count_last_180_days();
-		$total_optimized_count  = $this->get_optimized_posts_count();
-
-		if ( 0 === $total_optimized_count ) {
-			$site_type = 'inactive';
-		} elseif ( 0 === $recent_optimized_count ) {
-			$is_super_past = $this->is_super_criteria_met( $total_optimized_count );
-			$site_type     = $is_super_past ? 'super_dormant' : 'dormant';
-		} else {
-			$is_super_recent = $this->is_super_criteria_met( $recent_optimized_count );
-			$site_type       = $is_super_recent ? 'super' : 'active';
-		}
-
-		set_transient( 'surerank_analytics_site_type', $site_type, DAY_IN_SECONDS );
-
-		return $site_type;
-	}
-
-	/**
-	 * Get count of unique posts and terms that have been optimized with SureRank.
-	 *
-	 * @return int Number of optimized posts and terms.
-	 * @since 1.6.3
-	 */
-	private function get_optimized_posts_count() {
-		global $wpdb;
-
-		$posts_like        = $wpdb->esc_like( 'surerank_settings_' ) . '%';
-		$public_post_types = $this->get_public_post_types_for_query();
-
-		if ( empty( $public_post_types ) ) {
-			$post_count = 0;
-		} else {
-			$placeholders = implode( ', ', array_fill( 0, count( $public_post_types ), '%s' ) );
-
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$post_count = $wpdb->get_var(
-				$wpdb->prepare(
-					"SELECT COUNT(DISTINCT pm.post_id)
-					FROM {$wpdb->postmeta} pm
-					INNER JOIN {$wpdb->posts} p ON pm.post_id = p.ID
-					WHERE pm.meta_key LIKE %s
-					AND p.post_status = 'publish'
-					AND p.post_type IN ({$placeholders})", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					array_merge( [ $posts_like ], $public_post_types )
-				)
-			);
-		}
-
-		$terms_like = $wpdb->esc_like( 'surerank_seo_checks' ) . '%';
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$term_count = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT COUNT(DISTINCT tm.term_id)
-				FROM {$wpdb->termmeta} tm
-				INNER JOIN {$wpdb->terms} t ON tm.term_id = t.term_id
-				INNER JOIN {$wpdb->term_taxonomy} tt ON t.term_id = tt.term_id
-				WHERE tm.meta_key LIKE %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-				$terms_like
-			)
-		);
-
-		return absint( $post_count ) + absint( $term_count );
-	}
-
-	/**
-	 * Get count of posts optimized within last 180 days.
-	 *
-	 * @return int
-	 * @since 1.6.3
-	 */
-	private function get_optimized_posts_count_last_180_days() {
-		global $wpdb;
-
-		$days_180_ago      = strtotime( '-180 days' );
-		$public_post_types = $this->get_public_post_types_for_query();
-
-		if ( empty( $public_post_types ) ) {
-			$post_count = 0;
-		} else {
-			$placeholders = implode( ', ', array_fill( 0, count( $public_post_types ), '%s' ) );
-
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$post_count = $wpdb->get_var(
-				$wpdb->prepare(
-					"SELECT COUNT(DISTINCT pm.post_id)
-					FROM {$wpdb->postmeta} pm
-					INNER JOIN {$wpdb->posts} p ON pm.post_id = p.ID
-					WHERE pm.meta_key = 'surerank_post_optimized_at'
-					AND CAST(pm.meta_value AS UNSIGNED) > %d
-					AND p.post_status = 'publish'
-					AND p.post_type IN ({$placeholders})", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-					array_merge( [ $days_180_ago ], $public_post_types )
-				)
-			);
-		}
-
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$term_count = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT COUNT(DISTINCT tm.term_id)
-				FROM {$wpdb->termmeta} tm
-				INNER JOIN {$wpdb->terms} t ON tm.term_id = t.term_id
-				INNER JOIN {$wpdb->term_taxonomy} tt ON t.term_id = tt.term_id
-				WHERE tm.meta_key = 'surerank_term_optimized_at'
-				AND CAST(tm.meta_value AS UNSIGNED) > %d",
-				$days_180_ago
-			)
-		);
-
-		return absint( $post_count ) + absint( $term_count );
-	}
-
-	/**
-	 * Shared logic for super site criteria.
-	 *
-	 * @param int $optimized_count Number of optimized posts.
-	 * @return bool True if super criteria is met.
-	 * @since 1.6.3
-	 */
-	private function is_super_criteria_met( int $optimized_count ) {
-		$total_posts = $this->get_total_published_posts_count();
-
-		if ( 0 === $total_posts ) {
-			return false;
-		}
-
-		$threshold = 40;
-
-		if ( $total_posts >= $threshold ) {
-			return $optimized_count >= 20;
-		}
-
-		$percentage = $optimized_count / $total_posts * 100;
-
-		return $percentage >= 50;
-	}
-
-	/**
-	 * Get total count of published posts.
-	 *
-	 * @return int
-	 * @since 1.6.3
-	 */
-	private function get_total_published_posts_count() {
-		global $wpdb;
-
-		$public_post_types = $this->get_public_post_types_for_query();
-
-		if ( empty( $public_post_types ) ) {
-			return 0;
-		}
-
-		$placeholders = implode( ', ', array_fill( 0, count( $public_post_types ), '%s' ) );
-
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$count = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT COUNT(*)
-				FROM {$wpdb->posts}
-				WHERE post_status = 'publish'
-				AND post_type IN ({$placeholders})", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-				$public_post_types
-			)
-		);
-
-		return absint( $count );
 	}
 
 	/**
