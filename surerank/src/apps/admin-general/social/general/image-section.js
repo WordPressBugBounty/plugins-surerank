@@ -1,20 +1,27 @@
 import { useCallback, memo } from '@wordpress/element';
 import { Container, Label, Input, Text } from '@bsf/force-ui';
-import { Image } from 'lucide-react'; // Import Trash icon
+import { Image } from 'lucide-react';
 import { __ } from '@wordpress/i18n';
 import { useDispatch, useSuspenseSelect } from '@wordpress/data';
 import { STORE_NAME } from '@AdminStore/constants';
 import { cn } from '@Functions/utils';
 import { InfoTooltip } from '@AdminComponents/tooltip';
 import MediaPreview from '@/apps/admin-components/media-preview';
-import { createMediaFrame } from '@/global/utils/utils';
+import { createMediaFrame, getSiteDetails } from '@/global/utils/utils';
+import { applyFilters } from '@wordpress/hooks';
 
 const ImageTab = memo( () => {
-	const { setMetaSettings } = useDispatch( STORE_NAME );
-	const settings = useSuspenseSelect( ( select ) => {
-		const { getMetaSettings } = select( STORE_NAME );
-		return getMetaSettings();
-	}, [] );
+	const { setMetaSettings, updateAppSettings } = useDispatch( STORE_NAME );
+	const { openImageGenModal, ...settings } = useSuspenseSelect(
+		( select ) => {
+			const { getMetaSettings, getAppSettings } = select( STORE_NAME );
+			return {
+				...getMetaSettings(),
+				openImageGenModal: getAppSettings().openImageGenModal,
+			};
+		},
+		[]
+	);
 
 	const openMediaLibrary = useCallback(
 		( e ) => {
@@ -51,10 +58,46 @@ const ImageTab = memo( () => {
 		} );
 	}, [ setMetaSettings ] );
 
+	const setImageGenModalOpen = useCallback(
+		( open ) => {
+			updateAppSettings( { openImageGenModal: open } );
+		},
+		[ openImageGenModal ]
+	);
+
 	const imagePreview = settings.fallback_image;
 
 	return (
 		<Container direction="column" className="w-full">
+			<Container.Item className="md:w-full lg:w-full">
+				<div className="flex flex-row items-center justify-between w-full">
+					<div className="flex flex-col gap-2 size-full">
+						<Text size="14" weight={ 500 } color="label">
+							{ __( 'Preview', 'surerank' ) }
+						</Text>
+						<div
+							className={ cn(
+								'relative flex items-center justify-center bg-field-primary-background rounded-lg w-full',
+								imagePreview ? 'h-auto' : 'h-[280px]'
+							) }
+						>
+							{ imagePreview ? (
+								<div className="relative w-full h-full">
+									<img
+										src={ imagePreview }
+										alt={ __( 'Fallback', 'surerank' ) }
+										className="object-cover rounded-lg max-h-[280px] w-full h-auto mx-auto"
+									/>
+								</div>
+							) : (
+								<div className="[&>*]:text-icon-secondary [&>*:svg]:h-8">
+									<Image strokeWidth={ 1 } size={ 32 } />
+								</div>
+							) }
+						</div>
+					</div>
+				</div>
+			</Container.Item>
 			<Container.Item className="md:w-full lg:w-full">
 				<div className="flex flex-row items-center justify-between w-full">
 					<div className="flex flex-col gap-1.5 size-full">
@@ -73,6 +116,16 @@ const ImageTab = memo( () => {
 									'surerank'
 								) }
 							/>
+							<div className="ml-auto">
+								{ applyFilters(
+									'surerank-pro.og-image-trigger-button',
+									null,
+									{
+										onClick: () =>
+											setImageGenModalOpen( true ),
+									}
+								) }
+							</div>
 						</div>
 						<Input
 							type="file"
@@ -101,35 +154,18 @@ const ImageTab = memo( () => {
 					</div>
 				</div>
 			</Container.Item>
-			<Container.Item className="md:w-full lg:w-full">
-				<div className="flex flex-row items-center justify-between w-full">
-					<div className="flex flex-col gap-2 size-full">
-						<Label size="sm" variant="label">
-							{ __( 'Preview', 'surerank' ) }
-						</Label>
-						<div
-							className={ cn(
-								'relative flex items-center justify-center bg-field-primary-background rounded-lg w-full',
-								imagePreview ? 'h-auto' : 'h-[280px]'
-							) }
-						>
-							{ imagePreview ? (
-								<div className="relative w-full h-full">
-									<img
-										src={ imagePreview }
-										alt={ __( 'Fallback', 'surerank' ) }
-										className="object-cover rounded-lg max-h-[280px] w-full h-auto mx-auto"
-									/>
-								</div>
-							) : (
-								<div className="[&>*]:text-icon-secondary [&>*:svg]:h-8">
-									<Image strokeWidth={ 1 } size={ 32 } />
-								</div>
-							) }
-						</div>
-					</div>
-				</div>
-			</Container.Item>
+			{ applyFilters( 'surerank-pro.og-image-modal', null, {
+				open: openImageGenModal,
+				setOpen: setImageGenModalOpen,
+				postTitle: getSiteDetails().siteTitle,
+				postDescription: getSiteDetails().siteDescription,
+				onSelectImage: ( image ) => {
+					setMetaSettings( {
+						fallback_image: image.url,
+						fallback_image_id: image.id,
+					} );
+				},
+			} ) }
 		</Container>
 	);
 } );

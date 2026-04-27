@@ -3,7 +3,6 @@ import { __ } from '@wordpress/i18n';
 import ImageSection from './image-section';
 import withSuspense from '@AdminComponents/hoc/with-suspense';
 import GeneratePageContent from '@Functions/page-content-generator';
-import { createLazyRoute } from '@tanstack/react-router';
 
 export const PAGE_CONTENT = [
 	// {
@@ -130,9 +129,5 @@ const General = () => {
 		</PageContentWrapper>
 	);
 };
-
-export const LazyRoute = createLazyRoute( '/social' )( {
-	component: withSuspense( General ),
-} );
 
 export default withSuspense( General );

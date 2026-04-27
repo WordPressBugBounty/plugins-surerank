@@ -17,6 +17,7 @@ use SureRank\Inc\BatchProcess\Process;
 use SureRank\Inc\BatchProcess\Sync_Posts;
 use SureRank\Inc\BatchProcess\Sync_Taxonomies;
 use SureRank\Inc\Functions\Cache;
+use SureRank\Inc\Functions\Compat;
 use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Schema\Helper as Schema_Helper;
 use SureRank\Inc\Sitemap\Checksum;
@@ -78,11 +79,23 @@ class Sync {
 	/**
 	 * Batch Process Complete.
 	 *
+	 * Finalizes an in-progress sitemap rebuild by atomically discarding
+	 * the preserved backup (sitemap.old/). At this point sitemap/ contains
+	 * the freshly-built cache and is the authoritative source.
+	 *
+	 * Also records a timestamp of the last successful rebuild, used by
+	 * the staleness-based self-healing retry introduced in PR 2 and by
+	 * the sitemap health surface exposed via WP_Site_Health.
+	 *
 	 * @since 1.2.0
 	 * @return void
 	 */
 	public function batch_process_complete() {
 		Checksum::get_instance()->update_cache_checksum( Checksum::get_instance()->get_checksum() );
+
+		Cache::commit_atomic_rebuild( 'sitemap' );
+
+		update_option( 'surerank_sitemap_last_successful_rebuild', time(), false );
 	}
 
 	/**
@@ -106,18 +119,37 @@ class Sync {
 		// Get the singleton instance of Process.
 		self::$processes = Process::get_instance();
 
-		// Clear existing sitemap cache before regeneration.
-		Cache::clear_all();
+		// Rotate the current sitemap cache to a backup slot so a failed
+		// rebuild never leaves the site without a sitemap. The backup is
+		// discarded by batch_process_complete() on success, or rolled
+		// back by abort_atomic_rebuild() on fatal failure. See #2361.
+		//
+		// Fallback: on hosts where native rename() is unavailable (non-direct
+		// filesystem transports), atomic rotation will fail. In that case,
+		// fall back to the pre-atomic clear_all() behaviour so the site can
+		// still regenerate its sitemap — just without stale-while-revalidate.
+		if ( ! Cache::begin_atomic_rebuild( 'sitemap' ) ) {
+			self::log( 'Atomic rebuild unavailable; falling back to cache clear.' );
+			Cache::clear_all();
+		}
+
 		$classes = $this->generate_classes();
 
 		if ( defined( 'WP_CLI' ) ) {
-			WP_CLI::line( 'Batch Process Started..' );
-			foreach ( $classes as $key => $class ) {
-				if ( is_object( $class ) && method_exists( $class, 'import' ) ) {
-					$class->import();
+			$this->run_batch_synchronously(
+				$classes,
+				static function ( string $message ): void {
+					WP_CLI::line( $message );
 				}
-			}
-			WP_CLI::line( 'Batch Process Complete!' );
+			);
+		} elseif ( ! Compat::is_loopback_ok() ) {
+			// Loopback to admin-ajax.php is blocked on this environment
+			// (WP Ghost / iThemes / Wordfence / WAF / host restrictions).
+			// Dispatch would silently drop the queue; run the batch
+			// synchronously in the current cron tick instead so the cache
+			// still rebuilds. See #2361 PR 2 + Compat::is_loopback_ok().
+			self::log( 'admin-ajax loopback unavailable; running sitemap batch synchronously.' );
+			$this->run_batch_synchronously( $classes );
 		} else {
 			// Add all classes to batch queue.
 			foreach ( $classes as $key => $class ) {
@@ -131,6 +163,61 @@ class Sync {
 				self::$processes->save()->dispatch();
 			}
 		}
+	}
+
+	/**
+	 * Run the batch synchronously, one class after another, within the
+	 * current PHP process.
+	 *
+	 * Used by the WP-CLI path and by the synchronous fallback the next
+	 * commit wires into start_building_cache() when the admin-ajax
+	 * loopback has been detected as blocked.
+	 *
+	 * The logger argument is passed so CLI calls can emit to WP_CLI::line
+	 * and non-CLI callers can route the same messages through self::log
+	 * (or a test double). Extracted here to keep the WP-CLI path and the
+	 * fallback path strictly identical — drift between them would have
+	 * been hard to spot.
+	 *
+	 * @param array<int, object> $classes Batch classes to run; each must expose import().
+	 * @param callable|null      $logger  Function called with each status message.
+	 *                                    Defaults to self::log().
+	 * @since 1.7.2
+	 * @return void
+	 */
+	public function run_batch_synchronously( array $classes, ?callable $logger = null ): void {
+		$log = $logger ?? static function ( string $message ): void {
+			self::log( $message );
+		};
+
+		// Sync fallback on large sites (10k+ URLs) writes thousands of
+		// chunk files in-request. Raise the two PHP ceilings most likely
+		// to cut the rebuild short mid-flight and leave sitemap.old/
+		// permanently stuck as the live cache.
+		wp_raise_memory_limit( 'admin' );
+		if ( function_exists( 'set_time_limit' ) ) {
+			@set_time_limit( 0 ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- safe_mode hosts silently refuse; we don't want a warning here.
+		}
+
+		$log( 'Batch Process Started..' );
+
+		try {
+			foreach ( $classes as $class ) {
+				if ( is_object( $class ) && method_exists( $class, 'import' ) ) {
+					$class->import();
+				}
+			}
+		} catch ( \Throwable $e ) {
+			// Release the atomic-rebuild slot so a future rebuild
+			// can begin; otherwise `sitemap.old/` lingers and
+			// Cache::has_rebuild_backup() keeps reporting the
+			// site as mid-rebuild indefinitely.
+			Cache::abort_atomic_rebuild( 'sitemap' );
+			$log( 'Batch process failed: ' . $e->getMessage() );
+			return;
+		}
+
+		$log( 'Batch Process Complete!' );
 	}
 
 	/**
@@ -169,6 +256,21 @@ class Sync {
 		}
 
 		if ( $data_updates_checksum === $sync_process_checksum ) {
+			// Checksums match but the cache is missing or incomplete — a
+			// previous rebuild must have failed or been interrupted after
+			// the sync-process checksum was written but before the cache
+			// was fully populated. Without this guard the site would be
+			// stuck serving the miss handler forever (because the next
+			// rebuild would short-circuit on matching checksums). See #2361.
+			//
+			// Note: during an in-flight atomic rebuild the live index is
+			// intentionally absent. The transient lock acquired by
+			// begin_atomic_rebuild() prevents a second rebuild from
+			// starting and discarding the backup in that window.
+			if ( ! Cache::file_exists( 'sitemap/sitemap_index.json' ) ) {
+				return true;
+			}
+
 			return false;
 		}
 

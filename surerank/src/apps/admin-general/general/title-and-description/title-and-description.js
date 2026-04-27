@@ -20,7 +20,6 @@ import Preview from '@GlobalComponents/preview';
 import replacement from '@Functions/replacement';
 import withSuspense from '@AdminComponents/hoc/with-suspense';
 import GeneratePageContent from '@Functions/page-content-generator';
-import { createLazyRoute } from '@tanstack/react-router';
 import { applyFilters } from '@wordpress/hooks';
 import { UpgradeNotice } from '@/global/components/nudges';
 
@@ -236,9 +235,5 @@ const TitleAndDescription = () => {
 		</PageContentWrapper>
 	);
 };
-
-export const LazyRoute = createLazyRoute( '/' )( {
-	component: withSuspense( TitleAndDescription ),
-} );
 
 export default withSuspense( TitleAndDescription );

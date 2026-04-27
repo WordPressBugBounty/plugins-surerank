@@ -203,11 +203,11 @@ msgstr "Aucune URL fournie."
 msgid "Post id or term id is required"
 msgstr "L'identifiant de publication ou l'identifiant de terme est requis"
 
-#: inc/api/admin.php:175
+#: inc/api/admin.php:227
 msgid "No data found"
 msgstr "Aucune donnée trouvée"
 
-#: inc/api/admin.php:205
+#: inc/api/admin.php:251
 msgid "Settings updated"
 msgstr "Paramètres mis à jour"
 
@@ -232,19 +232,19 @@ msgstr "Le lien est cassé"
 msgid "Link is not broken"
 msgstr "Le lien n'est pas cassé"
 
-#: inc/api/api-base.php:98
+#: inc/api/api-base.php:123
 msgid "You do not have permission to perform this action."
 msgstr "Vous n'avez pas la permission d'effectuer cette action."
 
-#: inc/api/api-base.php:66
+#: inc/api/api-base.php:67
 msgid "Nonce is missing."
 msgstr "Le nonce est manquant."
 
-#: inc/api/api-base.php:75
+#: inc/api/api-base.php:76
 msgid "Nonce is invalid."
 msgstr "Le nonce est invalide."
 
-#: inc/api/api-base.php:157
+#: inc/api/api-base.php:182
 msgid "Sample Post"
 msgstr "Publication d'exemple"
 
@@ -263,41 +263,41 @@ msgstr "Paramètres mis à jour avec succès"
 msgid "Failed to update settings"
 msgstr "Échec de la mise à jour des paramètres"
 
-#: inc/api/post.php:124
-#: inc/api/term.php:113
+#: inc/api/post.php:170
+#: inc/api/term.php:151
 msgid "Error while running SEO Checks."
 msgstr "Erreur lors de l'exécution des vérifications SEO."
 
-#: inc/api/post.php:131
-#: inc/api/term.php:120
+#: inc/api/post.php:180
+#: inc/api/term.php:161
 msgid "Data updated"
 msgstr "Données mises à jour"
 
-#: inc/api/post.php:433
+#: inc/api/post.php:548
 msgid "Author pages"
 msgstr "Pages d'auteur"
 
-#: inc/api/post.php:437
+#: inc/api/post.php:552
 msgid "Date archives"
 msgstr "Archives par date"
 
-#: inc/api/post.php:440
+#: inc/api/post.php:555
 msgid "Search pages"
 msgstr "Pages de recherche"
 
-#: inc/api/post.php:182
+#: inc/api/post.php:297
 msgid "No post ID provided."
 msgstr "Aucun ID de publication fourni."
 
-#: inc/api/post.php:188
+#: inc/api/post.php:303
 msgid "No post found."
 msgstr "Aucune publication trouvée."
 
-#: inc/api/term.php:155
+#: inc/api/term.php:197
 msgid "No term ID provided."
 msgstr "Aucun ID de terme fourni."
 
-#: inc/api/term.php:161
+#: inc/api/term.php:203
 msgid "No term found."
 msgstr "Aucun terme trouvé."
 
@@ -387,7 +387,7 @@ msgid "Out of Stock"
 msgstr "Hors stock"
 
 #. translators: %s: page number, %s: total pages
-#: inc/functions/helper.php:297
+#: inc/functions/helper.php:305
 #, php-format
 msgid " - Page %1$s of %2$s"
 msgstr "- Page %1$s sur %2$s"
@@ -401,14 +401,14 @@ msgstr "ID"
 msgid "The unique identifier for a post."
 msgstr "L'identifiant unique d'un article."
 
-#: inc/admin/dashboard.php:634
+#: inc/admin/dashboard.php:636
 #: inc/meta-variables/post.php:65
 #: inc/schema/variables.php:83
 #: build/admin-dashboard/index.js:1
 msgid "Post Title"
 msgstr "Titre de l'article"
 
-#: inc/admin/dashboard.php:636
+#: inc/admin/dashboard.php:638
 #: inc/meta-variables/post.php:66
 msgid "The title of the post."
 msgstr "Le titre de l'article."
@@ -417,7 +417,7 @@ msgstr "Le titre de l'article."
 msgid "Excerpt"
 msgstr "Extrait"
 
-#: inc/admin/dashboard.php:641
+#: inc/admin/dashboard.php:643
 #: inc/meta-variables/post.php:70
 msgid "The excerpt of the post."
 msgstr "L'extrait de l'article."
@@ -426,7 +426,7 @@ msgstr "L'extrait de l'article."
 msgid "Content"
 msgstr "Contenu"
 
-#: inc/admin/dashboard.php:646
+#: inc/admin/dashboard.php:648
 #: inc/meta-variables/post.php:74
 msgid "The content of the post."
 msgstr "Le contenu de l'article."
@@ -451,12 +451,12 @@ msgstr "Séparateur"
 msgid "Site Tagline"
 msgstr "Slogan du site"
 
-#: inc/admin/dashboard.php:626
+#: inc/admin/dashboard.php:628
 #: inc/meta-variables/site.php:65
 msgid "The tagline of the site."
 msgstr "Le slogan du site."
 
-#: inc/admin/dashboard.php:619
+#: inc/admin/dashboard.php:621
 #: inc/meta-variables/site.php:68
 #: build/admin-dashboard/index.js:1
 msgid "Site Name"
@@ -492,7 +492,7 @@ msgstr "L'identifiant unique d'un terme."
 msgid "Term Name"
 msgstr "Nom du terme"
 
-#: inc/admin/dashboard.php:631
+#: inc/admin/dashboard.php:633
 #: inc/meta-variables/term.php:63
 msgid "The name of the term."
 msgstr "Le nom du terme."
@@ -506,7 +506,7 @@ msgstr "Le nom du terme."
 msgid "Description"
 msgstr "Description"
 
-#: inc/admin/dashboard.php:651
+#: inc/admin/dashboard.php:653
 #: inc/meta-variables/term.php:67
 msgid "The description of the term."
 msgstr "La description du terme."
@@ -550,8 +550,13 @@ msgstr "Évaluer SureRank"
 #: inc/schema/properties.php:91
 #: inc/schema/types/person.php:152
 #: inc/schema/types/thing.php:102
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
 msgid "Image"
-msgstr "Image"
+msgid_plural "Images"
+msgstr[0] "Image"
+msgstr[1] ""
 
 #: inc/schema/products.php:158
 #: inc/schema/properties.php:109
@@ -2318,17 +2323,17 @@ msgstr "Une image miniature pertinente pour le site Web."
 msgid "Post ID"
 msgstr "ID de publication"
 
-#: inc/admin/dashboard.php:639
+#: inc/admin/dashboard.php:641
 #: inc/schema/variables.php:85
 msgid "Post Excerpt"
 msgstr "Extrait de publication"
 
-#: inc/admin/dashboard.php:644
+#: inc/admin/dashboard.php:646
 #: inc/schema/variables.php:86
 msgid "Post Content"
 msgstr "Contenu de la publication"
 
-#: inc/admin/dashboard.php:664
+#: inc/admin/dashboard.php:666
 #: inc/schema/variables.php:87
 msgid "Post URL"
 msgstr "URL de la publication"
@@ -2377,7 +2382,7 @@ msgstr "Slug de terme"
 msgid "Term Taxonomy"
 msgstr "Taxonomie de terme"
 
-#: inc/admin/dashboard.php:649
+#: inc/admin/dashboard.php:651
 #: inc/schema/variables.php:115
 msgid "Term Description"
 msgstr "Description de terme"
@@ -2534,12 +2539,12 @@ msgstr "Corriger les problèmes SEO avec l'IA"
 msgid "Fix It for Me"
 msgstr "Corrigez-le pour moi"
 
-#: inc/admin/dashboard.php:624
+#: inc/admin/dashboard.php:626
 #: build/admin-dashboard/index.js:1
 msgid "Tagline"
 msgstr "Slogan"
 
-#: inc/admin/dashboard.php:629
+#: inc/admin/dashboard.php:631
 msgid "Term Title"
 msgstr "Titre de terme"
 
@@ -2676,6 +2681,7 @@ msgid "Social Title"
 msgstr "Titre social"
 
 #: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Social Description"
 msgstr "Description sociale"
@@ -2783,6 +2789,8 @@ msgstr "Enregistrement.."
 msgid "Saved"
 msgstr "Enregistré"
 
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Close"
 msgstr "Fermer"
@@ -2798,7 +2806,7 @@ msgstr "%1$d sur %2$d vérifications sont effectuées."
 msgid "Passed"
 msgstr "Réussi"
 
-#: loader.php:314
+#: loader.php:312
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 #: build/seo-popup/index.js:1
@@ -3248,10 +3256,6 @@ msgid "An error occurred. Please try again."
 msgstr "Une erreur s'est produite. Veuillez réessayer."
 
 #: build/admin-dashboard/index.js:1
-msgid "Error code: "
-msgstr "Code d'erreur :"
-
-#: build/admin-dashboard/index.js:1
 msgid "Quick Access"
 msgstr "Accès rapide"
 
@@ -3410,11 +3414,6 @@ msgstr "Ceci est uniquement pour la page d'accueil. Ces paramètres n'affecteron
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
-msgid "Site Name: "
-msgstr "Nom du site :"
-
-#: build/admin-dashboard/index.js:1
-#: build/admin-onboarding/index.js:1
 msgid "The site name used in meta titles and descriptions is taken from the WordPress General Settings, where it is defined under \"Site Title.\""
 msgstr "Le nom du site utilisé dans les titres et descriptions méta est tiré des paramètres généraux de WordPress, où il est défini sous \"Titre du site\"."
 
@@ -3555,16 +3554,8 @@ msgid "No Date"
 msgstr "Pas de date"
 
 #: build/admin-dashboard/index.js:1
-msgid "A static page is set as the home page of your website under WordPress Dashboard > Settings > Reading. "
-msgstr "Une page statique est définie comme la page d'accueil de votre site Web sous Tableau de bord WordPress > Réglages > Lecture."
-
-#: build/admin-dashboard/index.js:1
 msgid "Edit the home page"
 msgstr "Modifier la page d'accueil"
-
-#: build/admin-dashboard/index.js:1
-msgid " to set its search engine and social settings."
-msgstr "pour définir ses paramètres de moteur de recherche et sociaux."
 
 #: build/admin-dashboard/index.js:1
 msgid "Use data from Facebook Tab"
@@ -3859,119 +3850,119 @@ msgstr "Taxonomies"
 msgid "Archives"
 msgstr "Archives"
 
-#: inc/admin/dashboard.php:621
+#: inc/admin/dashboard.php:623
 msgid "The name of the site."
 msgstr "Le nom du site."
 
-#: inc/admin/dashboard.php:654
+#: inc/admin/dashboard.php:656
 #: inc/meta-variables/post.php:81
 msgid "Date Published"
 msgstr "Date de publication"
 
-#: inc/admin/dashboard.php:656
+#: inc/admin/dashboard.php:658
 #: inc/meta-variables/post.php:82
 msgid "Publication date of the current post/page OR specified date on date archives"
 msgstr "Date de publication de l'article/page actuel OU date spécifiée dans les archives de date"
 
-#: inc/admin/dashboard.php:659
+#: inc/admin/dashboard.php:661
 #: inc/meta-variables/post.php:85
 msgid "Date Modified"
 msgstr "Date de modification"
 
-#: inc/admin/dashboard.php:661
+#: inc/admin/dashboard.php:663
 #: inc/meta-variables/post.php:86
 msgid "Last modification date of the current post/page"
 msgstr "Date de dernière modification de l'article/page actuel"
 
-#: inc/admin/dashboard.php:666
+#: inc/admin/dashboard.php:668
 msgid "URL of the current post/page"
 msgstr "URL de l'article/page actuel"
 
-#: inc/admin/dashboard.php:669
+#: inc/admin/dashboard.php:671
 #: inc/meta-variables/site.php:84
 msgid "Current Date"
 msgstr "Date actuelle"
 
-#: inc/admin/dashboard.php:671
+#: inc/admin/dashboard.php:673
 #: inc/meta-variables/site.php:85
 msgid "Current server date"
 msgstr "Date du serveur actuel"
 
-#: inc/admin/dashboard.php:674
+#: inc/admin/dashboard.php:676
 #: inc/meta-variables/site.php:88
 msgid "Current Day"
 msgstr "Jour actuel"
 
-#: inc/admin/dashboard.php:676
+#: inc/admin/dashboard.php:678
 #: inc/meta-variables/site.php:89
 msgid "Current server day"
 msgstr "Jour du serveur actuel"
 
-#: inc/admin/dashboard.php:679
+#: inc/admin/dashboard.php:681
 #: inc/meta-variables/site.php:92
 msgid "Current Month"
 msgstr "Mois actuel"
 
-#: inc/admin/dashboard.php:681
+#: inc/admin/dashboard.php:683
 #: inc/meta-variables/site.php:93
 msgid "Current server month"
 msgstr "Mois du serveur actuel"
 
-#: inc/admin/dashboard.php:684
+#: inc/admin/dashboard.php:686
 #: inc/meta-variables/site.php:96
 msgid "Current Year"
 msgstr "Année actuelle"
 
-#: inc/admin/dashboard.php:686
+#: inc/admin/dashboard.php:688
 #: inc/meta-variables/site.php:97
 msgid "Current server year"
 msgstr "Année du serveur actuel"
 
-#: inc/admin/dashboard.php:689
+#: inc/admin/dashboard.php:691
 #: inc/meta-variables/site.php:100
 msgid "Current Time"
 msgstr "Heure actuelle"
 
-#: inc/admin/dashboard.php:691
+#: inc/admin/dashboard.php:693
 #: inc/meta-variables/site.php:101
 msgid "Current server time"
 msgstr "Heure du serveur actuel"
 
-#: inc/admin/dashboard.php:694
+#: inc/admin/dashboard.php:696
 #: inc/meta-variables/site.php:104
 msgid "Organization Name"
 msgstr "Nom de l'organisation"
 
-#: inc/admin/dashboard.php:696
+#: inc/admin/dashboard.php:698
 #: inc/meta-variables/site.php:105
 msgid "The Organization Name added in Local SEO Settings."
 msgstr "Le nom de l'organisation ajouté dans les paramètres SEO locaux."
 
-#: inc/admin/dashboard.php:699
+#: inc/admin/dashboard.php:701
 #: inc/meta-variables/site.php:108
 msgid "Organization Logo"
 msgstr "Logo de l'organisation"
 
-#: inc/admin/dashboard.php:701
+#: inc/admin/dashboard.php:703
 #: inc/meta-variables/site.php:109
 msgid "Organization Logo added in Local SEO Settings."
 msgstr "Logo de l'organisation ajouté dans les paramètres SEO locaux."
 
-#: inc/admin/dashboard.php:704
+#: inc/admin/dashboard.php:706
 #: inc/meta-variables/site.php:112
 msgid "Organization URL"
 msgstr "URL de l'organisation"
 
-#: inc/admin/dashboard.php:706
+#: inc/admin/dashboard.php:708
 #: inc/meta-variables/site.php:113
 msgid "Organization URL added in Local SEO Settings."
 msgstr "URL de l'organisation ajoutée dans les paramètres SEO locaux."
 
-#: inc/admin/dashboard.php:709
+#: inc/admin/dashboard.php:711
 msgid "Post Author Name"
 msgstr "Nom de l'auteur du post"
 
-#: inc/admin/dashboard.php:711
+#: inc/admin/dashboard.php:713
 msgid "Display author's nicename of the current post, page or author archive."
 msgstr "Afficher le nom d'utilisateur de l'auteur de l'article, de la page ou de l'archive d'auteur actuel."
 
@@ -3991,7 +3982,7 @@ msgstr "Requête de recherche"
 msgid "Search query (only available on search results page)"
 msgstr "Requête de recherche (disponible uniquement sur la page de résultats de recherche)"
 
-#: loader.php:294
+#: loader.php:292
 msgid "Rate our plugin"
 msgstr "Évaluez notre plugin"
 
@@ -4624,6 +4615,7 @@ msgid "Error importing Yoast SEO global settings: %s"
 msgstr "Erreur lors de l’importation des paramètres globaux Yoast SEO : %s"
 
 #: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
 #: build/search-console-widget/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No data available"
@@ -5139,16 +5131,16 @@ msgstr "atec Cache APCu"
 msgid "Detected via %1$s: %2$s"
 msgstr "Détecté via %1$s : %2$s"
 
-#: inc/api/sitemap.php:159
+#: inc/api/sitemap.php:172
 msgid "Sitemap cache generation has started."
 msgstr "La génération du cache du sitemap a commencé."
 
-#: inc/api/sitemap.php:160
+#: inc/api/sitemap.php:173
 msgid "This may take up to 5 minutes, please wait before checking the sitemap."
 msgstr "Cela peut prendre jusqu'à 5 minutes, veuillez attendre avant de vérifier le sitemap."
 
 #. translators: %s: Error message
-#: inc/api/sitemap.php:176
+#: inc/api/sitemap.php:189
 #, php-format
 msgid "Failed to start cache generation: %s"
 msgstr "Échec du démarrage de la génération du cache : %s"
@@ -5414,11 +5406,6 @@ msgstr "Avertissement :"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
-msgid "Your site's search engine visibility is currently set to Hidden in "
-msgstr "La visibilité de votre site dans les moteurs de recherche est actuellement réglée sur Caché dans"
-
-#: build/admin-dashboard/index.js:1
-#: build/admin-onboarding/index.js:1
 msgid "Settings > Reading"
 msgstr "Paramètres > Lecture"
 
@@ -5502,10 +5489,6 @@ msgstr "Aucun schéma trouvé dans cette catégorie."
 #: build/admin-dashboard/index.js:1
 msgid "No supported SEO plugins were found on this website."
 msgstr "Aucun plugin SEO compatible n’a été trouvé sur ce site web."
-
-#: build/admin-dashboard/index.js:1
-msgid "Migration Completed "
-msgstr "Migration terminée"
 
 #: build/admin-dashboard/index.js:1
 msgid "Your SEO settings have been successfully migrated to SureRank. However, we noticed your previous SEO plugin is still active. Would you like us to deactivate it to avoid conflicts?"
@@ -5977,11 +5960,11 @@ msgstr "Échec de la vérification du nonce"
 msgid "No user email found in the decrypted data."
 msgstr "Aucun e-mail utilisateur trouvé dans les données déchiffrées"
 
-#: inc/modules/content-generation/utils.php:175
+#: inc/functions/api-utils.php:153
 msgid "No authentication data found."
 msgstr "Aucune donnée d'authentification trouvée"
 
-#: inc/modules/content-generation/utils.php:179
+#: inc/functions/api-utils.php:157
 msgid "No data found for the provided key."
 msgstr "Aucune donnée trouvée pour la clé fournie"
 
@@ -6053,10 +6036,6 @@ msgid "Not Verified"
 msgstr "Non vérifié"
 
 #: build/admin-dashboard/index.js:1
-msgid "Verification is pending and may take 1-2 hours or up to 2 days. Your site has been added to Search Console. Reloading in 2 seconds…"
-msgstr "La vérification est en attente et peut prendre 1-2 heures ou jusqu'à 2 jours. Votre site a été ajouté à Search Console. Rechargement dans 2 secondes…"
-
-#: build/admin-dashboard/index.js:1
 msgid "The changes will take effect after a page refresh. Reloading in 2 seconds…"
 msgstr "Les modifications prendront effet après un rafraîchissement de la page. Rechargement dans 2 secondes…"
 
@@ -6104,7 +6083,9 @@ msgstr "ID de terme invalide"
 msgid "Invalid term ID provided"
 msgstr "ID de terme fourni invalide"
 
-#: inc/modules/content-generation/utils.php:212
+#: inc/functions/api-utils.php:50
+#: inc/functions/api-utils.php:82
+#: inc/functions/api-utils.php:115
 msgid "No authentication token found. Please connect your account."
 msgstr "Aucun jeton d'authentification trouvé. Veuillez connecter votre compte."
 
@@ -6207,6 +6188,7 @@ msgid "Authentication completed successfully. Closing tab in 3 seconds…"
 msgstr "Authentification terminée avec succès. Fermeture de l'onglet dans 3 secondes…"
 
 #: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Authentication failed"
 msgstr "Échec de l'authentification"
@@ -6232,21 +6214,25 @@ msgid "SureRank Angie AI assistant, handles sitemap control, page or term visibi
 msgstr "Assistant AI SureRank Angie, gère le contrôle du sitemap, la visibilité des pages ou termes, la gestion de la balise meta robots (visibilité pour les moteurs de recherche), vérifications SEO du site et des pages, mise à jour du titre et de la méta description des articles, et gestion complète des paramètres pour toutes les fonctionnalités SEO de SureRank"
 
 #: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Meta Titles & Descriptions"
 msgstr "Titres & Descriptions Méta"
 
 #: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Social Titles & Descriptions"
 msgstr "Titres & Descriptions Sociales"
 
 #: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Site level SEO Checks"
 msgstr "Vérifications SEO au niveau du site"
 
 #: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Let SureRank AI optimize your SEO"
 msgstr "Laissez l'IA SureRank optimiser votre SEO"
@@ -6350,6 +6336,8 @@ msgstr "Une erreur s'est produite lors de l'authentification"
 msgid "Popup blocked. Redirecting to authentication…"
 msgstr "Popup bloqué. Redirection vers l'authentification…"
 
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Connect SureRank AI"
 msgstr "Connecter SureRank AI"
@@ -6358,7 +6346,7 @@ msgstr "Connecter SureRank AI"
 msgid "Unable to generate content at this time. Please check your input and try again, or contact support if you need help."
 msgstr "Impossible de générer du contenu pour le moment. Veuillez vérifier votre saisie et réessayer, ou contacter le support si vous avez besoin d'aide."
 
-#: inc/modules/content-generation/utils.php:193
+#: inc/functions/api-utils.php:64
 msgid "Something went wrong on our end. Please try again in a moment, or contact support if you need help."
 msgstr "Un problème est survenu de notre côté. Veuillez réessayer dans un instant, ou contacter le support si vous avez besoin d'aide."
 
@@ -6377,28 +6365,28 @@ msgstr "Cliquez ici pour contacter le support."
 msgid "Connect Now"
 msgstr "Se connecter maintenant"
 
-#: inc/api/sitemap.php:167
+#: inc/api/sitemap.php:180
 msgid "CRONs are disabled on this website. Please enable the CRON functionality to use this feature."
 msgstr "Les CRON sont désactivés sur ce site. Veuillez activer la fonctionnalité CRON pour utiliser cette fonctionnalité."
 
-#: inc/api/sitemap.php:199
+#: inc/api/sitemap.php:212
 msgid "Sitemap classes not found."
 msgstr "Classes de sitemap non trouvées."
 
-#: inc/api/sitemap.php:211
-#: inc/api/sitemap.php:216
+#: inc/api/sitemap.php:224
+#: inc/api/sitemap.php:229
 msgid "Sitemap class not found."
 msgstr "Classe de sitemap non trouvée."
 
-#: inc/api/sitemap.php:220
+#: inc/api/sitemap.php:233
 msgid "Sitemap class information not found."
 msgstr "Informations sur la classe de sitemap non trouvées."
 
-#: inc/api/sitemap.php:225
+#: inc/api/sitemap.php:238
 msgid "Sitemap class does not exist."
 msgstr "La classe de sitemap n'existe pas."
 
-#: inc/api/sitemap.php:230
+#: inc/api/sitemap.php:243
 msgid "Import method not found in sitemap class."
 msgstr "Méthode d'importation non trouvée dans la classe de sitemap."
 
@@ -6594,17 +6582,12 @@ msgstr "Description commerciale du site Web."
 msgid "# SureRank will generate robots.txt automatically."
 msgstr "# SureRank générera automatiquement le fichier robots.txt."
 
-#: inc/modules/content-generation/utils.php:194
-msgid "You've reached your free usage limit. Upgrade to Pro for additional credits to continue generating content. require_pro"
-msgstr "Vous avez atteint votre limite d'utilisation gratuite. Passez à Pro pour obtenir des crédits supplémentaires afin de continuer à générer du contenu. require_pro"
-
-#: inc/modules/content-generation/utils.php:195
 #: build/admin-dashboard/index.js:1
 #: build/seo-popup/index.js:1
 msgid "You've used all your AI credits for today. Your credits will refresh automatically tomorrow, so you can continue creating content."
 msgstr "Vous avez utilisé tous vos crédits AI pour aujourd'hui. Vos crédits seront renouvelés automatiquement demain, vous permettant de continuer à créer du contenu."
 
-#: inc/modules/content-generation/utils.php:220
+#: inc/functions/api-utils.php:123
 msgid "Failed to encode request data to JSON."
 msgstr "Échec de l'encodage des données de la requête en JSON."
 
@@ -6994,16 +6977,19 @@ msgid "Generate with AI"
 msgstr "Générer avec l'IA"
 
 #: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Free Plan Limit Reached"
 msgstr "Limite du plan gratuit atteinte"
 
 #: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
 #: build/seo-popup/index.js:1
 msgid "You've used all available AI requests in your Free Plan. Upgrade to SureRank Pro to keep using AI features."
 msgstr "Vous avez utilisé toutes les requêtes IA disponibles dans votre plan gratuit. Passez à SureRank Pro pour continuer à utiliser les fonctionnalités IA."
 
 #: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Daily Limit Reached"
 msgstr "Limite quotidienne atteinte"
@@ -7270,10 +7256,6 @@ msgid "Traffic from last few days"
 msgstr "Trafic des derniers jours"
 
 #: build/seo-popup/index.js:1
-msgid "Custom Field"
-msgstr "Champ personnalisé"
-
-#: build/seo-popup/index.js:1
 #, js-format
 msgid "Enter image URL or %custom_field.field_name%"
 msgstr "Entrez l'URL de l'image ou %custom_field.nom_du_champ%"
@@ -7529,11 +7511,13 @@ msgstr "Une erreur s'est produite lors de la connexion"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
 msgid "Improve with AI"
 msgstr "Améliorez avec l'IA"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
 msgid "Improving…"
 msgstr "Amélioration en cours…"
 
@@ -7611,6 +7595,7 @@ msgstr "Liste des capacités de l'IA"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
 msgid "Please add at least 5 words to your description before improving."
 msgstr "Veuillez ajouter au moins 5 mots à votre description avant d'améliorer."
 
@@ -7626,16 +7611,19 @@ msgstr "Échec de l'amélioration de la description. Veuillez réessayer."
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
 msgid "Minimum word count required"
 msgstr "Nombre minimum de mots requis"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
 msgid "Connect with AI to improve this"
 msgstr "Connectez-vous à l'IA pour améliorer cela"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
 msgid "To generate better content with AI, you'll need to connect your AI provider first. It only takes a minute and unlocks all AI-powered features."
 msgstr "Pour générer un meilleur contenu avec l'IA, vous devez d'abord connecter votre fournisseur d'IA. Cela ne prend qu'une minute et débloque toutes les fonctionnalités alimentées par l'IA."
 
@@ -8060,11 +8048,12 @@ msgstr "Connaît la langue"
 msgid "Specify languages in which the organization provides services. Use standard IETF BCP 47 language codes (e.g., en, en-US, fr, es)."
 msgstr "Précisez les langues dans lesquelles l'organisation fournit des services. Utilisez les codes de langue standard IETF BCP 47 (par exemple, en, en-US, fr, es)."
 
-#: loader.php:367
+#: loader.php:365
 msgid "Get SureRank Pro"
 msgstr "Obtenez SureRank Pro"
 
 #: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Our AI-powered assistant helps you fix SEO issues smartly and quickly. No need to dig through settings or guess what's wrong - we'll do the heavy lifting for you."
 msgstr "Notre assistant alimenté par l'IA vous aide à résoudre les problèmes de SEO de manière intelligente et rapide. Pas besoin de fouiller dans les paramètres ou de deviner ce qui ne va pas - nous ferons le travail lourd pour vous."
@@ -8281,10 +8270,6 @@ msgstr "Passez à SureRank Pro et gérez les rôles des utilisateurs et leur acc
 #: build/admin-dashboard/index.js:1
 msgid "Page Not Found"
 msgstr "Page non trouvée"
-
-#: build/admin-dashboard/index.js:1
-msgid "Either the page does not exist or you don't have permission to access this page please contact your administrator. "
-msgstr "Soit la page n'existe pas, soit vous n'avez pas la permission d'accéder à cette page, veuillez contacter votre administrateur."
 
 #: build/admin-dashboard/index.js:1
 msgid "Go Back"
@@ -9663,10 +9648,669 @@ msgstr "Allez à SureRank ⇾ Général ⇾ Sitemaps"
 msgid "Whether the user opted into usage updates."
 msgstr "Que l'utilisateur ait choisi de recevoir des mises à jour d'utilisation."
 
-#: build/admin-dashboard/index.js:1
-msgid "Help shape the future of SureRank. Share how you use the plugin so we can build features that matter, fix issues faster, and make smarter decisions. "
-msgstr "Aidez à façonner l'avenir de SureRank. Partagez comment vous utilisez le plugin afin que nous puissions créer des fonctionnalités qui comptent, résoudre les problèmes plus rapidement et prendre des décisions plus intelligentes."
-
 #: build/admin-onboarding/index.js:1
 msgid "Stay in the loop and help shape SureRank! Get feature updates, and help us build a better SureRank by sharing how you use the plugin. <a>Privacy Policy</a>"
 msgstr "Restez informé et aidez à façonner SureRank ! Recevez des mises à jour de fonctionnalités et aidez-nous à construire un meilleur SureRank en partageant comment vous utilisez le plugin. <a>Politique de confidentialité</a>"
+
+#: inc/admin/rest-site-health.php:75
+msgid "SureRank REST API is reachable"
+msgstr "L'API REST de SureRank est accessible"
+
+#: inc/admin/rest-site-health.php:107
+msgid "SureRank REST reachability has not been measured yet."
+msgstr "La disponibilité de l'API REST de SureRank n'a pas encore été mesurée."
+
+#: inc/admin/rest-site-health.php:108
+msgid "No save attempts have happened yet. SureRank will surface any REST-reachability issues here after your first save."
+msgstr "Aucune tentative de sauvegarde n'a encore eu lieu. SureRank affichera ici tout problème de disponibilité de l'API REST après votre première sauvegarde."
+
+#: inc/admin/rest-site-health.php:116
+msgid "SureRank can reach its REST endpoint over /wp-json/."
+msgstr "SureRank peut atteindre son point de terminaison REST via /wp-json/."
+
+#: inc/admin/rest-site-health.php:117
+msgid "Save requests use the REST API directly; no fallback is needed."
+msgstr "Les requêtes de sauvegarde utilisent directement l'API REST ; aucun repli n'est nécessaire."
+
+#: inc/admin/rest-site-health.php:124
+msgid "SureRank's REST endpoint is not reachable."
+msgstr "Le point de terminaison REST de SureRank n'est pas accessible."
+
+#: inc/admin/rest-site-health.php:125
+msgid "A security plugin or firewall appears to be blocking /wp-json/. SureRank automatically falls back to admin-ajax.php for save requests, so editing continues to work. To eliminate the fallback round-trip, consult your security plugin or firewall documentation for allowlisting the /wp-json/surerank/ prefix."
+msgstr "Un plugin de sécurité ou un pare-feu semble bloquer /wp-json/. SureRank revient automatiquement à admin-ajax.php pour les requêtes de sauvegarde, donc l'édition continue de fonctionner. Pour éliminer ce repli, consultez la documentation de votre plugin de sécurité ou pare-feu pour autoriser le préfixe /wp-json/surerank/."
+
+#: inc/admin/site-health.php:65
+msgid "SureRank sitemap rebuild is recent"
+msgstr "La reconstruction du sitemap de SureRank est récente"
+
+#: inc/admin/site-health.php:70
+msgid "SureRank admin-ajax loopback is reachable"
+msgstr "Le loopback admin-ajax de SureRank est accessible"
+
+#: inc/admin/site-health.php:94
+msgid "SureRank has not yet rebuilt the sitemap cache on this site."
+msgstr "SureRank n'a pas encore reconstruit le cache du sitemap sur ce site."
+
+#: inc/admin/site-health.php:95
+msgid "The first rebuild runs automatically via WP-Cron. If your site has been active for more than a few hours and this message persists, WP-Cron may not be firing."
+msgstr "La première reconstruction s'exécute automatiquement via WP-Cron. Si votre site est actif depuis plus de quelques heures et que ce message persiste, WP-Cron pourrait ne pas fonctionner."
+
+#: inc/admin/site-health.php:105
+msgid "SureRank rebuilt the sitemap cache recently."
+msgstr "SureRank a récemment reconstruit le cache du sitemap."
+
+#. translators: %s: human-readable time, e.g. "3 hours ago".
+#: inc/admin/site-health.php:108
+msgid "Last successful rebuild: %s. SureRank normally refreshes the cache every six hours."
+msgstr "Dernière reconstruction réussie : %s. SureRank rafraîchit normalement le cache toutes les six heures."
+
+#: inc/admin/site-health.php:118
+msgid "SureRank has not rebuilt the sitemap cache in over twelve hours."
+msgstr "SureRank n'a pas reconstruit le cache du sitemap depuis plus de douze heures."
+
+#. translators: %s: human-readable time, e.g. "14 hours ago".
+#: inc/admin/site-health.php:121
+msgid "Last successful rebuild: %s. This is still within the stale threshold; the next scheduled cron tick should update it."
+msgstr "Dernière reconstruction réussie : %s. Cela reste dans le seuil de péremption ; le prochain déclenchement planifié de cron devrait le mettre à jour."
+
+#: inc/admin/site-health.php:130
+msgid "SureRank has not rebuilt the sitemap cache in over the stale threshold."
+msgstr "SureRank n'a pas reconstruit le cache du sitemap depuis le dépassement du seuil de péremption."
+
+#. translators: %s: human-readable time.
+#: inc/admin/site-health.php:133
+msgid "Last successful rebuild: %s. SureRank will attempt a rebuild on the next admin page visit; if the problem persists, WP-Cron or the admin-ajax loopback may be unavailable."
+msgstr "Dernière reconstruction réussie : %s. SureRank tentera une reconstruction lors de la prochaine visite d'une page d'administration ; si le problème persiste, WP-Cron ou le loopback admin-ajax pourraient être indisponibles."
+
+#: inc/admin/site-health.php:154
+msgid "SureRank can reach admin-ajax.php via a loopback request."
+msgstr "SureRank peut atteindre admin-ajax.php via une requête loopback."
+
+#: inc/admin/site-health.php:155
+msgid "Background sitemap rebuilds run asynchronously."
+msgstr "Les reconstructions en arrière-plan du sitemap s'exécutent de manière asynchrone."
+
+#: inc/admin/site-health.php:162
+msgid "SureRank cannot reach admin-ajax.php via a loopback request."
+msgstr "SureRank ne peut pas atteindre admin-ajax.php via une requête loopback."
+
+#: inc/admin/site-health.php:163
+msgid "This is usually caused by a security plugin renaming the admin path, a firewall blocking self-requests, or a host that disables loopbacks. SureRank automatically falls back to running rebuilds synchronously; everything still works, but each rebuild takes slightly longer. See the compatibility guide for details."
+msgstr "Cela est généralement causé par un plugin de sécurité renommant le chemin admin, un pare-feu bloquant les auto-requêtes, ou un hébergeur désactivant les loopbacks. SureRank revient automatiquement à l'exécution synchrone des reconstructions ; tout fonctionne toujours, mais chaque reconstruction prend un peu plus de temps. Consultez le guide de compatibilité pour plus de détails."
+
+#: inc/ajax/save-endpoints.php:87
+msgid "Invalid post id."
+msgstr "ID de publication invalide."
+
+#: inc/ajax/save-endpoints.php:117
+msgid "Invalid term id."
+msgstr "ID de terme invalide."
+
+#: inc/ajax/save-endpoints.php:185
+msgid "Your session has expired. Please refresh and try again."
+msgstr "Votre session a expiré. Veuillez actualiser et réessayer."
+
+#: inc/api/stock-images.php:107
+msgid "Failed to fetch images from external API"
+msgstr "Échec de la récupération des images depuis l'API externe"
+
+#: inc/api/stock-images.php:118
+msgid "Invalid response from external API"
+msgstr "Réponse invalide de l'API externe"
+
+#: inc/functions/api-utils.php:65
+msgid "You've reached your free usage limit. Upgrade to Pro for additional credits."
+msgstr "Vous avez atteint votre limite d'utilisation gratuite. Passez à la version Pro pour des crédits supplémentaires."
+
+#: inc/functions/api-utils.php:66
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "You've used all your AI credits for today. Your credits will refresh automatically tomorrow."
+msgstr "Vous avez utilisé tous vos crédits IA pour aujourd'hui. Vos crédits seront automatiquement renouvelés demain."
+
+#: inc/lib/astra-notices/class-bsf-admin-notices.php:168
+msgid "Invalid notice ID."
+msgstr "ID de notification invalide."
+
+#: build/admin-dashboard/index.js:1
+msgid "Verification is pending and may take 1–2 hours or up to 2 days. Your site has been added to Search Console. Reloading in 2 seconds…"
+msgstr "La vérification est en attente et peut prendre 1 à 2 heures ou jusqu'à 2 jours. Votre site a été ajouté à la Search Console. Rechargement dans 2 secondes…"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Generate Image"
+msgstr "Générer une image"
+
+#: build/admin-dashboard/index.js:1
+msgid "A static page is set as the home page of your website under WordPress Dashboard > Settings > Reading."
+msgstr "Une page statique est définie comme page d'accueil de votre site sous Tableau de bord WordPress > Réglages > Lecture."
+
+#: build/admin-dashboard/index.js:1
+msgid "to set its search engine and social settings."
+msgstr "pour définir ses paramètres de moteur de recherche et sociaux."
+
+#: build/admin-dashboard/index.js:1
+msgid "Help shape the future of SureRank. Share how you use the plugin so we can build features that matter, fix issues faster, and make smarter decisions."
+msgstr "Aidez à façonner l'avenir de SureRank. Partagez comment vous utilisez le plugin afin que nous puissions développer des fonctionnalités importantes, corriger les problèmes plus rapidement et prendre des décisions plus intelligentes."
+
+#: build/admin-dashboard/index.js:1
+msgid "Error code:"
+msgstr "Code d'erreur :"
+
+#: build/admin-dashboard/index.js:1
+msgid "Migration Completed"
+msgstr "Migration terminée"
+
+#: build/admin-dashboard/index.js:1
+msgid "Either the page does not exist or you don't have permission to access this page please contact your administrator."
+msgstr "Soit la page n'existe pas, soit vous n'avez pas la permission d'accéder à cette page, veuillez contacter votre administrateur."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Select template %d"
+msgstr "Sélectionner le modèle %d"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "OG Image Templates"
+msgstr "Modèles d'image OG"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Choose a template for your Open Graph images. The selected template will be used to generate social sharing images."
+msgstr "Choisissez un modèle pour vos images Open Graph. Le modèle sélectionné sera utilisé pour générer les images de partage social."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Select Brand Logo"
+msgstr "Sélectionner le logo de la marque"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Set Brand Logo"
+msgstr "Définir le logo de la marque"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Upload Brand Logo"
+msgstr "Télécharger le logo de la marque"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "No file chosen"
+msgstr "Aucun fichier choisi"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "This logo will be used inside the OG images when generated with AI"
+msgstr "Ce logo sera utilisé dans les images OG générées avec l'IA"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Custom color palette editor"
+msgstr "Éditeur de palette de couleurs personnalisée"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Custom Pallet"
+msgstr "Palette personnalisée"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Good contrast"
+msgstr "Bon contraste"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Below 4.5:1 AA minimum"
+msgstr "En dessous de 4,5:1 AA minimum"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Custom"
+msgstr "Personnalisé"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Color Palettes"
+msgstr "Palettes de couleurs"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Available color palettes for OG Image Templates. Click to select a palette for your OG images."
+msgstr "Palettes de couleurs disponibles pour les modèles d'image OG. Cliquez pour sélectionner une palette pour vos images OG."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Auto-generate OG images for every page"
+msgstr "Générer automatiquement des images OG pour chaque page"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Ready-to-use professional templates"
+msgstr "Modèles professionnels prêts à l'emploi"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Custom branding with logo & colors"
+msgstr "Personnalisation de la marque avec logo et couleurs"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Generate stunning social preview images automatically"
+msgstr "Générez automatiquement des images d'aperçu social époustouflantes"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Create beautiful Open Graph images for your pages with AI-powered templates. Customize layouts, colors, and branding in just few clicks."
+msgstr "Créez de magnifiques images Open Graph pour vos pages avec des modèles alimentés par l'IA. Personnalisez les mises en page, les couleurs et la marque en quelques clics seulement."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Connect Account"
+msgstr "Connecter le compte"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Image Generation"
+msgstr "Génération d'image"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "This is your site's default social sharing image (Open Graph). It shows up when your pages are shared on social platforms unless a custom image is set on that page."
+msgstr "Ceci est l'image de partage social par défaut de votre site (Open Graph). Elle apparaît lorsque vos pages sont partagées sur les plateformes sociales, sauf si une image personnalisée est définie sur cette page."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Your site's search engine visibility is currently set to Hidden in"
+msgstr "La visibilité de votre site sur les moteurs de recherche est actuellement définie sur Caché dans"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Site Name:"
+msgstr "Nom du site :"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Search images…"
+msgstr "Rechercher des images…"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Search for images"
+msgstr "Rechercher des images"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Image selection options"
+msgstr "Options de sélection d'image"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Search Results"
+msgstr "Résultats de la recherche"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Upload Your Images"
+msgstr "Téléchargez vos images"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Selected Images"
+msgstr "Images sélectionnées"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Select"
+msgstr "Sélectionner"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Invalid response from server"
+msgstr "Réponse invalide du serveur"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Failed to fetch images. Please try again."
+msgstr "Échec de la récupération des images. Veuillez réessayer."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "No images found. Try different keywords."
+msgstr "Aucune image trouvée. Essayez des mots-clés différents."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Search for images to get started"
+msgstr "Recherchez des images pour commencer"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "images found"
+msgstr "images trouvées"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Stock image"
+msgstr "Image de stock"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Load More Images"
+msgstr "Charger plus d’images"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Uploaded image"
+msgstr "Image téléchargée"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "No images selected yet. Search or upload images to get started."
+msgstr "Aucune image sélectionnée pour le moment. Recherchez ou téléchargez des images pour commencer."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Maximum"
+msgstr "Maximum"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "images reached. Please remove some images before adding more."
+msgstr "images atteintes. Veuillez supprimer quelques images avant d’en ajouter d’autres."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "You can only add"
+msgstr "Vous ne pouvez ajouter que"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "more"
+msgstr "de plus"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "images allowed."
+msgstr "images autorisées."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "You can only add 1 more image."
+msgstr "Vous ne pouvez ajouter qu’une image de plus."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "more images."
+msgstr "images de plus."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "No file provided"
+msgstr "Aucun fichier fourni"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Invalid file type. Please upload JPG, PNG, or WEBP images."
+msgstr "Type de fichier invalide. Veuillez télécharger des images JPG, PNG ou WEBP."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "File size exceeds the maximum allowed size of"
+msgstr "La taille du fichier dépasse la taille maximale autorisée de"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "One or more files failed to upload."
+msgstr "Un ou plusieurs fichiers n’ont pas pu être téléchargés."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "%1$d non-image %2$s were ignored. Only JPG, PNG, and WEBP types are allowed."
+msgstr "%1$d %2$s non image ont été ignorés. Seuls les types JPG, PNG et WEBP sont autorisés."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "file"
+msgid_plural "files"
+msgstr[0] "fichier"
+msgstr[1] ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Select Images"
+msgstr "Sélectionner des images"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "images reached"
+msgstr "images atteintes"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Click to select files or drag and drop files here"
+msgstr "Cliquez pour sélectionner des fichiers ou glissez-déposez les fichiers ici"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Uploading files…"
+msgstr "Téléchargement des fichiers…"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "JPG, PNG, WEBP up to 10MB"
+msgstr "JPG, PNG, WEBP jusqu’à 10 Mo"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Upload complete"
+msgstr "Téléchargement terminé"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "of"
+msgstr "de"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "images selected"
+msgstr "images sélectionnées"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Continue"
+msgstr "Continuer"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Invalid response format"
+msgstr "Format de réponse invalide"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Text improved successfully!"
+msgstr "Texte amélioré avec succès !"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Failed to improve text. Please try again."
+msgstr "Échec de l’amélioration du texte. Veuillez réessayer."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Failed to improve text"
+msgstr "Échec de l’amélioration du texte"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Please enter some text before improving."
+msgstr "Veuillez saisir du texte avant d’améliorer."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Select Image"
+msgstr "Sélectionner une image"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Choose an image from our library or upload your own. This image will be used as a visual input while we generate your complete OG image with the selected layout and text."
+msgstr "Choisissez une image dans notre bibliothèque ou téléchargez la vôtre. Cette image sera utilisée comme entrée visuelle pendant que nous générons votre image OG complète avec la mise en page et le texte sélectionnés."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Choose your OG image"
+msgstr "Choisissez votre image OG"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Select the image variation you'd like to use as your OG image."
+msgstr "Sélectionnez la variation d’image que vous souhaitez utiliser comme image OG."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Click the image below to set it as your OG image."
+msgstr "Cliquez sur l’image ci-dessous pour la définir comme votre image OG."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Failed to Generate %s"
+msgstr "Échec de la génération de %s"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Something went wrong while generating %s. Please refresh the page to try again."
+msgstr "Une erreur est survenue lors de la génération de %s. Veuillez rafraîchir la page pour réessayer."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "the image"
+msgid_plural "images"
+msgstr[0] "l’image"
+msgstr[1] ""
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Invalid response from server."
+msgstr "Réponse invalide du serveur."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Image saved successfully!"
+msgstr "Image enregistrée avec succès !"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "The image has been added to your media library."
+msgstr "L’image a été ajoutée à votre bibliothèque de médias."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Failed to save image"
+msgstr "Échec de l’enregistrement de l’image"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Title"
+msgstr "Titre"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Enter a title for your OG image"
+msgstr "Entrez un titre pour votre image OG"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "You can edit the title used inside the OG Image"
+msgstr "Vous pouvez modifier le titre utilisé dans l’image OG"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Enter a social description for your OG image"
+msgstr "Entrez une description sociale pour votre image OG"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "You can edit the social description used inside the OG Image"
+msgstr "Vous pouvez modifier la description sociale utilisée dans l’image OG"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Close modal"
+msgstr "Fermer la fenêtre modale"
+
+#: build/seo-popup/index.js:1
+msgid "Switch image input mode"
+msgstr "Changer le mode d’entrée d’image"
+
+#: build/seo-popup/index.js:1
+msgid "Switch to custom field"
+msgstr "Passer au champ personnalisé"
+
+#: build/seo-popup/index.js:1
+msgid "Switch to uploader"
+msgstr "Passer au téléchargeur"

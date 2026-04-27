@@ -5,7 +5,7 @@ Tags: seo, wordpress seo, xml sitemap, schema, google search console
 Requires at least: 6.8
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.7.1
+Stable tag: 1.7.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -294,6 +294,18 @@ Brainstorm Force
 
 
 == Changelog ==
+= 1.7.2 - 27-April-2026 =
+* New: Compatibility - Added support for the WP Ghost plugin to ensure SureRank works correctly when WP Ghost is active.
+* New: Multilingual - Ship wpml-config.xml for Polylang and WPML compatibility out of the box.
+* Improvement: Sitemap - Reliability hardening with graceful cache miss, atomic rebuild, stale-while-revalidate, loopback probe, sync fallback, staleness recovery, and Site Health integration.
+* Improvement: REST - Added apiFetch middleware with AJAX fallback for save endpoints, REST probe, AJAX-first mode, and Site Health integration for better resilience.
+* Improvement: Multilingual - Centralized locale-format conversion in Locale_Formatter for consistent handling across the plugin.
+* Improvement: Multilingual - Compatibility improvements for WPML, Polylang, and TranslatePress.
+* Improvement: RTL - Resolved RTL issues found while testing Force UI components.
+* Fix: Sitemap - Always emit valid XML on cache miss to prevent broken sitemap responses.
+* Fix: Multilingual - Schema inLanguage now resolves per-post language and emits BCP-47 codes.
+* Fix: Multilingual - Detach Polylang/WPML term filters during rewrite flush to prevent flush failures.
+* Fix: Multilingual - Canonical URL correctly concatenates mapped subdomain with page slug for LandingKit and WPML domain mode.
 = 1.7.1 - 15-April-2026 =
 * Fix: Admin dashboard UI fixes in RTL version.
 = 1.7.0 - 10-April-2026 =

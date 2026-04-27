@@ -2,6 +2,7 @@ import { __ } from '@wordpress/i18n';
 import { Button, Text } from '@bsf/force-ui';
 import { SparklesIcon } from '@GlobalComponents/icons';
 import { redirectToPricingPage } from '@Functions/nudges';
+import { cn } from '@Functions/utils';
 
 /**
  * UpgradeCpt Component
@@ -33,6 +34,7 @@ import { redirectToPricingPage } from '@Functions/nudges';
  * @param {string}   props.description    Optional custom description
  * @param {string}   props.buttonText     Optional custom button text
  * @param {boolean}  props.showButton     Optional flag to show/hide button
+ * @param {string}   props.className      Optional custom class name for outer wrapper
  * @return {JSX.Element}                      Rendered component
  */
 const UpgradeCpt = ( {
@@ -44,6 +46,7 @@ const UpgradeCpt = ( {
 	),
 	buttonText = __( 'Upgrade Now', 'surerank' ),
 	showButton = true,
+	className = '',
 } ) => {
 	const handleUpgradeClick = () => {
 		if ( typeof onClickUpgrade !== 'function' ) {
@@ -53,7 +56,12 @@ const UpgradeCpt = ( {
 		onClickUpgrade();
 	};
 	return (
-		<div className="bg-background-secondary rounded-lg p-2">
+		<div
+			className={ cn(
+				'bg-background-secondary rounded-lg p-2',
+				className
+			) }
+		>
 			<div className="bg-background-primary rounded-md p-4 flex flex-col items-center gap-3">
 				<SparklesIcon className="text-text-primary" />
 				<div className="text-center">

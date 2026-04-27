@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use SureRank\Inc\ThirdPartyIntegrations\Multilingual\Locale_Formatter;
 use SureRank\Inc\ThirdPartyIntegrations\Multilingual\Provider;
 
 /**
@@ -62,7 +63,7 @@ class Polylang implements Provider {
 
 			$translations[ $lang_code ] = [
 				'url'    => $url,
-				'locale' => $this->format_locale( $language->locale ),
+				'locale' => Locale_Formatter::to_bcp47( $language->locale ),
 			];
 		}
 
@@ -193,7 +194,7 @@ class Polylang implements Provider {
 
 			$translations[ $lang_code ] = [
 				'url'    => $url,
-				'locale' => $this->format_locale( $language->locale ),
+				'locale' => Locale_Formatter::to_bcp47( $language->locale ),
 			];
 		}
 
@@ -217,14 +218,4 @@ class Polylang implements Provider {
 		return $language ? (string) $language : '';
 	}
 
-	/**
-	 * Format locale for hreflang
-	 *
-	 * @since 1.6.3
-	 * @param string $locale Locale string.
-	 * @return string
-	 */
-	private function format_locale( string $locale ): string {
-		return str_replace( '_', '-', $locale );
-	}
 }

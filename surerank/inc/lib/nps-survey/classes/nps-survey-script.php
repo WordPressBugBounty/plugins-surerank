@@ -88,7 +88,7 @@ class Nps_Survey {
 		$show_on_screen = ! empty( $vars['show_on_screens'] ) && is_array( $vars['show_on_screens'] ) ? $vars['show_on_screens'] : [ 'dashboard' ];
 
 		if ( ! function_exists( 'get_current_screen' ) ) {
-			return;
+			require_once ABSPATH . '/wp-admin/includes/screen.php';
 		}
 		$current_screen = get_current_screen();
 
@@ -181,7 +181,7 @@ class Nps_Survey {
 		// Add localize JS.
 		wp_localize_script(
 			'nps-survey-script',
-			'nps_survey_data',
+			'npsSurvey',
 			$data
 		);
 
@@ -206,32 +206,7 @@ class Nps_Survey {
 					'methods'             => \WP_REST_Server::CREATABLE,
 					'callback'            => array( self::class, 'submit_rating' ),
 					'permission_callback' => array( self::class, 'get_item_permissions_check' ),
-					'args'                => array(
-						'nps_id'      => array(
-							'type'              => 'string',
-							'required'          => true,
-							'sanitize_callback' => 'sanitize_text_field',
-						),
-						'rating'      => array(
-							'type'              => 'integer',
-							'required'          => true,
-							'validate_callback' => static function ( $value ) {
-								return is_numeric( $value ) && (int) $value >= 0 && (int) $value <= 10;
-							},
-							'sanitize_callback' => 'absint',
-						),
-						'comment'     => array(
-							'type'              => 'string',
-							'required'          => false,
-							'default'           => '',
-							'sanitize_callback' => 'sanitize_text_field',
-						),
-						'plugin_slug' => array(
-							'type'              => 'string',
-							'required'          => true,
-							'sanitize_callback' => 'sanitize_text_field',
-						),
-					),
+					'args'                => array(),
 				),
 			)
 		);
@@ -244,28 +219,7 @@ class Nps_Survey {
 					'methods'             => \WP_REST_Server::CREATABLE,
 					'callback'            => array( self::class, 'dismiss_nps_survey_panel' ),
 					'permission_callback' => array( self::class, 'get_item_permissions_check' ),
-					'args'                => array(
-						'nps_id'           => array(
-							'type'              => 'string',
-							'required'          => true,
-							'sanitize_callback' => 'sanitize_text_field',
-						),
-						'plugin_slug'      => array(
-							'type'              => 'string',
-							'required'          => true,
-							'sanitize_callback' => 'sanitize_text_field',
-						),
-						'dismiss_timespan' => array(
-							'type'              => 'integer',
-							'required'          => true,
-							'sanitize_callback' => 'absint',
-						),
-						'current_step'     => array(
-							'type'              => 'string',
-							'required'          => true,
-							'sanitize_callback' => 'sanitize_text_field',
-						),
-					),
+					'args'                => array(),
 				),
 			)
 		);
@@ -313,14 +267,8 @@ class Nps_Survey {
 	 */
 	public static function get_item_permissions_check( $request ) {
 		/**
-		 * Filter to disable the REST API permission check for NPS Survey endpoints.
+		 * Filter to check if NPS Survey is enabled on API.
 		 *
-		 * @security WARNING: Setting this filter to `true` removes all authentication
-		 *   and capability checks from the NPS Survey REST API endpoints, making them
-		 *   publicly accessible to any unauthenticated request. Only use this in
-		 *   controlled environments where you explicitly intend to open these endpoints.
-		 *
-		 * @param bool $disable Whether to bypass the permission check. Default false.
 		 * @since 1.0.13
 		 */
 		if ( apply_filters( 'nps_survey_api_disable_permission_check', false ) ) {
@@ -329,7 +277,7 @@ class Nps_Survey {
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return new \WP_Error(
-				'nps_survey_rest_cannot_access',
+				'gt_rest_cannot_access',
 				__( 'Sorry, you are not allowed to do that.', 'nps-survey' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
@@ -408,8 +356,8 @@ class Nps_Survey {
 				'rating'      => ! empty( $request['rating'] ) ? sanitize_text_field( strval( $request['rating'] ) ) : '',
 				'comment'     => ! empty( $request['comment'] ) ? sanitize_text_field( strval( $request['comment'] ) ) : '',
 				'email'       => $current_user->user_email,
-				'first_name'  => ! empty( $current_user->first_name ) ? $current_user->first_name : $current_user->display_name,
-				'last_name'   => ! empty( $current_user->last_name ) ? $current_user->last_name : '',
+				'first_name'  => $current_user->first_name ?? $current_user->display_name,
+				'last_name'   => $current_user->last_name ?? '',
 				'source'      => ! empty( $request['plugin_slug'] ) ? sanitize_text_field( strval( $request['plugin_slug'] ) ) : '',
 				'plugin_slug' => ! empty( $request['plugin_slug'] ) ? sanitize_text_field( strval( $request['plugin_slug'] ) ) : '',
 			),
@@ -522,14 +470,14 @@ class Nps_Survey {
 		$nps_form_status = self::get_nps_survey_dismiss_status( strval( $request['plugin_slug'] ) );
 
 		// Add dismiss timespan.
-		$nps_form_status['dismiss_timespan'] = absint( $request['dismiss_timespan'] );
+		$nps_form_status['dismiss_timespan'] = $request['dismiss_timespan'];
 
 		// Add dismiss date.
 		$nps_form_status['dismiss_time'] = time();
 
 		// Update dismiss count.
 		$nps_form_status['dismiss_count'] += 1;
-		$nps_form_status['dismiss_step']   = sanitize_text_field( strval( $request['current_step'] ) );
+		$nps_form_status['dismiss_step']   = $request['current_step'];
 
 		// Dismiss Permanantly.
 		if ( $nps_form_status['dismiss_count'] >= 2 ) {

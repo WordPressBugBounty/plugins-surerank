@@ -191,6 +191,14 @@ class Defaults {
 	private $post_defaults = null;
 
 	/**
+	 * Cached global defaults.
+	 *
+	 * @var array<string, mixed>|null
+	 * @since 1.7.2
+	 */
+	private $cached_global_defaults = null;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 1.0.0
@@ -236,40 +244,51 @@ class Defaults {
 	 * @since 1.0.0
 	 */
 	public function get_global_defaults( $key = '' ) {
+		if ( null === $this->cached_global_defaults ) {
+			$social_profiles_array = [];
+			foreach ( Onboarding::social_profiles() as $profile ) {
+				$social_profiles_array[ $profile['id'] ] = '';
+			}
 
-		$social_profiles_array = [];
-		foreach ( Onboarding::social_profiles() as $profile ) {
-			$social_profiles_array[ $profile['id'] ] = '';
+			$this->cached_global_defaults = apply_filters(
+				'surerank_global_defaults',
+				array_merge(
+					// General Settings.
+					$this->get_general_defaults(),
+					$this->get_homepage_defaults(),
+					$this->get_social_defaults(),
+					$this->feature_management_defaults(),
+					$this->get_special_pages_defaults(),
+					$this->get_feeds_defaults(),
+					$this->get_sitemap_defaults(),
+					$this->get_robots_defaults(),
+					$this->get_images_defaults(),
+					$this->get_advanced_miscellaneous_defaults(),
+					[
+						'schemas' => Utils::get_default_schemas(),
+					],
+					[
+						'social_profiles' => $social_profiles_array,
+					]
+				)
+			);
 		}
 
-		$data_settings = apply_filters(
-			'surerank_global_defaults',
-			array_merge(
-				// General Settings.
-				$this->get_general_defaults(),
-				$this->get_homepage_defaults(),
-				$this->get_social_defaults(),
-				$this->feature_management_defaults(),
-				$this->get_special_pages_defaults(),
-				$this->get_feeds_defaults(),
-				$this->get_sitemap_defaults(),
-				$this->get_robots_defaults(),
-				$this->get_images_defaults(),
-				$this->get_advanced_miscellaneous_defaults(),
-				[
-					'schemas' => Utils::get_default_schemas(),
-				],
-				[
-					'social_profiles' => $social_profiles_array,
-				]
-			)
-		);
-
-		if ( ! empty( $key ) && isset( $data_settings[ $key ] ) ) {
-			return $data_settings[ $key ];
+		if ( ! empty( $key ) && isset( $this->cached_global_defaults[ $key ] ) ) {
+			return $this->cached_global_defaults[ $key ];
 		}
 
-		return $data_settings;
+		return $this->cached_global_defaults;
+	}
+
+	/**
+	 * Clear the cached global defaults.
+	 *
+	 * @since 1.7.2
+	 * @return void
+	 */
+	public function clear_cached_defaults() {
+		$this->cached_global_defaults = null;
 	}
 
 	/**

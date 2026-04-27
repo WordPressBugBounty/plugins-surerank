@@ -22,12 +22,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 interface Provider {
 
 	/**
-	 * Get translation URLs for a single post
+	 * Get translation URLs for a single post.
+	 *
+	 * Implementations MUST return the `locale` field in BCP 47 form
+	 * (hyphen-separated, e.g. "en-US", "fr"). Use {@see Locale_Formatter::to_bcp47()}
+	 * to normalise locale strings coming out of the underlying plugin's API.
+	 *
+	 * Consumers that need OpenGraph form (underscore, e.g. "en_US") should
+	 * convert with {@see Locale_Formatter::to_opengraph()}.
 	 *
 	 * @since 1.6.3
-	 * @param int    $post_id Post ID.
+	 * @param int    $post_id   Post ID.
 	 * @param string $post_type Post type.
 	 * @return array<string, array{url: string, locale: string}>
+	 *         Keyed by language code (provider-defined shape; see
+	 *         {@see Provider::get_post_language()}).
 	 */
 	public function get_translations( int $post_id, string $post_type ): array;
 
@@ -70,7 +79,16 @@ interface Provider {
 	public function get_translated_post_id( int $post_id, string $language ): ?int;
 
 	/**
-	 * Get the language of a post
+	 * Get the language of a post.
+	 *
+	 * Return format is **provider-defined** — callers should not assume BCP 47:
+	 *   - Polylang, WPML: short code (e.g. "en", "es", "fr").
+	 *   - TranslatePress: underscore-form locale (e.g. "en_US"), because
+	 *     TP has no per-post language and returns the site default.
+	 *
+	 * Consumers that need a specific format should pass the return value
+	 * through {@see Locale_Formatter::to_bcp47()} or
+	 * {@see Locale_Formatter::to_opengraph()}.
 	 *
 	 * @since 1.6.3
 	 * @param int $post_id Post ID.

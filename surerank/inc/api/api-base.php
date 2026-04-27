@@ -50,10 +50,11 @@ abstract class Api_Base extends WP_REST_Controller {
 	}
 
 	/**
-	 * Validate the nonce for REST API requests.
+	 * Validate the nonce for REST API requests, then apply the
+	 * capability + Pro filter chain via check_permission_for_action().
 	 *
 	 * @param WP_REST_Request<array<string, mixed>> $request The REST request object.
-	 * @return bool|WP_Error True if valid, WP_REST_Response if invalid.
+	 * @return bool|WP_Error True if valid, WP_Error if invalid.
 	 */
 	public function validate_permission( $request ) {
 		// Retrieve the nonce from the request header.
@@ -77,6 +78,30 @@ abstract class Api_Base extends WP_REST_Controller {
 			);
 		}
 
+		return self::check_permission_for_action( $request );
+	}
+
+	/**
+	 * Apply SureRank's capability + Pro-filter permission chain for
+	 * the given request.
+	 *
+	 * Extracted from validate_permission() so the AJAX fallback in
+	 * inc/ajax/save-endpoints.php can enforce the exact same policy
+	 * that Pro plugins layer on top of the REST endpoints via the
+	 * `surerank_rest_api_permission` and
+	 * `surerank_rest_api_permission_check` filters. AJAX must not be
+	 * a back door around a Pro licensing or role policy that blocks
+	 * the REST endpoint.
+	 *
+	 * Callers are responsible for verifying request authenticity
+	 * (X-WP-Nonce for REST, `_wpnonce` via check_ajax_referer() for
+	 * AJAX) before invoking this helper.
+	 *
+	 * @param WP_REST_Request<array<string, mixed>> $request The REST request object (or a synthetic request built by the AJAX handler mirroring the equivalent REST route).
+	 * @return bool|WP_Error True on pass, WP_Error on denial.
+	 * @since 1.7.2
+	 */
+	public static function check_permission_for_action( $request ) {
 		/**
 		 * Filter to allow Pro plugin or extensions to override permission checks.
 		 *

@@ -58,3 +58,39 @@ export const createMediaFrame = ( options ) => {
 
 	return frame;
 };
+
+/**
+ * Call all functions in an array with the provided arguments.
+ * This is useful for calling multiple callbacks without overwriting them.
+ *
+ * @param {...any} functions - Functions to call
+ * @return {Function} A function that calls all provided functions with the given arguments
+ */
+export const callAll = ( ...functions ) => {
+	return ( ...args ) => {
+		functions.forEach( ( fn ) => {
+			if ( typeof fn === 'function' ) {
+				fn( ...args );
+			}
+		} );
+	};
+};
+
+/**
+ * Get site details such as title and description for use in image generation context.
+ *
+ * @return {{siteTitle: string, siteDescription: string}} An object containing site title and description
+ */
+export const getSiteDetails = () => {
+	return {
+		siteTitle:
+			surerank_globals.site_details?.site_title ||
+			window?.surerank_admin_common?.website_details?.website_name ||
+			'',
+		siteDescription:
+			surerank_globals.site_details?.site_tagline ||
+			window?.surerank_admin_common?.website_details
+				?.business_description ||
+			'',
+	};
+};

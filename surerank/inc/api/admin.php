@@ -83,12 +83,12 @@ class Admin extends Api_Base {
 			Send_Json::error( [ 'message' => __( 'Post id or term id is required', 'surerank' ) ] );
 		}
 
-		Send_Json::success(
-			[
-				'variables' => $this->get_variables( $request->get_param( 'post_id' ), $request->get_param( 'term_id' ) ),
-				'other'     => $this->get_other_data(),
-			]
-		);
+		$data = [
+			'variables' => $this->get_variables( $request->get_param( 'post_id' ), $request->get_param( 'term_id' ) ),
+			'other'     => $this->get_other_data(),
+		];
+
+		Send_Json::success( $data );
 	}
 
 	/**
@@ -165,44 +165,91 @@ class Admin extends Api_Base {
 	/**
 	 * Update admin settings
 	 *
+	 * REST endpoint handler. Extracts params from the request, delegates
+	 * to the transport-free save_admin_settings() helper, and emits the
+	 * result as JSON. The helper is shared with the AJAX fallback
+	 * registered in inc/ajax/save-endpoints.php so both paths produce
+	 * identical side effects for identical input.
+	 *
 	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
 	 * @since 1.0.0
 	 * @return void
 	 */
 	public function update_admin_settings( $request ) {
-		$data = $request->get_param( 'data' );
-		if ( empty( $data ) ) {
-			Send_Json::error( [ 'message' => __( 'No data found', 'surerank' ) ] );
+		$data   = $request->get_param( 'data' );
+		$result = self::save_admin_settings( is_array( $data ) ? $data : [] );
+
+		if ( $result['success'] ) {
+			\SureRank\Inc\Functions\Rest_Observation::mark_reachable();
+			Send_Json::success( [ 'message' => $result['message'] ] );
 		}
-		$this->update_global_options( $data );
+
+		Send_Json::error( [ 'message' => $result['message'] ] );
 	}
 
 	/**
 	 * Update global options.
+	 *
+	 * Thin alias for backward compatibility. Existing callers that invoked
+	 * update_global_options() get the same behaviour — data is persisted
+	 * and a success JSON response is emitted.
 	 *
 	 * @param array<string, mixed> $data Data.
 	 * @since 1.0.0
 	 * @return void
 	 */
 	public function update_global_options( $data ) {
-		// Allow pro plugin to handle extended meta templates toggle detection BEFORE getting any settings.
+		$result = self::save_admin_settings( $data );
+
+		if ( $result['success'] ) {
+			Send_Json::success( [ 'message' => $result['message'] ] );
+		}
+
+		Send_Json::error( [ 'message' => $result['message'] ] );
+	}
+
+	/**
+	 * Save global admin settings — transport-free core logic.
+	 *
+	 * Called by the REST endpoint handler above, by the
+	 * backward-compatibility alias update_global_options(), and by the
+	 * AJAX fallback in inc/ajax/save-endpoints.php. Returns a result array
+	 * rather than emitting a response.
+	 *
+	 * @param array<string, mixed> $data Settings payload (already sanitised).
+	 * @return array{success: bool, message: string}
+	 * @since 1.x.x
+	 */
+	public static function save_admin_settings( array $data ): array {
+		if ( empty( $data ) ) {
+			return [
+				'success' => false,
+				'message' => __( 'No data found', 'surerank' ),
+			];
+		}
+
+		// Allow Pro plugin to handle extended meta templates toggle detection BEFORE getting any settings.
 		do_action( 'surerank_admin_settings_before_processing', $data );
 		$data       = apply_filters( 'surerank_update_admin_settings_data', $data );
 		$db_options = Settings::get();
 
-		$updated_options = $this->get_updated_options( $data, $db_options );
+		$instance        = self::get_instance();
+		$updated_options = $instance->get_updated_options( $data, $db_options );
 
 		Helper::update_flush_rules( $updated_options );
 
-		$data = $this->process_social_profile_updates( $data, $updated_options );
+		$data = $instance->process_social_profile_updates( $data, $updated_options );
 		$data = array_merge( $db_options, $data );
-		$data = $this->process_surerank_usage_optin( $data );
+		$data = $instance->process_surerank_usage_optin( $data );
 
 		if ( Update::option( SURERANK_SETTINGS, $data ) ) {
 			Update_Timestamp::timestamp_option();
 		}
 
-		Send_Json::success( [ 'message' => __( 'Settings updated', 'surerank' ) ] );
+		return [
+			'success' => true,
+			'message' => __( 'Settings updated', 'surerank' ),
+		];
 	}
 
 	/**

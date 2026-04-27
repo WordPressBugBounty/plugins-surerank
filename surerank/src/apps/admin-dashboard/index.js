@@ -1,3 +1,8 @@
+// Register SureRank's apiFetch middleware before any apiFetch call so
+// settings saves automatically fall back to admin-ajax.php when a
+// security plugin or WAF blocks /wp-json/. See #2362.
+import '@Functions/api-fetch-middleware';
+
 import { mountComponent } from '@Functions/utils';
 import createAdminRouter, {
 	createRoute,
@@ -52,6 +57,7 @@ import InstantIndexingLogs from '@AdminDashboard/instant-indexing/logs';
 import EmailReportsRoute from '@AdminGeneral/advanced/email-reports';
 import GoogleIndexingSettings from '@AdminDashboard/google-indexing/settings';
 import GoogleIndexingLogs from '@AdminDashboard/google-indexing/logs';
+// import ImageGenerationUpgrade from '@AdminDashboard/image-generation';
 import currentUserCan from '@/functions/role-capabilities';
 import { isProActive } from '@/functions/nudges';
 
@@ -151,6 +157,12 @@ const generalAndAdvancedRoutes = [
 		createChildRoute( '/image-seo', ImageSeoRoute, [], {
 			capability: 'surerank_global_setting',
 		} ),
+		/*
+		// Note: Revert this after release
+		createChildRoute( '/image-generation', ImageGenerationUpgrade, [], {
+			capability: 'surerank_global_setting',
+		} ),
+		 */
 		// Conditionally include schema route
 		...( ENABLE_SCHEMAS && SchemaRoute
 			? [
@@ -355,7 +367,7 @@ const App = () => {
 	return (
 		<>
 			<Router />
-			<Toaster className="z-999999" />
+			<Toaster className="z-[9999999]" />
 		</>
 	);
 };

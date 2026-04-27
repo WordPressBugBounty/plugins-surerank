@@ -54,7 +54,7 @@ class Controller {
 			'source' => 'openai',
 		];
 
-		$response = Utils::get_instance()->send_api_request( $args );
+		$response = Utils::get_instance()->send_api_request( $args, 'surerank/generate/content' );
 
 		if ( is_wp_error( $response ) ) {
 			return $response;
@@ -89,4 +89,5 @@ class Controller {
 
 		return $decoded_response['content'];
 	}
+
 }

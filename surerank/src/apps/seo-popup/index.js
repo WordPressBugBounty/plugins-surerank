@@ -1,3 +1,8 @@
+// Register SureRank's apiFetch middleware before any apiFetch call so
+// metabox saves automatically fall back to admin-ajax.php when a
+// security plugin or WAF blocks /wp-json/. See #2362.
+import '@Functions/api-fetch-middleware';
+
 import { createRoot } from 'react-dom';
 import Modal from '@SeoPopup/modal';
 import RegisterMenu from './register-menu';

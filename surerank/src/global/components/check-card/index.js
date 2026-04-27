@@ -294,12 +294,15 @@ export const ImageGrid = ( { images } ) => {
 		return null;
 	}
 
+	const mediaUploadUrl =
+		surerank_globals?.wp_media_upload_url ?? '/wp-admin/upload.php';
+
 	const handleImageClick = async ( event, image ) => {
 		event?.preventDefault();
 
 		if ( IMAGE_ID_CACHE.has( image ) ) {
 			window.open(
-				`/wp-admin/upload.php?item=${ IMAGE_ID_CACHE.get( image ) }`,
+				`${ mediaUploadUrl }?item=${ IMAGE_ID_CACHE.get( image ) }`,
 				'_blank',
 				'noopener noreferrer'
 			);
@@ -316,17 +319,13 @@ export const ImageGrid = ( { images } ) => {
 			const imageId = results?.id;
 			IMAGE_ID_CACHE.set( image, imageId );
 			window.open(
-				`/wp-admin/upload.php?item=${ imageId }`,
+				`${ mediaUploadUrl }?item=${ imageId }`,
 				'_blank',
 				'noopener noreferrer'
 			);
 		} catch ( error ) {
 			// If we can't find the image, open the media library
-			window.open(
-				'/wp-admin/upload.php',
-				'_blank',
-				'noopener noreferrer'
-			);
+			window.open( mediaUploadUrl, '_blank', 'noopener noreferrer' );
 		}
 	};
 

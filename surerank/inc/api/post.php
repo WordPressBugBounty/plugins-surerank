@@ -15,6 +15,7 @@ use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Functions\Send_Json;
 use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Functions\Update;
+use SureRank\Inc\Import_Export\Utils as ImportExportUtils;
 use SureRank\Inc\Schema\SchemasApi;
 use SureRank\Inc\Traits\Get_Instance;
 use WP_Error;
@@ -109,26 +110,140 @@ class Post extends Api_Base {
 	/**
 	 * Update seo data
 	 *
+	 * REST endpoint handler. Extracts params from the request, delegates to
+	 * the transport-free save_post_seo_meta() helper, and emits the result
+	 * as JSON. The helper is shared with the AJAX fallback registered in
+	 * inc/ajax/save-endpoints.php so both paths produce identical side
+	 * effects for identical input.
+	 *
 	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
 	 * @since 1.0.0
 	 * @return void
 	 */
 	public function update_post_seo_data( $request ) {
 
-		$post_id = $request->get_param( 'post_id' );
-		$data    = $request->get_param( 'metaData' );
+		$post_id = (int) $request->get_param( 'post_id' );
+		$data    = (array) $request->get_param( 'metaData' );
 
+		$result = self::save_post_seo_meta( $post_id, $data );
+
+		if ( $result['success'] ) {
+			// REST reached and save succeeded — record as evidence for Site Health.
+			\SureRank\Inc\Functions\Rest_Observation::mark_reachable();
+			Send_Json::success( [ 'message' => $result['message'] ] );
+		}
+
+		Send_Json::error( [ 'message' => $result['message'] ] );
+	}
+
+	/**
+	 * Save post SEO meta — transport-free core logic.
+	 *
+	 * Called by the REST endpoint handler above and by the AJAX fallback
+	 * handler in inc/ajax/save-endpoints.php. Returns a result array rather
+	 * than emitting a response, so both callers can transport it in their
+	 * native format (wp_send_json / Send_Json).
+	 *
+	 * Side effects (on success):
+	 *   - Downloads external feature-image URLs and updates data in place
+	 *   - Writes post meta via update_post_meta_common()
+	 *   - Runs the surerank_run_post_seo_checks filter
+	 *   - Updates the global and per-post last-optimised timestamps
+	 *
+	 * Side effects (on failure): no timestamps are written. This matches
+	 * the pre-refactor behaviour of update_post_seo_data() and avoids
+	 * marking a post as "optimized" when the SEO checks errored.
+	 *
+	 * @param int                  $post_id Post ID to save meta against.
+	 * @param array<string, mixed> $data    Meta payload (already sanitised).
+	 * @return array{success: bool, message: string}
+	 * @since 1.x.x
+	 */
+	public static function save_post_seo_meta( int $post_id, array $data ): array {
+		self::update_feature_image_data( $post_id, $data );
 		self::update_post_meta_common( $post_id, $data );
 
-		if ( is_wp_error( $this->run_checks( $post_id ) ) ) {
-			Send_Json::error( [ 'message' => __( 'Error while running SEO Checks.', 'surerank' ) ] );
+		$check_result = self::get_instance()->run_checks( $post_id );
+		if ( is_wp_error( $check_result ) ) {
+			return [
+				'success' => false,
+				'message' => __( 'Error while running SEO Checks.', 'surerank' ),
+			];
 		}
 
 		$current_time = time();
-		Update::option( 'surerank_last_optimized_on', $current_time ); // Site-wide last optimization for consider site type.
-		Update::post_meta( $post_id, 'surerank_post_optimized_at', $current_time ); // Per-post optimization timestamp for considering site type of basis of posts optimization.
+		Update::option( 'surerank_last_optimized_on', $current_time ); // Site-wide last optimisation.
+		Update::post_meta( $post_id, 'surerank_post_optimized_at', $current_time ); // Per-post optimisation timestamp.
 
-		Send_Json::success( [ 'message' => __( 'Data updated', 'surerank' ) ] );
+		return [
+			'success' => true,
+			'message' => __( 'Data updated', 'surerank' ),
+		];
+	}
+
+	/**
+	 * Update feature image data
+	 *
+	 * @param int                  $post_id Post ID.
+	 * @param array<string, mixed> $data Data to update (passed by reference to update URLs and IDs).
+	 * @return void
+	 */
+	public static function update_feature_image_data( int $post_id, array &$data ): void {
+		$image_fields = [
+			'facebook_image_url' => 'facebook_image_id',
+			'twitter_image_url'  => 'twitter_image_id',
+			'featured_image_url' => 'featured_image_id',
+		];
+
+		foreach ( $image_fields as $url_field => $id_field ) {
+			if ( ! isset( $data[ $url_field ] ) || empty( $data[ $url_field ] ) ) {
+				continue;
+			}
+
+			$image_url = $data[ $url_field ];
+
+			if ( strpos( $image_url, home_url() ) !== false ) {
+				continue;
+			}
+
+			$download_result = self::download_external_image( $image_url, $post_id );
+
+			if ( $download_result['success'] ) {
+				$data[ $url_field ] = $download_result['data']['url'];
+				$data[ $id_field ]  = $download_result['data']['attachment_id'];
+
+				if ( 'featured_image_url' === $url_field ) {
+					set_post_thumbnail( $post_id, $download_result['data']['attachment_id'] );
+				}
+			}
+		}
+	}
+
+	/**
+	 * Download external image and save to WordPress media library
+	 *
+	 * Uses the centralized download_and_save_image() utility which includes
+	 * SSRF protection and redirect blocking for security.
+	 *
+	 * @param string $image_url Image URL to download.
+	 * @param int    $post_id Post ID to associate the image with (unused, kept for compatibility).
+	 * @return array<string, mixed> Result with success status and data.
+	 */
+	public static function download_external_image( string $image_url, int $post_id ): array {
+		$result = ImportExportUtils::download_and_save_image( $image_url );
+
+		if ( ! $result['success'] ) {
+			return $result;
+		}
+
+		$attachment_id = $result['data']['attachment_id'] ?? 0;
+
+		// Add generated image meta (in addition to _surerank_imported from utils).
+		if ( $attachment_id ) {
+			add_post_meta( $attachment_id, '_surerank_generated_image', true );
+		}
+
+		return $result;
 	}
 
 	/**

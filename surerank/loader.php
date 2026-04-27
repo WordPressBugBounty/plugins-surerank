@@ -18,12 +18,15 @@ use SureRank\Inc\Admin\BulkActions;
 use SureRank\Inc\Admin\BulkEdit;
 use SureRank\Inc\Admin\Dashboard;
 use SureRank\Inc\Admin\Onboarding;
+use SureRank\Inc\Admin\Rest_Site_Health;
 use SureRank\Inc\Admin\Search_Console_Widget;
 use SureRank\Inc\Admin\Seo_Bar;
 use SureRank\Inc\Admin\Seo_Popup;
+use SureRank\Inc\Admin\Site_Health;
 use SureRank\Inc\Admin\Sync;
 use SureRank\Inc\Admin\Update_Timestamp;
 use SureRank\Inc\Ajax\Ajax;
+use SureRank\Inc\Ajax\Save_Endpoints;
 use SureRank\Inc\Analytics\Analytics;
 use SureRank\Inc\Analyzer\PostAnalyzer;
 use SureRank\Inc\Analyzer\TermAnalyzer;
@@ -48,6 +51,7 @@ use SureRank\Inc\Frontend\Special_Page;
 use SureRank\Inc\Frontend\Taxonomy;
 use SureRank\Inc\Frontend\Title;
 use SureRank\Inc\Frontend\Twitter;
+use SureRank\Inc\Functions\Compat;
 use SureRank\Inc\Functions\Cron;
 use SureRank\Inc\Functions\Defaults;
 use SureRank\Inc\Functions\Get;
@@ -91,7 +95,6 @@ class Loader {
 	 */
 	public function __construct() {
 		spl_autoload_register( [ $this, 'autoload' ] );
-		add_action( 'shutdown', [ $this, 'shutdown' ] );
 
 		add_action( 'plugins_loaded', [ $this, 'load_routes' ], 10 );
 
@@ -109,6 +112,9 @@ class Loader {
 		add_filter( 'plugin_action_links_' . SURERANK_BASE, [ $this, 'add_pro_nudge_link' ] );
 
 		add_filter( 'body_class', [ $this, 'add_body_class' ] );
+
+		// Map custom SureRank capabilities to primitive WordPress capabilities.
+		add_filter( 'map_meta_cap', [ $this, 'map_meta_cap' ], 10, 4 );
 	}
 
 	/**
@@ -136,10 +142,13 @@ class Loader {
 		do_action( 'surerank_before_load_routes' );
 
 		Routes::get_instance();
-		Analytics::get_instance();
-		Admin_Notice::get_instance();
 
-		do_action( 'surerank_before_load_routes' );
+		if ( is_admin() || wp_doing_ajax() ) {
+			Analytics::get_instance();
+			Admin_Notice::get_instance();
+		}
+
+		do_action( 'surerank_after_load_routes' );
 	}
 
 	/**
@@ -260,19 +269,8 @@ class Loader {
 	public function flush_rules() {
 		if ( Get::option( 'surerank_flush_required' ) ) {
 			Helper::flush();
+			delete_option( 'surerank_flush_required' );
 		}
-
-		delete_option( 'surerank_flush_required' );
-	}
-
-	/**
-	 * Flush the setting on the shubdown
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function shutdown() {
-		update_option( 'rewrite_rules', '' );
 	}
 
 	/**
@@ -399,6 +397,36 @@ class Loader {
 	}
 
 	/**
+	 * Map custom SureRank capabilities to primitive WordPress capabilities.
+	 *
+	 * This maps the custom capabilities used in SureRank to standard WordPress
+	 * capabilities so that role management works correctly. The Pro plugin can
+	 * override this to provide more granular control.
+	 *
+	 * @since 1.7.2
+	 * @param array<string> $caps    Primitive capabilities required by the user.
+	 * @param string        $cap     Capability being checked.
+	 * @param int           $user_id User ID.
+	 * @param array<int>    $args    Additional arguments.
+	 * @return array<string> Mapped capabilities.
+	 */
+	public function map_meta_cap( $caps, $cap, $user_id, $args ) {
+		// Map custom SureRank capabilities to manage_options for free version.
+		// Pro plugin can override this filter for proper role management.
+		$surerank_caps = [
+			'surerank_content_setting',
+			'surerank_global_setting',
+		];
+
+		if ( in_array( $cap, $surerank_caps, true ) ) {
+			// Map to manage_options for the free version.
+			return [ 'manage_options' ];
+		}
+
+		return $caps;
+	}
+
+	/**
 	 * Load core components that are always needed.
 	 *
 	 * @return void
@@ -407,29 +435,35 @@ class Loader {
 		$core_components = [
 			Defaults::class,
 			Schemas::class,
-			Seo_Bar::class,
-			Attachment::class,
 			Crawl_Optimization::class,
+			Api_Init::class,
+			Compat::class,
+			Cron::class,
+			Checksum::class,
+			Integrations_Init::class,
+			Knowledge_Graph_Init::class,
+			Attachment::class,
 			Analyzer::class,
 			PostAnalyzer::class,
 			TermAnalyzer::class,
-			Api_Init::class,
 			Auth::class,
 			Sync::class,
-			Cron::class,
-			Checksum::class,
 			Ai_Auth_Init::class,
 			Content_Generation_Init::class,
 			EmailReports_Init::class,
 			Fix_Seo_Checks_Init::class,
 			Knowledge_Graph_Init::class,
 			Nudges_Init::class,
-			Integrations_Init::class,
 			Process::class,
 			Cli::class,
 		];
 
 		$this->load_components( $core_components );
+
+		// Seo_Bar only needed in admin page views (not AJAX or CLI).
+		if ( is_admin() && ! wp_doing_ajax() ) {
+			$this->load_components( [ Seo_Bar::class ] );
+		}
 	}
 
 	/**
@@ -472,7 +506,10 @@ class Loader {
 			BulkActions::class,
 			BulkEdit::class,
 			Ajax::class,
+			Save_Endpoints::class,
+			Rest_Site_Health::class,
 			Search_Console_Widget::class,
+			Site_Health::class,
 		];
 
 		$this->load_components( $admin_components );

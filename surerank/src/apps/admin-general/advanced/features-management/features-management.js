@@ -83,7 +83,9 @@ const getBaseToggles = () => [
 	...( currentUserCan( 'surerank_global_setting' )
 		? PERFORMANCE_INSIGHTS_FEATURES
 		: [] ),
-	...( currentUserCan( 'surerank_global_setting' ) ? GLOBAL_SEO_FEATURES : [] ),
+	...( currentUserCan( 'surerank_global_setting' )
+		? GLOBAL_SEO_FEATURES
+		: [] ),
 	...( currentUserCan( 'surerank_global_setting' )
 		? TECHNICAL_CONTROLS_FEATURES
 		: [] ),

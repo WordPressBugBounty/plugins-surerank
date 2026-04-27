@@ -62,6 +62,8 @@ class Canonical {
 			$url = $meta_data['canonical_url'] ?? get_home_url();
 		}
 
+		global $wp;
+
 		if ( ! is_404() ) {
 			if ( is_search() ) {
 				$url = get_search_link();
@@ -74,11 +76,26 @@ class Canonical {
 				$url            = isset( $meta_data['canonical_url'] ) && ! empty( $meta_data['canonical_url'] )
 					? $meta_data['canonical_url']
 					: ( $queried_object instanceof WP_Term ? get_term_link( $queried_object ) : '' );
-			} else {
-				global $wp;
+			} elseif ( ! is_home() && ! is_front_page() ) {
 				$url = $meta_data['canonical_url'] ?? user_trailingslashit( home_url( add_query_arg( [], $wp->request ) ) );
 			}
+
+			if ( empty( $url ) ) {
+				$url = user_trailingslashit( home_url( add_query_arg( [], $wp->request ) ) );
+			}
 		}
+
+		/**
+		 * Filters the canonical URL before output.
+		 *
+		 * Allows domain-mapping integrations (WPML domain-per-language, WP Landing Kit)
+		 * to supply the correctly mapped canonical URL.
+		 *
+		 * @since 1.7.2
+		 * @param string               $url       Resolved canonical URL.
+		 * @param array<string, mixed> $meta_data Post meta data for this request.
+		 */
+		$url = (string) apply_filters( 'surerank_canonical_url', $url, $meta_data );
 
 		$this->print_canonical( $url );
 	}

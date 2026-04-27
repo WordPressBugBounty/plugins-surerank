@@ -11,13 +11,11 @@ import {
 	Text,
 } from '@bsf/force-ui';
 import { useCallback, useEffect, useRef, useState } from '@wordpress/element';
-import { RefreshCcw } from 'lucide-react';
+import { RefreshCcw, RefreshCw } from 'lucide-react';
 import SocialPreview from '@GlobalComponents/social-preview';
+import MetaField from './meta-field';
 import { STORE_NAME } from '@Store/constants';
-import {
-	INPUT_VARIABLE_SUGGESTIONS as variableSuggestions,
-	MAX_EDITOR_INPUT_LENGTH,
-} from '@Global/constants';
+import { INPUT_VARIABLE_SUGGESTIONS as variableSuggestions } from '@Global/constants';
 import {
 	editorValueToString,
 	stringValueToFormatJSON,
@@ -27,8 +25,8 @@ import replacement from '@Functions/replacement';
 import { flat } from '@Functions/variables';
 import { SeoPopupTooltip } from '@AdminComponents/tooltip';
 import MediaPreview from '@/apps/admin-components/media-preview';
-import MagicButton from '@/apps/seo-popup/components/fix-it-for-me/magic-button';
-import { createMediaFrame } from '@/global/utils/utils';
+import { createMediaFrame, getSiteDetails } from '@/global/utils/utils';
+import { applyFilters } from '@wordpress/hooks';
 
 const socialMediaTabs = [
 	{
@@ -67,6 +65,7 @@ const SocialTab = ( { postMetaData, updatePostMetaData, globalDefaults } ) => {
 		facebook: postMetaData?.facebook_image_mode || 'uploader',
 		twitter: postMetaData?.twitter_image_mode || 'uploader',
 	} );
+	const [ imageGenModalOpen, setImageGenModalOpen ] = useState( false );
 
 	// Auto-detect custom field usage in image URLs and switch to custom mode
 	useEffect( () => {
@@ -207,6 +206,28 @@ const SocialTab = ( { postMetaData, updatePostMetaData, globalDefaults } ) => {
 		} );
 	};
 
+	const ImageModeToggleButton = ( { targetMode, tooltipContent } ) => (
+		<SeoPopupTooltip content={ tooltipContent } placement="top-end">
+			<Button
+				size="xs"
+				variant="outline"
+				className="size-10"
+				aria-label={ __( 'Switch image input mode', 'surerank' ) }
+				icon={ <RefreshCw size={ 24 } /> }
+				onClick={ () => {
+					setImageInputMode( {
+						...imageInputMode,
+						[ activeTab ]: targetMode,
+					} );
+					handleUpdatePostMetaData(
+						`${ activeTab }_image_mode`,
+						targetMode
+					);
+				} }
+			/>
+		</SeoPopupTooltip>
+	);
+
 	const handleClickInput = ( event ) => {
 		event.preventDefault();
 
@@ -300,55 +321,42 @@ const SocialTab = ( { postMetaData, updatePostMetaData, globalDefaults } ) => {
 					null,
 					<>
 						<div className="p-2 space-y-1.5">
-							{ /* Label & Toggle */ }
+							{ /* Label & Generate Image */ }
 							<div className="flex items-center justify-between gap-2">
 								<div className="flex items-center gap-1">
 									<Label tag="span" size="sm">
 										{ __( 'Social Image', 'surerank' ) }
 									</Label>
 								</div>
-								<div className="flex items-center gap-2">
-									<Switch
-										id={ `${ activeTab }_image_mode_toggle` }
-										size="xs"
-										checked={
-											imageInputMode[ activeTab ] ===
-											'custom'
-										}
-										onChange={ ( value ) => {
-											const newMode = value
-												? 'custom'
-												: 'uploader';
-											setImageInputMode( {
-												...imageInputMode,
-												[ activeTab ]: newMode,
-											} );
-											handleUpdatePostMetaData(
-												`${ activeTab }_image_mode`,
-												newMode
-											);
-										} }
-									/>
-									<Label
-										htmlFor={ `${ activeTab }_image_mode_toggle` }
-										size="sm"
-										className="text-field-label"
-									>
-										{ __( 'Custom Field', 'surerank' ) }
-									</Label>
-								</div>
+								{ applyFilters(
+									'surerank-pro.og-image-trigger-button',
+									null,
+									{
+										onClick: () =>
+											setImageGenModalOpen( true ),
+									}
+								) }
 							</div>
 
 							{ /* Conditional Input */ }
 							{ imageInputMode[ activeTab ] === 'uploader' ? (
 								<>
 									{ /* File Input */ }
-									<Input
-										className="m-0 [&>input]:m-0 [&>input]:transition-colors [&>input]:duration-150 [&>input]:ease-in-out"
-										type="file"
-										size="md"
-										onClick={ handleClickInput }
-									/>
+									<div className="flex items-center gap-2 [&>div]:w-full">
+										<Input
+											className="m-0 w-full [&>input]:m-0 [&>input]:transition-colors [&>input]:duration-150 [&>input]:ease-in-out"
+											type="file"
+											size="md"
+											onClick={ handleClickInput }
+										/>
+										<ImageModeToggleButton
+											targetMode="custom"
+											tooltipContent={ __(
+												'Switch to custom field',
+												'surerank'
+											) }
+										/>
+									</div>
 
 									{ /* Help text for uploader mode */ }
 									<Text
@@ -376,161 +384,104 @@ const SocialTab = ( { postMetaData, updatePostMetaData, globalDefaults } ) => {
 							) : (
 								<>
 									{ /* Text Input for Custom Field */ }
-									<EditorInput
-										by="label"
-										defaultValue={ stringValueToFormatJSON(
-											postMetaData?.[
-												`${ activeTab }_image_url`
-											],
-											variableSuggestions,
-											'value'
-										) }
-										trigger="@"
-										options={ variableSuggestions }
-										onChange={ ( editorState ) => {
-											handleUpdatePostMetaData(
-												`${ activeTab }_image_url`,
-												editorValueToString(
-													editorState.toJSON()
+									<div className="flex items-center gap-2">
+										<EditorInput
+											className="w-full"
+											by="label"
+											defaultValue={ stringValueToFormatJSON(
+												postMetaData?.[
+													`${ activeTab }_image_url`
+												],
+												variableSuggestions,
+												'value'
+											) }
+											trigger="@"
+											options={ variableSuggestions }
+											onChange={ ( editorState ) => {
+												handleUpdatePostMetaData(
+													`${ activeTab }_image_url`,
+													editorValueToString(
+														editorState.toJSON()
+													)
+												);
+											} }
+											placeholder={
+												/* translators: %custom_field.field_name% is a placeholder for custom field variables */
+												__(
+													'Enter image URL or %custom_field.field_name%',
+													'surerank'
 												)
-											);
-										} }
-										placeholder={
-											/* translators: %custom_field.field_name% is a placeholder for custom field variables */
-											__(
-												'Enter image URL or %custom_field.field_name%',
+											}
+										/>
+										<ImageModeToggleButton
+											targetMode="uploader"
+											tooltipContent={ __(
+												'Switch to uploader',
 												'surerank'
-											)
-										}
-									/>
+											) }
+										/>
+									</div>
 									{ /* Hint text */ }
 									<Text
 										size={ 12 }
 										weight={ 400 }
 										color="help"
 									>
-										{ /* translators: %custom_field.field_name% is a placeholder example for custom field variables */
-										__(
-											'Enter a custom field variable like %custom_field.field_name% or a direct image URL. Type @ to view variable suggestions.',
-											'surerank'
-										) }
+										{
+											/* translators: %custom_field.field_name% is a placeholder example for custom field variables */
+											__(
+												'Enter a custom field variable like %custom_field.field_name% or a direct image URL. Type @ to view variable suggestions.',
+												'surerank'
+											)
+										}
 									</Text>
 								</>
 							) }
 						</div>
 						{ /* Social Title */ }
-						<div className="space-y-1.5 p-2">
-							{ /* Label & Limit */ }
-							<div className="flex items-center justify-between gap-1">
-								<Label
-									tag="span"
-									size="sm"
-									className="space-x-0.5"
-								>
-									{ __( 'Social Title', 'surerank' ) }
-								</Label>
-								<MagicButton
-									fieldKey={ `${ activeTab }_title` }
-									onUseThis={ ( fieldKey, content ) => {
-										handleUpdatePostMetaData(
-											fieldKey,
-											content
-										);
-									} }
-									tooltip={ __(
-										'Generate with AI',
-										'surerank'
-									) }
-								/>
-							</div>
-							{ /* Input */ }
-							<EditorInput
-								ref={ titleEditor }
-								by="label"
-								defaultValue={ stringValueToFormatJSON(
-									postMetaData?.[ `${ activeTab }_title` ],
-									variableSuggestions,
-									'value'
-								) }
-								trigger="@"
-								options={ variableSuggestions }
-								onChange={ ( editorState ) => {
-									handleUpdatePostMetaData(
-										`${ activeTab }_title`,
-										editorValueToString(
-											editorState.toJSON()
-										)
-									);
-								} }
-								placeholder={ '' }
-							/>
-							{ /* Hint text */ }
-							<span className="block text-xs leading-4 font-normal text-field-helper">
-								{ __(
-									'Type @ to view variable suggestions',
-									'surerank'
-								) }
-							</span>
-						</div>
+						<MetaField
+							label={ __( 'Social Title', 'surerank' ) }
+							editorRef={ titleEditor }
+							defaultValue={ stringValueToFormatJSON(
+								postMetaData?.[ `${ activeTab }_title` ],
+								variableSuggestions,
+								'value'
+							) }
+							variableSuggestions={ variableSuggestions }
+							onChange={ ( editorState ) => {
+								handleUpdatePostMetaData(
+									`${ activeTab }_title`,
+									editorValueToString( editorState.toJSON() )
+								);
+							} }
+							fieldKey={ `${ activeTab }_title` }
+							onUseThis={ ( fieldKey, content ) => {
+								handleUpdatePostMetaData( fieldKey, content );
+							} }
+						/>
 
-						{ /* Social description */ }
-						<div className="space-y-1.5 p-2">
-							{ /* Label & Limit */ }
-							<div className="flex items-center justify-between gap-1">
-								<Label
-									tag="span"
-									size="sm"
-									className="space-x-0.5"
-								>
-									{ __( 'Social Description', 'surerank' ) }
-								</Label>
-								<MagicButton
-									fieldKey={ `${ activeTab }_description` }
-									onUseThis={ ( fieldKey, content ) => {
-										handleUpdatePostMetaData(
-											fieldKey,
-											content
-										);
-									} }
-									tooltip={ __(
-										'Generate with AI',
-										'surerank'
-									) }
-								/>
-							</div>
-							{ /* Input */ }
-							<EditorInput
-								ref={ descriptionEditor }
-								className="[&+div]:items-start [&+div]:pt-1"
-								by="label"
-								defaultValue={ stringValueToFormatJSON(
-									postMetaData?.[
-										`${ activeTab }_description`
-									],
-									variableSuggestions,
-									'value'
-								) }
-								options={ variableSuggestions }
-								onChange={ ( editorState ) => {
-									handleUpdatePostMetaData(
-										`${ activeTab }_description`,
-										editorValueToString(
-											editorState.toJSON()
-										)
-									);
-								} }
-								trigger="@"
-								placeholder={ '' }
-								maxLength={ MAX_EDITOR_INPUT_LENGTH }
-							/>
-							{ /* Hint text */ }
-							<span className="block text-xs leading-4 font-normal text-field-helper">
-								{ __(
-									'Type @ to view variable suggestions',
-									'surerank'
-								) }
-							</span>
-						</div>
+						{ /* Social Description */ }
+						<MetaField
+							label={ __( 'Social Description', 'surerank' ) }
+							editorRef={ descriptionEditor }
+							defaultValue={ stringValueToFormatJSON(
+								postMetaData?.[ `${ activeTab }_description` ],
+								variableSuggestions,
+								'value'
+							) }
+							variableSuggestions={ variableSuggestions }
+							onChange={ ( editorState ) => {
+								handleUpdatePostMetaData(
+									`${ activeTab }_description`,
+									editorValueToString( editorState.toJSON() )
+								);
+							} }
+							className="[&+div]:items-start [&+div]:pt-1"
+							fieldKey={ `${ activeTab }_description` }
+							onUseThis={ ( fieldKey, content ) => {
+								handleUpdatePostMetaData( fieldKey, content );
+							} }
+						/>
 					</>
 				) }
 				<div className="p-2 space-y-2">
@@ -543,28 +494,30 @@ const SocialTab = ( { postMetaData, updatePostMetaData, globalDefaults } ) => {
 								activeTab === 'facebook' ? 'Facebook' : 'X'
 							) }
 						</Label>
-						{ activeTab === 'facebook' && (
-							<SeoPopupTooltip
-								content={ __(
-									"Click to update Facebook's share preview cache. This will update the preview with the latest content.",
-									'surerank'
-								) }
-								placement="top-end"
-								offset={ {
-									alignmentAxis: '0',
-									mainAxis: '8',
-								} }
-								arrow
-							>
-								<Button
-									size="sm"
-									className="p-0.5"
-									onClick={ handleClearFacebookCache }
-									icon={ <RefreshCcw /> }
-									variant="ghost"
-								/>
-							</SeoPopupTooltip>
-						) }
+						<div className="flex items-center gap-2">
+							{ activeTab === 'facebook' && (
+								<SeoPopupTooltip
+									content={ __(
+										"Click to update Facebook's share preview cache. This will update the preview with the latest content.",
+										'surerank'
+									) }
+									placement="top-end"
+									offset={ {
+										alignmentAxis: '0',
+										mainAxis: '8',
+									} }
+									arrow
+								>
+									<Button
+										size="sm"
+										className="p-0.5"
+										onClick={ handleClearFacebookCache }
+										icon={ <RefreshCcw /> }
+										variant="ghost"
+									/>
+								</SeoPopupTooltip>
+							) }
+						</div>
 					</div>
 					{ /* Preview */ }
 					<SocialPreview
@@ -586,6 +539,30 @@ const SocialTab = ( { postMetaData, updatePostMetaData, globalDefaults } ) => {
 					/>
 				</div>
 			</motion.div>
+
+			{ /* Image Generation Modal */ }
+			{ applyFilters( 'surerank-pro.og-image-modal', null, {
+				open: imageGenModalOpen,
+				setOpen: setImageGenModalOpen,
+				postTitle:
+					replacement(
+						postMetaData?.[ `${ activeTab }_title` ],
+						variablesArray,
+						postDynamicData
+					) || getSiteDetails().siteTitle,
+				postDescription:
+					replacement(
+						postMetaData?.[ `${ activeTab }_description` ],
+						variablesArray,
+						postDynamicData
+					) || getSiteDetails().siteDescription,
+				onSelectImage: ( image ) => {
+					updatePostMetaData( {
+						[ `${ activeTab }_image_url` ]: image.url,
+						[ `${ activeTab }_image_id` ]: image.id,
+					} );
+				},
+			} ) }
 		</div>
 	);
 };

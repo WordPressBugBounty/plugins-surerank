@@ -12,6 +12,7 @@ namespace SureRank\Inc\Schema;
 
 use SureRank\Inc\Frontend\Breadcrumbs;
 use SureRank\Inc\Frontend\Description;
+use SureRank\Inc\ThirdPartyIntegrations\Multilingual\Translation_Manager;
 use SureRank\Inc\Traits\Get_Instance;
 use WP_Post;
 use WP_Term;
@@ -329,10 +330,76 @@ class Data {
 			'title'       => get_bloginfo( 'name' ),
 			'description' => get_bloginfo( 'description' ),
 			'url'         => home_url( '/' ),
-			'language'    => get_locale(),
+			'language'    => $this->get_schema_language(),
 			'icon'        => get_site_icon_url(),
 			'search_url'  => $search_url,
 		];
+	}
+
+	/**
+	 * Resolve the language value used in schema output (inLanguage).
+	 *
+	 * On singular views, resolve the post's language via the active
+	 * multilingual provider. Falls back to the site language fetched via
+	 * WordPress's `get_bloginfo('language')`, which internally calls
+	 * `determine_locale()` and normalises the result with
+	 * `str_replace('_', '-', ...)`. That covers the typical
+	 * `en_US` → `en-US` case but is NOT a full BCP 47 conversion —
+	 * variant locales like `sr_RS@latin` emerge as `sr-RS@latin`
+	 * (the `@latin` modifier is not valid BCP 47; the correct form is
+	 * `sr-Latn-RS`). We accept this limitation because: (a) WordPress
+	 * itself has no better built-in converter, (b) the underlying
+	 * locales are vanishingly rare in practice, and (c) producing a
+	 * slightly-wrong BCP 47 tag is no worse than the previous raw
+	 * `get_locale()` which emitted underscores.
+	 *
+	 * Per-post language from the provider is normalised with a
+	 * conservative `_` → `-` swap. Return shape is provider-defined
+	 * (see {@see Provider::get_post_language()}): Polylang/WPML return
+	 * short codes (`en`, `fr`); TranslatePress returns an underscore-form
+	 * locale (e.g. `en_US`), which this swap correctly hyphenates.
+	 *
+	 * TranslatePress caveat: because TranslatePress has no per-post
+	 * language and its provider always returns the site default,
+	 * this path will emit the default-language code even when the
+	 * current URL is a TP-translated language. On TP sites,
+	 * `get_bloginfo('language')` (our fallback) already reflects the
+	 * URL-language via TP's own `locale` filter — so this function
+	 * currently yields a slightly worse result on TP singular views
+	 * than the fallback alone would. Tracked as a follow-up to resolve
+	 * TP language from `$GLOBALS['TRP_LANGUAGE']` or similar in the
+	 * provider rather than here.
+	 *
+	 * @since 1.7.2
+	 * @return string BCP 47 language code (e.g. `en-US`, `fr`).
+	 */
+	private function get_schema_language() {
+		// WP core's BCP 47-normalised form of the resolved locale.
+		$locale = (string) get_bloginfo( 'language' );
+
+		if ( is_singular() ) {
+			$post_id = get_the_ID();
+
+			if ( $post_id ) {
+				$provider = Translation_Manager::get_instance()->get_provider();
+
+				if ( $provider ) {
+					$post_language = $provider->get_post_language( $post_id );
+
+					if ( $post_language ) {
+						$locale = str_replace( '_', '-', $post_language );
+					}
+				}
+			}
+		}
+
+		/**
+		 * Filter the language value used in schema inLanguage / %site.language%.
+		 *
+		 * @since 1.7.2
+		 * @param string $locale BCP 47 language code.
+		 */
+		return (string) apply_filters( 'surerank_schema_in_language', $locale );
 	}
 
 	/**

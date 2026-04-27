@@ -3,7 +3,7 @@ import { addQueryArgs } from '@wordpress/url';
 import { TERM_SEO_DATA_URL, POST_SEO_DATA_URL } from '@Global/constants/api';
 import { isCurrentPage } from '@/functions/utils';
 
-const API_BASE_URL = '/surerank/v1';
+export const API_BASE_URL = '/surerank/v1';
 
 export const fetchMetaSettings = async () => {
 	const queryParams = {};
@@ -104,11 +104,6 @@ export const fetchImageDataByUrl = async ( imageUrl ) => {
 				return response[ 0 ];
 			}
 		} catch ( error ) {
-			// eslint-disable-next-line no-console
-			console.warn(
-				`Search strategy failed for: ${ strategy.search }`,
-				error
-			);
 			continue;
 		}
 	}
@@ -250,4 +245,28 @@ export const sendTestEmailReport = ( recipientEmail ) => {
 		method: 'POST',
 		data: { recipientEmail },
 	} );
+};
+
+/**
+ * Improve existing content with AI based on a prompt type.
+ *
+ * @since x.x.x
+ * @param {string}      type             Prompt type (e.g. 'og_image_title').
+ * @param {string}      input            Text to improve.
+ * @param {Object}      [options]        Optional request options.
+ * @param {AbortSignal} [options.signal] AbortController signal to cancel the request.
+ * @return {Promise<Object>} Response with improved_text string.
+ */
+export const improveContent = ( type, input, { signal } = {} ) => {
+	const fetchOptions = {
+		path: `${ API_BASE_URL }/improve-content`,
+		method: 'POST',
+		data: { type, input },
+	};
+
+	if ( signal ) {
+		fetchOptions.signal = signal;
+	}
+
+	return apiFetch( fetchOptions );
 };

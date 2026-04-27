@@ -50,6 +50,7 @@ class Api_Init {
 			'\SureRank\Inc\API\Import_Export_Settings',
 			'\SureRank\Inc\API\Sitemap',
 			'\SureRank\Inc\API\RobotsTxt',
+			'\SureRank\Inc\API\Stock_Images',
 		];
 
 		$controllers = apply_filters( 'surerank_api_controllers', $controllers );

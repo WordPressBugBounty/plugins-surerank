@@ -91,6 +91,37 @@ class Init {
 	}
 
 	/**
+	 * Ensure sitemap WP_Query / get_terms calls return content in all languages.
+	 *
+	 * Polylang and WPML both filter admin-context queries by active language.
+	 * We add provider-specific query args so the sitemap sees every language.
+	 *
+	 * - Polylang: 'lang' => '' disables language filtering for this query.
+	 * - WPML: 'wpml_language' => 'all' is WPML's documented query arg for
+	 *   cross-language retrieval. Avoids the nuclear 'suppress_filters' flag
+	 *   which would also disable unrelated plugins' posts_where/posts_join
+	 *   and cache plugin hooks that run on the same query.
+	 *
+	 * @since 1.7.2
+	 * @param array<string, mixed> $args          WP_Query / get_terms args.
+	 * @param string               $post_type_or_taxonomy Post type or taxonomy being queried.
+	 * @return array<string, mixed>
+	 */
+	public function ensure_all_languages_in_query( $args, $post_type_or_taxonomy ) {
+		unset( $post_type_or_taxonomy );
+
+		if ( function_exists( 'pll_default_language' ) ) {
+			$args['lang'] = '';
+		}
+
+		if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+			$args['wpml_language'] = 'all';
+		}
+
+		return $args;
+	}
+
+	/**
 	 * Check if translation plugin is active
 	 *
 	 * @since 1.6.3
@@ -111,10 +142,15 @@ class Init {
 	private function init_classes() {
 		Translation_Manager::get_instance();
 		Hreflang_Generator::get_instance();
+		Canonical_Adapter::get_instance();
 
 		if ( function_exists( 'pll_default_language' ) ) {
 			$this->register_polylang_string_translations();
 		}
+
+		// Ensure sitemap queries return posts and terms in all languages.
+		add_filter( 'surerank_sitemap_posts_cache_args', [ $this, 'ensure_all_languages_in_query' ], 10, 2 );
+		add_filter( 'surerank_sitemap_taxonomies_cache_args', [ $this, 'ensure_all_languages_in_query' ], 10, 2 );
 	}
 
 	/**

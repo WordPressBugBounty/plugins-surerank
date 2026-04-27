@@ -65,6 +65,20 @@ class Translation_Manager {
 	}
 
 	/**
+	 * Get the active translation provider.
+	 *
+	 * Exposes the singleton's detected provider so callers (e.g. frontend
+	 * Open Graph output) can reuse it without re-running detection or
+	 * instantiating a second provider object.
+	 *
+	 * @since 1.7.2
+	 * @return Provider|null
+	 */
+	public function get_provider(): ?Provider {
+		return $this->provider;
+	}
+
+	/**
 	 * Add translation data to post data during batch processing
 	 *
 	 * @since 1.6.3
@@ -77,12 +91,21 @@ class Translation_Manager {
 			return $post_data;
 		}
 
-		// Skip posts that are not in the default language to prevent duplicates.
+		// Skip posts that are not in the default language to prevent duplicates,
+		// unless the post has no default-language counterpart (secondary-language-only content).
 		$post_language = $this->provider->get_post_language( $post->ID );
 		$default_lang  = $this->provider->get_default_language();
 
 		if ( $post_language && $default_lang && $post_language !== $default_lang ) {
-			return [];
+			// Check if a default-language counterpart exists.
+			$default_post_id = $this->provider->get_translated_post_id( $post->ID, $default_lang );
+
+			if ( $default_post_id && $default_post_id !== $post->ID ) {
+				// Default-language post exists and will carry the translations.
+				return [];
+			}
+
+			// No default-language counterpart -- treat this as a standalone entry.
 		}
 
 		if ( ! isset( self::$translation_cache[ $post->ID ] ) ) {
@@ -168,12 +191,21 @@ class Translation_Manager {
 			return $term_data;
 		}
 
-		// Skip terms that are not in the default language to prevent duplicates.
+		// Skip terms that are not in the default language to prevent duplicates,
+		// unless the term has no default-language counterpart (secondary-language-only content).
 		$term_language = $this->provider->get_term_language( $term->term_id );
 		$default_lang  = $this->provider->get_default_language();
 
 		if ( $term_language && $default_lang && $term_language !== $default_lang ) {
-			return [];
+			// Check if a default-language counterpart exists via term translations.
+			$term_translations = $this->provider->get_term_translations( $term->term_id, $term->taxonomy );
+
+			if ( isset( $term_translations[ $default_lang ] ) ) {
+				// Default-language term exists and will carry the translations.
+				return [];
+			}
+
+			// No default-language counterpart -- treat this as a standalone entry.
 		}
 
 		if ( ! isset( self::$term_translation_cache[ $term->term_id ] ) ) {

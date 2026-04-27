@@ -26,17 +26,19 @@ const MetaField = ( {
 					<span>{ label }</span>
 				</Label>
 				<div className="ml-auto inline-flex items-center gap-2">
-					<Text size={ 12 } weight={ 400 } color="help">
-						<span
-							className={ cn( {
-								'text-text-error':
-									inputContent?.length > maxLength,
-							} ) }
-						>
-							{ inputContent?.length ?? 0 }
-						</span>
-						/ { maxLength }
-					</Text>
+					{ maxLength && (
+						<Text size={ 12 } weight={ 400 } color="help">
+							<span
+								className={ cn( {
+									'text-text-error':
+										inputContent?.length > maxLength,
+								} ) }
+							>
+								{ inputContent?.length ?? 0 }
+							</span>
+							/ { maxLength }
+						</Text>
+					) }
 					<MagicButton
 						fieldKey={ fieldKey }
 						onUseThis={ onUseThis }

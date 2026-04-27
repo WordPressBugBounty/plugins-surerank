@@ -10,8 +10,6 @@ const getInitialAuthState = () => {
 	return ai_authenticated;
 };
 
-const authCheckedRef = { current: false };
-
 // Auth store with subscription support for cross-component sync
 const authListeners = new Set();
 const authStore = {
@@ -70,11 +68,18 @@ const useOnboardingAuth = ( { skipCheck = false } = {} ) => {
 		try {
 			const response = await getAuth();
 
-			if ( ! response?.success || ! response?.auth_url ) {
+			if ( ! response?.success ) {
 				toast.error(
 					__( 'Failed to get authentication URL', 'surerank' )
 				);
 				setIsConnecting( false );
+				return;
+			}
+
+			// Already authenticated (no auth_url returned means auth is complete)
+			if ( ! response?.auth_url ) {
+				setIsConnecting( false );
+				setAuthState( true );
 				return;
 			}
 
@@ -91,11 +96,20 @@ const useOnboardingAuth = ( { skipCheck = false } = {} ) => {
 		}
 	};
 
-	// Mark as initialized on mount
+	// On mount, check real auth status from server in case the token was saved
+	// after the page loaded (e.g. OAuth redirect back to onboarding with ?access_key).
 	useEffect( () => {
-		if ( ! skipCheck ) {
-			authCheckedRef.current = true;
+		if ( skipCheck || isAuthenticated ) {
+			return;
 		}
+
+		getAuth()
+			.then( ( response ) => {
+				if ( response?.success && ! response?.auth_url ) {
+					setAuthState( true );
+				}
+			} )
+			.catch( () => {} );
 	}, [] );
 
 	return {

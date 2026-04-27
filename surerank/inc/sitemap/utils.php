@@ -34,13 +34,14 @@ class Utils {
 	/**
 	 * Generates the XML for the sitemap index.
 	 *
+	 * Pure: returns a string; does not send headers or exit. Callers are
+	 * responsible for transport (headers + echo). Keeps this method unit-testable.
+	 *
 	 * @param array<string, mixed>|array<int, string> $sitemap List of sitemap URLs to include in the index.
 	 * @return string XML string for the sitemap index.
 	 * @throws RuntimeException If XML generation fails.
 	 */
 	public static function sitemap_index( array $sitemap ): string {
-		self::output_headers();
-
 		$dom            = self::create_dom();
 		$xsl_stylesheet = self::add_stylesheet( $dom, 'sitemap-stylesheet.xsl' );
 		$dom->appendChild( $xsl_stylesheet );
@@ -69,13 +70,14 @@ class Utils {
 	/**
 	 * Generates the XML for the main sitemap with individual URLs.
 	 *
+	 * Pure: returns a string; does not send headers or exit. Callers are
+	 * responsible for transport (headers + echo). Keeps this method unit-testable.
+	 *
 	 * @param array<string, mixed>|array<int, string> $sitemap Array of URL data, each containing 'link', 'updated', and optional 'images'.
 	 * @return string XML string for the main sitemap.
 	 * @throws RuntimeException If XML generation fails.
 	 */
 	public static function sitemap_main( array $sitemap ): string {
-		self::output_headers();
-
 		$dom  = self::create_dom();
 		$xslt = self::add_stylesheet( $dom, 'sitemap-stylesheet.xsl' );
 		$dom->appendChild( $xslt );
@@ -132,6 +134,10 @@ class Utils {
 	 * @return void
 	 */
 	public static function output_headers() {
+		if ( headers_sent() ) {
+			return;
+		}
+
 		$headers = [
 			'Pragma'        => 'public',
 			'Cache-Control' => 'no-cache, no-store, must-revalidate, max-age=0',

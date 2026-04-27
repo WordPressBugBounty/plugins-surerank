@@ -20,6 +20,7 @@ use SureRank\Inc\Functions\Validate;
 use SureRank\Inc\Meta_Variables\Post;
 use SureRank\Inc\Meta_Variables\Site;
 use SureRank\Inc\Meta_Variables\Term;
+use SureRank\Inc\ThirdPartyIntegrations\Multilingual\Translation_Manager;
 use SureRank\Inc\Traits\Get_Instance;
 
 /**
@@ -248,22 +249,69 @@ class Facebook {
 	}
 
 	/**
-	 * Validate with locales FB supports.
+	 * Normalize a locale into og:locale shape (language_REGION).
 	 *
-	 * Check to see if the locale is a valid FB one, if not, use en_US as a fallback.
+	 * Single-pass normalizer that accepts every shape WordPress + multilingual
+	 * plugins produce and returns a valid ISO-ish language_REGION string:
 	 *
-	 * @param string $locale Current site locale.
+	 *  - Canonical xx_YY / xxx_YYY      → pass-through (bn_BD, pt_BR, ckb_IQ)
+	 *  - Hyphen separator (hreflang)    → underscore (fr-CA → fr_CA)
+	 *  - BCP 47 with script subtag      → drop script (zh_Hant_HK → zh_HK)
+	 *  - Regional/formal subtag         → keep first valid region (de_CH_formal → de_CH)
+	 *  - Non-alpha region (UN M.49)     → lang-only shape (es_419 → es_ES)
+	 *  - Mixed case (EN_us)             → normalized case (en_US)
+	 *  - Language-only (en, ceb)        → duplicated shape (en_EN, ceb_CEB)
+	 *  - Empty / malformed              → en_US fallback
+	 *
+	 * The legacy Facebook whitelist check is intentionally dropped: modern
+	 * Open Graph consumers (X/Twitter, LinkedIn, WhatsApp, Slack, Telegram,
+	 * Meta itself) accept ISO locales broadly, and coercing through the
+	 * whitelist was silently mangling real WordPress locales such as bn_BD
+	 * into bn_IN.
+	 *
+	 * @param mixed $locale Locale string (tolerates non-string input).
 	 *
 	 * @return string
 	 */
 	public static function validate( $locale ) {
-		if ( in_array( $locale, self::FACEBOOK_LOCALES, true ) ) {
-			return $locale;
+		if ( ! is_string( $locale ) ) {
+			return 'en_US';
 		}
 
-		$locale = self::join( substr( $locale, 0, 2 ) );
+		$locale = trim( str_replace( '-', '_', $locale ) );
 
-		return in_array( $locale, self::FACEBOOK_LOCALES, true ) ? $locale : 'en_US';
+		if ( '' === $locale ) {
+			return 'en_US';
+		}
+
+		$parts = array_values(
+			array_filter(
+				explode( '_', $locale ),
+				static fn( string $part ): bool => '' !== $part
+			)
+		);
+
+		if ( empty( $parts ) ) {
+			return 'en_US';
+		}
+
+		$lang = strtolower( $parts[0] );
+
+		if ( 1 !== preg_match( '/^[a-z]{2,3}$/', $lang ) ) {
+			return 'en_US';
+		}
+
+		$count = count( $parts );
+
+		for ( $i = 1; $i < $count; $i++ ) {
+			$region = strtoupper( $parts[ $i ] );
+
+			if ( 1 === preg_match( '/^[A-Z]{2,3}$/', $region ) ) {
+				return $lang . '_' . $region;
+			}
+		}
+
+		return $lang . '_' . strtoupper( $lang );
 	}
 
 	/**
@@ -347,6 +395,20 @@ class Facebook {
 	 */
 	public function get_locale() {
 		$locale = get_locale();
+
+		/**
+		 * Filter the locale used for og:locale meta tag.
+		 *
+		 * Allows multilingual plugins and developers to override the locale
+		 * per page. Translation plugins like Polylang and WPML typically filter
+		 * WordPress's get_locale() already, but this provides an additional
+		 * hook specifically for SureRank's OG output.
+		 *
+		 * @since 1.7.2
+		 * @param string $locale The locale string (e.g., 'en_US', 'fr_FR').
+		 */
+		$locale = apply_filters( 'surerank_og_locale', $locale );
+
 		$locale = self::sanitize( $locale );
 		return self::validate( $locale );
 	}
@@ -399,10 +461,12 @@ class Facebook {
 	 * @return void
 	 */
 	private function add_common_tags( $meta_data ) {
+		$current_locale = $this->get_locale();
+
 		$common_tags = [
 			'og:url'       => $this->get_url(),
 			'og:site_name' => Site::get_instance()->get_site_name(),
-			'og:locale'    => $this->get_locale(),
+			'og:locale'    => $current_locale,
 			'og:type'      => $this->get_type(),
 		];
 
@@ -410,7 +474,81 @@ class Facebook {
 			Meta_Data::get_instance()->meta_html_template( $key, $value, 'property' );
 		}
 
+		$this->add_locale_alternates( $current_locale );
 		$this->add_dynamic_tags( $meta_data );
+	}
+
+	/**
+	 * Output og:locale:alternate tags for other language versions.
+	 *
+	 * Uses the multilingual provider to discover translations and outputs
+	 * og:locale:alternate for each, as defined by the Open Graph Protocol.
+	 *
+	 * @since 1.7.2
+	 * @param string $current_locale The current page's og:locale value.
+	 * @return void
+	 */
+	private function add_locale_alternates( $current_locale ) {
+		if ( ! is_singular() && ! is_front_page() ) {
+			return;
+		}
+
+		$provider = Translation_Manager::get_instance()->get_provider();
+
+		if ( ! $provider ) {
+			return;
+		}
+
+		$post_id = get_the_ID();
+
+		if ( ! $post_id ) {
+			return;
+		}
+
+		$translations = $provider->get_translations( $post_id, strval( get_post_type( $post_id ) ) );
+
+		/**
+		 * Filter the alternate locales for og:locale:alternate output.
+		 *
+		 * @since 1.7.2
+		 * @param array<string, array{url: string, locale: string}> $translations Translation data.
+		 * @param int   $post_id Current post ID.
+		 */
+		$translations = apply_filters( 'surerank_og_locale_alternates', $translations, $post_id );
+
+		if ( empty( $translations ) ) {
+			return;
+		}
+
+		$current_prefix = strtolower( substr( (string) $current_locale, 0, 2 ) );
+
+		foreach ( $translations as $lang_code => $translation ) {
+			if ( empty( $translation['locale'] ) ) {
+				continue;
+			}
+
+			// Convert hreflang-style locale (en-US) back to OG-style (en_US).
+			$alt_locale = str_replace( '-', '_', $translation['locale'] );
+			$alt_locale = self::sanitize( $alt_locale );
+			// Intentionally no validate() — it may coerce locales FB doesn't list
+			// (e.g. bn_BD) to en_US. The OG spec does not restrict
+			// og:locale:alternate to Facebook's whitelist.
+
+			if ( ! $alt_locale || $alt_locale === $current_locale ) {
+				continue;
+			}
+
+			// Skip alternates that share a language prefix with the primary locale.
+			// e.g. primary bn_IN + alt bn_BD would be redundant since the validate()
+			// prefix-match fallback may pick a sibling locale for the primary.
+			$alt_prefix = strtolower( substr( $alt_locale, 0, 2 ) );
+
+			if ( '' !== $current_prefix && $alt_prefix === $current_prefix ) {
+				continue;
+			}
+
+			Meta_Data::get_instance()->meta_html_template( 'og:locale:alternate', $alt_locale, 'property' );
+		}
 	}
 
 	/**

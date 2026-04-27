@@ -13,6 +13,7 @@ use SureRank\Inc\Frontend\Robots;
 use SureRank\Inc\Meta_Variables\Post;
 use SureRank\Inc\Meta_Variables\Site;
 use SureRank\Inc\Meta_Variables\Term;
+use SureRank\Inc\ThirdPartyIntegrations\Multilingual\Rewrite_Shim;
 use WP_Post;
 use WP_Query;
 
@@ -84,13 +85,20 @@ class Helper {
 	}
 
 	/**
-	 * Flush rewrite rules
+	 * Flush rewrite rules.
+	 *
+	 * Routes through the multilingual Rewrite_Shim which temporarily detaches
+	 * Polylang and WPML term-query filters during the flush, preventing
+	 * per-language CPT and taxonomy slugs from being collapsed to the default
+	 * language when the flush is triggered from admin context.
+	 *
+	 * On non-multilingual sites the shim is a pure passthrough.
 	 *
 	 * @since 0.0.1
 	 * @return void
 	 */
 	public static function flush() {
-		flush_rewrite_rules(); //phpcs:ignore
+		Rewrite_Shim::safe_flush();
 	}
 
 	/**
@@ -652,6 +660,19 @@ class Helper {
 	 */
 	public static function decode( $value ) {
 		return base64_decode( $value, true ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+	}
+
+	/**
+	 * Get site title and tagline.
+	 *
+	 * @since 1.7.2
+	 * @return array<string, string> Array containing site_title and site_tagline.
+	 */
+	public static function site_details() {
+		return [
+			'site_title'   => get_bloginfo( 'name' ),
+			'site_tagline' => get_bloginfo( 'description' ),
+		];
 	}
 
 	/**

@@ -90,6 +90,7 @@ class Settings {
 	public static function clear_cache() {
 		self::$cached_settings = null;
 		self::$cached_defaults = null;
+		Defaults::get_instance()->clear_cached_defaults();
 	}
 
 	/**

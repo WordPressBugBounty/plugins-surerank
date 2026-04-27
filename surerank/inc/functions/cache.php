@@ -185,6 +185,214 @@ class Cache {
 	}
 
 	/**
+	 * Begin an atomic rebuild of a prefix directory.
+	 *
+	 * Rotates the current live directory ({prefix}/) to a backup slot
+	 * ({prefix}.old/) and creates an empty live directory for the new
+	 * rebuild to write into. The backup is used for stale-while-revalidate
+	 * reads during rebuild and is removed by commit_atomic_rebuild() on
+	 * success or restored by abort_atomic_rebuild() on failure.
+	 *
+	 * This call is the only operation that moves directories; the rebuild
+	 * itself continues to use the normal store_file() / get_file() API
+	 * against {prefix}/ with no changes.
+	 *
+	 * @param string $prefix Top-level cache prefix (e.g. "sitemap").
+	 * @since 1.7.2
+	 * @return bool True on success, false if rotation failed.
+	 */
+	public static function begin_atomic_rebuild( string $prefix ): bool {
+		if ( empty( self::$cache_dir ) ) {
+			self::init();
+		}
+
+		$prefix = self::sanitize_prefix( $prefix );
+		if ( '' === $prefix ) {
+			return false;
+		}
+
+		// Acquire a lock to prevent concurrent rebuilds from racing and
+		// destroying both the live and backup directories. The lock is
+		// released by commit_atomic_rebuild() or abort_atomic_rebuild().
+		$lock_key = 'surerank_rebuild_lock_' . $prefix;
+		if ( false !== get_transient( $lock_key ) ) {
+			return false;
+		}
+		set_transient( $lock_key, time(), 10 * MINUTE_IN_SECONDS );
+
+		$current = self::$cache_dir . $prefix;
+		$backup  = self::$cache_dir . $prefix . '.old';
+
+		// An existing backup can mean two different things:
+		//
+		// (a) Live has content (sitemap_index.json present): the previous rebuild
+		// succeeded and committed. The backup is leftover from that cycle and
+		// is safe to delete before we rotate the good live cache into the new
+		// backup slot.
+		//
+		// (b) Live is empty or missing: the previous async dispatch likely failed
+		// silently (loopback blocked, PHP timeout, etc.) and never populated
+		// the live dir. The backup is still the last known-good cache. Preserve
+		// it for stale-while-revalidate; just clean up the empty live dir and
+		// create a fresh one without touching the backup.
+		if ( file_exists( $backup ) ) {
+			$live_index = $current . '/sitemap_index.json';
+			if ( file_exists( $live_index ) ) {
+				// (a) Previous rebuild completed — remove the now-superseded backup.
+				if ( ! self::recursive_remove( $backup ) ) {
+					delete_transient( $lock_key );
+					return false;
+				}
+			} else {
+				// (b) Previous dispatch failed — live is empty. Keep the backup as
+				// the stale-while-revalidate source; only clean and recreate live.
+				if ( file_exists( $current ) ) {
+					self::recursive_remove( $current );
+				}
+				wp_mkdir_p( $current );
+				return true;
+			}
+		}
+
+		// Rotate current to backup if it exists. First-ever rebuild has
+		// no current directory yet, which is fine. rename() is used here
+		// (not WP_Filesystem::move) because atomic swap semantics matter:
+		// move() falls back to copy+delete on non-direct transports, which
+		// is not atomic. Both $current and $backup are inside
+		// wp_upload_dir()['basedir'], so this is within the allowlist for
+		// direct filesystem operations.
+		// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_rename,WordPress.PHP.NoSilencedErrors.Discouraged -- native rename() required for atomic swap; both paths are inside uploads.
+		if ( file_exists( $current ) && ! @rename( $current, $backup ) ) {
+			delete_transient( $lock_key );
+			return false;
+		}
+
+		// Create an empty live directory for the rebuild to populate.
+		wp_mkdir_p( $current );
+
+		return true;
+	}
+
+	/**
+	 * Commit a successful atomic rebuild.
+	 *
+	 * Removes the backup. The new cache built in {prefix}/ during the
+	 * rebuild is already in place and becomes the authoritative cache.
+	 *
+	 * @param string $prefix Top-level cache prefix (e.g. "sitemap").
+	 * @since 1.7.2
+	 * @return bool True if the backup was removed (or never existed).
+	 */
+	public static function commit_atomic_rebuild( string $prefix ): bool {
+		if ( empty( self::$cache_dir ) ) {
+			self::init();
+		}
+
+		$prefix = self::sanitize_prefix( $prefix );
+		if ( '' === $prefix ) {
+			return false;
+		}
+
+		delete_transient( 'surerank_rebuild_lock_' . $prefix );
+
+		$backup = self::$cache_dir . $prefix . '.old';
+
+		if ( ! file_exists( $backup ) ) {
+			return true;
+		}
+
+		return self::recursive_remove( $backup );
+	}
+
+	/**
+	 * Abort a rebuild and roll back to the previous cache.
+	 *
+	 * Removes the partially-written live directory and restores the
+	 * backup to its original position. Used when a rebuild fails
+	 * mid-flight and we want the previous known-good cache to serve
+	 * subsequent requests.
+	 *
+	 * @param string $prefix Top-level cache prefix (e.g. "sitemap").
+	 * @since 1.7.2
+	 * @return bool True if rollback succeeded or no backup existed.
+	 */
+	public static function abort_atomic_rebuild( string $prefix ): bool {
+		if ( empty( self::$cache_dir ) ) {
+			self::init();
+		}
+
+		$prefix = self::sanitize_prefix( $prefix );
+		if ( '' === $prefix ) {
+			return false;
+		}
+
+		delete_transient( 'surerank_rebuild_lock_' . $prefix );
+
+		$current = self::$cache_dir . $prefix;
+		$backup  = self::$cache_dir . $prefix . '.old';
+
+		// If the partial rebuild cannot be cleared (open file handles on
+		// Windows, permission flip mid-flight), do not attempt the
+		// rename — a half-rolled-back state is worse than a failed abort
+		// the caller can retry.
+		if ( file_exists( $current ) && ! self::recursive_remove( $current ) ) {
+			return false;
+		}
+
+		if ( ! file_exists( $backup ) ) {
+			return true;
+		}
+
+		// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_rename,WordPress.PHP.NoSilencedErrors.Discouraged -- native rename() required for atomic swap; both paths are inside uploads.
+		return @rename( $backup, $current );
+	}
+
+	/**
+	 * Whether a backup from an in-progress or failed rebuild is available.
+	 *
+	 * Used by the sitemap miss handler to serve stale-while-revalidate
+	 * responses instead of a 503 when the live cache is absent or
+	 * incomplete.
+	 *
+	 * @param string $prefix Top-level cache prefix (e.g. "sitemap").
+	 * @since 1.7.2
+	 * @return bool
+	 */
+	public static function has_rebuild_backup( string $prefix ): bool {
+		if ( empty( self::$cache_dir ) ) {
+			self::init();
+		}
+
+		$prefix = self::sanitize_prefix( $prefix );
+		if ( '' === $prefix ) {
+			return false;
+		}
+
+		return file_exists( self::$cache_dir . $prefix . '.old' );
+	}
+
+	/**
+	 * Read a file from the backup directory of an in-progress rebuild.
+	 *
+	 * Translates a live path like "sitemap/sitemap_index.json" to its
+	 * backup counterpart "sitemap.old/sitemap_index.json" and returns
+	 * its contents, or false if unavailable.
+	 *
+	 * @param string $filename The live filename (e.g. "sitemap/sitemap_index.json").
+	 * @since 1.7.2
+	 * @return string|false
+	 */
+	public static function read_rebuild_backup( string $filename ): string|false {
+		$pos = strpos( $filename, '/' );
+		if ( false === $pos ) {
+			return false;
+		}
+
+		$backup_filename = substr( $filename, 0, $pos ) . '.old' . substr( $filename, $pos );
+		return self::get_file( $backup_filename );
+	}
+
+	/**
 	 * Check if cache file exists
 	 *
 	 * @param string $filename The filename to check.
@@ -266,16 +474,99 @@ class Cache {
 	}
 
 	/**
+	 * Sanitize a prefix used by the atomic-rebuild helpers.
+	 *
+	 * Allows only alphanumerics, underscores, and hyphens. Prevents
+	 * callers from passing values that would escape the cache root.
+	 *
+	 * @param string $prefix The prefix to sanitize.
+	 * @since 1.7.2
+	 * @return string
+	 */
+	private static function sanitize_prefix( string $prefix ): string {
+		return (string) preg_replace( '/[^A-Za-z0-9_-]/', '', $prefix );
+	}
+
+	/**
+	 * Recursively remove a directory and its contents without following
+	 * symlinks. Symlinked entries are unlinked at the link node itself,
+	 * so an attacker who plants a symlink inside sitemap.old/ cannot
+	 * use commit/abort to wipe files outside the cache root.
+	 *
+	 * @param string $dir Absolute path to the directory to remove.
+	 * @since 1.7.2
+	 * @return bool
+	 */
+	private static function recursive_remove( string $dir ): bool {
+		global $wp_filesystem;
+		if ( ! $wp_filesystem ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+			WP_Filesystem();
+		}
+
+		if ( ! $wp_filesystem instanceof \WP_Filesystem_Base ) {
+			return false;
+		}
+
+		// If the target itself is a symlink, unlink the link node only.
+		if ( is_link( $dir ) ) {
+			return (bool) $wp_filesystem->delete( $dir, false, 'f' );
+		}
+
+		if ( ! $wp_filesystem->is_dir( $dir ) ) {
+			return false;
+		}
+
+		$list = $wp_filesystem->dirlist( $dir );
+		if ( ! is_array( $list ) ) {
+			return false;
+		}
+
+		foreach ( $list as $name => $info ) {
+			$path = rtrim( $dir, '/\\' ) . '/' . $name;
+
+			if ( is_link( $path ) ) {
+				$wp_filesystem->delete( $path, false, 'f' );
+				continue;
+			}
+
+			if ( 'd' === $info['type'] ) {
+				self::recursive_remove( $path );
+				continue;
+			}
+
+			$wp_filesystem->delete( $path, false, 'f' );
+		}
+
+		return (bool) $wp_filesystem->delete( $dir, false, 'd' );
+	}
+
+	/**
 	 * Sanitize filename to prevent directory traversal attacks.
+	 *
+	 * Normalizes separators and rejects any path containing a `..`
+	 * segment. Empty-string result signals callers to treat the path
+	 * as missing: `file_exists`/`get_file`/`store_file` all resolve
+	 * against the cache directory itself which fails safely (reads
+	 * return false, writes to a directory path fail).
 	 *
 	 * @param string $filename The filename to sanitize.
 	 * @since 1.2.0
-	 * @return string Sanitized filename.
+	 * @return string Sanitized filename, or empty string on traversal.
 	 */
 	private static function sanitize_filename( string $filename ): string {
-		// Prevent directory traversal attacks.
-		$filename = str_replace( '..', '', $filename );
-		return ltrim( $filename, '/' ); // Remove leading slash.
+		$filename = wp_normalize_path( $filename );
+		$filename = ltrim( $filename, '/' );
+
+		// Reject any path containing `..` anywhere. A segment-equality
+		// check on `..` alone would miss variants like `....` (two
+		// overlapping parent refs) or `...//foo` that still escape the
+		// cache root after normalisation. strpos catches all of them.
+		if ( false !== strpos( $filename, '..' ) ) {
+			return '';
+		}
+
+		return $filename;
 	}
 
 	/**

@@ -93,7 +93,20 @@ class Sitemap extends Api_Base {
 	 * @return void
 	 */
 	public function prepare_cache( $request ) {
-		Cache::clear_all();
+		// Rotate the current sitemap cache to a backup slot. A failed
+		// manual rebuild leaves the previous cache available to serve
+		// requests via stale-while-revalidate. See #2361.
+		//
+		// Fallback: if atomic rotation fails (lock held or non-direct
+		// filesystem), fall back to a full cache clear so the manual
+		// regen path always works — just without stale-while-revalidate.
+		//
+		// Commit: the last generate_cache_manual batch is always the
+		// Cleanup class, whose import() fires surerank_batch_process_complete
+		// → Sync::batch_process_complete() → Cache::commit_atomic_rebuild().
+		if ( ! Cache::begin_atomic_rebuild( 'sitemap' ) ) {
+			Cache::clear_all();
+		}
 		$classes    = Sync::get_instance()->generate_classes();
 		$chunk_size = apply_filters( 'surerank_sitemap_json_chunk_size', 20 );
 		$items      = [];

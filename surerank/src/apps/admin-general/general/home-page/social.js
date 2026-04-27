@@ -27,7 +27,8 @@ import useSettings from '@/global/hooks/use-admin-settings';
 import { InfoTooltip } from '@AdminComponents/tooltip';
 import { XSocialIcon } from '@/global/components/icons';
 import MediaPreview from '@/apps/admin-components/media-preview';
-import { createMediaFrame } from '@/global/utils/utils';
+import { createMediaFrame, getSiteDetails } from '@/global/utils/utils';
+import { applyFilters } from '@wordpress/hooks';
 import AdminMagicButton from './magic-button';
 import AIModal from './ai-modal';
 import useAIModal from '@/global/hooks/use-ai-modal';
@@ -61,6 +62,7 @@ const SocialSettings = () => {
 	const [ activeSocialTab, setActiveSocialTab ] = useState( 'facebook' );
 
 	const [ editorKey, setEditorKey ] = useState( 0 );
+	const [ imageGenModalOpen, setImageGenModalOpen ] = useState( false );
 
 	// AI modal management
 	const { aiModal, handleOpenAIModal, handleCloseAIModal, handleUseThis } =
@@ -354,6 +356,16 @@ const SocialSettings = () => {
 										'surerank'
 									) }
 								/>
+								<div className="ml-auto">
+									{ applyFilters(
+										'surerank-pro.og-image-trigger-button',
+										null,
+										{
+											onClick: () =>
+												setImageGenModalOpen( true ),
+										}
+									) }
+								</div>
 							</div>
 							{ /* Input */ }
 							<Input
@@ -408,6 +420,26 @@ const SocialSettings = () => {
 					onUseThis={ handleUseThis }
 				/>
 			) }
+
+			{ /* Image Generation Modal */ }
+			{ applyFilters( 'surerank-pro.og-image-modal', null, {
+				open: imageGenModalOpen,
+				setOpen: setImageGenModalOpen,
+				postTitle:
+					replacement( defaultTitleValue, siteSettings?.site ) ||
+					getSiteDetails().siteTitle,
+				postDescription:
+					replacement(
+						defaultDescriptionValue,
+						siteSettings?.site
+					) || getSiteDetails().siteDescription,
+				onSelectImage: ( image ) => {
+					setMetaSetting(
+						`home_page_${ activeSocialTab }_image_url`,
+						image.url
+					);
+				},
+			} ) }
 		</Container>
 	);
 };

@@ -204,6 +204,14 @@ export const getNavLinks = () => {
 					pageContent: IMAGE_SEO_PAGE_CONTENT,
 					migratable: true,
 				},
+				/*
+				// Note: Revert this after release
+				{
+					path: '/advanced/image-generation',
+					label: __( 'Image Generation', 'surerank' ),
+					icon: Image,
+				},
+				 */
 				{
 					path: '/advanced/email-reports',
 					label: __( 'Email Summary', 'surerank' ),

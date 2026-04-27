@@ -53,10 +53,24 @@ class Hreflang_Generator {
 				continue;
 			}
 
+			/**
+			 * Filter hreflang URL before output in sitemap.
+			 *
+			 * Use this to normalize URLs (trailing slashes, protocol) to ensure
+			 * consistency between SureRank's sitemap hreflang and the translation
+			 * plugin's HTML head hreflang output.
+			 *
+			 * @since 1.7.2
+			 * @param string $url The hreflang URL.
+			 * @param string $lang_code The language code.
+			 * @param string $locale The formatted locale string.
+			 */
+			$hreflang_url = apply_filters( 'surerank_hreflang_url', $translation['url'], $lang_code, $translation['locale'] );
+
 			$link = $dom->createElement( 'xhtml:link' );
 			$link->setAttribute( 'rel', 'alternate' );
 			$link->setAttribute( 'hreflang', esc_attr( $translation['locale'] ) );
-			$link->setAttribute( 'href', esc_url( $translation['url'] ) );
+			$link->setAttribute( 'href', esc_url( $hreflang_url ) );
 
 			$url_element->appendChild( $link );
 		}
@@ -64,10 +78,13 @@ class Hreflang_Generator {
 		if ( ! empty( $url['default_language'] ) && isset( $url['translations'][ $url['default_language'] ] ) ) {
 			$default_translation = $url['translations'][ $url['default_language'] ];
 
+			/** This filter is documented above. */
+			$default_url = apply_filters( 'surerank_hreflang_url', $default_translation['url'], $url['default_language'], 'x-default' );
+
 			$link = $dom->createElement( 'xhtml:link' );
 			$link->setAttribute( 'rel', 'alternate' );
 			$link->setAttribute( 'hreflang', 'x-default' );
-			$link->setAttribute( 'href', esc_url( $default_translation['url'] ) );
+			$link->setAttribute( 'href', esc_url( $default_url ) );
 
 			$url_element->appendChild( $link );
 		}

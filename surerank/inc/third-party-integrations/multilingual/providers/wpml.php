@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use SureRank\Inc\ThirdPartyIntegrations\Multilingual\Locale_Formatter;
 use SureRank\Inc\ThirdPartyIntegrations\Multilingual\Provider;
 
 /**
@@ -50,7 +51,7 @@ class Wpml implements Provider {
 
 			$translations[ $lang_code ] = [
 				'url'    => apply_filters( 'wpml_permalink', $url, $lang_code, true ),
-				'locale' => $this->format_locale( $language_data['default_locale'] ?? $lang_code ),
+				'locale' => Locale_Formatter::to_bcp47( $language_data['default_locale'] ?? $lang_code ),
 			];
 		}
 
@@ -155,7 +156,7 @@ class Wpml implements Provider {
 
 			$translations[ $lang_code ] = [
 				'url'    => apply_filters( 'wpml_permalink', $url, $lang_code, true ),
-				'locale' => $this->format_locale( $language_data['default_locale'] ?? $lang_code ),
+				'locale' => Locale_Formatter::to_bcp47( $language_data['default_locale'] ?? $lang_code ),
 			];
 		}
 
@@ -203,14 +204,4 @@ class Wpml implements Provider {
 		return apply_filters( 'wpml_active_languages', [], [ 'skip_missing' => true ] );
 	}
 
-	/**
-	 * Format locale for hreflang
-	 *
-	 * @since 1.6.3
-	 * @param string $locale Locale string.
-	 * @return string
-	 */
-	private function format_locale( string $locale ): string {
-		return str_replace( '_', '-', $locale );
-	}
 }

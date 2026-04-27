@@ -38,14 +38,16 @@ class Analytics {
 	 * @since 1.4.0
 	 */
 	public function __construct() {
+		// Stats payload filter.
+		add_filter( 'bsf_core_stats', [ $this, 'add_surerank_analytics_data' ] );
 
 		// Only run analytics in admin context.
 		if ( ! is_admin() ) {
 			return;
 		}
 
-		if ( ! class_exists( 'Astra_Notices' ) ) {
-			require_once SURERANK_DIR . 'inc/lib/astra-notices/class-astra-notices.php';
+		if ( ! class_exists( 'BSF_Admin_Notices' ) ) {
+			require_once SURERANK_DIR . 'inc/lib/astra-notices/class-bsf-admin-notices.php';
 		}
 
 		add_filter(
@@ -94,8 +96,6 @@ class Analytics {
 				],
 			]
 		);
-
-		add_filter( 'bsf_core_stats', [ $this, 'add_surerank_analytics_data' ] );
 
 		// Plugin version change detection — must run before throttle gate so updates are never missed between daily checks.
 		$stored_version = get_option( 'surerank_tracked_version', '' );

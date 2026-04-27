@@ -98,26 +98,68 @@ class Term extends Api_Base {
 	/**
 	 * Update seo data
 	 *
+	 * REST endpoint handler. Extracts params from the request, delegates to
+	 * the transport-free save_term_seo_meta() helper, and emits the result
+	 * as JSON. The helper is shared with the AJAX fallback registered in
+	 * inc/ajax/save-endpoints.php so both paths produce identical side
+	 * effects for identical input.
+	 *
 	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
 	 * @since 1.0.0
 	 * @return void
 	 */
 	public function update_term_seo_data( $request ) {
 
-		$term_id = $request->get_param( 'term_id' );
-		$data    = $request->get_param( 'metaData' );
+		$term_id = (int) $request->get_param( 'term_id' );
+		$data    = (array) $request->get_param( 'metaData' );
 
+		$result = self::save_term_seo_meta( $term_id, $data );
+
+		if ( $result['success'] ) {
+			\SureRank\Inc\Functions\Rest_Observation::mark_reachable();
+			Send_Json::success( [ 'message' => $result['message'] ] );
+		}
+
+		Send_Json::error( [ 'message' => $result['message'] ] );
+	}
+
+	/**
+	 * Save term SEO meta — transport-free core logic.
+	 *
+	 * Called by the REST endpoint handler above and by the AJAX fallback
+	 * handler in inc/ajax/save-endpoints.php. Returns a result array rather
+	 * than emitting a response so both callers can transport it in their
+	 * native format.
+	 *
+	 * On success: writes term meta, runs the surerank_run_term_seo_checks
+	 * filter, and updates the global + per-term last-optimised timestamps.
+	 * On SEO-check failure: no timestamps are written (matching the
+	 * pre-refactor behaviour of update_term_seo_data()).
+	 *
+	 * @param int                  $term_id Term ID to save meta against.
+	 * @param array<string, mixed> $data    Meta payload (already sanitised).
+	 * @return array{success: bool, message: string}
+	 * @since 1.x.x
+	 */
+	public static function save_term_seo_meta( int $term_id, array $data ): array {
 		self::update_term_meta_common( $term_id, $data );
 
-		if ( is_wp_error( $this->run_checks( $term_id ) ) ) {
-			Send_Json::error( [ 'message' => __( 'Error while running SEO Checks.', 'surerank' ) ] );
+		$check_result = self::get_instance()->run_checks( $term_id );
+		if ( is_wp_error( $check_result ) ) {
+			return [
+				'success' => false,
+				'message' => __( 'Error while running SEO Checks.', 'surerank' ),
+			];
 		}
 
 		$current_time = time();
-		Update::option( 'surerank_last_optimized_on', $current_time ); // Site-wide last optimization for consider site type.
-		Update::term_meta( $term_id, 'surerank_term_optimized_at', $current_time ); // Per-term optimization timestamp for considering site type of basis of terms optimization.
+		Update::option( 'surerank_last_optimized_on', $current_time ); // Site-wide last optimisation.
+		Update::term_meta( $term_id, 'surerank_term_optimized_at', $current_time ); // Per-term optimisation timestamp.
 
-		Send_Json::success( [ 'message' => __( 'Data updated', 'surerank' ) ] );
+		return [
+			'success' => true,
+			'message' => __( 'Data updated', 'surerank' ),
+		];
 	}
 
 	/**
