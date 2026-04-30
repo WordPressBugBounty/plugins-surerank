@@ -18,8 +18,6 @@ import {
 	handleRefreshWithBrokenLinks,
 } from '../elementor/page-checks';
 
-/* global MutationObserver */
-
 const DIVI_TARGET_SELECTOR = '.et-vb-page-bar-tools-action-buttons';
 
 // Divi-style tooltip implementation — dark rounded pill, no arrow

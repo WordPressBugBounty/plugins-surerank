@@ -38,33 +38,40 @@ const SaveButton = () => {
 				: { post_id: surerank_seo_popup?.post_id } ),
 		};
 
-		try {
-			const response = await apiFetch( {
-				path: isTerm ? TERM_SEO_DATA_URL : POST_SEO_DATA_URL,
-				method: 'POST',
-				data: queryParams,
-			} );
-			if ( ! response.success ) {
-				throw response;
-			}
-			// Update the store with the latest data
-			updateMetaSettings();
-			setTimeout( () => {
-				resetUnsavedMetaSettings();
-			}, 1000 );
-			return response;
-		} catch ( error ) {
-			throw error;
+		const response = await apiFetch( {
+			path: isTerm ? TERM_SEO_DATA_URL : POST_SEO_DATA_URL,
+			method: 'POST',
+			data: queryParams,
+		} );
+		if ( ! response.success ) {
+			throw response;
 		}
+		// Update the store with the latest data
+		updateMetaSettings();
+		setTimeout( () => {
+			resetUnsavedMetaSettings();
+		}, 1000 );
+
+		// Notify the seo-bar (listing page) to refresh the badge for this post.
+		const savedId = queryParams.term_id ?? queryParams.post_id;
+		if ( savedId ) {
+			window.dispatchEvent(
+				new CustomEvent( 'surerank:seo-data-saved', {
+					detail: {
+						postId: savedId,
+						type: isTerm ? 'taxonomy' : 'post',
+					},
+				} )
+			);
+		}
+
+		return response;
 	};
 
-	const handleBeforeUnload = useCallback(
-		( e ) => {
-			e.preventDefault();
-			e.returnValue = null;
-		},
-		[ unsavedMetaSettings ]
-	);
+	const handleBeforeUnload = useCallback( ( e ) => {
+		e.preventDefault();
+		e.returnValue = null;
+	}, [] );
 
 	// Alert user when they try to leave the page without saving
 	useEffect( () => {

@@ -5,7 +5,7 @@ Tags: seo, wordpress seo, xml sitemap, schema, google search console
 Requires at least: 6.8
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.7.2
+Stable tag: 1.7.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -294,6 +294,10 @@ Brainstorm Force
 
 
 == Changelog ==
+= 1.7.3 - 30-April-2026 =
+* New: Compatibility - Added support for Breakdance builder with SEO Metabox.
+* Improvement: Compatibility with Open Graph image generation SureRank Pro feature.
+* Fix: SEO Metabox - Fixed an issue where the Meta Box could be accessed from the All Pages, Posts, and CPT listing pages.
 = 1.7.2 - 27-April-2026 =
 * New: Compatibility - Added support for the WP Ghost plugin to ensure SureRank works correctly when WP Ghost is active.
 * New: Multilingual - Ship wpml-config.xml for Polylang and WPML compatibility out of the box.

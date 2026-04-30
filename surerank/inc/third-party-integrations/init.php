@@ -84,6 +84,10 @@ class Init {
 			Divi::get_instance();
 		}
 
+		if ( defined( '__BREAKDANCE_VERSION' ) ) {
+			Breakdance::get_instance();
+		}
+
 		Multilingual::get_instance();
 	}
 }

@@ -234,6 +234,11 @@ class Seo_Popup {
 			return 'bricks';
 		}
 
+		// Listing pages (post/taxonomy list tables) use a dedicated context.
+		if ( $screen && in_array( $screen->base, [ 'edit', 'edit-tags' ], true ) ) {
+			return 'listing';
+		}
+
 		// Allow integrations (e.g. Divi BFB) to override before the block-editor check.
 		$filtered = apply_filters( 'surerank_detect_editor_type', 'classic', $screen );
 		if ( 'classic' !== $filtered ) {
@@ -259,7 +264,7 @@ class Seo_Popup {
 			return true;
 		}
 
-		if ( ! $screen || empty( $screen->base ) || ! in_array( $screen->base, [ 'post', 'term' ], true ) ) {
+		if ( ! $screen || empty( $screen->base ) || ! in_array( $screen->base, [ 'post', 'term', 'edit', 'edit-tags' ], true ) ) {
 			return false;
 		}
 
@@ -270,6 +275,18 @@ class Seo_Popup {
 		}
 
 		if ( 'term' === $screen->base && ! empty( $screen->taxonomy ) ) {
+			if ( ! Seo_Bar::display_metabox( $screen->taxonomy, 'wp_terms' ) ) {
+				return false;
+			}
+		}
+
+		if ( 'edit' === $screen->base && ! empty( $screen->post_type ) ) {
+			if ( ! Seo_Bar::display_metabox( $screen->post_type, 'wp_posts' ) ) {
+				return false;
+			}
+		}
+
+		if ( 'edit-tags' === $screen->base && ! empty( $screen->taxonomy ) ) {
 			if ( ! Seo_Bar::display_metabox( $screen->taxonomy, 'wp_terms' ) ) {
 				return false;
 			}

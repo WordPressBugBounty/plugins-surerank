@@ -222,6 +222,32 @@ function reducer( state = DEFAULT_STATE, action ) {
 					...action.payload,
 				},
 			};
+		case actionTypes.RESET_FOR_NEW_POST: {
+			// Collect existing per-post seo-bar check entries (keyed by numeric post ID).
+			// These are stored as pageSeoChecks[postId] and must be preserved so
+			// the badge column doesn't lose its cached data when the modal opens.
+			const preserved = Object.fromEntries(
+				Object.entries( state.pageSeoChecks ).filter( ( [ key ] ) =>
+					/^\d+$/.test( key )
+				)
+			);
+
+			return {
+				...state,
+				activePostId: action.payload.postId,
+				metaboxInitialized: false,
+				unsavedPostSeoMeta: {},
+				postSeoMeta: { ...DEFAULT_STATE.postSeoMeta },
+				postDynamicData: { ...DEFAULT_STATE.postDynamicData },
+				appSettings: { ...DEFAULT_STATE.appSettings },
+				globalDefaults: {},
+				variables: undefined,
+				pageSeoChecks: {
+					...DEFAULT_STATE.pageSeoChecks,
+					...preserved,
+				},
+			};
+		}
 		default:
 			const proState = applyFilters(
 				'surerank-pro.seo-metabox-store',

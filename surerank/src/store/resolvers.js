@@ -36,12 +36,6 @@ export function* getCurrentPostIgnoredList() {
 		return [];
 	}
 
-	// Short-circuit if we already have data for this post in state
-	const existingData = state.pageSeoChecks?.ignoredList;
-	if ( existingData?.length > 0 ) {
-		return existingData;
-	}
-
 	try {
 		const ignoredChecks = yield fetchFromAPI( {
 			path: addQueryArgs( 'surerank/v1/checks/ignore-page-check', {

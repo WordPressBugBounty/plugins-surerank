@@ -124,7 +124,10 @@ class Analyzer extends Api_Base {
 			if ( is_wp_error( $checks ) ) {
 				continue;
 			}
-			$checks        = $this->consolidate_keyword_checks( $checks );
+			$checks = $this->consolidate_keyword_checks( $checks );
+			if ( isset( $checks['broken_links'] ) && ! isset( $checks['broken_links']['type'] ) ) {
+				$checks['broken_links']['type'] = 'page';
+			}
 			$data[ $p_id ] = [
 				'checks' => $checks,
 			];
@@ -158,7 +161,10 @@ class Analyzer extends Api_Base {
 			if ( is_wp_error( $checks ) ) {
 				continue;
 			}
-			$checks        = $this->consolidate_keyword_checks( $checks );
+			$checks = $this->consolidate_keyword_checks( $checks );
+			if ( isset( $checks['broken_links'] ) && ! isset( $checks['broken_links']['type'] ) ) {
+				$checks['broken_links']['type'] = 'page';
+			}
 			$data[ $p_id ] = [
 				'checks' => $checks,
 			];
@@ -1664,6 +1670,7 @@ class Analyzer extends Api_Base {
 		$final_array                 = [];
 		$final_array['broken_links'] = [
 			'status'      => 'error',
+			'type'        => 'page',
 			'description' => [
 				__( 'These broken links were found on the page: ', 'surerank' ),
 				[

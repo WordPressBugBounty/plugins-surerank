@@ -47,6 +47,19 @@ html:has( #surerank-root ) {
 	}
 }
 
+// Flex style fix for Breakdance editor, to prevent the popup from inheriting unwanted styles.
+html.is-breakdance #surerank-root {
+	.flex.flex-col .flex.flex-col:not( .flex-1, .flex-auto, .flex-none, .flex-initial ),
+	.flex .flex.flex-row:not( .flex-1, .flex-auto, .flex-none, .flex-initial, .flex-col ),
+	.flex .flex:not( .flex-1, .flex-auto, .flex-none, .flex-initial, .flex-row ) {
+		flex: initial;
+	}
+	.flex .flex.flex-col:not( .flex-1, .flex-auto, .flex-none, .flex-initial ),
+	.flex.flex-row .flex.flex-col:not( .flex-1, .flex-auto, .flex-none, .flex-initial ) {
+		flex: 1 1 0%;
+	}
+}
+
 #seo-popup {
 	vertical-align: middle;
 }

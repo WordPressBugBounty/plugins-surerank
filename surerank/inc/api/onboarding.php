@@ -459,7 +459,13 @@ class Onboarding extends Api_Base {
 	 * @return void
 	 */
 	public function set_website_details( $data, &$settings ) {
-		$this->update_schema_field( $settings, 'Organization', 'name', $data['website_name'] );
+		$sanitized_name = sanitize_text_field( $data['website_name'] ?? '' );
+
+		// Only update the Organization schema name when a non-empty value is provided so we
+		// don't overwrite the default (e.g., %site.title%) with an empty string during imports.
+		if ( '' !== $sanitized_name ) {
+			$this->update_schema_field( $settings, 'Organization', 'name', $data['website_name'] );
+		}
 		$this->update_schema_field( $settings, 'Organization', '@type', $data['organization_type'] );
 		$this->update_schema_field( $settings, 'Organization', 'logo', $data['website_logo'] );
 		$this->update_schema_field( $settings, 'Organization', 'telephone', $data['website_owner_phone'] );
@@ -470,8 +476,9 @@ class Onboarding extends Api_Base {
 
 		$this->update_schema_field( $settings, 'Person', 'name', $data['website_owner_name'] );
 		$this->update_schema_field( $settings, 'Person', 'image', $data['website_logo'] );
-		$sanitized_name = sanitize_text_field( $data['website_name'] );
-		update_option( 'blogname', $sanitized_name );
+		if ( '' !== $sanitized_name ) {
+			update_option( 'blogname', $sanitized_name );
+		}
 	}
 
 	/**

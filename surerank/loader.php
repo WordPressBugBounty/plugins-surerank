@@ -115,6 +115,12 @@ class Loader {
 
 		// Map custom SureRank capabilities to primitive WordPress capabilities.
 		add_filter( 'map_meta_cap', [ $this, 'map_meta_cap' ], 10, 4 );
+
+		// Remove this after the translation error is fixed.
+		add_filter( 'doing_it_wrong_trigger_error', [ $this, 'suppress_translation_error' ], 10, 4 );
+
+		// Prevent Query Monitor from collecting the error.
+		add_action( 'doing_it_wrong_run', [ $this, 'prevent_qm_collection' ], 5, 3 );
 	}
 
 	/**
@@ -133,6 +139,57 @@ class Loader {
 	}
 
 	/**
+	 * Prevent Query Monitor from collecting textdomain errors.
+	 *
+	 * @param string $function_name The function that was called.
+	 * @param string $message The error message.
+	 * @param string $version The version.
+	 * @return void
+	 * @since 1.7.3
+	 */
+	public function prevent_qm_collection( $function_name, $message, $version ): void {
+		if ( $function_name === '_load_textdomain_just_in_time' && strpos( $message, 'surerank' ) !== false ) {
+			// Remove Query Monitor's action temporarily.
+			if ( class_exists( '\QM_Collectors' ) ) {
+				$collector = \QM_Collectors::get( 'doing_it_wrong' );
+				$callback  = is_object( $collector ) ? [ $collector, 'action_doing_it_wrong_run' ] : null;
+				if ( is_callable( $callback ) ) {
+					remove_action( 'doing_it_wrong_run', $callback, 10 );
+
+					// Re-add it after this specific error.
+					add_action(
+						'shutdown',
+						static function() use ( $callback ): void {
+							if ( ! has_action( 'doing_it_wrong_run', $callback ) ) {
+								add_action( 'doing_it_wrong_run', $callback, 10, 3 );
+							}
+						},
+						-1
+					);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Suppress translation error.
+	 *
+	 * @param bool   $status       Status.
+	 * @param string $function_name Function name.
+	 * @param string $message      Message.
+	 * @param string $version      Version.
+	 *
+	 * @return bool
+	 * @since 1.7.3
+	 */
+	public function suppress_translation_error( $status, $function_name, $message, $version ) {
+		if ( $function_name === '_load_textdomain_just_in_time' && strpos( $message, 'surerank' ) !== false ) {
+			return false;
+		}
+		return $status;
+	}
+
+	/**
 	 * Load routes.
 	 *
 	 * @since 0.0.1
@@ -142,11 +199,8 @@ class Loader {
 		do_action( 'surerank_before_load_routes' );
 
 		Routes::get_instance();
-
-		if ( is_admin() || wp_doing_ajax() ) {
-			Analytics::get_instance();
-			Admin_Notice::get_instance();
-		}
+		Analytics::get_instance();
+		Admin_Notice::get_instance();
 
 		do_action( 'surerank_after_load_routes' );
 	}
@@ -460,8 +514,8 @@ class Loader {
 
 		$this->load_components( $core_components );
 
-		// Seo_Bar only needed in admin page views (not AJAX or CLI).
-		if ( is_admin() && ! wp_doing_ajax() ) {
+		// Seo_Bar needed in admin page views and AJAX (for inline-save column rendering).
+		if ( is_admin() ) {
 			$this->load_components( [ Seo_Bar::class ] );
 		}
 	}

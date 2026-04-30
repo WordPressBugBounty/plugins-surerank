@@ -5,8 +5,6 @@ import { createPortal, memo, useEffect, useState } from '@wordpress/element';
 import PageCheckStatusIndicator from '@AdminComponents/page-check-status-indicator';
 import { usePageCheckStatus } from '@SeoPopup/hooks';
 
-/* global MutationObserver */
-
 const PageChecksStatus = () => {
 	const [ host, setHost ] = useState( null );
 	const { status, initializing, counts } = usePageCheckStatus();

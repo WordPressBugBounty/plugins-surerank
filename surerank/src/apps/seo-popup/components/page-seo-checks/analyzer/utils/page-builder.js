@@ -119,15 +119,23 @@ export const refreshPageChecks = async (
 	brokenLinkState
 ) => {
 	const dynamicPostId =
-		staticSelect( STORE_NAME ).getVariables()?.post?.ID?.value || 0;
+		staticSelect( STORE_NAME ).getVariables()?.post?.ID?.value ||
+		staticSelect( STORE_NAME ).getActivePostId() ||
+		0;
 	setIsRefreshing( true );
+
+	const isTaxonomyListing = surerank_seo_popup?.is_taxonomy === '1';
+	const apiPath = isTaxonomyListing
+		? '/surerank/v1/checks/taxonomy'
+		: '/surerank/v1/checks/page';
+	const timestamp = Date.now();
+	const apiParams = isTaxonomyListing
+		? { term_ids: [ dynamicPostId ], _t: timestamp }
+		: { post_ids: [ dynamicPostId ], _t: timestamp };
 
 	try {
 		const response = await apiFetch( {
-			path: addQueryArgs( '/surerank/v1/checks/page', {
-				post_ids: [ dynamicPostId ],
-				_t: Date.now(),
-			} ),
+			path: addQueryArgs( apiPath, apiParams ),
 			method: 'GET',
 		} );
 
@@ -155,6 +163,15 @@ export const refreshPageChecks = async (
 			};
 		} );
 
+		// Populate ignoredList from the full server response before filtering out
+		// broken_links. The server stamps `ignore: true` on ignored checks via
+		// get_updated_ignored_check_list(). Extracting from the unfiltered array
+		// ensures broken_links (removed below) is included when it was ignored.
+		const serverIgnoredIds = checks
+			.filter( ( check ) => check.ignore === true )
+			.map( ( check ) => check.id );
+		setPageSeoCheck( 'ignoredList', serverIgnoredIds );
+
 		const cleanedChecks = [ ...checks ].filter(
 			( item ) => item.id !== 'broken_links'
 		);
@@ -166,6 +183,10 @@ export const refreshPageChecks = async (
 				cleanedChecks.filter( ( item ) => item.type === type )
 			);
 		} );
+
+		// Mark initialization complete so the status indicator and accordion
+		// render with real data (broken-links check may still be running).
+		setPageSeoCheck( 'initializing', false );
 
 		if ( allLinks.length === 0 ) {
 			setPageSeoCheck( 'isCheckingLinks', false );
@@ -226,6 +247,10 @@ export const isBricksBuilder = () => {
 	return !! surerank_globals?.is_bricks;
 };
 
+export const isBreakdanceBuilder = () => {
+	return !! surerank_globals?.is_breakdance;
+};
+
 export const isAvadaBuilder = () => {
 	// Check for Fusion Builder frontend context
 	if (
@@ -237,13 +262,20 @@ export const isAvadaBuilder = () => {
 	return false;
 };
 
+export const isListingPage = () => {
+	return surerank_seo_popup?.editor_type === 'listing';
+};
+
 export const isPageBuilderActive = () => {
 	return (
 		isBricksBuilder() ||
+		isBreakdanceBuilder() ||
 		isElementorBuilder() ||
 		isAvadaBuilder() ||
 		// Consider frontend as page builder active as page requires refresh.
-		isFrontend()
+		isFrontend() ||
+		// Listing pages use server-side checks — no live editor available.
+		isListingPage()
 	);
 };
 

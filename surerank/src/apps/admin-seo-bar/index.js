@@ -1,27 +1,10 @@
 import { createRoot } from 'react-dom/client';
 import { __ } from '@wordpress/i18n';
-import {
-	useState,
-	Suspense,
-	memo,
-	useEffect,
-	useRef,
-} from '@wordpress/element';
+import { memo, useEffect, useRef } from '@wordpress/element';
 import { applyFilters } from '@wordpress/hooks';
-import {
-	Badge,
-	Skeleton,
-	Drawer,
-	Container,
-	Button,
-	Text,
-} from '@bsf/force-ui';
-import { BarChart, X } from 'lucide-react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { SureRankFullLogo } from '@GlobalComponents/icons';
-import PageChecks from '@SeoPopup/components/page-seo-checks/page-checks';
-import { useDispatch, useSuspenseSelect, resolveSelect } from '@wordpress/data';
-import PageChecksListSkeleton from '@/apps/seo-popup/components/page-seo-checks/page-checks-list-skeleton';
+import { Badge } from '@bsf/force-ui';
+import { BarChart } from 'lucide-react';
+import { useSuspenseSelect, resolveSelect, dispatch } from '@wordpress/data';
 import RenderQueue from '@Functions/render-queue';
 import { STORE_NAME } from '@Store/constants';
 import { cn } from '@/functions/utils';
@@ -31,107 +14,6 @@ import './style.scss';
 // Initialize a global RenderQueue for sequential badge rendering
 const renderQueue = new RenderQueue();
 
-const SeoChecksDrawer = ( {
-	open,
-	setOpen,
-	seoChecks,
-	errorMessage,
-	pageTitle,
-	postId,
-	postType,
-} ) => {
-	const { ignoreSeoBarCheck, restoreSeoBarCheck, setPageSeoChecks } =
-		useDispatch( STORE_NAME );
-
-	useEffect( () => {
-		setPageSeoChecks( { hideFixHelpButtons: true } );
-	}, [] );
-
-	const handleCloseClick = ( e ) => {
-		e.preventDefault();
-		e.stopPropagation();
-		setOpen( false );
-	};
-
-	const handleIgnoreClick = ( checkId ) => {
-		ignoreSeoBarCheck( checkId, postId, postType );
-	};
-
-	const handleRestoreClick = ( checkId ) => {
-		restoreSeoBarCheck( checkId, postId, postType );
-	};
-
-	return (
-		<Drawer
-			exitOnEsc
-			position="right"
-			scrollLock
-			setOpen={ setOpen }
-			open={ open }
-			className="z-999999"
-		>
-			<Drawer.Panel>
-				<Drawer.Header className="px-5 pt-5 pb-0">
-					<Container align="center" justify="between">
-						<SureRankFullLogo className="w-32 h-5" />
-						<Button
-							variant="ghost"
-							size="sm"
-							icon={ <X /> }
-							onClick={ handleCloseClick }
-							className="text-text-secondary hover:text-text-primary"
-							aria-label={ __( 'Close drawer', 'surerank' ) }
-						/>
-					</Container>
-					<Container align="center" justify="between">
-						<Text
-							as="span"
-							color="primary"
-							className="py-2"
-							size={ 14 }
-							weight={ 500 }
-						>
-							{ pageTitle +
-								' - ' +
-								__( 'SEO Checks', 'surerank' ) }
-						</Text>
-					</Container>
-				</Drawer.Header>
-				<Drawer.Body className="overflow-x-hidden space-y-3 px-3">
-					<AnimatePresence>
-						{ ! seoChecks || errorMessage ? (
-							<motion.div
-								className="space-y-2 p-2"
-								initial={ { opacity: 0 } }
-								animate={ { opacity: 1 } }
-								exit={ { opacity: 0 } }
-								transition={ { duration: 0.3 } }
-							>
-								<p className="m-0 text-text-secondary">
-									{ errorMessage ||
-										__(
-											'No SEO data available.',
-											'surerank'
-										) }
-								</p>
-							</motion.div>
-						) : (
-							<Suspense fallback={ <PageChecksListSkeleton /> }>
-								<PageChecks
-									pageSeoChecks={ seoChecks }
-									onIgnore={ handleIgnoreClick }
-									onRestore={ handleRestoreClick }
-								/>
-							</Suspense>
-						) }
-					</AnimatePresence>
-				</Drawer.Body>
-			</Drawer.Panel>
-			<Drawer.Backdrop />
-		</Drawer>
-	);
-};
-
 const CustomBadge = ( {
 	id,
 	spanElement,
@@ -139,7 +21,6 @@ const CustomBadge = ( {
 	onRenderComplete,
 } ) => {
 	const postIdRef = useRef( id );
-	const [ drawerOpen, setDrawerOpen ] = useState( false );
 
 	const isTaxonomy = window?.surerank_seo_bar?.type === 'taxonomy';
 	const {
@@ -173,15 +54,51 @@ const CustomBadge = ( {
 		onRenderComplete();
 	}, [ onRenderComplete ] );
 
-	const title =
-		spanElement?.getAttribute( 'data-title' ) ||
-		__( 'Untitled', 'surerank' );
+	// Opens the full SEO meta box modal for this specific post/term.
+	// Mutates window.surerank_seo_popup so existing API helpers (fetchMetaSettings,
+	// save-button) read the correct post context without any refactoring.
+	const handleEditSeoClick = ( e ) => {
+		e.stopPropagation();
 
-	const handleBadgeClick = () => {
+		if ( ! window.surerank_seo_popup ) {
+			return;
+		}
+
+		const link = spanElement?.getAttribute( 'data-link' ) || '';
+
+		// Update the global context for this post/term.
+		if ( isTaxonomy ) {
+			window.surerank_seo_popup.post_id = undefined;
+			window.surerank_seo_popup.term_id = id;
+			window.surerank_seo_popup.is_taxonomy = '1';
+		} else {
+			window.surerank_seo_popup.post_id = id;
+			window.surerank_seo_popup.term_id = undefined;
+			window.surerank_seo_popup.is_taxonomy = '';
+		}
+		window.surerank_seo_popup.link = link;
+
+		// Reset store state for the new post (synchronously wipes modal state,
+		// then fires an async background fetch for editor template variables).
+		dispatch( STORE_NAME ).resetForNewPost(
+			id,
+			isTaxonomy ? 'taxonomy' : 'post',
+			isTaxonomy
+		);
+
+		// Open the modal immediately — the modal will fetch meta settings once
+		// metaboxInitialized is false (set by resetForNewPost above).
+		dispatch( STORE_NAME ).updateModalState( true );
+	};
+
+	const handleBadgeClick = ( e ) => {
 		if ( batchStatus ) {
 			return;
 		}
-		setDrawerOpen( true );
+		if ( ! window.surerank_seo_popup ) {
+			return;
+		}
+		handleEditSeoClick( e );
 	};
 
 	let badgeProps = {
@@ -230,42 +147,22 @@ const CustomBadge = ( {
 	}
 
 	return (
-		<>
-			<div
-				onClick={ handleBadgeClick }
-				role="button"
-				tabIndex={ batchStatus ? -1 : 0 }
-				className={ cn(
-					'inline-block w-full',
-					batchStatus ? 'cursor-default' : 'cursor-pointer'
-				) }
-				onKeyDown={ ( e ) => {
-					if ( e.key === 'Enter' || e.key === ' ' ) {
-						handleBadgeClick( e );
-					}
-				} }
-			>
-				<Badge { ...badgeProps } />
-			</div>
-			<Suspense
-				fallback={
-					<Skeleton
-						variant="rectangular"
-						className="w-full rounded-full h-6 max-w-32"
-					/>
+		<div
+			onClick={ handleBadgeClick }
+			role="button"
+			tabIndex={ batchStatus ? -1 : 0 }
+			className={ cn(
+				'inline-block',
+				batchStatus ? 'cursor-default' : 'cursor-pointer'
+			) }
+			onKeyDown={ ( e ) => {
+				if ( e.key === 'Enter' || e.key === ' ' ) {
+					handleBadgeClick( e );
 				}
-			>
-				<SeoChecksDrawer
-					open={ drawerOpen }
-					setOpen={ setDrawerOpen }
-					seoChecks={ seoChecks }
-					errorMessage={ errorMessage }
-					pageTitle={ title }
-					postId={ id }
-					postType={ isTaxonomy ? 'taxonomy' : 'post' }
-				/>
-			</Suspense>
-		</>
+			} }
+		>
+			<Badge { ...badgeProps } />
+		</div>
 	);
 };
 
@@ -352,7 +249,7 @@ const debounce = ( func, wait ) => {
 	};
 };
 
-/* global MutationObserver, inlineEditTax, Node */
+/* global inlineEditTax, Node */
 
 // Initialize badges on page load
 document.addEventListener( 'DOMContentLoaded', () => {
@@ -455,6 +352,21 @@ document.addEventListener( 'DOMContentLoaded', () => {
 
 			return result;
 		};
+	}
+} );
+
+// After saving from the meta box modal, refresh the SEO bar badge for the
+// saved post so the listing-page column reflects the updated checks.
+window.addEventListener( 'surerank:seo-data-saved', ( e ) => {
+	const postId = e.detail?.postId;
+	if ( ! postId ) {
+		return;
+	}
+	const span = document.querySelector(
+		`span.surerank-page-score[data-id="${ postId }"]`
+	);
+	if ( span ) {
+		renderQueue.enqueue( () => renderBadge( span, Date.now() ) );
 	}
 } );
 

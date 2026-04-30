@@ -37,6 +37,7 @@ class Bricks {
 
 		// Runs in admin/save context too — not limited to the visual builder.
 		add_filter( 'surerank_post_analyzer_content', [ $this, 'process_bricks_content' ], 10, 2 );
+		add_filter( 'surerank_meta_variable_post_content', [ $this, 'process_bricks_content' ], 10, 2 );
 
 		if ( ! function_exists( 'bricks_is_builder_main' ) || ! bricks_is_builder_main() ) {
 			return;

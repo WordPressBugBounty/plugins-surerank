@@ -1,8 +1,10 @@
 import { pick } from 'lodash';
 import { select } from '@wordpress/data';
+import { addQueryArgs } from '@wordpress/url';
 
 import { STORE_NAME } from './constants';
 import * as actionTypes from './action-types';
+import { EDITOR_URL } from '@Global/constants/api';
 import {
 	getCategorizedChecks,
 	getCheckTypeKey,
@@ -189,6 +191,12 @@ export function* restoreIgnoreCheck( checkId, actionType ) {
 		)?.type;
 		const storeKey = getCheckTypeKey( checkType )?.type || 'checks';
 		yield setPageSeoCheck( checkType, seoChecksState[ storeKey ] );
+
+		// Sync back to seo-bar per-post cache so the badge reflects the change.
+		const allChecks = select( STORE_NAME ).getPageSeoChecks()?.checks || [];
+		if ( postId && allChecks.length > 0 ) {
+			yield setPageSeoChecksByIdAndType( postId, postType, allChecks );
+		}
 	} catch ( error ) {
 		// Silently fail for aborted requests
 	}
@@ -352,4 +360,102 @@ export function* restoreSeoBarCheck( checkId, postId, postType ) {
 		'DELETE',
 		false
 	);
+}
+
+/**
+ * Converts the seo-bar's per-post categorized check cache into the flat format
+ * expected by the modal, then seeds pageSeoChecks so analyze.js skips the
+ * duplicate refreshPageChecks API call (refreshCalled: true).
+ *
+ * @param {string|number} postId     The post or term ID.
+ * @param {Object}        seoBarData The cached seo-bar entry: { checks, sequence }.
+ */
+const seedModalFromSeoBarCache = ( postId, seoBarData ) => {
+	const { checks: categorized, sequence } = seoBarData;
+
+	// Flatten the seo-bar's categorized buckets into a single sorted array.
+	const allChecks = [
+		'badChecks',
+		'fairChecks',
+		'suggestionChecks',
+		'passedChecks',
+		'ignoredChecks',
+	]
+		.flatMap( ( key ) => categorized[ key ] || [] )
+		.sort(
+			( a, b ) => sequence.indexOf( a.id ) - sequence.indexOf( b.id )
+		);
+
+	const pageChecks = allChecks.filter( ( c ) => c.type === 'page' );
+	const keywordChecks = allChecks.filter( ( c ) => c.type === 'keyword' );
+	const ignoredList = allChecks
+		.filter( ( c ) => c.ignore )
+		.map( ( c ) => c.id );
+
+	const categorizedChecks = getCategorizedChecks( allChecks, ignoredList );
+	const categorizedPageChecks = getCategorizedChecks(
+		pageChecks,
+		ignoredList
+	);
+	const categorizedKeywordChecks = getCategorizedChecks(
+		keywordChecks,
+		ignoredList
+	);
+
+	return setPageSeoChecks( {
+		postId,
+		checks: allChecks,
+		pageChecks,
+		keywordChecks,
+		categorizedChecks,
+		categorizedPageChecks,
+		categorizedKeywordChecks,
+		ignoredList,
+		initializing: false,
+		refreshCalled: true,
+		isRefreshing: false,
+	} );
+};
+
+/**
+ * Reset the store for a new post context on listing pages.
+ * Clears modal-specific state while preserving per-post seo-bar check cache.
+ *
+ * @param {string|number} postId     The post or term ID being opened.
+ * @param {string}        postType   'post' or 'taxonomy'.
+ * @param {boolean}       isTaxonomy Whether this is a taxonomy term.
+ */
+export function* resetForNewPost( postId, postType, isTaxonomy ) {
+	yield {
+		type: actionTypes.RESET_FOR_NEW_POST,
+		payload: { postId },
+	};
+
+	// If the seo-bar already fetched checks for this post, seed the modal state
+	// so analyze.js skips the duplicate refreshPageChecks API call.
+	// RESET_FOR_NEW_POST preserves numeric-keyed cache entries, so we read after.
+	const cachedData = select( STORE_NAME ).getPageSeoChecks()?.[ postId ];
+	if ( cachedData?.checks ) {
+		yield seedModalFromSeoBarCache( postId, cachedData );
+	}
+
+	// Fetch editor variables (used for title/description template replacement).
+	const queryParams = isTaxonomy ? { term_id: postId } : { post_id: postId };
+
+	try {
+		const response = yield fetchFromAPI( {
+			path: addQueryArgs( EDITOR_URL, queryParams ),
+			method: 'GET',
+		} );
+
+		if ( response?.success ) {
+			let initialState = { variables: response.variables };
+			if ( response.other ) {
+				initialState = { ...initialState, ...response.other };
+			}
+			yield updateInitialState( initialState );
+		}
+	} catch ( error ) {
+		// Silently fail — the modal will still work without variables.
+	}
 }

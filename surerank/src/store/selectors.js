@@ -60,18 +60,14 @@ export const getUnsavedMetaSettings = ( state ) => state.unsavedPostSeoMeta;
 export const getRefreshCalled = ( state ) => state.pageSeoChecks.refreshCalled;
 
 export const getCurrentPostIgnoredList = ( state ) => {
-	const postId =
-		state.pageSeoChecks?.postId ?? state?.variables?.post?.ID?.value;
-	if ( ! postId ) {
-		return [];
-	}
-	const ignoredList = state.pageSeoChecks.ignoredList || [];
-	return ignoredList;
+	return state.pageSeoChecks?.ignoredList || [];
 };
 
 export const getPageSeoChecks = ( state ) => {
 	return state.pageSeoChecks;
 };
+
+export const getActivePostId = ( state ) => state.activePostId;
 
 export const getSeoBarChecks = ( state, postId, checkType ) => {
 	if ( ! postId || ! checkType ) {

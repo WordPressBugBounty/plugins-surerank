@@ -25,6 +25,7 @@ import { usePageChecks } from '@SeoPopup/hooks';
 import { SCREENS } from './screens';
 import { useKeywordChecks } from '@SeoPopup/components/keyword-checks/hooks/use-keyword-checks';
 import { applyFilters } from '@wordpress/hooks';
+import { isListingPage } from '@SeoPopup/components/page-seo-checks/analyzer/utils/page-builder';
 
 // Define toast globally for PRO plugin.
 if ( window && ! window?.toast ) {
@@ -41,8 +42,20 @@ const animateVariants = {
 };
 
 export const getEditorData = () => {
-	const editor = staticSelect( 'core/editor' );
 	const selectors = staticSelect( STORE_NAME );
+
+	// On listing pages there is no editor — return empty content so any
+	// consumer that calls this doesn't crash.
+	if ( isListingPage() ) {
+		return {
+			postContent: '',
+			permalink: surerank_seo_popup?.link || '',
+			title: '',
+			description: selectors?.getPostSeoMeta()?.page_description || '',
+		};
+	}
+
+	const editor = staticSelect( 'core/editor' );
 	const isBlockEditor = surerank_seo_popup?.editor_type === 'block';
 
 	if ( isBlockEditor ) {
@@ -99,7 +112,15 @@ const SeoModal = ( props ) => {
 		( select ) => select( STORE_NAME ).getModalState(),
 		[]
 	);
+
+	// Track the active post ID so we can re-fetch when the user opens the
+	// modal for a different post from the listing page.
+	const activePostId = useSelect(
+		( select ) => select( STORE_NAME ).getActivePostId(),
+		[]
+	);
 	const calledOnceRef = useRef( false );
+	const prevPostIdRef = useRef( activePostId );
 
 	const getSEOData = useCallback( async () => {
 		if ( initialized ) {
@@ -121,11 +142,31 @@ const SeoModal = ( props ) => {
 	}, [ initialized ] );
 
 	useEffect( () => {
-		if ( ! calledOnceRef.current ) {
+		// When the active post changes (listing-page context switch), reset the
+		// ref so the next open triggers a fresh fetch for the new post.
+		if ( activePostId && prevPostIdRef.current !== activePostId ) {
+			calledOnceRef.current = false;
+			prevPostIdRef.current = activePostId;
+		}
+
+		// RESET_FOR_NEW_POST sets metaboxInitialized: false on every modal open
+		// (including same post, same ID). Allow a fresh fetch in all cases so the
+		// meta settings form doesn't stay in skeleton state on reopen.
+		if ( ! initialized ) {
+			calledOnceRef.current = false;
+		}
+
+		// On listing pages, don't fetch until the user has selected a post/term
+		// (activePostId is set by RESET_FOR_NEW_POST when a row is clicked).
+		if ( isListingPage() && ! activePostId ) {
+			return;
+		}
+
+		if ( ! calledOnceRef.current && ! initialized ) {
 			getSEOData();
 			calledOnceRef.current = true;
 		}
-	}, [ getSEOData ] );
+	}, [ getSEOData, activePostId, initialized ] );
 
 	// Allow Pro to inject auto-open logic. Link Manager.
 	useEffect( () => {
@@ -157,7 +198,7 @@ const SeoModal = ( props ) => {
 
 	const RenderHeader = useMemo( () => {
 		const screen = SCREENS[ appSettings?.currentScreen ];
-		if ( !! screen?.header ) {
+		if ( screen?.header ) {
 			return screen.header;
 		}
 
@@ -182,10 +223,8 @@ const SeoModal = ( props ) => {
 						variants={ animateVariants }
 						transition={ { duration: 0.3 } }
 					>
-						{ /* Header */ }
 						<RenderHeader onClose={ closeModal } />
 
-						{ /* Modal Body */ }
 						<div
 							className={ cn(
 								'flex-1 flex flex-col gap-6 overflow-y-auto px-4 pt-4 pb-0',

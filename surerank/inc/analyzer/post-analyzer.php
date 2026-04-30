@@ -561,6 +561,7 @@ class PostAnalyzer {
 
 		$empty_message = [
 			'status'  => 'success',
+			'type'    => 'page',
 			'message' => __( 'No broken links found on the page.', 'surerank' ),
 		];
 

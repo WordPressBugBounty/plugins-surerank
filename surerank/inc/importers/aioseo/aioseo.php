@@ -1179,8 +1179,16 @@ class Aioseo extends BaseImporter {
 
 		$site_represents = $schema['siteRepresents'] ?? 'organization';
 
+		$website_name = $schema['websiteName'] ?? '';
+
+		// AIOSEO uses '#site_title' as a placeholder meaning "use the WordPress site title".
+		// Resolve it to the current blogname so onboarding/schema data keeps a valid website name instead of persisting the literal placeholder or an empty string.
+		if ( '#site_title' === trim( $website_name ) ) {
+			$website_name = (string) get_option( 'blogname', '' );
+		}
+
 		$site_data = [
-			'website_name'      => $schema['websiteName'] ?? '',
+			'website_name'      => $website_name,
 			'organization_type' => 'organization' === $site_represents ? 'Organization' : 'Person',
 			'website_logo'      => $schema['organizationLogo'] ?? $schema['personLogo'] ?? '',
 			'website_type'      => $site_represents,

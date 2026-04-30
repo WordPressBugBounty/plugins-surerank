@@ -57,7 +57,7 @@ import InstantIndexingLogs from '@AdminDashboard/instant-indexing/logs';
 import EmailReportsRoute from '@AdminGeneral/advanced/email-reports';
 import GoogleIndexingSettings from '@AdminDashboard/google-indexing/settings';
 import GoogleIndexingLogs from '@AdminDashboard/google-indexing/logs';
-// import ImageGenerationUpgrade from '@AdminDashboard/image-generation';
+import ImageGenerationUpgrade from '@AdminDashboard/image-generation';
 import currentUserCan from '@/functions/role-capabilities';
 import { isProActive } from '@/functions/nudges';
 
@@ -157,12 +157,9 @@ const generalAndAdvancedRoutes = [
 		createChildRoute( '/image-seo', ImageSeoRoute, [], {
 			capability: 'surerank_global_setting',
 		} ),
-		/*
-		// Note: Revert this after release
 		createChildRoute( '/image-generation', ImageGenerationUpgrade, [], {
 			capability: 'surerank_global_setting',
 		} ),
-		 */
 		// Conditionally include schema route
 		...( ENABLE_SCHEMAS && SchemaRoute
 			? [

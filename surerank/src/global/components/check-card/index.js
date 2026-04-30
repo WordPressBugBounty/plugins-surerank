@@ -203,7 +203,7 @@ export const CheckCard = ( {
 							</div>
 						</>
 					) }
-					<div className="flex items-center flex-col gap-1.5 mt-px">
+					<div className="flex items-center flex-col flex-initial gap-1.5 mt-px">
 						<Label
 							size="xs"
 							className="space-x-1 text-sm text-text-secondary inline"
