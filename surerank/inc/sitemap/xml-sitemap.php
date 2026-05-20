@@ -390,6 +390,9 @@ class Xml_Sitemap extends Sitemap {
 	 * @return void
 	 */
 	protected function send_xml_response( string $xml, int $status = 200, array $extra_headers = [] ): void {
+		// Cleanup buffers before any header() so headers_sent() is honest.
+		$xml = Utils::strip_leading_noise( $xml );
+
 		if ( ! headers_sent() ) {
 			http_response_code( $status );
 		}

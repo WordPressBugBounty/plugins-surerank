@@ -77,6 +77,26 @@ const renderFieldLabel = ( field ) => (
 	</div>
 );
 
+const normalizeDateTimeValue = ( value ) => {
+	if ( ! value || typeof value !== 'string' ) {
+		return '';
+	}
+
+	if ( value.startsWith( '%' ) || value.includes( '@' ) ) {
+		return value;
+	}
+
+	try {
+		const date = new Date( value );
+		if ( isNaN( date.getTime() ) ) {
+			return value;
+		}
+		return date.toISOString();
+	} catch ( error ) {
+		return value;
+	}
+};
+
 // Custom DateTime component with DatePicker
 const DateTimeField = ( {
 	field,
@@ -94,31 +114,7 @@ const DateTimeField = ( {
 		if ( ! selectedDate ) {
 			return '';
 		}
-		try {
-			const date = new Date( selectedDate );
-			if ( isNaN( date.getTime() ) ) {
-				return '';
-			}
-			return date.toISOString();
-		} catch ( error ) {
-			return '';
-		}
-	};
-
-	// Convert ISO string to user-friendly display format
-	const formatForDisplay = ( isoString ) => {
-		if ( ! isoString ) {
-			return '';
-		}
-		try {
-			const date = new Date( isoString );
-			if ( isNaN( date.getTime() ) ) {
-				return '';
-			}
-			return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
-		} catch ( error ) {
-			return '';
-		}
+		return normalizeDateTimeValue( selectedDate.toString() );
 	};
 
 	const handleDateApply = ( selectedDate ) => {
@@ -160,19 +156,18 @@ const DateTimeField = ( {
 					options={ variableSuggestions }
 					placeholder={ placeholder }
 					defaultValue={ stringValueToFormatJSON(
-						// Show formatted date if it's an ISO string, otherwise show as-is for variables
-						currentValue &&
-							! currentValue.startsWith( '%' ) &&
-							! currentValue.includes( '@' )
-							? formatForDisplay( currentValue )
-							: currentValue,
+						currentValue,
 						variableSuggestions
 					) }
 					onChange={ ( editorState ) =>
 						onFieldChange(
 							field.id,
 							editorValueToString( editorState.toJSON() ) !== ''
-								? editorValueToString( editorState.toJSON() )
+								? normalizeDateTimeValue(
+										editorValueToString(
+											editorState.toJSON()
+										)
+								  )
 								: ''
 						)
 					}

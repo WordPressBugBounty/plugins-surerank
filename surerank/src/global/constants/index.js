@@ -101,7 +101,7 @@ export * from './process-status';
 
 // Page SEO Checks
 export const LEARN_MORE_AI_AUTH =
-	'https://surerank.com/surerank-ai/?utm_medium=surerank_plugin';
+	'https://surerank.com/surerank-ai/?utm_source=surerank_plugin&utm_medium=wordpress_plugin&utm_campaign=core_plugin&utm_content=surerank_ai_learn_more';
 
 /**
  * Get the appropriate max length based on the field type.

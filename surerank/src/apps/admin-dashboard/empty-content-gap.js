@@ -10,6 +10,7 @@ import {
 import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import ContentPerformanceEmptyState from './content-performance-empty-state';
+import { redirectToPricingPage } from '@/functions/nudges';
 
 const dummyRows = [
 	{
@@ -111,7 +112,9 @@ const EmptyContentGap = ( { rows = 5, overlayFixed = false } ) => {
 					variant="primary"
 					size="md"
 					onClick={ () =>
-						window.open( surerank_globals.pricing_link, '_blank' )
+						redirectToPricingPage(
+							'content_gap_full_report_upgrade'
+						)
 					}
 					className="pointer-events-auto"
 				>

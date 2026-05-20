@@ -139,26 +139,34 @@ const createStatusIndicator = () => {
 
 // Main setup function — called after store is initialized
 const setupDiviIntegration = () => {
-	let done = false;
 	let tooltipCleanup = null;
 	let unsubscribe = null;
 	let observer = null;
 
 	const inject = () => {
-		if ( done ) {
-			return;
-		}
-
 		const container = document.querySelector( DIVI_TARGET_SELECTOR );
 		if ( ! container ) {
 			return;
 		}
 
-		done = true;
+		// Already injected into this container instance — no-op.
+		if ( container.querySelector( '.surerank-divi-btn-wrapper' ) ) {
+			return;
+		}
+
+		// Container was replaced by a Divi re-render — clean up previous injection.
+		if ( tooltipCleanup ) {
+			tooltipCleanup();
+			tooltipCleanup = null;
+		}
+		if ( unsubscribe ) {
+			unsubscribe();
+			unsubscribe = null;
+		}
 
 		// Create surerank-root wrapper for TailwindCSS
 		const sureRankWrapper = document.createElement( 'div' );
-		sureRankWrapper.className = 'surerank-root';
+		sureRankWrapper.className = 'surerank-root surerank-divi-btn-wrapper';
 
 		// Create the button matching Divi's own button class
 		const btn = document.createElement( 'button' );
@@ -229,19 +237,14 @@ const setupDiviIntegration = () => {
 	// Try injecting immediately
 	inject();
 
-	// If the Divi page bar isn't rendered yet, use MutationObserver
-	if ( ! done ) {
-		observer = new MutationObserver( () => {
-			inject();
-			if ( done ) {
-				observer.disconnect();
-			}
-		} );
-		observer.observe( document.body, {
-			childList: true,
-			subtree: true,
-		} );
-	}
+	// Keep watching — Divi re-renders its page bar during new-page initialisation,
+	// which removes any previously injected button. The DOM-presence check in
+	// inject() makes each callback a fast no-op when the button is already there.
+	observer = new MutationObserver( inject );
+	observer.observe( document.body, {
+		childList: true,
+		subtree: true,
+	} );
 
 	// Cleanup on page unload
 	window.addEventListener( 'beforeunload', () => {

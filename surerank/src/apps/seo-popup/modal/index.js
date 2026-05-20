@@ -186,6 +186,29 @@ const SeoModal = ( props ) => {
 		}
 	}, [ initialized, updateModalState, updateAppSettings ] );
 
+	// Auto-open via `?surerank_open=true` (used by the Learn page to deep-link
+	// into the homepage page's SEO metabox when the site uses a static front page).
+	useEffect( () => {
+		if ( ! initialized || typeof window === 'undefined' ) {
+			return;
+		}
+		const params = new URLSearchParams( window.location.search );
+		if ( params.get( 'surerank_open' ) !== 'true' ) {
+			return;
+		}
+		updateModalState( true );
+		// Strip the flag so refreshes / rerenders don't reopen the modal.
+		params.delete( 'surerank_open' );
+		const qs = params.toString();
+		window.history.replaceState(
+			{},
+			'',
+			`${ window.location.pathname }${ qs ? `?${ qs }` : '' }${
+				window.location.hash
+			}`
+		);
+	}, [ initialized, updateModalState ] );
+
 	const closeModal = useCallback( () => {
 		updateModalState( false );
 	}, [ updateModalState ] );

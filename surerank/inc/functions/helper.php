@@ -676,6 +676,38 @@ class Helper {
 	}
 
 	/**
+	 * Build a UTM-tagged marketing link with stable defaults.
+	 *
+	 * Uses deterministic UTM values for SureRank outbound marketing links and
+	 * tracks placement via `utm_content`.
+	 *
+	 * @since 1.7.4
+	 * @param string                $path        Optional path appended to the SureRank website.
+	 * @param string                $utm_content Placement identifier for attribution.
+	 * @param array<string, string> $extra       Additional query args merged last.
+	 * @return string Sanitized URL with UTM parameters.
+	 */
+	public static function get_marketing_link( string $path = '', string $utm_content = '', array $extra = [] ): string {
+		$base = 'https://surerank.com/';
+
+		if ( '' !== $path ) {
+			$base .= ltrim( $path, '/' );
+		}
+
+		$utm_args = array_merge(
+			[
+				'utm_source'   => 'surerank_plugin',
+				'utm_medium'   => 'wordpress_plugin',
+				'utm_campaign' => 'core_plugin',
+			],
+			'' !== $utm_content ? [ 'utm_content' => $utm_content ] : [],
+			$extra
+		);
+
+		return esc_url_raw( add_query_arg( $utm_args, $base ) );
+	}
+
+	/**
 	 * Check if a value can be replaced.
 	 *
 	 * @param mixed $value The value to check.

@@ -320,6 +320,11 @@ class Admin_Notice {
 			return false;
 		}
 
+		// Do not show the notice on classic editor post edit screens.
+		if ( 'post' === $screen->base && ! $screen->is_block_editor() ) {
+			return false;
+		}
+
 		// Check if notice should display based on nudges settings.
 		$nudges = Utils::get_instance()->get_nudges();
 

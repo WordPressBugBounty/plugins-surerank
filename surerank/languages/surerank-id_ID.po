@@ -15,8 +15,9 @@ msgstr ""
 
 #. Author of the plugin
 #: surerank.php
-#: inc/admin/dashboard.php:245
-#: inc/admin/dashboard.php:246
+#: inc/admin/dashboard.php:249
+#: inc/admin/dashboard.php:250
+#: inc/admin/seo-popup.php:92
 #: inc/nps-notice.php:90
 msgid "SureRank"
 msgstr "SureRank"
@@ -31,13 +32,13 @@ msgstr "https://surerank.com"
 msgid "https://surerank.com/"
 msgstr "https://surerank.com/"
 
-#: inc/admin/dashboard.php:272
+#: inc/admin/dashboard.php:276
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Dashboard"
 msgstr "Dasbor"
 
-#: inc/admin/dashboard.php:276
+#: inc/admin/dashboard.php:280
 #: inc/analyzer/seo-analyzer.php:165
 #: inc/analyzer/seo-analyzer.php:288
 #: inc/schema/types/organization.php:678
@@ -47,7 +48,7 @@ msgstr "Dasbor"
 msgid "General"
 msgstr "Umum"
 
-#: inc/admin/dashboard.php:280
+#: inc/admin/dashboard.php:284
 #: inc/analyzer/seo-analyzer.php:851
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
@@ -401,14 +402,14 @@ msgstr "ID"
 msgid "The unique identifier for a post."
 msgstr "Pengidentifikasi unik untuk sebuah pos."
 
-#: inc/admin/dashboard.php:636
+#: inc/admin/dashboard.php:648
 #: inc/meta-variables/post.php:65
 #: inc/schema/variables.php:83
 #: build/admin-dashboard/index.js:1
 msgid "Post Title"
 msgstr "Judul Pos"
 
-#: inc/admin/dashboard.php:638
+#: inc/admin/dashboard.php:650
 #: inc/meta-variables/post.php:66
 msgid "The title of the post."
 msgstr "Judul dari pos."
@@ -417,7 +418,7 @@ msgstr "Judul dari pos."
 msgid "Excerpt"
 msgstr "Cuplikan"
 
-#: inc/admin/dashboard.php:643
+#: inc/admin/dashboard.php:655
 #: inc/meta-variables/post.php:70
 msgid "The excerpt of the post."
 msgstr "Cuplikan dari pos."
@@ -426,7 +427,7 @@ msgstr "Cuplikan dari pos."
 msgid "Content"
 msgstr "Konten"
 
-#: inc/admin/dashboard.php:648
+#: inc/admin/dashboard.php:660
 #: inc/meta-variables/post.php:74
 msgid "The content of the post."
 msgstr "Konten dari pos."
@@ -451,12 +452,12 @@ msgstr "Pemisah"
 msgid "Site Tagline"
 msgstr "Tagline Situs"
 
-#: inc/admin/dashboard.php:628
+#: inc/admin/dashboard.php:640
 #: inc/meta-variables/site.php:65
 msgid "The tagline of the site."
 msgstr "Tagline dari situs."
 
-#: inc/admin/dashboard.php:621
+#: inc/admin/dashboard.php:633
 #: inc/meta-variables/site.php:68
 #: build/admin-dashboard/index.js:1
 msgid "Site Name"
@@ -492,7 +493,7 @@ msgstr "Pengidentifikasi unik untuk sebuah istilah."
 msgid "Term Name"
 msgstr "Nama Istilah"
 
-#: inc/admin/dashboard.php:633
+#: inc/admin/dashboard.php:645
 #: inc/meta-variables/term.php:63
 msgid "The name of the term."
 msgstr "Nama dari istilah."
@@ -506,7 +507,7 @@ msgstr "Nama dari istilah."
 msgid "Description"
 msgstr "Deskripsi"
 
-#: inc/admin/dashboard.php:653
+#: inc/admin/dashboard.php:665
 #: inc/meta-variables/term.php:67
 msgid "The description of the term."
 msgstr "Deskripsi dari istilah."
@@ -2320,17 +2321,17 @@ msgstr "Gambar thumbnail yang relevan dengan situs web."
 msgid "Post ID"
 msgstr "ID Pos"
 
-#: inc/admin/dashboard.php:641
+#: inc/admin/dashboard.php:653
 #: inc/schema/variables.php:85
 msgid "Post Excerpt"
 msgstr "Cuplikan Pos"
 
-#: inc/admin/dashboard.php:646
+#: inc/admin/dashboard.php:658
 #: inc/schema/variables.php:86
 msgid "Post Content"
 msgstr "Konten Pos"
 
-#: inc/admin/dashboard.php:666
+#: inc/admin/dashboard.php:678
 #: inc/schema/variables.php:87
 msgid "Post URL"
 msgstr "URL Pos"
@@ -2379,7 +2380,7 @@ msgstr "Slug Istilah"
 msgid "Term Taxonomy"
 msgstr "Taksonomi Istilah"
 
-#: inc/admin/dashboard.php:651
+#: inc/admin/dashboard.php:663
 #: inc/schema/variables.php:115
 msgid "Term Description"
 msgstr "Deskripsi Istilah"
@@ -2534,12 +2535,12 @@ msgstr "Perbaiki Masalah SEO dengan AI"
 msgid "Fix It for Me"
 msgstr "Perbaiki Untuk Saya"
 
-#: inc/admin/dashboard.php:626
+#: inc/admin/dashboard.php:638
 #: build/admin-dashboard/index.js:1
 msgid "Tagline"
 msgstr "Tagline"
 
-#: inc/admin/dashboard.php:631
+#: inc/admin/dashboard.php:643
 msgid "Term Title"
 msgstr "Judul Istilah"
 
@@ -2803,14 +2804,14 @@ msgstr "%1$d dari %2$d pemeriksaan telah dilakukan."
 msgid "Passed"
 msgstr "Lulus"
 
-#: loader.php:365
+#: loader.php:366
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Settings"
 msgstr "Pengaturan"
 
-#: inc/admin/seo-popup.php:144
+#: inc/admin/seo-popup.php:207
 #: build/breakdance/index.js:1
 #: build/bricks/index.js:1
 #: build/divi/index.js:1
@@ -3854,119 +3855,119 @@ msgstr "Taksonomi"
 msgid "Archives"
 msgstr "Arsip"
 
-#: inc/admin/dashboard.php:623
+#: inc/admin/dashboard.php:635
 msgid "The name of the site."
 msgstr "Nama situs."
 
-#: inc/admin/dashboard.php:656
+#: inc/admin/dashboard.php:668
 #: inc/meta-variables/post.php:81
 msgid "Date Published"
 msgstr "Tanggal Diterbitkan"
 
-#: inc/admin/dashboard.php:658
+#: inc/admin/dashboard.php:670
 #: inc/meta-variables/post.php:82
 msgid "Publication date of the current post/page OR specified date on date archives"
 msgstr "Tanggal publikasi dari posting/halaman saat ini ATAU tanggal yang ditentukan pada arsip tanggal"
 
-#: inc/admin/dashboard.php:661
+#: inc/admin/dashboard.php:673
 #: inc/meta-variables/post.php:85
 msgid "Date Modified"
 msgstr "Tanggal Dimodifikasi"
 
-#: inc/admin/dashboard.php:663
+#: inc/admin/dashboard.php:675
 #: inc/meta-variables/post.php:86
 msgid "Last modification date of the current post/page"
 msgstr "Tanggal modifikasi terakhir dari posting/halaman saat ini"
 
-#: inc/admin/dashboard.php:668
+#: inc/admin/dashboard.php:680
 msgid "URL of the current post/page"
 msgstr "URL dari posting/halaman saat ini"
 
-#: inc/admin/dashboard.php:671
+#: inc/admin/dashboard.php:683
 #: inc/meta-variables/site.php:84
 msgid "Current Date"
 msgstr "Tanggal Saat Ini"
 
-#: inc/admin/dashboard.php:673
+#: inc/admin/dashboard.php:685
 #: inc/meta-variables/site.php:85
 msgid "Current server date"
 msgstr "Tanggal server saat ini"
 
-#: inc/admin/dashboard.php:676
+#: inc/admin/dashboard.php:688
 #: inc/meta-variables/site.php:88
 msgid "Current Day"
 msgstr "Hari Saat Ini"
 
-#: inc/admin/dashboard.php:678
+#: inc/admin/dashboard.php:690
 #: inc/meta-variables/site.php:89
 msgid "Current server day"
 msgstr "Hari server saat ini"
 
-#: inc/admin/dashboard.php:681
+#: inc/admin/dashboard.php:693
 #: inc/meta-variables/site.php:92
 msgid "Current Month"
 msgstr "Bulan Saat Ini"
 
-#: inc/admin/dashboard.php:683
+#: inc/admin/dashboard.php:695
 #: inc/meta-variables/site.php:93
 msgid "Current server month"
 msgstr "Bulan server saat ini"
 
-#: inc/admin/dashboard.php:686
+#: inc/admin/dashboard.php:698
 #: inc/meta-variables/site.php:96
 msgid "Current Year"
 msgstr "Tahun Saat Ini"
 
-#: inc/admin/dashboard.php:688
+#: inc/admin/dashboard.php:700
 #: inc/meta-variables/site.php:97
 msgid "Current server year"
 msgstr "Tahun server saat ini"
 
-#: inc/admin/dashboard.php:691
+#: inc/admin/dashboard.php:703
 #: inc/meta-variables/site.php:100
 msgid "Current Time"
 msgstr "Waktu Saat Ini"
 
-#: inc/admin/dashboard.php:693
+#: inc/admin/dashboard.php:705
 #: inc/meta-variables/site.php:101
 msgid "Current server time"
 msgstr "Waktu server saat ini"
 
-#: inc/admin/dashboard.php:696
+#: inc/admin/dashboard.php:708
 #: inc/meta-variables/site.php:104
 msgid "Organization Name"
 msgstr "Nama Organisasi"
 
-#: inc/admin/dashboard.php:698
+#: inc/admin/dashboard.php:710
 #: inc/meta-variables/site.php:105
 msgid "The Organization Name added in Local SEO Settings."
 msgstr "Nama Organisasi yang ditambahkan di Pengaturan SEO Lokal."
 
-#: inc/admin/dashboard.php:701
+#: inc/admin/dashboard.php:713
 #: inc/meta-variables/site.php:108
 msgid "Organization Logo"
 msgstr "Logo Organisasi"
 
-#: inc/admin/dashboard.php:703
+#: inc/admin/dashboard.php:715
 #: inc/meta-variables/site.php:109
 msgid "Organization Logo added in Local SEO Settings."
 msgstr "Logo Organisasi yang ditambahkan di Pengaturan SEO Lokal."
 
-#: inc/admin/dashboard.php:706
+#: inc/admin/dashboard.php:718
 #: inc/meta-variables/site.php:112
 msgid "Organization URL"
 msgstr "URL Organisasi"
 
-#: inc/admin/dashboard.php:708
+#: inc/admin/dashboard.php:720
 #: inc/meta-variables/site.php:113
 msgid "Organization URL added in Local SEO Settings."
 msgstr "URL Organisasi yang ditambahkan di Pengaturan SEO Lokal."
 
-#: inc/admin/dashboard.php:711
+#: inc/admin/dashboard.php:723
 msgid "Post Author Name"
 msgstr "Nama Penulis Postingan"
 
-#: inc/admin/dashboard.php:713
+#: inc/admin/dashboard.php:725
 msgid "Display author's nicename of the current post, page or author archive."
 msgstr "Tampilkan nama panggilan penulis dari posting, halaman, atau arsip penulis saat ini."
 
@@ -3986,7 +3987,7 @@ msgstr "Kueri Pencarian"
 msgid "Search query (only available on search results page)"
 msgstr "Kueri pencarian (hanya tersedia di halaman hasil pencarian)"
 
-#: loader.php:345
+#: loader.php:346
 msgid "Rate our plugin"
 msgstr "Beri nilai plugin kami"
 
@@ -4175,7 +4176,7 @@ msgstr "Templat Meta"
 msgid "Suggestion"
 msgstr "Saran"
 
-#: inc/admin/dashboard.php:287
+#: inc/admin/dashboard.php:291
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Search Console"
@@ -4200,7 +4201,7 @@ msgstr "Pulihkan pemeriksaan ini"
 msgid "The page does not contain any subheadings."
 msgstr "Halaman tidak mengandung subjudul apa pun."
 
-#: inc/admin/dashboard.php:298
+#: inc/admin/dashboard.php:302
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Tools"
@@ -5714,7 +5715,7 @@ msgstr "Pemeriksaan Halaman"
 msgid "SEO analysis is not available for this page."
 msgstr "Analisis SEO tidak tersedia untuk halaman ini."
 
-#: inc/admin/seo-popup.php:148
+#: inc/admin/seo-popup.php:211
 #: build/seo-popup/index.js:1
 msgid "Open SureRank Meta Box"
 msgstr "Buka Kotak Meta SureRank"
@@ -6550,7 +6551,7 @@ msgstr "Setelah terhubung ke Google Search Console, Anda akan melihat bagaimana 
 msgid "Redirections"
 msgstr "Pengalihan"
 
-#: inc/admin/dashboard.php:304
+#: inc/admin/dashboard.php:313
 msgid "Get Pro ↗"
 msgstr "Dapatkan Pro ↗"
 
@@ -7057,7 +7058,7 @@ msgstr "Ringkasan SEO minggu lalu - %1$s sampai %2$s"
 
 #. translators: %s: Site name
 #: inc/modules/email-reports/controller.php:378
-#: inc/modules/email-reports/controller.php:654
+#: inc/modules/email-reports/controller.php:663
 #, php-format
 msgid "%s Logo"
 msgstr "%s Logo"
@@ -7098,7 +7099,7 @@ msgstr "Lihat data yang penting, semuanya dalam satu dashboard bersih dan dapat 
 msgid "Explore"
 msgstr "Jelajahi"
 
-#: inc/modules/email-reports/controller.php:840
+#: inc/modules/email-reports/controller.php:849
 msgid "Home"
 msgstr "Beranda"
 
@@ -7267,7 +7268,7 @@ msgstr "Email Uji"
 msgid "Sending…"
 msgstr "Mengirim…"
 
-#: inc/admin/dashboard.php:293
+#: inc/admin/dashboard.php:297
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Link Manager"
@@ -8023,7 +8024,7 @@ msgstr "Mengetahui bahasa"
 msgid "Specify languages in which the organization provides services. Use standard IETF BCP 47 language codes (e.g., en, en-US, fr, es)."
 msgstr "Tentukan bahasa yang digunakan organisasi untuk memberikan layanan. Gunakan kode bahasa standar IETF BCP 47 (misalnya, en, en-US, fr, es)."
 
-#: loader.php:418
+#: loader.php:419
 msgid "Get SureRank Pro"
 msgstr "Dapatkan SureRank Pro"
 
@@ -8191,6 +8192,7 @@ msgstr "\"No Follow\" memberi tahu mesin pencari untuk tidak mengikuti tautan ap
 msgid "\"No Archive\" prevents search engines from storing a cached version of the page."
 msgstr "\"No Archive\" mencegah mesin pencari menyimpan versi cache halaman."
 
+#: inc/admin/seo-popup.php:111
 #: build/seo-popup/index.js:1
 msgid "Manage your SEO"
 msgstr "Kelola SEO Anda"
@@ -9675,6 +9677,7 @@ msgstr "SureRank baru-baru ini membangun ulang cache sitemap."
 
 #. translators: %s: human-readable time, e.g. "3 hours ago".
 #: inc/admin/site-health.php:108
+#, php-format
 msgid "Last successful rebuild: %s. SureRank normally refreshes the cache every six hours."
 msgstr "Pembangunan ulang berhasil terakhir: %s. SureRank biasanya menyegarkan cache setiap enam jam."
 
@@ -9684,6 +9687,7 @@ msgstr "SureRank belum membangun ulang cache sitemap lebih dari dua belas jam."
 
 #. translators: %s: human-readable time, e.g. "14 hours ago".
 #: inc/admin/site-health.php:121
+#, php-format
 msgid "Last successful rebuild: %s. This is still within the stale threshold; the next scheduled cron tick should update it."
 msgstr "Pembangunan ulang berhasil terakhir: %s. Ini masih dalam ambang kedaluwarsa; tick cron terjadwal berikutnya harus memperbaruinya."
 
@@ -9693,6 +9697,7 @@ msgstr "SureRank belum membangun ulang cache sitemap melewati ambang kedaluwarsa
 
 #. translators: %s: human-readable time.
 #: inc/admin/site-health.php:133
+#, php-format
 msgid "Last successful rebuild: %s. SureRank will attempt a rebuild on the next admin page visit; if the problem persists, WP-Cron or the admin-ajax loopback may be unavailable."
 msgstr "Pembangunan ulang berhasil terakhir: %s. SureRank akan mencoba membangun ulang pada kunjungan halaman admin berikutnya; jika masalah berlanjut, WP-Cron atau loopback admin-ajax mungkin tidak tersedia."
 
@@ -9826,3 +9831,295 @@ msgstr "Tingkatkan ke SureRank Pro atau Business dan buat gambar Open Graph bert
 #: build/seo-popup/index.js:1
 msgid "Checks are based on the published page. Refresh to get the latest results."
 msgstr "Pemeriksaan didasarkan pada halaman yang dipublikasikan. Segarkan untuk mendapatkan hasil terbaru."
+
+#: inc/admin/dashboard.php:307
+#: build/admin-dashboard/index.js:1
+msgid "Learn"
+msgstr "Belajar"
+
+#: inc/admin/seo-popup.php:112
+msgid "Click here"
+msgstr "Klik di sini"
+
+#: inc/api/learn.php:76
+msgid "Chapter identifier."
+msgstr "Identifikasi bab."
+
+#: inc/api/learn.php:85
+msgid "Step identifier within the chapter."
+msgstr "Identifikasi langkah dalam bab."
+
+#: inc/api/learn.php:99
+msgid "Whether the step is completed."
+msgstr "Apakah langkah tersebut telah selesai."
+
+#: build/admin-dashboard/index.js:1
+msgid "Get Started"
+msgstr "Mulai"
+
+#: build/admin-dashboard/index.js:1
+msgid "Set up the essentials so SureRank is fully configured from day one."
+msgstr "Siapkan hal-hal penting agar SureRank sepenuhnya dikonfigurasi sejak hari pertama."
+
+#: build/admin-dashboard/index.js:1
+msgid "Connect Google Search Console"
+msgstr "Hubungkan Google Search Console"
+
+#: build/admin-dashboard/index.js:1
+msgid "Link your GSC account so SureRank can pull real clicks, impressions, and ranking data into your dashboard."
+msgstr "Tautkan akun GSC Anda agar SureRank dapat menarik klik nyata, tayangan, dan data peringkat ke dalam dasbor Anda."
+
+#: build/admin-dashboard/index.js:1
+msgid "Connect GSC"
+msgstr "Hubungkan GSC"
+
+#: build/admin-dashboard/index.js:1
+msgid "Set your global title & description templates"
+msgstr "Atur template judul & deskripsi global Anda"
+
+#: build/admin-dashboard/index.js:1
+msgid "Create title and description templates using dynamic tags. SureRank applies them automatically across all your posts, pages, and archives."
+msgstr "Buat template judul dan deskripsi menggunakan tag dinamis. SureRank menerapkannya secara otomatis di semua pos, halaman, dan arsip Anda."
+
+#: build/admin-dashboard/index.js:1
+msgid "Configure Templates"
+msgstr "Konfigurasi Template"
+
+#: build/admin-dashboard/index.js:1
+msgid "Configure your homepage SEO"
+msgstr "Konfigurasi SEO beranda Anda"
+
+#: build/admin-dashboard/index.js:1
+msgid "Set a custom title and meta description for your homepage. It's your most important page and needs its own SEO settings."
+msgstr "Atur judul dan deskripsi meta kustom untuk beranda Anda. Ini adalah halaman terpenting Anda dan memerlukan pengaturan SEO sendiri."
+
+#: build/admin-dashboard/index.js:1
+msgid "Set Homepage SEO"
+msgstr "Atur SEO Beranda"
+
+#: build/admin-dashboard/index.js:1
+msgid "Migrate from your old SEO plugin"
+msgstr "Migrasi dari plugin SEO lama Anda"
+
+#: build/admin-dashboard/index.js:1
+msgid "Coming from Yoast, Rank Math, or AIOSEO? Import all your existing titles, descriptions, and settings into SureRank in one click."
+msgstr "Datang dari Yoast, Rank Math, atau AIOSEO? Impor semua judul, deskripsi, dan pengaturan yang ada ke dalam SureRank dengan satu klik."
+
+#: build/admin-dashboard/index.js:1
+msgid "Start Migration"
+msgstr "Mulai Migrasi"
+
+#: build/admin-dashboard/index.js:1
+msgid "Help Google Find You"
+msgstr "Bantu Google Menemukan Anda"
+
+#: build/admin-dashboard/index.js:1
+msgid "Make sure search engines can discover, crawl, and index all your content."
+msgstr "Pastikan mesin pencari dapat menemukan, merayapi, dan mengindeks semua konten Anda."
+
+#: build/admin-dashboard/index.js:1
+msgid "Configure and enable your XML sitemap"
+msgstr "Konfigurasi dan aktifkan sitemap XML Anda"
+
+#: build/admin-dashboard/index.js:1
+msgid "Choose which post types and pages to include, then submit your sitemap to Google Search Console so every page gets discovered."
+msgstr "Pilih jenis pos dan halaman mana yang akan disertakan, lalu kirim sitemap Anda ke Google Search Console agar setiap halaman dapat ditemukan."
+
+#: build/admin-dashboard/index.js:1
+msgid "Configure Sitemap"
+msgstr "Konfigurasi Sitemap"
+
+#: build/admin-dashboard/index.js:1
+msgid "Open Sitemap"
+msgstr "Buka Sitemap"
+
+#: build/admin-dashboard/index.js:1
+msgid "Set robots instructions for your site"
+msgstr "Atur instruksi robot untuk situs Anda"
+
+#: build/admin-dashboard/index.js:1
+msgid "Control which pages search engines can index. Set noindex on pages like thank-you pages, login pages, and tag archives that don't belong in search results."
+msgstr "Kontrol halaman mana yang dapat diindeks oleh mesin pencari. Atur noindex pada halaman seperti halaman terima kasih, halaman login, dan arsip tag yang tidak seharusnya muncul di hasil pencarian."
+
+#: build/admin-dashboard/index.js:1
+msgid "Configure Robots"
+msgstr "Konfigurasi Robot"
+
+#: build/admin-dashboard/index.js:1
+msgid "Set canonical URLs to avoid duplicate content"
+msgstr "Atur URL kanonik untuk menghindari konten duplikat"
+
+#: build/admin-dashboard/index.js:1
+msgid "Tell search engines which version of a page is the official one. This prevents duplicate content penalties when the same content is reachable at multiple URLs."
+msgstr "Beri tahu mesin pencari versi mana dari halaman yang resmi. Ini mencegah penalti konten duplikat ketika konten yang sama dapat diakses di beberapa URL."
+
+#: build/admin-dashboard/index.js:1
+msgid "Configure Canonicals"
+msgstr "Konfigurasi Kanonik"
+
+#: build/admin-dashboard/index.js:1
+msgid "Fix your site SEO issues"
+msgstr "Perbaiki masalah SEO situs Anda"
+
+#: build/admin-dashboard/index.js:1
+msgid "Run SureRank's site-wide health check to see everything rated Poor or Satisfactory, then fix the issues that are holding your site back."
+msgstr "Jalankan pemeriksaan kesehatan situs SureRank untuk melihat semua yang dinilai Buruk atau Memuaskan, lalu perbaiki masalah yang menghambat situs Anda."
+
+#: build/admin-dashboard/index.js:1
+msgid "View SEO Analysis"
+msgstr "Lihat Analisis SEO"
+
+#: build/admin-dashboard/index.js:1
+msgid "Optimize Your Pages"
+msgstr "Optimalkan Halaman Anda"
+
+#: build/admin-dashboard/index.js:1
+msgid "Use the SureRank metabox to make every post and page work harder in search results."
+msgstr "Gunakan metabox SureRank untuk membuat setiap pos dan halaman bekerja lebih keras dalam hasil pencarian."
+
+#: build/admin-dashboard/index.js:1
+msgid "Set title & meta description for a page"
+msgstr "Atur judul & deskripsi meta untuk sebuah halaman"
+
+#: build/admin-dashboard/index.js:1
+msgid "Open the SureRank metabox right from the posts or pages listing, or from inside the editor, to write a custom SEO title and meta description and preview exactly how it'll look in Google before publishing."
+msgstr "Buka metabox SureRank langsung dari daftar pos atau halaman, atau dari dalam editor, untuk menulis judul SEO kustom dan deskripsi meta serta melihat pratinjau bagaimana tampilannya di Google sebelum menerbitkan."
+
+#: build/admin-dashboard/index.js:1
+msgid "View Pages"
+msgstr "Lihat Halaman"
+
+#: build/admin-dashboard/index.js:1
+msgid "Run your page-level SEO check"
+msgstr "Jalankan pemeriksaan SEO tingkat halaman Anda"
+
+#: build/admin-dashboard/index.js:1
+msgid "See a real-time checklist of on-page SEO factors like keyword usage, heading structure, internal links, and image alt text, and fix what’s flagged."
+msgstr "Lihat daftar periksa waktu nyata dari faktor SEO di halaman seperti penggunaan kata kunci, struktur heading, tautan internal, dan teks alt gambar, dan perbaiki apa yang ditandai."
+
+#: build/admin-dashboard/index.js:1
+msgid "Open Page Analysis"
+msgstr "Buka Analisis Halaman"
+
+#: build/admin-dashboard/index.js:1
+msgid "Add schema markup to your content"
+msgstr "Tambahkan markup skema ke konten Anda"
+
+#: build/admin-dashboard/index.js:1
+msgid "Pick the right schema type for each page (Article, FAQ, HowTo, Product) to help Google understand your content and unlock rich results in search."
+msgstr "Pilih jenis skema yang tepat untuk setiap halaman (Artikel, FAQ, Cara, Produk) untuk membantu Google memahami konten Anda dan membuka hasil kaya dalam pencarian."
+
+#: build/admin-dashboard/index.js:1
+msgid "Optimize your images with alt text"
+msgstr "Optimalkan gambar Anda dengan teks alt"
+
+#: build/admin-dashboard/index.js:1
+msgid "SureRank automatically generates alt text for your images, improving how search engines understand your content and making your site more accessible."
+msgstr "SureRank secara otomatis menghasilkan teks alt untuk gambar Anda, meningkatkan cara mesin pencari memahami konten Anda dan membuat situs Anda lebih dapat diakses."
+
+#: build/admin-dashboard/index.js:1
+msgid "Configure Image SEO"
+msgstr "Konfigurasi SEO Gambar"
+
+#: build/admin-dashboard/index.js:1
+msgid "Social Appearance"
+msgstr "Tampilan Sosial"
+
+#: build/admin-dashboard/index.js:1
+msgid "Control exactly how your content looks when shared on Facebook, LinkedIn, and X."
+msgstr "Kontrol persis bagaimana konten Anda terlihat saat dibagikan di Facebook, LinkedIn, dan X."
+
+#: build/admin-dashboard/index.js:1
+msgid "Set your fallback Open Graph image"
+msgstr "Atur gambar Open Graph cadangan Anda"
+
+#: build/admin-dashboard/index.js:1
+msgid "Choose the default image that appears whenever any page on your site is shared on social. Used when a page has no featured image of its own."
+msgstr "Pilih gambar default yang muncul setiap kali halaman mana pun di situs Anda dibagikan di media sosial. Digunakan ketika halaman tidak memiliki gambar unggulan sendiri."
+
+#: build/admin-dashboard/index.js:1
+msgid "Configure OG Image"
+msgstr "Konfigurasi Gambar OG"
+
+#: build/admin-dashboard/index.js:1
+msgid "Add your Facebook profile links"
+msgstr "Tambahkan tautan profil Facebook Anda"
+
+#: build/admin-dashboard/index.js:1
+msgid "Enter your site's and author's Facebook page URLs. SureRank adds them to your structured data so search engines link your brand to its verified social profile."
+msgstr "Masukkan URL halaman Facebook situs dan penulis Anda. SureRank menambahkannya ke data terstruktur Anda sehingga mesin pencari menghubungkan merek Anda dengan profil sosialnya yang terverifikasi."
+
+#: build/admin-dashboard/index.js:1
+msgid "Configure Facebook"
+msgstr "Konfigurasi Facebook"
+
+#: build/admin-dashboard/index.js:1
+msgid "Set up X (Twitter) cards"
+msgstr "Siapkan kartu X (Twitter)"
+
+#: build/admin-dashboard/index.js:1
+msgid "Add your X username and choose your card type so your content displays as a rich image preview, not just a plain link, when shared on X."
+msgstr "Tambahkan nama pengguna X Anda dan pilih jenis kartu Anda sehingga konten Anda ditampilkan sebagai pratinjau gambar kaya, bukan hanya tautan biasa, saat dibagikan di X."
+
+#: build/admin-dashboard/index.js:1
+msgid "Configure X Cards"
+msgstr "Konfigurasi Kartu X"
+
+#: build/admin-dashboard/index.js:1
+msgid "Override social settings for a specific page"
+msgstr "Timpakan pengaturan sosial untuk halaman tertentu"
+
+#: build/admin-dashboard/index.js:1
+msgid "Open the SureRank metabox right from the posts or pages listing, or from inside the editor, then use the Social tab to set a different image, title, or description for that page when it’s shared."
+msgstr "Buka metabox SureRank langsung dari daftar pos atau halaman, atau dari dalam editor, lalu gunakan tab Sosial untuk mengatur gambar, judul, atau deskripsi yang berbeda untuk halaman tersebut saat dibagikan."
+
+#: build/admin-dashboard/index.js:1
+msgid "Could not update Learn progress."
+msgstr "Tidak dapat memperbarui kemajuan Belajar."
+
+#: build/admin-dashboard/index.js:1
+msgid "Continue Learning"
+msgstr "Lanjutkan Belajar"
+
+#: build/admin-dashboard/index.js:1
+#, js-format
+msgid "%1$d of %2$d setup steps complete. A few more and your site is ready."
+msgstr "%1$d dari %2$d langkah pengaturan selesai. Beberapa lagi dan situs Anda siap."
+
+#: build/admin-dashboard/index.js:1
+msgid "Continue"
+msgstr "Lanjutkan"
+
+#: build/admin-dashboard/index.js:1
+msgid "Auto-detected"
+msgstr "Terdeteksi secara otomatis"
+
+#: build/admin-dashboard/index.js:1
+#, js-format
+msgid "Learn more about %s"
+msgstr "Pelajari lebih lanjut tentang %s"
+
+#: build/admin-dashboard/index.js:1
+#, js-format
+msgid "Chapter progress: %d%%"
+msgstr "Kemajuan bab: %d%%"
+
+#: build/admin-dashboard/index.js:1
+msgid "You're all set!"
+msgstr "Anda sudah siap!"
+
+#: build/admin-dashboard/index.js:1
+msgid "You’ve completed every recommended setup step. Visit the docs or reach out if you’d like to go deeper."
+msgstr "Anda telah menyelesaikan setiap langkah pengaturan yang direkomendasikan. Kunjungi dokumen atau hubungi jika Anda ingin mendalami lebih lanjut."
+
+#: build/admin-dashboard/index.js:1
+msgid "Open Docs"
+msgstr "Buka Dokumen"
+
+#: build/admin-dashboard/index.js:1
+msgid "Contact Support"
+msgstr "Hubungi Dukungan"
+
+#: build/admin-dashboard/index.js:1
+msgid "Set up SureRank end to end with a step-by-step guide to make your site discoverable, shareable, and ready to rank."
+msgstr "Siapkan SureRank dari awal hingga akhir dengan panduan langkah demi langkah untuk membuat situs Anda dapat ditemukan, dapat dibagikan, dan siap untuk peringkat."

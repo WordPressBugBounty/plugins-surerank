@@ -53,7 +53,7 @@ class Analytics {
 		add_filter(
 			'uds_survey_allowed_screens',
 			static function () {
-				return [ 'plugins' ];
+				return [ 'plugins', 'plugins-network' ];
 			}
 		);
 
@@ -70,6 +70,33 @@ class Analytics {
 
 		$surerank_bsf_analytics = \BSF_Analytics_Loader::get_instance();
 
+		$deactivation_surveys = [
+			[
+				'id'                => 'deactivation-survey-surerank',
+				'popup_logo'        => SURERANK_URL . 'inc/admin/assets/images/surerank.png',
+				'plugin_slug'       => 'surerank',
+				'popup_title'       => 'Quick Feedback',
+				'support_url'       => 'https://surerank.com/contact/',
+				'popup_description' => 'If you have a moment, please share why you are deactivating SureRank:',
+				'show_on_screens'   => [ 'plugins', 'plugins-network' ],
+				'plugin_version'    => SURERANK_VERSION,
+			],
+		];
+
+		// Capture Pro deactivations too when Pro is active.
+		if ( defined( 'SURERANK_PRO_VERSION' ) ) {
+			$deactivation_surveys[] = [
+				'id'                => 'deactivation-survey-surerank-pro',
+				'popup_logo'        => SURERANK_URL . 'inc/admin/assets/images/surerank.png',
+				'plugin_slug'       => 'surerank-pro',
+				'popup_title'       => 'Quick Feedback',
+				'support_url'       => 'https://surerank.com/contact/',
+				'popup_description' => 'If you have a moment, please share why you are deactivating SureRank Pro:',
+				'show_on_screens'   => [ 'plugins', 'plugins-network' ],
+				'plugin_version'    => defined( 'SURERANK_PRO_VERSION' ) ? SURERANK_PRO_VERSION : '',
+			];
+		}
+
 		$surerank_bsf_analytics->set_entity(
 			[
 				'surerank' => [
@@ -77,21 +104,7 @@ class Analytics {
 					'path'                => SURERANK_DIR . 'inc/lib/bsf-analytics',
 					'author'              => 'SureRank',
 					'time_to_display'     => '+24 hours',
-					'deactivation_survey' => apply_filters(
-						'surerank_deactivation_survey_data',
-						[
-							[
-								'id'                => 'deactivation-survey-surerank',
-								'popup_logo'        => SURERANK_URL . 'inc/admin/assets/images/surerank.png',
-								'plugin_slug'       => 'surerank',
-								'popup_title'       => 'Quick Feedback',
-								'support_url'       => 'https://surerank.com/contact/',
-								'popup_description' => 'If you have a moment, please share why you are deactivating SureRank:',
-								'show_on_screens'   => [ 'plugins' ],
-								'plugin_version'    => SURERANK_VERSION,
-							],
-						]
-					),
+					'deactivation_survey' => apply_filters( 'surerank_deactivation_survey_data', $deactivation_surveys ),
 					'hide_optin_checkbox' => true,
 				],
 			]
@@ -103,8 +116,7 @@ class Analytics {
 			delete_transient( 'surerank_state_events_checked' );
 		}
 
-		// State-based events — throttled to once per day.
-		// Transient is set inside detect_state_events() only after confirming BSF_Analytics_Events class is loaded, so it retries on next load if not ready.
+		// State-based events — throttled to once per day - Transient is set inside detect_state_events() only after confirming BSF_Analytics_Events class is loaded, so it retries on next load if not ready.
 		if ( false === get_transient( 'surerank_state_events_checked' ) ) {
 			$this->detect_state_events();
 		}
@@ -135,6 +147,10 @@ class Analytics {
 	 */
 	public function add_surerank_analytics_data( $stats_data ) {
 		$events = self::events();
+
+		// Build Learn progress snapshot before flushing pending events,
+		// otherwise the freshly tracked event would miss this payload.
+		$this->get_learn_tracking_data();
 
 		$stats_data['plugin_data']['surerank'] = [
 			'plugin_version' => SURERANK_VERSION,
@@ -190,6 +206,70 @@ class Analytics {
 		}
 
 		return $difference;
+	}
+
+	/**
+	 * Track Learn section progress.
+	 *
+	 * SureRank stores progress site-wide in one option (unlike SureForms,
+	 * which uses per-user meta), so we don't iterate users. The single
+	 * 'learn' event carries per-step booleans plus aggregate counters,
+	 * and re-fires whenever progress changes or has never been tracked.
+	 *
+	 * @since 1.7.4
+	 * @return void
+	 */
+	private function get_learn_tracking_data() {
+		$events = self::events();
+		if ( null === $events ) {
+			return;
+		}
+
+		if ( ! class_exists( '\SureRank\Inc\API\Learn' ) ) {
+			return;
+		}
+
+		$has_changed = get_transient( 'surerank_learn_progress_changed' );
+		if ( ! $has_changed && $events->is_tracked( 'learn' ) ) {
+			return;
+		}
+
+		$allowed       = \SureRank\Inc\API\Learn::get_allowed_steps();
+		$progress      = \SureRank\Inc\API\Learn::get_user_progress();
+		$auto_detected = \SureRank\Inc\API\Learn::compute_auto_detected();
+
+		$stored_chapters = isset( $progress['chapters'] ) && is_array( $progress['chapters'] )
+			? $progress['chapters']
+			: [];
+
+		$properties      = [];
+		$total_steps     = 0;
+		$total_completed = 0;
+
+		foreach ( $allowed as $chapter_id => $step_ids ) {
+			foreach ( $step_ids as $step_id ) {
+				$is_done = ! empty( $stored_chapters[ $chapter_id ][ $step_id ] )
+					|| ! empty( $auto_detected[ $chapter_id ][ $step_id ] );
+
+				$properties[ $chapter_id . '_' . $step_id ] = $is_done ? 'yes' : 'no';
+				++$total_steps;
+				if ( $is_done ) {
+					++$total_completed;
+				}
+			}
+		}
+
+		$properties['total_steps']      = (string) $total_steps;
+		$properties['total_completed']  = (string) $total_completed;
+		$properties['percent_complete'] = $total_steps > 0
+			? (string) (int) round( $total_completed / $total_steps * 100 )
+			: '0';
+
+		// Flush dedup so the event re-tracks with the latest snapshot.
+		$events->flush_pushed( [ 'learn' ] );
+		$events->track( 'learn', (string) $total_completed, $properties );
+
+		delete_transient( 'surerank_learn_progress_changed' );
 	}
 
 	/**

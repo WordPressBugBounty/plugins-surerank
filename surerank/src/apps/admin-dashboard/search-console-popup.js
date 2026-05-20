@@ -3,6 +3,7 @@ import { __ } from '@wordpress/i18n';
 import ModalWrapper from '@AdminComponents/modal-wrapper';
 import { cn } from '@Functions/utils';
 import NotAllowedMessage from '@AdminComponents/not-allowed';
+import { getSurerankUtmUrl } from '@/global/utils/utm';
 
 const SearchConsolePopup = ( { isOpen = true } ) => {
 	if ( ! isOpen ) {
@@ -42,7 +43,11 @@ const SearchConsolePopup = ( { isOpen = true } ) => {
 							size={ 14 }
 							weight={ 400 }
 							as="a"
-							href="https://surerank.com/docs/google-search-console-surerank/?utm_source=surerank&utm_medium=search_console_connect&utm_campaign=docs"
+							href={ getSurerankUtmUrl(
+								'https://surerank.com/docs/google-search-console-surerank/',
+								'dashboard',
+								'learn_more_gsc'
+							) }
 							target="_blank"
 							rel="noopener noreferrer"
 							color="link"

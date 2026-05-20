@@ -64,15 +64,27 @@ html.is-breakdance #surerank-root {
 	vertical-align: middle;
 }
 
-#screen-meta + .wrap {
-	> h1 {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-	}
+.surerank-classic-sidebar-box {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	margin-right: 6px;
+	position: relative;
+}
 
-	#seo-popup {
-		display: contents;
-		align-content: center;
-	}
+.surerank-classic-sidebar-box-title {
+	margin: 0;
+	font-size: 14px;
+	font-weight: 600;
+	color: #1d2327;
+}
+
+.surerank-classic-sidebar-trigger-wrap {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.surerank-classic-sidebar-trigger-wrap .button {
+	margin: 0;
 }

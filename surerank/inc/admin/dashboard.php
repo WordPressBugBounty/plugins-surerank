@@ -12,12 +12,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+use SureRank\Inc\API\Learn;
 use SureRank\Inc\API\Migrations;
 use SureRank\Inc\API\Onboarding;
 use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Functions\Update;
+use SureRank\Inc\Functions\Utils as FunctionsUtils;
 use SureRank\Inc\Import_Export\Settings_Exporter;
 use SureRank\Inc\Modules\Nudges\Utils;
 use SureRank\Inc\Sitemap\Xml_Sitemap;
@@ -90,12 +92,14 @@ class Dashboard {
 				sidebarMenu.append(badge);
 			});
 
-// Handle Upgrade menu item click - redirect to pricing page
+			// Handle Upgrade menu item click - redirect to pricing page
 			jQuery(document).on('click', '#toplevel_page_surerank a[href*="surerank#/upgrade"]', function (e) {
 				e.preventDefault();
-				const pricingLink = window?.surerank_globals?.pricing_link + '?utm_medium=surerank_upgrade_menu';
+				const pricingLink = window?.surerank_globals?.pricing_link;
 				if (pricingLink && !pricingLink.includes('undefined')) {
-					window.open(pricingLink, '_blank', 'noopener,noreferrer');
+					const link = new URL(pricingLink);
+					link.searchParams.set('utm_content', 'surerank_upgrade_menu');
+					window.open(link.toString(), '_blank', 'noopener,noreferrer');
 				}
 			});
 		</script>
@@ -298,6 +302,11 @@ class Dashboard {
 			'page_title' => __( 'Tools', 'surerank' ),
 		];
 
+		$submenus[] = [
+			'id'         => 'surerank#/learn',
+			'page_title' => __( 'Learn', 'surerank' ),
+		];
+
 		if ( ! Utils::get_instance()->is_pro_active() ) {
 			$submenus[] = [
 				'id'         => 'surerank#/upgrade',
@@ -413,6 +422,8 @@ class Dashboard {
 						'robots_data'                 => Helper::get_robots_data(),
 						'wp_reading_settings_url'     => admin_url( 'options-reading.php' ),
 						'welcome_video'               => $this->get_welcome_video(),
+						'learn_progress'              => Learn::get_user_progress(),
+						'learn_auto_detected'         => Learn::compute_auto_detected(),
 					]
 				),
 			]
@@ -432,14 +443,14 @@ class Dashboard {
 				'_ajax_nonce'                => current_user_can( 'manage_options' ) ? wp_create_nonce( 'surerank_plugin' ) : '',
 				'admin_assets_url'           => SURERANK_URL . 'inc/admin/assets',
 				'version'                    => SURERANK_VERSION,
-				'help_link'                  => esc_url( 'https://surerank.com/docs/' ),
-				'support_link'               => esc_url( 'https://surerank.com/contact/' ),
+				'help_link'                  => FunctionsUtils::get_utm_url( 'https://surerank.com/docs/', 'admin_dashboard', 'help_link' ),
+				'support_link'               => FunctionsUtils::get_utm_url( 'https://surerank.com/contact/', 'admin_dashboard', 'support_link' ),
 				'rating_link'                => esc_url( 'https://wordpress.org/support/plugin/surerank/reviews/#new-post' ),
 				'community_link'             => esc_url( 'https://www.facebook.com/groups/surecrafted' ),
-				'pricing_link'               => esc_url( 'https://surerank.com/pricing/' ),
-				'pro_link'                   => esc_url( 'https://surerank.com/pro/' ),
-				'privacy_policy_url'         => esc_url( 'https://surerank.com/privacy-policy/' ),
-				'surerank_url'               => esc_url( 'https://surerank.com' ),
+				'pricing_link'               => Helper::get_marketing_link( 'pricing/', 'pricing_link' ),
+				'pro_link'                   => Helper::get_marketing_link( 'pro/', 'pro_link' ),
+				'privacy_policy_url'         => Helper::get_marketing_link( 'privacy-policy/', 'privacy_policy' ),
+				'surerank_url'               => Helper::get_marketing_link( '', 'surerank_home' ),
 				'wp_dashboard_url'           => admin_url( 'admin.php' ),
 				'wp_media_upload_url'        => admin_url( 'upload.php' ),
 				'site_url'                   => site_url(),
@@ -453,6 +464,7 @@ class Dashboard {
 				'nudges'                     => Utils::get_instance()->get_nudges(),
 				'wp_schema_pro_active'       => Helper::is_wp_schema_pro_active(),
 				'home_page_static'           => get_option( 'show_on_front', 'posts' ),
+				'page_on_front'              => (int) get_option( 'page_on_front', 0 ),
 			]
 		);
 	}

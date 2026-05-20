@@ -9,6 +9,7 @@ import { InfoTooltip } from '@AdminComponents/tooltip';
 import MediaPreview from '@/apps/admin-components/media-preview';
 import { createMediaFrame, getSiteDetails } from '@/global/utils/utils';
 import { applyFilters } from '@wordpress/hooks';
+import { getSurerankUtmUrl } from '@/global/utils/utm';
 
 const ImageTab = memo( () => {
 	const { setMetaSettings, updateAppSettings } = useDispatch( STORE_NAME );
@@ -139,7 +140,11 @@ const ImageTab = memo( () => {
 							) }{ ' ' }
 							<Text
 								as="a"
-								href="https://surerank.com/docs/general-settings/"
+								href={ getSurerankUtmUrl(
+									'https://surerank.com/docs/general-settings/',
+									'general_settings',
+									'learn_more'
+								) }
 								target="_blank"
 								rel="noopener noreferrer"
 								color="help"

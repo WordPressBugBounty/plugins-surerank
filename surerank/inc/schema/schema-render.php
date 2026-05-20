@@ -64,6 +64,7 @@ class Schema_Render {
 			$this->fields['sameAs'] = array_values( $this->fields['sameAs'] );
 		}
 
+		$this->normalize_datetime_fields();
 		$this->flatten_cloneable_fields();
 
 		$final_type = $this->type;
@@ -82,6 +83,108 @@ class Schema_Render {
 		$schema                = array_merge( [ '@type' => $final_type ], $this->fields );
 
 		return $this->remove_empty( $this->remove_schema_name( $schema ) );
+	}
+
+	/**
+	 * Normalize DateTime fields to ISO 8601 output before rendering.
+	 *
+	 * @return void
+	 */
+	private function normalize_datetime_fields() {
+		$field_definitions = $this->get_schema_field_definitions();
+
+		if ( empty( $field_definitions ) ) {
+			return;
+		}
+
+		$this->fields = $this->normalize_fields_by_definition( $this->fields, $field_definitions );
+	}
+
+	/**
+	 * Get field definitions for the current schema type.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private function get_schema_field_definitions() {
+		$schema_types = Utils::get_schema_types();
+		$schema_class = $schema_types[ $this->type ] ?? null;
+
+		if ( ! $schema_class || ! class_exists( $schema_class ) ) {
+			return [];
+		}
+
+		return $schema_class::get_instance()->get();
+	}
+
+	/**
+	 * Normalize fields using their schema definitions.
+	 *
+	 * @param array<string, mixed>             $values            Current schema field values.
+	 * @param array<int, array<string, mixed>> $field_definitions Schema field definitions.
+	 * @return array<string, mixed>
+	 */
+	private function normalize_fields_by_definition( array $values, array $field_definitions ) {
+		foreach ( $field_definitions as $field ) {
+			$field_id = $field['id'] ?? '';
+
+			if ( '' === $field_id || ! array_key_exists( $field_id, $values ) ) {
+				continue;
+			}
+
+			$field_type = $field['type'] ?? 'Text';
+
+			if ( 'DateTime' === $field_type ) {
+				if ( is_array( $values[ $field_id ] ) ) {
+					foreach ( $values[ $field_id ] as $uuid => $date_value ) {
+						$values[ $field_id ][ $uuid ] = $this->normalize_datetime_value( $date_value );
+					}
+				} else {
+					$values[ $field_id ] = $this->normalize_datetime_value( $values[ $field_id ] );
+				}
+				continue;
+			}
+
+			if ( 'Group' !== $field_type || empty( $field['fields'] ) || ! is_array( $values[ $field_id ] ) ) {
+				continue;
+			}
+
+			if ( ! empty( $field['cloneable'] ) ) {
+				foreach ( $values[ $field_id ] as $index => $group_item ) {
+					if ( is_array( $group_item ) ) {
+						$values[ $field_id ][ $index ] = $this->normalize_fields_by_definition( $group_item, $field['fields'] );
+					}
+				}
+				continue;
+			}
+
+			$values[ $field_id ] = $this->normalize_fields_by_definition( $values[ $field_id ], $field['fields'] );
+		}
+
+		return $values;
+	}
+
+	/**
+	 * Normalize a date-time string to ISO 8601 when possible.
+	 *
+	 * @param mixed $value Date-time value to normalize.
+	 * @return mixed
+	 */
+	private function normalize_datetime_value( $value ) {
+		if ( ! is_string( $value ) ) {
+			return $value;
+		}
+
+		$value = trim( $value );
+
+		if ( '' === $value || str_contains( $value, '%' ) ) {
+			return $value;
+		}
+
+		try {
+			return ( new \DateTimeImmutable( $value, wp_timezone() ) )->format( DATE_ATOM );
+		} catch ( \Exception $exception ) {
+			return $value;
+		}
 	}
 
 	/**
@@ -112,15 +215,11 @@ class Schema_Render {
 	 * @return void
 	 */
 	private function flatten_cloneable_fields() {
-		$schema_types = Utils::get_schema_types();
-		$schema_class = $schema_types[ $this->type ] ?? null;
+		$field_definitions = $this->get_schema_field_definitions();
 
-		if ( ! $schema_class || ! class_exists( $schema_class ) ) {
+		if ( empty( $field_definitions ) ) {
 			return;
 		}
-
-		$schema_instance   = $schema_class::get_instance();
-		$field_definitions = $schema_instance->get();
 
 		foreach ( $field_definitions as $field ) {
 			if ( ! empty( $field['cloneable'] ) && ! empty( $field['flatten'] ) && isset( $field['id'] ) ) {

@@ -11,6 +11,7 @@
 namespace SureRank\Inc\Frontend;
 
 use SureRank\Inc\Traits\Get_Instance;
+use SureRank\Inc\Traits\Tag_Attribute_Helpers;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -24,6 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Link_Seo {
 
 	use Get_Instance;
+	use Tag_Attribute_Helpers;
 
 	/**
 	 * Check if link enhancement is enabled
@@ -291,7 +293,7 @@ class Link_Seo {
 			return $tag;
 		}
 
-		return $this->apply_enhancements( $attributes );
+		return $this->apply_enhancements( $tag, $attributes );
 	}
 
 	/**
@@ -407,26 +409,51 @@ class Link_Seo {
 	}
 
 	/**
-	 * Apply enhancements to link attributes
+	 * Apply rel enhancements to the original tag in place.
 	 *
-	 * @param array<string, string> $attributes Original attributes.
+	 * Mirrors Image_Seo::apply_enhancements — writes only the attributes that
+	 * changed, leaving boolean attributes (download, inert, hidden) and
+	 * data-* attrs the regex parser does not capture exactly as authored.
+	 *
+	 * @param string                $tag        Original anchor tag.
+	 * @param array<string, string> $attributes Parsed attributes.
 	 * @return string Enhanced link tag
 	 * @since 1.5.0
 	 */
-	private function apply_enhancements( $attributes ): string {
+	private function apply_enhancements( $tag, $attributes ): string {
 		$rel_values = isset( $attributes['rel'] )
 			? array_map( 'trim', explode( ' ', $attributes['rel'] ) )
 			: [];
 
 		$rel_values = $this->apply_rel_enhancements( $rel_values );
+		$rel_value  = implode( ' ', array_filter( $rel_values ) );
 
-		if ( ! empty( $rel_values ) ) {
-			$attributes['rel'] = implode( ' ', array_filter( $rel_values ) );
+		if ( $rel_value === '' ) {
+			return $tag;
 		}
 
+		$before            = $attributes;
+		$attributes['rel'] = $rel_value;
+
+		/**
+		 * Filter the post-enhancement attribute set. Mutations are diffed
+		 * against the pre-filter snapshot and written back to the original
+		 * tag in place — booleans/data-* attrs are not stripped.
+		 *
+		 * @var array<string, string> $attributes
+		 */
 		$attributes = apply_filters( 'surerank_link_seo_enhanced_attributes', $attributes );
 
-		return $this->build_link_tag( $attributes );
+		foreach ( $attributes as $name => $value ) {
+			if ( ( $before[ $name ] ?? null ) === $value ) {
+				continue;
+			}
+			$tag = array_key_exists( $name, $before )
+				? $this->replace_attribute_value( $tag, (string) $name, (string) $value )
+				: $this->inject_attribute( $tag, (string) $name, (string) $value );
+		}
+
+		return $tag;
 	}
 
 	/**
@@ -449,32 +476,4 @@ class Link_Seo {
 		return apply_filters( 'surerank_link_seo_rel_enhancements', $rel_values );
 	}
 
-	/**
-	 * Build complete link tag from attributes
-	 *
-	 * @param array<string, string> $attributes Attribute pairs.
-	 * @return string Complete link tag
-	 * @since 1.5.0
-	 */
-	private function build_link_tag( $attributes ): string {
-		$attr_pairs = [];
-
-		foreach ( $attributes as $name => $value ) {
-			$attr_pairs[] = $this->format_attribute_pair( $name, $value );
-		}
-
-		return sprintf( '<a %s>', implode( ' ', $attr_pairs ) );
-	}
-
-	/**
-	 * Format single attribute pair
-	 *
-	 * @param string $name Attribute name.
-	 * @param string $value Attribute value.
-	 * @return string Formatted pair
-	 * @since 1.5.0
-	 */
-	private function format_attribute_pair( $name, $value ): string {
-		return sprintf( '%s="%s"', esc_attr( $name ), esc_attr( $value ) );
-	}
 }

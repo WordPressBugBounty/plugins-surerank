@@ -19,6 +19,7 @@ import {
 } from '@bsf/force-ui';
 import {
 	BookOpenText,
+	GraduationCap,
 	Megaphone,
 	ChartNoAxesColumnIncreasing,
 } from 'lucide-react';
@@ -395,6 +396,7 @@ const SidebarLayout = ( {
 	const { activeSection, navbarLinks: topNavbarLinks } = useNavbarLinks(
 		filteredNavLinksForStaticHome
 	);
+	const navigate = useNavigate();
 	const location = useLocation();
 	const childMatches = useChildMatches();
 	const isNotFound = ! childMatches.length;
@@ -550,6 +552,30 @@ const SidebarLayout = ( {
 									<SiteSeoAnalysisBadge />
 								</Suspense>
 							) }
+						</Topbar.Item>
+						<Topbar.Item className="hidden lg:flex">
+							<Tooltip
+								content={ __( 'Learn', 'surerank' ) }
+								placement="bottom"
+								arrow
+								className="z-[99999]"
+							>
+								<Button
+									size="sm"
+									variant="link"
+									className="text-text-primary focus:[box-shadow:none]"
+									onClick={ () =>
+										navigate( { to: '/learn' } )
+									}
+									aria-label={ __( 'Learn', 'surerank' ) }
+									icon={
+										<GraduationCap
+											className="size-4 m-1"
+											strokeWidth="1.5"
+										/>
+									}
+								/>
+							</Tooltip>
 						</Topbar.Item>
 						<Topbar.Item className="hidden lg:flex">
 							<Tooltip

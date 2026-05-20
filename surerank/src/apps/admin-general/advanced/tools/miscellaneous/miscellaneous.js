@@ -3,6 +3,7 @@ import { __ } from '@wordpress/i18n';
 import withSuspense from '@AdminComponents/hoc/with-suspense';
 import GeneratePageContent from '@Functions/page-content-generator';
 import { createLazyRoute } from '@tanstack/react-router';
+import { getSurerankUtmUrl } from '@/global/utils/utm';
 import { Text } from '@bsf/force-ui';
 
 export const PAGE_CONTENT = [
@@ -31,7 +32,11 @@ export const PAGE_CONTENT = [
 									) }
 								</span>
 								<a
-									href="https://surerank.com/share-usage-data/"
+									href={ getSurerankUtmUrl(
+										'https://surerank.com/share-usage-data/',
+										'advanced_tools',
+										'learn_more_usage_data'
+									) }
 									target="_blank"
 									rel="noopener noreferrer"
 									className="no-underline hover:no-underline ring-0"

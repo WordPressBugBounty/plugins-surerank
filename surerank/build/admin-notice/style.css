@@ -1202,6 +1202,9 @@
 #surerank-root .min-w-\[180px\], .surerank-root .min-w-\[180px\] {
 	min-width: 180px;
 }
+#surerank-root .min-w-\[2\.75rem\], .surerank-root .min-w-\[2\.75rem\] {
+	min-width: 2.75rem;
+}
 #surerank-root .min-w-\[8rem\], .surerank-root .min-w-\[8rem\] {
 	min-width: 8rem;
 }
@@ -1270,6 +1273,9 @@
 }
 #surerank-root .max-w-\[78\%\], .surerank-root .max-w-\[78\%\] {
 	max-width: 78%;
+}
+#surerank-root .max-w-\[920px\], .surerank-root .max-w-\[920px\] {
+	max-width: 920px;
 }
 #surerank-root .max-w-full, .surerank-root .max-w-full {
 	max-width: 100%;
@@ -2271,6 +2277,10 @@
 	--tw-bg-opacity: 1;
 	background-color: rgb(67 48 210 / var(--tw-bg-opacity, 1));
 }
+#surerank-root .bg-brand-200, .surerank-root .bg-brand-200 {
+	--tw-bg-opacity: 1;
+	background-color: rgb(199 210 254 / var(--tw-bg-opacity, 1));
+}
 #surerank-root .bg-brand-800, .surerank-root .bg-brand-800 {
 	--tw-bg-opacity: 1;
 	background-color: rgb(67 48 210 / var(--tw-bg-opacity, 1));
@@ -3104,6 +3114,9 @@
 	--tw-text-opacity: 1;
 	color: rgb(255 255 255 / var(--tw-text-opacity, 1));
 }
+#surerank-root .text-transparent, .surerank-root .text-transparent {
+	color: transparent;
+}
 #surerank-root .text-white, .surerank-root .text-white {
 	--tw-text-opacity: 1;
 	color: rgb(255 255 255 / var(--tw-text-opacity, 1));
@@ -3335,6 +3348,11 @@
 }
 #surerank-root .transition-\[box-shadow\2c color\2c background-color\], .surerank-root .transition-\[box-shadow\2c color\2c background-color\] {
 	transition-property: box-shadow,color,background-color;
+	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+	transition-duration: 150ms;
+}
+#surerank-root .transition-\[box-shadow\2c color\], .surerank-root .transition-\[box-shadow\2c color\] {
+	transition-property: box-shadow,color;
 	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 	transition-duration: 150ms;
 }
@@ -4083,6 +4101,18 @@
 	outline: 2px solid transparent;
 	outline-offset: 2px;
 }
+#surerank-root .focus-visible\:ring-2:focus-visible, .surerank-root .focus-visible\:ring-2:focus-visible {
+	--tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+	--tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+	box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+#surerank-root .focus-visible\:ring-focus:focus-visible, .surerank-root .focus-visible\:ring-focus:focus-visible {
+	--tw-ring-opacity: 1;
+	--tw-ring-color: rgb(79 70 229 / var(--tw-ring-opacity, 1));
+}
+#surerank-root .focus-visible\:ring-offset-2:focus-visible, .surerank-root .focus-visible\:ring-offset-2:focus-visible {
+	--tw-ring-offset-width: 2px;
+}
 #surerank-root .active\:text-button-primary:active, .surerank-root .active\:text-button-primary:active {
 	--tw-text-opacity: 1;
 	color: rgb(67 48 210 / var(--tw-text-opacity, 1));
@@ -4330,6 +4360,9 @@
 	}
 	#surerank-root .sm\:p-5, .surerank-root .sm\:p-5 {
 		padding: 1.25rem;
+	}
+	#surerank-root .sm\:p-6, .surerank-root .sm\:p-6 {
+		padding: 1.5rem;
 	}
 	#surerank-root .sm\:px-0, .surerank-root .sm\:px-0 {
 		padding-left: 0px;
@@ -5253,6 +5286,12 @@
 #surerank-root .\[\&\>a\]\:pl-0>a, .surerank-root .\[\&\>a\]\:pl-0>a {
 	padding-left: 0px;
 }
+#surerank-root .\[\&\>div\:first-child\]\:flex-1>div:first-child, .surerank-root .\[\&\>div\:first-child\]\:flex-1>div:first-child {
+	flex: 1 1 0%;
+}
+#surerank-root .\[\&\>div\:first-child\]\:justify-between>div:first-child, .surerank-root .\[\&\>div\:first-child\]\:justify-between>div:first-child {
+	justify-content: space-between;
+}
 #surerank-root .\[\&\>div\>span\]\:inline-block>div>span, .surerank-root .\[\&\>div\>span\]\:inline-block>div>span {
 	display: inline-block;
 }
@@ -5292,6 +5331,10 @@
 }
 #surerank-root .\[\&\>h2\]\:leading-9\.5>h2, .surerank-root .\[\&\>h2\]\:leading-9\.5>h2 {
 	line-height: 2.375rem;
+}
+#surerank-root .\[\&\>h3\]\:focus-visible\:outline-none:focus-visible>h3, .surerank-root .\[\&\>h3\]\:focus-visible\:outline-none:focus-visible>h3 {
+	outline: 2px solid transparent;
+	outline-offset: 2px;
 }
 #surerank-root .\[\&\>input\]\:m-0>input, .surerank-root .\[\&\>input\]\:m-0>input {
 	margin: 0px;

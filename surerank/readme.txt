@@ -3,9 +3,9 @@ Contributors: brainstormforce
 Donate link: https://www.paypal.me/BrainstormForce
 Tags: seo, wordpress seo, xml sitemap, schema, google search console
 Requires at least: 6.8
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.7.3
+Stable tag: 1.7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -294,6 +294,16 @@ Brainstorm Force
 
 
 == Changelog ==
+= 1.7.4 - 20-May-2026 =
+* New: Learn - Added a guided setup with step-by-step checklist, chapter progress tracking, and auto-detected completions to help users configure SureRank.
+* Improvement: Classic Editor - Moved the SureRank trigger into the sidebar under the Publish panel for a cleaner editor layout.
+* Fix: Compatibility - Bricks - Frontend meta variable hook no longer triggers a full Bricks render, preventing slow page loads and 504 timeouts on query-loop pages.
+* Fix: Compatibility - Divi 5 - Fixed the first Tabs tab not being visible when Image SEO is enabled.
+* Fix: Sitemap - Prevented XML parse errors caused by leading output before the sitemap response.
+* Fix: Schema - Event schema now emits valid ISO 8601 datetime values.
+* Fix: PHP 7.4 - Resolved a parse error in the cache rebuild backup reader on PHP 7.4.
+* Fix: Link Manager - Removed Pro-only submenu items from the free version.
+* Fix: Classic Editor - Hid the permalink redirect notice on classic editor screens where it did not apply.
 = 1.7.3 - 30-April-2026 =
 * New: Compatibility - Added support for Breakdance builder with SEO Metabox.
 * Improvement: Compatibility with Open Graph image generation SureRank Pro feature.

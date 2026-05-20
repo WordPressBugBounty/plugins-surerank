@@ -153,6 +153,18 @@ class Divi {
 		}
 
 		$post_id = get_the_ID();
+
+		// Auto-draft pages (new unsaved posts) are excluded from the public WP
+		// query, so get_the_ID() returns 0 in FVB. Divi always passes the post
+		// being edited as ?page_id= (pages) or ?p= (other post types).
+		if ( ! $post_id ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$raw_id = absint( $_GET['page_id'] ?? $_GET['p'] ?? 0 );
+			if ( $raw_id && current_user_can( 'edit_post', $raw_id ) ) {
+				$post_id = $raw_id;
+			}
+		}
+
 		if ( ! $post_id ) {
 			return;
 		}
@@ -305,6 +317,14 @@ class Divi {
 	 * do_blocks() invokes Divi's own server-side render callbacks for every
 	 * module type with no custom per-module code required on our side.
 	 *
+	 * TabModule::_is_subsequent_loop_iteration() uses a private static array
+	 * keyed on get_the_ID(). Calling do_blocks() here (during wp_head, before
+	 * the page template renders) would consume the first-tab slot for the real
+	 * post ID, causing the_content() render to omit et_pb_active_content from
+	 * the first tab and hide it. We temporarily set $GLOBALS['post']->ID to -1
+	 * (a sentinel that is impossible for any real WP post) so this render uses
+	 * a separate counter slot from the real page render.
+	 *
 	 * @param string $content Raw post_content with divi/* block comments.
 	 * @return string Fully rendered HTML from Divi's own render callbacks.
 	 */
@@ -313,7 +333,29 @@ class Divi {
 			return $content;
 		}
 
-		$html = do_blocks( $content );
+		// TabModule::_is_subsequent_loop_iteration() uses a private static array
+		// keyed on get_the_ID(). Calling do_blocks() here (during wp_head, before
+		// the page template renders) would consume the first-tab slot for the real
+		// post ID, causing the_content() render to omit et_pb_active_content from
+		// the first tab and hide it. Temporarily set $post->ID to -1 (a sentinel
+		// impossible for any real WP post) so this render uses a separate counter
+		// slot from the real page render.
+		global $post;
+		$original_id = null;
+
+		if ( $post instanceof \WP_Post ) {
+			$original_id = $post->ID;
+			$post->ID    = -1;
+		}
+
+		$html = '';
+		try {
+			$html = do_blocks( $content );
+		} finally {
+			if ( null !== $original_id ) {
+				$post->ID = $original_id;
+			}
+		}
 
 		return $html ? $html : $content;
 	}

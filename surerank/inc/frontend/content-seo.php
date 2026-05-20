@@ -70,14 +70,18 @@ class Content_Seo {
 			return $content;
 		}
 
-		$clean_content = $this->remove_script_style_tags( $content );
-		$image_tags    = $this->extract_tags( $clean_content, 'img' );
+		if ( $this->is_divi5_rendered_content( $content ) ) {
+			return $content;
+		}
+
+		[ $protected, $blocks ] = $this->protect_blocks( $content );
+		$image_tags             = $this->extract_tags( $protected, 'img' );
 
 		if ( empty( $image_tags ) ) {
 			return $content;
 		}
 
-		return $this->process_content( $content, $image_tags, [], $post_id );
+		return $this->restore_blocks( $this->process_content( $protected, $image_tags, [], $post_id ), $blocks );
 	}
 
 	/**
@@ -93,14 +97,18 @@ class Content_Seo {
 			return $content;
 		}
 
-		$clean_content = $this->remove_script_style_tags( $content );
-		$link_tags     = $this->extract_tags( $clean_content, 'a' );
+		if ( $this->is_divi5_rendered_content( $content ) ) {
+			return $content;
+		}
+
+		[ $protected, $blocks ] = $this->protect_blocks( $content );
+		$link_tags              = $this->extract_tags( $protected, 'a' );
 
 		if ( empty( $link_tags ) ) {
 			return $content;
 		}
 
-		return $this->process_content( $content, [], $link_tags, $post_id );
+		return $this->restore_blocks( $this->process_content( $protected, [], $link_tags, $post_id ), $blocks );
 	}
 
 	/**
@@ -123,15 +131,19 @@ class Content_Seo {
 			return $content;
 		}
 
-		$clean_content = $this->remove_script_style_tags( $content );
-		$image_tags    = $has_images ? $this->extract_tags( $clean_content, 'img' ) : [];
-		$link_tags     = $has_links ? $this->extract_tags( $clean_content, 'a' ) : [];
+		if ( $this->is_divi5_rendered_content( $content ) ) {
+			return $content;
+		}
+
+		[ $protected, $blocks ] = $this->protect_blocks( $content );
+		$image_tags             = $has_images ? $this->extract_tags( $protected, 'img' ) : [];
+		$link_tags              = $has_links ? $this->extract_tags( $protected, 'a' ) : [];
 
 		if ( empty( $image_tags ) && empty( $link_tags ) ) {
 			return $content;
 		}
 
-		return $this->process_content( $content, $image_tags, $link_tags, $post_id );
+		return $this->restore_blocks( $this->process_content( $protected, $image_tags, $link_tags, $post_id ), $blocks );
 	}
 
 	/**
@@ -237,15 +249,101 @@ class Content_Seo {
 	}
 
 	/**
-	 * Remove script and style tags from content
+	 * Detect Divi 5 rendered output. Modifying that HTML breaks React hydration
+	 * (the first tab panel goes invisible during the post-mismatch re-render), so
+	 * we bail entirely.
+	 *
+	 * Detection uses three layers:
+	 *
+	 * 1. CSS class markers in the rendered HTML. Divi 5 SectionModule always emits
+	 *    exactly one of: et_block_section (block layout), et_flex_section (flex —
+	 *    the default, see SectionModule.php:175 `?? 'flex'`), or et_grid_section
+	 *    (grid). et_flex_module covers flex-layout row modules. All are absent in
+	 *    Divi 4 shortcode output.
+	 *
+	 * 2. Raw post_content fallback — Divi 5 stores <!-- wp:divi/ --> block comments.
+	 *    Catches layouts where the rendered HTML lacks section wrappers (rare), but
+	 *    fails for Theme Builder templates where the layout lives in a separate Divi
+	 *    Layout post and $post->post_content is empty.
+	 *
+	 * `data-et-multi-view` and `et-builder-5` only appear in theme-level HTML
+	 * (header/footer), not in content passed to the_content filter.
+	 * Result is memoized per content to avoid repeated strpos scans.
+	 *
+	 * @param string $content Rendered content.
+	 * @return bool
+	 * @since 1.7.4
+	 */
+	private function is_divi5_rendered_content( $content ): bool {
+		static $cache = [];
+
+		$key = md5( $content );
+		if ( isset( $cache[ $key ] ) ) {
+			return $cache[ $key ];
+		}
+
+		// Every Divi 5 section emits exactly one of these three layout classes.
+		// et_flex_section is the default (SectionModule.php layout attr defaults
+		// to 'flex'), so this check now catches all standard Divi 5 layouts.
+		$is_divi5 = strpos( $content, 'et_block_section' ) !== false
+			|| strpos( $content, 'et_flex_section' ) !== false
+			|| strpos( $content, 'et_grid_section' ) !== false
+			|| strpos( $content, 'et_flex_module' ) !== false;
+
+		// Fallback for edge cases (e.g. sectionless layouts): check the raw post
+		// content for Divi 5 block comments. This does NOT cover Theme Builder
+		// templates — those live in a separate Divi Layout post, leaving
+		// $post->post_content empty — but the CSS check above handles them.
+		if ( ! $is_divi5 ) {
+			global $post;
+			$is_divi5 = $post instanceof \WP_Post
+				&& strpos( $post->post_content, '<!-- wp:divi/' ) !== false;
+		}
+
+		$cache[ $key ] = (bool) apply_filters( 'surerank_is_divi5_content', $is_divi5, $content );
+		return $cache[ $key ];
+	}
+
+	/**
+	 * Stash <script>/<style> blocks behind salted placeholders so subsequent
+	 * str_replace passes can't corrupt image/link strings embedded in JSON
+	 * hydration data. The salt prevents user content from colliding with our
+	 * marker (which would mis-restore the block).
 	 *
 	 * @param string $content Raw content.
-	 * @return string Cleaned content
-	 * @since 1.5.0
+	 * @return array{0: string, 1: array<string, string>} Protected content + placeholder→block map.
+	 * @since 1.7.4
 	 */
-	private function remove_script_style_tags( $content ): string {
-		$result = preg_replace( '/<(script|style)[^>]*?>.*?<\/\1>/si', '', $content );
-		return $result !== null ? $result : $content;
+	private function protect_blocks( $content ): array {
+		$blocks    = [];
+		$token     = function_exists( 'wp_generate_uuid4' ) ? wp_generate_uuid4() : uniqid( '', true );
+		$protected = preg_replace_callback(
+			'/<(script|style)[^>]*?>.*?<\/\1>/si',
+			static function ( $matches ) use ( &$blocks, $token ) {
+				$placeholder            = sprintf( '<!--SURERANK_BLOCK_%s_%d-->', $token, count( $blocks ) );
+				$blocks[ $placeholder ] = $matches[0];
+				return $placeholder;
+			},
+			$content
+		);
+
+		return [ $protected !== null ? $protected : $content, $blocks ];
+	}
+
+	/**
+	 * Restore the blocks stashed by protect_blocks().
+	 *
+	 * @param string                $content Protected content.
+	 * @param array<string, string> $blocks  Placeholder → block map.
+	 * @return string
+	 * @since 1.7.4
+	 */
+	private function restore_blocks( $content, $blocks ): string {
+		foreach ( $blocks as $placeholder => $block ) {
+			$content = str_replace( $placeholder, $block, $content );
+		}
+
+		return $content;
 	}
 
 	/**

@@ -1,22 +1,37 @@
 /**
  * Get the pricing link for the SureRank plugin.
  *
- * @param {string} utm_medium - The UTM parameter to include in the link.
+ * @param {string} utmContent - Placement identifier for utm_content. Required for accurate attribution.
  * @return {string} The pricing link URL.
  */
-export const getPricingLink = ( utm_medium = 'surerank_plugin' ) => {
-	return (
-		window?.surerank_globals?.pricing_link + `?utm_medium=${ utm_medium }`
-	);
+export const getPricingLink = ( utmContent = '' ) => {
+	const pricingLink = window?.surerank_globals?.pricing_link;
+
+	if ( ! pricingLink ) {
+		return '';
+	}
+
+	try {
+		const parsed = new URL( pricingLink );
+		parsed.searchParams.set( 'utm_source', 'surerank_plugin' );
+		parsed.searchParams.set( 'utm_medium', 'wordpress_plugin' );
+		parsed.searchParams.set( 'utm_campaign', 'core_plugin' );
+		if ( utmContent ) {
+			parsed.searchParams.set( 'utm_content', utmContent );
+		}
+		return parsed.toString();
+	} catch ( error ) {
+		return pricingLink;
+	}
 };
 
 /**
  * Redirect to the pricing page for the SureRank plugin.
  *
- * @param {string} utm_medium - The UTM parameter to include in the link.
+ * @param {string} utmContent - Placement identifier for utm_content.
  */
-export const redirectToPricingPage = ( utm_medium ) => {
-	const pricingLink = getPricingLink( utm_medium );
+export const redirectToPricingPage = ( utmContent ) => {
+	const pricingLink = getPricingLink( utmContent );
 	window.open( pricingLink, '_blank', 'noopener,noreferrer' );
 };
 

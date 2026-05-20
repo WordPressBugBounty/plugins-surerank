@@ -129,6 +129,32 @@ class Utils {
 	}
 
 	/**
+	 * Ensure XML/XSL output starts with the declaration at byte 0.
+	 *
+	 * Closes any active output buffers and strips a leading UTF-8 BOM and
+	 * any leading whitespace from the body. Must be called before
+	 * {@see self::output_headers()} so headers_sent() reflects the
+	 * post-cleanup state.
+	 *
+	 * @param string $body XML or XSL body to be emitted.
+	 * @return string Cleaned body.
+	 * @since 1.7.4
+	 */
+	public static function strip_leading_noise( string $body ): string {
+		while ( ob_get_level() > 0 ) {
+			if ( ! @ob_end_clean() ) { // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- guard against handlers that refuse to close.
+				break;
+			}
+		}
+
+		if ( substr( $body, 0, 3 ) === "\xEF\xBB\xBF" ) {
+			$body = substr( $body, 3 );
+		}
+
+		return ltrim( $body );
+	}
+
+	/**
 	 * Outputs necessary headers for XML display.
 	 *
 	 * @return void
@@ -295,16 +321,17 @@ class Utils {
 	 * @return void
 	 */
 	public static function output_stylesheet( $stylesheet ) {
-
-		self::output_headers();
-
 		$sitemap_title = esc_html( get_bloginfo( 'name' ) . ' Sitemap' );
 		$sitemap_slug  = Xml_Sitemap::get_slug();
 
 		$stylesheet_obj     = new Stylesheet();
 		$stylesheet_content = $stylesheet_obj->generate( $sitemap_title, $sitemap_slug );
+		$stylesheet_content = apply_filters( 'surerank_sitemap_output_stylesheet', $stylesheet_content, $stylesheet );
+		$stylesheet_content = self::strip_leading_noise( (string) $stylesheet_content );
 
-		echo apply_filters( 'surerank_sitemap_output_stylesheet', $stylesheet_content, $stylesheet ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		self::output_headers();
+
+		echo $stylesheet_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		exit;
 	}
 

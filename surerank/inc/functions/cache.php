@@ -382,7 +382,7 @@ class Cache {
 	 * @since 1.7.2
 	 * @return string|false
 	 */
-	public static function read_rebuild_backup( string $filename ): string|false {
+	public static function read_rebuild_backup( string $filename ) {
 		$pos = strpos( $filename, '/' );
 		if ( false === $pos ) {
 			return false;

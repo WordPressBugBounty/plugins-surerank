@@ -36,8 +36,8 @@ class Bricks {
 		}
 
 		// Runs in admin/save context too — not limited to the visual builder.
-		add_filter( 'surerank_post_analyzer_content', [ $this, 'process_bricks_content' ], 10, 2 );
-		add_filter( 'surerank_meta_variable_post_content', [ $this, 'process_bricks_content' ], 10, 2 );
+		add_filter( 'surerank_post_analyzer_content', [ $this, 'process_bricks_content_for_analyzer' ], 10, 2 );
+		add_filter( 'surerank_meta_variable_post_content', [ $this, 'process_bricks_content_for_meta' ], 10, 2 );
 
 		if ( ! function_exists( 'bricks_is_builder_main' ) || ! bricks_is_builder_main() ) {
 			return;
@@ -62,7 +62,7 @@ class Bricks {
 	 * @return string HTML extracted from Bricks elements, or the original $content.
 	 * @since 1.7.0
 	 */
-	public function process_bricks_content( string $content, \WP_Post $post ): string {
+	public function process_bricks_content_for_analyzer( string $content, \WP_Post $post ): string {
 		// Skip posts that have been switched back to the WordPress block editor.
 		$editor_mode = get_post_meta( $post->ID, BRICKS_DB_EDITOR_MODE, true );
 		if ( 'WordPress' === $editor_mode ) {
@@ -75,6 +75,31 @@ class Bricks {
 		}
 
 		return $this->extract_bricks_html( $elements );
+	}
+
+	/**
+	 * Frontend meta-variable handler: cheap text-only extraction from Bricks elements.
+	 *
+	 * Avoids \Bricks\Frontend::render_data() because rendering query loops (e.g. sc_product)
+	 * on every wp_head triggers expensive recursion. Only plain-text settings are read.
+	 *
+	 * @param string   $content Post content (usually empty for Bricks posts).
+	 * @param \WP_Post $post    Post object.
+	 * @return string Plain text harvested from Bricks element settings, or the original $content.
+	 * @since 1.7.4
+	 */
+	public function process_bricks_content_for_meta( string $content, \WP_Post $post ): string {
+		$editor_mode = get_post_meta( $post->ID, BRICKS_DB_EDITOR_MODE, true );
+		if ( 'WordPress' === $editor_mode ) {
+			return $content;
+		}
+
+		$elements = get_post_meta( $post->ID, BRICKS_DB_PAGE_CONTENT, true );
+		if ( ! is_array( $elements ) || empty( $elements ) ) {
+			return $content;
+		}
+
+		return $this->extract_text_only( $elements );
 	}
 
 	/**
@@ -128,5 +153,41 @@ class Bricks {
 			return '';
 		}
 		return \Bricks\Frontend::render_data( $elements, 'content' ) ?? '';
+	}
+
+	/**
+	 * Walk Bricks elements and concatenate plain-text settings without rendering.
+	 *
+	 * @param array<int, array<string, mixed>> $elements Flat Bricks elements array.
+	 * @return string Concatenated plain text from text/heading/description/label/content settings.
+	 * @since 1.7.4
+	 */
+	private function extract_text_only( array $elements ): string {
+		$text_keys = [ 'text', 'heading', 'description', 'label', 'content' ];
+		$pieces    = [];
+
+		foreach ( $elements as $element ) {
+			if ( ! is_array( $element ) || empty( $element['settings'] ) || ! is_array( $element['settings'] ) ) {
+				continue;
+			}
+
+			foreach ( $text_keys as $key ) {
+				if ( ! isset( $element['settings'][ $key ] ) || ! is_string( $element['settings'][ $key ] ) ) {
+					continue;
+				}
+
+				$value = preg_replace( '/\{[a-z0-9_:\-\.]+\}/i', '', $element['settings'][ $key ] );
+				if ( ! is_string( $value ) ) {
+					continue;
+				}
+
+				$value = trim( wp_strip_all_tags( $value ) );
+				if ( '' !== $value ) {
+					$pieces[] = $value;
+				}
+			}
+		}
+
+		return trim( implode( ' ', $pieces ) );
 	}
 }

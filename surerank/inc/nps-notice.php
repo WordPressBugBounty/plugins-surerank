@@ -10,6 +10,7 @@
 namespace SureRank\Inc;
 
 use Nps_Survey;
+use SureRank\Inc\Admin\Review_Notice;
 use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Traits\Get_Instance;
 
@@ -53,6 +54,10 @@ if ( ! class_exists( 'Nps_Notice' ) ) {
 		 * @return void
 		 */
 		public function show_nps_notice() {
+			if ( Review_Notice::is_notice_eligible_for_current_user() ) {
+				return;
+			}
+
 			// Ensure the Nps_Survey class exists before proceeding.
 			if ( ! class_exists( 'Nps_Survey' ) ) {
 				return;

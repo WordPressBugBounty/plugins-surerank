@@ -11,6 +11,7 @@ import { select, useDispatch } from '@wordpress/data';
 import { STORE_NAME } from '@Store/constants';
 import { SureRankMonoLogo } from '@GlobalComponents/icons';
 import { useEffect } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 import PageCheckStatusIndicator from '@AdminComponents/page-check-status-indicator';
 import usePageCheckStatus from './hooks/usePageCheckStatus';
 
@@ -27,6 +28,18 @@ const RenderTriggerPopupButton = () => {
 
 	// Get page checks status for indicator
 	const { status, initializing, counts } = usePageCheckStatus();
+	const isSidebarVariant =
+		document
+			.querySelector( '#surerank-classic-seo-popup-trigger' )
+			?.getAttribute( 'data-surerank-variant' ) === 'sidebar';
+
+	// Mirror the Gutenberg label condition from SpectraPageSettingsPopup.
+	const getButtonText = () => {
+		if ( status === 'success' || counts.errorAndWarnings === 0 ) {
+			return __( 'Manage Your SEO', 'surerank' );
+		}
+		return __( 'Optimize Here', 'surerank' );
+	};
 
 	useEffect( () => {
 		const adminBar = document.querySelector( '#wpadminbar' );
@@ -34,6 +47,20 @@ const RenderTriggerPopupButton = () => {
 			adminBar.style.zIndex = '10';
 		}
 	}, [] );
+
+	if ( isSidebarVariant ) {
+		return (
+			<div className="surerank-classic-sidebar-trigger-wrap">
+				<button
+					className="button button-primary"
+					type="button"
+					onClick={ () => updateModalState( true ) }
+				>
+					{ getButtonText() }
+				</button>
+			</div>
+		);
+	}
 
 	return (
 		<div className="relative inline-flex">
@@ -54,24 +81,42 @@ const RenderTriggerPopupButton = () => {
 	);
 };
 
-const insertRoot = () => {
-	const targetNode = document.querySelector( '.wrap > h1' );
-	if ( targetNode ) {
-		const rootContainer = document.createElement( 'span' );
-		rootContainer.id = 'seo-popup';
-		rootContainer.className = 'surerank-root';
-		targetNode.appendChild( rootContainer );
-		return rootContainer;
+const getClassicTriggerMountTarget = () => {
+	const sidebarTrigger = document.querySelector(
+		'#surerank-classic-seo-popup-trigger'
+	);
+	if ( sidebarTrigger ) {
+		return sidebarTrigger;
 	}
-	return null;
+
+	// Term edit page: #seo-popup is PHP-rendered inside <form>, so move it
+	// into .wrap > h1 to appear beside the page heading (matches old insertRoot behaviour).
+	const seoPopup = document.querySelector( '#seo-popup' );
+	const pageHeading = document.querySelector( '.wrap > h1' );
+	if ( seoPopup && pageHeading ) {
+		pageHeading.appendChild( seoPopup );
+	}
+	return seoPopup;
 };
 
-if ( surerank_seo_popup.editor_type === 'classic' ) {
-	const targetElement = insertRoot();
-	if ( targetElement ) {
-		const root = createRoot( targetElement );
-		root.render( <RenderTriggerPopupButton /> );
+const mountClassicTrigger = () => {
+	if ( surerank_seo_popup.editor_type !== 'classic' ) {
+		return;
 	}
+	const targetElement = getClassicTriggerMountTarget();
+	if ( ! targetElement ) {
+		return;
+	}
+	const root = createRoot( targetElement );
+	root.render( <RenderTriggerPopupButton /> );
+};
+
+// Metabox markup is server-rendered in the body, but this script may load in
+// the head. Defer mount until the DOM has parsed the metabox container.
+if ( document.readyState === 'loading' ) {
+	document.addEventListener( 'DOMContentLoaded', mountClassicTrigger );
+} else {
+	mountClassicTrigger();
 }
 
 document.addEventListener( 'DOMContentLoaded', function () {

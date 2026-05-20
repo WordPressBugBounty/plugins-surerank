@@ -15,8 +15,9 @@ msgstr ""
 
 #. Author of the plugin
 #: surerank.php
-#: inc/admin/dashboard.php:245
-#: inc/admin/dashboard.php:246
+#: inc/admin/dashboard.php:249
+#: inc/admin/dashboard.php:250
+#: inc/admin/seo-popup.php:92
 #: inc/nps-notice.php:90
 msgid "SureRank"
 msgstr "SureRank"
@@ -31,13 +32,13 @@ msgstr "https://surerank.com"
 msgid "https://surerank.com/"
 msgstr "https://surerank.com/"
 
-#: inc/admin/dashboard.php:272
+#: inc/admin/dashboard.php:276
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Dashboard"
 msgstr "Painel"
 
-#: inc/admin/dashboard.php:276
+#: inc/admin/dashboard.php:280
 #: inc/analyzer/seo-analyzer.php:165
 #: inc/analyzer/seo-analyzer.php:288
 #: inc/schema/types/organization.php:678
@@ -47,7 +48,7 @@ msgstr "Painel"
 msgid "General"
 msgstr "Geral"
 
-#: inc/admin/dashboard.php:280
+#: inc/admin/dashboard.php:284
 #: inc/analyzer/seo-analyzer.php:851
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
@@ -401,14 +402,14 @@ msgstr "ID"
 msgid "The unique identifier for a post."
 msgstr "O identificador único para uma postagem."
 
-#: inc/admin/dashboard.php:636
+#: inc/admin/dashboard.php:648
 #: inc/meta-variables/post.php:65
 #: inc/schema/variables.php:83
 #: build/admin-dashboard/index.js:1
 msgid "Post Title"
 msgstr "Título da Postagem"
 
-#: inc/admin/dashboard.php:638
+#: inc/admin/dashboard.php:650
 #: inc/meta-variables/post.php:66
 msgid "The title of the post."
 msgstr "O título da postagem."
@@ -417,7 +418,7 @@ msgstr "O título da postagem."
 msgid "Excerpt"
 msgstr "Resumo"
 
-#: inc/admin/dashboard.php:643
+#: inc/admin/dashboard.php:655
 #: inc/meta-variables/post.php:70
 msgid "The excerpt of the post."
 msgstr "O resumo da postagem."
@@ -426,7 +427,7 @@ msgstr "O resumo da postagem."
 msgid "Content"
 msgstr "Conteúdo"
 
-#: inc/admin/dashboard.php:648
+#: inc/admin/dashboard.php:660
 #: inc/meta-variables/post.php:74
 msgid "The content of the post."
 msgstr "O conteúdo da postagem."
@@ -451,12 +452,12 @@ msgstr "Separador"
 msgid "Site Tagline"
 msgstr "Slogan do Site"
 
-#: inc/admin/dashboard.php:628
+#: inc/admin/dashboard.php:640
 #: inc/meta-variables/site.php:65
 msgid "The tagline of the site."
 msgstr "O slogan do site."
 
-#: inc/admin/dashboard.php:621
+#: inc/admin/dashboard.php:633
 #: inc/meta-variables/site.php:68
 #: build/admin-dashboard/index.js:1
 msgid "Site Name"
@@ -492,7 +493,7 @@ msgstr "O identificador único para um termo."
 msgid "Term Name"
 msgstr "Nome do Termo"
 
-#: inc/admin/dashboard.php:633
+#: inc/admin/dashboard.php:645
 #: inc/meta-variables/term.php:63
 msgid "The name of the term."
 msgstr "O nome do termo."
@@ -506,7 +507,7 @@ msgstr "O nome do termo."
 msgid "Description"
 msgstr "Descrição"
 
-#: inc/admin/dashboard.php:653
+#: inc/admin/dashboard.php:665
 #: inc/meta-variables/term.php:67
 msgid "The description of the term."
 msgstr "A descrição do termo."
@@ -2320,17 +2321,17 @@ msgstr "Uma imagem em miniatura relevante para o site."
 msgid "Post ID"
 msgstr "ID do post"
 
-#: inc/admin/dashboard.php:641
+#: inc/admin/dashboard.php:653
 #: inc/schema/variables.php:85
 msgid "Post Excerpt"
 msgstr "Resumo do post"
 
-#: inc/admin/dashboard.php:646
+#: inc/admin/dashboard.php:658
 #: inc/schema/variables.php:86
 msgid "Post Content"
 msgstr "Conteúdo do post"
 
-#: inc/admin/dashboard.php:666
+#: inc/admin/dashboard.php:678
 #: inc/schema/variables.php:87
 msgid "Post URL"
 msgstr "URL do post"
@@ -2379,7 +2380,7 @@ msgstr "Slug do Termo"
 msgid "Term Taxonomy"
 msgstr "Taxonomia do Termo"
 
-#: inc/admin/dashboard.php:651
+#: inc/admin/dashboard.php:663
 #: inc/schema/variables.php:115
 msgid "Term Description"
 msgstr "Descrição do Termo"
@@ -2534,12 +2535,12 @@ msgstr "Corrigir Problemas de SEO com IA"
 msgid "Fix It for Me"
 msgstr "Corrija Para Mim"
 
-#: inc/admin/dashboard.php:626
+#: inc/admin/dashboard.php:638
 #: build/admin-dashboard/index.js:1
 msgid "Tagline"
 msgstr "Slogan"
 
-#: inc/admin/dashboard.php:631
+#: inc/admin/dashboard.php:643
 msgid "Term Title"
 msgstr "Título do Termo"
 
@@ -2803,14 +2804,14 @@ msgstr "%1$d de %2$d verificações foram feitas."
 msgid "Passed"
 msgstr "Aprovado"
 
-#: loader.php:365
+#: loader.php:366
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Settings"
 msgstr "Configurações"
 
-#: inc/admin/seo-popup.php:144
+#: inc/admin/seo-popup.php:207
 #: build/breakdance/index.js:1
 #: build/bricks/index.js:1
 #: build/divi/index.js:1
@@ -3854,119 +3855,119 @@ msgstr "Taxonomias"
 msgid "Archives"
 msgstr "Arquivos"
 
-#: inc/admin/dashboard.php:623
+#: inc/admin/dashboard.php:635
 msgid "The name of the site."
 msgstr "O nome do site."
 
-#: inc/admin/dashboard.php:656
+#: inc/admin/dashboard.php:668
 #: inc/meta-variables/post.php:81
 msgid "Date Published"
 msgstr "Data de Publicação"
 
-#: inc/admin/dashboard.php:658
+#: inc/admin/dashboard.php:670
 #: inc/meta-variables/post.php:82
 msgid "Publication date of the current post/page OR specified date on date archives"
 msgstr "Data de publicação do post/página atual OU data especificada nas arquivagens de data"
 
-#: inc/admin/dashboard.php:661
+#: inc/admin/dashboard.php:673
 #: inc/meta-variables/post.php:85
 msgid "Date Modified"
 msgstr "Data de Modificação"
 
-#: inc/admin/dashboard.php:663
+#: inc/admin/dashboard.php:675
 #: inc/meta-variables/post.php:86
 msgid "Last modification date of the current post/page"
 msgstr "Data da última modificação do post/página atual"
 
-#: inc/admin/dashboard.php:668
+#: inc/admin/dashboard.php:680
 msgid "URL of the current post/page"
 msgstr "URL do post/página atual"
 
-#: inc/admin/dashboard.php:671
+#: inc/admin/dashboard.php:683
 #: inc/meta-variables/site.php:84
 msgid "Current Date"
 msgstr "Data Atual"
 
-#: inc/admin/dashboard.php:673
+#: inc/admin/dashboard.php:685
 #: inc/meta-variables/site.php:85
 msgid "Current server date"
 msgstr "Data do servidor atual"
 
-#: inc/admin/dashboard.php:676
+#: inc/admin/dashboard.php:688
 #: inc/meta-variables/site.php:88
 msgid "Current Day"
 msgstr "Dia Atual"
 
-#: inc/admin/dashboard.php:678
+#: inc/admin/dashboard.php:690
 #: inc/meta-variables/site.php:89
 msgid "Current server day"
 msgstr "Dia do servidor atual"
 
-#: inc/admin/dashboard.php:681
+#: inc/admin/dashboard.php:693
 #: inc/meta-variables/site.php:92
 msgid "Current Month"
 msgstr "Mês Atual"
 
-#: inc/admin/dashboard.php:683
+#: inc/admin/dashboard.php:695
 #: inc/meta-variables/site.php:93
 msgid "Current server month"
 msgstr "Mês do servidor atual"
 
-#: inc/admin/dashboard.php:686
+#: inc/admin/dashboard.php:698
 #: inc/meta-variables/site.php:96
 msgid "Current Year"
 msgstr "Ano Atual"
 
-#: inc/admin/dashboard.php:688
+#: inc/admin/dashboard.php:700
 #: inc/meta-variables/site.php:97
 msgid "Current server year"
 msgstr "Ano do servidor atual"
 
-#: inc/admin/dashboard.php:691
+#: inc/admin/dashboard.php:703
 #: inc/meta-variables/site.php:100
 msgid "Current Time"
 msgstr "Hora Atual"
 
-#: inc/admin/dashboard.php:693
+#: inc/admin/dashboard.php:705
 #: inc/meta-variables/site.php:101
 msgid "Current server time"
 msgstr "Hora do servidor atual"
 
-#: inc/admin/dashboard.php:696
+#: inc/admin/dashboard.php:708
 #: inc/meta-variables/site.php:104
 msgid "Organization Name"
 msgstr "Nome da Organização"
 
-#: inc/admin/dashboard.php:698
+#: inc/admin/dashboard.php:710
 #: inc/meta-variables/site.php:105
 msgid "The Organization Name added in Local SEO Settings."
 msgstr "O nome da organização adicionado nas Configurações de SEO Local."
 
-#: inc/admin/dashboard.php:701
+#: inc/admin/dashboard.php:713
 #: inc/meta-variables/site.php:108
 msgid "Organization Logo"
 msgstr "Logo da Organização"
 
-#: inc/admin/dashboard.php:703
+#: inc/admin/dashboard.php:715
 #: inc/meta-variables/site.php:109
 msgid "Organization Logo added in Local SEO Settings."
 msgstr "Logo da Organização adicionado nas Configurações de SEO Local."
 
-#: inc/admin/dashboard.php:706
+#: inc/admin/dashboard.php:718
 #: inc/meta-variables/site.php:112
 msgid "Organization URL"
 msgstr "URL da Organização"
 
-#: inc/admin/dashboard.php:708
+#: inc/admin/dashboard.php:720
 #: inc/meta-variables/site.php:113
 msgid "Organization URL added in Local SEO Settings."
 msgstr "URL da Organização adicionado nas Configurações de SEO Local."
 
-#: inc/admin/dashboard.php:711
+#: inc/admin/dashboard.php:723
 msgid "Post Author Name"
 msgstr "Nome do Autor do Post"
 
-#: inc/admin/dashboard.php:713
+#: inc/admin/dashboard.php:725
 msgid "Display author's nicename of the current post, page or author archive."
 msgstr "Exibe o nome amigável do autor do post, página ou arquivo de autor atual."
 
@@ -3986,7 +3987,7 @@ msgstr "Consulta de Pesquisa"
 msgid "Search query (only available on search results page)"
 msgstr "Consulta de pesquisa (disponível apenas na página de resultados de pesquisa)"
 
-#: loader.php:345
+#: loader.php:346
 msgid "Rate our plugin"
 msgstr "Avalie nosso plugin"
 
@@ -4175,7 +4176,7 @@ msgstr "Modelos Meta"
 msgid "Suggestion"
 msgstr "Sugestão"
 
-#: inc/admin/dashboard.php:287
+#: inc/admin/dashboard.php:291
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Search Console"
@@ -4200,7 +4201,7 @@ msgstr "Restaurar esta verificação"
 msgid "The page does not contain any subheadings."
 msgstr "A página não contém subtítulos."
 
-#: inc/admin/dashboard.php:298
+#: inc/admin/dashboard.php:302
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Tools"
@@ -5714,7 +5715,7 @@ msgstr "Verificações da página"
 msgid "SEO analysis is not available for this page."
 msgstr "Análise de SEO não disponível para esta página."
 
-#: inc/admin/seo-popup.php:148
+#: inc/admin/seo-popup.php:211
 #: build/seo-popup/index.js:1
 msgid "Open SureRank Meta Box"
 msgstr "Abrir Meta Box do SureRank"
@@ -6550,7 +6551,7 @@ msgstr "Assim que estiver conectado ao Google Search Console, você verá como s
 msgid "Redirections"
 msgstr "Redireções"
 
-#: inc/admin/dashboard.php:304
+#: inc/admin/dashboard.php:313
 msgid "Get Pro ↗"
 msgstr "Obter Pro ↗"
 
@@ -7057,7 +7058,7 @@ msgstr "Resumo de SEO da semana passada - %1$s a %2$s"
 
 #. translators: %s: Site name
 #: inc/modules/email-reports/controller.php:378
-#: inc/modules/email-reports/controller.php:654
+#: inc/modules/email-reports/controller.php:663
 #, php-format
 msgid "%s Logo"
 msgstr "%s Logo"
@@ -7098,7 +7099,7 @@ msgstr "Veja os dados que importam, tudo em um painel limpo e personalizável. A
 msgid "Explore"
 msgstr "Explorar"
 
-#: inc/modules/email-reports/controller.php:840
+#: inc/modules/email-reports/controller.php:849
 msgid "Home"
 msgstr "Início"
 
@@ -7267,7 +7268,7 @@ msgstr "Email de teste"
 msgid "Sending…"
 msgstr "Enviando…"
 
-#: inc/admin/dashboard.php:293
+#: inc/admin/dashboard.php:297
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Link Manager"
@@ -8023,7 +8024,7 @@ msgstr "Conhece idiomas"
 msgid "Specify languages in which the organization provides services. Use standard IETF BCP 47 language codes (e.g., en, en-US, fr, es)."
 msgstr "Especifique os idiomas nos quais a organização oferece serviços. Use códigos de idioma padrão IETF BCP 47 (por exemplo, en, en-US, fr, es)."
 
-#: loader.php:418
+#: loader.php:419
 msgid "Get SureRank Pro"
 msgstr "Obtenha o SureRank Pro"
 
@@ -8191,6 +8192,7 @@ msgstr "\"No Follow\" informa aos mecanismos de busca para não seguir nenhum li
 msgid "\"No Archive\" prevents search engines from storing a cached version of the page."
 msgstr "\"No Archive\" impede que os mecanismos de busca armazenem uma versão em cache da página."
 
+#: inc/admin/seo-popup.php:111
 #: build/seo-popup/index.js:1
 msgid "Manage your SEO"
 msgstr "Gerencie seu SEO"
@@ -9675,6 +9677,7 @@ msgstr "O SureRank reconstruiu o cache do sitemap recentemente."
 
 #. translators: %s: human-readable time, e.g. "3 hours ago".
 #: inc/admin/site-health.php:108
+#, php-format
 msgid "Last successful rebuild: %s. SureRank normally refreshes the cache every six hours."
 msgstr "Última reconstrução bem-sucedida: %s. O SureRank normalmente atualiza o cache a cada seis horas."
 
@@ -9684,6 +9687,7 @@ msgstr "O SureRank não reconstruiu o cache do sitemap há mais de doze horas."
 
 #. translators: %s: human-readable time, e.g. "14 hours ago".
 #: inc/admin/site-health.php:121
+#, php-format
 msgid "Last successful rebuild: %s. This is still within the stale threshold; the next scheduled cron tick should update it."
 msgstr "Última reconstrução bem-sucedida: %s. Isso ainda está dentro do limite de obsolescência; o próximo cron agendado deve atualizá-lo."
 
@@ -9693,6 +9697,7 @@ msgstr "O SureRank não reconstruiu o cache do sitemap além do limite de obsole
 
 #. translators: %s: human-readable time.
 #: inc/admin/site-health.php:133
+#, php-format
 msgid "Last successful rebuild: %s. SureRank will attempt a rebuild on the next admin page visit; if the problem persists, WP-Cron or the admin-ajax loopback may be unavailable."
 msgstr "Última reconstrução bem-sucedida: %s. O SureRank tentará uma reconstrução na próxima visita à página de administração; se o problema persistir, o WP-Cron ou o loopback admin-ajax podem estar indisponíveis."
 
@@ -9826,3 +9831,295 @@ msgstr "Faça upgrade para SureRank Pro ou Business e gere imagens Open Graph im
 #: build/seo-popup/index.js:1
 msgid "Checks are based on the published page. Refresh to get the latest results."
 msgstr "As verificações são baseadas na página publicada. Atualize para obter os resultados mais recentes."
+
+#: inc/admin/dashboard.php:307
+#: build/admin-dashboard/index.js:1
+msgid "Learn"
+msgstr "Aprender"
+
+#: inc/admin/seo-popup.php:112
+msgid "Click here"
+msgstr "Clique aqui"
+
+#: inc/api/learn.php:76
+msgid "Chapter identifier."
+msgstr "Identificador do capítulo."
+
+#: inc/api/learn.php:85
+msgid "Step identifier within the chapter."
+msgstr "Identificador da etapa dentro do capítulo."
+
+#: inc/api/learn.php:99
+msgid "Whether the step is completed."
+msgstr "Se a etapa está concluída."
+
+#: build/admin-dashboard/index.js:1
+msgid "Get Started"
+msgstr "Começar"
+
+#: build/admin-dashboard/index.js:1
+msgid "Set up the essentials so SureRank is fully configured from day one."
+msgstr "Configure o essencial para que o SureRank esteja totalmente configurado desde o primeiro dia."
+
+#: build/admin-dashboard/index.js:1
+msgid "Connect Google Search Console"
+msgstr "Conectar Google Search Console"
+
+#: build/admin-dashboard/index.js:1
+msgid "Link your GSC account so SureRank can pull real clicks, impressions, and ranking data into your dashboard."
+msgstr "Vincule sua conta do GSC para que o SureRank possa puxar cliques reais, impressões e dados de classificação para o seu painel."
+
+#: build/admin-dashboard/index.js:1
+msgid "Connect GSC"
+msgstr "Conectar GSC"
+
+#: build/admin-dashboard/index.js:1
+msgid "Set your global title & description templates"
+msgstr "Defina seus modelos globais de título e descrição"
+
+#: build/admin-dashboard/index.js:1
+msgid "Create title and description templates using dynamic tags. SureRank applies them automatically across all your posts, pages, and archives."
+msgstr "Crie modelos de título e descrição usando tags dinâmicas. O SureRank os aplica automaticamente em todas as suas postagens, páginas e arquivos."
+
+#: build/admin-dashboard/index.js:1
+msgid "Configure Templates"
+msgstr "Configurar Modelos"
+
+#: build/admin-dashboard/index.js:1
+msgid "Configure your homepage SEO"
+msgstr "Configure o SEO da sua página inicial"
+
+#: build/admin-dashboard/index.js:1
+msgid "Set a custom title and meta description for your homepage. It's your most important page and needs its own SEO settings."
+msgstr "Defina um título personalizado e uma meta descrição para sua página inicial. É a sua página mais importante e precisa de suas próprias configurações de SEO."
+
+#: build/admin-dashboard/index.js:1
+msgid "Set Homepage SEO"
+msgstr "Definir SEO da Página Inicial"
+
+#: build/admin-dashboard/index.js:1
+msgid "Migrate from your old SEO plugin"
+msgstr "Migrar do seu antigo plugin de SEO"
+
+#: build/admin-dashboard/index.js:1
+msgid "Coming from Yoast, Rank Math, or AIOSEO? Import all your existing titles, descriptions, and settings into SureRank in one click."
+msgstr "Vindo do Yoast, Rank Math ou AIOSEO? Importe todos os seus títulos, descrições e configurações existentes para o SureRank com um clique."
+
+#: build/admin-dashboard/index.js:1
+msgid "Start Migration"
+msgstr "Iniciar Migração"
+
+#: build/admin-dashboard/index.js:1
+msgid "Help Google Find You"
+msgstr "Ajude o Google a Encontrá-lo"
+
+#: build/admin-dashboard/index.js:1
+msgid "Make sure search engines can discover, crawl, and index all your content."
+msgstr "Certifique-se de que os mecanismos de busca possam descobrir, rastrear e indexar todo o seu conteúdo."
+
+#: build/admin-dashboard/index.js:1
+msgid "Configure and enable your XML sitemap"
+msgstr "Configure e ative seu sitemap XML"
+
+#: build/admin-dashboard/index.js:1
+msgid "Choose which post types and pages to include, then submit your sitemap to Google Search Console so every page gets discovered."
+msgstr "Escolha quais tipos de postagens e páginas incluir, e depois envie seu sitemap para o Google Search Console para que cada página seja descoberta."
+
+#: build/admin-dashboard/index.js:1
+msgid "Configure Sitemap"
+msgstr "Configurar Sitemap"
+
+#: build/admin-dashboard/index.js:1
+msgid "Open Sitemap"
+msgstr "Abrir Sitemap"
+
+#: build/admin-dashboard/index.js:1
+msgid "Set robots instructions for your site"
+msgstr "Defina instruções de robots para seu site"
+
+#: build/admin-dashboard/index.js:1
+msgid "Control which pages search engines can index. Set noindex on pages like thank-you pages, login pages, and tag archives that don't belong in search results."
+msgstr "Controle quais páginas os mecanismos de busca podem indexar. Defina noindex em páginas como páginas de agradecimento, páginas de login e arquivos de tags que não pertencem aos resultados de busca."
+
+#: build/admin-dashboard/index.js:1
+msgid "Configure Robots"
+msgstr "Configurar Robots"
+
+#: build/admin-dashboard/index.js:1
+msgid "Set canonical URLs to avoid duplicate content"
+msgstr "Defina URLs canônicas para evitar conteúdo duplicado"
+
+#: build/admin-dashboard/index.js:1
+msgid "Tell search engines which version of a page is the official one. This prevents duplicate content penalties when the same content is reachable at multiple URLs."
+msgstr "Diga aos mecanismos de busca qual versão de uma página é a oficial. Isso evita penalidades por conteúdo duplicado quando o mesmo conteúdo é acessível em várias URLs."
+
+#: build/admin-dashboard/index.js:1
+msgid "Configure Canonicals"
+msgstr "Configurar Canônicos"
+
+#: build/admin-dashboard/index.js:1
+msgid "Fix your site SEO issues"
+msgstr "Corrija os problemas de SEO do seu site"
+
+#: build/admin-dashboard/index.js:1
+msgid "Run SureRank's site-wide health check to see everything rated Poor or Satisfactory, then fix the issues that are holding your site back."
+msgstr "Execute a verificação de saúde do site do SureRank para ver tudo classificado como Ruim ou Satisfatório, e depois corrija os problemas que estão impedindo seu site."
+
+#: build/admin-dashboard/index.js:1
+msgid "View SEO Analysis"
+msgstr "Ver Análise de SEO"
+
+#: build/admin-dashboard/index.js:1
+msgid "Optimize Your Pages"
+msgstr "Otimize Suas Páginas"
+
+#: build/admin-dashboard/index.js:1
+msgid "Use the SureRank metabox to make every post and page work harder in search results."
+msgstr "Use a metabox do SureRank para fazer cada postagem e página trabalhar mais nos resultados de busca."
+
+#: build/admin-dashboard/index.js:1
+msgid "Set title & meta description for a page"
+msgstr "Defina título e meta descrição para uma página"
+
+#: build/admin-dashboard/index.js:1
+msgid "Open the SureRank metabox right from the posts or pages listing, or from inside the editor, to write a custom SEO title and meta description and preview exactly how it'll look in Google before publishing."
+msgstr "Abra a metabox do SureRank diretamente da lista de postagens ou páginas, ou de dentro do editor, para escrever um título de SEO personalizado e uma meta descrição e visualizar exatamente como ficará no Google antes de publicar."
+
+#: build/admin-dashboard/index.js:1
+msgid "View Pages"
+msgstr "Ver Páginas"
+
+#: build/admin-dashboard/index.js:1
+msgid "Run your page-level SEO check"
+msgstr "Execute sua verificação de SEO em nível de página"
+
+#: build/admin-dashboard/index.js:1
+msgid "See a real-time checklist of on-page SEO factors like keyword usage, heading structure, internal links, and image alt text, and fix what’s flagged."
+msgstr "Veja uma lista de verificação em tempo real dos fatores de SEO on-page, como uso de palavras-chave, estrutura de cabeçalhos, links internos e texto alternativo de imagens, e corrija o que for sinalizado."
+
+#: build/admin-dashboard/index.js:1
+msgid "Open Page Analysis"
+msgstr "Abrir Análise de Página"
+
+#: build/admin-dashboard/index.js:1
+msgid "Add schema markup to your content"
+msgstr "Adicione marcação de esquema ao seu conteúdo"
+
+#: build/admin-dashboard/index.js:1
+msgid "Pick the right schema type for each page (Article, FAQ, HowTo, Product) to help Google understand your content and unlock rich results in search."
+msgstr "Escolha o tipo de esquema certo para cada página (Artigo, FAQ, Como Fazer, Produto) para ajudar o Google a entender seu conteúdo e desbloquear resultados ricos na pesquisa."
+
+#: build/admin-dashboard/index.js:1
+msgid "Optimize your images with alt text"
+msgstr "Otimize suas imagens com texto alternativo"
+
+#: build/admin-dashboard/index.js:1
+msgid "SureRank automatically generates alt text for your images, improving how search engines understand your content and making your site more accessible."
+msgstr "O SureRank gera automaticamente texto alternativo para suas imagens, melhorando a forma como os motores de busca entendem seu conteúdo e tornando seu site mais acessível."
+
+#: build/admin-dashboard/index.js:1
+msgid "Configure Image SEO"
+msgstr "Configurar SEO de Imagem"
+
+#: build/admin-dashboard/index.js:1
+msgid "Social Appearance"
+msgstr "Aparência Social"
+
+#: build/admin-dashboard/index.js:1
+msgid "Control exactly how your content looks when shared on Facebook, LinkedIn, and X."
+msgstr "Controle exatamente como seu conteúdo aparece quando compartilhado no Facebook, LinkedIn e X."
+
+#: build/admin-dashboard/index.js:1
+msgid "Set your fallback Open Graph image"
+msgstr "Defina sua imagem de fallback do Open Graph"
+
+#: build/admin-dashboard/index.js:1
+msgid "Choose the default image that appears whenever any page on your site is shared on social. Used when a page has no featured image of its own."
+msgstr "Escolha a imagem padrão que aparece sempre que qualquer página do seu site é compartilhada nas redes sociais. Usada quando uma página não tem uma imagem em destaque própria."
+
+#: build/admin-dashboard/index.js:1
+msgid "Configure OG Image"
+msgstr "Configurar Imagem OG"
+
+#: build/admin-dashboard/index.js:1
+msgid "Add your Facebook profile links"
+msgstr "Adicione os links do seu perfil do Facebook"
+
+#: build/admin-dashboard/index.js:1
+msgid "Enter your site's and author's Facebook page URLs. SureRank adds them to your structured data so search engines link your brand to its verified social profile."
+msgstr "Insira as URLs da página do Facebook do seu site e do autor. O SureRank as adiciona aos seus dados estruturados para que os motores de busca vinculem sua marca ao seu perfil social verificado."
+
+#: build/admin-dashboard/index.js:1
+msgid "Configure Facebook"
+msgstr "Configurar Facebook"
+
+#: build/admin-dashboard/index.js:1
+msgid "Set up X (Twitter) cards"
+msgstr "Configure cartões do X (Twitter)"
+
+#: build/admin-dashboard/index.js:1
+msgid "Add your X username and choose your card type so your content displays as a rich image preview, not just a plain link, when shared on X."
+msgstr "Adicione seu nome de usuário do X e escolha seu tipo de cartão para que seu conteúdo seja exibido como uma prévia rica em imagem, e não apenas um link simples, quando compartilhado no X."
+
+#: build/admin-dashboard/index.js:1
+msgid "Configure X Cards"
+msgstr "Configurar Cartões do X"
+
+#: build/admin-dashboard/index.js:1
+msgid "Override social settings for a specific page"
+msgstr "Substituir configurações sociais para uma página específica"
+
+#: build/admin-dashboard/index.js:1
+msgid "Open the SureRank metabox right from the posts or pages listing, or from inside the editor, then use the Social tab to set a different image, title, or description for that page when it’s shared."
+msgstr "Abra a metabox do SureRank diretamente da lista de posts ou páginas, ou de dentro do editor, e use a aba Social para definir uma imagem, título ou descrição diferente para essa página quando for compartilhada."
+
+#: build/admin-dashboard/index.js:1
+msgid "Could not update Learn progress."
+msgstr "Não foi possível atualizar o progresso de Aprendizado."
+
+#: build/admin-dashboard/index.js:1
+msgid "Continue Learning"
+msgstr "Continuar Aprendendo"
+
+#: build/admin-dashboard/index.js:1
+#, js-format
+msgid "%1$d of %2$d setup steps complete. A few more and your site is ready."
+msgstr "%1$d de %2$d etapas de configuração concluídas. Mais algumas e seu site estará pronto."
+
+#: build/admin-dashboard/index.js:1
+msgid "Continue"
+msgstr "Continuar"
+
+#: build/admin-dashboard/index.js:1
+msgid "Auto-detected"
+msgstr "Detectado automaticamente"
+
+#: build/admin-dashboard/index.js:1
+#, js-format
+msgid "Learn more about %s"
+msgstr "Saiba mais sobre %s"
+
+#: build/admin-dashboard/index.js:1
+#, js-format
+msgid "Chapter progress: %d%%"
+msgstr "Progresso do capítulo: %d%%"
+
+#: build/admin-dashboard/index.js:1
+msgid "You're all set!"
+msgstr "Você está pronto!"
+
+#: build/admin-dashboard/index.js:1
+msgid "You’ve completed every recommended setup step. Visit the docs or reach out if you’d like to go deeper."
+msgstr "Você completou todas as etapas de configuração recomendadas. Visite a documentação ou entre em contato se quiser se aprofundar."
+
+#: build/admin-dashboard/index.js:1
+msgid "Open Docs"
+msgstr "Abrir Documentos"
+
+#: build/admin-dashboard/index.js:1
+msgid "Contact Support"
+msgstr "Contactar Suporte"
+
+#: build/admin-dashboard/index.js:1
+msgid "Set up SureRank end to end with a step-by-step guide to make your site discoverable, shareable, and ready to rank."
+msgstr "Configure o SureRank de ponta a ponta com um guia passo a passo para tornar seu site descobrível, compartilhável e pronto para ranquear."

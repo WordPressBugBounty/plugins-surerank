@@ -19,6 +19,7 @@ use SureRank\Inc\Admin\BulkEdit;
 use SureRank\Inc\Admin\Dashboard;
 use SureRank\Inc\Admin\Onboarding;
 use SureRank\Inc\Admin\Rest_Site_Health;
+use SureRank\Inc\Admin\Review_Notice;
 use SureRank\Inc\Admin\Search_Console_Widget;
 use SureRank\Inc\Admin\Seo_Bar;
 use SureRank\Inc\Admin\Seo_Popup;
@@ -201,6 +202,7 @@ class Loader {
 		Routes::get_instance();
 		Analytics::get_instance();
 		Admin_Notice::get_instance();
+		Review_Notice::get_instance();
 
 		do_action( 'surerank_after_load_routes' );
 	}

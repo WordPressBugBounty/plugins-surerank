@@ -2,6 +2,7 @@ import { __ } from '@wordpress/i18n';
 import { Check, ExternalLink } from 'lucide-react';
 import { Button, Title, Badge, Text } from '@bsf/force-ui';
 import { exitURL } from '@Onboarding/components/exit-button';
+import { getSurerankUtmUrl } from '@/global/utils/utm';
 
 const defaultSettings = [
 	{
@@ -52,7 +53,11 @@ const Success = () => {
 
 	const handleDocumentation = () => {
 		window.open(
-			'https://surerank.com/docs/',
+			getSurerankUtmUrl(
+				'https://surerank.com/docs/',
+				'onboarding',
+				'documentation'
+			),
 			'_blank',
 			'noopener,noreferrer'
 		);

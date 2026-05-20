@@ -618,6 +618,15 @@ class Controller {
 		$title         = $product['title'];
 		$text          = $product['text'];
 		$link_url      = $product['link_url'];
+		$report_link   = add_query_arg(
+			[
+				'utm_source'   => 'surerank_plugin',
+				'utm_medium'   => 'wordpress_plugin',
+				'utm_campaign' => 'core_plugin',
+				'utm_content'  => 'surerank_seo_weekly_report',
+			],
+			$link_url
+		);
 		$link_text     = $product['link_text'];
 		$logo_url      = $product['logo_url'];
 		$product_title = $product['product_title'];
@@ -629,7 +638,7 @@ class Controller {
 			<img src="<?php echo esc_url( $logo_url ); ?>" alt="<?php echo esc_attr( $product_title ); ?>" style="text-align: left;" width="20" height="20" />
 			<h3 style="margin: 0 0 2px 0; font-size: 14px; font-weight: 600; line-height: 1.43; color: #141338;"><?php echo esc_html( $title ); ?></h3>
 			<p style="margin: 0 0 4px 0; font-size: 12px; font-weight: 400; line-height: 1.33; color: #4F4E7C;"><?php echo esc_html( $text ); ?></p>
-			<a href="<?php echo esc_url( $link_url . '?utm_medium=surerank-seo-weekly-report' ); ?>" style="display: inline-block; padding: 0; color: #4338CA; font-size: 12px; font-weight: 600; line-height: 1.33; text-decoration: none; border-radius: 4px;"><?php echo esc_html( $link_text ); ?></a>
+			<a href="<?php echo esc_url( $report_link ); ?>" style="display: inline-block; padding: 0; color: #4338CA; font-size: 12px; font-weight: 600; line-height: 1.33; text-decoration: none; border-radius: 4px;"><?php echo esc_html( $link_text ); ?></a>
 		</div>
 		<?php
 		$content = ob_get_clean();

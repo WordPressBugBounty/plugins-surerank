@@ -12,6 +12,7 @@ namespace SureRank\Inc\Frontend;
 
 use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Traits\Get_Instance;
+use SureRank\Inc\Traits\Tag_Attribute_Helpers;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -25,6 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Image_Seo {
 
 	use Get_Instance;
+	use Tag_Attribute_Helpers;
 
 	/**
 	 * Check if image enhancement is enabled
@@ -234,7 +236,7 @@ class Image_Seo {
 			return $tag;
 		}
 
-		return $this->apply_enhancements( $attributes, $enhancements, $image_src, $context );
+		return $this->apply_enhancements( $tag, $attributes, $enhancements, $image_src, $context );
 	}
 
 	/**
@@ -327,23 +329,30 @@ class Image_Seo {
 	}
 
 	/**
-	 * Apply enhancements to image attributes
+	 * Apply enhancements directly to the original tag string. Injecting (rather
+	 * than rebuilding from parsed attributes) preserves boolean attributes
+	 * (loading, decoding, etc.) and any data-* attrs the regex parser misses.
 	 *
-	 * @param array<string, string>                                  $attributes Original attributes.
+	 * @param string                                                 $tag Original image tag.
+	 * @param array<string, string>                                  $attributes Parsed attributes.
 	 * @param array<string, string>                                  $enhancements Needed enhancements.
 	 * @param string                                                 $src Image source.
 	 * @param object{title: string, slug: string, site_name: string} $context Processing context.
 	 * @return string Enhanced image tag
 	 * @since 1.5.0
 	 */
-	private function apply_enhancements( $attributes, $enhancements, $src, $context ): string {
+	private function apply_enhancements( $tag, $attributes, $enhancements, $src, $context ): string {
 		$filename = $this->extract_clean_filename( $src );
+		$result   = $tag;
 
 		foreach ( $enhancements as $attr => $template ) {
-			$attributes[ $attr ] = $this->resolve_template( $template, $context, $filename );
+			$value  = $this->resolve_template( $template, $context, $filename );
+			$result = array_key_exists( $attr, $attributes )
+				? $this->replace_attribute_value( $result, $attr, $value )
+				: $this->inject_attribute( $result, $attr, $value );
 		}
 
-		return $this->build_image_tag( $attributes );
+		return $result;
 	}
 
 	/**
@@ -443,32 +452,4 @@ class Image_Seo {
 		return apply_filters( 'surerank_image_seo_variable_map', $default_vars, $context, $filename );
 	}
 
-	/**
-	 * Build complete image tag from attributes
-	 *
-	 * @param array<string, string> $attributes Attribute pairs.
-	 * @return string Complete image tag
-	 * @since 1.5.0
-	 */
-	private function build_image_tag( $attributes ): string {
-		$attr_pairs = [];
-
-		foreach ( $attributes as $name => $value ) {
-			$attr_pairs[] = $this->format_attribute_pair( $name, $value );
-		}
-
-		return sprintf( '<img %s>', implode( ' ', $attr_pairs ) );
-	}
-
-	/**
-	 * Format single attribute pair
-	 *
-	 * @param string $name Attribute name.
-	 * @param string $value Attribute value.
-	 * @return string Formatted pair
-	 * @since 1.5.0
-	 */
-	private function format_attribute_pair( $name, $value ): string {
-		return sprintf( '%s="%s"', esc_attr( $name ), esc_attr( $value ) );
-	}
 }

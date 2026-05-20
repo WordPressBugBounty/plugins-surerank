@@ -7,6 +7,7 @@ import { SiteSeoChecksSummary } from './site-seo-checks';
 import { useNavigate } from '@tanstack/react-router';
 import UpgradeToPro from '@AdminDashboard/upgrade-to-pro';
 import WelcomeCard from './welcome-card';
+import LearnProgressCard from './learn-progress-card';
 import { isProActive } from '@/functions/nudges';
 import currentUserCan from '@/functions/role-capabilities';
 
@@ -176,6 +177,8 @@ const Dashboard = () => {
 
 					{ /* Show UpgradeToPro when pro is not active */ }
 					{ ! isProActive() && <UpgradeToPro /> }
+
+					<LearnProgressCard />
 
 					{ /* Quick Access */ }
 					<Container
