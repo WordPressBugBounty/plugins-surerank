@@ -42,8 +42,8 @@ class Product {
 	 */
 	public function __construct() {
 
-		// Check if WooCommerce is active.
-		if ( ! Helper::wc_status() ) {
+		// Check if the WooCommerce integration is active.
+		if ( ! Helper::woocommerce_enabled() ) {
 			return;
 		}
 		// Set product-specific meta data.
@@ -58,7 +58,7 @@ class Product {
 	 * @return array<string, mixed>
 	 */
 	public function get_meta_data( $meta_data ) {
-		if ( ! Helper::is_product() && ! Helper::wc_status() ) {
+		if ( ! Helper::is_product() && ! Helper::woocommerce_enabled() ) {
 			return $meta_data;
 		}
 

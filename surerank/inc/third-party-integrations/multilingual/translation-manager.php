@@ -136,26 +136,14 @@ class Translation_Manager {
 				continue;
 			}
 
-			$translated_post_data = [
-				'id'               => $post->ID,
-				'title'            => $this->get_translated_title( $post->ID, $lang_code ),
-				'link'             => $translation['url'],
-				'post_type'        => $post->post_type,
-				'updated'          => $post_data['updated'],
-				'images'           => $post_data['images'] ?? 0,
-				'images_data'      => $post_data['images_data'] ?? [],
-				'translations'     => $translations,
-				'default_language' => $default_lang,
-			];
-
-			// Copy additional fields if they exist (e.g., news data).
-			if ( isset( $post_data['is_news'] ) ) {
-				$translated_post_data['is_news'] = $post_data['is_news'];
-			}
-
-			if ( isset( $post_data['news_data'] ) ) {
-				$translated_post_data['news_data'] = $post_data['news_data'];
-			}
+			$translated_post_data                     = $post_data;
+			$translated_post_data['id']               = $post->ID;
+			$translated_post_data['title']            = $this->get_translated_title( $post->ID, $lang_code );
+			$translated_post_data['link']             = $translation['url'];
+			$translated_post_data['post_type']        = $post->post_type;
+			$translated_post_data['updated']          = $post_data['updated'];
+			$translated_post_data['translations']     = $translations;
+			$translated_post_data['default_language'] = $default_lang;
 
 			$entries[] = $translated_post_data;
 		}
@@ -236,18 +224,17 @@ class Translation_Manager {
 				continue;
 			}
 
-			$translated_term_data = [
-				'id'               => $term->term_id,
-				'name'             => $this->get_translated_term_name( $term->term_id, $term->taxonomy ),
-				'slug'             => $term->slug,
-				'link'             => $translation['url'],
-				'taxonomy'         => $term->taxonomy,
-				'description'      => $term->description,
-				'count'            => $term->count,
-				'updated'          => $term_data['updated'],
-				'translations'     => $translations,
-				'default_language' => $default_lang,
-			];
+			$translated_term_data                     = $term_data;
+			$translated_term_data['id']               = $term->term_id;
+			$translated_term_data['name']             = $this->get_translated_term_name( $term->term_id, $term->taxonomy );
+			$translated_term_data['slug']             = $term->slug;
+			$translated_term_data['link']             = $translation['url'];
+			$translated_term_data['taxonomy']         = $term->taxonomy;
+			$translated_term_data['description']      = $term->description;
+			$translated_term_data['count']            = $term->count;
+			$translated_term_data['updated']          = $term_data['updated'];
+			$translated_term_data['translations']     = $translations;
+			$translated_term_data['default_language'] = $default_lang;
 
 			$entries[] = $translated_term_data;
 		}

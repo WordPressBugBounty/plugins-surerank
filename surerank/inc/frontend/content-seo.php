@@ -184,7 +184,7 @@ class Content_Seo {
 	 */
 	private function register_hooks(): void {
 		$has_images = $this->image_processor->is_enabled();
-		$has_links  = $this->link_processor->is_enabled();
+		$has_links  = $this->link_processor->is_processing_enabled();
 
 		if ( ! $has_images && ! $has_links ) {
 			return;

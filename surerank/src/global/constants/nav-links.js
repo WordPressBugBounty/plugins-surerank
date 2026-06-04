@@ -19,6 +19,7 @@ import {
 	Users,
 	Ellipsis,
 	File,
+	Plug,
 } from 'lucide-react';
 import { applyFilters } from '@wordpress/hooks';
 import { __ } from '@wordpress/i18n';
@@ -325,6 +326,12 @@ export const getNavLinks = () => {
 					path: '/tools/miscellaneous',
 					label: __( 'Miscellaneous', 'surerank' ),
 					icon: Settings,
+					migratable: false,
+				},
+				{
+					path: '/tools/integrations',
+					label: __( 'Integrations', 'surerank' ),
+					icon: Plug,
 					migratable: false,
 				},
 				{

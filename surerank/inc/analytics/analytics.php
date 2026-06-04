@@ -69,8 +69,7 @@ class Analytics {
 		}
 
 		$surerank_bsf_analytics = \BSF_Analytics_Loader::get_instance();
-
-		$deactivation_surveys = [
+		$deactivation_surveys   = [
 			[
 				'id'                => 'deactivation-survey-surerank',
 				'popup_logo'        => SURERANK_URL . 'inc/admin/assets/images/surerank.png',
@@ -303,6 +302,10 @@ class Analytics {
 					'gsc_connected',
 					'migration_completed',
 					'first_ai_content_generated',
+					'first_ai_schema_recommendation_generated',
+					'first_ai_schema_recommendation_added',
+					'first_ai_schema_upgrade_clicked',
+					'first_ai_schema_group_dismissed',
 					'first_schema_added',
 					'first_redirect_created',
 					'first_bulk_action_used',
@@ -400,6 +403,26 @@ class Analytics {
 			if ( $ai_used ) {
 				$events->track( 'first_ai_content_generated', 'yes' );
 			}
+		}
+
+		// First schema recommendation generated.
+		if ( get_option( 'surerank_ai_schema_recommendation_used', false ) ) {
+			$events->track( 'first_ai_schema_recommendation_generated', 'yes' );
+		}
+
+		// First recommended schema added via quick action.
+		if ( get_option( 'surerank_ai_schema_recommendation_added', false ) ) {
+			$events->track( 'first_ai_schema_recommendation_added', 'yes' );
+		}
+
+		// First schema recommendation upgrade CTA click.
+		if ( get_option( 'surerank_ai_schema_recommendation_upgrade_clicked', false ) ) {
+			$events->track( 'first_ai_schema_upgrade_clicked', 'yes' );
+		}
+
+		// First recommendation group dismissed.
+		if ( get_option( 'surerank_ai_schema_recommendation_group_dismissed', false ) ) {
+			$events->track( 'first_ai_schema_group_dismissed', 'yes' );
 		}
 
 		// First schema added (site-wide or page-specific).

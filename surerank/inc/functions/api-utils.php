@@ -34,7 +34,7 @@ abstract class API_Utils {
 		if ( ! defined( 'SURERANK_CREDIT_SERVER_API' ) ) {
 			define( 'SURERANK_CREDIT_SERVER_API', 'https://credits.startertemplates.com/' );
 		}
-		return SURERANK_CREDIT_SERVER_API;
+		return trailingslashit( (string) SURERANK_CREDIT_SERVER_API );
 	}
 
 	/**
@@ -44,13 +44,28 @@ abstract class API_Utils {
 	 * @return string|WP_Error
 	 */
 	public function get_auth_token() {
-		$token = apply_filters( 'surerank_content_generation_auth_token', $this->get_auth_data( 'user_email' ) );
+		$auth_token = $this->get_auth_data( 'user_email' );
+		$token      = '';
+
+		if ( ! is_wp_error( $auth_token ) && is_string( $auth_token ) ) {
+			$token = sanitize_text_field( $auth_token );
+		}
+
+		if ( '' === $token ) {
+			$token = $this->get_license_token();
+		}
+
+		$token = apply_filters( 'surerank_content_generation_auth_token', $token );
 
 		if ( empty( $token ) || is_wp_error( $token ) ) {
 			return new WP_Error( 'no_auth_token', __( 'No authentication token found. Please connect your account.', 'surerank' ) );
 		}
 
-		return $token;
+		if ( ! is_string( $token ) ) {
+			return new WP_Error( 'invalid_auth_token', __( 'Invalid authentication token format.', 'surerank' ) );
+		}
+
+		return sanitize_text_field( $token );
 	}
 
 	/**
@@ -82,21 +97,28 @@ abstract class API_Utils {
 			return new WP_Error( 'no_auth_token', __( 'No authentication token found. Please connect your account.', 'surerank' ) );
 		}
 
-		$url = self::get_credit_system_api_url() . $route;
+		$url = $this->build_credit_system_url( $route );
 
 		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 		$encoded_token = base64_encode( $auth_token );
 
-		return Requests::get(
-			$url,
-			[
-				'headers' => [
-					'X-Token'      => $encoded_token,
-					'Content-Type' => 'application/json; charset=utf-8',
-				],
-				'timeout' => $timeout, // phpcs:ignore WordPressVIPMinimum.Performance.RemoteRequestTimeout.timeout_timeout
-			]
-		);
+		$args = [
+			'headers' => [
+				'X-Token'      => $encoded_token,
+				'Content-Type' => 'application/json; charset=utf-8',
+			],
+			'timeout' => $timeout, // phpcs:ignore WordPressVIPMinimum.Performance.RemoteRequestTimeout.timeout_timeout
+		];
+
+		if ( function_exists( 'vip_safe_wp_remote_get' ) ) {
+			// Signature: vip_safe_wp_remote_get( $url, $fallback_value, $threshold, $timeout, $retry, $args ).
+			// $args (with the auth headers) is the 6th argument; the function ignores $args['timeout']
+			// and uses the 4th argument. An empty fallback keeps failures returning a WP_Error.
+			return vip_safe_wp_remote_get( $url, '', 3, $timeout, 20, $args );
+		}
+
+		// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get
+		return wp_remote_get( $url, $args );
 	}
 
 	/**
@@ -115,7 +137,7 @@ abstract class API_Utils {
 			return new WP_Error( 'no_auth_token', __( 'No authentication token found. Please connect your account.', 'surerank' ) );
 		}
 
-		$url = self::get_credit_system_api_url() . $route;
+		$url = $this->build_credit_system_url( $route );
 
 		$body = wp_json_encode( $request_data );
 
@@ -126,7 +148,7 @@ abstract class API_Utils {
 		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 		$encoded_token = base64_encode( $auth_token );
 
-		return Requests::post(
+		return wp_remote_post(
 			$url,
 			[
 				'headers' => [
@@ -158,5 +180,41 @@ abstract class API_Utils {
 		}
 
 		return $auth_data;
+	}
+
+	/**
+	 * Build a normalized credit-system endpoint URL.
+	 *
+	 * @since 1.7.2
+	 * @param string $route API route.
+	 * @return string
+	 */
+	protected function build_credit_system_url( $route ) {
+		$base  = self::get_credit_system_api_url();
+		$route = ltrim( (string) $route, '/' );
+
+		return $base . $route;
+	}
+
+	/**
+	 * Get license token as fallback for API authentication.
+	 *
+	 * @since 1.7.2
+	 * @return string
+	 */
+	protected function get_license_token() {
+		$license_status = sanitize_text_field( (string) get_option( 'surerank_pro_license_status', '' ) );
+		$license_data   = get_option( 'surerankpro_license_options', [] );
+
+		if ( 'licensed' !== strtolower( $license_status ) || ! is_array( $license_data ) ) {
+			return '';
+		}
+
+		$license_token = sanitize_text_field( (string) ( $license_data['sc_license_key'] ?? '' ) );
+		if ( '' !== $license_token ) {
+			return $license_token;
+		}
+
+		return sanitize_text_field( (string) ( $license_data['sc_license_id'] ?? '' ) );
 	}
 }

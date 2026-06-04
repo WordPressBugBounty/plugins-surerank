@@ -131,6 +131,24 @@ class Dashboard extends Api_Base {
 				'methods'  => WP_REST_Server::CREATABLE,
 				'callback' => [ $this, 'verify_existing_property' ],
 			],
+			'url-inspection'         => [
+				'methods'  => WP_REST_Server::READABLE,
+				'callback' => [ $this, 'get_url_inspection' ],
+				'args'     => [
+					'post_id' => [
+						'type'     => 'integer',
+						'required' => false,
+					],
+					'term_id' => [
+						'type'     => 'integer',
+						'required' => false,
+					],
+					'refresh' => [
+						'type'     => 'boolean',
+						'required' => false,
+					],
+				],
+			],
 		];
 
 		foreach ( $routes as $endpoint => $args ) {
@@ -332,6 +350,73 @@ class Dashboard extends Api_Base {
 		} else {
 			Send_Json::error( $result );
 		}
+	}
+
+	/**
+	 * Get URL Inspection result for a post or term.
+	 *
+	 * Thin pass-through: validates request, checks per-object cap,
+	 * delegates cache/API logic to Url_Inspection.
+	 *
+	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
+	 * @return void
+	 * @since 1.7.5
+	 */
+	public function get_url_inspection( $request ) {
+		$post_id = absint( $request->get_param( 'post_id' ) );
+		$term_id = absint( $request->get_param( 'term_id' ) );
+		$refresh = (bool) $request->get_param( 'refresh' );
+
+		if ( ! $post_id && ! $term_id ) {
+			Send_Json::error(
+				[
+					'message' => __( 'A post_id or term_id is required.', 'surerank' ),
+					'code'    => 'missing_object',
+				]
+			);
+			return;
+		}
+
+		if ( ! Url_Inspection::selected_site_matches_current() ) {
+			Send_Json::error(
+				[
+					'message' => __( 'The connected Search Console property does not match this site.', 'surerank' ),
+					'code'    => 'site_mismatch',
+				]
+			);
+			return;
+		}
+
+		if ( $post_id && ! current_user_can( 'edit_post', $post_id ) ) {
+			Send_Json::error(
+				[
+					'message' => __( 'You do not have permission to view indexing status for this post.', 'surerank' ),
+					'code'    => 'forbidden_object',
+				]
+			);
+			return;
+		}
+
+		if ( $term_id && ! current_user_can( 'edit_term', $term_id ) ) {
+			Send_Json::error(
+				[
+					'message' => __( 'You do not have permission to view indexing status for this term.', 'surerank' ),
+					'code'    => 'forbidden_object',
+				]
+			);
+			return;
+		}
+
+		$result = $term_id
+			? Url_Inspection::get_instance()->get_for_term( $term_id, $refresh )
+			: Url_Inspection::get_instance()->get_for_post( $post_id, $refresh );
+
+		if ( $result['ok'] ) {
+			Send_Json::success( $result['payload'] );
+			return;
+		}
+
+		Send_Json::error( $result['payload'] );
 	}
 
 }

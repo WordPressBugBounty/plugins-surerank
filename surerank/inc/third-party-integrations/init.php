@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\ThirdPartyIntegrations\Multilingual\Init as Multilingual;
 use SureRank\Inc\Traits\Get_Instance;
 
@@ -64,15 +65,18 @@ class Init {
 	 * @return void
 	 */
 	public function load_frontend_integrations(): void {
+		$enable_woocommerce_integration = $this->is_integration_enabled( 'enable_woocommerce_integration' );
+		$enable_angie_integration       = $this->is_integration_enabled( 'enable_angie_integration' );
+
 		if ( defined( 'BRICKS_VERSION' ) ) {
 			Bricks::get_instance();
 		}
 
-		if ( class_exists( 'WooCommerce' ) ) {
+		if ( class_exists( 'WooCommerce' ) && $enable_woocommerce_integration ) {
 			Woocommerce::get_instance();
 		}
 
-		if ( defined( 'ANGIE_VERSION' ) ) {
+		if ( defined( 'ANGIE_VERSION' ) && $enable_angie_integration ) {
 			Angie::get_instance();
 		}
 
@@ -89,5 +93,22 @@ class Init {
 		}
 
 		Multilingual::get_instance();
+	}
+
+	/**
+	 * Check whether a third-party integration is enabled.
+	 *
+	 * Settings are normalized to booleans before being used with plugin
+	 * availability checks so malformed stored values do not accidentally load
+	 * an integration.
+	 *
+	 * @param string $setting_key Integration setting key.
+	 * @return bool
+	 * @since 1.7.5
+	 */
+	private function is_integration_enabled( string $setting_key ): bool {
+		$value = Settings::get( $setting_key );
+
+		return true === $value || 1 === $value || '1' === $value || 'true' === $value;
 	}
 }

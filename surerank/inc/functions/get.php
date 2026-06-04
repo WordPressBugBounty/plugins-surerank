@@ -256,9 +256,14 @@ class Get {
 		$trimmed = mb_substr( trim( $description ), 0, $limit );
 
 		if ( mb_strlen( $description ) > $limit ) {
-			$last_space = mb_strrpos( $trimmed, ' ' );
+			// Trim back to the last space using byte-based strrpos/substr so this works
+			// without the mbstring extension (mb_strrpos is not polyfilled by WordPress
+			// core, unlike mb_strlen/mb_substr). A space is single-byte ASCII, so cutting
+			// at its byte offset never splits a multibyte character; the visible result
+			// is identical to mb_strrpos/mb_substr.
+			$last_space = strrpos( $trimmed, ' ' );
 			if ( $last_space !== false ) {
-				$trimmed = mb_substr( $trimmed, 0, $last_space );
+				$trimmed = substr( $trimmed, 0, $last_space );
 			}
 		}
 

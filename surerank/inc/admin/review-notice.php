@@ -3,7 +3,7 @@
  * Review Notice handler.
  *
  * @package SureRank\Inc\Admin
- * @since x.x.x
+ * @since 1.7.5
  */
 
 namespace SureRank\Inc\Admin;
@@ -115,7 +115,28 @@ class Review_Notice {
 			]
 		);
 
+		add_action( 'astra_notice_before_markup_' . self::NOTICE_ID, [ $this, 'print_notice_styles' ] );
 		add_action( 'astra_notice_after_markup_' . self::NOTICE_ID, [ $this, 'enqueue_notice_response_script' ] );
+	}
+
+	/**
+	 * Print scoped notice styles. Fires only when this notice renders.
+	 *
+	 * @return void
+	 */
+	public function print_notice_styles(): void {
+		?>
+		<style>
+			#<?php echo esc_attr( self::NOTICE_ID ); ?> .notice-image {
+				align-self: normal;
+				margin-top: 4px;
+			}
+
+			#<?php echo esc_attr( self::NOTICE_ID ); ?> .notice-image img.custom-logo {
+				max-width: 32px;
+			}
+		</style>
+		<?php
 	}
 
 	/**

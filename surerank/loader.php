@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+use SureRank\Inc\Abilities\Abilities_Registrar;
 use SureRank\Inc\Admin\Admin_Notice;
 use SureRank\Inc\Admin\Attachment;
 use SureRank\Inc\Admin\BulkActions;
@@ -57,8 +58,10 @@ use SureRank\Inc\Functions\Cron;
 use SureRank\Inc\Functions\Defaults;
 use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Helper;
+use SureRank\Inc\Functions\Modified_Date_Lock;
 use SureRank\Inc\Functions\Update;
 use SureRank\Inc\GoogleSearchConsole\Auth;
+use SureRank\Inc\GoogleSearchConsole\Url_Inspection;
 use SureRank\Inc\Lib\Surerank_Nps_Survey;
 use SureRank\Inc\Modules\Ai_Auth\Init as Ai_Auth_Init;
 use SureRank\Inc\Modules\Content_Generation\Init as Content_Generation_Init;
@@ -100,9 +103,14 @@ class Loader {
 		add_action( 'plugins_loaded', [ $this, 'load_routes' ], 10 );
 
 		add_action( 'init', [ $this, 'load_textdomain' ], 10 );
+		add_action( 'init', [ Url_Inspection::class, 'register_meta_keys' ], 11 );
 		add_action( 'init', [ $this, 'load_nps' ], 99 );
+		// Disable the NPS survey entirely (code is kept, just never shown).
+		add_filter( 'surerank_disable_nps_survey', '__return_true' );
 		add_action( 'init', [ $this, 'setup' ], 999 );
 		add_action( 'init', [ $this, 'flush_rules' ], 999 );
+
+		add_action( 'wp_loaded', [ $this, 'track_cron_run' ], 0 );
 
 		register_activation_hook( SURERANK_FILE, [ $this, 'activation' ] );
 		register_deactivation_hook( SURERANK_FILE, [ $this, 'deactivation' ] );
@@ -199,6 +207,7 @@ class Loader {
 	public function load_routes() {
 		do_action( 'surerank_before_load_routes' );
 
+		Abilities_Registrar::get_instance();
 		Routes::get_instance();
 		Analytics::get_instance();
 		Admin_Notice::get_instance();
@@ -314,6 +323,27 @@ class Loader {
 		Checksum::get_instance()->clear_checksum();
 
 		delete_option( 'surerank_cron_test_ok' );
+		delete_option( 'surerank_last_cron_run' );
+	}
+
+	/**
+	 * Record a timestamp on every cron request so Helper::are_crons_available()
+	 * can detect server-side cron when DISABLE_WP_CRON or ALTERNATE_WP_CRON is set.
+	 *
+	 * @since 1.7.5
+	 * @return void
+	 */
+	public function track_cron_run(): void {
+		if ( ! defined( 'DOING_CRON' ) || ! DOING_CRON ) {
+			return;
+		}
+		$now      = time();
+		$last_run = (int) get_option( 'surerank_last_cron_run', 0 );
+		// Throttle writes to once per minute.
+		if ( $last_run > 0 && ( $now - $last_run ) < MINUTE_IN_SECONDS ) {
+			return;
+		}
+		update_option( 'surerank_last_cron_run', $now, false );
 	}
 
 	/**
@@ -494,6 +524,7 @@ class Loader {
 			Crawl_Optimization::class,
 			Api_Init::class,
 			Compat::class,
+			Modified_Date_Lock::class,
 			Cron::class,
 			Checksum::class,
 			Integrations_Init::class,

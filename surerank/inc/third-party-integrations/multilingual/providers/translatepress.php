@@ -317,11 +317,16 @@ class Translatepress implements Provider {
 
 			$pattern = '/' . ltrim( wp_make_link_relative( $pattern ), '/' );
 
-			// Trailing /* wildcard -> prefix match on parent directory.
+			// Trailing /* wildcard -> match the directory itself or its descendants.
 			if ( '/*' === substr( $pattern, -2 ) ) {
-				$prefix = rtrim( substr( $pattern, 0, -1 ), '/' );
+				$prefix        = rtrim( substr( $pattern, 0, -1 ), '/' );
+				$relative_norm = rtrim( $relative, '/' );
 
-				if ( '' === $prefix || 0 === strpos( rtrim( $relative, '/' ), $prefix ) ) {
+				if (
+					'' === $prefix ||
+					$relative_norm === $prefix ||
+					0 === strpos( $relative_norm, $prefix . '/' )
+				) {
 					return true;
 				}
 				continue;

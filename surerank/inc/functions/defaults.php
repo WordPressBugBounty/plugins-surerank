@@ -165,6 +165,21 @@ class Defaults {
 	];
 
 	/**
+	 * Default values for the global - Integrations.
+	 *
+	 * These flags control whether SureRank loads optional compatibility layers
+	 * for supported third-party plugins. They default to enabled so existing
+	 * plugin behavior continues to work as soon as the matching plugin is active.
+	 *
+	 * @var array<string, mixed>
+	 * @since 1.7.5
+	 */
+	private $global_integrations_defaults = [
+		'enable_woocommerce_integration' => true,
+		'enable_angie_integration'       => true,
+	];
+
+	/**
 	 * Default values for the global - Advanced - Robots.
 	 *
 	 * @var array<string, mixed>
@@ -264,6 +279,7 @@ class Defaults {
 					$this->get_robots_defaults(),
 					$this->get_images_defaults(),
 					$this->get_advanced_miscellaneous_defaults(),
+					$this->get_integrations_defaults(),
 					[
 						'schemas' => Utils::get_default_schemas(),
 					],
@@ -474,5 +490,39 @@ class Defaults {
 	 */
 	private function get_advanced_miscellaneous_defaults() {
 		return apply_filters( 'surerank_advanced_miscellaneous_defaults', $this->global_advanced_miscellaneous_defaults );
+	}
+
+	/**
+	 * Get integrations defaults with filter.
+	 *
+	 * The `surerank_integrations_defaults` filter can be used to override the
+	 * default enabled state for supported third-party integrations. Returned
+	 * values are normalized to booleans before they are merged into settings.
+	 *
+	 * @return array<string, mixed>
+	 * @since 1.7.5
+	 */
+	private function get_integrations_defaults() {
+		$defaults = apply_filters( 'surerank_integrations_defaults', $this->global_integrations_defaults );
+
+		if ( ! is_array( $defaults ) ) {
+			$defaults = $this->global_integrations_defaults;
+		}
+
+		return [
+			'enable_woocommerce_integration' => $this->sanitize_boolean_default( $defaults['enable_woocommerce_integration'] ?? $this->global_integrations_defaults['enable_woocommerce_integration'] ),
+			'enable_angie_integration'       => $this->sanitize_boolean_default( $defaults['enable_angie_integration'] ?? $this->global_integrations_defaults['enable_angie_integration'] ),
+		];
+	}
+
+	/**
+	 * Sanitize a boolean default value.
+	 *
+	 * @param mixed $value Value to sanitize.
+	 * @return bool
+	 * @since 1.7.5
+	 */
+	private function sanitize_boolean_default( $value ) {
+		return true === $value || 1 === $value || '1' === $value || 'true' === $value;
 	}
 }

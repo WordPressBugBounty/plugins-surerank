@@ -180,6 +180,11 @@ const dataSettings = {
 
 		// Miscellaneous
 		surerank_usage_optin: false, // true/false
+
+		// Integrations default to enabled to preserve automatic compatibility
+		// when the corresponding third-party plugin is active.
+		enable_woocommerce_integration: true, // Enables WooCommerce SEO compatibility.
+		enable_angie_integration: true, // Enables Angie integration compatibility.
 	},
 	/* Title and description End */
 	// Site Settings (Previously known as site variables)

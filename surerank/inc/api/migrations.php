@@ -1026,23 +1026,11 @@ class Migrations extends Api_Base {
 	 * @since 1.1.1
 	 */
 	private function get_associated_plugins( string $plugin_path ) {
-		$associated_plugins = [];
-		switch ( $plugin_path ) {
-			case 'seo-by-rank-math/rank-math.php':
-				$associated_plugins = [ 'seo-by-rank-math/rank-math.php', 'seo-by-rank-math-pro/rank-math-pro.php' ];
-				break;
-			case 'wordpress-seo/wp-seo.php':
-				$associated_plugins = [ 'wordpress-seo/wp-seo.php', 'wordpress-seo-premium/wp-seo-premium.php' ];
-				break;
-			case 'wp-seopress/seopress.php':
-				$associated_plugins = [ 'wp-seopress/seopress.php', 'wp-seopress-pro/seopress-pro.php' ];
-				break;
-			case 'all-in-one-seo-pack/all_in_one_seo_pack.php':
-				$associated_plugins = [ 'all-in-one-seo-pack/all_in_one_seo_pack.php', 'all-in-one-seo-pack-pro/all_in_one_seo_pack.php' ];
-				break;
-			case 'squirrly-seo/squirrly.php':
-				$associated_plugins = [ 'squirrly-seo/squirrly.php', 'squirrly-seo-pack/index.php' ];
-				break;
+		$seo_plugins        = ImporterUtils::get_seo_plugins_list();
+		$associated_plugins = [ $plugin_path ];
+
+		if ( ! empty( $seo_plugins[ $plugin_path ]['pro_slug'] ) ) {
+			$associated_plugins[] = $seo_plugins[ $plugin_path ]['pro_slug'];
 		}
 
 		return $associated_plugins;

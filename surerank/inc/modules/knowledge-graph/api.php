@@ -68,6 +68,7 @@ class Api extends Api_Base {
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'get_settings' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
+				'role_capability'     => 'global_setting',
 			]
 		);
 
@@ -79,6 +80,7 @@ class Api extends Api_Base {
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'update_settings' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
+				'role_capability'     => 'global_setting',
 				'args'                => $this->get_update_args(),
 			]
 		);

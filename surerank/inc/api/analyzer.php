@@ -18,6 +18,7 @@ use SureRank\Inc\Functions\Requests;
 use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Functions\Update;
 use SureRank\Inc\GoogleSearchConsole\Controller;
+use SureRank\Inc\Importers\ImporterUtils;
 use SureRank\Inc\Modules\Nudges\Utils as Nudge_Utils;
 use SureRank\Inc\Traits\Get_Instance;
 use SureRank\Inc\Traits\Logger;
@@ -521,36 +522,7 @@ class Analyzer extends Api_Base {
 	 * @since 1.4.0
 	 */
 	public function get_installed_seo_plugins_data(): array {
-		$seo_plugins = [
-			'seo-by-rank-math/rank-math.php'              => [
-				'name'     => 'Rank Math',
-				'pro_slug' => 'seo-by-rank-math-pro/rank-math-pro.php',
-			],
-			'wordpress-seo/wp-seo.php'                    => [
-				'name'     => 'Yoast SEO',
-				'pro_slug' => 'wordpress-seo-premium/wp-seo-premium.php',
-			],
-			'autodescription/autodescription.php'         => [
-				'name'     => 'The SEO Framework',
-				'pro_slug' => '',
-			],
-			'all-in-one-seo-pack/all_in_one_seo_pack.php' => [
-				'name'     => 'AIOSEO',
-				'pro_slug' => 'all-in-one-seo-pack-pro/all_in_one_seo_pack.php',
-			],
-			'wp-seopress/seopress.php'                    => [
-				'name'     => 'SEOPress',
-				'pro_slug' => 'wp-seopress-pro/wp-seopress-pro.php',
-			],
-			'slim-seo/slim-seo.php'                       => [
-				'name'     => 'Slim SEO',
-				'pro_slug' => 'slim-seo-pro/slim-seo-pro.php',
-			],
-			'squirrly-seo/squirrly.php'                   => [
-				'name'     => 'Squirrly SEO',
-				'pro_slug' => '',
-			],
-		];
+		$seo_plugins = ImporterUtils::get_seo_plugins_list();
 
 		$active_plugins   = apply_filters( 'active_plugins', get_option( 'active_plugins', [] ) );
 		$detected_plugins = [];

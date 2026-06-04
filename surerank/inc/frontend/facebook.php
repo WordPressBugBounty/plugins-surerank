@@ -360,7 +360,7 @@ class Facebook {
 		$this->add_common_tags( $meta_data );
 
 		// Add product-specific Open Graph tags if applicable.
-		if ( Helper::is_product() ) {
+		if ( Helper::woocommerce_enabled() && Helper::is_product() ) {
 			$this->add_product_tags( $meta_data );
 		}
 	}
@@ -609,7 +609,7 @@ class Facebook {
 			return 'profile';
 		}
 
-		return Helper::is_product() ? 'product' : 'article';
+		return Helper::woocommerce_enabled() && Helper::is_product() ? 'product' : 'article';
 	}
 
 }

@@ -493,6 +493,47 @@ final class ImporterUtils {
 	}
 
 	/**
+	 * Get the list of known SEO plugins with their pro counterparts.
+	 *
+	 * Single source of truth for SEO plugin detection and deactivation.
+	 *
+	 * @return array<string, array{name: string, pro_slug: string}> Map of plugin file => plugin data.
+	 * @since x.x.x
+	 */
+	public static function get_seo_plugins_list(): array {
+		return [
+			'seo-by-rank-math/rank-math.php'              => [
+				'name'     => 'Rank Math',
+				'pro_slug' => 'seo-by-rank-math-pro/rank-math-pro.php',
+			],
+			'wordpress-seo/wp-seo.php'                    => [
+				'name'     => 'Yoast SEO',
+				'pro_slug' => 'wordpress-seo-premium/wp-seo-premium.php',
+			],
+			'autodescription/autodescription.php'         => [
+				'name'     => 'The SEO Framework',
+				'pro_slug' => '',
+			],
+			'all-in-one-seo-pack/all_in_one_seo_pack.php' => [
+				'name'     => 'AIOSEO',
+				'pro_slug' => 'all-in-one-seo-pack-pro/all_in_one_seo_pack.php',
+			],
+			'wp-seopress/seopress.php'                    => [
+				'name'     => 'SEOPress',
+				'pro_slug' => 'wp-seopress-pro/seopress-pro.php',
+			],
+			'slim-seo/slim-seo.php'                       => [
+				'name'     => 'Slim SEO',
+				'pro_slug' => 'slim-seo-pro/slim-seo-pro.php',
+			],
+			'squirrly-seo/squirrly.php'                   => [
+				'name'     => 'Squirrly SEO',
+				'pro_slug' => '',
+			],
+		];
+	}
+
+	/**
 	 * Check if a profile URL matches a specific social platform.
 	 *
 	 * @param string $profile The profile URL to check.

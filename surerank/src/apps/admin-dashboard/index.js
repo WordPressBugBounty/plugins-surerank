@@ -43,6 +43,7 @@ import ContentAnalysisRoute from '@AdminDashboard/content-analysis/content-analy
 import SiteSeoChecksRoute from '@AdminDashboard/site-seo-checks/site-seo-checks-main';
 import MigrationRoute from '@AdminGeneral/advanced/tools/migration';
 import MiscellaneousRoute from '@AdminGeneral/advanced/tools/miscellaneous';
+import IntegrationsRoute from '@AdminGeneral/advanced/tools/integrations/integrations';
 import RobotsTxtEditorRoute from '@AdminGeneral/advanced/tools/robots-txt-editor/robots-txt-editor';
 import BreadcrumbsRoute from '@AdminDashboard/breadcrumbs/settings';
 import SchemaRoute from '@AdminGeneral/schema/schema';
@@ -298,6 +299,9 @@ const toolsRoutes = [
 			  ]
 			: [] ),
 		createChildRoute( '/miscellaneous', MiscellaneousRoute, [], {
+			capability: 'manage_options',
+		} ),
+		createChildRoute( '/integrations', IntegrationsRoute, [], {
 			capability: 'manage_options',
 		} ),
 		createChildRoute( '/role-manager', RoleManager, [], {

@@ -112,6 +112,21 @@ class Helper {
 	}
 
 	/**
+	 * Check if the WooCommerce integration is active.
+	 *
+	 * True only when WooCommerce is active AND the user has not disabled the
+	 * SureRank WooCommerce integration via Tools > Integrations. Use this for
+	 * WooCommerce-specific SEO behavior; use wc_status() only when you need to
+	 * know whether the WooCommerce plugin itself is present.
+	 *
+	 * @since 1.7.5
+	 * @return bool
+	 */
+	public static function woocommerce_enabled() {
+		return self::wc_status() && wp_validate_boolean( Settings::get( 'enable_woocommerce_integration' ) );
+	}
+
+	/**
 	 * Check if surecart is active
 	 *
 	 * @since 1.0.0
@@ -558,25 +573,30 @@ class Helper {
 	 * Check if crons are available and working.
 	 *
 	 * @since 1.4.3
-	 * @param bool $force Whether to bypass cached status and re-check cron.
+	 * @param bool $force Bypass the cached HTTP self-test result. Has no effect
+	 *                    when DISABLE_WP_CRON / ALTERNATE_WP_CRON is set
+	 *                    (those rely on the recorded server-side cron timestamp).
 	 * @return bool True if cron is available, false if not.
 	 */
 	public static function are_crons_available( $force = false ) {
 		global $wp_version;
+
+		// Escape hatch: filter must return an explicit bool to override.
+		$override = apply_filters( 'surerank_are_crons_available', null );
+		if ( is_bool( $override ) ) {
+			return $override;
+		}
 
 		// If we're currently running within a cron, it's obviously working.
 		if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
 			return true;
 		}
 
-		// Check if DISABLE_WP_CRON is defined and true.
-		if ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) {
-			return false;
-		}
-
-		// Check if ALTERNATE_WP_CRON is defined and true.
-		if ( defined( 'ALTERNATE_WP_CRON' ) && ALTERNATE_WP_CRON ) {
-			return false;
+		// WP-Cron off: treat server-side cron as available if a recent run was recorded.
+		if ( ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) ||
+			( defined( 'ALTERNATE_WP_CRON' ) && ALTERNATE_WP_CRON ) ) {
+			$last_run = (int) get_option( 'surerank_last_cron_run', 0 );
+			return $last_run > 0 && ( time() - $last_run ) < HOUR_IN_SECONDS;
 		}
 
 		if ( ! $force ) {

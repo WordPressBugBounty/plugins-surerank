@@ -35,7 +35,11 @@ class Parser {
 		libxml_use_internal_errors( true );
 		$dom = new DOMDocument();
 
-		if ( ! mb_check_encoding( $html, 'UTF-8' ) ) {
+		// mb_check_encoding / mb_convert_encoding are not polyfilled by WordPress core,
+		// so guard them; on hosts without the mbstring extension we skip the UTF-8
+		// normalisation and let DOMDocument handle the bytes rather than fatalling.
+		if ( function_exists( 'mb_check_encoding' ) && function_exists( 'mb_convert_encoding' )
+			&& ! mb_check_encoding( $html, 'UTF-8' ) ) {
 			$html = mb_convert_encoding( $html, 'UTF-8', 'auto' );
 		}
 

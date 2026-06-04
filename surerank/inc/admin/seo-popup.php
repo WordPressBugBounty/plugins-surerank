@@ -16,6 +16,9 @@ use SureRank\Inc\Frontend\Crawl_Optimization;
 use SureRank\Inc\Frontend\Image_Seo;
 use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Update;
+use SureRank\Inc\GoogleSearchConsole\Auth as GoogleSearchConsoleAuth;
+use SureRank\Inc\GoogleSearchConsole\Controller as GoogleSearchConsoleController;
+use SureRank\Inc\GoogleSearchConsole\Url_Inspection;
 use SureRank\Inc\Traits\Enqueue;
 use SureRank\Inc\Traits\Get_Instance;
 
@@ -520,7 +523,8 @@ class Seo_Popup {
 						'is_frontend'        => $context_data['is_frontend'] ?? false,
 					],
 					$context_data['post_data'],
-					$context_data['term_data']
+					$context_data['term_data'],
+					$this->get_indexing_status_localization( $context_data )
 				),
 			]
 		);
@@ -578,4 +582,56 @@ class Seo_Popup {
 			'is_frontend' => true,
 		];
 	}
+
+	/**
+	 * Build the indexing-status slice of the localized SEO popup data.
+	 *
+	 * The pill mounts inside the popup header and needs four things at
+	 * boot: whether GSC is connected, whether a site property is selected,
+	 * whether that selected property matches the current WordPress site,
+	 * and the last cached inspection result for the current post or term.
+	 * Returning the cached value lets the pill paint on first frame
+	 * without a REST round-trip. The cache is suppressed when the GSC
+	 * property doesn't match this site so a previous property's result
+	 * can't bleed through.
+	 *
+	 * @param array<string, mixed> $context_data Result of get_context_data().
+	 * @return array<string, mixed>
+	 * @since 1.7.5
+	 */
+	private function get_indexing_status_localization( array $context_data ): array {
+		$is_connected   = (bool) GoogleSearchConsoleController::get_instance()->get_auth_status();
+		$selected_site  = (string) GoogleSearchConsoleAuth::get_instance()->get_credentials( 'site_url' );
+		$has_site       = '' !== $selected_site;
+		$is_matching    = $is_connected && $has_site && Url_Inspection::selected_site_matches_current();
+		$indexing_cache = null;
+
+		if ( $is_matching ) {
+			$post_id = isset( $context_data['post_data']['post_id'] )
+				? absint( $context_data['post_data']['post_id'] )
+				: 0;
+			$term_id = isset( $context_data['term_data']['term_id'] )
+				? absint( $context_data['term_data']['term_id'] )
+				: 0;
+
+			if ( $term_id ) {
+				$cached = get_term_meta( $term_id, Url_Inspection::META_KEY, true );
+			} elseif ( $post_id ) {
+				$cached = get_post_meta( $post_id, Url_Inspection::META_KEY, true );
+			} else {
+				$cached = null;
+			}
+
+			$indexing_cache = is_array( $cached ) && ! empty( $cached ) ? $cached : null;
+		}
+
+		return [
+			'is_gsc_connected'      => $is_connected,
+			'has_gsc_site_selected' => $has_site,
+			'is_gsc_site_matching'  => $is_matching,
+			'indexing_status'       => $indexing_cache,
+			'indexing_fresh_ttl'    => Url_Inspection::FRESH_TTL,
+		];
+	}
+
 }

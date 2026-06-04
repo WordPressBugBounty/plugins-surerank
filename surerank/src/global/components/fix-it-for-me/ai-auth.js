@@ -35,6 +35,10 @@ const AIAuthScreen = ( {
 			id: 3,
 			text: __( 'Site level SEO Checks', 'surerank' ),
 		},
+		{
+			id: 4,
+			text: __( 'Schema Markup', 'surerank' ),
+		},
 	];
 
 	// Apply filter for button configuration (pro can override)
@@ -100,11 +104,11 @@ const AIAuthScreen = ( {
 				</div>
 
 				{ /* Features List */ }
-				<div className="flex flex-row self-stretch flex-wrap justify-center gap-6 py-2">
+				<div className="grid grid-cols-2 self-stretch gap-6 py-2">
 					{ features.map( ( feature ) => (
 						<div
 							key={ feature.id }
-							className="flex flex-col items-center gap-2 max-w-28"
+							className="flex flex-col items-center gap-2"
 						>
 							<FileText
 								width={ 16 }

@@ -94,7 +94,7 @@ class Twitter {
 			}
 		}
 
-		if ( Helper::wc_status() && Helper::is_product() ) {
+		if ( Helper::woocommerce_enabled() && Helper::is_product() ) {
 			$this->add_product_tags( $meta_data );
 		}
 	}

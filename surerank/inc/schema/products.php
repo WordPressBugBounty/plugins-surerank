@@ -29,7 +29,7 @@ class Products {
 	 */
 	public function __construct() {
 
-		if ( ! Helper::wc_status() && ! Helper::sc_status() ) {
+		if ( ! Helper::woocommerce_enabled() && ! Helper::sc_status() ) {
 			return;
 		}
 
@@ -57,7 +57,7 @@ class Products {
 	 * @return array<string, mixed> Modified schema types.
 	 */
 	public function add_product_schema_type( $schema_types ) {
-		if ( Helper::wc_status() || Helper::sc_status() ) {
+		if ( Helper::woocommerce_enabled() || Helper::sc_status() ) {
 			$schema_types['Product'] = Product::class;
 		}
 
@@ -128,7 +128,7 @@ class Products {
 	 * @return void
 	 */
 	public function remove_wc_schema() {
-		if ( ! Helper::wc_status() ) {
+		if ( ! Helper::woocommerce_enabled() ) {
 			return;
 		}
 
@@ -182,7 +182,7 @@ class Products {
 	 */
 	public function add_product_schema( $schemas ) {
 
-		if ( Helper::wc_status() ) {
+		if ( Helper::woocommerce_enabled() ) {
 			$rule = 'product|all';
 		} elseif ( Helper::sc_status() ) {
 			$rule = 'sc_product|all';

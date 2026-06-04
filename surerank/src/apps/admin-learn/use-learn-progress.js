@@ -58,7 +58,10 @@ const extractAutoDetected = ( res ) => {
 	if ( res.auto_detected && typeof res.auto_detected === 'object' ) {
 		return res.auto_detected;
 	}
-	if ( res.data?.auto_detected && typeof res.data.auto_detected === 'object' ) {
+	if (
+		res.data?.auto_detected &&
+		typeof res.data.auto_detected === 'object'
+	) {
 		return res.data.auto_detected;
 	}
 	return null;

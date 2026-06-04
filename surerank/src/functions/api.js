@@ -208,6 +208,87 @@ export const generateContent = ( type, postId, isTaxonomy ) => {
 	} );
 };
 
+const sleep = ( ms ) => new Promise( ( resolve ) => setTimeout( resolve, ms ) );
+
+const requestWithTimeout = async ( fetchOptions, timeoutMs ) => {
+	const abortController = new AbortController();
+	let timerId = null;
+
+	try {
+		timerId = setTimeout( () => {
+			abortController.abort();
+		}, timeoutMs );
+
+		return await apiFetch( {
+			...fetchOptions,
+			signal: abortController.signal,
+		} );
+	} catch ( error ) {
+		if ( error?.name === 'AbortError' ) {
+			const timeoutError = new Error( 'request_timeout' );
+			timeoutError.code = 'request_timeout';
+			throw timeoutError;
+		}
+		throw error;
+	} finally {
+		if ( timerId ) {
+			clearTimeout( timerId );
+		}
+	}
+};
+
+/**
+ * Recommend schema types for a page/post using AI.
+ *
+ * @param {Object} params              Request payload.
+ * @param {string} params.post_type    Post type.
+ * @param {string} params.post_title   Post title.
+ * @param {string} params.post_content Post content.
+ * @return {Promise<Object>} API response with recommendations.
+ */
+export const recommendSchemas = async ( params ) => {
+	let attempts = 0;
+	let lastError;
+
+	while ( attempts < 2 ) {
+		try {
+			const response = await requestWithTimeout(
+				{
+					path: `${ API_BASE_URL }/schemas/generator`,
+					method: 'POST',
+					data: params,
+				},
+				25000
+			);
+			return response;
+		} catch ( error ) {
+			lastError = error;
+			attempts++;
+
+			if ( attempts >= 2 ) {
+				break;
+			}
+
+			await sleep( 500 );
+		}
+	}
+
+	throw lastError;
+};
+
+/**
+ * Track schema recommendation interactions.
+ *
+ * @param {string} eventKey Event key to track.
+ * @return {Promise<Object>} API response.
+ */
+export const trackSchemaRecommendationEvent = ( eventKey ) =>
+	apiFetch( {
+		path: `${ API_BASE_URL }/schemas/recommendation-event`,
+		method: 'POST',
+		data: { event_key: eventKey },
+	} );
+
 /**
  * Save email reports settings
  * @param {Object}  settings                - The email reports settings to save.

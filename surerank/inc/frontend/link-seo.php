@@ -38,6 +38,30 @@ class Link_Seo {
 	}
 
 	/**
+	 * Check if external links should open in new tab.
+	 *
+	 * @return bool
+	 * @since 1.7.5
+	 */
+	public function is_new_tab_enabled(): bool {
+		return apply_filters( 'surerank_open_external_links_in_new_tab', false );
+	}
+
+	/**
+	 * Whether any link enhancement (nofollow or new-tab) is enabled.
+	 *
+	 * Used by the hook-registration gate. Distinct from is_enabled(), which
+	 * remains nofollow-specific so per-rel decisions don't get falsely flipped
+	 * when only the new-tab filter is on.
+	 *
+	 * @return bool
+	 * @since 1.7.5
+	 */
+	public function is_processing_enabled(): bool {
+		return $this->is_enabled() || $this->is_new_tab_enabled();
+	}
+
+	/**
 	 * Extract links that need processing
 	 *
 	 * @param string $content Clean content.
@@ -63,13 +87,17 @@ class Link_Seo {
 	}
 
 	/**
-	 * Extract external links that need nofollow
+	 * Extract external links that need enhancement
 	 *
 	 * @param string $content Content to search.
 	 * @return array<string> External link tags
 	 * @since 1.5.0
 	 */
 	private function extract_external_links( $content ): array {
+		if ( ! $this->is_enabled() && ! $this->is_new_tab_enabled() ) {
+			return [];
+		}
+
 		/**
 		 * Extract all anchor tags with href attributes from content
 		 *
@@ -111,7 +139,12 @@ class Link_Seo {
 			$full_tag = $match[0];
 			$url      = $match[1];
 
-			if ( $this->is_external_link( $url, $site_domain ) && ! $this->is_excluded_domain( $url, $excluded_domains ) && ! $this->already_has_nofollow( $full_tag ) ) {
+			if ( ! $this->is_external_link( $url, $site_domain ) || $this->is_excluded_domain( $url, $excluded_domains ) ) {
+				continue;
+			}
+
+			$attributes = $this->parse_link_attributes( $full_tag );
+			if ( $this->needs_any_enhancement( $attributes ) ) {
 				$external_links[] = $full_tag;
 			}
 		}
@@ -165,48 +198,6 @@ class Link_Seo {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Check if link already has nofollow
-	 *
-	 * @param string $link_tag Link tag.
-	 * @return bool True if has nofollow
-	 * @since 1.5.0
-	 */
-	private function already_has_nofollow( $link_tag ): bool {
-		/**
-		 * Check if anchor tag already contains nofollow in rel attribute
-		 *
-		 * Regex pattern breakdown:
-		 * rel=                         : Match literal "rel="
-		 * ["\']                        : Match opening quote (single or double)
-		 * [^"\']*                      : Match any characters except quotes (before nofollow)
-		 * nofollow                     : Match literal "nofollow"
-		 * [^"\']*                      : Match any characters except quotes (after nofollow)
-		 * ["\']                        : Match closing quote (single or double)
-		 * i                            : Case-insensitive flag
-		 *
-		 * Examples of what this WILL match:
-		 * - rel="nofollow"
-		 * - rel="nofollow external"
-		 * - rel="external nofollow"
-		 * - rel="noopener nofollow noreferrer"
-		 * - REL='NOFOLLOW'             (case insensitive)
-		 *
-		 * Examples of what this will NOT match:
-		 * - rel="external"             (no nofollow)
-		 * - rel=""                     (empty rel)
-		 * - class="nofollow"           (wrong attribute)
-		 * - href="nofollow.com"        (nofollow in URL, not rel)
-		 *
-		 * @param string $link_tag The anchor tag to check
-		 * @return int 1 if pattern matches, 0 if no match, false on error
-		 *
-		 * @see https://www.php.net/manual/en/reference.pcre.pattern.syntax.php
-		 * @since 1.5.0
-		 */
-		return preg_match( '/rel=["\'][^"\']*nofollow[^"\']*["\']/i', $link_tag ) === 1;
 	}
 
 	/**
@@ -377,20 +368,25 @@ class Link_Seo {
 			return false;
 		}
 
-		return $this->needs_any_rel_enhancement( $attributes );
+		return $this->needs_any_enhancement( $attributes );
 	}
 
 	/**
-	 * Check if nofollow enhancement is needed for this link
+	 * Check if any enhancement is needed for this link.
 	 *
 	 * @param array<string, string> $attributes Link attributes.
-	 * @return bool True if enhancement is needed
-	 * @since 1.5.0
+	 * @return bool True if any enhancement is needed
+	 * @since 1.7.5
 	 */
-	private function needs_any_rel_enhancement( $attributes ): bool {
+	private function needs_any_enhancement( $attributes ): bool {
 		$current_rel_values = $this->get_current_rel_values( $attributes );
+		$current_target     = strtolower( trim( $attributes['target'] ?? '' ) );
 
-		return $this->is_enabled() && ! in_array( 'nofollow', $current_rel_values, true );
+		if ( $this->is_enabled() && ! in_array( 'nofollow', $current_rel_values, true ) ) {
+			return true;
+		}
+
+		return $this->is_new_tab_enabled() && '_blank' !== $current_target;
 	}
 
 	/**
@@ -421,6 +417,12 @@ class Link_Seo {
 	 * @since 1.5.0
 	 */
 	private function apply_enhancements( $tag, $attributes ): string {
+		$before = $attributes;
+
+		if ( $this->is_new_tab_enabled() ) {
+			$attributes['target'] = '_blank';
+		}
+
 		$rel_values = isset( $attributes['rel'] )
 			? array_map( 'trim', explode( ' ', $attributes['rel'] ) )
 			: [];
@@ -428,12 +430,9 @@ class Link_Seo {
 		$rel_values = $this->apply_rel_enhancements( $rel_values );
 		$rel_value  = implode( ' ', array_filter( $rel_values ) );
 
-		if ( $rel_value === '' ) {
-			return $tag;
+		if ( $rel_value !== '' ) {
+			$attributes['rel'] = $rel_value;
 		}
-
-		$before            = $attributes;
-		$attributes['rel'] = $rel_value;
 
 		/**
 		 * Filter the post-enhancement attribute set. Mutations are diffed
@@ -466,6 +465,14 @@ class Link_Seo {
 	private function apply_rel_enhancements( $rel_values ): array {
 		if ( $this->is_enabled() && ! in_array( 'nofollow', $rel_values, true ) ) {
 			$rel_values[] = 'nofollow';
+		}
+
+		if ( $this->is_new_tab_enabled() ) {
+			foreach ( [ 'noopener', 'noreferrer' ] as $rel_token ) {
+				if ( ! in_array( $rel_token, $rel_values, true ) ) {
+					$rel_values[] = $rel_token;
+				}
+			}
 		}
 
 		/**

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SureRank 1.0.0.beta-1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/surerank\n"
-"Last-Translator: gpt-po v1.2.4\n"
+"Last-Translator: gpt-po v1.3.0\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -15,10 +15,11 @@ msgstr ""
 
 #. Author of the plugin
 #: surerank.php
+#: inc/abilities/abilities-registrar.php:126
 #: inc/admin/dashboard.php:249
 #: inc/admin/dashboard.php:250
-#: inc/admin/seo-popup.php:92
-#: inc/nps-notice.php:90
+#: inc/admin/seo-popup.php:95
+#: inc/nps-notice.php:95
 msgid "SureRank"
 msgstr "SureRank"
 
@@ -90,12 +91,12 @@ msgstr "Geen thema opgegeven."
 msgid "Theme activated successfully."
 msgstr "Thema succesvol geactiveerd."
 
-#: inc/analyzer/parser.php:54
+#: inc/analyzer/parser.php:58
 msgid "Failed to pre-process HTML."
 msgstr "Voorbewerking van HTML is mislukt."
 
-#: inc/analyzer/parser.php:45
-#: inc/analyzer/parser.php:70
+#: inc/analyzer/parser.php:49
+#: inc/analyzer/parser.php:74
 msgid "Failed to parse HTML."
 msgstr "Parseren van HTML is mislukt."
 
@@ -348,37 +349,37 @@ msgstr "Geen gegevens gevonden"
 msgid "Settings updated"
 msgstr "Instellingen bijgewerkt"
 
-#: inc/api/analyzer.php:118
-#: inc/api/analyzer.php:1220
+#: inc/api/analyzer.php:119
+#: inc/api/analyzer.php:1192
 msgid "Invalid Post ID."
 msgstr "Ongeldige Post-ID."
 
-#: inc/api/analyzer.php:503
+#: inc/api/analyzer.php:504
 msgid "Google Search Console is connected."
 msgstr "Google Search Console is verbonden."
 
-#: inc/api/analyzer.php:503
+#: inc/api/analyzer.php:504
 msgid "Google Search Console is not connected."
 msgstr "Google Search Console is niet verbonden."
 
-#: inc/api/analyzer.php:999
+#: inc/api/analyzer.php:971
 msgid "Post not found"
 msgstr "Bericht niet gevonden"
 
-#: inc/api/analyzer.php:2050
-#: inc/api/analyzer.php:2073
+#: inc/api/analyzer.php:2022
+#: inc/api/analyzer.php:2045
 msgid "Link is broken"
 msgstr "Link is gebroken"
 
-#: inc/api/analyzer.php:1016
+#: inc/api/analyzer.php:988
 msgid "Link is not broken"
 msgstr "Link is niet gebroken"
 
-#: inc/api/analyzer.php:1675
+#: inc/api/analyzer.php:1647
 msgid "These broken links were found on the page: "
 msgstr "Deze gebroken links zijn gevonden op de pagina:"
 
-#: inc/api/analyzer.php:1680
+#: inc/api/analyzer.php:1652
 #: build/breakdance/index.js:1
 #: build/bricks/index.js:1
 #: build/divi/index.js:1
@@ -410,7 +411,7 @@ msgid "Invalid data provided"
 msgstr "Ongeldige gegevens verstrekt"
 
 #: inc/api/onboarding.php:300
-#: inc/modules/knowledge-graph/api.php:115
+#: inc/modules/knowledge-graph/api.php:117
 msgid "Settings updated successfully"
 msgstr "Instellingen succesvol bijgewerkt"
 
@@ -429,14 +430,17 @@ msgstr "Fout bij het uitvoeren van SEO-controles."
 msgid "Data updated"
 msgstr "Gegevens bijgewerkt"
 
+#: inc/abilities/content/list-content-types.php:88
 #: inc/api/post.php:548
 msgid "Author pages"
 msgstr "Auteurspagina's"
 
+#: inc/abilities/content/list-content-types.php:89
 #: inc/api/post.php:552
 msgid "Date archives"
 msgstr "Datumarchieven"
 
+#: inc/abilities/content/list-content-types.php:90
 #: inc/api/post.php:555
 msgid "Search pages"
 msgstr "Zoekpagina's"
@@ -543,7 +547,7 @@ msgid "Out of Stock"
 msgstr "Niet op voorraad"
 
 #. translators: %s: page number, %s: total pages
-#: inc/functions/helper.php:305
+#: inc/functions/helper.php:320
 #, php-format
 msgid " - Page %1$s of %2$s"
 msgstr "- Pagina %1$s van %2$s"
@@ -602,7 +606,7 @@ msgstr "De permalink van de site."
 msgid "Separator"
 msgstr "Scheidingsteken"
 
-#: inc/api/analyzer.php:662
+#: inc/api/analyzer.php:634
 #: inc/meta-variables/site.php:64
 msgid "Site Tagline"
 msgstr "Site-tagline"
@@ -679,27 +683,28 @@ msgstr "De slug van de term."
 msgid "The permalink of the term."
 msgstr "De permalink van de term."
 
-#: inc/nps-notice.php:91
+#: inc/nps-notice.php:96
 msgid "How likely are you to recommend SureRank to your friends or colleagues?"
 msgstr "Hoe waarschijnlijk is het dat je SureRank aan je vrienden of collega's aanbeveelt?"
 
-#: inc/nps-notice.php:92
+#: inc/nps-notice.php:97
 msgid "Thanks a lot for your feedback! 😍"
 msgstr "Hartelijk dank voor je feedback! 😍"
 
-#: inc/nps-notice.php:93
+#: inc/nps-notice.php:98
 msgid "Could you please do us a favor and give us a 5-star rating on WordPress? It would help others choose SureRank with confidence. Thank you!"
 msgstr "Zou je ons een plezier willen doen en ons een 5-sterren beoordeling op WordPress geven? Het zou anderen helpen om SureRank met vertrouwen te kiezen. Dank je!"
 
-#: inc/nps-notice.php:95
+#: inc/nps-notice.php:100
 msgid "Thank you for your feedback"
 msgstr "Dank je voor je feedback"
 
-#: inc/nps-notice.php:96
+#: inc/nps-notice.php:101
 msgid "We value your input. How can we improve your experience?"
 msgstr "We waarderen je input. Hoe kunnen we je ervaring verbeteren?"
 
-#: inc/nps-notice.php:97
+#: inc/admin/review-notice.php:265
+#: inc/nps-notice.php:102
 msgid "Rate SureRank"
 msgstr "Beoordeel SureRank"
 
@@ -2746,7 +2751,7 @@ msgstr "Opgeslagen"
 msgid "Search…"
 msgstr "Zoeken…"
 
-#: loader.php:366
+#: loader.php:398
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 #: build/seo-popup/index.js:1
@@ -2853,6 +2858,7 @@ msgid "Content Score"
 msgstr "Inhoudsscore"
 
 #: build/admin-dashboard/index.js:1
+#: build/seo-popup/index.js:1
 msgid "Pro"
 msgstr "Pro"
 
@@ -3757,7 +3763,7 @@ msgstr "Open Graph-tags zijn aanwezig op de pagina."
 msgid "Open Graph tags are not present on the page."
 msgstr "Open Graph-tags zijn niet aanwezig op de pagina."
 
-#: inc/admin/seo-popup.php:207
+#: inc/admin/seo-popup.php:210
 #: build/breakdance/index.js:1
 #: build/bricks/index.js:1
 #: build/divi/index.js:1
@@ -3987,7 +3993,7 @@ msgstr "Zoekopdracht"
 msgid "Search query (only available on search results page)"
 msgstr "Zoekopdracht (alleen beschikbaar op de zoekresultatenpagina)"
 
-#: loader.php:346
+#: loader.php:378
 msgid "Rate our plugin"
 msgstr "Beoordeel onze plugin"
 
@@ -4089,53 +4095,53 @@ msgstr "Beheer hoe zoekmachines uw startpagina behandelen. Met deze opties kunt 
 msgid "Adds structured data to your content so search engines can better understand and present it. Most fields are already filled in to make setup easier and help your site show up better in search results."
 msgstr "Voegt gestructureerde gegevens toe aan uw inhoud zodat zoekmachines deze beter kunnen begrijpen en presenteren. De meeste velden zijn al ingevuld om de installatie te vergemakkelijken en uw site beter te laten verschijnen in zoekresultaten."
 
-#: inc/api/analyzer.php:1890
-#: inc/api/analyzer.php:1913
+#: inc/api/analyzer.php:1862
+#: inc/api/analyzer.php:1885
 msgid "Type of check to delete. Can be \"post\" or \"taxonomy\"."
 msgstr "Type controle om te verwijderen. Kan \"post\" of \"taxonomy\" zijn."
 
-#: inc/api/analyzer.php:231
+#: inc/api/analyzer.php:232
 msgid "Checks ignored."
 msgstr "Genegeerde controles."
 
-#: inc/api/analyzer.php:268
+#: inc/api/analyzer.php:269
 msgid "Checks unignored."
 msgstr "Niet langer genegeerde controles."
 
-#: inc/api/analyzer.php:353
+#: inc/api/analyzer.php:354
 msgid "Check ignored for post."
 msgstr "Controle genegeerd voor bericht."
 
-#: inc/api/analyzer.php:381
+#: inc/api/analyzer.php:382
 msgid "Check unignored for post."
 msgstr "Controle niet langer genegeerd voor bericht."
 
-#: inc/api/analyzer.php:404
+#: inc/api/analyzer.php:405
 msgid "Ignored checks retrieved."
 msgstr "Genegeerde controles opgehaald."
 
 #: inc/api/onboarding.php:74
-#: inc/modules/knowledge-graph/api.php:129
+#: inc/modules/knowledge-graph/api.php:131
 msgid "Type of the website."
 msgstr "Type van de website."
 
 #: inc/api/onboarding.php:83
-#: inc/modules/knowledge-graph/api.php:138
+#: inc/modules/knowledge-graph/api.php:140
 msgid "Name of the website."
 msgstr "Naam van de website."
 
 #: inc/api/onboarding.php:101
-#: inc/modules/knowledge-graph/api.php:156
+#: inc/modules/knowledge-graph/api.php:158
 msgid "Name of the website owner."
 msgstr "Naam van de eigenaar van de website."
 
 #: inc/api/onboarding.php:110
-#: inc/modules/knowledge-graph/api.php:165
+#: inc/modules/knowledge-graph/api.php:167
 msgid "Phone number of the website owner."
 msgstr "Telefoonnummer van de eigenaar van de website."
 
 #: inc/api/onboarding.php:119
-#: inc/modules/knowledge-graph/api.php:174
+#: inc/modules/knowledge-graph/api.php:176
 msgid "Type of the organization."
 msgstr "Type van de organisatie."
 
@@ -4276,34 +4282,34 @@ msgstr "Plugin is al inactief."
 msgid "Plugin deactivated successfully."
 msgstr "Plugin succesvol gedeactiveerd."
 
-#: inc/api/migrations.php:1062
+#: inc/api/migrations.php:1050
 msgid "Invalid plugin slug specified."
 msgstr "Ongeldige plugin slug opgegeven."
 
-#: inc/api/migrations.php:1163
+#: inc/api/migrations.php:1151
 msgid "No data found for this item."
 msgstr "Geen gegevens gevonden voor dit item."
 
-#: inc/api/migrations.php:1169
+#: inc/api/migrations.php:1157
 msgid "Detection failed."
 msgstr "Detectie mislukt."
 
-#: inc/api/migrations.php:1176
+#: inc/api/migrations.php:1164
 msgid "Invalid import response."
 msgstr "Ongeldige importreactie."
 
-#: inc/api/migrations.php:1185
+#: inc/api/migrations.php:1173
 msgid "Import failed."
 msgstr "Importeren mislukt."
 
 #. translators: %s: error message.
-#: inc/api/migrations.php:1190
+#: inc/api/migrations.php:1178
 #, php-format
 msgid "Error: %s"
 msgstr "Fout: %s"
 
 #. translators: 1: imported count, 2: total count, 3: item type, 4: plugin name.
-#: inc/api/migrations.php:1233
+#: inc/api/migrations.php:1221
 #, php-format
 msgid "Imported %1$d of %2$d %3$s from %4$s."
 msgstr "%1$d van %2$d %3$s geïmporteerd van %4$s."
@@ -4860,7 +4866,7 @@ msgid "Done"
 msgstr "Klaar"
 
 #: inc/analyzer/utils.php:252
-#: inc/api/analyzer.php:1654
+#: inc/api/analyzer.php:1626
 msgid "The link is broken."
 msgstr "De link is verbroken."
 
@@ -4984,7 +4990,7 @@ msgstr "Plugin-slug die is gemigreerd."
 #. translators: %s: importer class name
 #. translators: %s: importer class name.
 #: inc/api/migrations.php:390
-#: inc/api/migrations.php:1079
+#: inc/api/migrations.php:1067
 #, php-format
 msgid "Invalid importer class: %s does not implement Importer."
 msgstr "Ongeldige importer-klasse: %s implementeert geen Importer."
@@ -5715,7 +5721,7 @@ msgstr "Pagina-controles"
 msgid "SEO analysis is not available for this page."
 msgstr "SEO-analyse is niet beschikbaar voor deze pagina."
 
-#: inc/admin/seo-popup.php:211
+#: inc/admin/seo-popup.php:214
 #: build/seo-popup/index.js:1
 msgid "Open SureRank Meta Box"
 msgstr "Open SureRank Meta Box"
@@ -5956,11 +5962,11 @@ msgstr "Nonce-verificatie mislukt"
 msgid "No user email found in the decrypted data."
 msgstr "Geen gebruikersmail gevonden in de gedecodeerde gegevens"
 
-#: inc/functions/api-utils.php:153
+#: inc/functions/api-utils.php:175
 msgid "No authentication data found."
 msgstr "Geen authenticatiegegevens gevonden"
 
-#: inc/functions/api-utils.php:157
+#: inc/functions/api-utils.php:179
 msgid "No data found for the provided key."
 msgstr "Geen gegevens gevonden voor de opgegeven sleutel"
 
@@ -6081,9 +6087,9 @@ msgstr "Ongeldige term-ID"
 msgid "Invalid term ID provided"
 msgstr "Ongeldige term-ID opgegeven"
 
-#: inc/functions/api-utils.php:50
-#: inc/functions/api-utils.php:82
-#: inc/functions/api-utils.php:115
+#: inc/functions/api-utils.php:61
+#: inc/functions/api-utils.php:97
+#: inc/functions/api-utils.php:137
 msgid "No authentication token found. Please connect your account."
 msgstr "Geen authenticatietoken gevonden. Verbind uw account alstublieft."
 
@@ -6336,7 +6342,7 @@ msgstr "Verbind SureRank AI"
 msgid "Unable to generate content at this time. Please check your input and try again, or contact support if you need help."
 msgstr "Kan momenteel geen inhoud genereren. Controleer uw invoer en probeer het opnieuw, of neem contact op met support als u hulp nodig heeft."
 
-#: inc/functions/api-utils.php:64
+#: inc/functions/api-utils.php:79
 msgid "Something went wrong on our end. Please try again in a moment, or contact support if you need help."
 msgstr "Er is iets misgegaan aan onze kant. Probeer het over een moment opnieuw, of neem contact op met support als u hulp nodig heeft."
 
@@ -6349,7 +6355,7 @@ msgstr "Kan momenteel geen inhoud genereren. Probeer het opnieuw, of neem contac
 msgid "Click here to contact support."
 msgstr "Klik hier om contact op te nemen met support."
 
-#: inc/api/analyzer.php:508
+#: inc/api/analyzer.php:509
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Connect Now"
@@ -6560,7 +6566,7 @@ msgid "SureRank Website Insights"
 msgstr "SureRank Website-inzichten"
 
 #: inc/api/onboarding.php:92
-#: inc/modules/knowledge-graph/api.php:147
+#: inc/modules/knowledge-graph/api.php:149
 msgid "Business description of the website."
 msgstr "Bedrijfsbeschrijving van de website."
 
@@ -6573,7 +6579,7 @@ msgstr "# SureRank genereert automatisch een robots.txt-bestand."
 msgid "You've used all your AI credits for today. Your credits will refresh automatically tomorrow, so you can continue creating content."
 msgstr "Je hebt alle AI-credits voor vandaag gebruikt. Je credits worden automatisch opnieuw ingesteld morgen, zodat je verder kunt met het maken van inhoud."
 
-#: inc/functions/api-utils.php:123
+#: inc/functions/api-utils.php:145
 msgid "Failed to encode request data to JSON."
 msgstr "Fout bij het coderen van verzoekgegevens naar JSON."
 
@@ -7014,17 +7020,17 @@ msgstr "Schakel dit in om alle bijlagepagina's door te sturen naar hun hoofdberi
 msgid "Optimize Image SEO without AI"
 msgstr "Optimaliseer Image SEO zonder AI"
 
-#: inc/api/analyzer.php:139
-#: inc/api/analyzer.php:176
+#: inc/api/analyzer.php:140
+#: inc/api/analyzer.php:177
 msgid "SEO checks retrieved."
 msgstr "SEO-controles opgehaald."
 
-#: inc/api/analyzer.php:155
+#: inc/api/analyzer.php:156
 msgid "Invalid Term ID."
 msgstr "Ongeldige Term-ID."
 
-#: inc/api/analyzer.php:1964
-#: inc/api/analyzer.php:1998
+#: inc/api/analyzer.php:1936
+#: inc/api/analyzer.php:1970
 msgid "No cached checks found."
 msgstr "Geen gecachte controles gevonden."
 
@@ -7664,7 +7670,7 @@ msgstr "Homepage SEO Beschrijving"
 msgid "Homepage Open Graph Tags"
 msgstr "Homepage Open Graph-tags"
 
-#: inc/api/analyzer.php:1185
+#: inc/api/analyzer.php:1157
 msgid "No focus keyword set. Add one to analyze title, description, URL, and content."
 msgstr "Geen focuszoekwoord ingesteld. Voeg er een toe om titel, beschrijving, URL en inhoud te analyseren."
 
@@ -8024,7 +8030,7 @@ msgstr "Kent taal"
 msgid "Specify languages in which the organization provides services. Use standard IETF BCP 47 language codes (e.g., en, en-US, fr, es)."
 msgstr "Geef de talen op waarin de organisatie diensten verleent. Gebruik standaard IETF BCP 47-taalcodes (bijv. en, en-US, fr, es)."
 
-#: loader.php:419
+#: loader.php:451
 msgid "Get SureRank Pro"
 msgstr "Krijg SureRank Pro"
 
@@ -8192,7 +8198,7 @@ msgstr "\"No Follow\" vertelt zoekmachines om geen links op de pagina te volgen.
 msgid "\"No Archive\" prevents search engines from storing a cached version of the page."
 msgstr "\"No Archive\" voorkomt dat zoekmachines een gecachte versie van de pagina opslaan."
 
-#: inc/admin/seo-popup.php:111
+#: inc/admin/seo-popup.php:114
 #: build/seo-popup/index.js:1
 msgid "Manage your SEO"
 msgstr "Beheer uw SEO"
@@ -8315,7 +8321,7 @@ msgstr "Een duidelijke en goed geschreven titel helpt zoekmachines uw homepage t
 #: inc/analyzer/seo-analyzer.php:386
 #: inc/analyzer/seo-analyzer.php:470
 #: inc/analyzer/seo-analyzer.php:653
-#: inc/api/analyzer.php:672
+#: inc/api/analyzer.php:644
 msgid "Best Practice"
 msgstr "Beste Praktijk"
 
@@ -8349,12 +8355,12 @@ msgstr "Een eenvoudige, eerlijke titel presteert meestal beter dan een lange of 
 #: inc/analyzer/seo-analyzer.php:1079
 #: inc/analyzer/seo-analyzer.php:1204
 #: inc/analyzer/seo-analyzer.php:1707
-#: inc/api/analyzer.php:466
-#: inc/api/analyzer.php:609
-#: inc/api/analyzer.php:685
-#: inc/api/analyzer.php:746
-#: inc/api/analyzer.php:815
-#: inc/api/analyzer.php:905
+#: inc/api/analyzer.php:467
+#: inc/api/analyzer.php:581
+#: inc/api/analyzer.php:657
+#: inc/api/analyzer.php:718
+#: inc/api/analyzer.php:787
+#: inc/api/analyzer.php:877
 msgid "Where to Update It"
 msgstr "Waar te Updaten"
 
@@ -8395,11 +8401,11 @@ msgstr "Hier kunt u de titel, beschrijving en sociale metadata met afbeelding vo
 #: inc/analyzer/seo-analyzer.php:1217
 #: inc/analyzer/seo-analyzer.php:1235
 #: inc/analyzer/seo-analyzer.php:1720
-#: inc/api/analyzer.php:483
-#: inc/api/analyzer.php:698
-#: inc/api/analyzer.php:759
-#: inc/api/analyzer.php:835
-#: inc/api/analyzer.php:919
+#: inc/api/analyzer.php:484
+#: inc/api/analyzer.php:670
+#: inc/api/analyzer.php:731
+#: inc/api/analyzer.php:807
+#: inc/api/analyzer.php:891
 msgid "Update Here"
 msgstr "Hier Bijwerken"
 
@@ -8415,10 +8421,10 @@ msgstr "Hier Bijwerken"
 #: inc/analyzer/seo-analyzer.php:1027
 #: inc/analyzer/seo-analyzer.php:1125
 #: inc/analyzer/seo-analyzer.php:1696
-#: inc/api/analyzer.php:639
-#: inc/api/analyzer.php:711
-#: inc/api/analyzer.php:769
-#: inc/api/analyzer.php:848
+#: inc/api/analyzer.php:611
+#: inc/api/analyzer.php:683
+#: inc/api/analyzer.php:741
+#: inc/api/analyzer.php:820
 msgid "Need Help?"
 msgstr "Hulp Nodig?"
 
@@ -8704,16 +8710,16 @@ msgstr "Voer de juiste URL in het veld Canonieke Tag in"
 #: inc/analyzer/seo-analyzer.php:760
 #: inc/analyzer/seo-analyzer.php:1212
 #: inc/analyzer/seo-analyzer.php:1230
-#: inc/api/analyzer.php:692
-#: inc/api/analyzer.php:753
-#: inc/api/analyzer.php:828
-#: inc/api/analyzer.php:913
+#: inc/api/analyzer.php:664
+#: inc/api/analyzer.php:725
+#: inc/api/analyzer.php:800
+#: inc/api/analyzer.php:885
 msgid "Save your changes"
 msgstr "Sla je wijzigingen op"
 
 #: inc/analyzer/seo-analyzer.php:781
-#: inc/api/analyzer.php:713
-#: inc/api/analyzer.php:770
+#: inc/api/analyzer.php:685
+#: inc/api/analyzer.php:742
 msgid "SureRank Pro helps fix SEO issues across your website using AI, without manual effort."
 msgstr "SureRank Pro helpt SEO-problemen op je website op te lossen met behulp van AI, zonder handmatige inspanning."
 
@@ -9127,296 +9133,296 @@ msgstr "Klik op de afbeeldingsblok"
 msgid "Add a short, clear description in the ALT text field"
 msgstr "Voeg een korte, duidelijke beschrijving toe in het ALT-tekstveld"
 
-#: inc/api/analyzer.php:457
+#: inc/api/analyzer.php:458
 msgid "Google Search Console is currently connected to your site."
 msgstr "Google Search Console is momenteel verbonden met uw site."
 
-#: inc/api/analyzer.php:458
+#: inc/api/analyzer.php:459
 msgid "Google Search Console is not currently connected to your site."
 msgstr "Google Search Console is momenteel niet verbonden met uw site."
 
-#: inc/api/analyzer.php:461
+#: inc/api/analyzer.php:462
 msgid "Search Console helps you understand how your site appears in Google search results. It shows which pages are indexed, how your site is performing, and whether Google is reporting any issues."
 msgstr "Search Console helpt u te begrijpen hoe uw site verschijnt in Google-zoekresultaten. Het toont welke pagina's zijn geïndexeerd, hoe uw site presteert en of Google problemen meldt."
 
-#: inc/api/analyzer.php:462
+#: inc/api/analyzer.php:463
 msgid "Without it connected, you miss important visibility into how Google sees your site."
 msgstr "Zonder verbinding mist u belangrijke zichtbaarheid in hoe Google uw site ziet."
 
-#: inc/api/analyzer.php:468
+#: inc/api/analyzer.php:469
 msgid "You can connect Google Search Console directly from the SureRank Dashboard."
 msgstr "U kunt Google Search Console rechtstreeks verbinden vanuit het SureRank-dashboard."
 
 #. translators: %s is the Search Console URL.
-#: inc/api/analyzer.php:473
+#: inc/api/analyzer.php:474
 #, php-format
 msgid "Go to SureRank ⇾ <a href=\"%s\">Search Console</a>"
 msgstr "Ga naar SureRank ⇾ <a href=\"%s\">Search Console</a>"
 
-#: inc/api/analyzer.php:476
+#: inc/api/analyzer.php:477
 msgid "Sign in with your Google account"
 msgstr "Log in met uw Google-account"
 
-#: inc/api/analyzer.php:477
+#: inc/api/analyzer.php:478
 msgid "Select your site and complete the connection"
 msgstr "Selecteer uw site en voltooi de verbinding"
 
-#: inc/api/analyzer.php:492
+#: inc/api/analyzer.php:493
 msgid "Once connected, SureRank will start using Search Console data to show search performance and indexing insights."
 msgstr "Zodra u verbonden bent, begint SureRank Search Console-gegevens te gebruiken om zoekprestaties en indexeringsinzichten weer te geven."
 
-#: inc/api/analyzer.php:498
-#: inc/api/analyzer.php:932
+#: inc/api/analyzer.php:499
+#: inc/api/analyzer.php:904
 msgid "Need More?"
 msgstr "Meer nodig?"
 
-#: inc/api/analyzer.php:500
+#: inc/api/analyzer.php:501
 msgid "SureRank Pro unlocks advanced insights and recommendations powered by Google Search Console data."
 msgstr "SureRank Pro ontgrendelt geavanceerde inzichten en aanbevelingen aangedreven door gegevens van Google Search Console."
 
-#: inc/api/analyzer.php:590
+#: inc/api/analyzer.php:562
 msgid "Other SEO Plugin Detected"
 msgstr "Andere SEO-plug-in gedetecteerd"
 
-#: inc/api/analyzer.php:590
+#: inc/api/analyzer.php:562
 msgid "No other SEO plugin detected"
 msgstr "Geen andere SEO-plugin gedetecteerd"
 
-#: inc/api/analyzer.php:591
+#: inc/api/analyzer.php:563
 msgid "No other SEO plugin detected on your site."
 msgstr "Geen andere SEO-plugin gedetecteerd op uw site."
 
-#: inc/api/analyzer.php:595
+#: inc/api/analyzer.php:567
 msgid "More than one SEO plugin is currently active on your site."
 msgstr "Meer dan één SEO-plugin is momenteel actief op uw site."
 
 #. translators: %s is the list of active plugins
-#: inc/api/analyzer.php:598
+#: inc/api/analyzer.php:570
 #, php-format
 msgid "Another SEO plugin, %s, is currently active on your site."
 msgstr "Een andere SEO-plugin, %s, is momenteel actief op uw site."
 
-#: inc/api/analyzer.php:603
+#: inc/api/analyzer.php:575
 msgid "SEO plugins manage things like page titles, descriptions, schema, and indexing settings. These signals help search engines understand how your site appears in search results."
 msgstr "SEO-plugins beheren zaken zoals paginatitels, beschrijvingen, schema's en indexeringsinstellingen. Deze signalen helpen zoekmachines te begrijpen hoe uw site verschijnt in zoekresultaten."
 
-#: inc/api/analyzer.php:604
+#: inc/api/analyzer.php:576
 msgid "When multiple SEO plugins are active, they can create duplicate or conflicting signals. This makes it harder for search engines to understand which information to trust."
 msgstr "Wanneer meerdere SEO-plugins actief zijn, kunnen ze dubbele of conflicterende signalen creëren. Dit maakt het moeilijker voor zoekmachines om te begrijpen welke informatie te vertrouwen."
 
-#: inc/api/analyzer.php:605
+#: inc/api/analyzer.php:577
 msgid "Using a single SEO plugin helps keep everything consistent and easier to manage."
 msgstr "Het gebruik van een enkele SEO-plugin helpt alles consistent en gemakkelijker te beheren."
 
-#: inc/api/analyzer.php:611
+#: inc/api/analyzer.php:583
 msgid "You can manage this from your WordPress plugins list."
 msgstr "U kunt dit beheren vanuit uw WordPress-pluginlijst."
 
 #. translators: %s is the Plugins menu URL.
-#: inc/api/analyzer.php:616
+#: inc/api/analyzer.php:588
 #, php-format
 msgid "Go to <a href=\"%s\">Plugins ⇾ Installed Plugins</a>"
 msgstr "Ga naar <a href=\"%s\">Plugins ⇾ Geïnstalleerde Plugins</a>"
 
-#: inc/api/analyzer.php:619
+#: inc/api/analyzer.php:591
 msgid "Identify any other active SEO plugins"
 msgstr "Identificeer eventuele andere actieve SEO-plugins"
 
-#: inc/api/analyzer.php:620
+#: inc/api/analyzer.php:592
 msgid "Deactivate the ones you are not using"
 msgstr "Deactiveer de plugins die u niet gebruikt"
 
-#: inc/api/analyzer.php:626
+#: inc/api/analyzer.php:598
 msgid "Deactivate Here"
 msgstr "Deactiveer hier"
 
-#: inc/api/analyzer.php:641
+#: inc/api/analyzer.php:613
 msgid "SureRank Premium users get access to our support team, available 24×7, to help review plugin conflicts and guide you through cleanup."
 msgstr "SureRank Premium-gebruikers krijgen toegang tot ons ondersteuningsteam, dat 24×7 beschikbaar is, om te helpen bij het beoordelen van pluginconflicten en u door de opruiming te begeleiden."
 
-#: inc/api/analyzer.php:663
+#: inc/api/analyzer.php:635
 msgid "Your site does currently have a tagline set."
 msgstr "Uw site heeft momenteel een tagline ingesteld."
 
-#: inc/api/analyzer.php:663
+#: inc/api/analyzer.php:635
 msgid "Your site does not currently have a tagline set."
 msgstr "Uw site heeft momenteel geen tagline ingesteld."
 
-#: inc/api/analyzer.php:666
+#: inc/api/analyzer.php:638
 msgid "A site tagline is a short line that describes what your website is about."
 msgstr "Een site-tagline is een korte zin die beschrijft waar uw website over gaat."
 
-#: inc/api/analyzer.php:667
+#: inc/api/analyzer.php:639
 msgid "It often appears alongside your site title and helps visitors quickly understand your purpose."
 msgstr "Het verschijnt vaak naast uw sitetitel en helpt bezoekers snel uw doel te begrijpen."
 
-#: inc/api/analyzer.php:668
+#: inc/api/analyzer.php:640
 msgid "A clear tagline sets context, supports your brand, and makes your site feel more intentional."
 msgstr "Een duidelijke tagline stelt de context, ondersteunt uw merk en maakt uw site meer doelgericht."
 
-#: inc/api/analyzer.php:676
+#: inc/api/analyzer.php:648
 msgid "A good tagline is simple and easy to understand."
 msgstr "Een goede tagline is eenvoudig en gemakkelijk te begrijpen."
 
-#: inc/api/analyzer.php:677
+#: inc/api/analyzer.php:649
 msgid "It should describe what you do or who your site is for."
 msgstr "Het moet beschrijven wat u doet of voor wie uw site is."
 
-#: inc/api/analyzer.php:678
+#: inc/api/analyzer.php:650
 msgid "Aim for a single clear sentence that feels natural and human."
 msgstr "Streef naar een enkele duidelijke zin die natuurlijk en menselijk aanvoelt."
 
-#: inc/api/analyzer.php:681
+#: inc/api/analyzer.php:653
 msgid "Avoid buzzwords or vague phrases that do not say much about your site."
 msgstr "Vermijd modewoorden of vage zinnen die niet veel over uw site zeggen."
 
-#: inc/api/analyzer.php:687
+#: inc/api/analyzer.php:659
 msgid "You can update your site tagline from the WordPress settings."
 msgstr "U kunt uw site-tagline bijwerken vanuit de WordPress-instellingen."
 
-#: inc/api/analyzer.php:690
+#: inc/api/analyzer.php:662
 msgid "Go to Settings ⇾ General"
 msgstr "Ga naar Instellingen ⇾ Algemeen"
 
-#: inc/api/analyzer.php:691
+#: inc/api/analyzer.php:663
 msgid "Update the Tagline field"
 msgstr "Werk het Tagline-veld bij"
 
-#: inc/api/analyzer.php:733
+#: inc/api/analyzer.php:705
 msgid "Robots.txt is accessible."
 msgstr "Robots.txt is toegankelijk."
 
-#: inc/api/analyzer.php:734
+#: inc/api/analyzer.php:706
 msgid "Your site has an accessible robots.txt file."
 msgstr "Uw site heeft een toegankelijke robots.txt-bestand."
 
-#: inc/api/analyzer.php:736
+#: inc/api/analyzer.php:708
 msgid "Robots.txt is missing or inaccessible."
 msgstr "Robots.txt ontbreekt of is niet toegankelijk."
 
-#: inc/api/analyzer.php:737
+#: inc/api/analyzer.php:709
 msgid "Your site does not currently have an accessible robots.txt file."
 msgstr "Uw site heeft momenteel geen toegankelijk robots.txt-bestand."
 
-#: inc/api/analyzer.php:740
+#: inc/api/analyzer.php:712
 msgid "The robots.txt file tells search engines which parts of your site they are allowed to crawl and index."
 msgstr "Het robots.txt-bestand vertelt zoekmachines welke delen van uw site ze mogen crawlen en indexeren."
 
-#: inc/api/analyzer.php:741
+#: inc/api/analyzer.php:713
 msgid "When this file is missing or inaccessible, search engines may have trouble understanding how to properly crawl your site."
 msgstr "Wanneer dit bestand ontbreekt of niet toegankelijk is, kunnen zoekmachines moeite hebben om te begrijpen hoe ze uw site correct moeten crawlen."
 
-#: inc/api/analyzer.php:742
+#: inc/api/analyzer.php:714
 msgid "Having a valid robots.txt file helps avoid crawling issues and ensures search engines focus on the right pages."
 msgstr "Een geldig robots.txt-bestand helpt om crawlen problemen te voorkomen en zorgt ervoor dat zoekmachines zich op de juiste pagina's concentreren."
 
-#: inc/api/analyzer.php:748
+#: inc/api/analyzer.php:720
 msgid "You can create or edit your robots.txt file directly from SureRank."
 msgstr "Je kunt je robots.txt-bestand rechtstreeks vanuit SureRank maken of bewerken."
 
-#: inc/api/analyzer.php:751
+#: inc/api/analyzer.php:723
 msgid "Go to SureRank ⇾ Advanced ⇾ Robots.txt Editor"
 msgstr "Ga naar SureRank ⇾ Geavanceerd ⇾ Robots.txt-editor"
 
-#: inc/api/analyzer.php:752
+#: inc/api/analyzer.php:724
 msgid "Review or add the required rules"
 msgstr "Beoordeel of voeg de vereiste regels toe"
 
-#: inc/api/analyzer.php:802
+#: inc/api/analyzer.php:774
 msgid "Search engine visibility is enabled."
 msgstr "De zichtbaarheid voor zoekmachines is ingeschakeld."
 
-#: inc/api/analyzer.php:803
+#: inc/api/analyzer.php:775
 msgid "Search engine visibility is currently enabled in your WordPress settings."
 msgstr "De zichtbaarheid voor zoekmachines is momenteel ingeschakeld in je WordPress-instellingen."
 
-#: inc/api/analyzer.php:805
+#: inc/api/analyzer.php:777
 msgid "Search engine visibility is disabled."
 msgstr "De zichtbaarheid voor zoekmachines is uitgeschakeld."
 
-#: inc/api/analyzer.php:806
+#: inc/api/analyzer.php:778
 msgid "Search engine visibility is currently disabled in your WordPress settings."
 msgstr "De zichtbaarheid voor zoekmachines is momenteel uitgeschakeld in je WordPress-instellingen."
 
-#: inc/api/analyzer.php:809
+#: inc/api/analyzer.php:781
 msgid "WordPress includes a setting that tells search engines whether they are allowed to index your site. Indexing means your pages can appear in search results."
 msgstr "WordPress bevat een instelling die zoekmachines vertelt of ze je site mogen indexeren. Indexeren betekent dat je pagina's in zoekresultaten kunnen verschijnen."
 
-#: inc/api/analyzer.php:810
+#: inc/api/analyzer.php:782
 msgid "This setting is commonly used while a site is being built or kept private. When enabled, it asks search engines not to index new pages."
 msgstr "Deze instelling wordt vaak gebruikt terwijl een site wordt gebouwd of privé wordt gehouden. Wanneer ingeschakeld, vraagt het zoekmachines om nieuwe pagina's niet te indexeren."
 
-#: inc/api/analyzer.php:811
+#: inc/api/analyzer.php:783
 msgid "If this setting remains enabled by mistake, your site may not appear in search results even if everything else is set up correctly. It can quietly limit visibility without showing obvious errors."
 msgstr "Als deze instelling per ongeluk ingeschakeld blijft, kan je site mogelijk niet in zoekresultaten verschijnen, zelfs als alles andere correct is ingesteld. Het kan stilletjes de zichtbaarheid beperken zonder duidelijke fouten te tonen."
 
-#: inc/api/analyzer.php:817
+#: inc/api/analyzer.php:789
 msgid "You can change this setting from your WordPress dashboard."
 msgstr "Je kunt deze instelling wijzigen vanuit je WordPress-dashboard."
 
 #. translators: %s is the URL of the WordPress Reading settings page
-#: inc/api/analyzer.php:823
+#: inc/api/analyzer.php:795
 #, php-format
 msgid "Go to <a href=\"%s\">Settings ⇾ Reading</a>"
 msgstr "Ga naar <a href=\"%s\">Instellingen ⇾ Lezen</a>"
 
-#: inc/api/analyzer.php:826
+#: inc/api/analyzer.php:798
 msgid "Find the option labeled “Search engine visibility”"
 msgstr "Zoek de optie met het label “Zichtbaarheid voor zoekmachines”"
 
-#: inc/api/analyzer.php:827
+#: inc/api/analyzer.php:799
 msgid "Make sure the checkbox is not selected"
 msgstr "Zorg ervoor dat het selectievakje niet is aangevinkt"
 
-#: inc/api/analyzer.php:850
+#: inc/api/analyzer.php:822
 msgid "SureRank Pro users get access to our support team, available 24×7, to help detect visibility and indexing issues before they affect your site."
 msgstr "SureRank Pro-gebruikers krijgen toegang tot ons ondersteuningsteam, dat 24×7 beschikbaar is, om zichtbaarheid en indexeringsproblemen te helpen detecteren voordat ze je site beïnvloeden."
 
-#: inc/api/analyzer.php:891
+#: inc/api/analyzer.php:863
 msgid "XML sitemap is accessible."
 msgstr "XML-sitemap is toegankelijk."
 
-#: inc/api/analyzer.php:892
+#: inc/api/analyzer.php:864
 msgid "The XML sitemap for this site is accessible to search engines."
 msgstr "De XML-sitemap voor deze site is toegankelijk voor zoekmachines."
 
-#: inc/api/analyzer.php:894
+#: inc/api/analyzer.php:866
 msgid "XML sitemap is missing or inaccessible."
 msgstr "XML-sitemap ontbreekt of is niet toegankelijk."
 
-#: inc/api/analyzer.php:895
+#: inc/api/analyzer.php:867
 msgid "The XML sitemap for this site is missing or cannot be accessed."
 msgstr "De XML-sitemap voor deze site ontbreekt of kan niet worden geopend."
 
-#: inc/api/analyzer.php:898
+#: inc/api/analyzer.php:870
 msgid "An XML sitemap helps search engines discover and understand the pages on your site."
 msgstr "Een XML-sitemap helpt zoekmachines om de pagina's op je site te ontdekken en te begrijpen."
 
-#: inc/api/analyzer.php:899
+#: inc/api/analyzer.php:871
 msgid "When the sitemap is missing or cannot be accessed, search engines may take longer to find new or updated pages."
 msgstr "Wanneer de sitemap ontbreekt of niet toegankelijk is, kan het langer duren voordat zoekmachines nieuwe of bijgewerkte pagina's vinden."
 
-#: inc/api/analyzer.php:900
+#: inc/api/analyzer.php:872
 msgid "Having a sitemap makes it easier for search engines to crawl your site efficiently."
 msgstr "Een sitemap hebben maakt het gemakkelijker voor zoekmachines om je site efficiënt te crawlen."
 
-#: inc/api/analyzer.php:901
+#: inc/api/analyzer.php:873
 msgid "It also helps ensure important pages are not missed during indexing."
 msgstr "Het helpt ook om ervoor te zorgen dat belangrijke pagina's niet worden gemist tijdens het indexeren."
 
-#: inc/api/analyzer.php:907
+#: inc/api/analyzer.php:879
 msgid "You can enable and manage your XML sitemap directly from SureRank."
 msgstr "Je kunt je XML-sitemap rechtstreeks vanuit SureRank inschakelen en beheren."
 
-#: inc/api/analyzer.php:911
+#: inc/api/analyzer.php:883
 msgid "Enable the XML Sitemap toggle"
 msgstr "Schakel de XML-sitemap-schakelaar in"
 
-#: inc/api/analyzer.php:912
+#: inc/api/analyzer.php:884
 msgid "Click on Regenerate Button"
 msgstr "Klik op de Regenereren-knop"
 
-#: inc/api/analyzer.php:934
+#: inc/api/analyzer.php:906
 msgid "Upgrade to SureRank Pro to unlock advanced sitemap types like Video, News, HTML, and Author sitemaps for better search visibility."
 msgstr "Upgrade naar SureRank Pro om geavanceerde sitemaptypes zoals Video, Nieuws, HTML en Auteur-sitemaps te ontgrendelen voor betere zoekzichtbaarheid."
 
@@ -9615,7 +9621,7 @@ msgstr "Voegt automatisch alt-tekst toe aan afbeeldingen die er een missen, met 
 msgid "Generate SEO-friendly image alt text automatically to improve accessibility and boost image search visibility."
 msgstr "Genereer automatisch SEO-vriendelijke alt-tekst voor afbeeldingen om de toegankelijkheid te verbeteren en de zichtbaarheid in de afbeeldingszoekopdracht te vergroten."
 
-#: inc/api/analyzer.php:910
+#: inc/api/analyzer.php:882
 msgid "Go to SureRank ⇾ General ⇾ Sitemaps"
 msgstr "Ga naar SureRank ⇾ Algemeen ⇾ Sitemap"
 
@@ -9737,11 +9743,11 @@ msgstr "Kan geen afbeeldingen ophalen van externe API"
 msgid "Invalid response from external API"
 msgstr "Ongeldig antwoord van externe API"
 
-#: inc/functions/api-utils.php:65
+#: inc/functions/api-utils.php:80
 msgid "You've reached your free usage limit. Upgrade to Pro for additional credits."
 msgstr "Je hebt je gratis gebruikslimiet bereikt. Upgrade naar Pro voor extra credits."
 
-#: inc/functions/api-utils.php:66
+#: inc/functions/api-utils.php:81
 msgid "You've used all your AI credits for today. Your credits will refresh automatically tomorrow."
 msgstr "Je hebt al je AI-credits voor vandaag gebruikt. Je credits worden morgen automatisch vernieuwd."
 
@@ -9837,7 +9843,7 @@ msgstr "Controles zijn gebaseerd op de gepubliceerde pagina. Vernieuw om de laat
 msgid "Learn"
 msgstr "Leren"
 
-#: inc/admin/seo-popup.php:112
+#: inc/admin/seo-popup.php:115
 msgid "Click here"
 msgstr "Klik hier"
 
@@ -10123,3 +10129,532 @@ msgstr "Neem contact op met ondersteuning"
 #: build/admin-dashboard/index.js:1
 msgid "Set up SureRank end to end with a step-by-step guide to make your site discoverable, shareable, and ready to rank."
 msgstr "Stel SureRank van begin tot eind in met een stapsgewijze handleiding om je site ontdekbaar, deelbaar en klaar om te ranken te maken."
+
+#: inc/abilities/abilities-registrar.php:99
+msgid "SureRank MCP Server"
+msgstr "SureRank MCP Server"
+
+#: inc/abilities/abilities-registrar.php:100
+msgid "SureRank MCP Server for SEO settings, metadata, and analysis workflows."
+msgstr "SureRank MCP Server voor SEO-instellingen, metadata en analysewerkstromen."
+
+#: inc/abilities/abilities-registrar.php:127
+msgid "SEO settings, metadata, and analysis abilities powered by SureRank."
+msgstr "SEO-instellingen, metadata en analysecapaciteiten aangedreven door SureRank."
+
+#: inc/abilities/analysis/get-post-seo-checks.php:28
+msgid "Get SureRank Post SEO Checks"
+msgstr "Krijg SureRank Post SEO-controles"
+
+#: inc/abilities/analysis/get-post-seo-checks.php:29
+msgid "Retrieve SureRank SEO checks for one or more posts, pages, or custom post type items."
+msgstr "Haal SureRank SEO-controles op voor een of meer berichten, pagina's of items van een aangepast berichttype."
+
+#: inc/abilities/analysis/get-post-seo-checks.php:59
+msgid "One or more post IDs to inspect."
+msgstr "Een of meer post-ID's om te inspecteren."
+
+#: inc/abilities/analysis/get-post-seo-checks.php:106
+msgid "At least one valid post ID is required."
+msgstr "Ten minste één geldige post-ID is vereist."
+
+#: inc/abilities/analysis/get-term-seo-checks.php:28
+msgid "Get SureRank Term SEO Checks"
+msgstr "Krijg SureRank Term SEO-controles"
+
+#: inc/abilities/analysis/get-term-seo-checks.php:29
+msgid "Retrieve SureRank SEO checks for one or more taxonomy terms."
+msgstr "Haal SureRank SEO-controles op voor een of meer taxonomie-termen."
+
+#: inc/abilities/analysis/get-term-seo-checks.php:59
+msgid "One or more term IDs to inspect."
+msgstr "Een of meer term-ID's om te inspecteren."
+
+#: inc/abilities/analysis/get-term-seo-checks.php:106
+msgid "At least one valid term ID is required."
+msgstr "Ten minste één geldige term-ID is vereist."
+
+#: inc/abilities/content/get-post-seo.php:28
+msgid "Get SureRank Post SEO"
+msgstr "Krijg SureRank Post SEO"
+
+#: inc/abilities/content/get-post-seo.php:29
+msgid "Retrieve SureRank SEO settings and inherited defaults for a post, page, or custom post type item."
+msgstr "Haal SureRank SEO-instellingen en geërfde standaardinstellingen op voor een bericht, pagina of item van een aangepast berichttype."
+
+#: inc/abilities/content/get-post-seo.php:59
+#: inc/abilities/content/update-post-seo.php:61
+msgid "The target post ID."
+msgstr "De doel-post-ID."
+
+#: inc/abilities/content/get-post-seo.php:63
+msgid "The target post type slug."
+msgstr "De doel-posttype slug."
+
+#: inc/abilities/content/get-post-seo.php:99
+msgid "A valid post ID and post type are required."
+msgstr "Een geldige post-ID en posttype zijn vereist."
+
+#: inc/abilities/content/get-post-seo.php:107
+#: inc/abilities/content/list-content-items.php:148
+msgid "The provided post type slug does not exist."
+msgstr "De opgegeven posttype slug bestaat niet."
+
+#: inc/abilities/content/get-post-seo.php:116
+msgid "The provided post ID does not exist."
+msgstr "De opgegeven post-ID bestaat niet."
+
+#: inc/abilities/content/get-post-seo.php:124
+msgid "The provided post type does not match the post ID."
+msgstr "Het opgegeven posttype komt niet overeen met de post-ID."
+
+#: inc/abilities/content/get-term-seo.php:28
+msgid "Get SureRank Term SEO"
+msgstr "Krijg SureRank Term SEO"
+
+#: inc/abilities/content/get-term-seo.php:29
+msgid "Retrieve SureRank SEO settings and inherited defaults for a taxonomy term."
+msgstr "Haal SureRank SEO-instellingen en geërfde standaardinstellingen op voor een taxonomie-term."
+
+#: inc/abilities/content/get-term-seo.php:59
+#: inc/abilities/content/update-term-seo.php:61
+msgid "The target term ID."
+msgstr "De doel-term-ID."
+
+#: inc/abilities/content/get-term-seo.php:63
+msgid "The taxonomy slug for the term."
+msgstr "De taxonomie slug voor de term."
+
+#: inc/abilities/content/get-term-seo.php:100
+msgid "A valid term ID and taxonomy slug are required."
+msgstr "Een geldige term-ID en taxonomie slug zijn vereist."
+
+#: inc/abilities/content/get-term-seo.php:108
+#: inc/abilities/content/list-content-items.php:140
+msgid "The provided taxonomy slug does not exist."
+msgstr "De opgegeven taxonomie slug bestaat niet."
+
+#: inc/abilities/content/get-term-seo.php:117
+msgid "The provided term ID does not exist for this taxonomy."
+msgstr "De opgegeven term-ID bestaat niet voor deze taxonomie."
+
+#: inc/abilities/content/list-content-items.php:27
+msgid "List SureRank Content Items"
+msgstr "Lijst SureRank Inhoud Items"
+
+#: inc/abilities/content/list-content-items.php:28
+msgid "List posts, pages, custom post types, or taxonomy terms to find the IDs needed for SureRank SEO actions."
+msgstr "Lijst berichten, pagina's, aangepaste berichttypes of taxonomie-termen om de ID's te vinden die nodig zijn voor SureRank SEO-acties."
+
+#: inc/abilities/content/list-content-items.php:60
+msgid "Whether to list post objects or taxonomy terms."
+msgstr "Of de postobjecten of taxonomie-termen moeten worden vermeld."
+
+#: inc/abilities/content/list-content-items.php:64
+msgid "The post type slug or taxonomy slug to list."
+msgstr "De posttype slug of taxonomie slug om te vermelden."
+
+#: inc/abilities/content/list-content-items.php:68
+msgid "Optional search query for titles or term names."
+msgstr "Optionele zoekopdracht voor titels of termnamen."
+
+#: inc/abilities/content/list-content-items.php:74
+msgid "Results page number."
+msgstr "Resultaten pagina nummer."
+
+#: inc/abilities/content/list-content-items.php:81
+msgid "Results per page."
+msgstr "Resultaten per pagina."
+
+#: inc/abilities/content/list-content-items.php:132
+msgid "A post type or taxonomy slug is required."
+msgstr "Een posttype of taxonomie slug is vereist."
+
+#: inc/abilities/content/list-content-types.php:28
+msgid "List SureRank Content Types"
+msgstr "Lijst SureRank Inhoud Types"
+
+#: inc/abilities/content/list-content-types.php:29
+msgid "List the post types, taxonomies, and archives that SureRank can optimize."
+msgstr "Lijst de posttypes, taxonomieën en archieven die SureRank kan optimaliseren."
+
+#: inc/abilities/content/update-post-seo.php:30
+msgid "Update SureRank Post SEO"
+msgstr "Update SureRank Post SEO"
+
+#: inc/abilities/content/update-post-seo.php:31
+msgid "Update SureRank SEO metadata for a post, page, or custom post type item."
+msgstr "Update SureRank SEO-metadata voor een bericht, pagina of item van een aangepast berichttype."
+
+#: inc/abilities/content/update-post-seo.php:65
+msgid "Key-value pairs of SureRank post SEO metadata to update."
+msgstr "Sleutel-waarde paren van SureRank post SEO-metadata om bij te werken."
+
+#: inc/abilities/content/update-post-seo.php:103
+msgid "A valid post ID and metadata payload are required."
+msgstr "Een geldige post-ID en metadata payload zijn vereist."
+
+#: inc/abilities/content/update-post-seo.php:111
+msgid "No post was found for the provided ID."
+msgstr "Er is geen post gevonden voor de opgegeven ID."
+
+#: inc/abilities/content/update-post-seo.php:122
+msgid "No valid SureRank post SEO keys were provided."
+msgstr "Er zijn geen geldige SureRank post SEO-sleutels opgegeven."
+
+#: inc/abilities/content/update-term-seo.php:30
+msgid "Update SureRank Term SEO"
+msgstr "Update SureRank Term SEO"
+
+#: inc/abilities/content/update-term-seo.php:31
+msgid "Update SureRank SEO metadata for a taxonomy term."
+msgstr "Update SureRank SEO-metadata voor een taxonomie-term."
+
+#: inc/abilities/content/update-term-seo.php:65
+msgid "Key-value pairs of SureRank term SEO metadata to update."
+msgstr "Sleutel-waarde paren van SureRank term SEO-metadata om bij te werken."
+
+#: inc/abilities/content/update-term-seo.php:102
+msgid "A valid term ID and metadata payload are required."
+msgstr "Een geldige term-ID en metadata payload zijn vereist."
+
+#: inc/abilities/content/update-term-seo.php:110
+msgid "No term was found for the provided ID."
+msgstr "Er is geen term gevonden voor de opgegeven ID."
+
+#: inc/abilities/content/update-term-seo.php:121
+msgid "No valid SureRank term SEO keys were provided."
+msgstr "Er zijn geen geldige SureRank-term SEO-sleutels opgegeven."
+
+#: inc/abilities/settings/get-global-settings.php:28
+msgid "Get SureRank Global Settings"
+msgstr "Krijg SureRank Global Instellingen"
+
+#: inc/abilities/settings/get-global-settings.php:29
+msgid "Retrieve the current SureRank global SEO settings."
+msgstr "Haal de huidige SureRank globale SEO-instellingen op."
+
+#: inc/abilities/settings/get-global-settings.php:59
+msgid "Optional list of specific setting keys to return. Omit to return all SureRank settings."
+msgstr "Optionele lijst van specifieke instelling sleutels om terug te geven. Laat weg om alle SureRank-instellingen terug te geven."
+
+#: inc/abilities/settings/get-robots-txt.php:27
+msgid "Get SureRank Robots.txt"
+msgstr "Krijg SureRank Robots.txt"
+
+#: inc/abilities/settings/get-robots-txt.php:28
+msgid "Retrieve the custom robots.txt content currently stored by SureRank."
+msgstr "Haal de aangepaste robots.txt-inhoud op die momenteel door SureRank is opgeslagen."
+
+#: inc/abilities/settings/get-sitemap-settings.php:38
+msgid "Get SureRank Sitemap Settings"
+msgstr "Krijg SureRank Sitemap Instellingen"
+
+#: inc/abilities/settings/get-sitemap-settings.php:39
+msgid "Retrieve SureRank XML sitemap settings, including sitemap toggles and excluded post types/taxonomies."
+msgstr "Haal SureRank XML sitemapinstellingen op, inclusief sitemap-schakelaars en uitgesloten posttypes/taxonomieën."
+
+#: inc/abilities/settings/update-global-settings.php:30
+msgid "Update SureRank Global Settings"
+msgstr "Werk SureRank Global Instellingen bij"
+
+#: inc/abilities/settings/update-global-settings.php:31
+msgid "Update one or more SureRank global SEO settings."
+msgstr "Werk een of meer SureRank globale SEO-instellingen bij."
+
+#: inc/abilities/settings/update-global-settings.php:61
+msgid "Key-value pairs of SureRank global settings to update."
+msgstr "Sleutel-waarde paren van SureRank globale instellingen om bij te werken."
+
+#: inc/abilities/settings/update-global-settings.php:96
+msgid "A settings payload is required."
+msgstr "Een instellingenpayload is vereist."
+
+#: inc/abilities/settings/update-global-settings.php:107
+msgid "No valid SureRank global setting keys were provided."
+msgstr "Er zijn geen geldige SureRank globale instelling sleutels opgegeven."
+
+#: inc/abilities/settings/update-robots-txt.php:27
+msgid "Update SureRank Robots.txt"
+msgstr "Werk SureRank Robots.txt bij"
+
+#: inc/abilities/settings/update-robots-txt.php:28
+msgid "Update the custom robots.txt content stored by SureRank."
+msgstr "Werk de aangepaste robots.txt-inhoud bij die door SureRank is opgeslagen."
+
+#: inc/abilities/settings/update-robots-txt.php:58
+msgid "The full robots.txt content to store."
+msgstr "De volledige robots.txt-inhoud om op te slaan."
+
+#: inc/abilities/settings/update-sitemap-settings.php:38
+msgid "Update SureRank Sitemap Settings"
+msgstr "Werk SureRank Sitemap Instellingen bij"
+
+#: inc/abilities/settings/update-sitemap-settings.php:39
+msgid "Update SureRank XML sitemap settings, including sitemap toggles and excluded post types/taxonomies."
+msgstr "Werk SureRank XML sitemapinstellingen bij, inclusief sitemap-schakelaars en uitgesloten posttypes/taxonomieën."
+
+#: inc/abilities/settings/update-sitemap-settings.php:69
+msgid "Sitemap settings to update."
+msgstr "Sitemapinstellingen om bij te werken."
+
+#: inc/abilities/settings/update-sitemap-settings.php:104
+msgid "A sitemap settings payload is required."
+msgstr "Een sitemapinstellingenpayload is vereist."
+
+#: inc/abilities/settings/update-sitemap-settings.php:115
+msgid "No valid sitemap setting keys were provided."
+msgstr "Er zijn geen geldige sitemapinstelling sleutels opgegeven."
+
+#: inc/admin/review-notice.php:177
+msgid "Invalid nonce."
+msgstr "Ongeldige nonce."
+
+#: inc/admin/review-notice.php:181
+msgid "Unauthorized user."
+msgstr "Niet-geautoriseerde gebruiker."
+
+#: inc/admin/review-notice.php:189
+msgid "Invalid parameters."
+msgstr "Ongeldige parameters."
+
+#: inc/admin/review-notice.php:254
+msgid "Amazing! SureRank is helping optimize your site - let's keep growing together!"
+msgstr "Geweldig! SureRank helpt je site te optimaliseren - laten we samen blijven groeien!"
+
+#: inc/admin/review-notice.php:256
+msgid "If SureRank has been helpful, would you mind taking a moment to leave a 5-star review on WordPress.org?"
+msgstr "Als SureRank nuttig is geweest, zou je dan een moment willen nemen om een 5-sterrenrecensie achter te laten op WordPress.org?"
+
+#: inc/admin/review-notice.php:273
+msgid "Maybe later"
+msgstr "Misschien later"
+
+#: inc/admin/review-notice.php:277
+msgid "I already did"
+msgstr "Ik heb het al gedaan"
+
+#: inc/functions/api-utils.php:65
+msgid "Invalid authentication token format."
+msgstr "Ongeldig formaat van authenticatietoken."
+
+#: inc/google-search-console/dashboard.php:373
+msgid "A post_id or term_id is required."
+msgstr "Een post_id of term_id is vereist."
+
+#: inc/google-search-console/dashboard.php:383
+msgid "The connected Search Console property does not match this site."
+msgstr "De verbonden Search Console-eigenschap komt niet overeen met deze site."
+
+#: inc/google-search-console/dashboard.php:393
+msgid "You do not have permission to view indexing status for this post."
+msgstr "Je hebt geen toestemming om de indexeringsstatus voor deze post te bekijken."
+
+#: inc/google-search-console/dashboard.php:403
+msgid "You do not have permission to view indexing status for this term."
+msgstr "Je hebt geen toestemming om de indexeringsstatus voor deze term te bekijken."
+
+#: inc/google-search-console/url-inspection.php:82
+#: inc/google-search-console/url-inspection.php:98
+msgid "No public URL available yet (draft or invalid object)."
+msgstr "Er is nog geen openbare URL beschikbaar (concept of ongeldig object)."
+
+#: inc/google-search-console/url-inspection.php:194
+#: build/seo-popup/index.js:1
+msgid "Unable to fetch indexing status."
+msgstr "Niet mogelijk om indexeringsstatus op te halen."
+
+#: inc/google-search-console/url-inspection.php:273
+msgid "No Search Console property selected."
+msgstr "Geen Search Console-eigenschap geselecteerd."
+
+#: inc/schema/schemas-api.php:353
+msgid "Schema recommendations are disabled by site configuration."
+msgstr "Schema-aanbevelingen zijn uitgeschakeld door de siteconfiguratie."
+
+#: inc/schema/schemas-api.php:375
+msgid "Please provide post title or content to generate schema recommendations."
+msgstr "Geef een posttitel of inhoud op om schema-aanbevelingen te genereren."
+
+#: inc/schema/schemas-api.php:405
+#: inc/schema/schemas-api.php:556
+msgid "Unable to generate schema recommendations right now. Please try again."
+msgstr "Momenteel niet mogelijk om schema-aanbevelingen te genereren. Probeer het opnieuw."
+
+#: inc/schema/schemas-api.php:466
+msgid "Invalid recommendation event key."
+msgstr "Ongeldige aanbevelingsevenement sleutel."
+
+#: build/admin-dashboard/index.js:1
+msgid "WooCommerce"
+msgstr "WooCommerce"
+
+#: build/admin-dashboard/index.js:1
+msgid "Enable SureRank support for WooCommerce store content, including product SEO fields, product schema, and metadata used across product and shop pages. Turn this off only if you do not want SureRank to load WooCommerce-specific SEO compatibility."
+msgstr "Schakel SureRank-ondersteuning in voor WooCommerce-winkelinhoud, inclusief product SEO-velden, product schema en metadata die op product- en winkelpagina's worden gebruikt. Zet dit uit als je niet wilt dat SureRank WooCommerce-specifieke SEO-compatibiliteit laadt."
+
+#: build/admin-dashboard/index.js:1
+msgid "Angie"
+msgstr "Angie"
+
+#: build/admin-dashboard/index.js:1
+msgid "Enable SureRank compatibility with Angie so Angie can access supported SEO actions and data where both plugins integrate. Turn this off if you want to prevent Angie from using SureRank-specific integration points."
+msgstr "Schakel de SureRank-compatibiliteit in met Angie, zodat Angie toegang heeft tot ondersteunde SEO-acties en gegevens waar beide plugins integreren. Zet dit uit als je wilt voorkomen dat Angie gebruikmaakt van SureRank-specifieke integratiepunten."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Integrations"
+msgstr "Integraties"
+
+#: build/admin-dashboard/index.js:1
+msgid "Manage compatibility with supported third-party tools."
+msgstr "Beheer de compatibiliteit met ondersteunde externe tools."
+
+#: build/admin-dashboard/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Schema Markup"
+msgstr "Schema Markup"
+
+#: build/seo-popup/index.js:1
+msgid "Checking…"
+msgstr "Controleren…"
+
+#: build/seo-popup/index.js:1
+msgid "Not available"
+msgstr "Niet beschikbaar"
+
+#: build/seo-popup/index.js:1
+msgid "Indexed"
+msgstr "Geïndexeerd"
+
+#: build/seo-popup/index.js:1
+msgid "Crawled, not indexed"
+msgstr "Gecrawld, niet geïndexeerd"
+
+#: build/seo-popup/index.js:1
+msgid "Discovered, not indexed"
+msgstr "Ontdekt, niet geïndexeerd"
+
+#: build/seo-popup/index.js:1
+msgid "Noindex"
+msgstr "Geen index"
+
+#: build/seo-popup/index.js:1
+msgid "Not indexed"
+msgstr "Niet geïndexeerd"
+
+#: build/seo-popup/index.js:1
+msgid "Checking indexing status…"
+msgstr "Controleren indexstatus…"
+
+#: build/seo-popup/index.js:1
+msgid "Search Console quota reached. Try again later."
+msgstr "Quota van de Search Console bereikt. Probeer het later opnieuw."
+
+#: build/seo-popup/index.js:1
+msgid "You do not have permission to view this indexing status."
+msgstr "Je hebt geen toestemming om deze indexstatus te bekijken."
+
+#: build/seo-popup/index.js:1
+msgid "Save the post as published to inspect its URL."
+msgstr "Sla de post op als gepubliceerd om de URL te inspecteren."
+
+#: build/seo-popup/index.js:1
+msgid "Connect a Search Console property to see indexing status."
+msgstr "Verbind een Search Console-eigendom om de indexstatus te zien."
+
+#: build/seo-popup/index.js:1
+#, js-format
+msgid "Last checked %s"
+msgstr "Laatst gecontroleerd %s"
+
+#: build/seo-popup/index.js:1
+msgid "just now"
+msgstr "zojuist"
+
+#: build/seo-popup/index.js:1
+#, js-format
+msgid "%d min ago"
+msgstr "%d min geleden"
+
+#: build/seo-popup/index.js:1
+#, js-format
+msgid "%d h ago"
+msgstr "%d u geleden"
+
+#: build/seo-popup/index.js:1
+#, js-format
+msgid "%d d ago"
+msgstr "%d d geleden"
+
+#: build/seo-popup/index.js:1
+msgid "Refresh indexing status"
+msgstr "Vernieuw indexstatus"
+
+#: build/seo-popup/index.js:1
+msgid "Open Analyze tab"
+msgstr "Open het tabblad Analyseren"
+
+#: build/seo-popup/index.js:1
+msgid "Please add post title or content first to get schema recommendations."
+msgstr "Voeg eerst de posttitel of inhoud toe om schema-aanbevelingen te krijgen."
+
+#: build/seo-popup/index.js:1
+msgid "Unable to recommend schema right now. Please try again."
+msgstr "Momenteel kunnen er geen schema-aanbevelingen worden gedaan. Probeer het opnieuw."
+
+#: build/seo-popup/index.js:1
+msgid "No relevant schema recommendations found for this content."
+msgstr "Geen relevante schema-aanbevelingen gevonden voor deze inhoud."
+
+#: build/seo-popup/index.js:1
+msgid "Schema recommendation timed out. Please try again in a moment."
+msgstr "Schema-aanbeveling is verlopen. Probeer het over een moment opnieuw."
+
+#: build/seo-popup/index.js:1
+msgid "You have reached your monthly schema recommendation limit."
+msgstr "Je hebt je maandelijkse limiet voor schema-aanbevelingen bereikt."
+
+#: build/seo-popup/index.js:1
+msgid "Schema recommendations are unavailable for your current plan."
+msgstr "Schema-aanbevelingen zijn niet beschikbaar voor je huidige plan."
+
+#: build/seo-popup/index.js:1
+msgid "Recommended for this page"
+msgstr "Aanbevolen voor deze pagina"
+
+#: build/seo-popup/index.js:1
+msgid "Refresh suggestions"
+msgstr "Vernieuw suggesties"
+
+#: build/seo-popup/index.js:1
+msgid "Companion"
+msgstr "Companion"
+
+#: build/seo-popup/index.js:1
+msgid "Dismiss"
+msgstr "Afwijzen"
+
+#: build/seo-popup/index.js:1
+msgid "Upgrade to Add"
+msgstr "Upgrade om toe te voegen"
+
+#: build/seo-popup/index.js:1
+msgid "No missing high-relevance schema found. Try adding more content context and refresh suggestions."
+msgstr "Geen ontbrekende schema's met hoge relevantie gevonden. Probeer meer inhoudscontext toe te voegen en vernieuw de suggesties."
+
+#: build/seo-popup/index.js:1
+msgid "Recommend Schema Using AI"
+msgstr "Aanbevelen Schema met AI"
+
+#: build/seo-popup/index.js:1
+msgid "Recommending…"
+msgstr "Aanbevelen…"
+
+#: build/seo-popup/index.js:1
+msgid "Already Added"
+msgstr "Al toegevoegd"
+
+#: build/seo-popup/index.js:1
+msgid "Add"
+msgstr "Toevoegen"

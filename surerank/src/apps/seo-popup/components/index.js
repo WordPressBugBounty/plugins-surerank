@@ -7,3 +7,4 @@ export { Header } from './header';
 export { Footer } from './footer';
 export { default as Analyze } from './analyze';
 export { default as SettingsScreen } from './settings-root';
+export { default as IndexingStatus } from './indexing-status';
