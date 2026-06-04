@@ -41,6 +41,21 @@ const animateVariants = {
 	},
 };
 
+// For Classic Editor drafts WP shows `?p=ID` as the sample anchor href —
+// the slug isn't in the URL until publish — but the live sanitized slug is
+// always kept in `#editable-post-name-full`. Build a synthetic URL from it
+// so the keyword-in-URL analyzer (substring match) sees the current slug.
+export const getClassicEditorPermalink = () => {
+	const slugSpan = document.getElementById( 'editable-post-name-full' );
+	const liveSlug = slugSpan?.textContent?.trim();
+	if ( liveSlug ) {
+		return `${ window.location.origin }/${ liveSlug }/`;
+	}
+
+	const sampleAnchor = document.querySelector( '#sample-permalink a' );
+	return sampleAnchor?.href || surerank_seo_popup?.link || '';
+};
+
 export const getEditorData = () => {
 	const selectors = staticSelect( STORE_NAME );
 
@@ -75,7 +90,7 @@ export const getEditorData = () => {
 		const titleInput = document.getElementById( 'title' );
 		return {
 			postContent: window.tinymce.get( 'content' ).getContent() || '',
-			permalink: surerank_seo_popup?.link,
+			permalink: getClassicEditorPermalink(),
 			title: titleInput ? titleInput.value || '' : '',
 			description: selectors.getPostSeoMeta()?.page_description || '',
 		};
@@ -86,7 +101,7 @@ export const getEditorData = () => {
 	const titleInput = document.getElementById( 'title' );
 	return {
 		postContent: textarea ? textarea.value || '' : '',
-		permalink: surerank_seo_popup?.link,
+		permalink: getClassicEditorPermalink(),
 		title: titleInput ? titleInput.value || '' : '',
 		description: selectors.getPostSeoMeta()?.page_description || '',
 	};

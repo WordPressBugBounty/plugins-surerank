@@ -498,7 +498,7 @@ final class ImporterUtils {
 	 * Single source of truth for SEO plugin detection and deactivation.
 	 *
 	 * @return array<string, array{name: string, pro_slug: string}> Map of plugin file => plugin data.
-	 * @since x.x.x
+	 * @since 1.8.0
 	 */
 	public static function get_seo_plugins_list(): array {
 		return [

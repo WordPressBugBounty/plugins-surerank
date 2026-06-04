@@ -6,6 +6,7 @@ import {
 } from '@wordpress/data';
 import { STORE_NAME as storeName } from '@Store/constants';
 import { cleanContent } from '@Functions/utils';
+import { getClassicEditorPermalink } from './index';
 
 /* global elementor */
 
@@ -150,6 +151,21 @@ export const ClassicEditorData = ( ChildComponent ) => {
 				} );
 			}
 
+			// Watch the permalink editor for slug-only edits — WP rewrites
+			// `#sample-permalink` and `#editable-post-name-full` on commit.
+			const slugBox = document.getElementById( 'edit-slug-box' );
+			let slugObserver = null;
+			if ( slugBox ) {
+				slugObserver = new MutationObserver( () => {
+					setDynamicData( 'permalink', getClassicEditorPermalink() );
+				} );
+				slugObserver.observe( slugBox, {
+					subtree: true,
+					childList: true,
+					characterData: true,
+				} );
+			}
+
 			// Remove event listener on component unmount.
 			return () => {
 				if ( content ) {
@@ -177,6 +193,10 @@ export const ClassicEditorData = ( ChildComponent ) => {
 					title.removeEventListener( 'input', ( e ) => {
 						setDynamicData( 'title', e.target.value );
 					} );
+				}
+
+				if ( slugObserver ) {
+					slugObserver.disconnect();
 				}
 			};
 		}, [] );

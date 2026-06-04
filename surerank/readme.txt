@@ -5,7 +5,7 @@ Tags: seo, wordpress seo, xml sitemap, schema, google search console
 Requires at least: 6.8
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.7.5
+Stable tag: 1.8.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -294,7 +294,9 @@ Brainstorm Force
 
 
 == Changelog ==
-= 1.7.5 - 4-June-2026 =
+= 1.8.1 - 4-June-2026 =
+* Update compatibility with 1.8.0 release.
+= 1.8.0 - 4-June-2026 =
 * New: Abilities API - Registered SureRank abilities via the WordPress Abilities API with MCP support, allowing AI agents to read and update SEO meta, settings, sitemap, and robots.txt.
 * New: Schema - AI-powered schema recommendation generator in the Schema tab suggests the right schema types for your content.
 * New: SEO Metabox - Indexing status from Google Search Console (URL Inspection) now appears in the SEO meta box.
@@ -302,7 +304,9 @@ Brainstorm Force
 * New: Developer - Added `surerank_freeze_modified_date` filter to preserve the post modified date during programmatic updates.
 * New: Developer - Added filter to automatically open external links in a new tab with rel="noopener noreferrer".
 * New: Developer - Added filter-based white-label support for the sitemap top bar.
+* New: Developer - Added `surerank_og_type` filter to override the Open Graph type for custom page models.
 * Improvement: Cron - Server-side cron is now detected when WP-Cron is disabled, preventing false cron warnings.
+* Fix: Classic Editor - Keyword-in-URL check now evaluates correctly on Classic Editor drafts.
 * Fix: Multilingual - Completed TranslatePress sitemap compatibility, including correct handling of excluded path wildcards.
 * Fix: PHP - Hardened the analyzer and description helper against servers missing the mbstring extension, preventing fatal errors.
 * Fix: Admin - Corrected the review notice logo sizing in the admin area.

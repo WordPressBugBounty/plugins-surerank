@@ -467,7 +467,7 @@ class Facebook {
 			'og:url'       => $this->get_url(),
 			'og:site_name' => Site::get_instance()->get_site_name(),
 			'og:locale'    => $current_locale,
-			'og:type'      => $this->get_type(),
+			'og:type'      => $this->get_type( $meta_data ),
 		];
 
 		foreach ( $common_tags as $key => $value ) {
@@ -598,18 +598,45 @@ class Facebook {
 	/**
 	 * Get type.
 	 *
+	 * @param array<string, mixed> $meta_data Meta Data.
 	 * @return string
 	 */
-	private function get_type() {
+	private function get_type( $meta_data = [] ) {
 		if ( is_front_page() || is_home() ) {
-			return 'website';
+			$type = 'website';
+		} elseif ( is_author() ) {
+			$type = 'profile';
+		} else {
+			$type = Helper::woocommerce_enabled() && Helper::is_product() ? 'product' : 'article';
 		}
 
-		if ( is_author() ) {
-			return 'profile';
-		}
+		$post_id = get_the_ID();
+		$post_id = $post_id ? (int) $post_id : 0;
 
-		return Helper::woocommerce_enabled() && Helper::is_product() ? 'product' : 'article';
+		/**
+		 * Filter the resolved Open Graph object type.
+		 *
+		 * This allows developers to override SureRank's built-in mapping for
+		 * custom page models such as video pages or custom post types.
+		 *
+		 * @since 1.7.6
+		 * @param string              $type      The resolved Open Graph object type.
+		 * @param array<string, mixed> $meta_data The current meta data array.
+		 * @param array<string, mixed> $context   Context about the current request.
+		 */
+		return (string) apply_filters(
+			'surerank_og_type',
+			$type,
+			$meta_data,
+			[
+				'is_front_page' => is_front_page(),
+				'is_home'       => is_home(),
+				'is_author'     => is_author(),
+				'is_product'    => Helper::woocommerce_enabled() && Helper::is_product(),
+				'post_id'       => $post_id,
+				'post_type'     => $post_id ? get_post_type( $post_id ) : get_post_type(),
+			]
+		);
 	}
 
 }
