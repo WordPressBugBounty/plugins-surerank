@@ -3,10 +3,15 @@ import { STORE_NAME } from '@/store/constants';
 import apiFetch from '@wordpress/api-fetch';
 import GlobalSaveButton from '@/apps/admin-components/global-save-button';
 import { isCurrentPage } from '@/functions/utils';
-import { POST_SEO_DATA_URL, TERM_SEO_DATA_URL } from '@/global/constants/api';
+import {
+	POST_SEO_DATA_URL,
+	TERM_SEO_DATA_URL,
+	USER_SEO_DATA_URL,
+} from '@/global/constants/api';
 import { useCallback, useEffect } from '@wordpress/element';
 import { fetchMetaSettings } from '@/functions/api';
 import { DotIcon } from '@/global/components/icons';
+import { validateCustomJsonLdSchemas } from '@/apps/admin-components/schema-utils/custom-json-ld';
 
 const SaveButton = () => {
 	const unsavedMetaSettings = useSelect(
@@ -29,17 +34,38 @@ const SaveButton = () => {
 	};
 
 	const save = async () => {
+		const schemaValidation = validateCustomJsonLdSchemas(
+			unsavedMetaSettings?.schemas
+		);
+		if ( ! schemaValidation.valid ) {
+			throw new Error( schemaValidation.message );
+		}
+
+		const isUser = !! surerank_seo_popup?.is_user;
 		const isTerm =
-			!! surerank_seo_popup.is_taxonomy || isCurrentPage( 'term.php' );
+			! isUser &&
+			( !! surerank_seo_popup.is_taxonomy || isCurrentPage( 'term.php' ) );
+
+		let idParam = { post_id: surerank_seo_popup?.post_id };
+		let dataUrl = POST_SEO_DATA_URL;
+		let savedType = 'post';
+		if ( isUser ) {
+			idParam = { user_id: surerank_seo_popup?.user_id };
+			dataUrl = USER_SEO_DATA_URL;
+			savedType = 'user';
+		} else if ( isTerm ) {
+			idParam = { term_id: surerank_seo_popup?.term_id };
+			dataUrl = TERM_SEO_DATA_URL;
+			savedType = 'taxonomy';
+		}
+
 		const queryParams = {
 			metaData: unsavedMetaSettings,
-			...( isTerm
-				? { term_id: surerank_seo_popup?.term_id }
-				: { post_id: surerank_seo_popup?.post_id } ),
+			...idParam,
 		};
 
 		const response = await apiFetch( {
-			path: isTerm ? TERM_SEO_DATA_URL : POST_SEO_DATA_URL,
+			path: dataUrl,
 			method: 'POST',
 			data: queryParams,
 		} );
@@ -53,13 +79,14 @@ const SaveButton = () => {
 		}, 1000 );
 
 		// Notify the seo-bar (listing page) to refresh the badge for this post.
-		const savedId = queryParams.term_id ?? queryParams.post_id;
+		const savedId =
+			queryParams.user_id ?? queryParams.term_id ?? queryParams.post_id;
 		if ( savedId ) {
 			window.dispatchEvent(
 				new CustomEvent( 'surerank:seo-data-saved', {
 					detail: {
 						postId: savedId,
-						type: isTerm ? 'taxonomy' : 'post',
+						type: savedType,
 					},
 				} )
 			);

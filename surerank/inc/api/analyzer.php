@@ -83,6 +83,14 @@ class Analyzer extends Api_Base {
 	private $taxonomy_seo_checks = '/checks/taxonomy';
 
 	/**
+	 * User Seo Status
+	 *
+	 * @var string
+	 * @since 1.9.0
+	 */
+	private $user_seo_checks = '/checks/user';
+
+	/**
 	 * Route for sitemap check.
 	 *
 	 * @var string
@@ -95,6 +103,14 @@ class Analyzer extends Api_Base {
 	 * @var string
 	 */
 	private $ignore_post_checks = '/checks/ignore-page-check';
+
+	/**
+	 * Route for broken link ignore/restore.
+	 *
+	 * @since 1.9.0
+	 * @var string
+	 */
+	private $broken_link_ignore = '/checks/broken-link-ignore';
 
 	/**
 	 * Register API routes.
@@ -167,6 +183,48 @@ class Analyzer extends Api_Base {
 				$checks['broken_links']['type'] = 'page';
 			}
 			$data[ $p_id ] = [
+				'checks' => $checks,
+			];
+		}
+
+		return rest_ensure_response(
+			[
+				'status'  => 'success',
+				'message' => __( 'SEO checks retrieved.', 'surerank' ),
+				'data'    => $data,
+			]
+		);
+	}
+
+	/**
+	 * Get user seo checks.
+	 *
+	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
+	 * @since 1.9.0
+	 * @return WP_REST_Response|WP_Error
+	 */
+	public function get_user_seo_checks( $request ) {
+		$user_ids = $request->get_param( 'user_ids' );
+
+		if ( empty( $user_ids ) || ! is_array( $user_ids ) ) {
+			return $this->create_error_response( __( 'Invalid User ID.', 'surerank' ) );
+		}
+
+		$data = [];
+		foreach ( $user_ids as $u_id ) {
+			// Object-level guard (parity with /user/settings): the route-level
+			// permission gates the endpoint, this prevents reading another
+			// user's data (e.g. focus keyword) without the edit_user capability.
+			if ( ! User_Seo::can_manage_user_seo( (int) $u_id ) ) {
+				continue;
+			}
+
+			$checks = $this->get_user_checks_data( $u_id );
+			if ( is_wp_error( $checks ) ) {
+				continue;
+			}
+			$checks        = $this->consolidate_keyword_checks( $checks );
+			$data[ $u_id ] = [
 				'checks' => $checks,
 			];
 		}
@@ -304,6 +362,8 @@ class Analyzer extends Api_Base {
 		$ignored_checks = null;
 		if ( $check_type === 'taxonomy' ) {
 			$ignored_checks = $this->get_ignore_taxonomy_checks( $post_id );
+		} elseif ( $check_type === 'user' ) {
+			$ignored_checks = $this->get_ignore_user_checks( $post_id );
 		} else {
 			$ignored_checks = $this->get_ignore_post_checks( $post_id );
 		}
@@ -324,6 +384,8 @@ class Analyzer extends Api_Base {
 	public function update_ignored_post_taxo_check( $post_id, $check_type = 'post', $checks = [] ) {
 		if ( $check_type === 'taxonomy' ) {
 			Update::term_meta( $post_id, 'surerank_ignored_post_checks', array_values( $checks ) );
+		} elseif ( $check_type === 'user' ) {
+			Update::user_meta( $post_id, 'surerank_ignored_post_checks', array_values( $checks ) );
 		} else {
 			Update::post_meta( $post_id, 'surerank_ignored_post_checks', array_values( $checks ) );
 		}
@@ -339,6 +401,11 @@ class Analyzer extends Api_Base {
 		$id         = $request->get_param( 'id' );
 		$post_id    = $request->get_param( 'post_id' );
 		$check_type = $request->get_param( 'check_type' );
+
+		$guard = $this->guard_user_check_access( $post_id, $check_type );
+		if ( is_wp_error( $guard ) ) {
+			return $guard;
+		}
 
 		$ignore_checks = $this->get_ignored_post_taxo_check( $post_id, $check_type );
 
@@ -368,6 +435,11 @@ class Analyzer extends Api_Base {
 		$post_id    = $request->get_param( 'post_id' );
 		$check_type = $request->get_param( 'check_type' );
 
+		$guard = $this->guard_user_check_access( $post_id, $check_type );
+		if ( is_wp_error( $guard ) ) {
+			return $guard;
+		}
+
 		$ignore_checks = $this->get_ignored_post_taxo_check( $post_id, $check_type );
 
 		if ( in_array( $id, $ignore_checks, true ) ) {
@@ -395,6 +467,11 @@ class Analyzer extends Api_Base {
 
 		$post_id    = (int) $request->get_param( 'post_id' );
 		$check_type = $request->get_param( 'check_type' );
+
+		$guard = $this->guard_user_check_access( $post_id, $check_type );
+		if ( is_wp_error( $guard ) ) {
+			return $guard;
+		}
 
 		$ignore_checks = $this->get_ignored_post_taxo_check( $post_id, $check_type );
 
@@ -610,7 +687,7 @@ class Analyzer extends Api_Base {
 				'<h6>💬 %s </h6>',
 				__( 'Need Help?', 'surerank' )
 			);
-			$description[] = __( 'SureRank Premium users get access to our support team, available 24×7, to help review plugin conflicts and guide you through cleanup.', 'surerank' );
+			$description[] = __( 'SureRank Pro users get access to our support team, available 24×7, to help review plugin conflicts and guide you through cleanup.', 'surerank' );
 		}
 
 		return [
@@ -632,7 +709,7 @@ class Analyzer extends Api_Base {
 		$is_set  = ! empty( $tagline );
 
 		$heading = __( 'Site Tagline', 'surerank' );
-		$title   = $is_set ? __( 'Your site does currently have a tagline set.', 'surerank' ) : __( 'Your site does not currently have a tagline set.', 'surerank' );
+		$title   = $is_set ? __( 'Your site currently has a tagline set.', 'surerank' ) : __( 'Your site does not currently have a tagline set.', 'surerank' );
 
 		$description = [
 			__( 'A site tagline is a short line that describes what your website is about.', 'surerank' ),
@@ -700,66 +777,31 @@ class Analyzer extends Api_Base {
 	 * @return array<string, mixed>
 	 */
 	public function robots_txt() {
-		$robots_url = home_url( '/robots.txt' );
+		$response = Scraper::get_instance()->call_request( home_url( '/robots.txt' ) );
+		$code     = is_wp_error( $response ) ? 0 : (int) wp_remote_retrieve_response_code( $response );
 
-		$working_heading = __( 'Robots.txt is accessible.', 'surerank' );
-		$working_label   = __( 'Your site has an accessible robots.txt file.', 'surerank' );
-
-		$not_working_heading = __( 'Robots.txt is missing or inaccessible.', 'surerank' );
-		$not_working_label   = __( 'Your site does not currently have an accessible robots.txt file.', 'surerank' );
-
-		$helptext = [
-			__( 'The robots.txt file tells search engines which parts of your site they are allowed to crawl and index.', 'surerank' ),
-			__( 'When this file is missing or inaccessible, search engines may have trouble understanding how to properly crawl your site.', 'surerank' ),
-			__( 'Having a valid robots.txt file helps avoid crawling issues and ensures search engines focus on the right pages.', 'surerank' ),
-
-			sprintf(
-				'<h6>🛠️ %s </h6>',
-				__( 'Where to Update It', 'surerank' )
-			),
-			__( 'You can create or edit your robots.txt file directly from SureRank.', 'surerank' ),
-			[
-				'list' => [
-					__( 'Go to SureRank ⇾ Advanced ⇾ Robots.txt Editor', 'surerank' ),
-					__( 'Review or add the required rules', 'surerank' ),
-					__( 'Save your changes', 'surerank' ),
-				],
-			],
-
-			sprintf(
-				'<h6>✏️ %s </h6>',
-				__( 'Update Here', 'surerank' )
-			),
-			sprintf(
-				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/02/robotstxt-is-missing-or-inaccessible.webp' ),
-				esc_attr( 'Robots.txt example' )
-			),
-		];
-
-		if ( ! Nudge_Utils::get_instance()->is_pro_active() ) {
-			$helptext[] = sprintf( '<h6>💬 %s </h6>', __( 'Need Help?', 'surerank' ) );
-			$helptext[] = __( 'SureRank Pro helps fix SEO issues across your website using AI, without manual effort.', 'surerank' );
+		// Not available: missing, inaccessible, or a non-robots HTML/404 body.
+		if ( is_wp_error( $response ) || 200 !== $code ) {
+			return $this->robots_txt_unreachable_result();
 		}
 
-		$response = Scraper::get_instance()->fetch_status( $robots_url );
-		if ( is_wp_error( $response ) || $response !== 200 ) {
-			return [
-				'exists'      => false,
-				'status'      => 'warning',
-				'description' => $helptext,
-				'message'     => $not_working_label,
-				'heading'     => $not_working_heading,
-			];
+		$body         = (string) wp_remote_retrieve_body( $response );
+		$content_type = wp_remote_retrieve_header( $response, 'content-type' );
+		$content_type = is_string( $content_type ) ? $content_type : '';
+
+		if ( $this->is_non_robots_content_type( $content_type ) || $this->looks_like_markup_body( $body ) ) {
+			return $this->robots_txt_unreachable_result();
 		}
 
-		return [
-			'exists'      => true,
-			'status'      => 'success',
-			'description' => $helptext,
-			'message'     => $working_label,
-			'heading'     => $working_heading,
-		];
+		// Analyze the served content for SEO impact (not just syntax).
+		$parsed   = $this->parse_robots_txt( $body );
+		$findings = $this->evaluate_robots_findings( $parsed );
+
+		if ( empty( $findings ) ) {
+			return $this->robots_txt_success_result();
+		}
+
+		return $this->build_robots_txt_result( $findings );
 	}
 
 	/**
@@ -971,6 +1013,17 @@ class Analyzer extends Api_Base {
 			return $this->create_broken_link_error_response( __( 'Post not found', 'surerank' ) );
 		}
 
+		if ( $this->is_broken_link_ignored( $url ) ) {
+			$this->remove_broken_links( $url, $post_id, $urls );
+			return rest_ensure_response(
+				[
+					'success' => true,
+					'ignored' => true,
+					'message' => __( 'Link is ignored.', 'surerank' ),
+				]
+			);
+		}
+
 		$response = $this->fetch_url_status( $url );
 
 		if ( is_wp_error( $response ) ) {
@@ -1015,6 +1068,69 @@ class Analyzer extends Api_Base {
 	}
 
 	/**
+	 * Ignore a broken link URL site-wide.
+	 *
+	 * Ignored URLs are skipped by the broken link checker on every post.
+	 *
+	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
+	 * @return WP_REST_Response|\WP_Error
+	 * @since 1.9.0
+	 */
+	public function ignore_broken_link( $request ) {
+		$url     = (string) $request->get_param( 'url' );
+		$post_id = (int) $request->get_param( 'post_id' );
+		$urls    = (array) $request->get_param( 'urls' );
+
+		$ignored_urls = $this->get_broken_link_ignored_urls();
+
+		if ( ! $this->is_broken_link_ignored( $url ) ) {
+			$ignored_urls[] = esc_url_raw( $url );
+			Update::option( 'surerank_broken_link_ignored_urls', array_values( array_unique( $ignored_urls ) ) );
+		}
+
+		if ( $post_id > 0 ) {
+			$this->remove_broken_links( $url, $post_id, $urls );
+		}
+
+		return rest_ensure_response(
+			[
+				'success' => true,
+				'message' => __( 'Link ignored.', 'surerank' ),
+				'urls'    => $this->get_broken_link_ignored_urls(),
+			]
+		);
+	}
+
+	/**
+	 * Restore (un-ignore) a broken link URL.
+	 *
+	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
+	 * @return WP_REST_Response|\WP_Error
+	 * @since 1.9.0
+	 */
+	public function restore_broken_link( $request ) {
+		$url    = (string) $request->get_param( 'url' );
+		$needle = $this->normalize_broken_link_url( $url );
+
+		$ignored_urls = array_values(
+			array_filter(
+				$this->get_broken_link_ignored_urls(),
+				fn( $ignored_url ) => $this->normalize_broken_link_url( $ignored_url ) !== $needle
+			)
+		);
+
+		Update::option( 'surerank_broken_link_ignored_urls', $ignored_urls );
+
+		return rest_ensure_response(
+			[
+				'success' => true,
+				'message' => __( 'Link restored.', 'surerank' ),
+				'urls'    => $ignored_urls,
+			]
+		);
+	}
+
+	/**
 	 * Run checks.
 	 *
 	 * @param int $post_id Post ID.
@@ -1032,6 +1148,17 @@ class Analyzer extends Api_Base {
 	 */
 	public function run_taxonomy_checks( $term_id ) {
 		return Term::get_instance()->run_checks( $term_id );
+	}
+
+	/**
+	 * Run user checks.
+	 *
+	 * @param int $user_id User ID.
+	 * @since 1.9.0
+	 * @return array<string, mixed>|int|WP_Error
+	 */
+	public function run_user_checks( $user_id ) {
+		return User_Seo::get_instance()->run_checks( $user_id );
 	}
 
 	/**
@@ -1110,6 +1237,516 @@ class Analyzer extends Api_Base {
 	}
 
 	/**
+	 * Parse robots.txt content into user-agent groups and directives (RFC 9309).
+	 *
+	 * @param string $content Robots.txt content.
+	 * @return array<string, mixed>
+	 * @since 1.9.0
+	 */
+	private function parse_robots_txt( string $content ) {
+		$content = (string) preg_replace( '/^\xEF\xBB\xBF/', '', $content );
+
+		// Crawlers read at most 500 KiB (Google's documented limit); ignore the rest.
+		if ( strlen( $content ) > 512000 ) {
+			$content = substr( $content, 0, 512000 );
+		}
+
+		$groups             = [];
+		$unrecognized       = [];
+		$orphan_rules       = [];
+		$unknown_directives = [];
+		$current            = [];
+		$last_was_agent     = false;
+
+		$lines = preg_split( '/\r\n|\r|\n/', $content );
+		$lines = is_array( $lines ) ? $lines : [];
+
+		foreach ( $lines as $raw ) {
+			$hash = strpos( $raw, '#' );
+			if ( false !== $hash ) {
+				$raw = substr( $raw, 0, $hash );
+			}
+			$line = trim( $raw );
+			if ( '' === $line ) {
+				continue;
+			}
+
+			if ( ! preg_match( '/^([A-Za-z][A-Za-z0-9 -]*?)\s*:\s*(.*)$/', $line, $matches ) ) {
+				$unrecognized[] = $line;
+				continue;
+			}
+
+			$directive = $this->canonical_robots_directive( strtolower( $matches[1] ) );
+			$value     = trim( $matches[2] );
+
+			if ( 'user-agent' === $directive ) {
+				if ( ! $last_was_agent && ! empty( $current ) ) {
+					$current = [];
+				}
+				// Keep only the product token: "Googlebot/2.1" governs "googlebot".
+				$agent = strtolower( trim( (string) strtok( $value, '/' ) ) );
+				if ( '' !== $agent ) {
+					$current[] = $agent;
+				}
+				$last_was_agent = true;
+				continue;
+			}
+
+			// Sitemap lines are independent of groups; recognized here so they
+			// are not mistaken for unknown directives.
+			if ( 'sitemap' === $directive ) {
+				continue;
+			}
+
+			if ( 'allow' === $directive || 'disallow' === $directive ) {
+				$last_was_agent = false;
+				$rule           = [
+					'type'  => $directive,
+					'value' => $value,
+				];
+				if ( empty( $current ) ) {
+					$orphan_rules[] = $rule;
+				} else {
+					foreach ( $current as $agent ) {
+						if ( ! isset( $groups[ $agent ] ) ) {
+							$groups[ $agent ] = [ 'rules' => [] ];
+						}
+						$groups[ $agent ]['rules'][] = $rule;
+					}
+				}
+				continue;
+			}
+
+			$last_was_agent       = false;
+			$unknown_directives[] = $directive;
+		}
+
+		return [
+			'groups'             => $groups,
+			'unrecognized'       => $unrecognized,
+			'orphan_rules'       => $orphan_rules,
+			'unknown_directives' => $unknown_directives,
+		];
+	}
+
+	/**
+	 * Normalize directive spellings that major crawlers accept and apply.
+	 *
+	 * Google's open-source robots.txt parser tolerates these exact misspellings
+	 * and applies the rules, so the analyzer must treat them as real directives
+	 * to judge SEO impact the way Google does. Source list (kAllowFrequentTypos):
+	 * https://github.com/google/robotstxt/blob/master/robots.cc
+	 *
+	 * @param string $directive Lowercased directive name.
+	 * @return string
+	 * @since 1.9.0
+	 */
+	private function canonical_robots_directive( string $directive ) {
+		$aliases = [
+			'dissallow'  => 'disallow',
+			'dissalow'   => 'disallow',
+			'disalow'    => 'disallow',
+			'diasllow'   => 'disallow',
+			'disallaw'   => 'disallow',
+			'useragent'  => 'user-agent',
+			'user agent' => 'user-agent',
+			'site-map'   => 'sitemap',
+		];
+		return $aliases[ $directive ] ?? $directive;
+	}
+
+	/**
+	 * Get the rule group that governs a given crawler.
+	 *
+	 * Falls back to the wildcard group, matching how Google selects the most
+	 * specific matching user-agent group.
+	 *
+	 * @param array<string, mixed> $parsed Parsed robots.txt.
+	 * @param string               $agent  User-agent (lowercased).
+	 * @return array<string, mixed>|null
+	 * @since 1.9.0
+	 */
+	private function get_effective_group_for_agent( array $parsed, string $agent ) {
+		$groups = $parsed['groups'] ?? [];
+		$agent  = strtolower( $agent );
+
+		if ( isset( $groups[ $agent ] ) ) {
+			return $groups[ $agent ];
+		}
+		if ( isset( $groups['*'] ) ) {
+			return $groups['*'];
+		}
+		return null;
+	}
+
+	/**
+	 * Object-level guard for the shared ignore-check routes.
+	 *
+	 * These routes accept check_type=user, so the route-level
+	 * validate_permission alone would let any role that passes the gate
+	 * read/write another user's ignored checks. Enforce the same per-user
+	 * object guard used by the dedicated user SEO routes.
+	 *
+	 * @param int|string $post_id    Target ID (user ID when $check_type is 'user').
+	 * @param string     $check_type Check type ('post', 'taxonomy', 'user').
+	 * @since 1.9.0
+	 * @return WP_Error|null WP_Error when denied, null when allowed.
+	 */
+	private function guard_user_check_access( $post_id, $check_type ) {
+		if ( 'user' === $check_type && ! User_Seo::can_manage_user_seo( (int) $post_id ) ) {
+			return new WP_Error(
+				'surerank_cannot_manage_user',
+				__( 'You are not allowed to manage SEO checks for this user.', 'surerank' ),
+				[ 'status' => rest_authorization_required_code() ]
+			);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Match a robots.txt path pattern against a path (RFC 9309 wildcards).
+	 *
+	 * @param string $pattern Pattern (may contain * and a trailing $).
+	 * @param string $path    Path to test.
+	 * @return int|null Specificity (pattern length) when it matches, else null.
+	 * @since 1.9.0
+	 */
+	private function robots_pattern_match_length( string $pattern, string $path ) {
+		if ( '' === $pattern ) {
+			return null;
+		}
+
+		// Specificity counts the full pattern including $ (matches Google's parser).
+		$specificity = strlen( $pattern );
+
+		$anchored = false;
+		if ( '$' === substr( $pattern, -1 ) ) {
+			$anchored = true;
+			$pattern  = substr( $pattern, 0, -1 );
+		}
+
+		$regex = preg_quote( $pattern, '#' );
+		$regex = str_replace( '\*', '.*', $regex );
+		$regex = '#^' . $regex . ( $anchored ? '$' : '' ) . '#';
+
+		if ( preg_match( $regex, $path ) ) {
+			return $specificity;
+		}
+		return null;
+	}
+
+	/**
+	 * Whether a group's rules allow crawling a path (longest-match, allow wins on tie).
+	 *
+	 * @param array<int, array<string, string>> $rules Allow/Disallow rules.
+	 * @param string                            $path  Path to test.
+	 * @return bool
+	 * @since 1.9.0
+	 */
+	private function robots_path_allows( array $rules, string $path ) {
+		$longest_allow    = -1;
+		$longest_disallow = -1;
+
+		foreach ( $rules as $rule ) {
+			$value = (string) ( $rule['value'] ?? '' );
+			if ( '' === $value ) {
+				continue;
+			}
+			$length = $this->robots_pattern_match_length( $value, $path );
+			if ( null === $length ) {
+				continue;
+			}
+			if ( 'allow' === $rule['type'] ) {
+				$longest_allow = max( $longest_allow, $length );
+			} elseif ( 'disallow' === $rule['type'] ) {
+				$longest_disallow = max( $longest_disallow, $length );
+			}
+		}
+
+		if ( $longest_disallow < 0 ) {
+			return true;
+		}
+		return $longest_allow >= $longest_disallow;
+	}
+
+	/**
+	 * Real render-asset URL paths from this WordPress install, used to detect
+	 * whether the served robots.txt blocks resources search engines need.
+	 *
+	 * Paths are derived from the actual site (theme stylesheet, core jQuery),
+	 * so they adapt to custom locations and subdirectory installs instead of
+	 * relying on hardcoded paths. A versioned variant (?ver=) is added for each
+	 * because WordPress appends a version query string to enqueued CSS/JS,
+	 * which a rule like "Disallow: /*?" blocks.
+	 *
+	 * @return array<int, string>
+	 * @since 1.9.0
+	 */
+	private function get_robots_asset_probe_paths() {
+		$urls = [
+			get_stylesheet_uri(),                         // Active theme stylesheet.
+			includes_url( 'js/jquery/jquery.min.js' ),    // WordPress core JavaScript.
+		];
+
+		$paths = [];
+		foreach ( $urls as $url ) {
+			$path = (string) wp_parse_url( $url, PHP_URL_PATH );
+			if ( '' === $path ) {
+				continue;
+			}
+			$paths[] = $path;
+			$paths[] = $path . '?ver=1';
+		}
+
+		return $paths;
+	}
+
+	/**
+	 * Run all SEO-impact evaluators and collect findings.
+	 *
+	 * @param array<string, mixed> $parsed Parsed robots.txt.
+	 * @return array<int, array<string, mixed>>
+	 * @since 1.9.0
+	 */
+	private function evaluate_robots_findings( array $parsed ) {
+		$findings = [];
+		$checks   = [
+			$this->check_site_blocked( $parsed ),
+			$this->check_blocking_render_assets( $parsed ),
+			$this->check_ignored_lines( $parsed ),
+		];
+
+		foreach ( $checks as $finding ) {
+			if ( null !== $finding ) {
+				$findings[] = $finding;
+			}
+		}
+		return $findings;
+	}
+
+	/**
+	 * R1: site-wide crawl block (the most damaging robots.txt mistake).
+	 *
+	 * @param array<string, mixed> $parsed Parsed robots.txt.
+	 * @return array<string, mixed>|null
+	 * @since 1.9.0
+	 */
+	private function check_site_blocked( array $parsed ) {
+		$group = $this->get_effective_group_for_agent( $parsed, 'googlebot' );
+		if ( null === $group || $this->robots_path_allows( $group['rules'], '/' ) ) {
+			return null;
+		}
+
+		return [
+			'id'       => 'site_blocked',
+			'severity' => 'error',
+			'heading'  => __( 'Robots.txt is not valid for SEO.', 'surerank' ),
+			'summary'  => __( 'Your robots.txt is blocking search engines from crawling your entire site.', 'surerank' ),
+		];
+	}
+
+	/**
+	 * R2: blocking CSS/JS resources search engines need to render pages.
+	 *
+	 * @param array<string, mixed> $parsed Parsed robots.txt.
+	 * @return array<string, mixed>|null
+	 * @since 1.9.0
+	 */
+	private function check_blocking_render_assets( array $parsed ) {
+		$group = $this->get_effective_group_for_agent( $parsed, 'googlebot' );
+		if ( null === $group ) {
+			return null;
+		}
+
+		$blocked = [];
+		foreach ( $this->get_robots_asset_probe_paths() as $probe ) {
+			if ( ! $this->robots_path_allows( $group['rules'], $probe ) ) {
+				$blocked[] = $probe;
+			}
+		}
+
+		if ( empty( $blocked ) ) {
+			return null;
+		}
+
+		return [
+			'id'       => 'blocking_assets',
+			'severity' => 'warning',
+			'heading'  => __( 'Robots.txt is not valid for SEO.', 'surerank' ),
+			'summary'  => __( 'Your robots.txt blocks resources (CSS/JS) that search engines need to render your pages.', 'surerank' ),
+		];
+	}
+
+	/**
+	 * R3: lines search engines silently ignore, so the written rules never apply.
+	 *
+	 * Covers lines that fail to parse, Allow/Disallow rules with no User-agent
+	 * above them, and probable misspellings of real directives. Legitimate
+	 * extension directives (Crawl-delay, Clean-param, etc.) are not flagged.
+	 *
+	 * @param array<string, mixed> $parsed Parsed robots.txt.
+	 * @return array<string, mixed>|null
+	 * @since 1.9.0
+	 */
+	private function check_ignored_lines( array $parsed ) {
+		$ignored = count( $parsed['unrecognized'] ?? [] ) + count( $parsed['orphan_rules'] ?? [] );
+
+		foreach ( $parsed['unknown_directives'] ?? [] as $directive ) {
+			if ( $this->is_probable_directive_typo( (string) $directive ) ) {
+				$ignored++;
+			}
+		}
+
+		if ( 0 === $ignored ) {
+			return null;
+		}
+
+		return [
+			'id'       => 'ignored_lines',
+			'severity' => 'warning',
+			'heading'  => __( 'Robots.txt is not valid for SEO.', 'surerank' ),
+			'summary'  => __( 'Your robots.txt contains rules search engines cannot understand, so those rules are ignored.', 'surerank' ),
+		];
+	}
+
+	/**
+	 * Whether an unknown directive is likely a misspelling of a real one.
+	 *
+	 * Uses edit distance against the canonical directive names, so typos like
+	 * "Disalloew" or "Allooww" are caught while unrelated extension directives
+	 * pass through. Directives containing spaces are never valid.
+	 *
+	 * @param string $directive Lowercased directive name.
+	 * @return bool
+	 * @since 1.9.0
+	 */
+	private function is_probable_directive_typo( string $directive ) {
+		if ( false !== strpos( $directive, ' ' ) ) {
+			return true;
+		}
+		foreach ( [ 'allow', 'disallow', 'user-agent', 'sitemap' ] as $known ) {
+			if ( levenshtein( $directive, $known ) <= 2 ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Rank a severity for ordering (higher is worse).
+	 *
+	 * @param string $severity Severity name.
+	 * @return int
+	 * @since 1.9.0
+	 */
+	private function robots_severity_rank( string $severity ) {
+		$ranks = [
+			'success'    => 0,
+			'suggestion' => 1,
+			'warning'    => 2,
+			'error'      => 3,
+		];
+		return $ranks[ $severity ] ?? 0;
+	}
+
+	/**
+	 * Compose a single check result from one or more findings.
+	 *
+	 * @param array<int, array<string, mixed>> $findings Findings.
+	 * @return array<string, mixed>
+	 * @since 1.9.0
+	 */
+	private function build_robots_txt_result( array $findings ) {
+		if ( empty( $findings ) ) {
+			return $this->robots_txt_success_result();
+		}
+
+		usort(
+			$findings,
+			fn( $a, $b ) => $this->robots_severity_rank( $b['severity'] ) <=> $this->robots_severity_rank( $a['severity'] )
+		);
+
+		$top = $findings[0];
+
+		return [
+			'exists'      => true,
+			'status'      => $top['severity'],
+			'description' => [ $top['summary'] ],
+			'message'     => $top['summary'],
+			'heading'     => $top['heading'],
+		];
+	}
+
+	/**
+	 * Result for a missing or inaccessible robots.txt.
+	 *
+	 * @return array<string, mixed>
+	 * @since 1.9.0
+	 */
+	private function robots_txt_unreachable_result() {
+		return [
+			'exists'      => false,
+			'status'      => 'warning',
+			'description' => [ __( 'Your site does not currently have an accessible robots.txt file.', 'surerank' ) ],
+			'message'     => __( 'Your site does not currently have an accessible robots.txt file.', 'surerank' ),
+			'heading'     => __( 'Robots.txt is missing or inaccessible.', 'surerank' ),
+		];
+	}
+
+	/**
+	 * Result for a robots.txt that is valid for SEO.
+	 *
+	 * @return array<string, mixed>
+	 * @since 1.9.0
+	 */
+	private function robots_txt_success_result() {
+		return [
+			'exists'      => true,
+			'status'      => 'success',
+			'description' => [ __( 'Your robots.txt is valid and does not contain rules that harm your SEO.', 'surerank' ) ],
+			'message'     => __( 'Your robots.txt is valid for SEO.', 'surerank' ),
+			'heading'     => __( 'Robots.txt is valid.', 'surerank' ),
+		];
+	}
+
+	/**
+	 * Detect when a 200 response declares a non-robots content type (HTML, JSON, XML).
+	 *
+	 * Soft 404s and error pages commonly answer 200 with one of these types,
+	 * which would otherwise parse as an all-allowing robots.txt.
+	 *
+	 * @param string $content_type Content-Type header value.
+	 * @return bool
+	 * @since 1.9.0
+	 */
+	private function is_non_robots_content_type( string $content_type ) {
+		$content_type = strtolower( $content_type );
+		foreach ( [ 'text/html', 'application/json', 'xml' ] as $type ) {
+			if ( false !== strpos( $content_type, $type ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Detect when a 200 response body is actually an HTML or XML page, not a robots.txt.
+	 *
+	 * @param string $body Response body.
+	 * @return bool
+	 * @since 1.9.0
+	 */
+	private function looks_like_markup_body( string $body ) {
+		$trimmed = ltrim( $body );
+		if ( '' === $trimmed ) {
+			return false;
+		}
+		$lower = strtolower( substr( $trimmed, 0, 14 ) );
+		return strpos( $lower, '<!doctype' ) === 0 || strpos( $lower, '<html' ) === 0 || strpos( $lower, '<?xml' ) === 0;
+	}
+
+	/**
 	 * Consolidate keyword checks if all are suggestions (no focus keyword set).
 	 *
 	 * @param array<string, mixed> $checks List of checks.
@@ -1181,6 +1818,30 @@ class Analyzer extends Api_Base {
 	}
 
 	/**
+	 * Get user checks data (cached or fresh).
+	 *
+	 * @param int $user_id User ID.
+	 * @since 1.9.0
+	 * @return array<string, mixed>|WP_Error
+	 */
+	private function get_user_checks_data( $user_id ) {
+		if ( ! get_user_by( 'id', $user_id ) ) {
+			return new WP_Error( 'invalid_user', __( 'Invalid User ID.', 'surerank' ) );
+		}
+
+		if ( $this->is_user_cache_valid( $user_id ) ) {
+			return $this->get_cached_user_checks( $user_id );
+		}
+
+		$user_checks = $this->run_user_checks( $user_id );
+		if ( ! is_array( $user_checks ) || isset( $user_checks['status'] ) && 'error' === $user_checks['status'] ) {
+			return new WP_Error( 'user_checks_failed', __( 'Failed to run user SEO checks.', 'surerank' ) );
+		}
+
+		return $this->get_updated_ignored_check_list( $user_checks, $user_id, 'user' );
+	}
+
+	/**
 	 * Get post checks data (cached or fresh).
 	 *
 	 * @param int $post_id       Post ID.
@@ -1217,8 +1878,87 @@ class Analyzer extends Api_Base {
 		$this->register_broken_links_route( $namespace );
 		$this->register_page_seo_checks_route( $namespace );
 		$this->register_taxonomy_seo_checks_route( $namespace );
+		$this->register_user_seo_checks_route( $namespace );
 		$this->register_ignore_checks_routes( $namespace );
 		$this->register_ignore_post_checks_routes( $namespace );
+		$this->register_broken_link_ignore_routes( $namespace );
+	}
+
+	/**
+	 * Get the site-wide list of ignored broken link URLs.
+	 *
+	 * @return array<int, string>
+	 * @since 1.9.0
+	 */
+	private function get_broken_link_ignored_urls() {
+		$ignored_urls = Get::option( 'surerank_broken_link_ignored_urls', [] );
+		return is_array( $ignored_urls ) ? $ignored_urls : [];
+	}
+
+	/**
+	 * Normalize a URL for ignored-list comparison.
+	 *
+	 * Trailing slashes are stripped so cosmetic permalink variants match;
+	 * scheme is preserved because http/https are different resources.
+	 *
+	 * @param string $url URL to normalize.
+	 * @return string
+	 * @since 1.9.0
+	 */
+	private function normalize_broken_link_url( $url ) {
+		return untrailingslashit( esc_url_raw( trim( $url ) ) );
+	}
+
+	/**
+	 * Whether a URL is in the site-wide ignored broken links list.
+	 *
+	 * @param string $url URL to check.
+	 * @return bool
+	 * @since 1.9.0
+	 */
+	private function is_broken_link_ignored( $url ) {
+		$needle = $this->normalize_broken_link_url( $url );
+
+		foreach ( $this->get_broken_link_ignored_urls() as $ignored_url ) {
+			if ( $this->normalize_broken_link_url( $ignored_url ) === $needle ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Register broken link ignore/restore routes
+	 *
+	 * @param string $namespace The API namespace.
+	 * @return void
+	 * @since 1.9.0
+	 */
+	private function register_broken_link_ignore_routes( $namespace ) {
+		register_rest_route(
+			$namespace,
+			$this->broken_link_ignore,
+			[
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => [ $this, 'ignore_broken_link' ],
+				'permission_callback' => [ $this, 'validate_permission' ],
+				'args'                => $this->get_broken_link_ignore_args(),
+				'role_capability'     => 'content_setting',
+			]
+		);
+
+		register_rest_route(
+			$namespace,
+			$this->broken_link_ignore,
+			[
+				'methods'             => WP_REST_Server::DELETABLE,
+				'callback'            => [ $this, 'restore_broken_link' ],
+				'permission_callback' => [ $this, 'validate_permission' ],
+				'args'                => $this->get_broken_link_ignore_args(),
+				'role_capability'     => 'content_setting',
+			]
+		);
 	}
 
 	/**
@@ -1336,6 +2076,27 @@ class Analyzer extends Api_Base {
 				'callback'            => [ $this, 'get_taxonomy_seo_checks' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
 				'args'                => $this->get_term_id_args(),
+				'role_capability'     => 'content_setting',
+			]
+		);
+	}
+
+	/**
+	 * Register user SEO checks route
+	 *
+	 * @param string $namespace The API namespace.
+	 * @since 1.9.0
+	 * @return void
+	 */
+	private function register_user_seo_checks_route( $namespace ) {
+		register_rest_route(
+			$namespace,
+			$this->user_seo_checks,
+			[
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'get_user_seo_checks' ],
+				'permission_callback' => [ $this, 'validate_permission' ],
+				'args'                => $this->get_user_id_args(),
 				'role_capability'     => 'content_setting',
 			]
 		);
@@ -1644,7 +2405,7 @@ class Analyzer extends Api_Base {
 			'status'      => 'error',
 			'type'        => 'page',
 			'description' => [
-				__( 'These broken links were found on the page: ', 'surerank' ),
+				__( 'These broken links were found on the page:', 'surerank' ),
 				[
 					'list' => $existing_broken_links,
 				],
@@ -1673,6 +2434,17 @@ class Analyzer extends Api_Base {
 	 */
 	private function get_ignore_taxonomy_checks( $term_id ) {
 		return Get::term_meta( $term_id, 'surerank_ignored_post_checks', true );
+	}
+
+	/**
+	 * Get user-specific ignore checks.
+	 *
+	 * @param int $user_id User ID.
+	 * @since 1.9.0
+	 * @return array<string>
+	 */
+	private function get_ignore_user_checks( $user_id ) {
+		return Get::user_meta( $user_id, 'surerank_ignored_post_checks', true );
 	}
 
 	/**
@@ -1772,6 +2544,33 @@ class Analyzer extends Api_Base {
 	}
 
 	/**
+	 * Get broken link ignore/restore arguments
+	 *
+	 * @return array<string, mixed>
+	 * @since 1.9.0
+	 */
+	private function get_broken_link_ignore_args() {
+		return [
+			'url'     => [
+				'type'              => 'string',
+				'required'          => true,
+				'sanitize_callback' => 'esc_url_raw',
+			],
+			'post_id' => [
+				'type'              => 'integer',
+				'required'          => false,
+				'default'           => 0,
+				'sanitize_callback' => 'absint',
+			],
+			'urls'    => [
+				'type'     => 'array',
+				'required' => false,
+				'default'  => [],
+			],
+		];
+	}
+
+	/**
 	 * Get post ID arguments
 	 *
 	 * @return array<string, array<string, mixed>>
@@ -1797,6 +2596,25 @@ class Analyzer extends Api_Base {
 	private function get_term_id_args() {
 		return [
 			'term_ids' => [
+				'type'              => 'array',
+				'required'          => true,
+				'sanitize_callback' => [ self::class, 'sanitize_ids' ],
+				'items'             => [
+					'type' => 'integer',
+				],
+			],
+		];
+	}
+
+	/**
+	 * Get user ID arguments
+	 *
+	 * @since 1.9.0
+	 * @return array<string, array<string, mixed>>
+	 */
+	private function get_user_id_args() {
+		return [
+			'user_ids' => [
 				'type'              => 'array',
 				'required'          => true,
 				'sanitize_callback' => [ self::class, 'sanitize_ids' ],
@@ -1858,8 +2676,9 @@ class Analyzer extends Api_Base {
 				'enum'        => [
 					'post',
 					'taxonomy',
+					'user',
 				],
-				'description' => __( 'Type of check to delete. Can be "post" or "taxonomy".', 'surerank' ),
+				'description' => __( 'Type of check to delete. Can be "post", "taxonomy" or "user".', 'surerank' ),
 			],
 		];
 	}
@@ -1881,8 +2700,9 @@ class Analyzer extends Api_Base {
 				'enum'        => [
 					'post',
 					'taxonomy',
+					'user',
 				],
-				'description' => __( 'Type of check to delete. Can be "post" or "taxonomy".', 'surerank' ),
+				'description' => __( 'Type of check to delete. Can be "post", "taxonomy" or "user".', 'surerank' ),
 			],
 		];
 	}
@@ -1966,6 +2786,42 @@ class Analyzer extends Api_Base {
 		$term_checks = Get::term_meta( $term_id, 'surerank_seo_checks', true );
 		if ( ! empty( $term_checks ) ) {
 			return $this->get_updated_ignored_check_list( $term_checks, $term_id, 'taxonomy' );
+		}
+		return new WP_Error( 'no_cached_checks', __( 'No cached checks found.', 'surerank' ) );
+	}
+
+	/**
+	 * Check if user cache is valid
+	 *
+	 * @param int $user_id User ID.
+	 * @since 1.9.0
+	 * @return bool
+	 */
+	private function is_user_cache_valid( $user_id ) {
+		$user_modified_time  = Get::user_meta( $user_id, SURERANK_USER_UPDATED_AT, true );
+		$checks_last_updated = Get::user_meta( $user_id, SURERANK_SEO_CHECKS_LAST_UPDATED, true );
+		$settings_updated    = Get::option( SURERANK_SEO_LAST_UPDATED );
+
+		$user_modified_time  = ! empty( $user_modified_time ) ? (int) $user_modified_time : 0;
+		$checks_last_updated = ! empty( $checks_last_updated ) ? (int) $checks_last_updated : 0;
+		$settings_updated    = ! empty( $settings_updated ) ? (int) $settings_updated : 0;
+
+		return $checks_last_updated !== 0 &&
+			$user_modified_time <= $checks_last_updated &&
+			( $settings_updated === 0 || $checks_last_updated >= $settings_updated );
+	}
+
+	/**
+	 * Get cached user checks
+	 *
+	 * @param int $user_id User ID.
+	 * @since 1.9.0
+	 * @return array<string,mixed>|WP_Error
+	 */
+	private function get_cached_user_checks( $user_id ) {
+		$user_checks = Get::user_meta( $user_id, 'surerank_seo_checks', true );
+		if ( ! empty( $user_checks ) ) {
+			return $this->get_updated_ignored_check_list( $user_checks, $user_id, 'user' );
 		}
 		return new WP_Error( 'no_cached_checks', __( 'No cached checks found.', 'surerank' ) );
 	}

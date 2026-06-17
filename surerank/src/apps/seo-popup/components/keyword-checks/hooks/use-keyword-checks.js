@@ -11,6 +11,7 @@ import {
 	checkKeywordInUrl,
 	checkKeywordInContent,
 } from '../analyzer/keyword-analyzer';
+import { isUserContext } from '@SeoPopup/components/page-seo-checks/analyzer/utils/page-builder';
 
 export const useKeywordChecks = () => {
 	const { setPageSeoCheck } = useDispatch( STORE_NAME );
@@ -102,7 +103,9 @@ export const useKeywordChecks = () => {
 
 	// initial check.
 	useLayoutEffect( () => {
-		if ( ! settingsLoaded ) {
+		// User context has no editor content — keyword checks come from the
+		// server (/checks/user analyzes the author bio), not live computation.
+		if ( ! settingsLoaded || isUserContext() ) {
 			return;
 		}
 		const snapshot = getEditorData();
@@ -134,7 +137,7 @@ export const useKeywordChecks = () => {
 
 	// subscribe to content changes.
 	useLayoutEffect( () => {
-		if ( ! settingsLoaded ) {
+		if ( ! settingsLoaded || isUserContext() ) {
 			return;
 		}
 

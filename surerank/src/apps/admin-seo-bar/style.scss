@@ -23,11 +23,13 @@ th.column-surerank-data {
 	@apply relative z-[99999];
 }
 
-.surerank-root *,
-.surerank-root *::before,
-.surerank-root *::after,
-[id^="surerank"] *,
-[id^="surerank"] *::before,
-[id^="surerank"] *::after {
+// Use an attribute selector for the surerank-root class so the PostCSS
+// customPrefixPlugin (which only rewrites selectors starting with ".") leaves
+// it untouched. Scoping to the class — instead of [id^="surerank"] — keeps the
+// base font on the app mounts while excluding non-app markup such as the
+// #surerank-rating-notice admin notice, whose Dashicons must stay intact.
+[class~="surerank-root"] *,
+[class~="surerank-root"] *::before,
+[class~="surerank-root"] *::after {
 	@apply font-sans;
 }

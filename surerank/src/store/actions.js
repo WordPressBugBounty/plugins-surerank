@@ -1,11 +1,14 @@
 import { pick } from 'lodash';
 import { select } from '@wordpress/data';
 import { addQueryArgs } from '@wordpress/url';
+import { __ } from '@wordpress/i18n';
 
 import { STORE_NAME } from './constants';
 import * as actionTypes from './action-types';
 import { EDITOR_URL } from '@Global/constants/api';
 import {
+	applyIgnoredBrokenLinks,
+	getBrokenLinkItems,
 	getCategorizedChecks,
 	getCheckTypeKey,
 	mergeAllCheckTypes,
@@ -171,9 +174,14 @@ export function* restoreIgnoreCheck( checkId, actionType ) {
 	const postId =
 		state.pageSeoChecks?.postId ||
 		state.variables?.post?.ID?.value ||
-		state.variables?.term?.ID?.value;
-	const postType =
-		window?.surerank_seo_popup?.is_taxonomy === '1' ? 'taxonomy' : 'post';
+		state.variables?.term?.ID?.value ||
+		state.variables?.user?.ID?.value;
+	let postType = 'post';
+	if ( window?.surerank_seo_popup?.is_user ) {
+		postType = 'user';
+	} else if ( window?.surerank_seo_popup?.is_taxonomy === '1' ) {
+		postType = 'taxonomy';
+	}
 
 	try {
 		const data = yield fetchFromAPI( {
@@ -208,6 +216,150 @@ export function* ignorePageSeoCheck( checkId ) {
 
 export function* restorePageSeoCheck( checkId ) {
 	yield restoreIgnoreCheck( checkId, 'restore' );
+}
+
+/**
+ * Ignore or restore a broken link URL site-wide and update the
+ * broken_links check in the store.
+ *
+ * @param {string} url        URL to ignore/restore.
+ * @param {string} actionType Either 'ignore' or 'restore'.
+ */
+function* updateBrokenLinkIgnoreState( url, actionType ) {
+	const state = select( STORE_NAME ).getState();
+	const isTaxonomy = window?.surerank_seo_popup?.is_taxonomy === '1';
+	const postId = isTaxonomy
+		? 0
+		: state.pageSeoChecks?.postId ||
+		  state.variables?.post?.ID?.value ||
+		  0;
+
+	// Stored broken links must be passed along so the backend keeps the
+	// other entries intact when reconciling the post meta. The check data can
+	// be flat (block editor) or nested (listing / page builder), so normalize
+	// it before reading the URLs.
+	const getBrokenUrls = () =>
+		getBrokenLinkItems(
+			select( STORE_NAME )
+				.getPageSeoChecks()
+				?.pageChecks?.find( ( check ) => check?.id === 'broken_links' )
+				?.data
+		)
+			.map( ( item ) => item?.url )
+			.filter( Boolean );
+
+	try {
+		yield fetchFromAPI( {
+			path: 'surerank/v1/checks/broken-link-ignore',
+			method: actionType === 'ignore' ? 'POST' : 'DELETE',
+			data:
+				actionType === 'ignore'
+					? { url, post_id: postId, urls: getBrokenUrls() }
+					: { url },
+		} );
+
+		// On restore, immediately re-check the URL so it returns to the
+		// broken list right away when it is still broken.
+		let recheckResult = null;
+		if ( actionType === 'restore' && postId ) {
+			recheckResult = yield fetchFromAPI( {
+				path: 'surerank/v1/checks/broken-link',
+				method: 'POST',
+				data: {
+					url,
+					post_id: postId,
+					urls: [ ...new Set( [ ...getBrokenUrls(), url ] ) ],
+					user_agent: window.navigator.userAgent,
+				},
+			} );
+		}
+
+		// Re-read the checks after the requests resolve so a concurrent
+		// analyze cycle is not clobbered with stale data.
+		const pageChecks =
+			select( STORE_NAME ).getPageSeoChecks()?.pageChecks || [];
+
+		const updatedPageChecks = pageChecks.map( ( check ) => {
+			if ( check?.id !== 'broken_links' ) {
+				return check;
+			}
+
+			const ignoredBrokenLinks = check?.ignoredBrokenLinks || [];
+			// Normalize to a flat list of objects so the URL filter works for
+			// both the block-editor and listing / page-builder data shapes.
+			const brokenItems = getBrokenLinkItems( check?.data );
+
+			if ( actionType === 'ignore' ) {
+				const data = brokenItems.filter(
+					( item ) => item?.url !== url
+				);
+
+				return {
+					...check,
+					data,
+					ignoredBrokenLinks: [
+						...new Set( [ ...ignoredBrokenLinks, url ] ),
+					],
+					...( data.length === 0 && {
+						status: 'success',
+						title: __(
+							'No broken links found on the page.',
+							'surerank'
+						),
+					} ),
+				};
+			}
+
+			// Restore: re-add the URL to the broken list when the live
+			// re-check confirms it is still broken.
+			const existingData = brokenItems;
+			const stillBroken =
+				recheckResult &&
+				recheckResult?.success !== true &&
+				! existingData.some( ( item ) => item?.url === url );
+			const data = stillBroken
+				? [
+						...existingData,
+						{
+							url,
+							status: recheckResult?.status ?? 'error',
+							details: recheckResult?.details ?? '',
+						},
+				  ]
+				: existingData;
+
+			return {
+				...check,
+				data,
+				ignoredBrokenLinks: ignoredBrokenLinks.filter(
+					( ignoredUrl ) => ignoredUrl !== url
+				),
+				...( data.length > 0 && {
+					status: 'error',
+					title: __(
+						'One or more broken links found on the page.',
+						'surerank'
+					),
+				} ),
+			};
+		} );
+
+		yield setPageSeoCheck( 'page', updatedPageChecks );
+
+		return { success: true };
+	} catch ( error ) {
+		// The request failed or was aborted — report it so callers can
+		// surface an error state instead of a false success.
+		return { success: false };
+	}
+}
+
+export function* ignoreBrokenLinkUrl( url ) {
+	return yield* updateBrokenLinkIgnoreState( url, 'ignore' );
+}
+
+export function* restoreBrokenLinkUrl( url ) {
+	return yield* updateBrokenLinkIgnoreState( url, 'restore' );
 }
 
 export const setPageSeoChecksByIdAndType = (
@@ -247,6 +399,10 @@ export const setBatchPageSeoChecks = ( data, type = 'post' ) => {
 				showImages: key === 'image_alt_text',
 			} )
 		);
+
+		// Surface site-wide ignored broken links so the listing modal shows the
+		// ignore / restore UI on open, without waiting for a manual refresh.
+		applyIgnoredBrokenLinks( processedChecks, checks.all_links );
 
 		const { categorizedChecks, sequence } =
 			categorizeChecksList( processedChecks );
@@ -421,8 +577,8 @@ const seedModalFromSeoBarCache = ( postId, seoBarData ) => {
  * Reset the store for a new post context on listing pages.
  * Clears modal-specific state while preserving per-post seo-bar check cache.
  *
- * @param {string|number} postId     The post or term ID being opened.
- * @param {string}        postType   'post' or 'taxonomy'.
+ * @param {string|number} postId     The post, term or user ID being opened.
+ * @param {string}        postType   'post', 'taxonomy' or 'user'.
  * @param {boolean}       isTaxonomy Whether this is a taxonomy term.
  */
 export function* resetForNewPost( postId, postType, isTaxonomy ) {
@@ -440,7 +596,12 @@ export function* resetForNewPost( postId, postType, isTaxonomy ) {
 	}
 
 	// Fetch editor variables (used for title/description template replacement).
-	const queryParams = isTaxonomy ? { term_id: postId } : { post_id: postId };
+	let queryParams = { post_id: postId };
+	if ( postType === 'user' ) {
+		queryParams = { user_id: postId };
+	} else if ( isTaxonomy ) {
+		queryParams = { term_id: postId };
+	}
 
 	try {
 		const response = yield fetchFromAPI( {

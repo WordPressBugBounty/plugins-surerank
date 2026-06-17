@@ -4,6 +4,10 @@ import { XIcon } from 'lucide-react';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { redirectToPricingPage } from '@/functions/nudges';
+import { getSurerankUtmUrl } from '@/global/utils/utm';
+
+const LEARN_MORE_URL =
+	'https://surerank.com/changed-a-url-heres-how-to-protect-your-seo-with-redirects/';
 
 const Notice = () => {
 	const handleDismiss = () => {
@@ -45,6 +49,25 @@ const Notice = () => {
 								}
 							>
 								{ __( 'Upgrade Now', 'surerank' ) }
+							</Button>
+
+							<Button
+								variant="link"
+								size="xs"
+								onClick={ () =>
+									window.open(
+										getSurerankUtmUrl(
+											LEARN_MORE_URL,
+											'core_plugin',
+											'redirect_notice',
+											'redirect_notice_learn_more'
+										),
+										'_blank',
+										'noopener,noreferrer'
+									)
+								}
+							>
+								{ __( 'Learn more', 'surerank' ) }
 							</Button>
 						</div>
 					</div>

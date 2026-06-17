@@ -16,7 +16,7 @@ const getPluginsUrl = () => {
  * is active that hasn't yet shipped the Image Generation feature
  * (backward-compat notice asking the user to update Pro).
  *
- * @since x.x.x
+ * @since 1.9.0
  */
 const ImageGenerationUpgrade = () => {
 	if ( isProActive( 'pro' ) ) {

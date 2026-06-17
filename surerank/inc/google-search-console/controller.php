@@ -116,7 +116,7 @@ class Controller {
 		if ( empty( $site_url ) ) {
 			Send_Json::error(
 				[
-					'message' => __( 'No site URL found', 'surerank' ),
+					'message' => __( 'No site URL found.', 'surerank' ),
 					'status'  => 400,
 				]
 			);
@@ -510,7 +510,7 @@ class Controller {
 		if ( empty( $url ) ) {
 			return [
 				'success' => false,
-				'message' => __( 'URL parameter is required', 'surerank' ),
+				'message' => __( 'URL parameter is required.', 'surerank' ),
 				'data'    => [],
 			];
 		}

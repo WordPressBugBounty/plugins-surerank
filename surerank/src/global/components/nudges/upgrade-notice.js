@@ -21,12 +21,12 @@ import UpgradeButton from './upgrade-button';
  * @return {JSX.Element} UpgradeNotice component
  */
 const UpgradeNotice = ( {
-	title = __( 'Wants to unlock advanced SEO features?', 'surerank' ),
+	title = __( 'Want to unlock advanced SEO features?', 'surerank' ),
 	description = __(
 		'Upgrade to unlock Video / News Sitemaps, Instant Indexing, Redirect Manager, and more.',
 		'surerank'
 	),
-	buttonLabel = __( 'Upgrade now', 'surerank' ),
+	buttonLabel = __( 'Upgrade Now', 'surerank' ),
 	onButtonClick,
 	position = 'right',
 	className = '',

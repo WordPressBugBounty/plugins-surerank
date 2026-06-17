@@ -365,7 +365,7 @@ const SocialTab = ( { postMetaData, updatePostMetaData, globalDefaults } ) => {
 										color="help"
 									>
 										{ __(
-											'Upload at least 600x315px image. Recommended size is 1200x630px.',
+											'Upload an image at least 600×315px. Recommended size is 1200×630px.',
 											'surerank'
 										) }
 									</Text>

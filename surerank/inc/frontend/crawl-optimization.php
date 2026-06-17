@@ -75,6 +75,45 @@ class Crawl_Optimization {
 			remove_filter( 'term_link', [ $this, 'surerank_remove_product_category_base' ], 10 );
 			remove_action( 'template_redirect', [ $this, 'surerank_product_category_redirect' ], 1 );
 		}
+
+		/**
+		 * Filter to strip the ?replytocom query argument from comment reply links.
+		 * Each comment otherwise produces a unique ?replytocom=NN URL that serves
+		 * identical page content, which search engines treat as duplicate content
+		 * and which wastes crawl budget. Defaults to enabled; can be disabled with
+		 * the filter below.
+		 *
+		 * @since 1.9.0
+		 */
+		if ( apply_filters( 'surerank_remove_replytocom', true ) ) {
+			add_filter( 'comment_reply_link', [ $this, 'remove_replytocom_from_reply_link' ], 10, 1 );
+		}
+	}
+
+	/**
+	 * Remove the ?replytocom Query Argument from Comment Reply Links
+	 * Strips the replytocom query argument from the reply link href while keeping
+	 * the fragment anchor (e.g. #respond) intact, so the JS-driven reply behavior
+	 * still works and search engines no longer index duplicate ?replytocom URLs.
+	 *
+	 * @param string $link The HTML markup for the comment reply link.
+	 * @return string Modified reply link markup.
+	 * @since 1.9.0
+	 */
+	public function remove_replytocom_from_reply_link( $link ) {
+		if ( strpos( $link, 'replytocom' ) === false ) {
+			return $link;
+		}
+
+		$updated = preg_replace_callback(
+			'/href=([\'"])(.*?)\1/',
+			static function ( $matches ) {
+				return 'href=' . $matches[1] . esc_url( remove_query_arg( 'replytocom', $matches[2] ) ) . $matches[1];
+			},
+			$link
+		);
+
+		return $updated !== null ? $updated : $link;
 	}
 
 	/**

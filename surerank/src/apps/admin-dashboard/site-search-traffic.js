@@ -476,6 +476,10 @@ const SiteSearchTraffic = () => {
 							yAxisFontColor={ [ '#4B3BED', '#38BDF8' ] }
 							data={ siteTraffic }
 							dataKeys={ [ 'impressions', 'clicks' ] }
+							seriesLabels={ {
+								impressions: __( 'Impressions', 'surerank' ),
+								clicks: __( 'Clicks', 'surerank' ),
+							} }
 							showTooltip
 							showXAxis={ true }
 							showYAxis={ true }

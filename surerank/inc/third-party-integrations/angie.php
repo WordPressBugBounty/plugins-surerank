@@ -319,7 +319,7 @@ class Angie extends Api_Base {
 
 		$reason = __( 'Post is indexable', 'surerank' );
 		if ( $meta === 'yes' ) {
-			$reason = __( 'This post is set to noindex by SureRank settings from SEO popup.', 'surerank' );
+			$reason = __( 'This post is set to noindex by SureRank settings from the SEO popup.', 'surerank' );
 		}
 
 		if ( ! $meta ) {

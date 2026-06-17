@@ -75,7 +75,7 @@ class RankMath extends BaseImporter {
 			return ImporterUtils::build_response(
 				sprintf(
 					// translators: %d: term ID.
-					__( 'RankMath data detected for term %d.', 'surerank' ),
+					__( 'Rank Math data detected for term %d.', 'surerank' ),
 					$term_id
 				),
 				true
@@ -87,7 +87,7 @@ class RankMath extends BaseImporter {
 		return ImporterUtils::build_response(
 			sprintf(
 				// translators: %d: term ID.
-				__( 'No RankMath data found for term %d.', 'surerank' ),
+				__( 'No Rank Math data found for term %d.', 'surerank' ),
 				$term_id
 			),
 			false,
@@ -163,7 +163,7 @@ class RankMath extends BaseImporter {
 		$this->source_settings = get_option( 'rank-math-options-titles', [] );
 		if ( empty( $this->source_settings ) || ! is_array( $this->source_settings ) ) {
 			return ImporterUtils::build_response(
-				__( 'No RankMath global settings found to import.', 'surerank' ),
+				__( 'No Rank Math global settings found to import.', 'surerank' ),
 				false
 			);
 		}
@@ -182,14 +182,14 @@ class RankMath extends BaseImporter {
 		try {
 			ImporterUtils::update_global_settings( $this->surerank_settings );
 			return ImporterUtils::build_response(
-				__( 'RankMath global settings imported successfully.', 'surerank' ),
+				__( 'Rank Math global settings imported successfully.', 'surerank' ),
 				true
 			);
 		} catch ( Exception $e ) {
 			self::log(
 				sprintf(
 					/* translators: %s: error message. */
-					__( 'Error importing RankMath global settings: %s', 'surerank' ),
+					__( 'Error importing Rank Math global settings: %s', 'surerank' ),
 					$e->getMessage()
 				)
 			);
@@ -337,6 +337,14 @@ class RankMath extends BaseImporter {
 		];
 
 		$imported = $this->process_meta_mapping( $mapping );
+
+		// Rank Math stores focus keywords as a comma-separated list where
+		// the first entry is the primary keyword.
+		$focus_keyword = ImporterUtils::get_primary_keyword( $this->source_meta['rank_math_focus_keyword'][0] ?? '' );
+		if ( '' !== $focus_keyword ) {
+			$this->default_surerank_meta['focus_keyword'] = $focus_keyword;
+			$imported                                     = true;
+		}
 
 		if ( $imported ) {
 			return ImporterUtils::build_response(

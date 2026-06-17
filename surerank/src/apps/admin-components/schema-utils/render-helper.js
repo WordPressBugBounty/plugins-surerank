@@ -7,6 +7,7 @@ import {
 	Input,
 	Text,
 	DatePicker,
+	TextArea,
 } from '@bsf/force-ui';
 import {
 	editorValueToString,
@@ -16,7 +17,8 @@ import {
 import { Trash, Plus, Info, Calendar } from 'lucide-react';
 import { generateUUID } from '@AdminComponents/schema-utils/utils';
 import { SeoPopupTooltip } from '@AdminComponents/tooltip';
-import { useState, useEffect, useRef, useMemo } from '@wordpress/element';
+import FloatingPopover from '@AdminComponents/floating-popover';
+import { useState, useMemo } from '@wordpress/element';
 import { widthToTailwindClass, groupFieldsIntoRows } from './layout-utils';
 
 const WORD_BREAK_ALL_EDITOR_INPUT = [ 'url', 'logo' ];
@@ -77,6 +79,25 @@ const renderFieldLabel = ( field ) => (
 	</div>
 );
 
+// ISO 8601 with the local UTC offset (e.g. 2026-06-12T10:30:00+05:30) so the
+// selected wall-clock time is preserved — toISOString() shifts it to UTC.
+const toLocalISOString = ( date ) => {
+	const pad = ( num ) => String( num ).padStart( 2, '0' );
+	const offsetMinutes = -date.getTimezoneOffset();
+	const sign = offsetMinutes >= 0 ? '+' : '-';
+	const absOffset = Math.abs( offsetMinutes );
+	const datePart = `${ date.getFullYear() }-${ pad(
+		date.getMonth() + 1
+	) }-${ pad( date.getDate() ) }`;
+	const timePart = `${ pad( date.getHours() ) }:${ pad(
+		date.getMinutes()
+	) }:${ pad( date.getSeconds() ) }`;
+	const offsetPart = `${ sign }${ pad(
+		Math.floor( absOffset / 60 )
+	) }:${ pad( absOffset % 60 ) }`;
+	return `${ datePart }T${ timePart }${ offsetPart }`;
+};
+
 const normalizeDateTimeValue = ( value ) => {
 	if ( ! value || typeof value !== 'string' ) {
 		return '';
@@ -91,7 +112,7 @@ const normalizeDateTimeValue = ( value ) => {
 		if ( isNaN( date.getTime() ) ) {
 			return value;
 		}
-		return date.toISOString();
+		return toLocalISOString( date );
 	} catch ( error ) {
 		return value;
 	}
@@ -105,9 +126,8 @@ const DateTimeField = ( {
 	placeholder,
 	variableSuggestions,
 } ) => {
-	const [ isDatePickerOpen, setIsDatePickerOpen ] = useState( false );
 	const [ keyCounter, setKeyCounter ] = useState( 0 );
-	const containerRef = useRef( null );
+	const [ isPickerOpen, setIsPickerOpen ] = useState( false );
 
 	// Convert selected date to ISO string
 	const formatForOutput = ( selectedDate ) => {
@@ -117,37 +137,21 @@ const DateTimeField = ( {
 		return normalizeDateTimeValue( selectedDate.toString() );
 	};
 
+	const closePicker = () => setIsPickerOpen( false );
+
 	const handleDateApply = ( selectedDate ) => {
 		onFieldChange( field.id, formatForOutput( selectedDate ) );
-		setIsDatePickerOpen( false );
+		closePicker();
 		// Force EditorInput to re-render with new value
 		setKeyCounter( ( prev ) => prev + 1 );
 	};
 
 	const handleDateCancel = () => {
-		setIsDatePickerOpen( false );
+		closePicker();
 	};
 
-	useEffect( () => {
-		function handleClickOutside( event ) {
-			if (
-				isDatePickerOpen &&
-				containerRef.current &&
-				! containerRef.current.contains( event.target )
-			) {
-				setIsDatePickerOpen( false );
-			}
-		}
-
-		// Bind the event listener
-		document.addEventListener( 'mousedown', handleClickOutside );
-		return () => {
-			document.removeEventListener( 'mousedown', handleClickOutside );
-		};
-	}, [ isDatePickerOpen ] );
-
 	return (
-		<div ref={ containerRef } className="w-full relative">
+		<div className="w-full relative">
 			<div className="flex items-center gap-2 w-full">
 				<EditorInput
 					key={ `${ field.id }-${ keyCounter }` }
@@ -180,28 +184,31 @@ const DateTimeField = ( {
 							: {}
 					}
 				/>
-				<Button
-					variant="ghost"
-					size="md"
-					onClick={ () => setIsDatePickerOpen( ( prev ) => ! prev ) }
-					className="flex-shrink-0"
-					aria-label={ __( 'Open date picker', 'surerank' ) }
-					icon={
-						<Calendar
-							strokeWidth={ 1.5 }
-							className="text-icon-secondary"
+				<FloatingPopover
+					open={ isPickerOpen }
+					onOpenChange={ setIsPickerOpen }
+					trigger={
+						<Button
+							variant="ghost"
+							size="md"
+							className="flex-shrink-0"
+							aria-label={ __( 'Open date picker', 'surerank' ) }
+							icon={
+								<Calendar
+									strokeWidth={ 1.5 }
+									className="text-icon-secondary"
+								/>
+							}
 						/>
 					}
-				/>
-			</div>
-			{ isDatePickerOpen && (
-				<div className="absolute z-10 mb-2 rounded-lg shadow-lg right-0 bg-background-primary bottom-full">
+				>
 					<DatePicker
 						applyButtonText={ __( 'Apply', 'surerank' ) }
 						cancelButtonText={ __( 'Cancel', 'surerank' ) }
 						selectionType="single"
 						showOutsideDays={ false }
 						variant="normal"
+						enableTimeSelection
 						onApply={ handleDateApply }
 						onCancel={ handleDateCancel }
 						selected={
@@ -210,8 +217,8 @@ const DateTimeField = ( {
 								: null
 						}
 					/>
-				</div>
-			) }
+				</FloatingPopover>
+			</div>
 		</div>
 	);
 };
@@ -902,6 +909,24 @@ export function renderFieldCommon( {
 						onChange={ ( value ) => {
 							onFieldChange( field.id, value );
 						} }
+					/>
+				</div>
+			);
+		}
+
+		case 'Textarea': {
+			return (
+				<div className="w-full">
+					<TextArea
+						key={ uniqueKey }
+						value={ currentFieldValue }
+						onChange={ ( value ) =>
+							onFieldChange( field.id, value )
+						}
+						rows={ field.rows || 8 }
+						size="md"
+						className="w-full font-mono text-sm"
+						placeholder={ placeholder }
 					/>
 				</div>
 			);

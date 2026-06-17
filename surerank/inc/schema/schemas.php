@@ -116,7 +116,24 @@ class Schemas {
 
 				if ( $schema_class && class_exists( $schema_class ) ) {
 					$schema_instance = $schema_class::get_instance();
-					$rendered[]      = $schema_instance->render_schema( $schema, $renderer );
+					$schema_output   = $schema_instance->render_schema( $schema, $renderer );
+
+					if ( empty( $schema_output ) ) {
+						continue;
+					}
+
+					if ( is_array( $schema_output ) && $this->is_list_array( $schema_output ) ) {
+						foreach ( $schema_output as $schema_node ) {
+							if ( is_array( $schema_node ) && ! empty( $schema_node ) ) {
+								$rendered[] = $schema_node;
+							}
+						}
+						continue;
+					}
+
+					if ( is_array( $schema_output ) ) {
+						$rendered[] = $schema_output;
+					}
 				}
 			}
 		}
@@ -142,10 +159,13 @@ class Schemas {
 	 * @since 1.0.0
 	 */
 	public function get_wp_json_encode_flags() {
+		// JSON_HEX_TAG escapes < and > so a value containing </script> cannot
+		// break out of the JSON-LD <script> block. JSON_UNESCAPED_SLASHES keeps
+		// URLs readable but would otherwise leave </script> intact.
 		if ( defined( 'SURERANK_DEBUG' ) && SURERANK_DEBUG ) {
-			return JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
+			return JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG;
 		}
-		return JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
+		return JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG;
 	}
 
 	/**
@@ -254,5 +274,19 @@ class Schemas {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Check whether an array uses sequential numeric keys.
+	 *
+	 * @param array<mixed> $array Array to inspect.
+	 * @return bool
+	 */
+	private function is_list_array( array $array ) {
+		if ( [] === $array ) {
+			return true;
+		}
+
+		return array_keys( $array ) === range( 0, count( $array ) - 1 );
 	}
 }

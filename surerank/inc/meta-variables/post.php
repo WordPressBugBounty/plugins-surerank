@@ -75,19 +75,19 @@ class Post extends Variables {
 			],
 			'permalink'     => [
 				'label'       => __( 'Permalink', 'surerank' ),
-				'description' => __( 'The permalink of the site.', 'surerank' ),
+				'description' => __( 'The permalink of the post.', 'surerank' ),
 			],
 			'published'     => [
 				'label'       => __( 'Date Published', 'surerank' ),
-				'description' => __( 'Publication date of the current post/page OR specified date on date archives', 'surerank' ),
+				'description' => __( 'Publication date of the current post/page OR specified date on date archives.', 'surerank' ),
 			],
 			'modified'      => [
 				'label'       => __( 'Date Modified', 'surerank' ),
-				'description' => __( 'Last modification date of the current post/page', 'surerank' ),
+				'description' => __( 'Last modification date of the current post/page.', 'surerank' ),
 			],
 			'author_name'   => [
 				'label'       => __( 'Author Name', 'surerank' ),
-				'description' => __( 'The name of the author of the current post/page', 'surerank' ),
+				'description' => __( 'The name of the author of the current post/page.', 'surerank' ),
 			],
 			'archive_title' => [
 				'label'       => __( 'Archive Title', 'surerank' ),

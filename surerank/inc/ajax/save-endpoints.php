@@ -35,6 +35,7 @@ use SureRank\Inc\API\Admin;
 use SureRank\Inc\API\Api_Base;
 use SureRank\Inc\API\Post;
 use SureRank\Inc\API\Term;
+use SureRank\Inc\API\User_Seo;
 use SureRank\Inc\Functions\Rest_Observation;
 use SureRank\Inc\Functions\Sanitize;
 use SureRank\Inc\Traits\Get_Instance;
@@ -64,6 +65,7 @@ class Save_Endpoints {
 	public function __construct() {
 		add_action( 'wp_ajax_surerank_save_post_settings', [ $this, 'save_post_settings' ] );
 		add_action( 'wp_ajax_surerank_save_term_settings', [ $this, 'save_term_settings' ] );
+		add_action( 'wp_ajax_surerank_save_user_settings', [ $this, 'save_user_settings' ] );
 		add_action( 'wp_ajax_surerank_save_admin_settings', [ $this, 'save_admin_settings' ] );
 	}
 
@@ -128,6 +130,36 @@ class Save_Endpoints {
 	}
 
 	/**
+	 * AJAX handler for POST /wp-json/surerank/v1/user/settings parity.
+	 *
+	 * @since 1.9.0
+	 * @return void
+	 */
+	public function save_user_settings(): void {
+		if ( ! $this->guard_request( 'POST', '/surerank/v1/user/settings' ) ) {
+			return;
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified in guard_request() above.
+		$user_id = isset( $_POST['user_id'] ) ? absint( wp_unslash( $_POST['user_id'] ) ) : 0;
+		if ( $user_id <= 0 || ! User_Seo::can_manage_user_seo( $user_id ) ) {
+			wp_send_json_error(
+				[
+					'success' => false,
+					'message' => __( 'Invalid user id.', 'surerank' ),
+				],
+				400
+			);
+		}
+
+		$meta_data = $this->extract_meta_data();
+
+		$result = User_Seo::save_user_seo_meta( $user_id, $meta_data );
+
+		$this->respond_with( $result );
+	}
+
+	/**
 	 * AJAX handler for POST /wp-json/surerank/v1/admin/global-settings parity.
 	 *
 	 * @since 1.7.2
@@ -151,7 +183,7 @@ class Save_Endpoints {
 		 *
 		 * @var array<string, mixed> $data
 		 */
-		$data = Sanitize::array_deep( [ Sanitize::class, 'sanitize_with_placeholders' ], $data );
+		$data = Sanitize::sanitize_request_data( $data );
 
 		$result = Admin::save_admin_settings( $data );
 
@@ -227,7 +259,7 @@ class Save_Endpoints {
 	 * @return array<string, mixed>
 	 */
 	private function extract_meta_data(): array {
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce verified in guard_request(); raw value is sanitised via Sanitize::array_deep below before use.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce verified in guard_request(); raw value is sanitised via Sanitize::sanitize_request_data() below before use.
 		$raw = isset( $_POST['metaData'] ) ? wp_unslash( $_POST['metaData'] ) : [];
 
 		if ( is_string( $raw ) ) {
@@ -244,7 +276,7 @@ class Save_Endpoints {
 		 *
 		 * @var array<string, mixed> $sanitised
 		 */
-		$sanitised = Sanitize::array_deep( [ Sanitize::class, 'sanitize_with_placeholders' ], $raw );
+		$sanitised = Sanitize::sanitize_request_data( $raw );
 		return $sanitised;
 	}
 

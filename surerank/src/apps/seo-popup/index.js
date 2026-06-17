@@ -89,7 +89,7 @@ const getClassicTriggerMountTarget = () => {
 		return sidebarTrigger;
 	}
 
-	// Term edit page: #seo-popup is PHP-rendered inside <form>, so move it
+	// Term/user edit pages: #seo-popup is PHP-rendered inside <form>, so move it
 	// into .wrap > h1 to appear beside the page heading (matches old insertRoot behaviour).
 	const seoPopup = document.querySelector( '#seo-popup' );
 	const pageHeading = document.querySelector( '.wrap > h1' );
@@ -100,7 +100,9 @@ const getClassicTriggerMountTarget = () => {
 };
 
 const mountClassicTrigger = () => {
-	if ( surerank_seo_popup.editor_type !== 'classic' ) {
+	if (
+		! [ 'classic', 'user' ].includes( surerank_seo_popup.editor_type )
+	) {
 		return;
 	}
 	const targetElement = getClassicTriggerMountTarget();
@@ -120,6 +122,12 @@ if ( document.readyState === 'loading' ) {
 }
 
 document.addEventListener( 'DOMContentLoaded', function () {
+	// On frontend single views the shadow-DOM entry (front-end-meta-box) owns
+	// the mount. Returning here prevents a duplicate root in the light DOM.
+	if ( window.surerank_seo_popup?.is_frontend ) {
+		return;
+	}
+
 	let node = document.querySelector( '#surerank-root' );
 
 	if ( ! node ) {

@@ -11,7 +11,7 @@
  *   utm_campaign = <surface> (or core_plugin fallback)
  *   utm_content  = <context>   (e.g. 'learn_more', 'documentation')
  *
- * @since x.x.x
+ * @since 1.9.0
  */
 
 /**
@@ -24,10 +24,18 @@
  * @param {string} content  UTM content value — CTA / context identifier using
  *                          lowercase letters, digits, and underscores
  *                          (e.g. 'learn_more', 'documentation').
+ * @param {string} medium   UTM medium value. Defaults to 'wordpress_plugin';
+ *                          pass a custom value to distinguish a CTA's
+ *                          attribution (e.g. 'redirect_notice_learn_more').
  * @return {string} URL with UTM parameters appended, or the original URL if
  *                  it already contains UTM parameters or is an asset URL.
  */
-export const getSurerankUtmUrl = ( url, campaign, content ) => {
+export const getSurerankUtmUrl = (
+	url,
+	campaign,
+	content,
+	medium = 'wordpress_plugin'
+) => {
 	// Guard: require all parameters.
 	if ( ! url || ! campaign || ! content ) {
 		return url || '';
@@ -58,7 +66,7 @@ export const getSurerankUtmUrl = ( url, campaign, content ) => {
 	}
 
 	urlObj.searchParams.set( 'utm_source', 'surerank_plugin' );
-	urlObj.searchParams.set( 'utm_medium', 'wordpress_plugin' );
+	urlObj.searchParams.set( 'utm_medium', medium || 'wordpress_plugin' );
 	urlObj.searchParams.set( 'utm_campaign', campaign || 'core_plugin' );
 	urlObj.searchParams.set( 'utm_content', content );
 

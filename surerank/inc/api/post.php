@@ -160,6 +160,23 @@ class Post extends Api_Base {
 	 * @since 1.x.x
 	 */
 	public static function save_post_seo_meta( int $post_id, array $data ): array {
+		if ( isset( $data['schemas'] ) ) {
+			$validation = apply_filters(
+				'surerank_validate_schemas_payload',
+				[
+					'valid'   => true,
+					'message' => '',
+				],
+				$data['schemas']
+			);
+			if ( is_array( $validation ) && isset( $validation['valid'] ) && ! $validation['valid'] ) {
+				return [
+					'success' => false,
+					'message' => $validation['message'] ?? __( 'Invalid schema payload.', 'surerank' ),
+				];
+			}
+		}
+
 		self::update_feature_image_data( $post_id, $data );
 		self::update_post_meta_common( $post_id, $data );
 

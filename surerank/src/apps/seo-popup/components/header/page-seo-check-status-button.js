@@ -35,9 +35,19 @@ const PageSeoCheckButton = ( { className, showAsBadge = false } ) => {
 	};
 
 	const handleOpenChecks = () => {
-		const isTaxonomy = window?.surerank_seo_popup?.is_taxonomy === '1';
-		setPageSeoCheck( 'checkType', isTaxonomy ? 'taxonomy' : 'post' );
-		if ( isTaxonomy && window?.surerank_seo_popup?.term_id ) {
+		const isUser = !! window?.surerank_seo_popup?.is_user;
+		const isTaxonomy =
+			! isUser && window?.surerank_seo_popup?.is_taxonomy === '1';
+		let checkType = 'post';
+		if ( isUser ) {
+			checkType = 'user';
+		} else if ( isTaxonomy ) {
+			checkType = 'taxonomy';
+		}
+		setPageSeoCheck( 'checkType', checkType );
+		if ( isUser && window?.surerank_seo_popup?.user_id ) {
+			setPageSeoCheck( 'postId', window?.surerank_seo_popup?.user_id );
+		} else if ( isTaxonomy && window?.surerank_seo_popup?.term_id ) {
 			setPageSeoCheck( 'postId', window?.surerank_seo_popup?.term_id );
 		}
 		handleNavigateToChecks();
@@ -92,21 +102,17 @@ const PageSeoCheckButton = ( { className, showAsBadge = false } ) => {
 				<Text size={ 12 } weight={ 600 } color="inverse">
 					{ counts.errorAndWarnings > 0
 						? sprintf(
-								// translators: %1$s is the number of issues detected, %2$s is the word "Issue".
-								__(
-									'%1$s %2$s need attention. Click to see',
-									'surerank'
-								),
-								counts.errorAndWarnings,
+								// translators: %d is the number of issues detected.
 								_n(
-									'issue',
-									'issues',
+									'%d issue needs attention. Click to see details.',
+									'%d issues need attention. Click to see details.',
 									counts.errorAndWarnings,
 									'surerank'
-								)
+								),
+								counts.errorAndWarnings
 						  )
 						: __(
-								'All SEO checks passed. Click to see',
+								'All SEO checks passed. Click to see details.',
 								'surerank'
 						  ) }
 				</Text>

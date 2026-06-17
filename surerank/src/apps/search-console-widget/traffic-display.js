@@ -189,6 +189,10 @@ const TrafficDisplay = () => {
 							yAxisFontColor={ [ '#2171B1', '#72AEE6' ] }
 							data={ siteTraffic }
 							dataKeys={ [ 'impressions', 'clicks' ] }
+							seriesLabels={ {
+								impressions: __( 'Impressions', 'surerank' ),
+								clicks: __( 'Clicks', 'surerank' ),
+							} }
 							showTooltip
 							showXAxis={ true }
 							showYAxis={ true }

@@ -45,13 +45,14 @@ class Seo_Popup {
 		}
 
 		$this->enqueue_scripts_admin();
-		add_action( 'category_term_edit_form_top', [ $this, 'add_meta_box_trigger' ] );
+		add_action( 'current_screen', [ $this, 'register_term_edit_trigger' ] );
+		add_action( 'show_user_profile', [ $this, 'add_user_meta_box_trigger' ] );
+		add_action( 'edit_user_profile', [ $this, 'add_user_meta_box_trigger' ] );
 		add_action( 'add_meta_boxes', [ $this, 'register_classic_sidebar_meta_box' ], 20, 2 );
 		add_action( 'created_category', [ $this, 'update_category_seo_values' ] );
 		add_action( 'edited_category', [ $this, 'update_category_seo_values' ] );
 		// For enqueue scripts on the frontend.
-		// Uncomment this line when the frontend meta box style issue is resolved.
-		// add_action( 'wp_enqueue_scripts', [ $this, 'frontend_enqueue_scripts' ] );.
+		add_action( 'wp_enqueue_scripts', [ $this, 'frontend_enqueue_scripts' ] );
 	}
 
 	/**
@@ -62,6 +63,50 @@ class Seo_Popup {
 	 */
 	public function add_meta_box_trigger() {
 		echo '<span id="seo-popup" class="surerank-root"></span>';
+	}
+
+	/**
+	 * Add SEO popup trigger on user profile edit screens.
+	 *
+	 * Fires inside the profile form via show_user_profile/edit_user_profile;
+	 * the popup JS relocates the trigger next to the page heading.
+	 *
+	 * @param \WP_User $user The user being edited.
+	 * @since 1.9.0
+	 * @return void
+	 */
+	public function add_user_meta_box_trigger( $user ) {
+		if ( ! $user instanceof \WP_User || ! Seo_Bar::display_metabox( '', 'wp_users' ) ) {
+			return;
+		}
+
+		// profile.php is reachable by every role, so gate the trigger on the
+		// same capability chain the REST routes use plus edit_user on the
+		// target, otherwise subscribers see a button whose API calls 403.
+		if ( ! apply_filters( 'surerank_content_setting_access', current_user_can( 'manage_options' ) )
+			|| ! current_user_can( 'edit_user', $user->ID ) ) {
+			return;
+		}
+
+		echo '<span id="seo-popup" class="surerank-root"></span>';
+	}
+
+	/**
+	 * Register the term edit form trigger for the current taxonomy screen.
+	 *
+	 * @param \WP_Screen $screen Current screen object.
+	 * @return void
+	 */
+	public function register_term_edit_trigger( $screen ): void {
+		if ( ! $screen instanceof \WP_Screen || 'term' !== $screen->base || empty( $screen->taxonomy ) ) {
+			return;
+		}
+
+		if ( ! Seo_Bar::display_metabox( $screen->taxonomy, 'wp_terms' ) ) {
+			return;
+		}
+
+		add_action( "{$screen->taxonomy}_term_edit_form_top", [ $this, 'add_meta_box_trigger' ] );
 	}
 
 	/**
@@ -133,15 +178,51 @@ class Seo_Popup {
 	 * @return void
 	 */
 	public function frontend_enqueue_scripts() {
-		// Check if the user is logged in and has the necessary capabilities.
-		if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
+		// Restrict to singular posts and taxonomy term archives — the only page
+		// types where SureRank manages SEO metadata.
+		if ( ! is_singular() && ! is_tax() && ! is_tag() && ! is_category() ) {
 			return;
 		}
-		// Early return if it's a preview of editor or customizer.
-		if ( is_admin() ||
-			is_customize_preview() ||
-			is_preview() ||
-			! is_admin_bar_showing() ) {
+
+		// Skip shared-URL contexts that fire wp_enqueue_scripts but should not render UI.
+		if ( wp_doing_ajax()
+			|| ( defined( 'REST_REQUEST' ) && REST_REQUEST )
+			|| is_feed()
+			|| is_embed()
+			|| is_customize_preview()
+			|| is_preview() ) {
+			return;
+		}
+
+		// Skip third-party visual-builder previews that render on a public URL.
+		if ( null !== filter_input( INPUT_GET, 'elementor-preview', FILTER_VALIDATE_INT )
+			|| ( function_exists( 'bricks_is_builder' ) && bricks_is_builder() )
+			|| ( function_exists( 'et_fb_is_enabled' ) && et_fb_is_enabled() ) ) {
+			return;
+		}
+
+		// Same gate as the editor metabox and seo-bar: manage_options by
+		// default, Pro Role Manager grants surerank_content_setting via
+		// the surerank_content_setting_access filter.
+		$can_edit = apply_filters( 'surerank_content_setting_access', current_user_can( 'manage_options' ) );
+		$post_id  = is_singular() ? (int) get_queried_object_id() : 0;
+
+		/**
+		 * Filters whether the current user can open the frontend SEO metabox.
+		 *
+		 * Pro can hook here to apply license or custom-role restrictions on top
+		 * of the default capability check. On singular pages $post_id is the post
+		 * ID; on taxonomy archives it is 0.
+		 *
+		 * @since 1.9.0
+		 * @param bool $can_edit Whether the user passes the default capability check.
+		 * @param int  $post_id  Post ID for singular views; 0 for taxonomy archives.
+		 */
+		if ( ! is_user_logged_in() || ! apply_filters( 'surerank_frontend_metabox_access', $can_edit, $post_id ) ) {
+			return;
+		}
+
+		if ( ! is_admin_bar_showing() ) {
 			return;
 		}
 
@@ -246,12 +327,6 @@ class Seo_Popup {
 	 * Get keyword checks configuration
 	 *
 	 * @since 1.0.0
-	 * @return array
-	 */
-	/**
-	 * Get keyword checks configuration
-	 *
-	 * @since 1.0.0
 	 * @return array<string>
 	 */
 	public function keyword_checks() {
@@ -300,9 +375,14 @@ class Seo_Popup {
 			return 'bricks';
 		}
 
-		// Listing pages (post/taxonomy list tables) use a dedicated context.
-		if ( $screen && in_array( $screen->base, [ 'edit', 'edit-tags' ], true ) ) {
+		// Listing pages (post/taxonomy/user list tables) use a dedicated context.
+		if ( $screen && in_array( $screen->base, [ 'edit', 'edit-tags', 'users' ], true ) ) {
 			return 'listing';
+		}
+
+		// User profile edit screens use a dedicated context.
+		if ( $screen && in_array( $screen->base, [ 'profile', 'user-edit' ], true ) ) {
+			return 'user';
 		}
 
 		// Allow integrations (e.g. Divi BFB) to override before the block-editor check.
@@ -330,8 +410,20 @@ class Seo_Popup {
 			return true;
 		}
 
-		if ( ! $screen || empty( $screen->base ) || ! in_array( $screen->base, [ 'post', 'term', 'edit', 'edit-tags' ], true ) ) {
+		if ( ! $screen || empty( $screen->base ) || ! in_array( $screen->base, [ 'post', 'term', 'edit', 'edit-tags', 'profile', 'user-edit', 'users' ], true ) ) {
 			return false;
+		}
+
+		if ( in_array( $screen->base, [ 'profile', 'user-edit', 'users' ], true ) ) {
+			if ( ! Seo_Bar::display_metabox( '', 'wp_users' ) ) {
+				return false;
+			}
+
+			// Don't ship the popup bundle to roles that can't use it (e.g.
+			// subscribers on their own profile.php). Per-user edit_user is
+			// still enforced per row in the users-list column and per request
+			// by the REST object guard.
+			return (bool) apply_filters( 'surerank_content_setting_access', current_user_can( 'manage_options' ) );
 		}
 
 		if ( 'post' === $screen->base && ! empty( $screen->post_type ) ) {
@@ -375,17 +467,20 @@ class Seo_Popup {
 	 *
 	 * @param string          $editor_type Editor type.
 	 * @param \WP_Screen|null $screen Current screen object.
-	 * @return array{post_data: array<string, mixed>, term_data: array<string, mixed>, post_type: string, is_taxonomy: bool, is_frontend?: bool} Context data.
+	 * @return array{post_data: array<string, mixed>, term_data: array<string, mixed>, user_data: array<string, mixed>, post_type: string, is_taxonomy: bool, is_user: bool, is_frontend?: bool} Context data.
 	 */
 	private function get_context_data( string $editor_type, $screen ): array {
 		$post_data = $this->get_post_data( $editor_type, $screen );
 		$term_data = $this->get_term_data( $screen );
+		$user_data = $this->get_user_data( $screen );
 
 		return [
 			'post_data'   => $post_data,
 			'term_data'   => $term_data,
+			'user_data'   => $user_data,
 			'post_type'   => $this->get_post_type( $editor_type, $screen ),
 			'is_taxonomy' => $this->is_taxonomy( $editor_type, $screen ),
+			'is_user'     => $this->is_user( $screen ),
 		];
 	}
 
@@ -436,6 +531,50 @@ class Seo_Popup {
 			'term_id' => $tag_ID,
 			'link'    => $final_link,
 		];
+	}
+
+	/**
+	 * Get user data if on a user profile edit screen.
+	 *
+	 * @param \WP_Screen|null $screen Current screen object.
+	 * @since 1.9.0
+	 * @return array<string, mixed> User data.
+	 */
+	private function get_user_data( $screen ): array {
+		if ( ! $screen || ! in_array( $screen->base, [ 'profile', 'user-edit' ], true ) ) {
+			return [];
+		}
+
+		if ( 'user-edit' === $screen->base ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only context detection; capability enforced below and on save.
+			$user_id = isset( $_GET['user_id'] ) ? absint( wp_unslash( $_GET['user_id'] ) ) : 0;
+		} else {
+			$user_id = get_current_user_id();
+		}
+
+		if ( ! $user_id || ! current_user_can( 'edit_user', $user_id ) ) {
+			return [];
+		}
+
+		return [
+			'user_id' => $user_id,
+			'link'    => get_author_posts_url( $user_id ),
+		];
+	}
+
+	/**
+	 * Check if current context is a single-user edit screen (profile or user-edit).
+	 *
+	 * Intentionally excludes the users.php listing: no user_id exists there at
+	 * load time — the seo-bar badge click handler sets is_user/user_id on the
+	 * JS side when a specific user is selected.
+	 *
+	 * @param \WP_Screen|null $screen Current screen object.
+	 * @since 1.9.0
+	 * @return bool True if user context.
+	 */
+	private function is_user( $screen ): bool {
+		return $screen && in_array( $screen->base, [ 'profile', 'user-edit' ], true );
 	}
 
 	/**
@@ -496,8 +635,8 @@ class Seo_Popup {
 	/**
 	 * Enqueue assets for SEO popup.
 	 *
-	 * @param string                                                                                                                            $editor_type Editor type.
-	 * @param array{post_data: array<string, mixed>, term_data: array<string, mixed>, post_type: string, is_taxonomy: bool, is_frontend?: bool} $context_data Context data.
+	 * @param string                                                                                                                                                                              $editor_type Editor type.
+	 * @param array{post_data: array<string, mixed>, term_data: array<string, mixed>, user_data?: array<string, mixed>, post_type: string, is_taxonomy: bool, is_user?: bool, is_frontend?: bool} $context_data Context data.
 	 * @return void
 	 */
 	private function enqueue_assets( string $editor_type, array $context_data ): void {
@@ -510,20 +649,23 @@ class Seo_Popup {
 				'object_name' => 'seo_popup',
 				'data'        => array_merge(
 					[
-						'admin_assets_url'   => SURERANK_URL . 'inc/admin/assets',
-						'site_icon_url'      => get_site_icon_url( 16 ),
-						'editor_type'        => $editor_type,
-						'post_type'          => $context_data['post_type'],
-						'is_taxonomy'        => $context_data['is_taxonomy'],
-						'description_length' => Get::description_length(),
-						'title_length'       => Get::title_length(),
-						'keyword_checks'     => $this->keyword_checks(),
-						'page_checks'        => $this->page_checks(),
-						'image_seo'          => Image_Seo::get_instance()->status(),
-						'is_frontend'        => $context_data['is_frontend'] ?? false,
+						'admin_assets_url'         => SURERANK_URL . 'inc/admin/assets',
+						'site_icon_url'            => get_site_icon_url( 16 ),
+						'editor_type'              => $editor_type,
+						'post_type'                => $context_data['post_type'],
+						'is_taxonomy'              => $context_data['is_taxonomy'],
+						'is_user'                  => $context_data['is_user'] ?? false,
+						'description_length'       => Get::description_length(),
+						'title_length'             => Get::title_length(),
+						'keyword_checks'           => $this->keyword_checks(),
+						'page_checks'              => $this->page_checks(),
+						'image_seo'                => Image_Seo::get_instance()->status(),
+						'is_frontend'              => $context_data['is_frontend'] ?? false,
+						'broken_link_ignored_urls' => Get::option( 'surerank_broken_link_ignored_urls', [] ),
 					],
 					$context_data['post_data'],
 					$context_data['term_data'],
+					$context_data['user_data'] ?? [],
 					$this->get_indexing_status_localization( $context_data )
 				),
 			]

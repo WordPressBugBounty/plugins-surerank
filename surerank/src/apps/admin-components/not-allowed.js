@@ -10,7 +10,7 @@ const NotAllowedMessage = () => {
 			className="text-center"
 		>
 			{ __(
-				"You don't have permission to perform this action. Please contact administrator.",
+				"You don't have permission to perform this action. Please contact your administrator.",
 				'surerank'
 			) }
 		</Text>

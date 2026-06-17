@@ -11,6 +11,10 @@ import {
 import PageChecksListSkeleton from './page-checks-list-skeleton';
 import { useKeywordChecks } from '@SeoPopup/components/keyword-checks/hooks/use-keyword-checks';
 import { getCheckTypeKey } from '@/functions/utils';
+import {
+	markBrokenLinkIgnored,
+	markBrokenLinkRestored,
+} from './analyzer/link-checks';
 
 const PageSeoChecksWrapper = ( { type = 'page' } ) => {
 	const {
@@ -35,6 +39,8 @@ const PageSeoChecksWrapper = ( { type = 'page' } ) => {
 		restorePageSeoCheck,
 		updateAppSettings,
 		updatePostSeoMeta,
+		ignoreBrokenLinkUrl,
+		restoreBrokenLinkUrl,
 	} = useDispatch( STORE_NAME );
 
 	// Use keyword checks hook when type is keyword to trigger keyword analysis
@@ -65,6 +71,23 @@ const PageSeoChecksWrapper = ( { type = 'page' } ) => {
 	};
 	const handleRestoreCheck = ( checkId ) => {
 		restorePageSeoCheck( checkId );
+	};
+
+	const handleIgnoreBrokenLink = async ( url ) => {
+		const result = await ignoreBrokenLinkUrl( url );
+		// Sync the session ignored list and results cache only after the
+		// server confirms, so a failed request can't cause client drift.
+		if ( result?.success ) {
+			markBrokenLinkIgnored( url );
+		}
+		return result;
+	};
+	const handleRestoreBrokenLink = async ( url ) => {
+		const result = await restoreBrokenLinkUrl( url );
+		if ( result?.success ) {
+			markBrokenLinkRestored( url );
+		}
+		return result;
 	};
 
 	const handleOnSuccess = ( { selectedCheckId, content } ) => {
@@ -118,6 +141,8 @@ const PageSeoChecksWrapper = ( { type = 'page' } ) => {
 			onIgnore={ handleIgnoreCheck }
 			onRestore={ handleRestoreCheck }
 			onFix={ handleClickFix }
+			onIgnoreBrokenLink={ handleIgnoreBrokenLink }
+			onRestoreBrokenLink={ handleRestoreBrokenLink }
 		/>
 	);
 };

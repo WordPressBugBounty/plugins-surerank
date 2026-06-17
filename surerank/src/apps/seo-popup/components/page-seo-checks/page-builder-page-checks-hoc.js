@@ -6,6 +6,10 @@ import { STORE_NAME } from '@/store/constants';
 import PageChecksListSkeleton from './page-checks-list-skeleton';
 import { PROCESS_STATUSES } from '@/global/constants';
 import { getCheckTypeKey } from '@/functions/utils';
+import {
+	markBrokenLinkIgnored,
+	markBrokenLinkRestored,
+} from './analyzer/link-checks';
 
 const PageBuilderPageSeoChecksHoc = ( { type = 'page' } ) => {
 	const pageSeoChecks = useSelect(
@@ -17,6 +21,8 @@ const PageBuilderPageSeoChecksHoc = ( { type = 'page' } ) => {
 		restorePageSeoCheck,
 		updateAppSettings,
 		updatePostSeoMeta,
+		ignoreBrokenLinkUrl,
+		restoreBrokenLinkUrl,
 	} = useDispatch( STORE_NAME );
 
 	// For keyword checks, we need focus keyword and ignored list
@@ -53,6 +59,23 @@ const PageBuilderPageSeoChecksHoc = ( { type = 'page' } ) => {
 	};
 	const handleRestoreCheck = ( checkId ) => {
 		restorePageSeoCheck( checkId );
+	};
+
+	const handleIgnoreBrokenLink = async ( url ) => {
+		const result = await ignoreBrokenLinkUrl( url );
+		// Sync the session ignored list and results cache only after the
+		// server confirms, so a failed request can't cause client drift.
+		if ( result?.success ) {
+			markBrokenLinkIgnored( url );
+		}
+		return result;
+	};
+	const handleRestoreBrokenLink = async ( url ) => {
+		const result = await restoreBrokenLinkUrl( url );
+		if ( result?.success ) {
+			markBrokenLinkRestored( url );
+		}
+		return result;
 	};
 
 	const handleOnSuccess = ( { selectedCheckId, content } ) => {
@@ -100,6 +123,8 @@ const PageBuilderPageSeoChecksHoc = ( { type = 'page' } ) => {
 						onIgnore={ handleIgnoreCheck }
 						onRestore={ handleRestoreCheck }
 						onFix={ handleClickFix }
+						onIgnoreBrokenLink={ handleIgnoreBrokenLink }
+						onRestoreBrokenLink={ handleRestoreBrokenLink }
 					/>
 				</Suspense>
 			</div>

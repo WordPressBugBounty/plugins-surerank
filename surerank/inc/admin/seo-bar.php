@@ -38,6 +38,7 @@ class Seo_Bar {
 		$this->enqueue_scripts_admin();
 		add_action( 'admin_init', [ $this, 'setup_columns' ] );
 		add_action( 'admin_init', [ $this, 'setup_taxonomy_columns' ] );
+		add_action( 'admin_init', [ $this, 'setup_user_columns' ] );
 	}
 
 	/**
@@ -100,6 +101,24 @@ class Seo_Bar {
 				]
 			);
 			do_action( 'surerank_seo_bar_enqueue_taxonomy_scripts', $hook, $screen );
+		}
+
+		if ( 'users.php' === $hook && 'users' === $screen->base && $this->display_metabox( '', 'wp_users' ) && current_user_can( 'list_users' ) ) {
+
+			// Enqueue vendor and common assets.
+			$this->enqueue_vendor_and_common_assets();
+
+			$this->build_assets_operations(
+				'admin-seo-bar',
+				[
+					'hook'        => 'admin-seo-bar',
+					'object_name' => 'seo_bar',
+					'data'        => [
+						'type' => 'user',
+					],
+				]
+			);
+			do_action( 'surerank_seo_bar_enqueue_user_scripts', $hook, $screen );
 		}
 	}
 
@@ -193,6 +212,65 @@ class Seo_Bar {
 	}
 
 	/**
+	 * Sets up column filters for the users list table.
+	 *
+	 * @since 1.9.0
+	 * @return void
+	 */
+	public function setup_user_columns() {
+		if ( $this->display_metabox( '', 'wp_users' ) !== false ) {
+			add_filter( 'manage_users_columns', [ $this, 'column_heading_user' ], 10, 1 );
+			add_filter( 'manage_users_custom_column', [ $this, 'column_content_user' ], 10, 3 );
+		}
+	}
+
+	/**
+	 * Adds the custom column to the users admin table.
+	 *
+	 * @param array<string, string> $columns The existing columns.
+	 * @since 1.9.0
+	 * @return array<string, string> The modified columns.
+	 */
+	public function column_heading_user( $columns ) {
+		if ( $this->display_metabox( '', 'wp_users' ) === false ) {
+			return $columns;
+		}
+
+		$target_column = apply_filters( 'surerank_seo_bar_column_position_user', 5 );
+		$custom_column = [
+			'surerank-data' => __( 'SEO Checks', 'surerank' ),
+		];
+		return array_slice( $columns, 0, $target_column, true ) + $custom_column + array_slice( $columns, $target_column, null, true );
+	}
+
+	/**
+	 * Renders column content for users.
+	 *
+	 * @param string $content     The current column content.
+	 * @param string $column_name The name of the column.
+	 * @param int    $user_id     The ID of the user.
+	 * @since 1.9.0
+	 * @return string
+	 */
+	public function column_content_user( $content, $column_name, $user_id ) {
+		if ( ! $user_id || $column_name !== 'surerank-data' ) {
+			return $content;
+		}
+
+		$user = get_user_by( 'id', $user_id );
+		if ( ! $user || ! current_user_can( 'edit_user', $user_id ) ) {
+			return $content;
+		}
+
+		$excluded_roles = apply_filters( 'surerank_excluded_roles_from_seo_checks', [] );
+		if ( ! empty( array_intersect( $user->roles, (array) $excluded_roles ) ) ) {
+			return $content;
+		}
+
+		return '<span id="surerank-seo-popup-' . esc_attr( (string) $user_id ) . '" class="surerank-root surerank-page-score" data-title="' . esc_attr( (string) $user->display_name ) . '" data-id="' . esc_attr( (string) $user_id ) . '" data-link="' . esc_attr( get_author_posts_url( $user_id ) ) . '"><div class="bg-gray-200 animate-pulse w-full h-6 rounded-full max-w-32"></div></span>';
+	}
+
+	/**
 	 * Renders column content for taxonomies.
 	 *
 	 * @param string $content     The current column content.
@@ -240,6 +318,16 @@ class Seo_Bar {
 			if ( in_array( $post_type_or_taxonomy, apply_filters( 'surerank_excluded_taxonomies_from_seo_checks', [] ), true ) ) {
 				return false;
 			}
+		}
+
+		if ( $object_type === 'wp_users' ) {
+			/**
+			 * Filter to disable per-user SEO settings entirely.
+			 *
+			 * @since 1.9.0
+			 * @param bool $enabled Whether user SEO settings are enabled.
+			 */
+			return (bool) apply_filters( 'surerank_enable_user_seo_settings', true );
 		}
 
 		return true;

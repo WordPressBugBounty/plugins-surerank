@@ -15,10 +15,10 @@ msgstr ""
 
 #. Author of the plugin
 #: surerank.php
-#: inc/abilities/abilities-registrar.php:126
-#: inc/admin/dashboard.php:249
-#: inc/admin/dashboard.php:250
-#: inc/admin/seo-popup.php:95
+#: inc/abilities/abilities-registrar.php:158
+#: inc/admin/dashboard.php:269
+#: inc/admin/dashboard.php:270
+#: inc/admin/seo-popup.php:140
 #: inc/nps-notice.php:95
 msgid "SureRank"
 msgstr "SureRank"
@@ -33,26 +33,28 @@ msgstr "https://surerank.com"
 msgid "https://surerank.com/"
 msgstr "https://surerank.com/"
 
-#: inc/admin/dashboard.php:276
+#: inc/admin/dashboard.php:296
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Dashboard"
 msgstr "Dashboard"
 
-#: inc/admin/dashboard.php:280
+#: inc/admin/dashboard.php:300
 #: inc/analyzer/seo-analyzer.php:165
 #: inc/analyzer/seo-analyzer.php:288
 #: inc/schema/types/organization.php:678
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "General"
 msgstr "Algemeen"
 
-#: inc/admin/dashboard.php:284
+#: inc/admin/dashboard.php:304
 #: inc/analyzer/seo-analyzer.php:851
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Advanced"
 msgstr "Geavanceerd"
@@ -61,11 +63,6 @@ msgstr "Geavanceerd"
 #: inc/admin/onboarding.php:39
 msgid "Onboarding"
 msgstr "Onboarding"
-
-#: inc/ajax/ajax.php:47
-#: inc/ajax/ajax.php:117
-msgid "Not an ajax request."
-msgstr "Geen ajax-verzoek."
 
 #: inc/ajax/ajax.php:57
 msgid "You do not have permission to activate plugins."
@@ -102,6 +99,7 @@ msgstr "Parseren van HTML is mislukt."
 
 #: inc/analyzer/post-analyzer.php:176
 #: inc/analyzer/term-analyzer.php:148
+#: inc/analyzer/user-analyzer.php:145
 msgid "Failed to update SEO checks"
 msgstr "Bijwerken van SEO-controles is mislukt."
 
@@ -167,11 +165,13 @@ msgstr "Links zijn aanwezig op de pagina."
 
 #: inc/analyzer/post-analyzer.php:536
 #: inc/analyzer/term-analyzer.php:188
+#: inc/analyzer/user-analyzer.php:187
 msgid "No canonical URL provided."
 msgstr "Geen canonieke URL opgegeven."
 
 #: inc/analyzer/post-analyzer.php:545
 #: inc/analyzer/term-analyzer.php:196
+#: inc/analyzer/user-analyzer.php:195
 msgid "No permalink provided."
 msgstr "Geen permalink opgegeven."
 
@@ -222,6 +222,7 @@ msgstr "Canonical-tag is niet aanwezig op de homepage."
 msgid "Invalid URL."
 msgstr "Ongeldig URL."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "Search engine title exceeds %1$d characters."
@@ -231,6 +232,7 @@ msgstr "De titel van de zoekmachine overschrijdt %1$d tekens."
 msgid "Search engine title is present and under 60 characters."
 msgstr "De titel van de zoekmachine is aanwezig en onder de 60 tekens."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "Search engine description exceeds %1$d characters."
@@ -243,6 +245,7 @@ msgstr "Ongeldige term-ID of termobject."
 #. translators: %s is the search engine title length.
 #: inc/analyzer/utils.php:70
 #: inc/analyzer/utils.php:84
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Search engine title is missing on the page."
 msgstr "Zoekmachine titel ontbreekt op de pagina."
@@ -268,6 +271,7 @@ msgstr "De zoekmachine titel voor de pagina is: \"%s\""
 #. translators: %s is the search engine description length.
 #: inc/analyzer/utils.php:115
 #: inc/analyzer/utils.php:128
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Search engine description is missing on the page."
 msgstr "Zoekmachine beschrijving ontbreekt op de pagina."
@@ -337,49 +341,42 @@ msgstr "Pagina-URL is kort en SEO-vriendelijk."
 msgid "Page URL is longer than %s characters and may affect SEO and readability."
 msgstr "Pagina-URL is langer dan %s tekens en kan SEO en leesbaarheid beïnvloeden."
 
-#: inc/api/admin.php:83
-msgid "Post id or term id is required"
-msgstr "Post-ID of term-ID is vereist"
-
-#: inc/api/admin.php:227
+#: inc/api/admin.php:244
 msgid "No data found"
 msgstr "Geen gegevens gevonden"
 
-#: inc/api/admin.php:251
+#: inc/api/admin.php:286
 msgid "Settings updated"
 msgstr "Instellingen bijgewerkt"
 
-#: inc/api/analyzer.php:119
-#: inc/api/analyzer.php:1192
+#: inc/api/analyzer.php:135
+#: inc/api/analyzer.php:1853
 msgid "Invalid Post ID."
 msgstr "Ongeldige Post-ID."
 
-#: inc/api/analyzer.php:504
+#: inc/api/analyzer.php:581
 msgid "Google Search Console is connected."
 msgstr "Google Search Console is verbonden."
 
-#: inc/api/analyzer.php:504
+#: inc/api/analyzer.php:581
 msgid "Google Search Console is not connected."
 msgstr "Google Search Console is niet verbonden."
 
-#: inc/api/analyzer.php:971
+#: inc/api/analyzer.php:1013
 msgid "Post not found"
 msgstr "Bericht niet gevonden"
 
-#: inc/api/analyzer.php:2022
-#: inc/api/analyzer.php:2045
+#: inc/api/analyzer.php:2878
+#: inc/api/analyzer.php:2901
 msgid "Link is broken"
 msgstr "Link is gebroken"
 
-#: inc/api/analyzer.php:988
+#: inc/api/analyzer.php:1041
 msgid "Link is not broken"
 msgstr "Link is niet gebroken"
 
-#: inc/api/analyzer.php:1647
-msgid "These broken links were found on the page: "
-msgstr "Deze gebroken links zijn gevonden op de pagina:"
-
-#: inc/api/analyzer.php:1652
+#: inc/api/analyzer.php:2413
+#: build/admin-seo-bar/index.js:1
 #: build/breakdance/index.js:1
 #: build/bricks/index.js:1
 #: build/divi/index.js:1
@@ -420,70 +417,65 @@ msgstr "Instellingen succesvol bijgewerkt"
 msgid "Failed to update settings"
 msgstr "Bijwerken van instellingen mislukt"
 
-#: inc/api/post.php:170
-#: inc/api/term.php:151
+#: inc/api/post.php:187
+#: inc/api/term.php:168
+#: inc/api/user-seo.php:201
 msgid "Error while running SEO Checks."
 msgstr "Fout bij het uitvoeren van SEO-controles."
 
-#: inc/api/post.php:180
-#: inc/api/term.php:161
+#: inc/api/post.php:197
+#: inc/api/term.php:178
+#: inc/api/user-seo.php:211
 msgid "Data updated"
 msgstr "Gegevens bijgewerkt"
 
 #: inc/abilities/content/list-content-types.php:88
-#: inc/api/post.php:548
+#: inc/api/post.php:565
 msgid "Author pages"
 msgstr "Auteurspagina's"
 
 #: inc/abilities/content/list-content-types.php:89
-#: inc/api/post.php:552
+#: inc/api/post.php:569
 msgid "Date archives"
 msgstr "Datumarchieven"
 
 #: inc/abilities/content/list-content-types.php:90
-#: inc/api/post.php:555
+#: inc/api/post.php:572
 msgid "Search pages"
 msgstr "Zoekpagina's"
 
-#: inc/api/post.php:297
+#: inc/api/post.php:314
 msgid "No post ID provided."
 msgstr "Geen bericht-ID opgegeven."
 
-#: inc/api/post.php:303
+#: inc/api/post.php:320
 msgid "No post found."
 msgstr "Geen bericht gevonden."
 
-#: inc/api/term.php:197
+#: inc/api/term.php:214
 msgid "No term ID provided."
 msgstr "Geen term-ID opgegeven."
 
-#: inc/api/term.php:203
+#: inc/api/term.php:220
 msgid "No term found."
 msgstr "Geen term gevonden."
-
-#: inc/google-search-console/controller.php:119
-msgid "No site URL found"
-msgstr "Geen site-URL gevonden"
 
 #: inc/google-search-console/controller.php:150
 msgid "No data found for the selected date range."
 msgstr "Geen gegevens gevonden voor het geselecteerde datumbereik."
 
-#: inc/google-search-console/google-console.php:60
-msgid "Invalid credentials"
-msgstr "Ongeldige inloggegevens"
-
 #: inc/google-search-console/google-console.php:104
 #: inc/google-search-console/site-verification.php:60
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Unknown error"
 msgstr "Onbekende fout"
 
-#: inc/frontend/description.php:189
+#: inc/frontend/description.php:206
 msgid "Welcome to "
 msgstr "Welkom bij"
 
-#: inc/frontend/description.php:193
+#: inc/frontend/description.php:210
 msgid "Latest posts from "
 msgstr "Laatste berichten van"
 
@@ -554,6 +546,7 @@ msgstr "- Pagina %1$s van %2$s"
 
 #: inc/meta-variables/post.php:61
 #: inc/meta-variables/term.php:58
+#: inc/meta-variables/user.php:63
 msgid "ID"
 msgstr "ID"
 
@@ -561,14 +554,14 @@ msgstr "ID"
 msgid "The unique identifier for a post."
 msgstr "De unieke identificatie voor een bericht."
 
-#: inc/admin/dashboard.php:648
+#: inc/admin/dashboard.php:668
 #: inc/meta-variables/post.php:65
 #: inc/schema/variables.php:83
 #: build/admin-dashboard/index.js:1
 msgid "Post Title"
 msgstr "Berichttitel"
 
-#: inc/admin/dashboard.php:650
+#: inc/admin/dashboard.php:670
 #: inc/meta-variables/post.php:66
 msgid "The title of the post."
 msgstr "De titel van het bericht."
@@ -577,7 +570,7 @@ msgstr "De titel van het bericht."
 msgid "Excerpt"
 msgstr "Uittreksel"
 
-#: inc/admin/dashboard.php:655
+#: inc/admin/dashboard.php:675
 #: inc/meta-variables/post.php:70
 msgid "The excerpt of the post."
 msgstr "Het uittreksel van het bericht."
@@ -586,53 +579,41 @@ msgstr "Het uittreksel van het bericht."
 msgid "Content"
 msgstr "Inhoud"
 
-#: inc/admin/dashboard.php:660
+#: inc/admin/dashboard.php:680
 #: inc/meta-variables/post.php:74
 msgid "The content of the post."
 msgstr "De inhoud van het bericht."
 
 #: inc/meta-variables/post.php:77
 #: inc/meta-variables/term.php:74
+#: inc/meta-variables/user.php:79
 msgid "Permalink"
 msgstr "Permalink"
 
-#: inc/meta-variables/post.php:78
-msgid "The permalink of the site."
-msgstr "De permalink van de site."
-
 #: inc/meta-variables/site.php:60
-#: inc/meta-variables/site.php:61
 #: build/admin-dashboard/index.js:1
 msgid "Separator"
 msgstr "Scheidingsteken"
 
-#: inc/api/analyzer.php:634
+#: inc/api/analyzer.php:711
 #: inc/meta-variables/site.php:64
 msgid "Site Tagline"
 msgstr "Site-tagline"
 
-#: inc/admin/dashboard.php:640
+#: inc/admin/dashboard.php:660
 #: inc/meta-variables/site.php:65
 msgid "The tagline of the site."
 msgstr "De tagline van de site."
 
-#: inc/admin/dashboard.php:633
+#: inc/admin/dashboard.php:653
 #: inc/meta-variables/site.php:68
 #: build/admin-dashboard/index.js:1
 msgid "Site Name"
 msgstr "Site naam"
 
-#: inc/meta-variables/site.php:69
-msgid "The blog info of the site."
-msgstr "De bloginformatie van de site."
-
 #: inc/meta-variables/site.php:72
 msgid "Site Address"
 msgstr "Siteadres"
-
-#: inc/meta-variables/site.php:73
-msgid "The URL of the Site"
-msgstr "De URL van de site"
 
 #: inc/meta-variables/site.php:76
 #: build/admin-dashboard/index.js:1
@@ -652,7 +633,7 @@ msgstr "De unieke identificatie voor een term."
 msgid "Term Name"
 msgstr "Termnaam"
 
-#: inc/admin/dashboard.php:645
+#: inc/admin/dashboard.php:665
 #: inc/meta-variables/term.php:63
 msgid "The name of the term."
 msgstr "De naam van de term."
@@ -666,7 +647,7 @@ msgstr "De naam van de term."
 msgid "Description"
 msgstr "Beschrijving"
 
-#: inc/admin/dashboard.php:665
+#: inc/admin/dashboard.php:685
 #: inc/meta-variables/term.php:67
 msgid "The description of the term."
 msgstr "De beschrijving van de term."
@@ -858,7 +839,7 @@ msgid "If your video has important segments, specify them here"
 msgstr "Als je video belangrijke segmenten heeft, geef ze hier op"
 
 #: inc/schema/properties.php:367
-#: inc/schema/types/article.php:199
+#: inc/schema/types/article.php:198
 msgid "Part"
 msgstr "Onderdeel"
 
@@ -1017,8 +998,9 @@ msgstr "Beoordeling"
 msgid "Reviews of the item"
 msgstr "Beoordelingen van het item"
 
+#: inc/frontend/archives-meta.php:130
 #: inc/schema/properties.php:603
-#: inc/schema/types/article.php:182
+#: inc/schema/types/article.php:181
 #: inc/schema/types/web-page.php:95
 #: inc/schema/types/web-site.php:85
 msgid "Author"
@@ -1069,6 +1051,7 @@ msgstr "Een string of tekst die de eenheid van meting aangeeft."
 msgid "Hour"
 msgstr "Uur"
 
+#: inc/frontend/archives-meta.php:133
 #: inc/schema/properties.php:709
 msgid "Day"
 msgstr "Dag"
@@ -1077,10 +1060,12 @@ msgstr "Dag"
 msgid "Week"
 msgstr "Week"
 
+#: inc/frontend/archives-meta.php:136
 #: inc/schema/properties.php:711
 msgid "Month"
 msgstr "Maand"
 
+#: inc/frontend/archives-meta.php:139
 #: inc/schema/properties.php:712
 msgid "Year"
 msgstr "Jaar"
@@ -1302,6 +1287,7 @@ msgstr "Geef je schema een naam om het later te kunnen identificeren. Deze titel
 
 #: inc/schema/types/article.php:82
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Schema Type"
 msgstr "Schema Type"
@@ -1322,14 +1308,6 @@ msgstr "Voer een beknopte en beschrijvende kop voor het artikel in. Deze kop wor
 msgid "Provide a short summary of the article’s content. This description is used in your site’s structured data to help search engines understand what the article is about."
 msgstr "Geef een korte samenvatting van de inhoud van het artikel. Deze beschrijving wordt gebruikt in de gestructureerde gegevens van je site om zoekmachines te helpen begrijpen waar het artikel over gaat."
 
-#: inc/schema/types/article.php:125
-msgid "Enter the date and time the article was first published, using the ISO 8601 format.  This value is used in your site’s structured data to show when the content was originally made public."
-msgstr "Voer de datum en tijd in waarop het artikel voor het eerst is gepubliceerd, gebruikmakend van het ISO 8601-formaat. Deze waarde wordt gebruikt in de gestructureerde gegevens van je site om aan te geven wanneer de inhoud oorspronkelijk openbaar is gemaakt."
-
-#: inc/schema/types/article.php:132
-msgid "The date and time the article was first published, in ISO 8601 format"
-msgstr "De datum en tijd waarop het artikel voor het eerst is gepubliceerd, in ISO 8601-formaat"
-
 #: inc/schema/types/article.php:137
 msgid "Comment count"
 msgstr "Aantal opmerkingen"
@@ -1342,90 +1320,90 @@ msgstr "Voeg het totale aantal opmerkingen toe dat het artikel heeft ontvangen. 
 msgid "Word count"
 msgstr "Aantal woorden"
 
-#: inc/schema/types/article.php:161
+#: inc/schema/types/article.php:160
 #: inc/schema/types/organization.php:134
 #: build/admin-dashboard/index.js:1
 msgid "Keywords"
 msgstr "Trefwoorden"
 
-#: inc/schema/types/article.php:167
+#: inc/schema/types/article.php:166
 msgid "List relevant tags or keywords that describe the article, separated by commas. These keywords are used in structured data to help categorize and improve content discoverability."
 msgstr "Lijst relevante tags of trefwoorden die het artikel beschrijven, gescheiden door komma's. Deze trefwoorden worden gebruikt in gestructureerde gegevens om de inhoud te categoriseren en de vindbaarheid te verbeteren."
 
-#: inc/schema/types/article.php:171
+#: inc/schema/types/article.php:170
 msgid "Sections"
 msgstr "Secties"
 
-#: inc/schema/types/article.php:177
+#: inc/schema/types/article.php:176
 msgid "Specify the section or category the article belongs to, such as Sports, Lifestyle, or Business. This is included in structured data to help search engines organize content by topic."
 msgstr "Geef de sectie of categorie op waartoe het artikel behoort, zoals Sport, Levensstijl of Bedrijf. Dit wordt opgenomen in gestructureerde gegevens om zoekmachines te helpen inhoud op onderwerp te organiseren."
 
-#: inc/schema/types/article.php:185
+#: inc/schema/types/article.php:184
 msgid "Specify the name of the person who wrote the article. This author information will be included in the structured data to attribute the content correctly."
 msgstr "Geef de naam op van de persoon die het artikel heeft geschreven. Deze auteurinformatie wordt opgenomen in de gestructureerde gegevens om de inhoud correct toe te schrijven."
 
-#: inc/schema/types/article.php:193
+#: inc/schema/types/article.php:192
 msgid "Subscription and pay-walled content"
 msgstr "Abonnement en betaalde inhoud"
 
-#: inc/schema/types/article.php:197
+#: inc/schema/types/article.php:196
 msgid "Indicates the content that is part of this item."
 msgstr "Geeft de inhoud aan die deel uitmaakt van dit item."
 
-#: inc/schema/types/article.php:212
+#: inc/schema/types/article.php:211
 msgid "Is accessible for free?"
 msgstr "Is toegankelijk gratis?"
 
-#: inc/schema/types/article.php:215
+#: inc/schema/types/article.php:214
 msgid "Whether the dataset is accessible without payment."
 msgstr "Of de dataset toegankelijk is zonder betaling."
 
 #: inc/admin/bulk-edit.php:72
 #: inc/admin/bulk-edit.php:80
 #: inc/admin/bulk-edit.php:88
-#: inc/schema/types/article.php:219
+#: inc/schema/types/article.php:218
 msgid "Yes"
 msgstr "Ja"
 
 #: inc/admin/bulk-edit.php:73
 #: inc/admin/bulk-edit.php:81
 #: inc/admin/bulk-edit.php:89
-#: inc/schema/types/article.php:220
+#: inc/schema/types/article.php:219
 msgid "No"
 msgstr "Nee"
 
-#: inc/schema/types/article.php:227
+#: inc/schema/types/article.php:226
 msgid "CSS selector"
 msgstr "CSS-selector"
 
-#: inc/schema/types/article.php:230
+#: inc/schema/types/article.php:229
 msgid "Class name around each pay-walled section of your page."
 msgstr "Klasse naam rond elk betaalmuur gedeelte van uw pagina."
 
-#: inc/schema/types/article.php:238
+#: inc/schema/types/article.php:237
 #: inc/schema/types/web-page.php:168
 msgid "Is part of"
 msgstr "Is onderdeel van"
 
-#: inc/schema/types/article.php:247
+#: inc/schema/types/article.php:246
 #: inc/schema/types/web-page.php:177
 #: inc/schema/types/web-site.php:128
 msgid "Publisher"
 msgstr "Uitgever"
 
-#: inc/schema/types/article.php:250
+#: inc/schema/types/article.php:249
 msgid "Enter the name of the individual or organization that published the article. This is included in the structured data to credit the source of the content."
 msgstr "Voer de naam in van de persoon of organisatie die het artikel heeft gepubliceerd. Dit wordt opgenomen in de gestructureerde gegevens om de bron van de inhoud te crediteren."
 
-#: inc/schema/types/article.php:268
+#: inc/schema/types/article.php:267
 msgid "Article"
 msgstr "Artikel"
 
-#: inc/schema/types/article.php:269
+#: inc/schema/types/article.php:268
 msgid "NewsArticle"
 msgstr "Nieuwsartikel"
 
-#: inc/schema/types/article.php:270
+#: inc/schema/types/article.php:269
 msgid "BlogPosting"
 msgstr "Blogbericht"
 
@@ -1867,10 +1845,6 @@ msgstr "Het product of de dienst waar dit naar verwijst."
 msgid "Please create a Product or Service and link to this property via a dynamic variable."
 msgstr "Maak alstublieft een Product of Dienst aan en koppel deze aan deze eigenschap via een dynamische variabele."
 
-#: inc/schema/types/offer.php:480
-msgid "Unit ode"
-msgstr "Eenheidscode"
-
 #: inc/schema/types/offer.php:483
 msgid "The unit of measurement given using the UN/CEFACT Common Code (3 characters) or a URL. Other codes than the UN/CEFACT Common Code may be used with a prefix followed by a colon."
 msgstr "De eenheid van meting gegeven met behulp van de UN/CEFACT Common Code (3 tekens) of een URL. Andere codes dan de UN/CEFACT Common Code kunnen worden gebruikt met een prefix gevolgd door een dubbele punt."
@@ -1961,10 +1935,6 @@ msgstr "Maak een Persoon of een Organisatie-schema aan en koppel dit aan deze ei
 msgid "The offer price of a product, or of a price component when attached to PriceSpecification and its subtypes. Use the priceCurrency property (with standard formats: ISO 4217 currency format, e.g. \"USD\"; Ticker symbol for cryptocurrencies, e.g. \"BTC\"; well known names for Local Exchange Trading Systems (LETS) and other currency types, e.g. \"Ithaca HOUR\") instead of including ambiguous symbols such as '$' in the value."
 msgstr "De aanbiedingsprijs van een product, of van een prijscomponent wanneer deze is gekoppeld aan PriceSpecification en zijn subtypes. Gebruik de priceCurrency-eigenschap (met standaardformaten: ISO 4217-valutaformaat, bijv. \"USD\"; Ticker-symbool voor cryptocurrencies, bijv. \"BTC\"; bekende namen voor Local Exchange Trading Systems (LETS) en andere valutatypes, bijv. \"Ithaca HOUR\") in plaats van onduidelijke symbolen zoals '$' in de waarde op te nemen."
 
-#: inc/schema/types/offer.php:579
-msgid "The currency of the price, or a price component when attached to PriceSpecification and its subtypes. Use standard formats: ISO 4217 currency format, e.g. \"USD\"; Ticker symbol for cryptocurrencies, e.g. \"BTC\"; well known names for Local Exchange Trading Systems (LETS) and other currency types, e.g. \"Ithaca HOUR\". "
-msgstr "De valuta van de prijs, of een prijscomponent wanneer deze is gekoppeld aan PriceSpecification en zijn subtypes. Gebruik standaardformaten: ISO 4217-valutaformaat, bijv. \"USD\"; Ticker-symbool voor cryptocurrencies, bijv. \"BTC\"; bekende namen voor Local Exchange Trading Systems (LETS) en andere valutatypes, bijv. \"Ithaca HOUR\"."
-
 #: inc/schema/types/offer.php:586
 #: inc/schema/types/product.php:253
 msgid "Price valid until"
@@ -2003,10 +1973,6 @@ msgstr "De Stock Keeping Unit (SKU), d.w.z. een handelaar-specifieke identificat
 #: inc/schema/types/offer.php:624
 msgid "The date when the item becomes valid in ISO-8601 format"
 msgstr "De datum waarop het item geldig wordt in ISO-8601-formaat"
-
-#: inc/schema/types/offer.php:632
-msgid "The date after when the item is not valid. For example the end of an offer, salary period, or a period of opening hours. "
-msgstr "De datum waarna het item niet meer geldig is. Bijvoorbeeld het einde van een aanbieding, salarisperiode of een periode van openingstijden."
 
 #: inc/schema/types/organization.php:83
 #: inc/schema/types/organization.php:288
@@ -2363,10 +2329,6 @@ msgstr "Toon de hoogste vermelde prijs voor het product bij alle aanbiedingen. G
 msgid "Offer count"
 msgstr "Aantal aanbiedingen"
 
-#: inc/schema/types/product.php:299
-msgid "Shows the stock status of the product, such as In Stock or Out of Stock. This information helps search engines show real-time availability."
-msgstr "Toont de voorraadstatus van het product, zoals Op Voorraad of Niet Op Voorraad. Deze informatie helpt zoekmachines om real-time beschikbaarheid te tonen."
-
 #: inc/schema/types/thing.php:74
 msgid "The name of the item"
 msgstr "De naam van het item"
@@ -2489,17 +2451,17 @@ msgstr "Een miniatuurafbeelding die relevant is voor de website."
 msgid "Post ID"
 msgstr "Bericht-ID"
 
-#: inc/admin/dashboard.php:653
+#: inc/admin/dashboard.php:673
 #: inc/schema/variables.php:85
 msgid "Post Excerpt"
 msgstr "Berichtfragment"
 
-#: inc/admin/dashboard.php:658
+#: inc/admin/dashboard.php:678
 #: inc/schema/variables.php:86
 msgid "Post Content"
 msgstr "Berichtinhoud"
 
-#: inc/admin/dashboard.php:678
+#: inc/admin/dashboard.php:698
 #: inc/schema/variables.php:87
 msgid "Post URL"
 msgstr "Bericht-URL"
@@ -2548,7 +2510,7 @@ msgstr "Term-slug"
 msgid "Term Taxonomy"
 msgstr "Term-taxonomie"
 
-#: inc/admin/dashboard.php:663
+#: inc/admin/dashboard.php:683
 #: inc/schema/variables.php:115
 msgid "Term Description"
 msgstr "Termbeschrijving"
@@ -2589,6 +2551,7 @@ msgstr "E-mail auteur"
 msgid "Author Website URL"
 msgstr "Website-URL auteur"
 
+#: inc/meta-variables/user.php:75
 #: inc/schema/variables.php:135
 msgid "Author Nicename"
 msgstr "Nicename auteur"
@@ -2691,7 +2654,7 @@ msgstr "%s Schema"
 msgid "This setting is managed by the SureRank plugin, so you don’t need to configure indexing rules for funnels here."
 msgstr "Deze instelling wordt beheerd door de SureRank-plugin, dus je hoeft hier geen indexeringsregels voor funnels te configureren."
 
-#: inc/admin/dashboard.php:638
+#: inc/admin/dashboard.php:658
 #: build/admin-dashboard/index.js:1
 msgid "Tagline"
 msgstr "Tagline"
@@ -2701,6 +2664,7 @@ msgid "Proceed"
 msgstr "Doorgaan"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Cancel"
 msgstr "Annuleren"
@@ -2731,18 +2695,14 @@ msgstr "Er is een onverwachte fout opgetreden bij het ophalen van de instellinge
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Save"
 msgstr "Opslaan"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
-#: build/seo-popup/index.js:1
-msgid "Saving.."
-msgstr "Opslaan.."
-
-#: build/admin-dashboard/index.js:1
-#: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Saved"
 msgstr "Opgeslagen"
@@ -2751,9 +2711,10 @@ msgstr "Opgeslagen"
 msgid "Search…"
 msgstr "Zoeken…"
 
-#: loader.php:398
+#: loader.php:406
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Settings"
 msgstr "Instellingen"
@@ -2787,7 +2748,8 @@ msgid "Select a site"
 msgstr "Selecteer een site"
 
 #: build/admin-dashboard/index.js:1
-#: build/admin-onboarding/index.js:1
+#: build/admin-notice/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Learn more"
 msgstr "Leer meer"
@@ -2858,6 +2820,7 @@ msgid "Content Score"
 msgstr "Inhoudsscore"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Pro"
 msgstr "Pro"
@@ -2931,12 +2894,14 @@ msgstr "Sitemaps"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Robot Instructions"
 msgstr "Robotinstructies"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Schema"
 msgstr "Schema"
@@ -3051,6 +3016,7 @@ msgid "No additional information to show."
 msgstr "Geen aanvullende informatie om te tonen."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Fix It for Me"
 msgstr "Los het voor mij op"
@@ -3113,6 +3079,7 @@ msgstr "Voeg afbeeldingen toe aan XML-sitemap"
 msgid "These settings help search engines understand how to treat your home page in search results. Enabling ‘No Index’ will prevent the home page from appearing in search results. ‘No Follow’ tells search engines not to follow any links on the page, and ‘No Archive’ prevents search engines from storing a cached version of the page. These settings apply only to your website’s home page."
 msgstr "Deze instellingen helpen zoekmachines te begrijpen hoe ze uw startpagina in zoekresultaten moeten behandelen. Het inschakelen van 'No Index' voorkomt dat de startpagina in zoekresultaten verschijnt. 'No Follow' vertelt zoekmachines om geen links op de pagina te volgen, en 'No Archive' voorkomt dat zoekmachines een gecachte versie van de pagina opslaan. Deze instellingen zijn alleen van toepassing op de startpagina van uw website."
 
+#: inc/admin/bulk-edit.php:69
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "No Index"
@@ -3123,6 +3090,7 @@ msgstr "Geen index"
 msgid "Prevents search engines from listing your home page in search results."
 msgstr "Voorkomt dat zoekmachines uw startpagina in zoekresultaten vermelden."
 
+#: inc/admin/bulk-edit.php:77
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "No Follow"
@@ -3133,6 +3101,7 @@ msgstr "Geen volg"
 msgid "Tells search engines not to follow any links on your home page."
 msgstr "Geeft zoekmachines de instructie om geen links op uw startpagina te volgen."
 
+#: inc/admin/bulk-edit.php:85
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "No Archive"
@@ -3155,6 +3124,7 @@ msgstr "De sitenaam die in meta-titels en beschrijvingen wordt gebruikt, is afko
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Search Engine Title"
 msgstr "Zoekmachine titel"
@@ -3166,12 +3136,14 @@ msgstr "Stel een standaardtitel in voor alle individuele berichtenpagina's om te
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Type @ to view variable suggestions"
 msgstr "Typ @ om variabele suggesties te bekijken"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Search Engine Preview"
 msgstr "Zoekmachine voorbeeld"
@@ -3208,11 +3180,13 @@ msgstr "Voer de URL in van uw standaard Facebook-auteurpagina. Deze wordt gebrui
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Facebook"
 msgstr "Facebook"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Social Image"
 msgstr "Sociale afbeelding"
@@ -3284,6 +3258,7 @@ msgstr "Voer de URL van uw fallback Twitter-auteurspagina in. Dit zal worden geb
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "X"
 msgstr "X"
@@ -3315,12 +3290,14 @@ msgid "No Date"
 msgstr "Geen datum"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Fix SEO Issues with AI"
 msgstr "Los SEO-problemen op met AI"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Sample Post - Testing Site"
 msgstr "Voorbeeldpost - Testsite"
@@ -3338,7 +3315,7 @@ msgstr "Voorbeeldpost - Testsite"
 msgid "This content will be set as the meta description tag and may appear in search results. Keep it short and clearly explain what the page is about."
 msgstr "Deze inhoud zal worden ingesteld als de meta-beschrijvingstag en kan verschijnen in zoekresultaten. Houd het kort en leg duidelijk uit waar de pagina over gaat."
 
-#: inc/admin/dashboard.php:643
+#: inc/admin/dashboard.php:663
 msgid "Term Title"
 msgstr "Termtitel"
 
@@ -3423,27 +3400,32 @@ msgstr "Blokkeert zoekmachines om een gecachte versie van uw pagina op te slaan.
 #: inc/analyzer/seo-analyzer.php:1090
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Social"
 msgstr "Sociaal"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Add New"
 msgstr "Nieuwe toevoegen"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Search or select an option"
 msgstr "Zoek of selecteer een optie"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "This schema does not have any configurable fields"
 msgstr "Dit schema heeft geen configureerbare velden"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Search Engine Description"
 msgstr "Zoekmachinebeschrijving"
@@ -3457,22 +3439,26 @@ msgid "Use data from Facebook Tab"
 msgstr "Gebruik gegevens van Facebook-tabblad"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Social Title"
 msgstr "Sociale titel"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Social Description"
 msgstr "Sociale beschrijving"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "%s Preview"
 msgstr "%s Voorbeeld"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Select an option"
 msgstr "Selecteer een optie"
@@ -3495,6 +3481,7 @@ msgstr "Niet weergeven op"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Back"
 msgstr "Terug"
@@ -3504,16 +3491,19 @@ msgid "Properties"
 msgstr "Eigenschappen"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Add Schema"
 msgstr "Schema toevoegen"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Choose Schema"
 msgstr "Kies schema"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Remove"
 msgstr "Verwijderen"
@@ -3638,15 +3628,18 @@ msgstr "Lijst met functies"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Let's Get Started"
 msgstr "Laten we aan de slag gaan"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "%1$d out of %2$d checks are done."
 msgstr "%1$d van de %2$d controles zijn voltooid."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Passed"
 msgstr "Geslaagd"
@@ -3669,30 +3662,32 @@ msgstr "Gevonden problemen"
 msgid "Open SureRank SEO"
 msgstr "Open SureRank SEO"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Close"
 msgstr "Sluiten"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Canonical URL"
 msgstr "Canonical URL"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "The Canonical URL tells search engines which version of a page should be indexed to avoid duplicate content issues. Leave blank to let SureRank set it automatically."
 msgstr "De Canonical URL vertelt zoekmachines welke versie van een pagina moet worden geïndexeerd om problemen met dubbele inhoud te voorkomen. Laat leeg om SureRank het automatisch in te laten stellen."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Use Data from Facebook Tab"
 msgstr "Gebruik gegevens van Facebook-tabblad"
 
-#: build/seo-popup/index.js:1
-msgid "Upload at least 600x315px image. Recommended size is 1200x630px."
-msgstr "Upload een afbeelding van minimaal 600x315px. Aanbevolen grootte is 1200x630px."
-
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Schemas in Use"
 msgstr "Schemas in gebruik"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No schemas configured."
 msgstr "Geen schemas geconfigureerd."
@@ -3734,6 +3729,7 @@ msgid "Page does not contain at least one subheading."
 msgstr "Pagina bevat niet minstens één subkop."
 
 #: inc/analyzer/post-analyzer.php:565
+#: build/admin-seo-bar/index.js:1
 #: build/breakdance/index.js:1
 #: build/bricks/index.js:1
 #: build/divi/index.js:1
@@ -3743,27 +3739,31 @@ msgstr "Pagina bevat niet minstens één subkop."
 msgid "No broken links found on the page."
 msgstr "Geen gebroken links gevonden op de pagina."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "Search engine title is present and under %1$d characters."
 msgstr "Zoekmachine titel is aanwezig en onder %1$d tekens."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "Search engine description is present and under %1$d characters."
 msgstr "Zoekmachine beschrijving is aanwezig en onder %1$d tekens."
 
 #: inc/analyzer/utils.php:284
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Open Graph tags are present on the page."
 msgstr "Open Graph-tags zijn aanwezig op de pagina."
 
 #: inc/analyzer/utils.php:277
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Open Graph tags are not present on the page."
 msgstr "Open Graph-tags zijn niet aanwezig op de pagina."
 
-#: inc/admin/seo-popup.php:210
+#: inc/admin/seo-popup.php:291
 #: build/breakdance/index.js:1
 #: build/bricks/index.js:1
 #: build/divi/index.js:1
@@ -3817,6 +3817,7 @@ msgstr "Selecteer Contact Pagina"
 msgid "No options available"
 msgstr "Geen opties beschikbaar"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Critical"
 msgstr "Kritiek"
@@ -3836,15 +3837,11 @@ msgid_plural "Warnings"
 msgstr[0] "Waarschuwing"
 msgstr[1] ""
 
-#: build/breakdance/index.js:1
-#: build/bricks/index.js:1
-#: build/divi/index.js:1
-#: build/elementor/index.js:1
-#: build/front-end-meta-box/index.js:1
-#: build/seo-popup/index.js:1
+#: inc/api/analyzer.php:2408
 msgid "These broken links were found on the page:"
 msgstr "Deze gebroken links zijn gevonden op de pagina:"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Please save changes in the editor before refreshing the checks."
 msgstr "Sla alstublieft wijzigingen op in de editor voordat u de controles vernieuwt."
@@ -3861,139 +3858,131 @@ msgstr "Taxonomieën"
 msgid "Archives"
 msgstr "Archieven"
 
-#: inc/admin/dashboard.php:635
+#: inc/admin/dashboard.php:655
+#: inc/meta-variables/site.php:69
 msgid "The name of the site."
 msgstr "De naam van de site."
 
-#: inc/admin/dashboard.php:668
+#: inc/admin/dashboard.php:688
 #: inc/meta-variables/post.php:81
 msgid "Date Published"
 msgstr "Publicatiedatum"
 
-#: inc/admin/dashboard.php:670
-#: inc/meta-variables/post.php:82
+#: inc/admin/dashboard.php:690
 msgid "Publication date of the current post/page OR specified date on date archives"
 msgstr "Publicatiedatum van het huidige bericht/pagina OF opgegeven datum in datumarchieven"
 
-#: inc/admin/dashboard.php:673
+#: inc/admin/dashboard.php:693
 #: inc/meta-variables/post.php:85
 msgid "Date Modified"
 msgstr "Datum gewijzigd"
 
-#: inc/admin/dashboard.php:675
-#: inc/meta-variables/post.php:86
+#: inc/admin/dashboard.php:695
 msgid "Last modification date of the current post/page"
 msgstr "Laatste wijzigingsdatum van het huidige bericht/pagina"
 
-#: inc/admin/dashboard.php:680
+#: inc/admin/dashboard.php:700
 msgid "URL of the current post/page"
 msgstr "URL van het huidige bericht/pagina"
 
-#: inc/admin/dashboard.php:683
+#: inc/admin/dashboard.php:703
 #: inc/meta-variables/site.php:84
 msgid "Current Date"
 msgstr "Huidige datum"
 
-#: inc/admin/dashboard.php:685
+#: inc/admin/dashboard.php:705
 #: inc/meta-variables/site.php:85
 msgid "Current server date"
 msgstr "Huidige serverdatum"
 
-#: inc/admin/dashboard.php:688
+#: inc/admin/dashboard.php:708
 #: inc/meta-variables/site.php:88
 msgid "Current Day"
 msgstr "Huidige dag"
 
-#: inc/admin/dashboard.php:690
+#: inc/admin/dashboard.php:710
 #: inc/meta-variables/site.php:89
 msgid "Current server day"
 msgstr "Huidige serverdag"
 
-#: inc/admin/dashboard.php:693
+#: inc/admin/dashboard.php:713
 #: inc/meta-variables/site.php:92
 msgid "Current Month"
 msgstr "Huidige maand"
 
-#: inc/admin/dashboard.php:695
+#: inc/admin/dashboard.php:715
 #: inc/meta-variables/site.php:93
 msgid "Current server month"
 msgstr "Huidige servermaand"
 
-#: inc/admin/dashboard.php:698
+#: inc/admin/dashboard.php:718
 #: inc/meta-variables/site.php:96
 msgid "Current Year"
 msgstr "Huidig jaar"
 
-#: inc/admin/dashboard.php:700
+#: inc/admin/dashboard.php:720
 #: inc/meta-variables/site.php:97
 msgid "Current server year"
 msgstr "Huidig serverjaar"
 
-#: inc/admin/dashboard.php:703
+#: inc/admin/dashboard.php:723
 #: inc/meta-variables/site.php:100
 msgid "Current Time"
 msgstr "Huidige tijd"
 
-#: inc/admin/dashboard.php:705
+#: inc/admin/dashboard.php:725
 #: inc/meta-variables/site.php:101
 msgid "Current server time"
 msgstr "Huidige servertijd"
 
-#: inc/admin/dashboard.php:708
+#: inc/admin/dashboard.php:728
 #: inc/meta-variables/site.php:104
 msgid "Organization Name"
 msgstr "Naam organisatie"
 
-#: inc/admin/dashboard.php:710
+#: inc/admin/dashboard.php:730
 #: inc/meta-variables/site.php:105
 msgid "The Organization Name added in Local SEO Settings."
 msgstr "De naam van de organisatie toegevoegd in de Local SEO-instellingen."
 
-#: inc/admin/dashboard.php:713
+#: inc/admin/dashboard.php:733
 #: inc/meta-variables/site.php:108
 msgid "Organization Logo"
 msgstr "Organisatielogo"
 
-#: inc/admin/dashboard.php:715
+#: inc/admin/dashboard.php:735
 #: inc/meta-variables/site.php:109
 msgid "Organization Logo added in Local SEO Settings."
 msgstr "Organisatielogo toegevoegd in de Local SEO-instellingen."
 
-#: inc/admin/dashboard.php:718
+#: inc/admin/dashboard.php:738
 #: inc/meta-variables/site.php:112
 msgid "Organization URL"
 msgstr "Organisatie-URL"
 
-#: inc/admin/dashboard.php:720
+#: inc/admin/dashboard.php:740
 #: inc/meta-variables/site.php:113
 msgid "Organization URL added in Local SEO Settings."
 msgstr "Organisatie-URL toegevoegd in de Local SEO-instellingen."
 
-#: inc/admin/dashboard.php:723
+#: inc/admin/dashboard.php:743
 msgid "Post Author Name"
 msgstr "Naam berichtauteur"
 
-#: inc/admin/dashboard.php:725
+#: inc/admin/dashboard.php:745
 msgid "Display author's nicename of the current post, page or author archive."
 msgstr "Toon de nicenaam van de auteur van het huidige bericht, pagina of auteurarchief."
 
 #: inc/meta-variables/post.php:89
+#: inc/meta-variables/user.php:67
 msgid "Author Name"
 msgstr "Auteur naam"
-
-#: inc/meta-variables/post.php:90
-msgid "The name of the author of the current post/page"
-msgstr "De naam van de auteur van het huidige bericht/pagina"
 
 #: inc/meta-variables/site.php:80
 msgid "Search Query"
 msgstr "Zoekopdracht"
 
-#: inc/meta-variables/site.php:81
-msgid "Search query (only available on search results page)"
-msgstr "Zoekopdracht (alleen beschikbaar op de zoekresultatenpagina)"
-
-#: loader.php:378
+#: loader.php:386
 msgid "Rate our plugin"
 msgstr "Beoordeel onze plugin"
 
@@ -4036,25 +4025,12 @@ msgid "Control how your pages appear when shared on X. Set attribution and previ
 msgstr "Beheer hoe uw pagina's verschijnen wanneer ze worden gedeeld op X. Stel hier toeschrijving en voorbeeldinstellingen in."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Click here to discover more details about this check."
 msgstr "Klik hier voor meer details over deze controle."
 
-#: build/admin-dashboard/index.js:1
-#: build/admin-onboarding/index.js:1
-#: build/admin-seo-bar/index.js:1
-#: build/breakdance/index.js:1
-#: build/bricks/index.js:1
-#: build/divi/index.js:1
-#: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
-#: build/search-console-widget/index.js:1
-#: build/seo-popup/index.js:1
-msgid "issue"
-msgid_plural "issues"
-msgstr[0] "probleem"
-msgstr[1] ""
-
 #: build/seo-popup/index.js:1
 msgid "Confirm"
 msgstr "Bevestigen"
@@ -4095,28 +4071,23 @@ msgstr "Beheer hoe zoekmachines uw startpagina behandelen. Met deze opties kunt 
 msgid "Adds structured data to your content so search engines can better understand and present it. Most fields are already filled in to make setup easier and help your site show up better in search results."
 msgstr "Voegt gestructureerde gegevens toe aan uw inhoud zodat zoekmachines deze beter kunnen begrijpen en presenteren. De meeste velden zijn al ingevuld om de installatie te vergemakkelijken en uw site beter te laten verschijnen in zoekresultaten."
 
-#: inc/api/analyzer.php:1862
-#: inc/api/analyzer.php:1885
-msgid "Type of check to delete. Can be \"post\" or \"taxonomy\"."
-msgstr "Type controle om te verwijderen. Kan \"post\" of \"taxonomy\" zijn."
-
-#: inc/api/analyzer.php:232
+#: inc/api/analyzer.php:290
 msgid "Checks ignored."
 msgstr "Genegeerde controles."
 
-#: inc/api/analyzer.php:269
+#: inc/api/analyzer.php:327
 msgid "Checks unignored."
 msgstr "Niet langer genegeerde controles."
 
-#: inc/api/analyzer.php:354
+#: inc/api/analyzer.php:421
 msgid "Check ignored for post."
 msgstr "Controle genegeerd voor bericht."
 
-#: inc/api/analyzer.php:382
+#: inc/api/analyzer.php:454
 msgid "Check unignored for post."
 msgstr "Controle niet langer genegeerd voor bericht."
 
-#: inc/api/analyzer.php:405
+#: inc/api/analyzer.php:482
 msgid "Ignored checks retrieved."
 msgstr "Genegeerde controles opgehaald."
 
@@ -4154,16 +4125,19 @@ msgid "No SEO Performance to Show"
 msgstr "Geen SEO-prestaties om te tonen"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Help Me Fix"
 msgstr "Help me het op te lossen"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Restore"
 msgstr "Herstellen"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Ignore"
 msgstr "Negeren"
@@ -4178,11 +4152,12 @@ msgstr "Stel een standaardbeschrijving in voor alle individuele berichtpagina's 
 msgid "Meta Templates"
 msgstr "Meta-sjablonen"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Suggestion"
 msgstr "Suggestie"
 
-#: inc/admin/dashboard.php:291
+#: inc/admin/dashboard.php:311
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Search Console"
@@ -4194,11 +4169,13 @@ msgid "This is required"
 msgstr "Dit is verplicht"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Ignore this check"
 msgstr "Negeer deze controle"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Restore this check"
 msgstr "Herstel deze controle"
@@ -4207,7 +4184,7 @@ msgstr "Herstel deze controle"
 msgid "The page does not contain any subheadings."
 msgstr "De pagina bevat geen subkoppen."
 
-#: inc/admin/dashboard.php:302
+#: inc/admin/dashboard.php:322
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Tools"
@@ -4394,32 +4371,6 @@ msgstr "Ongeldige term-ID %d."
 msgid "Invalid Post ID %d."
 msgstr "Ongeldige bericht-ID %d."
 
-#. translators: %d: term ID.
-#: inc/importers/rankmath/rank-math.php:78
-#, php-format
-msgid "RankMath data detected for term %d."
-msgstr "RankMath-gegevens gedetecteerd voor term %d."
-
-#. translators: %d: term ID.
-#: inc/importers/rankmath/rank-math.php:90
-#, php-format
-msgid "No RankMath data found for term %d."
-msgstr "Geen RankMath-gegevens gevonden voor term %d."
-
-#: inc/importers/rankmath/rank-math.php:166
-msgid "No RankMath global settings found to import."
-msgstr "Geen RankMath globale instellingen gevonden om te importeren."
-
-#: inc/importers/rankmath/rank-math.php:185
-msgid "RankMath global settings imported successfully."
-msgstr "RankMath globale instellingen succesvol geïmporteerd."
-
-#. translators: %s: error message.
-#: inc/importers/rankmath/rank-math.php:192
-#, php-format
-msgid "Error importing RankMath global settings: %s"
-msgstr "Fout bij het importeren van RankMath globale instellingen: %s"
-
 #. translators: %d: ID, %s: type.
 #. translators: %s: type, %d: ID.
 #: inc/importers/rankmath/rank-math.php:260
@@ -4456,8 +4407,8 @@ msgstr "Fout bij het importeren van meta-robots voor %2$s %1$d: %3$s"
 #. translators: %d: ID, %s: type.
 #. translators: %s: type, %d: ID.
 #. translators: %1$s: type (post|term), %2$d: ID.
-#: inc/importers/aioseo/aioseo.php:592
-#: inc/importers/rankmath/rank-math.php:345
+#: inc/importers/aioseo/aioseo.php:605
+#: inc/importers/rankmath/rank-math.php:353
 #: inc/importers/slimseo/slim-seo.php:343
 #: inc/importers/squirrly/squirrly.php:472
 #, php-format
@@ -4468,8 +4419,8 @@ msgstr "Algemene instellingen geïmporteerd voor %1$s %2$d."
 #. translators: %d: ID, %s: type.
 #. translators: %s: type, %d: ID.
 #. translators: %1$s: type (post|term), %2$d: ID.
-#: inc/importers/aioseo/aioseo.php:594
-#: inc/importers/rankmath/rank-math.php:356
+#: inc/importers/aioseo/aioseo.php:607
+#: inc/importers/rankmath/rank-math.php:364
 #: inc/importers/slimseo/slim-seo.php:354
 #: inc/importers/squirrly/squirrly.php:483
 #, php-format
@@ -4480,8 +4431,8 @@ msgstr "Geen algemene instellingen om te importeren voor %1$s %2$d."
 #. translators: %d: ID, %s: type.
 #. translators: %s: type, %d: ID.
 #. translators: %1$s: type (post|term), %2$d: ID.
-#: inc/importers/aioseo/aioseo.php:640
-#: inc/importers/rankmath/rank-math.php:396
+#: inc/importers/aioseo/aioseo.php:653
+#: inc/importers/rankmath/rank-math.php:404
 #: inc/importers/slimseo/slim-seo.php:409
 #: inc/importers/squirrly/squirrly.php:594
 #, php-format
@@ -4492,8 +4443,8 @@ msgstr "Sociale metadata geïmporteerd voor %1$s %2$d."
 #. translators: %d: ID, %s: type.
 #. translators: %s: type, %d: ID.
 #. translators: %1$s: type (post|term), %2$d: ID.
-#: inc/importers/aioseo/aioseo.php:642
-#: inc/importers/rankmath/rank-math.php:407
+#: inc/importers/aioseo/aioseo.php:655
+#: inc/importers/rankmath/rank-math.php:415
 #: inc/importers/slimseo/slim-seo.php:420
 #: inc/importers/squirrly/squirrly.php:605
 #, php-format
@@ -4550,76 +4501,77 @@ msgid "Error importing meta-robots for term %1$d: %2$s"
 msgstr "Fout bij het importeren van meta-robots voor term %1$d: %2$s"
 
 #. translators: %d: post ID.
-#: inc/importers/seopress/seopress.php:229
-#: inc/importers/yoast/yoast.php:219
+#: inc/importers/seopress/seopress.php:238
+#: inc/importers/yoast/yoast.php:220
 #, php-format
 msgid "General settings imported for post %d."
 msgstr "Algemene instellingen geïmporteerd voor bericht %d."
 
 #. translators: %d: post ID.
-#: inc/importers/seopress/seopress.php:229
-#: inc/importers/yoast/yoast.php:219
+#: inc/importers/seopress/seopress.php:238
+#: inc/importers/yoast/yoast.php:220
 #, php-format
 msgid "No general settings to import for post %d."
 msgstr "Geen algemene instellingen om te importeren voor bericht %d."
 
 #. translators: %d: term ID.
-#: inc/importers/seopress/seopress.php:256
-#: inc/importers/yoast/yoast.php:247
+#: inc/importers/seopress/seopress.php:265
+#: inc/importers/yoast/yoast.php:249
 #, php-format
 msgid "General settings imported for term %d."
 msgstr "Algemene instellingen geïmporteerd voor term %d."
 
 #. translators: %d: term ID.
-#: inc/importers/seopress/seopress.php:256
-#: inc/importers/yoast/yoast.php:247
+#: inc/importers/seopress/seopress.php:265
+#: inc/importers/yoast/yoast.php:249
 #, php-format
 msgid "No general settings to import for term %d."
 msgstr "Geen algemene instellingen om te importeren voor term %d."
 
 #. translators: %d: post ID.
-#: inc/importers/seopress/seopress.php:279
-#: inc/importers/yoast/yoast.php:272
+#: inc/importers/seopress/seopress.php:288
+#: inc/importers/yoast/yoast.php:274
 #, php-format
 msgid "Social metadata imported for post %d."
 msgstr "Sociale metadata geïmporteerd voor bericht %d."
 
 #. translators: %d: post ID.
-#: inc/importers/seopress/seopress.php:279
-#: inc/importers/yoast/yoast.php:272
+#: inc/importers/seopress/seopress.php:288
+#: inc/importers/yoast/yoast.php:274
 #, php-format
 msgid "No social metadata to import for post %d."
 msgstr "Geen sociale metadata om te importeren voor bericht %d."
 
 #. translators: %d: term ID.
-#: inc/importers/seopress/seopress.php:302
-#: inc/importers/yoast/yoast.php:296
+#: inc/importers/seopress/seopress.php:311
+#: inc/importers/yoast/yoast.php:298
 #, php-format
 msgid "Social metadata imported for term %d."
 msgstr "Sociale metadata geïmporteerd voor term %d."
 
 #. translators: %d: term ID.
-#: inc/importers/seopress/seopress.php:302
-#: inc/importers/yoast/yoast.php:296
+#: inc/importers/seopress/seopress.php:311
+#: inc/importers/yoast/yoast.php:298
 #, php-format
 msgid "No social metadata to import for term %d."
 msgstr "Geen sociale metadata om te importeren voor term %d."
 
-#: inc/importers/yoast/yoast.php:327
+#: inc/importers/yoast/yoast.php:329
 msgid "No Yoast SEO global settings found to import."
 msgstr "Geen Yoast SEO globale instellingen gevonden om te importeren."
 
-#: inc/importers/yoast/yoast.php:344
+#: inc/importers/yoast/yoast.php:346
 msgid "Yoast SEO global settings imported successfully."
 msgstr "Yoast SEO globale instellingen succesvol geïmporteerd."
 
 #. translators: %s: error message.
-#: inc/importers/yoast/yoast.php:351
+#: inc/importers/yoast/yoast.php:353
 #, php-format
 msgid "Error importing Yoast SEO global settings: %s"
 msgstr "Fout bij het importeren van Yoast SEO globale instellingen: %s"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/search-console-widget/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No data available"
@@ -4652,10 +4604,12 @@ msgstr "Diversen"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Settings saved successfully."
 msgstr "Instellingen succesvol opgeslagen."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Loading page SEO checks…"
 msgstr "Pagina SEO-controles laden…"
@@ -4665,10 +4619,12 @@ msgstr "Pagina SEO-controles laden…"
 msgid "Error loading SEO checks"
 msgstr "Fout bij het laden van SEO-controles"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Enter your focus keyword"
 msgstr "Voer uw focuszoekwoord in"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Optimize"
 msgstr "Optimaliseren"
@@ -4853,6 +4809,7 @@ msgid "Contribute to SureRank"
 msgstr "Bijdragen aan SureRank"
 
 #: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
 msgid "Learn More"
 msgstr "Meer informatie"
 
@@ -4866,41 +4823,48 @@ msgid "Done"
 msgstr "Klaar"
 
 #: inc/analyzer/utils.php:252
-#: inc/api/analyzer.php:1626
+#: inc/api/analyzer.php:2387
 msgid "The link is broken."
 msgstr "De link is verbroken."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "(The page or resource was not found)"
 msgstr "(De pagina of bron niet gevonden)"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "(Unable to connect to the URL)"
 msgstr "(Kan geen verbinding maken met de URL)"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "(Access to this resource is forbidden)"
 msgstr "(Toegang tot deze bron is verboden)"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "(Server error occurred)"
 msgstr "(Serverfout opgetreden)"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "(HTTP error"
 msgstr "(HTTP-fout"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Why is this link broken?"
 msgstr "Waarom is deze link verbroken?"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Status:"
 msgstr "Status:"
@@ -4915,6 +4879,7 @@ msgid "Failed to check link"
 msgstr "Controleren van de link mislukt"
 
 #: inc/admin/bulk-actions.php:236
+#: inc/admin/bulk-edit.php:66
 msgid "SureRank Settings"
 msgstr "SureRank-instellingen"
 
@@ -4950,24 +4915,9 @@ msgid_plural "%1$d items %2$s."
 msgstr[0] "%1$d item %2$s."
 msgstr[1] ""
 
-#: inc/admin/bulk-edit.php:66
-msgid "SURERANK SETTINGS"
-msgstr "SURERANK-INSTELLINGEN"
-
-#: inc/admin/bulk-edit.php:69
-msgid "No Index -"
-msgstr "Geen index -"
-
-#: inc/admin/bulk-edit.php:77
-msgid "No Follow -"
-msgstr "Geen follow -"
-
-#: inc/admin/bulk-edit.php:85
-msgid "No Archive -"
-msgstr "Geen archief -"
-
-#: inc/admin/seo-bar.php:120
-#: inc/admin/seo-bar.php:140
+#: inc/admin/seo-bar.php:139
+#: inc/admin/seo-bar.php:159
+#: inc/admin/seo-bar.php:241
 msgid "SEO Checks"
 msgstr "SEO-controles"
 
@@ -5216,18 +5166,18 @@ msgid "Invalid image URL."
 msgstr "Ongeldige afbeeldings-URL."
 
 #. translators: %s: Category name.
-#: inc/import-export/settings-importer.php:164
+#: inc/import-export/settings-importer.php:165
 #, php-format
 msgid "Skipped invalid category: %s"
 msgstr "Ongeldige categorie overgeslagen: %s"
 
 #. translators: %d: Number of settings that were successfully imported
-#: inc/import-export/settings-importer.php:256
+#: inc/import-export/settings-importer.php:262
 #, php-format
 msgid "Successfully imported %d settings."
 msgstr "Succesvol %d instellingen geïmporteerd."
 
-#: inc/import-export/settings-importer.php:259
+#: inc/import-export/settings-importer.php:265
 msgid "No settings were imported."
 msgstr "Er zijn geen instellingen geïmporteerd."
 
@@ -5509,6 +5459,7 @@ msgstr "We hebben andere geïnstalleerde SEO-plugins op je website gevonden. Kie
 msgid "Recommended Logo size 112 X 112 or more, PNG / JPG format"
 msgstr "Aanbevolen logo grootte 112 x 112 of meer, PNG / JPG formaat"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Click to update Facebook's share preview cache. This will update the preview with the latest content."
 msgstr "Klik om de cache van de Facebook-deelvoorbeeld te vernieuwen. Dit zal de preview bijwerken met de nieuwste inhoud."
@@ -5543,12 +5494,12 @@ msgstr "Plugin-slug om termen te filteren op (bijv. %s)."
 msgid "Plugin slug to migrate global settings from (e.g. %s)."
 msgstr "Plugin-slug om globale instellingen te migreren van (bijv. %s)."
 
-#: inc/import-export/settings-importer.php:155
-#: inc/import-export/settings-importer.php:184
+#: inc/import-export/settings-importer.php:156
+#: inc/import-export/settings-importer.php:185
 msgid "No settings found to import."
 msgstr "Geen instellingen gevonden om te importeren."
 
-#: inc/import-export/settings-importer.php:197
+#: inc/import-export/settings-importer.php:203
 msgid "Failed to save settings to database."
 msgstr "Kon instellingen niet opslaan in de database."
 
@@ -5582,33 +5533,19 @@ msgstr "SEOPress-gegevens gedetecteerd voor term %d."
 msgid "No SEOPress data found for term %d."
 msgstr "Geen SEOPress-gegevens gevonden voor term %d."
 
-#: inc/importers/seopress/seopress.php:339
+#: inc/importers/seopress/seopress.php:348
 msgid "No SEOPress global settings found to import."
 msgstr "Geen globale SEOPress-instellingen gevonden om te importeren."
 
-#: inc/importers/seopress/seopress.php:356
+#: inc/importers/seopress/seopress.php:365
 msgid "SEOPress global settings imported successfully."
 msgstr "Globale SEOPress-instellingen succesvol geïmporteerd."
 
 #. translators: %s: error message.
-#: inc/importers/seopress/seopress.php:363
+#: inc/importers/seopress/seopress.php:372
 #, php-format
 msgid "Error importing SEOPress global settings: %s"
 msgstr "Fout bij het importeren van globale SEOPress-instellingen: %s"
-
-#: build/admin-dashboard/index.js:1
-#: build/admin-onboarding/index.js:1
-#: build/admin-seo-bar/index.js:1
-#: build/breakdance/index.js:1
-#: build/bricks/index.js:1
-#: build/divi/index.js:1
-#: build/elementor/index.js:1
-#: build/front-end-meta-box/index.js:1
-#: build/search-console-widget/index.js:1
-#: build/seo-popup/index.js:1
-#, js-format
-msgid "%1$d %2$s need attention."
-msgstr "%1$d %2$s heeft aandacht nodig."
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
@@ -5625,18 +5562,21 @@ msgstr "Alle SEO-controles geslaagd."
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Modern WordPress SEO Plugin Without the Bloat - SureRank"
 msgstr "Moderne WordPress SEO-plugin zonder ballast - SureRank"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Verified account"
 msgstr "Geverifieerd account"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "Check out my page: %s"
@@ -5644,6 +5584,7 @@ msgstr "Bekijk mijn pagina: %s"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "From"
 msgstr "Van"
@@ -5709,19 +5650,22 @@ msgstr "Exporteren mislukt"
 msgid "Export failed. Please try again."
 msgstr "Exporteren mislukt. Probeer het opnieuw."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Analyze"
 msgstr "Analyseren"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Page Checks"
 msgstr "Pagina-controles"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "SEO analysis is not available for this page."
 msgstr "SEO-analyse is niet beschikbaar voor deze pagina."
 
-#: inc/admin/seo-popup.php:214
+#: inc/admin/seo-popup.php:295
 #: build/seo-popup/index.js:1
 msgid "Open SureRank Meta Box"
 msgstr "Open SureRank Meta Box"
@@ -5757,17 +5701,20 @@ msgid "You can add them manually or turn on auto-set image title and alt in the 
 msgstr "Je kunt ze handmatig toevoegen of de automatische instelling voor afbeeldingtitels en alt inschakelen in de instellingen."
 
 #: inc/analyzer/utils.php:300
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No focus keyword set to analyze title."
 msgstr "Geen focus zoekwoord ingesteld om de titel te analyseren."
 
 #: inc/analyzer/utils.php:308
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No SEO title found to analyze."
 msgstr "Geen SEO-titel gevonden om te analyseren."
 
 #. translators: %s is the focus keyword.
 #: inc/analyzer/utils.php:317
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, php-format,js-format
 msgid "Focus keyword \"%s\" found in SEO title."
@@ -5775,23 +5722,27 @@ msgstr "Focus zoekwoord \"%s\" gevonden in SEO-titel."
 
 #. translators: %s is the focus keyword.
 #: inc/analyzer/utils.php:325
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, php-format,js-format
 msgid "Focus keyword \"%s\" not found in SEO title."
 msgstr "Focus zoekwoord \"%s\" niet gevonden in SEO-titel."
 
 #: inc/analyzer/utils.php:341
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No focus keyword set to analyze meta description."
 msgstr "Geen focus zoekwoord ingesteld om meta-beschrijving te analyseren."
 
 #: inc/analyzer/utils.php:349
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No meta description found to analyze."
 msgstr "Geen meta-beschrijving gevonden om te analyseren."
 
 #. translators: %s is the focus keyword.
 #: inc/analyzer/utils.php:358
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, php-format,js-format
 msgid "Focus keyword \"%s\" found in meta description."
@@ -5799,23 +5750,27 @@ msgstr "Focus zoekwoord \"%s\" gevonden in meta-beschrijving."
 
 #. translators: %s is the focus keyword.
 #: inc/analyzer/utils.php:366
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, php-format,js-format
 msgid "Focus keyword \"%s\" not found in meta description."
 msgstr "Focus zoekwoord \"%s\" niet gevonden in meta-beschrijving."
 
 #: inc/analyzer/utils.php:382
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No focus keyword set to analyze URL."
 msgstr "Geen focus zoekwoord ingesteld om URL te analyseren."
 
 #: inc/analyzer/utils.php:390
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No URL found to analyze."
 msgstr "Geen URL gevonden om te analyseren."
 
 #. translators: %s is the focus keyword.
 #: inc/analyzer/utils.php:408
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, php-format,js-format
 msgid "Focus keyword \"%s\" found in URL."
@@ -5823,23 +5778,27 @@ msgstr "Focus zoekwoord \"%s\" gevonden in URL."
 
 #. translators: %s is the focus keyword.
 #: inc/analyzer/utils.php:416
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, php-format,js-format
 msgid "Focus keyword \"%s\" not found in URL."
 msgstr "Focus zoekwoord \"%s\" niet gevonden in URL."
 
 #: inc/analyzer/utils.php:432
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No focus keyword set to analyze content."
 msgstr "Geen focus zoekwoord ingesteld om inhoud te analyseren."
 
 #: inc/analyzer/utils.php:440
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No content found to analyze."
 msgstr "Geen inhoud gevonden om te analyseren."
 
 #. translators: %s is the focus keyword.
 #: inc/analyzer/utils.php:454
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, php-format,js-format
 msgid "Focus keyword \"%s\" found in content."
@@ -5847,6 +5806,7 @@ msgstr "Focus zoekwoord \"%s\" gevonden in inhoud."
 
 #. translators: %s is the focus keyword.
 #: inc/analyzer/utils.php:462
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, php-format,js-format
 msgid "Focus keyword \"%s\" not found in content."
@@ -5890,17 +5850,9 @@ msgstr "Google Site Verification-service is tijdelijk niet beschikbaar. Probeer 
 msgid "Site verification error (Code: %d). Please try again."
 msgstr "Fout bij site-verificatie (Code: %d). Probeer het opnieuw."
 
-#: inc/google-search-console/site-verification.php:146
-msgid "No verification token received"
-msgstr "Geen verificatietoken ontvangen"
-
 #: inc/google-search-console/site-verification.php:231
 msgid "Site verification is pending. Google needs time to crawl and verify your site. This may take 1-2 hours or up to 2 days."
 msgstr "Site-verificatie is in afwachting. Google heeft tijd nodig om je site te crawlen en te verifiëren. Dit kan 1-2 uur duren of tot 2 dagen."
-
-#: inc/google-search-console/site-verification.php:242
-msgid "Site verified successfully"
-msgstr "Site succesvol geverifieerd"
 
 #: inc/google-search-console/site-verification.php:265
 msgid "Site added successfully"
@@ -6029,6 +5981,7 @@ msgid "Meta description fix applied successfully."
 msgstr "Meta-beschrijvingsfix succesvol toegepast"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Fix It For Me"
 msgstr "Fix Het Voor Mij"
@@ -6063,6 +6016,7 @@ msgid_plural "%s Warnings Detected"
 msgstr[0] "%s Waarschuwing Gevonden"
 msgstr[1] ""
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Keyword Checks"
 msgstr "Trefwoordanalyse"
@@ -6149,10 +6103,6 @@ msgstr "archive"
 msgid "Post is indexable"
 msgstr "Bericht is indexeerbaar"
 
-#: inc/third-party-integrations/angie.php:322
-msgid "This post is set to noindex by SureRank settings from SEO popup."
-msgstr "Dit bericht is ingesteld op noindex door SureRank-instellingen vanuit SEO-popup."
-
 #: inc/third-party-integrations/angie.php:330
 msgid "This post is set to noindex by SureRank Global Robots Settings."
 msgstr "Dit bericht is ingesteld op noindex door SureRank Global Robots-instellingen."
@@ -6174,11 +6124,13 @@ msgid "Settings updated successfully."
 msgstr "Instellingen succesvol bijgewerkt."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Open date picker"
 msgstr "Datumkiezer openen"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Apply"
 msgstr "Toepassen"
@@ -6192,6 +6144,7 @@ msgid "Authentication completed successfully. Closing tab in 3 seconds…"
 msgstr "Authenticatie succesvol voltooid. Tabblad sluit over 3 seconden…"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Authentication failed"
 msgstr "Authenticatie mislukt"
@@ -6217,25 +6170,30 @@ msgid "SureRank Angie AI assistant, handles sitemap control, page or term visibi
 msgstr "SureRank Angie AI-assistent beheert sitemapcontrole, zichtbaarheid van pagina of term, beheer van robots meta-tags (zichtbaarheid voor zoekmachines), Site- & Pagina-SEO-controles, bijwerken van post meta-titel en meta-beschrijving, en uitgebreide instellingenbeheer voor alle SureRank SEO-functies"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Meta Titles & Descriptions"
 msgstr "Meta titels & beschrijvingen"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Social Titles & Descriptions"
 msgstr "Sociale titels & beschrijvingen"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Site level SEO Checks"
 msgstr "SEO-controles op siteniveau"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Let SureRank AI optimize your SEO"
 msgstr "Laat SureRank AI je SEO optimaliseren"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Here are a few suggestions"
 msgstr "Hier zijn een paar suggesties"
@@ -6243,97 +6201,117 @@ msgstr "Hier zijn een paar suggesties"
 #: build/admin-dashboard/index.js:1
 #: build/admin-notice/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Upgrade Now"
 msgstr "Nu upgraden"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No content generated yet. Click \"Generate\" to create AI-powered content suggestions."
 msgstr "Nog geen inhoud gegenereerd. Klik op \"Genereren\" om AI-gestuurde inhoudssuggesties te maken."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "No content generated. Click %s to retry creating AI-powered content suggestions."
 msgstr "Geen inhoud gegenereerd. Klik op %s om opnieuw te proberen AI-gestuurde inhoudssuggesties te maken."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Here are the fixes generated by SureRank AI based on your request. Review and apply the ones you'd like to use."
 msgstr "Hier zijn de oplossingen gegenereerd door SureRank AI op basis van je verzoek. Bekijk en pas de oplossingen toe die je wilt gebruiken."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Selected content is empty."
 msgstr "Geselecteerde inhoud is leeg."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Post or term ID not found."
 msgstr "Post- of term-ID niet gevonden."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Failed to apply content."
 msgstr "Inhoud toepassen mislukt."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Fixed successfully"
 msgstr "Succesvol opgelost"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Fix applied successfully. Some fixes may require a page reload to see changes."
 msgstr "Oplossing succesvol toegepast. Sommige oplossingen vereisen mogelijk een pagina-herlaad om de wijzigingen te zien."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "An unexpected error occurred while applying content."
 msgstr "Er is een onverwachte fout opgetreden bij het toepassen van inhoud."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No content type selected. Please select an item to generate content for."
 msgstr "Geen inhoudstype geselecteerd. Selecteer een item om inhoud voor te genereren."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "An unexpected error occurred while generating content."
 msgstr "Er is een onverwachte fout opgetreden bij het genereren van inhoud."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Generation Failed"
 msgstr "Generatie mislukt"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Oops! Something went wrong while generating content. You can try again, or edit it manually to make sure it's correct."
 msgstr "Oeps! Er is iets misgegaan bij het genereren van inhoud. Je kunt het opnieuw proberen of handmatig bewerken om te zorgen dat het correct is."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Retry"
 msgstr "Opnieuw proberen"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Authentication timeout. Please try again."
 msgstr "Authenticatietime-out. Probeer het opnieuw."
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Authentication successful!"
 msgstr "Authenticatie geslaagd!"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "An error occurred during authentication"
 msgstr "Er is een fout opgetreden tijdens de authenticatie"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Popup blocked. Redirecting to authentication…"
 msgstr "Popup geblokkeerd. Wordt doorgestuurd naar authenticatie…"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Connect SureRank AI"
 msgstr "Verbind SureRank AI"
@@ -6351,11 +6329,12 @@ msgid "Unable to generate content at this time. Please try again, or contact sup
 msgstr "Kan momenteel geen inhoud genereren. Probeer het opnieuw, of neem contact op met support als u hulp nodig heeft."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Click here to contact support."
 msgstr "Klik hier om contact op te nemen met support."
 
-#: inc/api/analyzer.php:509
+#: inc/api/analyzer.php:586
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Connect Now"
@@ -6387,21 +6366,25 @@ msgid "Import method not found in sitemap class."
 msgstr "Importmethode niet gevonden in sitemap-klasse."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Check ignored successfully"
 msgstr "Controle genegeerd succesvol"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Failed to ignore check"
 msgstr "Fout bij negeren van controle"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Check restored successfully"
 msgstr "Controle hersteld succesvol"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Failed to restore check"
 msgstr "Fout bij herstellen van controle"
@@ -6498,11 +6481,6 @@ msgstr "Sitemap-cachegeneratie gestart…"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
-msgid "Processing items in batches it will take some time, please stay on the page."
-msgstr "Items worden in batches verwerkt, het kan enige tijd duren, blijf op de pagina."
-
-#: build/admin-dashboard/index.js:1
-#: build/admin-onboarding/index.js:1
 msgid "Sitemap cache generation completed!"
 msgstr "Sitemap-cachegeneratie voltooid!"
 
@@ -6511,35 +6489,42 @@ msgstr "Sitemap-cachegeneratie voltooid!"
 msgid "All content has been processed successfully."
 msgstr "Alle inhoud is succesvol verwerkt."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Focus Keyword"
 msgstr "Focus Trefwoord"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "The primary keyword or phrase you want this content to rank for in search engines. Keyword checks will be based on this."
 msgstr "Het primaire trefwoord of de zin waarop je wilt dat deze inhoud rankt in zoekmachines. Keyword-controles worden op basis hiervan uitgevoerd."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Use This"
 msgstr "Gebruik dit"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Fixing…"
 msgstr "Bezig met repareren…"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Generate"
 msgstr "Genereer"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Generating…"
 msgstr "Bezig met genereren…"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Regenerate"
 msgstr "Opnieuw genereren"
@@ -6557,7 +6542,7 @@ msgstr "Zodra je verbonden bent met Google Search Console, zie je hier hoe je in
 msgid "Redirections"
 msgstr "Omleidingen"
 
-#: inc/admin/dashboard.php:313
+#: inc/admin/dashboard.php:333
 msgid "Get Pro ↗"
 msgstr "Get Pro ↗"
 
@@ -6575,6 +6560,7 @@ msgid "# SureRank will generate robots.txt automatically."
 msgstr "# SureRank genereert automatisch een robots.txt-bestand."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "You've used all your AI credits for today. Your credits will refresh automatically tomorrow, so you can continue creating content."
 msgstr "Je hebt alle AI-credits voor vandaag gebruikt. Je credits worden automatisch opnieuw ingesteld morgen, zodat je verder kunt met het maken van inhoud."
@@ -6599,19 +6585,8 @@ msgstr "\"%s\" is uitgeschakeld."
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
-msgid "Wants to unlock advanced SEO features?"
-msgstr "Wil je geavanceerde SEO-functies ontgrendelen?"
-
-#: build/admin-dashboard/index.js:1
-#: build/admin-onboarding/index.js:1
 msgid "Upgrade to unlock Video / News Sitemaps, Instant Indexing, Redirect Manager, and more."
 msgstr "Upgrade om Video / Nieuws Sitemaps, Direct Indexering, Redirect Manager en meer te ontgrendelen."
-
-#: build/admin-dashboard/index.js:1
-#: build/admin-onboarding/index.js:1
-#: build/seo-popup/index.js:1
-msgid "Upgrade now"
-msgstr "Nu upgraden"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
@@ -6619,21 +6594,25 @@ msgid "This is your site's default social sharing image (Open Graph). It shows u
 msgstr "Dit is de standaard sociale deelafbeelding van je site (Open Graph). Het verschijnt wanneer je pagina's worden gedeeld op sociale platforms - tenzij er een aangepaste afbeelding op die pagina is ingesteld."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "SureRank Schema Disabled"
 msgstr "SureRank Schema Uitgeschakeld"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "We detected that WP Schema Pro is active on your website. To avoid schema conflicts, SureRank Schema functionality has been automatically disabled. Please continue using WP Schema Pro for your schema markup needs."
 msgstr "We hebben vastgesteld dat WP Schema Pro actief is op je website. Om schema-conflicten te voorkomen, is de SureRank Schema-functionaliteit automatisch uitgeschakeld. Blijf WP Schema Pro gebruiken voor je schema markup-behoeften."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Looking for more schemas?"
 msgstr "Op zoek naar meer schema's?"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Upgrade to SureRank Pro and let AI help you fix critical SEO issues and warnings, so your website stays fully optimized and ready to perform better in search results."
 msgstr "Upgrade naar SureRank Pro en laat AI je helpen bij het oplossen van kritieke SEO-problemen en waarschuwingen, zodat je website volledig geoptimaliseerd blijft en beter presteert in zoekresultaten."
@@ -6947,14 +6926,6 @@ msgid "Stay ahead with Instant Indexing support"
 msgstr "Blijf voorop met ondersteuning voor Instant Indexing"
 
 #: build/search-console-widget/index.js:1
-msgid "Build smarter Meta Templates for all post content"
-msgstr "Bouw slimmere Meta-sjablonen voor alle berichtinhoud"
-
-#: build/search-console-widget/index.js:1
-msgid "Detect and Fix Issues before they hurt SEO"
-msgstr "Detecteer en los problemen op voordat ze SEO schaden"
-
-#: build/search-console-widget/index.js:1
 msgid "Redirect old URLs instantly, no setup needed"
 msgstr "Doorverwijzen van oude URL's direct, geen setup nodig"
 
@@ -6963,21 +6934,25 @@ msgid "Failed to fetch clicks and impressions"
 msgstr "Mislukt om klikken en vertoningen op te halen"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Generate with AI"
 msgstr "Genereer met AI"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Free Plan Limit Reached"
 msgstr "Limiet van het gratis plan bereikt"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "You've used all available AI requests in your Free Plan. Upgrade to SureRank Pro to keep using AI features."
 msgstr "Je hebt alle beschikbare AI-verzoeken in je Gratis Plan gebruikt. Upgrade naar SureRank Pro om AI-functies te blijven gebruiken."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Daily Limit Reached"
 msgstr "Dagelijkse limiet bereikt"
@@ -7020,17 +6995,19 @@ msgstr "Schakel dit in om alle bijlagepagina's door te sturen naar hun hoofdberi
 msgid "Optimize Image SEO without AI"
 msgstr "Optimaliseer Image SEO zonder AI"
 
-#: inc/api/analyzer.php:140
-#: inc/api/analyzer.php:177
+#: inc/api/analyzer.php:156
+#: inc/api/analyzer.php:193
+#: inc/api/analyzer.php:235
 msgid "SEO checks retrieved."
 msgstr "SEO-controles opgehaald."
 
-#: inc/api/analyzer.php:156
+#: inc/api/analyzer.php:172
 msgid "Invalid Term ID."
 msgstr "Ongeldige Term-ID."
 
-#: inc/api/analyzer.php:1936
-#: inc/api/analyzer.php:1970
+#: inc/api/analyzer.php:2756
+#: inc/api/analyzer.php:2790
+#: inc/api/analyzer.php:2826
 msgid "No cached checks found."
 msgstr "Geen gecachte controles gevonden."
 
@@ -7243,23 +7220,28 @@ msgstr "E-mail samenvatting gebruikt GSC-gegevens om de zoekprestaties van uw si
 msgid "Traffic from last few days"
 msgstr "Verkeer van de afgelopen dagen"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "Enter image URL or %custom_field.field_name%"
 msgstr "Voer afbeeldings-URL of %custom_field.field_name% in"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Toggle general SEO settings"
 msgstr "Algemene SEO-instellingen in- of uitschakelen"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Toggle social media settings"
 msgstr "Social media-instellingen in- of uitschakelen"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Toggle advanced SEO settings"
 msgstr "Geavanceerde SEO-instellingen in- of uitschakelen"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Toggle schema markup settings"
 msgstr "Schema markup-instellingen in- of uitschakelen"
@@ -7274,7 +7256,7 @@ msgstr "Test e-mail"
 msgid "Sending…"
 msgstr "Verzenden…"
 
-#: inc/admin/dashboard.php:297
+#: inc/admin/dashboard.php:317
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Link Manager"
@@ -7367,12 +7349,6 @@ msgstr "Voer het totale aantal beoordelingen in dat het product heeft ontvangen.
 msgid "Give your schema a name to help you identify it later. This title is for internal reference only and won't be included in your site's structured data."
 msgstr "Geef uw schema een naam om het later te kunnen identificeren. Deze titel is alleen voor intern gebruik en wordt niet opgenomen in de gestructureerde gegevens van uw site."
 
-#: inc/schema/types/article.php:153
-msgid ""
-"Enter the total word count of the article's main content. This information is used in structured data to provide search engines with content length details.\n"
-""
-msgstr "Voer het totale aantal woorden van de hoofdinhoud van het artikel in. Deze informatie wordt gebruikt in gestructureerde gegevens om zoekmachines details over de lengte van de inhoud te bieden."
-
 #: inc/schema/types/organization.php:145
 msgid "Enter the direct URL to the organization's official logo image. This logo will be used in structured data to visually represent the brand."
 msgstr "Voer de directe URL in naar het officiële logo van de organisatie. Dit logo zal worden gebruikt in gestructureerde gegevens om het merk visueel weer te geven."
@@ -7390,21 +7366,25 @@ msgid "Write a brief description of what your website is about. This summary hel
 msgstr "Schrijf een korte beschrijving van waar uw website over gaat. Deze samenvatting helpt zoekmachines het doel en de inhoud van de site te begrijpen."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Add Field"
 msgstr "Veld toevoegen"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Search fields…"
 msgstr "Zoekvelden…"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Delete Field"
 msgstr "Veld verwijderen"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Delete"
 msgstr "Verwijderen"
@@ -7631,16 +7611,19 @@ msgstr "Documentatie"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Authentication cancelled. Please try again."
 msgstr "Authenticatie geannuleerd. Probeer het opnieuw."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Edit"
 msgstr "Bewerken"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "%1$d/%2$d"
@@ -7670,13 +7653,9 @@ msgstr "Homepage SEO Beschrijving"
 msgid "Homepage Open Graph Tags"
 msgstr "Homepage Open Graph-tags"
 
-#: inc/api/analyzer.php:1157
+#: inc/api/analyzer.php:1794
 msgid "No focus keyword set. Add one to analyze title, description, URL, and content."
 msgstr "Geen focuszoekwoord ingesteld. Voeg er een toe om titel, beschrijving, URL en inhoud te analyseren."
-
-#: inc/google-search-console/controller.php:513
-msgid "URL parameter is required"
-msgstr "URL-parameter is vereist"
 
 #: inc/schema/types/organization.php:188
 #: inc/schema/types/organization.php:191
@@ -8030,56 +8009,66 @@ msgstr "Kent taal"
 msgid "Specify languages in which the organization provides services. Use standard IETF BCP 47 language codes (e.g., en, en-US, fr, es)."
 msgstr "Geef de talen op waarin de organisatie diensten verleent. Gebruik standaard IETF BCP 47-taalcodes (bijv. en, en-US, fr, es)."
 
-#: loader.php:451
+#: loader.php:459
 msgid "Get SureRank Pro"
 msgstr "Krijg SureRank Pro"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Our AI-powered assistant helps you fix SEO issues smartly and quickly. No need to dig through settings or guess what's wrong - we'll do the heavy lifting for you."
 msgstr "Onze AI-gestuurde assistent helpt je SEO-problemen slim en snel op te lossen. Geen nood om door instellingen te graven of te raden wat er mis is - wij doen het zware werk voor je."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Here are generated home page titles. Review and apply the one you like."
 msgstr "Hier zijn gegenereerde titels voor de startpagina. Bekijk en pas de titel aan die je leuk vindt."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Here are generated home page descriptions. Review and apply the one you like."
 msgstr "Hier zijn gegenereerde beschrijvingen voor de startpagina. Bekijk en pas de beschrijving aan die je leuk vindt."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Here are generated social titles for your home page. Review and apply the one you like."
 msgstr "Hier zijn gegenereerde sociale titels voor je startpagina. Bekijk en pas de titel aan die je leuk vindt."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Here are generated social descriptions for your home page. Review and apply the one you like."
 msgstr "Hier zijn gegenereerde sociale beschrijvingen voor je startpagina. Bekijk en pas de beschrijving aan die je leuk vindt."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Here are generated page titles. Review and apply the one you like."
 msgstr "Hier zijn gegenereerde paginatitels. Bekijk en pas de titel aan die je leuk vindt."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Here are generated page descriptions. Review and apply the one you like."
 msgstr "Hier zijn gegenereerde paginabeschrijvingen. Bekijk en pas de beschrijving aan die je leuk vindt."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Here are generated social titles. Review and apply the one you like."
 msgstr "Hier zijn gegenereerde sociale titels. Bekijk en pas de titel aan die je leuk vindt."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Here are generated social descriptions. Review and apply the one you like."
 msgstr "Hier zijn gegenereerde sociale beschrijvingen. Bekijk en pas de beschrijving aan die je leuk vindt."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Here are generated site taglines. Review and apply the one you like."
 msgstr "Hier zijn gegenereerde site-taglines. Bekijk en pas de tagline aan die je leuk vindt."
@@ -8153,18 +8142,10 @@ msgstr "Upgrade naar SureRank Pro om zoekmachines zoals Bing en Yandex te inform
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
-msgid "Choose how your content will appear when shared on X. This setting determines the card type-either a summary or a summary with a large image-used in the post preview."
-msgstr "Kies hoe je inhoud eruit zal zien wanneer deze wordt gedeeld op X. Deze instelling bepaalt het type kaart - ofwel een samenvatting of een samenvatting met een grote afbeelding - die in de postpreview wordt gebruikt."
-
-#: build/admin-dashboard/index.js:1
-#: build/admin-onboarding/index.js:1
 msgid "We've successfully imported some of your SEO settings, but the migration wasn't completed. This may happen if the process was interrupted or exited early. Don't worry - everything imported so far is safely saved, and no duplicate data will be created."
 msgstr "We hebben enkele van uw SEO-instellingen succesvol geïmporteerd, maar de migratie is niet voltooid. Dit kan gebeuren als het proces werd onderbroken of vroegtijdig werd beëindigd. Maak je geen zorgen - alles wat tot nu toe is geïmporteerd, is veilig opgeslagen en er zullen geen dubbele gegevens worden aangemaakt."
 
-#: build/admin-onboarding/index.js:1
-msgid "Set up your site’s SEO easily-no advanced skills needed!"
-msgstr "Stel eenvoudig de SEO van uw site in - geen geavanceerde vaardigheden nodig!"
-
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Ignored"
 msgstr "Genegeerd"
@@ -8177,28 +8158,33 @@ msgstr "Pagina SEO-controles - SureRank helpt u snel de SEO-kwaliteit van uw Wor
 msgid "Toggle SureRank Settings - Control multiple SureRank SEO settings with a single command. Supports author archive (show/hide author post archives), date archive (show/hide date-based archives), no_index (strictly array of existing post types or taxonomies to hide from search), no_follow (strictly array of existing post types or taxonomies with nofollow), no_archive (strictly array of existing post types or taxonomies to prevent caching), enable_xml_sitemap (XML sitemap generation), enable_xml_image_sitemap (include images in sitemap), enable_automatic_indexing (auto-submit to search engines), auto_redirect_enabled (automatic redirects), enable_page_level_seo (per-page SEO controls), enable_google_console (Google Search Console integration), enable_schemas (structured data), enable_migration (import from other SEO plugins), enable_extended_meta_templates (advanced meta templates). Examples: \"enable author archive and XML sitemap\", \"disable date archive and enable image sitemap\", \"set no_index for posts and pages\", \"enable all sitemaps and schemas\", \"turn on Google Console and page level SEO\"."
 msgstr "Schakel SureRank-instellingen in - Beheer meerdere SureRank SEO-instellingen met één opdracht. Ondersteunt auteur archief (toon/verberg auteur postarchieven), datumarchief (toon/verberg datumgebaseerde archieven), no_index (strikt array van bestaande posttypes of taxonomieën om uit de zoekopdracht te verbergen), no_follow (strikt array van bestaande posttypes of taxonomieën met nofollow), no_archive (strikt array van bestaande posttypes of taxonomieën om caching te voorkomen), enable_xml_sitemap (XML-sitemapgeneratie), enable_xml_image_sitemap (inclusief afbeeldingen in sitemap), enable_automatic_indexing (automatisch indienen bij zoekmachines), auto_redirect_enabled (automatische omleidingen), enable_page_level_seo (per-pagina SEO-controles), enable_google_console (integratie met Google Search Console), enable_schemas (gestructureerde gegevens), enable_migration (importeren van andere SEO-plug-ins), enable_extended_meta_templates (geavanceerde meta-sjablonen). Voorbeelden: \"schakel auteur archief en XML-sitemap in\", \"schakel datumarchief uit en schakel afbeeldingssitemap in\", \"stel no_index in voor berichten en pagina's\", \"schakel alle sitemaps en schema's in\", \"zet Google Console en pagina-niveau SEO aan\"."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "Enter a custom field variable like %custom_field.field_name% or a direct image URL. Type @ to view variable suggestions."
 msgstr "Voer een aangepaste veldvariabele in zoals %custom_field.field_name% of een directe afbeeldings-URL. Typ @ om variabele suggesties te bekijken."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "These settings help search engines understand how to treat your page in search results."
 msgstr "Deze instellingen helpen zoekmachines te begrijpen hoe ze uw pagina in de zoekresultaten moeten behandelen."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "\"No Index\" will prevent the page from appearing in search results."
 msgstr "\"No Index\" voorkomt dat de pagina in de zoekresultaten verschijnt."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "\"No Follow\" tells search engines not to follow any links on the page."
 msgstr "\"No Follow\" vertelt zoekmachines om geen links op de pagina te volgen."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "\"No Archive\" prevents search engines from storing a cached version of the page."
 msgstr "\"No Archive\" voorkomt dat zoekmachines een gecachte versie van de pagina opslaan."
 
-#: inc/admin/seo-popup.php:114
+#: inc/admin/seo-popup.php:159
 #: build/seo-popup/index.js:1
 msgid "Manage your SEO"
 msgstr "Beheer uw SEO"
@@ -8222,10 +8208,6 @@ msgstr "Achternaam van de gebruiker."
 #: inc/api/onboarding.php:176
 msgid "Email address of the user."
 msgstr "E-mailadres van de gebruiker."
-
-#: build/admin-dashboard/index.js:1
-msgid "You don't have permission to perform this action. Please contact administrator."
-msgstr "Je hebt geen toestemming om deze actie uit te voeren. Neem contact op met de beheerder."
 
 #: build/admin-dashboard/index.js:1
 msgid "Please contact the administrator to manage the static page SEO, as you do not have the required access rights."
@@ -8312,16 +8294,12 @@ msgstr "Een SEO-titel voor de homepage is de belangrijkste kop die voor uw site 
 msgid "It is often the first thing people read before deciding whether to click."
 msgstr "Het is vaak het eerste dat mensen lezen voordat ze besluiten te klikken."
 
-#: inc/analyzer/seo-analyzer.php:139
-msgid "A clear and well written title helps search engines understand your homepage and improves click through rate by setting the right expectation."
-msgstr "Een duidelijke en goed geschreven titel helpt zoekmachines uw homepage te begrijpen en verbetert de doorklikratio door de juiste verwachtingen te scheppen."
-
 #: inc/analyzer/seo-analyzer.php:143
 #: inc/analyzer/seo-analyzer.php:264
 #: inc/analyzer/seo-analyzer.php:386
 #: inc/analyzer/seo-analyzer.php:470
 #: inc/analyzer/seo-analyzer.php:653
-#: inc/api/analyzer.php:644
+#: inc/api/analyzer.php:721
 msgid "Best Practice"
 msgstr "Beste Praktijk"
 
@@ -8350,17 +8328,16 @@ msgstr "Een eenvoudige, eerlijke titel presteert meestal beter dan een lange of 
 #: inc/analyzer/seo-analyzer.php:752
 #: inc/analyzer/seo-analyzer.php:827
 #: inc/analyzer/seo-analyzer.php:843
-#: inc/analyzer/seo-analyzer.php:931
+#: inc/analyzer/seo-analyzer.php:936
 #: inc/analyzer/seo-analyzer.php:1008
 #: inc/analyzer/seo-analyzer.php:1079
 #: inc/analyzer/seo-analyzer.php:1204
 #: inc/analyzer/seo-analyzer.php:1707
-#: inc/api/analyzer.php:467
-#: inc/api/analyzer.php:581
-#: inc/api/analyzer.php:657
-#: inc/api/analyzer.php:718
-#: inc/api/analyzer.php:787
-#: inc/api/analyzer.php:877
+#: inc/api/analyzer.php:544
+#: inc/api/analyzer.php:658
+#: inc/api/analyzer.php:734
+#: inc/api/analyzer.php:829
+#: inc/api/analyzer.php:919
 msgid "Where to Update It"
 msgstr "Waar te Updaten"
 
@@ -8396,16 +8373,15 @@ msgstr "Hier kunt u de titel, beschrijving en sociale metadata met afbeelding vo
 #: inc/analyzer/seo-analyzer.php:681
 #: inc/analyzer/seo-analyzer.php:766
 #: inc/analyzer/seo-analyzer.php:860
-#: inc/analyzer/seo-analyzer.php:944
+#: inc/analyzer/seo-analyzer.php:949
 #: inc/analyzer/seo-analyzer.php:1105
 #: inc/analyzer/seo-analyzer.php:1217
 #: inc/analyzer/seo-analyzer.php:1235
 #: inc/analyzer/seo-analyzer.php:1720
-#: inc/api/analyzer.php:484
-#: inc/api/analyzer.php:670
-#: inc/api/analyzer.php:731
-#: inc/api/analyzer.php:807
-#: inc/api/analyzer.php:891
+#: inc/api/analyzer.php:561
+#: inc/api/analyzer.php:747
+#: inc/api/analyzer.php:849
+#: inc/api/analyzer.php:933
 msgid "Update Here"
 msgstr "Hier Bijwerken"
 
@@ -8417,20 +8393,15 @@ msgstr "Hier Bijwerken"
 #: inc/analyzer/seo-analyzer.php:693
 #: inc/analyzer/seo-analyzer.php:779
 #: inc/analyzer/seo-analyzer.php:871
-#: inc/analyzer/seo-analyzer.php:959
+#: inc/analyzer/seo-analyzer.php:964
 #: inc/analyzer/seo-analyzer.php:1027
 #: inc/analyzer/seo-analyzer.php:1125
 #: inc/analyzer/seo-analyzer.php:1696
-#: inc/api/analyzer.php:611
-#: inc/api/analyzer.php:683
-#: inc/api/analyzer.php:741
-#: inc/api/analyzer.php:820
+#: inc/api/analyzer.php:688
+#: inc/api/analyzer.php:760
+#: inc/api/analyzer.php:862
 msgid "Need Help?"
 msgstr "Hulp Nodig?"
-
-#: inc/analyzer/seo-analyzer.php:202
-msgid "SureRank Pro helps you generate SEO titles using AI, following best practices for length, clarity, and click through rate."
-msgstr "SureRank Pro helpt u SEO-titels te genereren met behulp van AI, volgens de beste praktijken voor lengte, duidelijkheid en doorklikratio."
 
 #: inc/analyzer/seo-analyzer.php:253
 msgid "A homepage SEO description is the short text that appears below your site title in search results."
@@ -8439,10 +8410,6 @@ msgstr "Een SEO-beschrijving voor de homepage is de korte tekst die onder uw sit
 #: inc/analyzer/seo-analyzer.php:259
 msgid "It gives people a quick idea of what your site is about before they decide to click."
 msgstr "Het geeft mensen een snel idee van waar uw site over gaat voordat ze besluiten te klikken."
-
-#: inc/analyzer/seo-analyzer.php:260
-msgid "A clear and well written description helps search engines understand your homepage and makes your result more appealing."
-msgstr "Een duidelijke en goed geschreven beschrijving helpt zoekmachines uw homepage te begrijpen en maakt uw resultaat aantrekkelijker."
 
 #: inc/analyzer/seo-analyzer.php:268
 msgid "Good descriptions are clear and easy to read."
@@ -8529,10 +8496,6 @@ msgstr "Uw homepage bevat momenteel meerdere H1-headings."
 msgid "Multiple H1 Headings Found"
 msgstr "Meerdere H1-headings gevonden"
 
-#: inc/analyzer/seo-analyzer.php:442
-msgid "Your homepage currently contains one H1 heading"
-msgstr "Uw homepage bevat momenteel één H1-heading"
-
 #: inc/analyzer/seo-analyzer.php:443
 msgid "Homepage H1 Heading Found"
 msgstr "H1-heading van de homepage gevonden"
@@ -8578,10 +8541,6 @@ msgstr "Voeg sectieheadings toe of werk ze bij en stel ze in als H2"
 #: inc/analyzer/seo-analyzer.php:517
 msgid "SureRank Pro helps you identify heading structure issues and suggests improvements using AI, so your pages stay clear and well organized."
 msgstr "SureRank Pro helpt u om problemen met de headingstructuur te identificeren en doet suggesties voor verbeteringen met behulp van AI, zodat uw pagina's duidelijk en goed georganiseerd blijven."
-
-#: inc/analyzer/seo-analyzer.php:524
-msgid "Your homepage contains at least one H2 heading"
-msgstr "Uw homepage bevat ten minste één H2-heading"
 
 #: inc/analyzer/seo-analyzer.php:525
 msgid "Subheadings Found on the Homepage"
@@ -8710,16 +8669,14 @@ msgstr "Voer de juiste URL in het veld Canonieke Tag in"
 #: inc/analyzer/seo-analyzer.php:760
 #: inc/analyzer/seo-analyzer.php:1212
 #: inc/analyzer/seo-analyzer.php:1230
-#: inc/api/analyzer.php:664
-#: inc/api/analyzer.php:725
-#: inc/api/analyzer.php:800
-#: inc/api/analyzer.php:885
+#: inc/api/analyzer.php:741
+#: inc/api/analyzer.php:842
+#: inc/api/analyzer.php:927
 msgid "Save your changes"
 msgstr "Sla je wijzigingen op"
 
 #: inc/analyzer/seo-analyzer.php:781
-#: inc/api/analyzer.php:685
-#: inc/api/analyzer.php:742
+#: inc/api/analyzer.php:762
 msgid "SureRank Pro helps fix SEO issues across your website using AI, without manual effort."
 msgstr "SureRank Pro helpt SEO-problemen op je website op te lossen met behulp van AI, zonder handmatige inspanning."
 
@@ -8772,72 +8729,59 @@ msgstr "Ga vanuit het SureRank-dashboard naar Algemeen ⇾ Homepage ⇾ <a href=
 msgid "Here, you can update the Robot Instructions for your Home Page to control how search engines interact with it."
 msgstr "Hier kun je de Robot-instructies voor je Homepage bijwerken om te controleren hoe zoekmachines ermee omgaan."
 
-#: inc/analyzer/seo-analyzer.php:873
-msgid "SureRank Pro helps you detect and fix indexing issues using AI assistant, so your pages are visible and searchable."
-msgstr "SureRank Pro helpt je om indexeerproblemen te detecteren en op te lossen met behulp van een AI-assistent, zodat je pagina's zichtbaar en doorzoekbaar zijn."
-
-#: inc/analyzer/seo-analyzer.php:881
-#: inc/analyzer/seo-analyzer.php:897
-msgid "Your homepage is currently not indexable by search engines. "
-msgstr "Je homepage is momenteel niet indexeerbaar door zoekmachines."
-
-#: inc/analyzer/seo-analyzer.php:897
-msgid "Your homepage is currently indexable by search engines. "
-msgstr "Je homepage is momenteel indexeerbaar door zoekmachines."
-
 #: inc/analyzer/seo-analyzer.php:898
 msgid "Home Page Indexable"
 msgstr "Homepage Indexeerbaar"
 
-#: inc/analyzer/seo-analyzer.php:918
+#: inc/analyzer/seo-analyzer.php:923
 msgid "Home Page is Reachable"
 msgstr "Homepage is Bereikbaar"
 
-#: inc/analyzer/seo-analyzer.php:919
+#: inc/analyzer/seo-analyzer.php:924
 msgid "Your homepage is currently accessible and loading correctly."
 msgstr "Je homepage is momenteel toegankelijk en laadt correct."
 
-#: inc/analyzer/seo-analyzer.php:921
+#: inc/analyzer/seo-analyzer.php:926
 msgid "Home Page is Not Reachable"
 msgstr "Homepage is Niet Bereikbaar"
 
-#: inc/analyzer/seo-analyzer.php:922
+#: inc/analyzer/seo-analyzer.php:927
 msgid "Your homepage is currently not accessible or is returning an error."
 msgstr "Je homepage is momenteel niet toegankelijk of geeft een foutmelding terug."
 
-#: inc/analyzer/seo-analyzer.php:925
+#: inc/analyzer/seo-analyzer.php:930
 msgid "Your homepage is usually the first page visitors see and the main entry point search engines use to understand your site. It acts as the starting point for crawling and navigation."
 msgstr "Je homepage is meestal de eerste pagina die bezoekers zien en het belangrijkste toegangspunt dat zoekmachines gebruiken om je site te begrijpen. Het fungeert als het startpunt voor crawlen en navigatie."
 
-#: inc/analyzer/seo-analyzer.php:926
+#: inc/analyzer/seo-analyzer.php:931
 msgid "When the homepage cannot be reached, visitors may see an error page and leave immediately. Search engines may also struggle to crawl or index your site properly if they cannot access this page."
 msgstr "Wanneer de homepage niet bereikbaar is, kunnen bezoekers een foutpagina zien en onmiddellijk vertrekken. Zoekmachines kunnen ook moeite hebben om je site goed te crawlen of te indexeren als ze deze pagina niet kunnen bereiken."
 
-#: inc/analyzer/seo-analyzer.php:927
+#: inc/analyzer/seo-analyzer.php:932
 msgid "This issue can affect the visibility of your entire site, not just the homepage."
 msgstr "Dit probleem kan de zichtbaarheid van je hele site beïnvloeden, niet alleen de homepage."
 
-#: inc/analyzer/seo-analyzer.php:933
+#: inc/analyzer/seo-analyzer.php:938
 msgid "You can review and fix this from your WordPress settings."
 msgstr "Je kunt dit bekijken en oplossen vanuit je WordPress-instellingen."
 
-#: inc/analyzer/seo-analyzer.php:936
+#: inc/analyzer/seo-analyzer.php:941
 msgid "Go to Settings ⇾ Reading"
 msgstr "Ga naar Instellingen ⇾ Lezen"
 
-#: inc/analyzer/seo-analyzer.php:937
+#: inc/analyzer/seo-analyzer.php:942
 msgid "Check which page is set as your homepage"
 msgstr "Controleer welke pagina is ingesteld als je homepage"
 
-#: inc/analyzer/seo-analyzer.php:938
+#: inc/analyzer/seo-analyzer.php:943
 msgid "Make sure the selected page exists and is published"
 msgstr "Zorg ervoor dat de geselecteerde pagina bestaat en gepubliceerd is"
 
-#: inc/analyzer/seo-analyzer.php:953
+#: inc/analyzer/seo-analyzer.php:958
 msgid "If you are using a static homepage, open the page directly and confirm it loads without errors. Also check that no redirects, maintenance plugins, or access restrictions are blocking it."
 msgstr "Als je een statische homepage gebruikt, open dan de pagina rechtstreeks en bevestig dat deze zonder fouten laadt. Controleer ook of er geen omleidingen, onderhoudsplug-ins of toegangsbeperkingen zijn die deze blokkeren."
 
-#: inc/analyzer/seo-analyzer.php:961
+#: inc/analyzer/seo-analyzer.php:966
 msgid "SureRank Pro users get access to our support team, available 24×7, to help identify homepage access and visibility issues."
 msgstr "SureRank Pro-gebruikers krijgen toegang tot ons ondersteuningsteam, dat 24×7 beschikbaar is, om te helpen bij het identificeren van problemen met de toegang en zichtbaarheid van de homepage."
 
@@ -9037,10 +8981,6 @@ msgstr "Hoewel beide dezelfde site tonen, beschouwen zoekmachines ze als verschi
 msgid "To keep things clean, choose one version as your main address."
 msgstr "Om het overzichtelijk te houden, kiest u één versie als uw hoofdadres."
 
-#: inc/analyzer/seo-analyzer.php:1321
-msgid "Decide whether you want to use www or non www, then set up a redirect so all traffic goes to that version."
-msgstr "Bepaal of u www of non-www wilt gebruiken, en stel vervolgens een omleiding in zodat al het verkeer naar die versie gaat."
-
 #: inc/analyzer/seo-analyzer.php:1325
 msgid "🔧 Where to set it"
 msgstr "🔧 Waar het in te stellen"
@@ -9057,10 +8997,6 @@ msgstr "Ik heb hulp nodig bij het instellen van een voorkeursversie van mijn web
 msgid "Right now, my site loads on both versions:"
 msgstr "Op dit moment laadt mijn site op beide versies:"
 
-#: inc/analyzer/seo-analyzer.php:1336
-msgid "I would like to redirect all traffic from https://www.example.com to https://example.com and use the non WWW version as my main address."
-msgstr "Ik zou graag al het verkeer van https://www.example.com naar https://example.com willen omleiden en de non-WWW-versie als mijn hoofdadres gebruiken."
-
 #: inc/analyzer/seo-analyzer.php:1337
 msgid "Please feel free to set this up for me directly. Thank you for your help."
 msgstr "Voel je vrij om dit rechtstreeks voor mij in te stellen. Bedankt voor je hulp."
@@ -9073,17 +9009,9 @@ msgstr "💬 Hulp nodig?"
 msgid "SureRank Pro users get access to our support team, available 24×7, for setup and plugin related questions."
 msgstr "SureRank Pro-gebruikers krijgen toegang tot ons ondersteuningsteam, dat 24×7 beschikbaar is voor vragen over installatie en plugins."
 
-#: inc/analyzer/seo-analyzer.php:1349
-msgid "WWW and non-WWW versions are redirecting properly."
-msgstr "WWW- en non-WWW-versies worden correct omgeleid."
-
 #: inc/analyzer/seo-analyzer.php:1350
 msgid "The site correctly redirects between the www and non-www versions."
 msgstr "De site leidt correct om tussen de www- en non-www-versies."
-
-#: inc/analyzer/seo-analyzer.php:1352
-msgid "WWW and non-WWW versions are not redirecting properly."
-msgstr "WWW- en non-WWW-versies worden niet correct omgeleid."
 
 #: inc/analyzer/seo-analyzer.php:1353
 msgid "The site does not correctly redirect between the www and non-www versions."
@@ -9133,296 +9061,257 @@ msgstr "Klik op de afbeeldingsblok"
 msgid "Add a short, clear description in the ALT text field"
 msgstr "Voeg een korte, duidelijke beschrijving toe in het ALT-tekstveld"
 
-#: inc/api/analyzer.php:458
+#: inc/api/analyzer.php:535
 msgid "Google Search Console is currently connected to your site."
 msgstr "Google Search Console is momenteel verbonden met uw site."
 
-#: inc/api/analyzer.php:459
+#: inc/api/analyzer.php:536
 msgid "Google Search Console is not currently connected to your site."
 msgstr "Google Search Console is momenteel niet verbonden met uw site."
 
-#: inc/api/analyzer.php:462
+#: inc/api/analyzer.php:539
 msgid "Search Console helps you understand how your site appears in Google search results. It shows which pages are indexed, how your site is performing, and whether Google is reporting any issues."
 msgstr "Search Console helpt u te begrijpen hoe uw site verschijnt in Google-zoekresultaten. Het toont welke pagina's zijn geïndexeerd, hoe uw site presteert en of Google problemen meldt."
 
-#: inc/api/analyzer.php:463
+#: inc/api/analyzer.php:540
 msgid "Without it connected, you miss important visibility into how Google sees your site."
 msgstr "Zonder verbinding mist u belangrijke zichtbaarheid in hoe Google uw site ziet."
 
-#: inc/api/analyzer.php:469
+#: inc/api/analyzer.php:546
 msgid "You can connect Google Search Console directly from the SureRank Dashboard."
 msgstr "U kunt Google Search Console rechtstreeks verbinden vanuit het SureRank-dashboard."
 
 #. translators: %s is the Search Console URL.
-#: inc/api/analyzer.php:474
+#: inc/api/analyzer.php:551
 #, php-format
 msgid "Go to SureRank ⇾ <a href=\"%s\">Search Console</a>"
 msgstr "Ga naar SureRank ⇾ <a href=\"%s\">Search Console</a>"
 
-#: inc/api/analyzer.php:477
+#: inc/api/analyzer.php:554
 msgid "Sign in with your Google account"
 msgstr "Log in met uw Google-account"
 
-#: inc/api/analyzer.php:478
+#: inc/api/analyzer.php:555
 msgid "Select your site and complete the connection"
 msgstr "Selecteer uw site en voltooi de verbinding"
 
-#: inc/api/analyzer.php:493
+#: inc/api/analyzer.php:570
 msgid "Once connected, SureRank will start using Search Console data to show search performance and indexing insights."
 msgstr "Zodra u verbonden bent, begint SureRank Search Console-gegevens te gebruiken om zoekprestaties en indexeringsinzichten weer te geven."
 
-#: inc/api/analyzer.php:499
-#: inc/api/analyzer.php:904
+#: inc/api/analyzer.php:576
+#: inc/api/analyzer.php:946
 msgid "Need More?"
 msgstr "Meer nodig?"
 
-#: inc/api/analyzer.php:501
+#: inc/api/analyzer.php:578
 msgid "SureRank Pro unlocks advanced insights and recommendations powered by Google Search Console data."
 msgstr "SureRank Pro ontgrendelt geavanceerde inzichten en aanbevelingen aangedreven door gegevens van Google Search Console."
 
-#: inc/api/analyzer.php:562
+#: inc/api/analyzer.php:639
 msgid "Other SEO Plugin Detected"
 msgstr "Andere SEO-plug-in gedetecteerd"
 
-#: inc/api/analyzer.php:562
+#: inc/api/analyzer.php:639
 msgid "No other SEO plugin detected"
 msgstr "Geen andere SEO-plugin gedetecteerd"
 
-#: inc/api/analyzer.php:563
+#: inc/api/analyzer.php:640
 msgid "No other SEO plugin detected on your site."
 msgstr "Geen andere SEO-plugin gedetecteerd op uw site."
 
-#: inc/api/analyzer.php:567
+#: inc/api/analyzer.php:644
 msgid "More than one SEO plugin is currently active on your site."
 msgstr "Meer dan één SEO-plugin is momenteel actief op uw site."
 
 #. translators: %s is the list of active plugins
-#: inc/api/analyzer.php:570
+#: inc/api/analyzer.php:647
 #, php-format
 msgid "Another SEO plugin, %s, is currently active on your site."
 msgstr "Een andere SEO-plugin, %s, is momenteel actief op uw site."
 
-#: inc/api/analyzer.php:575
+#: inc/api/analyzer.php:652
 msgid "SEO plugins manage things like page titles, descriptions, schema, and indexing settings. These signals help search engines understand how your site appears in search results."
 msgstr "SEO-plugins beheren zaken zoals paginatitels, beschrijvingen, schema's en indexeringsinstellingen. Deze signalen helpen zoekmachines te begrijpen hoe uw site verschijnt in zoekresultaten."
 
-#: inc/api/analyzer.php:576
+#: inc/api/analyzer.php:653
 msgid "When multiple SEO plugins are active, they can create duplicate or conflicting signals. This makes it harder for search engines to understand which information to trust."
 msgstr "Wanneer meerdere SEO-plugins actief zijn, kunnen ze dubbele of conflicterende signalen creëren. Dit maakt het moeilijker voor zoekmachines om te begrijpen welke informatie te vertrouwen."
 
-#: inc/api/analyzer.php:577
+#: inc/api/analyzer.php:654
 msgid "Using a single SEO plugin helps keep everything consistent and easier to manage."
 msgstr "Het gebruik van een enkele SEO-plugin helpt alles consistent en gemakkelijker te beheren."
 
-#: inc/api/analyzer.php:583
+#: inc/api/analyzer.php:660
 msgid "You can manage this from your WordPress plugins list."
 msgstr "U kunt dit beheren vanuit uw WordPress-pluginlijst."
 
 #. translators: %s is the Plugins menu URL.
-#: inc/api/analyzer.php:588
+#: inc/api/analyzer.php:665
 #, php-format
 msgid "Go to <a href=\"%s\">Plugins ⇾ Installed Plugins</a>"
 msgstr "Ga naar <a href=\"%s\">Plugins ⇾ Geïnstalleerde Plugins</a>"
 
-#: inc/api/analyzer.php:591
+#: inc/api/analyzer.php:668
 msgid "Identify any other active SEO plugins"
 msgstr "Identificeer eventuele andere actieve SEO-plugins"
 
-#: inc/api/analyzer.php:592
+#: inc/api/analyzer.php:669
 msgid "Deactivate the ones you are not using"
 msgstr "Deactiveer de plugins die u niet gebruikt"
 
-#: inc/api/analyzer.php:598
+#: inc/api/analyzer.php:675
 msgid "Deactivate Here"
 msgstr "Deactiveer hier"
 
-#: inc/api/analyzer.php:613
-msgid "SureRank Premium users get access to our support team, available 24×7, to help review plugin conflicts and guide you through cleanup."
-msgstr "SureRank Premium-gebruikers krijgen toegang tot ons ondersteuningsteam, dat 24×7 beschikbaar is, om te helpen bij het beoordelen van pluginconflicten en u door de opruiming te begeleiden."
-
-#: inc/api/analyzer.php:635
-msgid "Your site does currently have a tagline set."
-msgstr "Uw site heeft momenteel een tagline ingesteld."
-
-#: inc/api/analyzer.php:635
+#: inc/api/analyzer.php:712
 msgid "Your site does not currently have a tagline set."
 msgstr "Uw site heeft momenteel geen tagline ingesteld."
 
-#: inc/api/analyzer.php:638
+#: inc/api/analyzer.php:715
 msgid "A site tagline is a short line that describes what your website is about."
 msgstr "Een site-tagline is een korte zin die beschrijft waar uw website over gaat."
 
-#: inc/api/analyzer.php:639
+#: inc/api/analyzer.php:716
 msgid "It often appears alongside your site title and helps visitors quickly understand your purpose."
 msgstr "Het verschijnt vaak naast uw sitetitel en helpt bezoekers snel uw doel te begrijpen."
 
-#: inc/api/analyzer.php:640
+#: inc/api/analyzer.php:717
 msgid "A clear tagline sets context, supports your brand, and makes your site feel more intentional."
 msgstr "Een duidelijke tagline stelt de context, ondersteunt uw merk en maakt uw site meer doelgericht."
 
-#: inc/api/analyzer.php:648
+#: inc/api/analyzer.php:725
 msgid "A good tagline is simple and easy to understand."
 msgstr "Een goede tagline is eenvoudig en gemakkelijk te begrijpen."
 
-#: inc/api/analyzer.php:649
+#: inc/api/analyzer.php:726
 msgid "It should describe what you do or who your site is for."
 msgstr "Het moet beschrijven wat u doet of voor wie uw site is."
 
-#: inc/api/analyzer.php:650
+#: inc/api/analyzer.php:727
 msgid "Aim for a single clear sentence that feels natural and human."
 msgstr "Streef naar een enkele duidelijke zin die natuurlijk en menselijk aanvoelt."
 
-#: inc/api/analyzer.php:653
+#: inc/api/analyzer.php:730
 msgid "Avoid buzzwords or vague phrases that do not say much about your site."
 msgstr "Vermijd modewoorden of vage zinnen die niet veel over uw site zeggen."
 
-#: inc/api/analyzer.php:659
+#: inc/api/analyzer.php:736
 msgid "You can update your site tagline from the WordPress settings."
 msgstr "U kunt uw site-tagline bijwerken vanuit de WordPress-instellingen."
 
-#: inc/api/analyzer.php:662
+#: inc/api/analyzer.php:739
 msgid "Go to Settings ⇾ General"
 msgstr "Ga naar Instellingen ⇾ Algemeen"
 
-#: inc/api/analyzer.php:663
+#: inc/api/analyzer.php:740
 msgid "Update the Tagline field"
 msgstr "Werk het Tagline-veld bij"
 
-#: inc/api/analyzer.php:705
-msgid "Robots.txt is accessible."
-msgstr "Robots.txt is toegankelijk."
-
-#: inc/api/analyzer.php:706
-msgid "Your site has an accessible robots.txt file."
-msgstr "Uw site heeft een toegankelijke robots.txt-bestand."
-
-#: inc/api/analyzer.php:708
+#: inc/api/analyzer.php:1693
 msgid "Robots.txt is missing or inaccessible."
 msgstr "Robots.txt ontbreekt of is niet toegankelijk."
 
-#: inc/api/analyzer.php:709
+#: inc/api/analyzer.php:1691
+#: inc/api/analyzer.php:1692
 msgid "Your site does not currently have an accessible robots.txt file."
 msgstr "Uw site heeft momenteel geen toegankelijk robots.txt-bestand."
 
-#: inc/api/analyzer.php:712
-msgid "The robots.txt file tells search engines which parts of your site they are allowed to crawl and index."
-msgstr "Het robots.txt-bestand vertelt zoekmachines welke delen van uw site ze mogen crawlen en indexeren."
-
-#: inc/api/analyzer.php:713
-msgid "When this file is missing or inaccessible, search engines may have trouble understanding how to properly crawl your site."
-msgstr "Wanneer dit bestand ontbreekt of niet toegankelijk is, kunnen zoekmachines moeite hebben om te begrijpen hoe ze uw site correct moeten crawlen."
-
-#: inc/api/analyzer.php:714
-msgid "Having a valid robots.txt file helps avoid crawling issues and ensures search engines focus on the right pages."
-msgstr "Een geldig robots.txt-bestand helpt om crawlen problemen te voorkomen en zorgt ervoor dat zoekmachines zich op de juiste pagina's concentreren."
-
-#: inc/api/analyzer.php:720
-msgid "You can create or edit your robots.txt file directly from SureRank."
-msgstr "Je kunt je robots.txt-bestand rechtstreeks vanuit SureRank maken of bewerken."
-
-#: inc/api/analyzer.php:723
-msgid "Go to SureRank ⇾ Advanced ⇾ Robots.txt Editor"
-msgstr "Ga naar SureRank ⇾ Geavanceerd ⇾ Robots.txt-editor"
-
-#: inc/api/analyzer.php:724
-msgid "Review or add the required rules"
-msgstr "Beoordeel of voeg de vereiste regels toe"
-
-#: inc/api/analyzer.php:774
+#: inc/api/analyzer.php:816
 msgid "Search engine visibility is enabled."
 msgstr "De zichtbaarheid voor zoekmachines is ingeschakeld."
 
-#: inc/api/analyzer.php:775
+#: inc/api/analyzer.php:817
 msgid "Search engine visibility is currently enabled in your WordPress settings."
 msgstr "De zichtbaarheid voor zoekmachines is momenteel ingeschakeld in je WordPress-instellingen."
 
-#: inc/api/analyzer.php:777
+#: inc/api/analyzer.php:819
 msgid "Search engine visibility is disabled."
 msgstr "De zichtbaarheid voor zoekmachines is uitgeschakeld."
 
-#: inc/api/analyzer.php:778
+#: inc/api/analyzer.php:820
 msgid "Search engine visibility is currently disabled in your WordPress settings."
 msgstr "De zichtbaarheid voor zoekmachines is momenteel uitgeschakeld in je WordPress-instellingen."
 
-#: inc/api/analyzer.php:781
+#: inc/api/analyzer.php:823
 msgid "WordPress includes a setting that tells search engines whether they are allowed to index your site. Indexing means your pages can appear in search results."
 msgstr "WordPress bevat een instelling die zoekmachines vertelt of ze je site mogen indexeren. Indexeren betekent dat je pagina's in zoekresultaten kunnen verschijnen."
 
-#: inc/api/analyzer.php:782
+#: inc/api/analyzer.php:824
 msgid "This setting is commonly used while a site is being built or kept private. When enabled, it asks search engines not to index new pages."
 msgstr "Deze instelling wordt vaak gebruikt terwijl een site wordt gebouwd of privé wordt gehouden. Wanneer ingeschakeld, vraagt het zoekmachines om nieuwe pagina's niet te indexeren."
 
-#: inc/api/analyzer.php:783
+#: inc/api/analyzer.php:825
 msgid "If this setting remains enabled by mistake, your site may not appear in search results even if everything else is set up correctly. It can quietly limit visibility without showing obvious errors."
 msgstr "Als deze instelling per ongeluk ingeschakeld blijft, kan je site mogelijk niet in zoekresultaten verschijnen, zelfs als alles andere correct is ingesteld. Het kan stilletjes de zichtbaarheid beperken zonder duidelijke fouten te tonen."
 
-#: inc/api/analyzer.php:789
+#: inc/api/analyzer.php:831
 msgid "You can change this setting from your WordPress dashboard."
 msgstr "Je kunt deze instelling wijzigen vanuit je WordPress-dashboard."
 
 #. translators: %s is the URL of the WordPress Reading settings page
-#: inc/api/analyzer.php:795
+#: inc/api/analyzer.php:837
 #, php-format
 msgid "Go to <a href=\"%s\">Settings ⇾ Reading</a>"
 msgstr "Ga naar <a href=\"%s\">Instellingen ⇾ Lezen</a>"
 
-#: inc/api/analyzer.php:798
+#: inc/api/analyzer.php:840
 msgid "Find the option labeled “Search engine visibility”"
 msgstr "Zoek de optie met het label “Zichtbaarheid voor zoekmachines”"
 
-#: inc/api/analyzer.php:799
+#: inc/api/analyzer.php:841
 msgid "Make sure the checkbox is not selected"
 msgstr "Zorg ervoor dat het selectievakje niet is aangevinkt"
 
-#: inc/api/analyzer.php:822
+#: inc/api/analyzer.php:864
 msgid "SureRank Pro users get access to our support team, available 24×7, to help detect visibility and indexing issues before they affect your site."
 msgstr "SureRank Pro-gebruikers krijgen toegang tot ons ondersteuningsteam, dat 24×7 beschikbaar is, om zichtbaarheid en indexeringsproblemen te helpen detecteren voordat ze je site beïnvloeden."
 
-#: inc/api/analyzer.php:863
+#: inc/api/analyzer.php:905
 msgid "XML sitemap is accessible."
 msgstr "XML-sitemap is toegankelijk."
 
-#: inc/api/analyzer.php:864
+#: inc/api/analyzer.php:906
 msgid "The XML sitemap for this site is accessible to search engines."
 msgstr "De XML-sitemap voor deze site is toegankelijk voor zoekmachines."
 
-#: inc/api/analyzer.php:866
+#: inc/api/analyzer.php:908
 msgid "XML sitemap is missing or inaccessible."
 msgstr "XML-sitemap ontbreekt of is niet toegankelijk."
 
-#: inc/api/analyzer.php:867
+#: inc/api/analyzer.php:909
 msgid "The XML sitemap for this site is missing or cannot be accessed."
 msgstr "De XML-sitemap voor deze site ontbreekt of kan niet worden geopend."
 
-#: inc/api/analyzer.php:870
+#: inc/api/analyzer.php:912
 msgid "An XML sitemap helps search engines discover and understand the pages on your site."
 msgstr "Een XML-sitemap helpt zoekmachines om de pagina's op je site te ontdekken en te begrijpen."
 
-#: inc/api/analyzer.php:871
+#: inc/api/analyzer.php:913
 msgid "When the sitemap is missing or cannot be accessed, search engines may take longer to find new or updated pages."
 msgstr "Wanneer de sitemap ontbreekt of niet toegankelijk is, kan het langer duren voordat zoekmachines nieuwe of bijgewerkte pagina's vinden."
 
-#: inc/api/analyzer.php:872
+#: inc/api/analyzer.php:914
 msgid "Having a sitemap makes it easier for search engines to crawl your site efficiently."
 msgstr "Een sitemap hebben maakt het gemakkelijker voor zoekmachines om je site efficiënt te crawlen."
 
-#: inc/api/analyzer.php:873
+#: inc/api/analyzer.php:915
 msgid "It also helps ensure important pages are not missed during indexing."
 msgstr "Het helpt ook om ervoor te zorgen dat belangrijke pagina's niet worden gemist tijdens het indexeren."
 
-#: inc/api/analyzer.php:879
+#: inc/api/analyzer.php:921
 msgid "You can enable and manage your XML sitemap directly from SureRank."
 msgstr "Je kunt je XML-sitemap rechtstreeks vanuit SureRank inschakelen en beheren."
 
-#: inc/api/analyzer.php:883
+#: inc/api/analyzer.php:925
 msgid "Enable the XML Sitemap toggle"
 msgstr "Schakel de XML-sitemap-schakelaar in"
 
-#: inc/api/analyzer.php:884
+#: inc/api/analyzer.php:926
 msgid "Click on Regenerate Button"
 msgstr "Klik op de Regenereren-knop"
 
-#: inc/api/analyzer.php:906
+#: inc/api/analyzer.php:948
 msgid "Upgrade to SureRank Pro to unlock advanced sitemap types like Video, News, HTML, and Author sitemaps for better search visibility."
 msgstr "Upgrade naar SureRank Pro om geavanceerde sitemaptypes zoals Video, Nieuws, HTML en Auteur-sitemaps te ontgrendelen voor betere zoekzichtbaarheid."
 
@@ -9556,12 +9445,14 @@ msgstr "Fout bij het importeren van Slim SEO globale instellingen: %s"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Failed to save settings."
 msgstr "Instellingen opslaan is mislukt."
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Please try again."
 msgstr "Probeer het opnieuw."
@@ -9621,7 +9512,7 @@ msgstr "Voegt automatisch alt-tekst toe aan afbeeldingen die er een missen, met 
 msgid "Generate SEO-friendly image alt text automatically to improve accessibility and boost image search visibility."
 msgstr "Genereer automatisch SEO-vriendelijke alt-tekst voor afbeeldingen om de toegankelijkheid te verbeteren en de zichtbaarheid in de afbeeldingszoekopdracht te vergroten."
 
-#: inc/api/analyzer.php:882
+#: inc/api/analyzer.php:924
 msgid "Go to SureRank ⇾ General ⇾ Sitemaps"
 msgstr "Ga naar SureRank ⇾ Algemeen ⇾ Sitemap"
 
@@ -9697,10 +9588,6 @@ msgstr "SureRank heeft de sitemap-cache al meer dan twaalf uur niet herbouwd."
 msgid "Last successful rebuild: %s. This is still within the stale threshold; the next scheduled cron tick should update it."
 msgstr "Laatste succesvolle herbouw: %s. Dit valt nog binnen de verouderingsdrempel; de volgende geplande cron-taak zou dit moeten bijwerken."
 
-#: inc/admin/site-health.php:130
-msgid "SureRank has not rebuilt the sitemap cache in over the stale threshold."
-msgstr "SureRank heeft de sitemap-cache langer dan de verouderingsdrempel niet herbouwd."
-
 #. translators: %s: human-readable time.
 #: inc/admin/site-health.php:133
 #, php-format
@@ -9723,15 +9610,15 @@ msgstr "SureRank kan admin-ajax.php niet bereiken via een loopback-verzoek."
 msgid "This is usually caused by a security plugin renaming the admin path, a firewall blocking self-requests, or a host that disables loopbacks. SureRank automatically falls back to running rebuilds synchronously; everything still works, but each rebuild takes slightly longer. See the compatibility guide for details."
 msgstr "Dit wordt meestal veroorzaakt door een beveiligingsplugin die het admin-pad hernoemt, een firewall die zelfverzoeken blokkeert, of een host die loopbacks uitschakelt. SureRank valt automatisch terug op het synchron uitvoeren van herbouwingen; alles werkt nog steeds, maar elke herbouw duurt iets langer. Zie de compatibiliteitsgids voor details."
 
-#: inc/ajax/save-endpoints.php:87
+#: inc/ajax/save-endpoints.php:89
 msgid "Invalid post id."
 msgstr "Ongeldige bericht-id."
 
-#: inc/ajax/save-endpoints.php:117
+#: inc/ajax/save-endpoints.php:119
 msgid "Invalid term id."
 msgstr "Ongeldige term-id."
 
-#: inc/ajax/save-endpoints.php:185
+#: inc/ajax/save-endpoints.php:217
 msgid "Your session has expired. Please refresh and try again."
 msgstr "Je sessie is verlopen. Vernieuw de pagina en probeer het opnieuw."
 
@@ -9780,10 +9667,6 @@ msgid "Migration Completed"
 msgstr "Migratie voltooid"
 
 #: build/admin-dashboard/index.js:1
-msgid "Either the page does not exist or you don't have permission to access this page please contact your administrator."
-msgstr "De pagina bestaat niet of je hebt geen toestemming om deze pagina te openen. Neem contact op met je beheerder."
-
-#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Your site's search engine visibility is currently set to Hidden in"
 msgstr "De zichtbaarheid van je site voor zoekmachines is momenteel ingesteld op Verborgen in"
@@ -9793,14 +9676,17 @@ msgstr "De zichtbaarheid van je site voor zoekmachines is momenteel ingesteld op
 msgid "Site Name:"
 msgstr "Sitenaam:"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Switch image input mode"
 msgstr "Schakel afbeeldingsinvoermodus"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Switch to custom field"
 msgstr "Overschakelen naar aangepast veld"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Switch to uploader"
 msgstr "Overschakelen naar uploader"
@@ -9834,16 +9720,17 @@ msgstr "Upgrade om Afbeelding Generatie te ontgrendelen"
 msgid "Upgrade to SureRank Pro or Business and generate stunning AI-powered Open Graph images with custom branding presets for your posts and pages."
 msgstr "Upgrade naar SureRank Pro of Business en genereer verbluffende AI-gestuurde Open Graph-afbeeldingen met aangepaste branding presets voor je berichten en pagina's."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Checks are based on the published page. Refresh to get the latest results."
 msgstr "Controles zijn gebaseerd op de gepubliceerde pagina. Vernieuw om de laatste resultaten te krijgen."
 
-#: inc/admin/dashboard.php:307
+#: inc/admin/dashboard.php:327
 #: build/admin-dashboard/index.js:1
 msgid "Learn"
 msgstr "Leren"
 
-#: inc/admin/seo-popup.php:115
+#: inc/admin/seo-popup.php:160
 msgid "Click here"
 msgstr "Klik hier"
 
@@ -10130,15 +10017,15 @@ msgstr "Neem contact op met ondersteuning"
 msgid "Set up SureRank end to end with a step-by-step guide to make your site discoverable, shareable, and ready to rank."
 msgstr "Stel SureRank van begin tot eind in met een stapsgewijze handleiding om je site ontdekbaar, deelbaar en klaar om te ranken te maken."
 
-#: inc/abilities/abilities-registrar.php:99
+#: inc/abilities/abilities-registrar.php:131
 msgid "SureRank MCP Server"
 msgstr "SureRank MCP Server"
 
-#: inc/abilities/abilities-registrar.php:100
+#: inc/abilities/abilities-registrar.php:132
 msgid "SureRank MCP Server for SEO settings, metadata, and analysis workflows."
 msgstr "SureRank MCP Server voor SEO-instellingen, metadata en analysewerkstromen."
 
-#: inc/abilities/abilities-registrar.php:127
+#: inc/abilities/abilities-registrar.php:159
 msgid "SEO settings, metadata, and analysis abilities powered by SureRank."
 msgstr "SEO-instellingen, metadata en analysecapaciteiten aangedreven door SureRank."
 
@@ -10460,6 +10347,7 @@ msgid "No public URL available yet (draft or invalid object)."
 msgstr "Er is nog geen openbare URL beschikbaar (concept of ongeldig object)."
 
 #: inc/google-search-console/url-inspection.php:194
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Unable to fetch indexing status."
 msgstr "Niet mogelijk om indexeringsstatus op te halen."
@@ -10511,150 +10399,815 @@ msgid "Manage compatibility with supported third-party tools."
 msgstr "Beheer de compatibiliteit met ondersteunde externe tools."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Schema Markup"
 msgstr "Schema Markup"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Checking…"
 msgstr "Controleren…"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Not available"
 msgstr "Niet beschikbaar"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Indexed"
 msgstr "Geïndexeerd"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Crawled, not indexed"
 msgstr "Gecrawld, niet geïndexeerd"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Discovered, not indexed"
 msgstr "Ontdekt, niet geïndexeerd"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Noindex"
 msgstr "Geen index"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Not indexed"
 msgstr "Niet geïndexeerd"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Checking indexing status…"
 msgstr "Controleren indexstatus…"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Search Console quota reached. Try again later."
 msgstr "Quota van de Search Console bereikt. Probeer het later opnieuw."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "You do not have permission to view this indexing status."
 msgstr "Je hebt geen toestemming om deze indexstatus te bekijken."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Save the post as published to inspect its URL."
 msgstr "Sla de post op als gepubliceerd om de URL te inspecteren."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Connect a Search Console property to see indexing status."
 msgstr "Verbind een Search Console-eigendom om de indexstatus te zien."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "Last checked %s"
 msgstr "Laatst gecontroleerd %s"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "just now"
 msgstr "zojuist"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "%d min ago"
 msgstr "%d min geleden"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "%d h ago"
 msgstr "%d u geleden"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "%d d ago"
 msgstr "%d d geleden"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Refresh indexing status"
 msgstr "Vernieuw indexstatus"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Open Analyze tab"
 msgstr "Open het tabblad Analyseren"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Please add post title or content first to get schema recommendations."
 msgstr "Voeg eerst de posttitel of inhoud toe om schema-aanbevelingen te krijgen."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Unable to recommend schema right now. Please try again."
 msgstr "Momenteel kunnen er geen schema-aanbevelingen worden gedaan. Probeer het opnieuw."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No relevant schema recommendations found for this content."
 msgstr "Geen relevante schema-aanbevelingen gevonden voor deze inhoud."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Schema recommendation timed out. Please try again in a moment."
 msgstr "Schema-aanbeveling is verlopen. Probeer het over een moment opnieuw."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "You have reached your monthly schema recommendation limit."
 msgstr "Je hebt je maandelijkse limiet voor schema-aanbevelingen bereikt."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Schema recommendations are unavailable for your current plan."
 msgstr "Schema-aanbevelingen zijn niet beschikbaar voor je huidige plan."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Recommended for this page"
 msgstr "Aanbevolen voor deze pagina"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Refresh suggestions"
 msgstr "Vernieuw suggesties"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Companion"
 msgstr "Companion"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Dismiss"
 msgstr "Afwijzen"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Upgrade to Add"
 msgstr "Upgrade om toe te voegen"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No missing high-relevance schema found. Try adding more content context and refresh suggestions."
 msgstr "Geen ontbrekende schema's met hoge relevantie gevonden. Probeer meer inhoudscontext toe te voegen en vernieuw de suggesties."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Recommend Schema Using AI"
 msgstr "Aanbevelen Schema met AI"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Recommending…"
 msgstr "Aanbevelen…"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Already Added"
 msgstr "Al toegevoegd"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Add"
 msgstr "Toevoegen"
+
+#: inc/admin/dashboard.php:748
+#: inc/meta-variables/user.php:71
+msgid "Author Bio"
+msgstr "Auteur Bio"
+
+#: inc/admin/dashboard.php:750
+msgid "Biographical info of the author on author archives."
+msgstr "Biografische informatie van de auteur op auteur archieven."
+
+#: inc/admin/delete-data-checkbox.php:104
+msgid "Delete all SureRank data on uninstall"
+msgstr "Verwijder alle SureRank-gegevens bij de installatie."
+
+#: inc/admin/delete-data-checkbox.php:105
+msgid "Settings, schema, sitemap, post and term meta, custom tables, and scheduled tasks will be permanently removed when you delete the plugin. This cannot be undone."
+msgstr "Instellingen, schema, sitemap, post- en termmeta, aangepaste tabellen en geplande taken worden permanent verwijderd wanneer je de plugin verwijdert. Dit kan niet ongedaan worden gemaakt."
+
+#: inc/admin/delete-data-checkbox.php:211
+msgid "Insufficient permissions."
+msgstr "Onvoldoende machtigingen."
+
+#: inc/admin/site-health.php:130
+msgid "SureRank has not rebuilt the sitemap cache for longer than the stale threshold."
+msgstr "SureRank heeft de sitemap-cache langer dan de verouderingsdrempel niet opnieuw opgebouwd."
+
+#: inc/ajax/ajax.php:47
+#: inc/ajax/ajax.php:117
+msgid "Not an AJAX request."
+msgstr "Geen AJAX-verzoek."
+
+#: inc/ajax/save-endpoints.php:149
+msgid "Invalid user id."
+msgstr "Ongeldig gebruikers-id."
+
+#: inc/analyzer/seo-analyzer.php:139
+msgid "A clear and well-written title helps search engines understand your homepage and improves click-through rate by setting the right expectation."
+msgstr "Een duidelijke en goed geschreven titel helpt zoekmachines je homepage te begrijpen en verbetert de doorklikratio door de juiste verwachting te scheppen."
+
+#: inc/analyzer/seo-analyzer.php:202
+msgid "SureRank Pro helps you generate SEO titles using AI, following best practices for length, clarity, and click-through rate."
+msgstr "SureRank Pro helpt je SEO-titels te genereren met behulp van AI, volgens de beste praktijken voor lengte, duidelijkheid en doorklikratio."
+
+#: inc/analyzer/seo-analyzer.php:260
+msgid "A clear and well-written description helps search engines understand your homepage and makes your result more appealing."
+msgstr "Een duidelijke en goed geschreven beschrijving helpt zoekmachines je homepage te begrijpen en maakt je resultaat aantrekkelijker."
+
+#: inc/analyzer/seo-analyzer.php:442
+msgid "Your homepage currently contains one H1 heading."
+msgstr "Je homepage bevat momenteel één H1-kop."
+
+#: inc/analyzer/seo-analyzer.php:524
+msgid "Your homepage contains at least one H2 heading."
+msgstr "Je homepage bevat ten minste één H2-kop."
+
+#: inc/analyzer/seo-analyzer.php:873
+msgid "SureRank Pro helps you detect and fix indexing issues using an AI assistant, so your pages are visible and searchable."
+msgstr "SureRank Pro helpt je indexeringsproblemen te detecteren en op te lossen met behulp van een AI-assistent, zodat je pagina's zichtbaar en doorzoekbaar zijn."
+
+#: inc/analyzer/seo-analyzer.php:881
+#: inc/analyzer/seo-analyzer.php:897
+msgid "Your homepage is currently not indexable by search engines."
+msgstr "Je homepage is momenteel niet indexeerbaar door zoekmachines."
+
+#: inc/analyzer/seo-analyzer.php:897
+msgid "Your homepage is currently indexable by search engines."
+msgstr "Je homepage is momenteel indexeerbaar door zoekmachines."
+
+#: inc/analyzer/seo-analyzer.php:1321
+msgid "Decide whether you want to use www or non-www, then set up a redirect so all traffic goes to that version."
+msgstr "Bepaal of je www of non-www wilt gebruiken, en stel vervolgens een omleiding in zodat al het verkeer naar die versie gaat."
+
+#: inc/analyzer/seo-analyzer.php:1336
+msgid "I would like to redirect all traffic from https://www.example.com to https://example.com and use the non-www version as my main address."
+msgstr "Ik wil al het verkeer van https://www.example.com omleiden naar https://example.com en de non-www versie als mijn hoofdadres gebruiken."
+
+#: inc/analyzer/seo-analyzer.php:1349
+msgid "WWW and non-www versions are redirecting properly."
+msgstr "WWW- en non-www-versies worden correct omgeleid."
+
+#: inc/analyzer/seo-analyzer.php:1352
+msgid "WWW and non-www versions are not redirecting properly."
+msgstr "WWW- en non-www-versies worden niet correct omgeleid."
+
+#: inc/analyzer/user-analyzer.php:120
+msgid "Invalid user ID or user object."
+msgstr "Ongeldig gebruikers-ID of gebruikersobject."
+
+#: inc/api/admin.php:85
+msgid "Post id, term id or user id is required"
+msgstr "Post-id, term-id of gebruikers-id is vereist."
+
+#: inc/api/admin.php:92
+#: inc/api/user-seo.php:73
+#: inc/api/user-seo.php:121
+msgid "You are not allowed to manage SEO settings for this user."
+msgstr "Je bent niet toegestaan om SEO-instellingen voor deze gebruiker te beheren."
+
+#: inc/api/admin.php:265
+#: inc/api/post.php:175
+#: inc/api/term.php:157
+msgid "Invalid schema payload."
+msgstr "Ongeldige schema payload."
+
+#: inc/api/analyzer.php:210
+#: inc/api/analyzer.php:1829
+msgid "Invalid User ID."
+msgstr "Ongeldig gebruikers-ID."
+
+#: inc/api/analyzer.php:690
+msgid "SureRank Pro users get access to our support team, available 24×7, to help review plugin conflicts and guide you through cleanup."
+msgstr "SureRank Pro-gebruikers krijgen toegang tot ons ondersteuningsteam, dat 24×7 beschikbaar is, om te helpen bij het beoordelen van pluginconflicten en je door het opruimen te begeleiden."
+
+#: inc/api/analyzer.php:712
+msgid "Your site currently has a tagline set."
+msgstr "Je site heeft momenteel een tagline ingesteld."
+
+#: inc/api/analyzer.php:1022
+msgid "Link is ignored."
+msgstr "Link wordt genegeerd."
+
+#: inc/api/analyzer.php:1098
+msgid "Link ignored."
+msgstr "Link genegeerd."
+
+#: inc/api/analyzer.php:1127
+msgid "Link restored."
+msgstr "Link hersteld."
+
+#: inc/api/analyzer.php:1399
+msgid "You are not allowed to manage SEO checks for this user."
+msgstr "Je bent niet toegestaan om SEO-controles voor deze gebruiker te beheren."
+
+#: inc/api/analyzer.php:1544
+#: inc/api/analyzer.php:1576
+#: inc/api/analyzer.php:1608
+msgid "Robots.txt is not valid for SEO."
+msgstr "Robots.txt is niet geldig voor SEO."
+
+#: inc/api/analyzer.php:1545
+msgid "Your robots.txt is blocking search engines from crawling your entire site."
+msgstr "Je robots.txt blokkeert zoekmachines om je hele site te crawlen."
+
+#: inc/api/analyzer.php:1577
+msgid "Your robots.txt blocks resources (CSS/JS) that search engines need to render your pages."
+msgstr "Je robots.txt blokkeert bronnen (CSS/JS) die zoekmachines nodig hebben om je pagina's weer te geven."
+
+#: inc/api/analyzer.php:1609
+msgid "Your robots.txt contains rules search engines cannot understand, so those rules are ignored."
+msgstr "Je robots.txt bevat regels die zoekmachines niet kunnen begrijpen, dus die regels worden genegeerd."
+
+#: inc/api/analyzer.php:1707
+msgid "Your robots.txt is valid and does not contain rules that harm your SEO."
+msgstr "Je robots.txt is geldig en bevat geen regels die schadelijk zijn voor je SEO."
+
+#: inc/api/analyzer.php:1708
+msgid "Your robots.txt is valid for SEO."
+msgstr "Je robots.txt is geldig voor SEO."
+
+#: inc/api/analyzer.php:1709
+msgid "Robots.txt is valid."
+msgstr "Robots.txt is geldig."
+
+#: inc/api/analyzer.php:1838
+msgid "Failed to run user SEO checks."
+msgstr "Het uitvoeren van gebruikers-SEO-controles is mislukt."
+
+#: inc/api/analyzer.php:2681
+#: inc/api/analyzer.php:2705
+msgid "Type of check to delete. Can be \"post\", \"taxonomy\" or \"user\"."
+msgstr "Type controle om te verwijderen. Kan \"post\", \"taxonomy\" of \"user\" zijn."
+
+#: inc/api/headless-sitemap.php:120
+#: inc/api/headless.php:165
+msgid "The Headless REST API is disabled."
+msgstr "De Headless REST API is uitgeschakeld."
+
+#: inc/api/headless-sitemap.php:245
+msgid "The XML sitemap is disabled, so the JSON sitemap is unavailable."
+msgstr "De XML-sitemap is uitgeschakeld, dus de JSON-sitemap is niet beschikbaar."
+
+#: inc/api/headless-sitemap.php:259
+msgid "No sitemap found for the requested slug."
+msgstr "Geen sitemap gevonden voor de aangevraagde slug."
+
+#: inc/api/headless-sitemap.php:273
+msgid "The sitemap has not been generated yet. Try again shortly."
+msgstr "De sitemap is nog niet gegenereerd. Probeer het over een tijdje opnieuw."
+
+#: inc/api/headless.php:357
+msgid "No public SEO data found for the requested URL."
+msgstr "Geen openbare SEO-gegevens gevonden voor de aangevraagde URL."
+
+#: inc/api/rest-fields.php:294
+msgid "SureRank SEO metadata and schema for this resource."
+msgstr "SureRank SEO-metadata en schema voor deze bron."
+
+#: inc/api/rest-fields.php:309
+msgid "SureRank SEO head HTML for drop-in server-side rendering."
+msgstr "SureRank SEO head HTML voor server-side rendering."
+
+#: inc/api/user-seo.php:247
+msgid "No user ID provided."
+msgstr "Geen gebruikers-ID opgegeven."
+
+#: inc/api/user-seo.php:253
+msgid "No user found."
+msgstr "Geen gebruiker gevonden."
+
+#: inc/batch-process/sync-archives.php:63
+msgid "No post-type archives found for processing."
+msgstr "Geen post-type archieven gevonden voor verwerking."
+
+#: inc/batch-process/sync-archives.php:71
+msgid "Failed to encode archive sitemap JSON."
+msgstr "Mislukt om archive sitemap JSON te coderen."
+
+#. translators: %d: number of archive URLs
+#: inc/batch-process/sync-archives.php:83
+#, php-format
+msgid "Archive sitemap generated for %d post-type archives."
+msgstr "Archive sitemap gegenereerd voor %d post-type archieven."
+
+#. translators: 1: archive type label (e.g. Author), 2: archive label (e.g. author name)
+#: inc/frontend/archives-meta.php:161
+#, php-format
+msgid "%1$s: %2$s"
+msgstr "%1$s: %2$s"
+
+#: inc/google-search-console/controller.php:119
+msgid "No site URL found."
+msgstr "Geen site-URL gevonden."
+
+#: inc/google-search-console/controller.php:513
+msgid "URL parameter is required."
+msgstr "URL-parameter is vereist."
+
+#: inc/google-search-console/google-console.php:60
+msgid "Invalid credentials."
+msgstr "Ongeldige inloggegevens."
+
+#: inc/google-search-console/site-verification.php:146
+msgid "No verification token received."
+msgstr "Geen verificatietoken ontvangen."
+
+#: inc/google-search-console/site-verification.php:242
+msgid "Site verified successfully."
+msgstr "Site succesvol geverifieerd."
+
+#. translators: %d: term ID.
+#: inc/importers/rankmath/rank-math.php:78
+#, php-format
+msgid "Rank Math data detected for term %d."
+msgstr "Rank Math-gegevens gedetecteerd voor term %d."
+
+#. translators: %d: term ID.
+#: inc/importers/rankmath/rank-math.php:90
+#, php-format
+msgid "No Rank Math data found for term %d."
+msgstr "Geen Rank Math-gegevens gevonden voor term %d."
+
+#: inc/importers/rankmath/rank-math.php:166
+msgid "No Rank Math global settings found to import."
+msgstr "Geen Rank Math globale instellingen gevonden om te importeren."
+
+#: inc/importers/rankmath/rank-math.php:185
+msgid "Rank Math global settings imported successfully."
+msgstr "Rank Math globale instellingen succesvol geïmporteerd."
+
+#. translators: %s: error message.
+#: inc/importers/rankmath/rank-math.php:192
+#, php-format
+msgid "Error importing Rank Math global settings: %s"
+msgstr "Fout bij het importeren van Rank Math globale instellingen: %s"
+
+#: inc/meta-variables/post.php:78
+msgid "The permalink of the post."
+msgstr "De permalink van de post."
+
+#: inc/meta-variables/post.php:82
+msgid "Publication date of the current post/page OR specified date on date archives."
+msgstr "Publicatiedatum van de huidige post/pagina OF opgegeven datum op datumarchieven."
+
+#: inc/meta-variables/post.php:86
+msgid "Last modification date of the current post/page."
+msgstr "Laatste wijzigingsdatum van de huidige post/pagina."
+
+#: inc/meta-variables/post.php:90
+msgid "The name of the author of the current post/page."
+msgstr "De naam van de auteur van de huidige post/pagina."
+
+#: inc/meta-variables/site.php:61
+msgid "The separator character used in titles."
+msgstr "Het scheidingsteken dat in titels wordt gebruikt."
+
+#: inc/meta-variables/site.php:73
+msgid "The URL of the site."
+msgstr "De URL van de site."
+
+#: inc/meta-variables/site.php:81
+msgid "Search query (only available on search results page)."
+msgstr "Zoekopdracht (alleen beschikbaar op de zoekresultatenpagina)."
+
+#: inc/meta-variables/user.php:64
+msgid "The unique identifier for a user."
+msgstr "De unieke identificatie voor een gebruiker."
+
+#: inc/meta-variables/user.php:68
+msgid "The display name of the author."
+msgstr "De weergavenaam van de auteur."
+
+#: inc/meta-variables/user.php:72
+msgid "The biographical info of the author."
+msgstr "De biografische informatie van de auteur."
+
+#: inc/meta-variables/user.php:76
+msgid "The URL-friendly name of the author."
+msgstr "De URL-vriendelijke naam van de auteur."
+
+#: inc/meta-variables/user.php:80
+msgid "The author archive URL."
+msgstr "De auteur archief-URL."
+
+#: inc/schema/types/article.php:125
+msgid "Enter the date and time the article was first published, using the ISO 8601 format. This value is used in your site’s structured data to show when the content was originally made public."
+msgstr "Voer de datum en tijd in waarop het artikel voor het eerst is gepubliceerd, gebruikmakend van het ISO 8601-formaat. Deze waarde wordt gebruikt in de gestructureerde gegevens van je site om te laten zien wanneer de inhoud oorspronkelijk openbaar is gemaakt."
+
+#: inc/schema/types/article.php:132
+msgid "The date and time the article was last modified, in ISO 8601 format."
+msgstr "De datum en tijd waarop het artikel voor het laatst is gewijzigd, in ISO 8601-formaat."
+
+#: inc/schema/types/article.php:153
+msgid "Enter the total word count of the article's main content. This information is used in structured data to provide search engines with content length details."
+msgstr "Voer het totale aantal woorden van de hoofdinhoud van het artikel in. Deze informatie wordt gebruikt in gestructureerde gegevens om zoekmachines details over de inhouds lengte te geven."
+
+#: inc/schema/types/offer.php:480
+msgid "Unit code"
+msgstr "Eenheidscode"
+
+#: inc/schema/types/offer.php:579
+msgid "The currency of the price, or a price component when attached to PriceSpecification and its subtypes. Use standard formats: ISO 4217 currency format, e.g. \"USD\"; Ticker symbol for cryptocurrencies, e.g. \"BTC\"; well known names for Local Exchange Trading Systems (LETS) and other currency types, e.g. \"Ithaca HOUR\"."
+msgstr "De valuta van de prijs, of een prijscomponent wanneer deze is gekoppeld aan PriceSpecification en zijn subtypes. Gebruik standaardformaten: ISO 4217-valutaformaat, bijv. \"USD\"; Ticker-symbool voor cryptocurrencies, bijv. \"BTC\"; bekende namen voor Local Exchange Trading Systems (LETS) en andere valutatypes, bijv. \"Ithaca HOUR\"."
+
+#: inc/schema/types/offer.php:632
+msgid "The date after when the item is not valid. For example the end of an offer, salary period, or a period of opening hours."
+msgstr "De datum na wanneer het item niet meer geldig is. Bijvoorbeeld het einde van een aanbieding, salarisperiode of een periode van openingstijden."
+
+#: inc/schema/types/product.php:299
+msgid "Shows the total number of offers available for the product across all sellers. This information is used in your structured data to indicate offer availability."
+msgstr "Toont het totale aantal aanbiedingen dat beschikbaar is voor het product bij alle verkopers. Deze informatie wordt gebruikt in uw gestructureerde gegevens om de beschikbaarheid van aanbiedingen aan te geven."
+
+#: inc/third-party-integrations/angie.php:322
+msgid "This post is set to noindex by SureRank settings from the SEO popup."
+msgstr "Deze post is ingesteld op noindex door de SureRank-instellingen vanuit de SEO-popup."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Saving…"
+msgstr "Opslaan…"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Add valid JSON-LD markup before saving."
+msgstr "Voeg geldige JSON-LD-markup toe voordat u opslaat."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Each JSON-LD object must include an @type value."
+msgstr "Elk JSON-LD-object moet een @type-waarde bevatten."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Include an @context value such as https://schema.org."
+msgstr "Voeg een @context-waarde toe, zoals https://schema.org."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Provide a JSON-LD object or @graph payload with at least one node."
+msgstr "Geef een JSON-LD-object of @graph-payload op met ten minste één knooppunt."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Smart tags are supported only inside quoted JSON string values."
+msgstr "Slimme tags worden alleen ondersteund binnen gequote JSON-stringwaarden."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "The JSON-LD markup could not be parsed."
+msgstr "De JSON-LD-markup kon niet worden geparsed."
+
+#: build/admin-dashboard/index.js:1
+msgid "You don't have permission to perform this action. Please contact your administrator."
+msgstr "U heeft geen toestemming om deze actie uit te voeren. Neem contact op met uw beheerder."
+
+#: build/admin-dashboard/index.js:1
+msgid "Headless REST API"
+msgstr "Headless REST API"
+
+#: build/admin-dashboard/index.js:1
+msgid "Expose SureRank SEO metadata and schema for a public URL through the surerank/v1/get_head REST endpoint, for use with headless front-ends."
+msgstr "Exposeer SureRank SEO-metadata en schema voor een openbare URL via het surerank/v1/get_head REST-eindpunt, voor gebruik met headless front-ends."
+
+#: build/admin-dashboard/index.js:1
+msgid "Delete plugin data on uninstall"
+msgstr "Verwijder plugin-gegevens bij de-installatie"
+
+#: build/admin-dashboard/index.js:1
+msgid "When enabled, deleting SureRank from the Plugins screen will permanently remove all of its settings, schema, sitemap data, post and term meta, custom tables, and scheduled tasks. Disabled by default so your data is preserved across reinstalls."
+msgstr "Wanneer ingeschakeld, zal het verwijderen van SureRank van het Plugins-scherm permanent al zijn instellingen, schema, sitemapgegevens, post- en termmeta, aangepaste tabellen en geplande taken verwijderen. Standaard uitgeschakeld zodat uw gegevens behouden blijven bij herinstallaties."
+
+#: build/admin-dashboard/index.js:1
+msgid "Connect Your AI Client"
+msgstr "Verbind uw AI-client"
+
+#: build/admin-dashboard/index.js:1
+msgid "Create an Application Password"
+msgstr "Maak een applicatiewachtwoord aan"
+
+#: build/admin-dashboard/index.js:1
+msgid "Open Application Passwords"
+msgstr "Open applicatiewachtwoorden"
+
+#: build/admin-dashboard/index.js:1
+msgid "Add to your AI client:"
+msgstr "Voeg toe aan uw AI-client:"
+
+#: build/admin-dashboard/index.js:1
+msgid "Claude Code"
+msgstr "Claude-code"
+
+#: build/admin-dashboard/index.js:1
+msgid "Claude Desktop"
+msgstr "Claude Desktop"
+
+#: build/admin-dashboard/index.js:1
+msgid "Cursor"
+msgstr "Cursor"
+
+#: build/admin-dashboard/index.js:1
+msgid "VS Code"
+msgstr "VS Code"
+
+#: build/admin-dashboard/index.js:1
+msgid "ChatGPT"
+msgstr "ChatGPT"
+
+#: build/admin-dashboard/index.js:1
+msgid "go to Settings → Connectors → Add Connector, paste the endpoint URL, and use your WordPress username + Application Password."
+msgstr "ga naar Instellingen → Connectoren → Voeg Connector toe, plak de eindpunt-URL en gebruik uw WordPress-gebruikersnaam + Applicatiewachtwoord."
+
+#: build/admin-dashboard/index.js:1
+msgid "Replace \"your-application-password\" in the JSON with the password from Step 1."
+msgstr "Vervang \"your-application-password\" in de JSON door het wachtwoord van Stap 1."
+
+#: build/admin-dashboard/index.js:1
+msgid "SureRank Only"
+msgstr "Alleen SureRank"
+
+#: build/admin-dashboard/index.js:1
+msgid "Global"
+msgstr "Globaal"
+
+#: build/admin-dashboard/index.js:1
+msgid "Copy setup prompt for AI client"
+msgstr "Kopieer setup-prompt voor AI-client"
+
+#: build/admin-dashboard/index.js:1
+msgid "Prompt copied! Paste it into your AI client."
+msgstr "Prompt gekopieerd! Plak het in uw AI-client."
+
+#: build/admin-dashboard/index.js:1
+msgid "Failed to copy prompt to clipboard"
+msgstr "Kopiëren van prompt naar klembord mislukt"
+
+#: build/admin-dashboard/index.js:1
+msgid "Copy JSON config"
+msgstr "Kopieer JSON-configuratie"
+
+#: build/admin-dashboard/index.js:1
+msgid "Copied to clipboard"
+msgstr "Gekopieerd naar klembord"
+
+#: build/admin-dashboard/index.js:1
+msgid "Failed to copy to clipboard"
+msgstr "Kopiëren naar het klembord is mislukt"
+
+#: build/admin-dashboard/index.js:1
+msgid "Enable MCP"
+msgstr "Schakel MCP in"
+
+#: build/admin-dashboard/index.js:1
+msgid "Allow AI clients like Claude, ChatGPT, and Cursor to read and update your SEO settings, metadata, sitemap, and robots.txt through SureRank. When disabled, no abilities are registered and AI clients cannot connect."
+msgstr "Sta AI-clients zoals Claude, ChatGPT en Cursor toe om uw SEO-instellingen, metadata, sitemap en robots.txt te lezen en bij te werken via SureRank. Wanneer uitgeschakeld, worden er geen mogelijkheden geregistreerd en kunnen AI-clients geen verbinding maken."
+
+#: build/admin-dashboard/index.js:1
+msgid "MCP Adapter plugin not detected"
+msgstr "MCP Adapter-plugin niet gedetecteerd"
+
+#: build/admin-dashboard/index.js:1
+#, js-format
+msgid "To connect AI clients to your site, the %s plugin is required. Download the latest release from GitHub, upload it via Plugins > Add New > Upload Plugin, and activate."
+msgstr "Om AI-clients met uw site te verbinden, is de %s-plugin vereist. Download de nieuwste versie van GitHub, upload deze via Plugins > Nieuwe toevoegen > Plugin uploaden en activeer."
+
+#: build/admin-dashboard/index.js:1
+msgid "Download from GitHub"
+msgstr "Download van GitHub"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "MCP"
+msgstr "MCP"
+
+#: build/admin-dashboard/index.js:1
+msgid "Configure AI client access to SureRank through the Model Context Protocol."
+msgstr "Configureer de toegang van AI-clients tot SureRank via het Model Context Protocol."
+
+#: build/admin-dashboard/index.js:1
+msgid "Either the page does not exist or you don't have permission to access it. Please contact your administrator."
+msgstr "Of de pagina bestaat niet, of u heeft geen toestemming om deze te openen. Neem contact op met uw beheerder."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Processing items in batches. This will take some time, so please stay on the page."
+msgstr "Items worden in batches verwerkt. Dit kan enige tijd duren, dus blijf alstublieft op de pagina."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Choose how your content will appear when shared on X. This setting determines the card type — either a summary or a summary with a large image — used in the post preview."
+msgstr "Kies hoe uw inhoud eruit zal zien wanneer deze op X wordt gedeeld. Deze instelling bepaalt het kaarttype — ofwel een samenvatting of een samenvatting met een grote afbeelding — die in de postpreview wordt gebruikt."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/admin-seo-bar/index.js:1
+#: build/breakdance/index.js:1
+#: build/bricks/index.js:1
+#: build/divi/index.js:1
+#: build/elementor/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/search-console-widget/index.js:1
+#: build/seo-popup/index.js:1
+#, js-format
+msgid "%d issue needs attention."
+msgid_plural "%d issues need attention."
+msgstr[0] "%d probleem heeft aandacht nodig."
+msgstr[1] ""
+
+#: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Ignore this link"
+msgstr "Negeer deze link"
+
+#: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Failed to ignore link"
+msgstr "Link negeren is mislukt"
+
+#: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Link ignored successfully"
+msgstr "Link succesvol genegeerd"
+
+#: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+#, js-format
+msgid "Ignored links (%d)"
+msgstr "Genegeerde links (%d)"
+
+#: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Failed to restore link"
+msgstr "Link herstellen is mislukt"
+
+#: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Link restored successfully"
+msgstr "Link succesvol hersteld"
+
+#: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Restore this link"
+msgstr "Herstel deze link"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Want to unlock advanced SEO features?"
+msgstr "Wilt u geavanceerde SEO-functies ontgrendelen?"
+
+#: build/admin-onboarding/index.js:1
+msgid "Set up your site’s SEO easily — no advanced skills needed!"
+msgstr "Stel de SEO van uw site eenvoudig in — geen geavanceerde vaardigheden nodig!"
+
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Upload an image at least 600×315px. Recommended size is 1200×630px."
+msgstr "Upload een afbeelding van minimaal 600×315px. Aanbevolen grootte is 1200×630px."
+
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Checks are based on the published user. Refresh to get the latest results."
+msgstr "Controles zijn gebaseerd op de gepubliceerde gebruiker. Vernieuw om de nieuwste resultaten te krijgen."
+
+#: build/search-console-widget/index.js:1
+msgid "Build smarter meta templates for all post content"
+msgstr "Bouw slimmere meta-sjablonen voor alle postinhoud"
+
+#: build/search-console-widget/index.js:1
+msgid "Detect and fix issues before they hurt SEO"
+msgstr "Detecteer en los problemen op voordat ze SEO schaden"

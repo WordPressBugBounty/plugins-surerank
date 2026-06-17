@@ -51,7 +51,7 @@ const ImportData = () => {
 				/>
 				<p>
 					{ __(
-						'We have deducted few SEO plugins installed on your website. Select the plugin from which you want to import',
+						'We have detected a few SEO plugins installed on your website. Select the plugin from which you want to import.',
 						'surerank'
 					) }
 				</p>

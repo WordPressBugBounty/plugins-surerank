@@ -15,7 +15,7 @@ import { LEARN_MORE_AI_AUTH as LEARN_MORE_URL } from '@Global/constants';
  * schema recommendations. Reuses the shared AIAuthScreen/auth flow; on success
  * (or Back) it returns the user to the Schema tab they came from.
  *
- * @since x.x.x
+ * @since 1.9.0
  * @return {JSX.Element} The schema AI authentication screen.
  */
 const SchemaAiAuth = () => {

@@ -477,7 +477,7 @@ class Offer extends Base {
 						],
 						[
 							'id'      => 'unitCode',
-							'label'   => __( 'Unit ode', 'surerank' ),
+							'label'   => __( 'Unit code', 'surerank' ),
 							'default' => true,
 							'show'    => true,
 							'tooltip' => __( 'The unit of measurement given using the UN/CEFACT Common Code (3 characters) or a URL. Other codes than the UN/CEFACT Common Code may be used with a prefix followed by a colon.', 'surerank' ),
@@ -576,7 +576,7 @@ class Offer extends Base {
 					'label'    => __( 'Price currency', 'surerank' ),
 					'default'  => true,
 					'show'     => true,
-					'tooltip'  => __( 'The currency of the price, or a price component when attached to PriceSpecification and its subtypes. Use standard formats: ISO 4217 currency format, e.g. "USD"; Ticker symbol for cryptocurrencies, e.g. "BTC"; well known names for Local Exchange Trading Systems (LETS) and other currency types, e.g. "Ithaca HOUR". ', 'surerank' ),
+					'tooltip'  => __( 'The currency of the price, or a price component when attached to PriceSpecification and its subtypes. Use standard formats: ISO 4217 currency format, e.g. "USD"; Ticker symbol for cryptocurrencies, e.g. "BTC"; well known names for Local Exchange Trading Systems (LETS) and other currency types, e.g. "Ithaca HOUR".', 'surerank' ),
 					'required' => true,
 					'std'      => 'USD',
 					'width'    => '1/2',
@@ -629,7 +629,7 @@ class Offer extends Base {
 					'label'   => __( 'Valid through', 'surerank' ),
 					'default' => true,
 					'show'    => true,
-					'tooltip' => __( 'The date after when the item is not valid. For example the end of an offer, salary period, or a period of opening hours. ', 'surerank' ),
+					'tooltip' => __( 'The date after when the item is not valid. For example the end of an offer, salary period, or a period of opening hours.', 'surerank' ),
 					'width'   => '1/2',
 				],
 			]

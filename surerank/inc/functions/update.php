@@ -52,6 +52,21 @@ class Update {
 	}
 
 	/**
+	 * Update user meta
+	 * This function will update user meta
+	 *
+	 * @param int   $user_id    User ID.
+	 * @param mixed $meta_key   Meta key.
+	 * @param mixed $meta_value Meta value.
+	 *
+	 * @since 1.9.0
+	 * @return bool|int
+	 */
+	public static function user_meta( $user_id, $meta_key, $meta_value ) {
+		return update_user_meta( $user_id, $meta_key, $meta_value );
+	}
+
+	/**
 	 * Update the option.
 	 *
 	 * @param string $option_name Option name.
@@ -112,6 +127,25 @@ class Update {
 
 		self::term_meta( $term_id, SURERANK_SEO_CHECKS, $final_seo_checks );
 		self::term_meta( $term_id, SURERANK_SEO_CHECKS_LAST_UPDATED, time() );
+		return true;
+	}
+
+	/**
+	 * Update SEO Checks for users.
+	 *
+	 * @param int                  $user_id User ID.
+	 * @param array<string, mixed> $seo_checks SEO Checks.
+	 * @since 1.9.0
+	 * @return bool
+	 */
+	public static function user_seo_checks( $user_id, $seo_checks ) {
+		$existing_seo_checks = get_user_meta( $user_id, SURERANK_SEO_CHECKS, true );
+		$existing_seo_checks = is_array( $existing_seo_checks ) ? $existing_seo_checks : [];
+
+		$final_seo_checks = array_filter( array_merge( $existing_seo_checks, $seo_checks ) );
+
+		self::user_meta( $user_id, SURERANK_SEO_CHECKS, $final_seo_checks );
+		self::user_meta( $user_id, SURERANK_SEO_CHECKS_LAST_UPDATED, time() );
 		return true;
 	}
 }

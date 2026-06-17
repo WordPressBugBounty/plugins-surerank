@@ -23,6 +23,7 @@ import {
 	isAvadaBuilder,
 	isFrontend,
 	isListingPage,
+	isUserContext,
 } from '@SeoPopup/components/page-seo-checks/analyzer/utils/page-builder';
 import { calculateCheckStatus } from '@SeoPopup/utils/calculate-check-status';
 
@@ -57,6 +58,8 @@ const ChecksComponent = ( { type } ) => {
 
 const Analyze = () => {
 	const isPageBuilder = isPageBuilderActive();
+	const isTaxonomyFrontend =
+		isFrontend() && surerank_seo_popup?.is_taxonomy === '1';
 
 	// Get entire pageSeoChecks state and extract what we need
 	const pageSeoChecks = useSelect(
@@ -212,11 +215,10 @@ const Analyze = () => {
 
 	return (
 		<div className="space-y-2">
-			{ /* Show save message for Elementor and Bricks */ }
+			{ /* Show save message for page builder editors (not frontend viewer) */ }
 			{ ( isElementorBuilder() ||
 				isBricksBuilder() ||
-				isBreakdanceBuilder() ||
-				isFrontend() ) && (
+				isBreakdanceBuilder() ) && (
 				<RefreshAlert
 					message={ __(
 						'Please save changes in the editor before refreshing the checks.',
@@ -224,8 +226,9 @@ const Analyze = () => {
 					) }
 				/>
 			) }
-			{ /* Show refresh button for listing pages */ }
-			{ isListingPage() && (
+			{ /* Frontend viewer and listing pages: checks reflect the published page */ }
+			{ ( ( isFrontend() && ! isTaxonomyFrontend ) ||
+				isListingPage() ) && (
 				<RefreshAlert
 					message={ __(
 						'Checks are based on the published page. Refresh to get the latest results.',
@@ -233,8 +236,17 @@ const Analyze = () => {
 					) }
 				/>
 			) }
+			{ /* Show save + refresh message for user/author profile screens */ }
+			{ isUserContext() && ! isListingPage() && (
+				<RefreshAlert
+					message={ __(
+						'Checks are based on the published user. Refresh to get the latest results.',
+						'surerank'
+					) }
+				/>
+			) }
 			{ /* Render RefreshButtonPortal at top level so it's always available for page builders */ }
-			{ isPageBuilder && (
+			{ isPageBuilder && ! isTaxonomyFrontend && (
 				<RefreshButtonPortal
 					isRefreshing={ isRefreshing }
 					isChecking={ pageSeoChecks.isCheckingLinks }

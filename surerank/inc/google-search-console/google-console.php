@@ -57,7 +57,7 @@ class GoogleConsole {
 		if ( ! Auth::get_instance()->auth_check() ) {
 			wp_send_json_error(
 				[
-					'message' => __( 'Invalid credentials', 'surerank' ),
+					'message' => __( 'Invalid credentials.', 'surerank' ),
 				]
 			);
 		}

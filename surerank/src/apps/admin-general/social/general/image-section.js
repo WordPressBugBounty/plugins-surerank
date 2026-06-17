@@ -149,7 +149,7 @@ const ImageTab = memo( () => {
 								rel="noopener noreferrer"
 								color="help"
 							>
-								{ __( 'Learn more', 'surerank' ) }
+								{ __( 'Learn More', 'surerank' ) }
 							</Text>
 						</Text>
 						<MediaPreview

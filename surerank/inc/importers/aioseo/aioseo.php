@@ -587,6 +587,19 @@ class Aioseo extends BaseImporter {
 			$imported                                     = true;
 		}
 
+		// AIOSEO stores keyphrases as JSON; the primary lives in focus.keyphrase.
+		if ( ! empty( $this->source_meta['keyphrases'] ) && is_string( $this->source_meta['keyphrases'] ) ) {
+			$keyphrases    = json_decode( $this->source_meta['keyphrases'], true );
+			$focus_keyword = is_array( $keyphrases ) && isset( $keyphrases['focus']['keyphrase'] ) && is_string( $keyphrases['focus']['keyphrase'] )
+				? trim( $keyphrases['focus']['keyphrase'] )
+				: '';
+
+			if ( '' !== $focus_keyword ) {
+				$this->default_surerank_meta['focus_keyword'] = $focus_keyword;
+				$imported                                     = true;
+			}
+		}
+
 		$message = $imported
 			/* translators: 1: type (post/term), 2: ID */
 			? __( 'General settings imported for %1$s %2$d.', 'surerank' )

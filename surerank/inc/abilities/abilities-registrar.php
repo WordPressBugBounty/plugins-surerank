@@ -21,6 +21,7 @@ use SureRank\Inc\Abilities\Settings\Get_Sitemap_Settings;
 use SureRank\Inc\Abilities\Settings\Update_Global_Settings;
 use SureRank\Inc\Abilities\Settings\Update_Robots_Txt;
 use SureRank\Inc\Abilities\Settings\Update_Sitemap_Settings;
+use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Traits\Get_Instance;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -43,12 +44,43 @@ class Abilities_Registrar {
 			return;
 		}
 
+		// Single admin toggle (enable_mcp) gates both the abilities and the MCP server.
+		add_filter( 'surerank_abilities_api_enabled', [ $this, 'is_mcp_enabled' ] );
+		add_filter( 'surerank_mcp_server_enabled', [ $this, 'is_mcp_enabled' ] );
+
 		add_action( 'wp_abilities_api_categories_init', [ $this, 'register_category' ] );
 		add_action( 'wp_abilities_api_init', [ $this, 'register_abilities' ] );
 
 		if ( self::mcp_adapter_enabled() ) {
 			add_action( 'mcp_adapter_init', [ $this, 'register_mcp_server' ] );
 		}
+	}
+
+	/**
+	 * Whether the MCP integration is enabled via the admin setting.
+	 *
+	 * Used as the callback for the `surerank_abilities_api_enabled` and
+	 * `surerank_mcp_server_enabled` filters so a single toggle controls both the
+	 * abilities registration and the MCP server endpoint.
+	 *
+	 * @since 1.9.0
+	 * @return bool
+	 */
+	public function is_mcp_enabled() {
+		return (bool) Settings::get( 'enable_mcp' );
+	}
+
+	/**
+	 * Whether the MCP Adapter plugin is available.
+	 *
+	 * Supports both the current `WordPress/mcp-adapter` plugin (`McpAdapter`) and
+	 * the deprecated `Automattic/wordpress-mcp` plugin (`Plugin`).
+	 *
+	 * @since 1.9.0
+	 * @return bool
+	 */
+	public static function is_adapter_available() {
+		return class_exists( 'WP\\MCP\\Core\\McpAdapter' ) || class_exists( 'WP\\MCP\\Plugin' );
 	}
 
 	/**
@@ -59,7 +91,7 @@ class Abilities_Registrar {
 	 */
 	public static function mcp_adapter_enabled() {
 		return function_exists( 'wp_register_ability' ) &&
-			class_exists( 'WP\\MCP\\Plugin' ) &&
+			self::is_adapter_available() &&
 			(bool) apply_filters( 'surerank_mcp_server_enabled', true );
 	}
 

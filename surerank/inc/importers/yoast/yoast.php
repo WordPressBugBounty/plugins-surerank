@@ -212,6 +212,7 @@ class Yoast extends BaseImporter {
 			'_yoast_wpseo_title'     => [ 'title', 'page_title' ],
 			'_yoast_wpseo_metadesc'  => [ 'metadesc', 'page_description' ],
 			'_yoast_wpseo_canonical' => [ '', 'canonical_url' ],
+			'_yoast_wpseo_focuskw'   => [ '', 'focus_keyword' ],
 		];
 
 		$imported = $this->process_meta_mapping( $mapping );
@@ -240,6 +241,7 @@ class Yoast extends BaseImporter {
 			'wpseo_metadesc'  => [ 'metadesc-tax', 'page_description' ],
 			'wpseo_desc'      => [ 'metadesc-tax', 'page_description' ],
 			'wpseo_canonical' => [ '', 'canonical_url' ],
+			'wpseo_focuskw'   => [ '', 'focus_keyword' ],
 		];
 
 		$imported = $this->process_meta_mapping( $mapping );

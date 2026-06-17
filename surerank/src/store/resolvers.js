@@ -19,17 +19,21 @@ export function* getCurrentPostIgnoredList() {
 		state.pageSeoChecks?.postId ||
 		state.variables?.post?.ID?.value ||
 		state.variables?.term?.ID?.value ||
+		state.variables?.user?.ID?.value ||
 		window?.surerank_seo_popup?.post_id ||
 		window?.surerank_seo_popup?.term_id ||
+		window?.surerank_seo_popup?.user_id ||
 		window?.surerank_globals?.post_id ||
 		window?.surerank_globals?.term_id;
 
 	// Determine check type from multiple sources
-	const checkType =
-		state.pageSeoChecks?.checkType ||
-		( window?.surerank_seo_popup?.is_taxonomy === '1'
-			? 'taxonomy'
-			: 'post' );
+	let fallbackCheckType = 'post';
+	if ( window?.surerank_seo_popup?.is_user ) {
+		fallbackCheckType = 'user';
+	} else if ( window?.surerank_seo_popup?.is_taxonomy === '1' ) {
+		fallbackCheckType = 'taxonomy';
+	}
+	const checkType = state.pageSeoChecks?.checkType || fallbackCheckType;
 
 	// If we don't yet have a postId or checkType, defer resolution.
 	if ( ! postId || ! checkType ) {
@@ -95,11 +99,15 @@ export function* fetchSeoBarChecks( ids, type, forceRefresh = false ) {
 		return;
 	}
 
-	const isTaxonomy = type === 'taxonomy';
-	const endpoint = isTaxonomy
-		? '/surerank/v1/checks/taxonomy'
-		: '/surerank/v1/checks/page';
-	const queryArg = isTaxonomy ? 'term_ids' : 'post_ids';
+	let endpoint = '/surerank/v1/checks/page';
+	let queryArg = 'post_ids';
+	if ( type === 'taxonomy' ) {
+		endpoint = '/surerank/v1/checks/taxonomy';
+		queryArg = 'term_ids';
+	} else if ( type === 'user' ) {
+		endpoint = '/surerank/v1/checks/user';
+		queryArg = 'user_ids';
+	}
 	const cacheBuster = forceRefresh ? `&_t=${ forceRefresh }` : '';
 
 	try {

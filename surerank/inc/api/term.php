@@ -142,6 +142,23 @@ class Term extends Api_Base {
 	 * @since 1.x.x
 	 */
 	public static function save_term_seo_meta( int $term_id, array $data ): array {
+		if ( isset( $data['schemas'] ) ) {
+			$validation = apply_filters(
+				'surerank_validate_schemas_payload',
+				[
+					'valid'   => true,
+					'message' => '',
+				],
+				$data['schemas']
+			);
+			if ( is_array( $validation ) && isset( $validation['valid'] ) && ! $validation['valid'] ) {
+				return [
+					'success' => false,
+					'message' => $validation['message'] ?? __( 'Invalid schema payload.', 'surerank' ),
+				];
+			}
+		}
+
 		self::update_term_meta_common( $term_id, $data );
 
 		$check_result = self::get_instance()->run_checks( $term_id );

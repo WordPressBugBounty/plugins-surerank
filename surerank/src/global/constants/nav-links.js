@@ -335,6 +335,12 @@ export const getNavLinks = () => {
 					migratable: false,
 				},
 				{
+					path: '/tools/mcp',
+					label: __( 'MCP', 'surerank' ),
+					icon: Bot,
+					migratable: false,
+				},
+				{
 					path: '/tools/role-manager',
 					label: __( 'Role Manager', 'surerank' ),
 					icon: Users,

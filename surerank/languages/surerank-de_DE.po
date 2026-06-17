@@ -15,10 +15,10 @@ msgstr ""
 
 #. Author of the plugin
 #: surerank.php
-#: inc/abilities/abilities-registrar.php:126
-#: inc/admin/dashboard.php:249
-#: inc/admin/dashboard.php:250
-#: inc/admin/seo-popup.php:95
+#: inc/abilities/abilities-registrar.php:158
+#: inc/admin/dashboard.php:269
+#: inc/admin/dashboard.php:270
+#: inc/admin/seo-popup.php:140
 #: inc/nps-notice.php:95
 msgid "SureRank"
 msgstr "SureRank"
@@ -33,26 +33,28 @@ msgstr "https://surerank.com"
 msgid "https://surerank.com/"
 msgstr "https://surerank.com/"
 
-#: inc/admin/dashboard.php:276
+#: inc/admin/dashboard.php:296
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Dashboard"
 msgstr "Dashboard"
 
-#: inc/admin/dashboard.php:280
+#: inc/admin/dashboard.php:300
 #: inc/analyzer/seo-analyzer.php:165
 #: inc/analyzer/seo-analyzer.php:288
 #: inc/schema/types/organization.php:678
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "General"
 msgstr "Allgemein"
 
-#: inc/admin/dashboard.php:284
+#: inc/admin/dashboard.php:304
 #: inc/analyzer/seo-analyzer.php:851
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Advanced"
 msgstr "Erweitert"
@@ -61,11 +63,6 @@ msgstr "Erweitert"
 #: inc/admin/onboarding.php:39
 msgid "Onboarding"
 msgstr "Onboarding"
-
-#: inc/ajax/ajax.php:47
-#: inc/ajax/ajax.php:117
-msgid "Not an ajax request."
-msgstr "Keine Ajax-Anfrage."
 
 #: inc/ajax/ajax.php:57
 msgid "You do not have permission to activate plugins."
@@ -102,6 +99,7 @@ msgstr "Fehler beim Parsen von HTML."
 
 #: inc/analyzer/post-analyzer.php:176
 #: inc/analyzer/term-analyzer.php:148
+#: inc/analyzer/user-analyzer.php:145
 msgid "Failed to update SEO checks"
 msgstr "Fehler beim Aktualisieren der SEO-Prüfungen"
 
@@ -115,11 +113,13 @@ msgstr "Keine Links auf der Seite gefunden."
 
 #: inc/analyzer/post-analyzer.php:536
 #: inc/analyzer/term-analyzer.php:188
+#: inc/analyzer/user-analyzer.php:187
 msgid "No canonical URL provided."
 msgstr "Keine kanonische URL angegeben."
 
 #: inc/analyzer/post-analyzer.php:545
 #: inc/analyzer/term-analyzer.php:196
+#: inc/analyzer/user-analyzer.php:195
 msgid "No permalink provided."
 msgstr "Kein Permalink angegeben."
 
@@ -170,6 +170,7 @@ msgstr "Das kanonische Tag ist auf der Startseite nicht vorhanden."
 msgid "Invalid URL."
 msgstr "Ungültige URL."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "Search engine title exceeds %1$d characters."
@@ -179,6 +180,7 @@ msgstr "Der Titel für Suchmaschinen überschreitet %1$d Zeichen."
 msgid "Search engine title is present and under 60 characters."
 msgstr "Der Titel für Suchmaschinen ist vorhanden und unter 60 Zeichen."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "Search engine description exceeds %1$d characters."
@@ -201,36 +203,32 @@ msgstr "Die Beschreibung für die Suchmaschine der Seite ist: \"%s\""
 msgid "No URL provided."
 msgstr "Keine URL angegeben."
 
-#: inc/api/admin.php:83
-msgid "Post id or term id is required"
-msgstr "Post-ID oder Term-ID ist erforderlich"
-
-#: inc/api/admin.php:227
+#: inc/api/admin.php:244
 msgid "No data found"
 msgstr "Keine Daten gefunden"
 
-#: inc/api/admin.php:251
+#: inc/api/admin.php:286
 msgid "Settings updated"
 msgstr "Einstellungen aktualisiert"
 
-#: inc/api/analyzer.php:504
+#: inc/api/analyzer.php:581
 msgid "Google Search Console is connected."
 msgstr "Google Search Console ist verbunden."
 
-#: inc/api/analyzer.php:504
+#: inc/api/analyzer.php:581
 msgid "Google Search Console is not connected."
 msgstr "Google Search Console ist nicht verbunden."
 
-#: inc/api/analyzer.php:971
+#: inc/api/analyzer.php:1013
 msgid "Post not found"
 msgstr "Beitrag nicht gefunden"
 
-#: inc/api/analyzer.php:2022
-#: inc/api/analyzer.php:2045
+#: inc/api/analyzer.php:2878
+#: inc/api/analyzer.php:2901
 msgid "Link is broken"
 msgstr "Link ist defekt"
 
-#: inc/api/analyzer.php:988
+#: inc/api/analyzer.php:1041
 msgid "Link is not broken"
 msgstr "Link ist nicht defekt"
 
@@ -265,70 +263,65 @@ msgstr "Einstellungen erfolgreich aktualisiert"
 msgid "Failed to update settings"
 msgstr "Fehler beim Aktualisieren der Einstellungen"
 
-#: inc/api/post.php:170
-#: inc/api/term.php:151
+#: inc/api/post.php:187
+#: inc/api/term.php:168
+#: inc/api/user-seo.php:201
 msgid "Error while running SEO Checks."
 msgstr "Fehler beim Ausführen der SEO-Überprüfungen."
 
-#: inc/api/post.php:180
-#: inc/api/term.php:161
+#: inc/api/post.php:197
+#: inc/api/term.php:178
+#: inc/api/user-seo.php:211
 msgid "Data updated"
 msgstr "Daten aktualisiert"
 
 #: inc/abilities/content/list-content-types.php:88
-#: inc/api/post.php:548
+#: inc/api/post.php:565
 msgid "Author pages"
 msgstr "Autoren-Seiten"
 
 #: inc/abilities/content/list-content-types.php:89
-#: inc/api/post.php:552
+#: inc/api/post.php:569
 msgid "Date archives"
 msgstr "Datumsarchive"
 
 #: inc/abilities/content/list-content-types.php:90
-#: inc/api/post.php:555
+#: inc/api/post.php:572
 msgid "Search pages"
 msgstr "Suchseiten"
 
-#: inc/api/post.php:297
+#: inc/api/post.php:314
 msgid "No post ID provided."
 msgstr "Keine Beitrags-ID angegeben."
 
-#: inc/api/post.php:303
+#: inc/api/post.php:320
 msgid "No post found."
 msgstr "Kein Beitrag gefunden."
 
-#: inc/api/term.php:197
+#: inc/api/term.php:214
 msgid "No term ID provided."
 msgstr "Keine Begriff-ID angegeben."
 
-#: inc/api/term.php:203
+#: inc/api/term.php:220
 msgid "No term found."
 msgstr "Kein Begriff gefunden."
-
-#: inc/google-search-console/controller.php:119
-msgid "No site URL found"
-msgstr "Keine Website-URL gefunden"
 
 #: inc/google-search-console/controller.php:150
 msgid "No data found for the selected date range."
 msgstr "Keine Daten für den ausgewählten Datumsbereich gefunden."
 
-#: inc/google-search-console/google-console.php:60
-msgid "Invalid credentials"
-msgstr "Ungültige Anmeldeinformationen"
-
 #: inc/google-search-console/google-console.php:104
 #: inc/google-search-console/site-verification.php:60
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Unknown error"
 msgstr "Unbekannter Fehler"
 
-#: inc/frontend/description.php:189
+#: inc/frontend/description.php:206
 msgid "Welcome to "
 msgstr "Willkommen bei"
 
-#: inc/frontend/description.php:193
+#: inc/frontend/description.php:210
 msgid "Latest posts from "
 msgstr "Neueste Beiträge von"
 
@@ -399,6 +392,7 @@ msgstr "- Seite %1$s von %2$s"
 
 #: inc/meta-variables/post.php:61
 #: inc/meta-variables/term.php:58
+#: inc/meta-variables/user.php:63
 msgid "ID"
 msgstr "ID"
 
@@ -406,14 +400,14 @@ msgstr "ID"
 msgid "The unique identifier for a post."
 msgstr "Die eindeutige Kennung für einen Beitrag."
 
-#: inc/admin/dashboard.php:648
+#: inc/admin/dashboard.php:668
 #: inc/meta-variables/post.php:65
 #: inc/schema/variables.php:83
 #: build/admin-dashboard/index.js:1
 msgid "Post Title"
 msgstr "Beitragstitel"
 
-#: inc/admin/dashboard.php:650
+#: inc/admin/dashboard.php:670
 #: inc/meta-variables/post.php:66
 msgid "The title of the post."
 msgstr "Der Titel des Beitrags."
@@ -422,7 +416,7 @@ msgstr "Der Titel des Beitrags."
 msgid "Excerpt"
 msgstr "Auszug"
 
-#: inc/admin/dashboard.php:655
+#: inc/admin/dashboard.php:675
 #: inc/meta-variables/post.php:70
 msgid "The excerpt of the post."
 msgstr "Der Auszug des Beitrags."
@@ -431,53 +425,41 @@ msgstr "Der Auszug des Beitrags."
 msgid "Content"
 msgstr "Inhalt"
 
-#: inc/admin/dashboard.php:660
+#: inc/admin/dashboard.php:680
 #: inc/meta-variables/post.php:74
 msgid "The content of the post."
 msgstr "Der Inhalt des Beitrags."
 
 #: inc/meta-variables/post.php:77
 #: inc/meta-variables/term.php:74
+#: inc/meta-variables/user.php:79
 msgid "Permalink"
 msgstr "Permalink"
 
-#: inc/meta-variables/post.php:78
-msgid "The permalink of the site."
-msgstr "Der Permalink der Seite."
-
 #: inc/meta-variables/site.php:60
-#: inc/meta-variables/site.php:61
 #: build/admin-dashboard/index.js:1
 msgid "Separator"
 msgstr "Trennzeichen"
 
-#: inc/api/analyzer.php:634
+#: inc/api/analyzer.php:711
 #: inc/meta-variables/site.php:64
 msgid "Site Tagline"
 msgstr "Seiten-Tagline"
 
-#: inc/admin/dashboard.php:640
+#: inc/admin/dashboard.php:660
 #: inc/meta-variables/site.php:65
 msgid "The tagline of the site."
 msgstr "Die Tagline der Seite."
 
-#: inc/admin/dashboard.php:633
+#: inc/admin/dashboard.php:653
 #: inc/meta-variables/site.php:68
 #: build/admin-dashboard/index.js:1
 msgid "Site Name"
 msgstr "Seitenname"
 
-#: inc/meta-variables/site.php:69
-msgid "The blog info of the site."
-msgstr "Die Blog-Informationen der Seite."
-
 #: inc/meta-variables/site.php:72
 msgid "Site Address"
 msgstr "Seitenadresse"
-
-#: inc/meta-variables/site.php:73
-msgid "The URL of the Site"
-msgstr "Die URL der Seite"
 
 #: inc/meta-variables/site.php:76
 #: build/admin-dashboard/index.js:1
@@ -497,7 +479,7 @@ msgstr "Die eindeutige Kennung für einen Begriff."
 msgid "Term Name"
 msgstr "Begriffname"
 
-#: inc/admin/dashboard.php:645
+#: inc/admin/dashboard.php:665
 #: inc/meta-variables/term.php:63
 msgid "The name of the term."
 msgstr "Der Name des Begriffs."
@@ -511,7 +493,7 @@ msgstr "Der Name des Begriffs."
 msgid "Description"
 msgstr "Beschreibung"
 
-#: inc/admin/dashboard.php:665
+#: inc/admin/dashboard.php:685
 #: inc/meta-variables/term.php:67
 msgid "The description of the term."
 msgstr "Die Beschreibung des Begriffs."
@@ -703,7 +685,7 @@ msgid "If your video has important segments, specify them here"
 msgstr "Wenn Ihr Video wichtige Segmente hat, geben Sie diese hier an"
 
 #: inc/schema/properties.php:367
-#: inc/schema/types/article.php:199
+#: inc/schema/types/article.php:198
 msgid "Part"
 msgstr "Teil"
 
@@ -862,8 +844,9 @@ msgstr "Bewertung"
 msgid "Reviews of the item"
 msgstr "Bewertungen des Artikels"
 
+#: inc/frontend/archives-meta.php:130
 #: inc/schema/properties.php:603
-#: inc/schema/types/article.php:182
+#: inc/schema/types/article.php:181
 #: inc/schema/types/web-page.php:95
 #: inc/schema/types/web-site.php:85
 msgid "Author"
@@ -914,6 +897,7 @@ msgstr "Ein String oder Text, der die Maßeinheit angibt."
 msgid "Hour"
 msgstr "Stunde"
 
+#: inc/frontend/archives-meta.php:133
 #: inc/schema/properties.php:709
 msgid "Day"
 msgstr "Tag"
@@ -922,10 +906,12 @@ msgstr "Tag"
 msgid "Week"
 msgstr "Woche"
 
+#: inc/frontend/archives-meta.php:136
 #: inc/schema/properties.php:711
 msgid "Month"
 msgstr "Monat"
 
+#: inc/frontend/archives-meta.php:139
 #: inc/schema/properties.php:712
 msgid "Year"
 msgstr "Jahr"
@@ -1147,11 +1133,12 @@ msgstr "Geben Sie Ihrem Schema einen Namen, um es später zu identifizieren. Die
 
 #: inc/schema/types/article.php:82
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Schema Type"
 msgstr "Schema-Typ"
 
-#: inc/schema/types/article.php:268
+#: inc/schema/types/article.php:267
 msgid "Article"
 msgstr "Artikel"
 
@@ -1171,14 +1158,6 @@ msgstr "Geben Sie eine prägnante und beschreibende Überschrift für den Artike
 msgid "Provide a short summary of the article’s content. This description is used in your site’s structured data to help search engines understand what the article is about."
 msgstr "Geben Sie eine kurze Zusammenfassung des Inhalts des Artikels an. Diese Beschreibung wird in den strukturierten Daten Ihrer Website verwendet, um Suchmaschinen zu helfen, zu verstehen, worum es in dem Artikel geht."
 
-#: inc/schema/types/article.php:125
-msgid "Enter the date and time the article was first published, using the ISO 8601 format.  This value is used in your site’s structured data to show when the content was originally made public."
-msgstr "Geben Sie das Datum und die Uhrzeit an, zu der der Artikel erstmals veröffentlicht wurde, im ISO 8601-Format. Dieser Wert wird in den strukturierten Daten Ihrer Website verwendet, um zu zeigen, wann der Inhalt ursprünglich veröffentlicht wurde."
-
-#: inc/schema/types/article.php:132
-msgid "The date and time the article was first published, in ISO 8601 format"
-msgstr "Das Datum und die Uhrzeit, zu der der Artikel erstmals veröffentlicht wurde, im ISO 8601-Format"
-
 #: inc/schema/types/article.php:137
 msgid "Comment count"
 msgstr "Kommentaranzahl"
@@ -1191,78 +1170,78 @@ msgstr "Fügen Sie die Gesamtzahl der Kommentare hinzu, die der Artikel erhalten
 msgid "Word count"
 msgstr "Wortanzahl"
 
-#: inc/schema/types/article.php:161
+#: inc/schema/types/article.php:160
 #: inc/schema/types/organization.php:134
 #: build/admin-dashboard/index.js:1
 msgid "Keywords"
 msgstr "Schlüsselwörter"
 
-#: inc/schema/types/article.php:167
+#: inc/schema/types/article.php:166
 msgid "List relevant tags or keywords that describe the article, separated by commas. These keywords are used in structured data to help categorize and improve content discoverability."
 msgstr "Listen Sie relevante Tags oder Schlüsselwörter auf, die den Artikel beschreiben, getrennt durch Kommas. Diese Schlüsselwörter werden in strukturierten Daten verwendet, um die Kategorisierung zu unterstützen und die Auffindbarkeit des Inhalts zu verbessern."
 
-#: inc/schema/types/article.php:171
+#: inc/schema/types/article.php:170
 msgid "Sections"
 msgstr "Abschnitte"
 
-#: inc/schema/types/article.php:177
+#: inc/schema/types/article.php:176
 msgid "Specify the section or category the article belongs to, such as Sports, Lifestyle, or Business. This is included in structured data to help search engines organize content by topic."
 msgstr "Geben Sie den Abschnitt oder die Kategorie an, zu der der Artikel gehört, z. B. Sport, Lifestyle oder Wirtschaft. Dies wird in strukturierten Daten enthalten, um Suchmaschinen zu helfen, Inhalte nach Thema zu organisieren."
 
-#: inc/schema/types/article.php:185
+#: inc/schema/types/article.php:184
 msgid "Specify the name of the person who wrote the article. This author information will be included in the structured data to attribute the content correctly."
 msgstr "Geben Sie den Namen der Person an, die den Artikel geschrieben hat. Diese Autoreninformationen werden in den strukturierten Daten enthalten sein, um den Inhalt korrekt zuzuordnen."
 
-#: inc/schema/types/article.php:193
+#: inc/schema/types/article.php:192
 msgid "Subscription and pay-walled content"
 msgstr "Abonnement- und kostenpflichtige Inhalte"
 
-#: inc/schema/types/article.php:197
+#: inc/schema/types/article.php:196
 msgid "Indicates the content that is part of this item."
 msgstr "Gibt den Inhalt an, der Teil dieses Elements ist."
 
-#: inc/schema/types/article.php:212
+#: inc/schema/types/article.php:211
 msgid "Is accessible for free?"
 msgstr "Ist es kostenlos zugänglich?"
 
-#: inc/schema/types/article.php:215
+#: inc/schema/types/article.php:214
 msgid "Whether the dataset is accessible without payment."
 msgstr "Ob der Datensatz ohne Zahlung zugänglich ist."
 
 #: inc/admin/bulk-edit.php:72
 #: inc/admin/bulk-edit.php:80
 #: inc/admin/bulk-edit.php:88
-#: inc/schema/types/article.php:219
+#: inc/schema/types/article.php:218
 msgid "Yes"
 msgstr "Ja"
 
 #: inc/admin/bulk-edit.php:73
 #: inc/admin/bulk-edit.php:81
 #: inc/admin/bulk-edit.php:89
-#: inc/schema/types/article.php:220
+#: inc/schema/types/article.php:219
 msgid "No"
 msgstr "Nein"
 
-#: inc/schema/types/article.php:227
+#: inc/schema/types/article.php:226
 msgid "CSS selector"
 msgstr "CSS-Selektor"
 
-#: inc/schema/types/article.php:230
+#: inc/schema/types/article.php:229
 msgid "Class name around each pay-walled section of your page."
 msgstr "Klassenname um jeden kostenpflichtigen Abschnitt Ihrer Seite."
 
-#: inc/schema/types/article.php:238
+#: inc/schema/types/article.php:237
 #: inc/schema/types/web-page.php:168
 msgid "Is part of"
 msgstr "Ist Teil von"
 
-#: inc/schema/types/article.php:247
+#: inc/schema/types/article.php:246
 #: inc/schema/types/web-page.php:177
 #: inc/schema/types/web-site.php:128
 msgid "Publisher"
 msgstr "Verleger"
 
-#: inc/schema/types/article.php:250
+#: inc/schema/types/article.php:249
 msgid "Enter the name of the individual or organization that published the article. This is included in the structured data to credit the source of the content."
 msgstr "Geben Sie den Namen der Person oder Organisation ein, die den Artikel veröffentlicht hat. Dies wird in den strukturierten Daten enthalten, um die Quelle des Inhalts zu würdigen."
 
@@ -1704,10 +1683,6 @@ msgstr "Das Produkt oder die Dienstleistung, auf die sich dies bezieht."
 msgid "Please create a Product or Service and link to this property via a dynamic variable."
 msgstr "Bitte erstellen Sie ein Produkt oder eine Dienstleistung und verlinken Sie über eine dynamische Variable auf dieses Attribut."
 
-#: inc/schema/types/offer.php:480
-msgid "Unit ode"
-msgstr "Einheitscode"
-
 #: inc/schema/types/offer.php:483
 msgid "The unit of measurement given using the UN/CEFACT Common Code (3 characters) or a URL. Other codes than the UN/CEFACT Common Code may be used with a prefix followed by a colon."
 msgstr "Der Einheit von Messung, angegeben mit dem UN/CEFACT Common Code (3 Zeichen) oder einer URL. Andere Codes als der UN/CEFACT Common Code können mit einem Präfix gefolgt von einem Doppelpunkt verwendet werden."
@@ -1798,10 +1773,6 @@ msgstr "Bitte erstellen Sie ein Schema für eine Person oder eine Organisation u
 msgid "The offer price of a product, or of a price component when attached to PriceSpecification and its subtypes. Use the priceCurrency property (with standard formats: ISO 4217 currency format, e.g. \"USD\"; Ticker symbol for cryptocurrencies, e.g. \"BTC\"; well known names for Local Exchange Trading Systems (LETS) and other currency types, e.g. \"Ithaca HOUR\") instead of including ambiguous symbols such as '$' in the value."
 msgstr "Der Angebotspreis eines Produkts oder eines Preisbestandteils, wenn er an PriceSpecification und deren Untertypen angehängt ist. Verwenden Sie die Eigenschaft priceCurrency (mit Standardformaten: ISO 4217 Währungsformat, z.B. \"USD\"; Tickersymbol für Kryptowährungen, z.B. \"BTC\"; bekannte Namen für lokale Währungssysteme (LETS) und andere Währungsarten, z.B. \"Ithaca HOUR\"), anstatt mehrdeutige Symbole wie '$' im Wert einzuschließen."
 
-#: inc/schema/types/offer.php:579
-msgid "The currency of the price, or a price component when attached to PriceSpecification and its subtypes. Use standard formats: ISO 4217 currency format, e.g. \"USD\"; Ticker symbol for cryptocurrencies, e.g. \"BTC\"; well known names for Local Exchange Trading Systems (LETS) and other currency types, e.g. \"Ithaca HOUR\". "
-msgstr "Die Währung des Preises oder eines Preisbestandteils, wenn er an PriceSpecification und deren Untertypen angehängt ist. Verwenden Sie Standardformate: ISO 4217 Währungsformat, z.B. \"USD\"; Tickersymbol für Kryptowährungen, z.B. \"BTC\"; bekannte Namen für lokale Währungssysteme (LETS) und andere Währungsarten, z.B. \"Ithaca HOUR\"."
-
 #: inc/schema/types/offer.php:586
 #: inc/schema/types/product.php:253
 msgid "Price valid until"
@@ -1840,10 +1811,6 @@ msgstr "Die Stock Keeping Unit (SKU), d.h. eine händler-spezifische Kennung fü
 #: inc/schema/types/offer.php:624
 msgid "The date when the item becomes valid in ISO-8601 format"
 msgstr "Das Datum, an dem der Artikel im ISO-8601-Format gültig wird"
-
-#: inc/schema/types/offer.php:632
-msgid "The date after when the item is not valid. For example the end of an offer, salary period, or a period of opening hours. "
-msgstr "Das Datum, nach dem der Artikel nicht mehr gültig ist. Zum Beispiel das Ende eines Angebots, eines Gehaltszeitraums oder eines Zeitraums der Öffnungszeiten."
 
 #: inc/schema/types/organization.php:83
 #: inc/schema/types/organization.php:288
@@ -2200,10 +2167,6 @@ msgstr "Zeigt den höchsten angegebenen Preis für das Produkt über alle Angebo
 msgid "Offer count"
 msgstr "Anzahl der Angebote"
 
-#: inc/schema/types/product.php:299
-msgid "Shows the stock status of the product, such as In Stock or Out of Stock. This information helps search engines show real-time availability."
-msgstr "Zeigt den Lagerstatus des Produkts an, wie Auf Lager oder Ausverkauft. Diese Informationen helfen Suchmaschinen, die Echtzeitverfügbarkeit anzuzeigen."
-
 #: inc/schema/types/thing.php:74
 msgid "The name of the item"
 msgstr "Der Name des Artikels"
@@ -2326,17 +2289,17 @@ msgstr "Ein Thumbnail-Bild, das relevant für die Webseite ist."
 msgid "Post ID"
 msgstr "Beitrag-ID"
 
-#: inc/admin/dashboard.php:653
+#: inc/admin/dashboard.php:673
 #: inc/schema/variables.php:85
 msgid "Post Excerpt"
 msgstr "Beitragsauszug"
 
-#: inc/admin/dashboard.php:658
+#: inc/admin/dashboard.php:678
 #: inc/schema/variables.php:86
 msgid "Post Content"
 msgstr "Beitragsinhalt"
 
-#: inc/admin/dashboard.php:678
+#: inc/admin/dashboard.php:698
 #: inc/schema/variables.php:87
 msgid "Post URL"
 msgstr "Beitrags-URL"
@@ -2385,7 +2348,7 @@ msgstr "Begriff-Slug"
 msgid "Term Taxonomy"
 msgstr "Begriff-Taxonomie"
 
-#: inc/admin/dashboard.php:663
+#: inc/admin/dashboard.php:683
 #: inc/schema/variables.php:115
 msgid "Term Description"
 msgstr "Begriff-Beschreibung"
@@ -2426,6 +2389,7 @@ msgstr "E-Mail des Autors"
 msgid "Author Website URL"
 msgstr "Website-URL des Autors"
 
+#: inc/meta-variables/user.php:75
 #: inc/schema/variables.php:135
 msgid "Author Nicename"
 msgstr "Schöner Name des Autors"
@@ -2531,21 +2495,23 @@ msgid "Open SureRank SEO"
 msgstr "Öffne SureRank SEO"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Fix SEO Issues with AI"
 msgstr "SEO-Probleme mit KI beheben"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Fix It for Me"
 msgstr "Mach es für mich"
 
-#: inc/admin/dashboard.php:638
+#: inc/admin/dashboard.php:658
 #: build/admin-dashboard/index.js:1
 msgid "Tagline"
 msgstr "Slogan"
 
-#: inc/admin/dashboard.php:643
+#: inc/admin/dashboard.php:663
 msgid "Term Title"
 msgstr "Begriff Titel"
 
@@ -2642,58 +2608,64 @@ msgstr "Dieser Inhalt wird als Meta-Beschreibungstag festgelegt und kann in den 
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Search Engine Preview"
 msgstr "Vorschau der Suchmaschine"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Search Engine Title"
 msgstr "Suchmaschinen-Titel"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Type @ to view variable suggestions"
 msgstr "Gib @ ein, um Variablenvorschläge anzuzeigen"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Search Engine Description"
 msgstr "Suchmaschinen-Beschreibung"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Sample Post - Testing Site"
 msgstr "Beispielbeitrag - Testseite"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Use Data from Facebook Tab"
 msgstr "Daten aus dem Facebook-Tab verwenden"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Social Image"
 msgstr "Soziale Bild"
 
-#: build/seo-popup/index.js:1
-msgid "Upload at least 600x315px image. Recommended size is 1200x630px."
-msgstr "Lade ein Bild mit mindestens 600x315px hoch. Empfohlene Größe ist 1200x630px."
-
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Social Title"
 msgstr "Sozialer Titel"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Social Description"
 msgstr "Soziale Beschreibung"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "%s Preview"
@@ -2701,14 +2673,17 @@ msgstr "%s-Vorschau"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Robot Instructions"
 msgstr "Robot-Anweisungen"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Canonical URL"
 msgstr "Kanonische URL"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "The Canonical URL tells search engines which version of a page should be indexed to avoid duplicate content issues. Leave blank to let SureRank set it automatically."
 msgstr "Die kanonische URL sagt Suchmaschinen, welche Version einer Seite indiziert werden soll, um Probleme mit doppeltem Inhalt zu vermeiden. Lass es leer, damit SureRank es automatisch festlegt."
@@ -2716,50 +2691,60 @@ msgstr "Die kanonische URL sagt Suchmaschinen, welche Version einer Seite indizi
 #: inc/analyzer/seo-analyzer.php:1090
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Social"
 msgstr "Sozial"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "This schema does not have any configurable fields"
 msgstr "Dieses Schema hat keine konfigurierbaren Felder"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Search or select an option"
 msgstr "Suche oder wähle eine Option"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Add Schema"
 msgstr "Schema hinzufügen"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Choose Schema"
 msgstr "Schema auswählen"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Cancel"
 msgstr "Abbrechen"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Schemas in Use"
 msgstr "Verwendete Schemata"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Add New"
 msgstr "Neu hinzufügen"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No schemas configured."
 msgstr "Keine Schemata konfiguriert."
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Schema"
 msgstr "Schema"
@@ -2767,6 +2752,7 @@ msgstr "Schema"
 #. translators: %s is the search engine title length.
 #: inc/analyzer/utils.php:70
 #: inc/analyzer/utils.php:84
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Search engine title is missing on the page."
 msgstr "Der Titel für Suchmaschinen fehlt auf der Seite."
@@ -2774,49 +2760,50 @@ msgstr "Der Titel für Suchmaschinen fehlt auf der Seite."
 #. translators: %s is the search engine description length.
 #: inc/analyzer/utils.php:115
 #: inc/analyzer/utils.php:128
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Search engine description is missing on the page."
 msgstr "Die Beschreibung für Suchmaschinen fehlt auf der Seite."
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Save"
 msgstr "Speichern"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
-#: build/seo-popup/index.js:1
-msgid "Saving.."
-msgstr "Speichern.."
-
-#: build/admin-dashboard/index.js:1
-#: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Saved"
 msgstr "Gespeichert"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Close"
 msgstr "Schließen"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "%1$d out of %2$d checks are done."
 msgstr "%1$d von %2$d Prüfungen sind abgeschlossen."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Passed"
 msgstr "Bestanden"
 
-#: loader.php:398
+#: loader.php:406
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: inc/admin/seo-popup.php:210
+#: inc/admin/seo-popup.php:291
 #: build/breakdance/index.js:1
 #: build/bricks/index.js:1
 #: build/divi/index.js:1
@@ -2825,11 +2812,11 @@ msgstr "Einstellungen"
 msgid "SureRank Meta Box"
 msgstr "SureRank Meta-Box"
 
-#: inc/schema/types/article.php:269
+#: inc/schema/types/article.php:268
 msgid "NewsArticle"
 msgstr "Nachricht"
 
-#: inc/schema/types/article.php:270
+#: inc/schema/types/article.php:269
 msgid "BlogPosting"
 msgstr "Blogbeitrag"
 
@@ -2951,11 +2938,8 @@ msgstr "Die URL der Seite ist kurz und SEO-freundlich."
 msgid "Page URL is longer than %s characters and may affect SEO and readability."
 msgstr "Die URL der Seite ist länger als %s Zeichen und kann SEO und Lesbarkeit beeinträchtigen."
 
-#: inc/api/analyzer.php:1647
-msgid "These broken links were found on the page: "
-msgstr "Diese defekten Links wurden auf der Seite gefunden:"
-
-#: inc/api/analyzer.php:1652
+#: inc/api/analyzer.php:2413
+#: build/admin-seo-bar/index.js:1
 #: build/breakdance/index.js:1
 #: build/bricks/index.js:1
 #: build/divi/index.js:1
@@ -2996,27 +2980,32 @@ msgstr "Keine Links auf dieser Seite gefunden."
 msgid "Links are present on this page."
 msgstr "Links sind auf dieser Seite vorhanden."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "Search engine title is present and under %1$d characters."
 msgstr "Der Titel der Suchmaschine ist vorhanden und unter %1$d Zeichen."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "Search engine description is present and under %1$d characters."
 msgstr "Die Beschreibung der Suchmaschine ist vorhanden und unter %1$d Zeichen."
 
 #: inc/analyzer/utils.php:284
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Open Graph tags are present on the page."
 msgstr "Open Graph-Tags sind auf der Seite vorhanden."
 
 #: inc/analyzer/utils.php:277
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Open Graph tags are not present on the page."
 msgstr "Open Graph-Tags sind auf der Seite nicht vorhanden."
 
 #: inc/analyzer/post-analyzer.php:565
+#: build/admin-seo-bar/index.js:1
 #: build/breakdance/index.js:1
 #: build/bricks/index.js:1
 #: build/divi/index.js:1
@@ -3087,7 +3076,8 @@ msgid "Select a site"
 msgstr "Wählen Sie eine Website aus"
 
 #: build/admin-dashboard/index.js:1
-#: build/admin-onboarding/index.js:1
+#: build/admin-notice/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Learn more"
 msgstr "Erfahren Sie mehr"
@@ -3158,6 +3148,7 @@ msgid "Content Score"
 msgstr "Inhaltsbewertung"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Pro"
 msgstr "Pro"
@@ -3396,6 +3387,7 @@ msgstr "Bilder in XML-Sitemap einbeziehen"
 msgid "These settings help search engines understand how to treat your home page in search results. Enabling ‘No Index’ will prevent the home page from appearing in search results. ‘No Follow’ tells search engines not to follow any links on the page, and ‘No Archive’ prevents search engines from storing a cached version of the page. These settings apply only to your website’s home page."
 msgstr "Diese Einstellungen helfen Suchmaschinen zu verstehen, wie sie Ihre Startseite in den Suchergebnissen behandeln sollen. Das Aktivieren von „No Index“ verhindert, dass die Startseite in den Suchergebnissen angezeigt wird. „No Follow“ sagt Suchmaschinen, dass sie keine Links auf der Seite folgen sollen, und „No Archive“ verhindert, dass Suchmaschinen eine zwischengespeicherte Version der Seite speichern. Diese Einstellungen gelten nur für die Startseite Ihrer Website."
 
+#: inc/admin/bulk-edit.php:69
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "No Index"
@@ -3406,6 +3398,7 @@ msgstr "Kein Index"
 msgid "Prevents search engines from listing your home page in search results."
 msgstr "Verhindert, dass Suchmaschinen Ihre Startseite in den Suchergebnissen auflisten."
 
+#: inc/admin/bulk-edit.php:77
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "No Follow"
@@ -3416,6 +3409,7 @@ msgstr "Kein Follow"
 msgid "Tells search engines not to follow any links on your home page."
 msgstr "Sagt Suchmaschinen, dass sie keinen Links auf Ihrer Startseite folgen sollen."
 
+#: inc/admin/bulk-edit.php:85
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "No Archive"
@@ -3473,6 +3467,7 @@ msgstr "Geben Sie die URL Ihrer standardmäßigen Facebook-Autorenseite ein. Sie
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Facebook"
 msgstr "Facebook"
@@ -3544,6 +3539,7 @@ msgstr "Geben Sie die URL Ihrer Fallback-Twitter-Autorenseite ein. Diese wird ve
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "X"
 msgstr "X"
@@ -3583,6 +3579,7 @@ msgid "Use data from Facebook Tab"
 msgstr "Daten von Facebook-Tab verwenden"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Select an option"
 msgstr "Wählen Sie eine Option"
@@ -3605,6 +3602,7 @@ msgstr "Nicht anzeigen auf"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Back"
 msgstr "Zurück"
@@ -3614,6 +3612,7 @@ msgid "Properties"
 msgstr "Eigenschaften"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Remove"
 msgstr "Entfernen"
@@ -3738,6 +3737,7 @@ msgstr "Liste der Funktionen"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Let's Get Started"
 msgstr "Lass uns anfangen"
@@ -3746,8 +3746,8 @@ msgstr "Lass uns anfangen"
 msgid "Invalid term ID or term object."
 msgstr "Ungültige Begriff-ID oder Begriffobjekt."
 
-#: inc/api/analyzer.php:119
-#: inc/api/analyzer.php:1192
+#: inc/api/analyzer.php:135
+#: inc/api/analyzer.php:1853
 msgid "Invalid Post ID."
 msgstr "Ungültige Post-ID."
 
@@ -3817,6 +3817,7 @@ msgstr "Kontakt Seite auswählen"
 msgid "No options available"
 msgstr "Keine Optionen verfügbar"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Critical"
 msgstr "Kritisch"
@@ -3836,15 +3837,11 @@ msgid_plural "Warnings"
 msgstr[0] "Warnung"
 msgstr[1] ""
 
-#: build/breakdance/index.js:1
-#: build/bricks/index.js:1
-#: build/divi/index.js:1
-#: build/elementor/index.js:1
-#: build/front-end-meta-box/index.js:1
-#: build/seo-popup/index.js:1
+#: inc/api/analyzer.php:2408
 msgid "These broken links were found on the page:"
 msgstr "Diese defekten Links wurden auf der Seite gefunden:"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Please save changes in the editor before refreshing the checks."
 msgstr "Bitte speichern Sie die Änderungen im Editor, bevor Sie die Überprüfungen aktualisieren."
@@ -3861,139 +3858,131 @@ msgstr "Taxonomien"
 msgid "Archives"
 msgstr "Archive"
 
-#: inc/admin/dashboard.php:635
+#: inc/admin/dashboard.php:655
+#: inc/meta-variables/site.php:69
 msgid "The name of the site."
 msgstr "Der Name der Website."
 
-#: inc/admin/dashboard.php:668
+#: inc/admin/dashboard.php:688
 #: inc/meta-variables/post.php:81
 msgid "Date Published"
 msgstr "Veröffentlichungsdatum"
 
-#: inc/admin/dashboard.php:670
-#: inc/meta-variables/post.php:82
+#: inc/admin/dashboard.php:690
 msgid "Publication date of the current post/page OR specified date on date archives"
 msgstr "Veröffentlichungsdatum des aktuellen Beitrags/der aktuellen Seite ODER angegebenes Datum in Datumsarchiven"
 
-#: inc/admin/dashboard.php:673
+#: inc/admin/dashboard.php:693
 #: inc/meta-variables/post.php:85
 msgid "Date Modified"
 msgstr "Änderungsdatum"
 
-#: inc/admin/dashboard.php:675
-#: inc/meta-variables/post.php:86
+#: inc/admin/dashboard.php:695
 msgid "Last modification date of the current post/page"
 msgstr "Letztes Änderungsdatum des aktuellen Beitrags/der aktuellen Seite"
 
-#: inc/admin/dashboard.php:680
+#: inc/admin/dashboard.php:700
 msgid "URL of the current post/page"
 msgstr "URL des aktuellen Beitrags/der aktuellen Seite"
 
-#: inc/admin/dashboard.php:683
+#: inc/admin/dashboard.php:703
 #: inc/meta-variables/site.php:84
 msgid "Current Date"
 msgstr "Aktuelles Datum"
 
-#: inc/admin/dashboard.php:685
+#: inc/admin/dashboard.php:705
 #: inc/meta-variables/site.php:85
 msgid "Current server date"
 msgstr "Aktuelles Serverdatum"
 
-#: inc/admin/dashboard.php:688
+#: inc/admin/dashboard.php:708
 #: inc/meta-variables/site.php:88
 msgid "Current Day"
 msgstr "Aktueller Tag"
 
-#: inc/admin/dashboard.php:690
+#: inc/admin/dashboard.php:710
 #: inc/meta-variables/site.php:89
 msgid "Current server day"
 msgstr "Aktueller Servertag"
 
-#: inc/admin/dashboard.php:693
+#: inc/admin/dashboard.php:713
 #: inc/meta-variables/site.php:92
 msgid "Current Month"
 msgstr "Aktueller Monat"
 
-#: inc/admin/dashboard.php:695
+#: inc/admin/dashboard.php:715
 #: inc/meta-variables/site.php:93
 msgid "Current server month"
 msgstr "Aktueller Servermonat"
 
-#: inc/admin/dashboard.php:698
+#: inc/admin/dashboard.php:718
 #: inc/meta-variables/site.php:96
 msgid "Current Year"
 msgstr "Aktuelles Jahr"
 
-#: inc/admin/dashboard.php:700
+#: inc/admin/dashboard.php:720
 #: inc/meta-variables/site.php:97
 msgid "Current server year"
 msgstr "Aktuelles Serverjahr"
 
-#: inc/admin/dashboard.php:703
+#: inc/admin/dashboard.php:723
 #: inc/meta-variables/site.php:100
 msgid "Current Time"
 msgstr "Aktuelle Uhrzeit"
 
-#: inc/admin/dashboard.php:705
+#: inc/admin/dashboard.php:725
 #: inc/meta-variables/site.php:101
 msgid "Current server time"
 msgstr "Aktuelle Serverzeit"
 
-#: inc/admin/dashboard.php:708
+#: inc/admin/dashboard.php:728
 #: inc/meta-variables/site.php:104
 msgid "Organization Name"
 msgstr "Name der Organisation"
 
-#: inc/admin/dashboard.php:710
+#: inc/admin/dashboard.php:730
 #: inc/meta-variables/site.php:105
 msgid "The Organization Name added in Local SEO Settings."
 msgstr "Der in den Local SEO-Einstellungen hinzugefügte Organisationsname."
 
-#: inc/admin/dashboard.php:713
+#: inc/admin/dashboard.php:733
 #: inc/meta-variables/site.php:108
 msgid "Organization Logo"
 msgstr "Organisationslogo"
 
-#: inc/admin/dashboard.php:715
+#: inc/admin/dashboard.php:735
 #: inc/meta-variables/site.php:109
 msgid "Organization Logo added in Local SEO Settings."
 msgstr "In den Local SEO-Einstellungen hinzugefügtes Organisationslogo."
 
-#: inc/admin/dashboard.php:718
+#: inc/admin/dashboard.php:738
 #: inc/meta-variables/site.php:112
 msgid "Organization URL"
 msgstr "Organisations-URL"
 
-#: inc/admin/dashboard.php:720
+#: inc/admin/dashboard.php:740
 #: inc/meta-variables/site.php:113
 msgid "Organization URL added in Local SEO Settings."
 msgstr "In den Local SEO-Einstellungen hinzugefügte Organisations-URL."
 
-#: inc/admin/dashboard.php:723
+#: inc/admin/dashboard.php:743
 msgid "Post Author Name"
 msgstr "Name des Beitragsautors"
 
-#: inc/admin/dashboard.php:725
+#: inc/admin/dashboard.php:745
 msgid "Display author's nicename of the current post, page or author archive."
 msgstr "Zeigt den Nicename des Autors des aktuellen Beitrags, der Seite oder des Autorenarchivs an."
 
 #: inc/meta-variables/post.php:89
+#: inc/meta-variables/user.php:67
 msgid "Author Name"
 msgstr "Name des Autors"
-
-#: inc/meta-variables/post.php:90
-msgid "The name of the author of the current post/page"
-msgstr "Der Name des Autors des aktuellen Beitrags/der aktuellen Seite"
 
 #: inc/meta-variables/site.php:80
 msgid "Search Query"
 msgstr "Suchanfrage"
 
-#: inc/meta-variables/site.php:81
-msgid "Search query (only available on search results page)"
-msgstr "Suchanfrage (nur auf der Suchergebnisseite verfügbar)"
-
-#: loader.php:378
+#: loader.php:386
 msgid "Rate our plugin"
 msgstr "Bewerten Sie unser Plugin"
 
@@ -4036,25 +4025,12 @@ msgid "Control how your pages appear when shared on X. Set attribution and previ
 msgstr "Steuern Sie, wie Ihre Seiten beim Teilen auf X erscheinen. Legen Sie hier Attribution und Vorschau-Einstellungen fest."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Click here to discover more details about this check."
 msgstr "Klicken Sie hier, um weitere Details zu dieser Prüfung zu entdecken."
 
-#: build/admin-dashboard/index.js:1
-#: build/admin-onboarding/index.js:1
-#: build/admin-seo-bar/index.js:1
-#: build/breakdance/index.js:1
-#: build/bricks/index.js:1
-#: build/divi/index.js:1
-#: build/elementor/index.js:1
 #: build/front-end-meta-box/index.js:1
-#: build/search-console-widget/index.js:1
-#: build/seo-popup/index.js:1
-msgid "issue"
-msgid_plural "issues"
-msgstr[0] "Problem"
-msgstr[1] ""
-
 #: build/seo-popup/index.js:1
 msgid "Confirm"
 msgstr "Bestätigen"
@@ -4095,28 +4071,23 @@ msgstr "Steuern Sie, wie Suchmaschinen Ihre Startseite behandeln. Diese Optionen
 msgid "Adds structured data to your content so search engines can better understand and present it. Most fields are already filled in to make setup easier and help your site show up better in search results."
 msgstr "Fügt Ihren Inhalten strukturierte Daten hinzu, damit Suchmaschinen sie besser verstehen und präsentieren können. Die meisten Felder sind bereits ausgefüllt, um die Einrichtung zu erleichtern und Ihre Website in den Suchergebnissen besser sichtbar zu machen."
 
-#: inc/api/analyzer.php:1862
-#: inc/api/analyzer.php:1885
-msgid "Type of check to delete. Can be \"post\" or \"taxonomy\"."
-msgstr "Art der zu löschenden Prüfung. Kann „post“ oder „taxonomy“ sein."
-
-#: inc/api/analyzer.php:232
+#: inc/api/analyzer.php:290
 msgid "Checks ignored."
 msgstr "Ignorierte Prüfungen."
 
-#: inc/api/analyzer.php:269
+#: inc/api/analyzer.php:327
 msgid "Checks unignored."
 msgstr "Nicht mehr ignorierte Prüfungen."
 
-#: inc/api/analyzer.php:354
+#: inc/api/analyzer.php:421
 msgid "Check ignored for post."
 msgstr "Prüfung für Beitrag ignoriert."
 
-#: inc/api/analyzer.php:382
+#: inc/api/analyzer.php:454
 msgid "Check unignored for post."
 msgstr "Prüfung für Beitrag nicht mehr ignoriert."
 
-#: inc/api/analyzer.php:405
+#: inc/api/analyzer.php:482
 msgid "Ignored checks retrieved."
 msgstr "Ignorierte Prüfungen abgerufen."
 
@@ -4154,16 +4125,19 @@ msgid "No SEO Performance to Show"
 msgstr "Keine SEO-Leistung zum Anzeigen"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Help Me Fix"
 msgstr "Hilf mir zu beheben"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Restore"
 msgstr "Wiederherstellen"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Ignore"
 msgstr "Ignorieren"
@@ -4178,11 +4152,12 @@ msgstr "Legen Sie eine Standardbeschreibung für alle einzelnen Beitragsseiten f
 msgid "Meta Templates"
 msgstr "Meta-Vorlagen"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Suggestion"
 msgstr "Vorschlag"
 
-#: inc/admin/dashboard.php:291
+#: inc/admin/dashboard.php:311
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Search Console"
@@ -4194,11 +4169,13 @@ msgid "This is required"
 msgstr "Dies ist erforderlich"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Ignore this check"
 msgstr "Diese Prüfung ignorieren"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Restore this check"
 msgstr "Diese Prüfung wiederherstellen"
@@ -4207,7 +4184,7 @@ msgstr "Diese Prüfung wiederherstellen"
 msgid "The page does not contain any subheadings."
 msgstr "Die Seite enthält keine Unterüberschriften."
 
-#: inc/admin/dashboard.php:302
+#: inc/admin/dashboard.php:322
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Tools"
@@ -4394,32 +4371,6 @@ msgstr "Ungültige Begriff-ID %d."
 msgid "Invalid Post ID %d."
 msgstr "Ungültige Beitrags-ID %d."
 
-#. translators: %d: term ID.
-#: inc/importers/rankmath/rank-math.php:78
-#, php-format
-msgid "RankMath data detected for term %d."
-msgstr "RankMath-Daten für Begriff %d erkannt."
-
-#. translators: %d: term ID.
-#: inc/importers/rankmath/rank-math.php:90
-#, php-format
-msgid "No RankMath data found for term %d."
-msgstr "Keine RankMath-Daten für Begriff %d gefunden."
-
-#: inc/importers/rankmath/rank-math.php:166
-msgid "No RankMath global settings found to import."
-msgstr "Keine RankMath-Global-Einstellungen zum Importieren gefunden."
-
-#: inc/importers/rankmath/rank-math.php:185
-msgid "RankMath global settings imported successfully."
-msgstr "RankMath-Global-Einstellungen erfolgreich importiert."
-
-#. translators: %s: error message.
-#: inc/importers/rankmath/rank-math.php:192
-#, php-format
-msgid "Error importing RankMath global settings: %s"
-msgstr "Fehler beim Importieren der RankMath-Global-Einstellungen: %s"
-
 #. translators: %d: ID, %s: type.
 #. translators: %s: type, %d: ID.
 #: inc/importers/rankmath/rank-math.php:260
@@ -4456,8 +4407,8 @@ msgstr "Fehler beim Importieren der Meta-Robots für %2$s %1$d: %3$s"
 #. translators: %d: ID, %s: type.
 #. translators: %s: type, %d: ID.
 #. translators: %1$s: type (post|term), %2$d: ID.
-#: inc/importers/aioseo/aioseo.php:592
-#: inc/importers/rankmath/rank-math.php:345
+#: inc/importers/aioseo/aioseo.php:605
+#: inc/importers/rankmath/rank-math.php:353
 #: inc/importers/slimseo/slim-seo.php:343
 #: inc/importers/squirrly/squirrly.php:472
 #, php-format
@@ -4468,8 +4419,8 @@ msgstr "Allgemeine Einstellungen für %1$s %2$d importiert."
 #. translators: %d: ID, %s: type.
 #. translators: %s: type, %d: ID.
 #. translators: %1$s: type (post|term), %2$d: ID.
-#: inc/importers/aioseo/aioseo.php:594
-#: inc/importers/rankmath/rank-math.php:356
+#: inc/importers/aioseo/aioseo.php:607
+#: inc/importers/rankmath/rank-math.php:364
 #: inc/importers/slimseo/slim-seo.php:354
 #: inc/importers/squirrly/squirrly.php:483
 #, php-format
@@ -4480,8 +4431,8 @@ msgstr "Keine allgemeinen Einstellungen zum Importieren für %1$s %2$d."
 #. translators: %d: ID, %s: type.
 #. translators: %s: type, %d: ID.
 #. translators: %1$s: type (post|term), %2$d: ID.
-#: inc/importers/aioseo/aioseo.php:640
-#: inc/importers/rankmath/rank-math.php:396
+#: inc/importers/aioseo/aioseo.php:653
+#: inc/importers/rankmath/rank-math.php:404
 #: inc/importers/slimseo/slim-seo.php:409
 #: inc/importers/squirrly/squirrly.php:594
 #, php-format
@@ -4492,8 +4443,8 @@ msgstr "Soziale Metadaten für %1$s %2$d importiert."
 #. translators: %d: ID, %s: type.
 #. translators: %s: type, %d: ID.
 #. translators: %1$s: type (post|term), %2$d: ID.
-#: inc/importers/aioseo/aioseo.php:642
-#: inc/importers/rankmath/rank-math.php:407
+#: inc/importers/aioseo/aioseo.php:655
+#: inc/importers/rankmath/rank-math.php:415
 #: inc/importers/slimseo/slim-seo.php:420
 #: inc/importers/squirrly/squirrly.php:605
 #, php-format
@@ -4550,76 +4501,77 @@ msgid "Error importing meta-robots for term %1$d: %2$s"
 msgstr "Fehler beim Importieren der Meta-Robots für Begriff %1$d: %2$s"
 
 #. translators: %d: post ID.
-#: inc/importers/seopress/seopress.php:229
-#: inc/importers/yoast/yoast.php:219
+#: inc/importers/seopress/seopress.php:238
+#: inc/importers/yoast/yoast.php:220
 #, php-format
 msgid "General settings imported for post %d."
 msgstr "Allgemeine Einstellungen für Beitrag %d importiert."
 
 #. translators: %d: post ID.
-#: inc/importers/seopress/seopress.php:229
-#: inc/importers/yoast/yoast.php:219
+#: inc/importers/seopress/seopress.php:238
+#: inc/importers/yoast/yoast.php:220
 #, php-format
 msgid "No general settings to import for post %d."
 msgstr "Keine allgemeinen Einstellungen zum Importieren für Beitrag %d."
 
 #. translators: %d: term ID.
-#: inc/importers/seopress/seopress.php:256
-#: inc/importers/yoast/yoast.php:247
+#: inc/importers/seopress/seopress.php:265
+#: inc/importers/yoast/yoast.php:249
 #, php-format
 msgid "General settings imported for term %d."
 msgstr "Allgemeine Einstellungen für Begriff %d importiert."
 
 #. translators: %d: term ID.
-#: inc/importers/seopress/seopress.php:256
-#: inc/importers/yoast/yoast.php:247
+#: inc/importers/seopress/seopress.php:265
+#: inc/importers/yoast/yoast.php:249
 #, php-format
 msgid "No general settings to import for term %d."
 msgstr "Keine allgemeinen Einstellungen zum Importieren für Begriff %d."
 
 #. translators: %d: post ID.
-#: inc/importers/seopress/seopress.php:279
-#: inc/importers/yoast/yoast.php:272
+#: inc/importers/seopress/seopress.php:288
+#: inc/importers/yoast/yoast.php:274
 #, php-format
 msgid "Social metadata imported for post %d."
 msgstr "Soziale Metadaten für Beitrag %d importiert."
 
 #. translators: %d: post ID.
-#: inc/importers/seopress/seopress.php:279
-#: inc/importers/yoast/yoast.php:272
+#: inc/importers/seopress/seopress.php:288
+#: inc/importers/yoast/yoast.php:274
 #, php-format
 msgid "No social metadata to import for post %d."
 msgstr "Keine sozialen Metadaten zum Importieren für Beitrag %d."
 
 #. translators: %d: term ID.
-#: inc/importers/seopress/seopress.php:302
-#: inc/importers/yoast/yoast.php:296
+#: inc/importers/seopress/seopress.php:311
+#: inc/importers/yoast/yoast.php:298
 #, php-format
 msgid "Social metadata imported for term %d."
 msgstr "Soziale Metadaten für Begriff %d importiert."
 
 #. translators: %d: term ID.
-#: inc/importers/seopress/seopress.php:302
-#: inc/importers/yoast/yoast.php:296
+#: inc/importers/seopress/seopress.php:311
+#: inc/importers/yoast/yoast.php:298
 #, php-format
 msgid "No social metadata to import for term %d."
 msgstr "Keine sozialen Metadaten zum Importieren für Begriff %d."
 
-#: inc/importers/yoast/yoast.php:327
+#: inc/importers/yoast/yoast.php:329
 msgid "No Yoast SEO global settings found to import."
 msgstr "Keine globalen Yoast SEO-Einstellungen zum Importieren gefunden."
 
-#: inc/importers/yoast/yoast.php:344
+#: inc/importers/yoast/yoast.php:346
 msgid "Yoast SEO global settings imported successfully."
 msgstr "Globale Yoast SEO-Einstellungen erfolgreich importiert."
 
 #. translators: %s: error message.
-#: inc/importers/yoast/yoast.php:351
+#: inc/importers/yoast/yoast.php:353
 #, php-format
 msgid "Error importing Yoast SEO global settings: %s"
 msgstr "Fehler beim Importieren der globalen Yoast SEO-Einstellungen: %s"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/search-console-widget/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No data available"
@@ -4652,10 +4604,12 @@ msgstr "Verschiedenes"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Settings saved successfully."
 msgstr "Einstellungen erfolgreich gespeichert."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Loading page SEO checks…"
 msgstr "Lade SEO-Prüfungen der Seite…"
@@ -4665,10 +4619,12 @@ msgstr "Lade SEO-Prüfungen der Seite…"
 msgid "Error loading SEO checks"
 msgstr "Fehler beim Laden der SEO-Prüfungen"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Enter your focus keyword"
 msgstr "Geben Sie Ihr Fokus-Keyword ein"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Optimize"
 msgstr "Optimieren"
@@ -4853,6 +4809,7 @@ msgid "Contribute to SureRank"
 msgstr "Beitragen zu SureRank"
 
 #: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
 msgid "Learn More"
 msgstr "Mehr erfahren"
 
@@ -4866,41 +4823,48 @@ msgid "Done"
 msgstr "Fertig"
 
 #: inc/analyzer/utils.php:252
-#: inc/api/analyzer.php:1626
+#: inc/api/analyzer.php:2387
 msgid "The link is broken."
 msgstr "Der Link ist defekt."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "(The page or resource was not found)"
 msgstr "(Die Seite oder Ressource wurde nicht gefunden)"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "(Unable to connect to the URL)"
 msgstr "(Verbindung zur URL konnte nicht hergestellt werden)"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "(Access to this resource is forbidden)"
 msgstr "(Der Zugriff auf diese Ressource ist verboten)"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "(Server error occurred)"
 msgstr "(Serverfehler aufgetreten)"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "(HTTP error"
 msgstr "(HTTP-Fehler"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Why is this link broken?"
 msgstr "Warum ist dieser Link defekt?"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Status:"
 msgstr "Status:"
@@ -4915,6 +4879,7 @@ msgid "Failed to check link"
 msgstr "Fehler beim Überprüfen des Links"
 
 #: inc/admin/bulk-actions.php:236
+#: inc/admin/bulk-edit.php:66
 msgid "SureRank Settings"
 msgstr "SureRank Einstellungen"
 
@@ -4950,24 +4915,9 @@ msgid_plural "%1$d items %2$s."
 msgstr[0] "%1$d Element %2$s."
 msgstr[1] ""
 
-#: inc/admin/bulk-edit.php:66
-msgid "SURERANK SETTINGS"
-msgstr "SURERANK EINSTELLUNGEN"
-
-#: inc/admin/bulk-edit.php:69
-msgid "No Index -"
-msgstr "Kein Index -"
-
-#: inc/admin/bulk-edit.php:77
-msgid "No Follow -"
-msgstr "No Follow -"
-
-#: inc/admin/bulk-edit.php:85
-msgid "No Archive -"
-msgstr "No Archive -"
-
-#: inc/admin/seo-bar.php:120
-#: inc/admin/seo-bar.php:140
+#: inc/admin/seo-bar.php:139
+#: inc/admin/seo-bar.php:159
+#: inc/admin/seo-bar.php:241
 msgid "SEO Checks"
 msgstr "SEO-Prüfungen"
 
@@ -5216,18 +5166,18 @@ msgid "Invalid image URL."
 msgstr "Ungültige Bild-URL."
 
 #. translators: %s: Category name.
-#: inc/import-export/settings-importer.php:164
+#: inc/import-export/settings-importer.php:165
 #, php-format
 msgid "Skipped invalid category: %s"
 msgstr "Ungültige Kategorie übersprungen: %s"
 
 #. translators: %d: Number of settings that were successfully imported
-#: inc/import-export/settings-importer.php:256
+#: inc/import-export/settings-importer.php:262
 #, php-format
 msgid "Successfully imported %d settings."
 msgstr "Erfolgreich %d Einstellungen importiert."
 
-#: inc/import-export/settings-importer.php:259
+#: inc/import-export/settings-importer.php:265
 msgid "No settings were imported."
 msgstr "Keine Einstellungen importiert."
 
@@ -5509,6 +5459,7 @@ msgstr "Wir haben andere installierte SEO-Plugins auf Ihrer Website gefunden. W�
 msgid "Recommended Logo size 112 X 112 or more, PNG / JPG format"
 msgstr "Empfohlene Logo-Größe 112 x 112 oder mehr, PNG / JPG Format"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Click to update Facebook's share preview cache. This will update the preview with the latest content."
 msgstr "Klicken Sie, um den Facebook-Share-Preview-Cache zu aktualisieren. Dadurch wird die Vorschau mit den neuesten Inhalten aktualisiert."
@@ -5543,12 +5494,12 @@ msgstr "Plugin-Slug zum Filtern von Begriffen nach (z. B. %s)."
 msgid "Plugin slug to migrate global settings from (e.g. %s)."
 msgstr "Plugin-Slug zum Migrieren globaler Einstellungen von (z. B. %s)."
 
-#: inc/import-export/settings-importer.php:155
-#: inc/import-export/settings-importer.php:184
+#: inc/import-export/settings-importer.php:156
+#: inc/import-export/settings-importer.php:185
 msgid "No settings found to import."
 msgstr "Keine Einstellungen zum Importieren gefunden."
 
-#: inc/import-export/settings-importer.php:197
+#: inc/import-export/settings-importer.php:203
 msgid "Failed to save settings to database."
 msgstr "Fehler beim Speichern der Einstellungen in der Datenbank."
 
@@ -5582,33 +5533,19 @@ msgstr "SEOPress-Daten für Begriff %d erkannt."
 msgid "No SEOPress data found for term %d."
 msgstr "Keine SEOPress-Daten für Begriff %d gefunden."
 
-#: inc/importers/seopress/seopress.php:339
+#: inc/importers/seopress/seopress.php:348
 msgid "No SEOPress global settings found to import."
 msgstr "Keine globalen SEOPress-Einstellungen zum Importieren gefunden."
 
-#: inc/importers/seopress/seopress.php:356
+#: inc/importers/seopress/seopress.php:365
 msgid "SEOPress global settings imported successfully."
 msgstr "Globale SEOPress-Einstellungen erfolgreich importiert."
 
 #. translators: %s: error message.
-#: inc/importers/seopress/seopress.php:363
+#: inc/importers/seopress/seopress.php:372
 #, php-format
 msgid "Error importing SEOPress global settings: %s"
 msgstr "Fehler beim Importieren der globalen SEOPress-Einstellungen: %s"
-
-#: build/admin-dashboard/index.js:1
-#: build/admin-onboarding/index.js:1
-#: build/admin-seo-bar/index.js:1
-#: build/breakdance/index.js:1
-#: build/bricks/index.js:1
-#: build/divi/index.js:1
-#: build/elementor/index.js:1
-#: build/front-end-meta-box/index.js:1
-#: build/search-console-widget/index.js:1
-#: build/seo-popup/index.js:1
-#, js-format
-msgid "%1$d %2$s need attention."
-msgstr "%1$d %2$s benötigen Aufmerksamkeit."
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
@@ -5625,18 +5562,21 @@ msgstr "Alle SEO-Prüfungen bestanden."
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Modern WordPress SEO Plugin Without the Bloat - SureRank"
 msgstr "Modernes WordPress SEO-Plugin ohne Ballast - SureRank"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Verified account"
 msgstr "Verifizierter Account"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "Check out my page: %s"
@@ -5644,6 +5584,7 @@ msgstr "Besuche meine Seite: %s"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "From"
 msgstr "Von"
@@ -5709,19 +5650,22 @@ msgstr "Export fehlgeschlagen"
 msgid "Export failed. Please try again."
 msgstr "Export fehlgeschlagen. Bitte versuchen Sie es erneut."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Analyze"
 msgstr "Analysieren"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Page Checks"
 msgstr "Seitenprüfungen"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "SEO analysis is not available for this page."
 msgstr "SEO-Analyse für diese Seite ist nicht verfügbar."
 
-#: inc/admin/seo-popup.php:214
+#: inc/admin/seo-popup.php:295
 #: build/seo-popup/index.js:1
 msgid "Open SureRank Meta Box"
 msgstr "SureRank Meta-Box öffnen"
@@ -5757,17 +5701,20 @@ msgid "You can add them manually or turn on auto-set image title and alt in the 
 msgstr "Sie können sie manuell hinzufügen oder in den Einstellungen die automatische Einstellung für Bildtitel und Alt aktivieren."
 
 #: inc/analyzer/utils.php:300
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No focus keyword set to analyze title."
 msgstr "Kein Fokus-Schlüsselwort zum Analysieren des Titels festgelegt."
 
 #: inc/analyzer/utils.php:308
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No SEO title found to analyze."
 msgstr "Kein SEO-Titel zum Analysieren gefunden."
 
 #. translators: %s is the focus keyword.
 #: inc/analyzer/utils.php:317
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, php-format,js-format
 msgid "Focus keyword \"%s\" found in SEO title."
@@ -5775,23 +5722,27 @@ msgstr "Fokus-Schlüsselwort \"%s\" im SEO-Titel gefunden."
 
 #. translators: %s is the focus keyword.
 #: inc/analyzer/utils.php:325
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, php-format,js-format
 msgid "Focus keyword \"%s\" not found in SEO title."
 msgstr "Fokus-Schlüsselwort \"%s\" im SEO-Titel nicht gefunden."
 
 #: inc/analyzer/utils.php:341
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No focus keyword set to analyze meta description."
 msgstr "Kein Fokus-Schlüsselwort zum Analysieren der Meta-Beschreibung festgelegt."
 
 #: inc/analyzer/utils.php:349
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No meta description found to analyze."
 msgstr "Keine Meta-Beschreibung zum Analysieren gefunden."
 
 #. translators: %s is the focus keyword.
 #: inc/analyzer/utils.php:358
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, php-format,js-format
 msgid "Focus keyword \"%s\" found in meta description."
@@ -5799,23 +5750,27 @@ msgstr "Fokus-Schlüsselwort \"%s\" in der Meta-Beschreibung gefunden."
 
 #. translators: %s is the focus keyword.
 #: inc/analyzer/utils.php:366
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, php-format,js-format
 msgid "Focus keyword \"%s\" not found in meta description."
 msgstr "Fokus-Schlüsselwort \"%s\" in der Meta-Beschreibung nicht gefunden."
 
 #: inc/analyzer/utils.php:382
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No focus keyword set to analyze URL."
 msgstr "Kein Fokus-Schlüsselwort zum Analysieren der URL festgelegt."
 
 #: inc/analyzer/utils.php:390
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No URL found to analyze."
 msgstr "Keine URL zum Analysieren gefunden."
 
 #. translators: %s is the focus keyword.
 #: inc/analyzer/utils.php:408
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, php-format,js-format
 msgid "Focus keyword \"%s\" found in URL."
@@ -5823,23 +5778,27 @@ msgstr "Fokus-Schlüsselwort \"%s\" in der URL gefunden."
 
 #. translators: %s is the focus keyword.
 #: inc/analyzer/utils.php:416
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, php-format,js-format
 msgid "Focus keyword \"%s\" not found in URL."
 msgstr "Fokus-Schlüsselwort \"%s\" in der URL nicht gefunden."
 
 #: inc/analyzer/utils.php:432
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No focus keyword set to analyze content."
 msgstr "Kein Fokus-Schlüsselwort zum Analysieren des Inhalts festgelegt."
 
 #: inc/analyzer/utils.php:440
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No content found to analyze."
 msgstr "Kein Inhalt zum Analysieren gefunden."
 
 #. translators: %s is the focus keyword.
 #: inc/analyzer/utils.php:454
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, php-format,js-format
 msgid "Focus keyword \"%s\" found in content."
@@ -5847,6 +5806,7 @@ msgstr "Fokus-Schlüsselwort \"%s\" im Inhalt gefunden."
 
 #. translators: %s is the focus keyword.
 #: inc/analyzer/utils.php:462
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, php-format,js-format
 msgid "Focus keyword \"%s\" not found in content."
@@ -5890,17 +5850,9 @@ msgstr "Der Google Site Verification-Dienst ist vorübergehend nicht verfügbar.
 msgid "Site verification error (Code: %d). Please try again."
 msgstr "Fehler bei der Website-Verifizierung (Code: %d). Bitte versuchen Sie es erneut."
 
-#: inc/google-search-console/site-verification.php:146
-msgid "No verification token received"
-msgstr "Kein Verifizierungstoken empfangen"
-
 #: inc/google-search-console/site-verification.php:231
 msgid "Site verification is pending. Google needs time to crawl and verify your site. This may take 1-2 hours or up to 2 days."
 msgstr "Die Website-Verifizierung ist ausstehend. Google benötigt Zeit, um Ihre Website zu crawlen und zu verifizieren. Dies kann 1-2 Stunden oder bis zu 2 Tage dauern."
-
-#: inc/google-search-console/site-verification.php:242
-msgid "Site verified successfully"
-msgstr "Website erfolgreich verifiziert"
 
 #: inc/google-search-console/site-verification.php:265
 msgid "Site added successfully"
@@ -6029,6 +5981,7 @@ msgid "Meta description fix applied successfully."
 msgstr "Meta-Beschreibungs-Korrektur erfolgreich angewendet."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Fix It For Me"
 msgstr "Mach es für mich reparieren"
@@ -6063,6 +6016,7 @@ msgid_plural "%s Warnings Detected"
 msgstr[0] "%s Warnung erkannt"
 msgstr[1] ""
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Keyword Checks"
 msgstr "Keyword-Prüfungen"
@@ -6149,10 +6103,6 @@ msgstr "archive"
 msgid "Post is indexable"
 msgstr "Beitrag ist indexierbar"
 
-#: inc/third-party-integrations/angie.php:322
-msgid "This post is set to noindex by SureRank settings from SEO popup."
-msgstr "Dieser Beitrag ist durch SureRank-Einstellungen im SEO-Popup auf noindex gesetzt."
-
 #: inc/third-party-integrations/angie.php:330
 msgid "This post is set to noindex by SureRank Global Robots Settings."
 msgstr "Dieser Beitrag ist durch SureRank Global Robots Einstellungen auf noindex gesetzt."
@@ -6174,11 +6124,13 @@ msgid "Settings updated successfully."
 msgstr "Einstellungen erfolgreich aktualisiert."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Open date picker"
 msgstr "Datumsauswahl öffnen"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Apply"
 msgstr "Anwenden"
@@ -6192,6 +6144,7 @@ msgid "Authentication completed successfully. Closing tab in 3 seconds…"
 msgstr "Authentifizierung erfolgreich abgeschlossen. Tab wird in 3 Sekunden geschlossen…"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Authentication failed"
 msgstr "Authentifizierung fehlgeschlagen"
@@ -6217,25 +6170,30 @@ msgid "SureRank Angie AI assistant, handles sitemap control, page or term visibi
 msgstr "SureRank Angie KI-Assistent verwaltet Sitemap-Kontrolle, Seiten- oder Begriffssichtbarkeit, Robots-Meta-Tag-Verwaltung (Suchmaschinensichtbarkeit), Site- & Seiten-SEO-Prüfungen, Aktualisierung von Beitrags-Meta-Titel und Meta-Beschreibung sowie umfassendes Einstellungsmanagement für alle SureRank SEO-Funktionen"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Meta Titles & Descriptions"
 msgstr "Meta-Titel & Beschreibungen"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Social Titles & Descriptions"
 msgstr "Soziale Titel & Beschreibungen"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Site level SEO Checks"
 msgstr "SEO-Prüfungen auf Site-Ebene"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Let SureRank AI optimize your SEO"
 msgstr "Lassen Sie SureRank KI Ihre SEO optimieren"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Here are a few suggestions"
 msgstr "Hier sind einige Vorschläge"
@@ -6243,97 +6201,117 @@ msgstr "Hier sind einige Vorschläge"
 #: build/admin-dashboard/index.js:1
 #: build/admin-notice/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Upgrade Now"
 msgstr "Jetzt upgraden"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No content generated yet. Click \"Generate\" to create AI-powered content suggestions."
 msgstr "Noch kein Inhalt generiert. Klicken Sie auf „Generieren“, um KI-gestützte Inhaltsvorschläge zu erstellen."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "No content generated. Click %s to retry creating AI-powered content suggestions."
 msgstr "Kein Inhalt generiert. Klicken Sie auf %s, um die Erstellung von KI-gestützten Inhaltsvorschlägen erneut zu versuchen."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Here are the fixes generated by SureRank AI based on your request. Review and apply the ones you'd like to use."
 msgstr "Hier sind die von SureRank KI basierend auf Ihrer Anfrage generierten Korrekturen. Überprüfen Sie sie und wenden Sie die gewünschten an."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Selected content is empty."
 msgstr "Ausgewählter Inhalt ist leer."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Post or term ID not found."
 msgstr "Beitrags- oder Begriff-ID nicht gefunden."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Failed to apply content."
 msgstr "Inhalt konnte nicht angewendet werden."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Fixed successfully"
 msgstr "Erfolgreich behoben"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Fix applied successfully. Some fixes may require a page reload to see changes."
 msgstr "Korrektur erfolgreich angewendet. Einige Korrekturen erfordern möglicherweise ein Neuladen der Seite, um Änderungen zu sehen."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "An unexpected error occurred while applying content."
 msgstr "Beim Anwenden des Inhalts ist ein unerwarteter Fehler aufgetreten."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No content type selected. Please select an item to generate content for."
 msgstr "Kein Inhaltstyp ausgewählt. Bitte wählen Sie ein Element aus, für das Inhalt generiert werden soll."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "An unexpected error occurred while generating content."
 msgstr "Beim Generieren des Inhalts ist ein unerwarteter Fehler aufgetreten."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Generation Failed"
 msgstr "Generierung fehlgeschlagen"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Oops! Something went wrong while generating content. You can try again, or edit it manually to make sure it's correct."
 msgstr "Ups! Beim Generieren des Inhalts ist etwas schiefgelaufen. Sie können es erneut versuchen oder manuell bearbeiten, um sicherzustellen, dass es korrekt ist."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Retry"
 msgstr "Erneut versuchen"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Authentication timeout. Please try again."
 msgstr "Authentifizierungszeitüberschreitung. Bitte versuchen Sie es erneut."
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Authentication successful!"
 msgstr "Authentifizierung erfolgreich!"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "An error occurred during authentication"
 msgstr "Bei der Authentifizierung ist ein Fehler aufgetreten"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Popup blocked. Redirecting to authentication…"
 msgstr "Popup blockiert. Weiterleitung zur Authentifizierung…"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Connect SureRank AI"
 msgstr "SureRank KI verbinden"
@@ -6351,11 +6329,12 @@ msgid "Unable to generate content at this time. Please try again, or contact sup
 msgstr "Derzeit kann kein Inhalt generiert werden. Bitte versuchen Sie es erneut, oder kontaktieren Sie den Support, wenn Sie Hilfe benötigen."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Click here to contact support."
 msgstr "Klicken Sie hier, um den Support zu kontaktieren."
 
-#: inc/api/analyzer.php:509
+#: inc/api/analyzer.php:586
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Connect Now"
@@ -6387,21 +6366,25 @@ msgid "Import method not found in sitemap class."
 msgstr "Importmethode in der Sitemap-Klasse nicht gefunden."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Check ignored successfully"
 msgstr "Ignorieren erfolgreich überprüft"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Failed to ignore check"
 msgstr "Fehler beim Ignorieren der Überprüfung"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Check restored successfully"
 msgstr "Überprüfung erfolgreich wiederhergestellt"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Failed to restore check"
 msgstr "Fehler beim Wiederherstellen der Überprüfung"
@@ -6498,11 +6481,6 @@ msgstr "Sitemap-Cache-Erstellung gestartet…"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
-msgid "Processing items in batches it will take some time, please stay on the page."
-msgstr "Die Verarbeitung der Elemente in Chargen dauert einige Zeit, bitte bleiben Sie auf der Seite."
-
-#: build/admin-dashboard/index.js:1
-#: build/admin-onboarding/index.js:1
 msgid "Sitemap cache generation completed!"
 msgstr "Sitemap-Cache-Erstellung abgeschlossen!"
 
@@ -6511,35 +6489,42 @@ msgstr "Sitemap-Cache-Erstellung abgeschlossen!"
 msgid "All content has been processed successfully."
 msgstr "Alle Inhalte wurden erfolgreich verarbeitet."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Focus Keyword"
 msgstr "Fokus-Schlüsselwort"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "The primary keyword or phrase you want this content to rank for in search engines. Keyword checks will be based on this."
 msgstr "Das primäre Schlüsselwort oder die Phrase, für die Sie möchten, dass dieser Inhalt in Suchmaschinen rankt. Keyword-Checks basieren auf diesem."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Use This"
 msgstr "Verwenden Sie dies"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Fixing…"
 msgstr "Wird repariert…"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Generate"
 msgstr "Generieren"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Generating…"
 msgstr "Generiere…"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Regenerate"
 msgstr "Neu generieren"
@@ -6557,7 +6542,7 @@ msgstr "Sobald Sie mit Google Search Console verbunden sind, sehen Sie hier, wie
 msgid "Redirections"
 msgstr "Weiterleitungen"
 
-#: inc/admin/dashboard.php:313
+#: inc/admin/dashboard.php:333
 msgid "Get Pro ↗"
 msgstr "Get Pro ↗"
 
@@ -6575,6 +6560,7 @@ msgid "# SureRank will generate robots.txt automatically."
 msgstr "# SureRank erstellt robots.txt automatisch."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "You've used all your AI credits for today. Your credits will refresh automatically tomorrow, so you can continue creating content."
 msgstr "Sie haben alle AI-Credits für heute verbraucht. Ihre Credits werden morgen automatisch erneuert, sodass Sie weiterhin Inhalte erstellen können."
@@ -6599,19 +6585,8 @@ msgstr "„%s“ wurde deaktiviert."
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
-msgid "Wants to unlock advanced SEO features?"
-msgstr "Möchten Sie erweiterte SEO-Funktionen freischalten?"
-
-#: build/admin-dashboard/index.js:1
-#: build/admin-onboarding/index.js:1
 msgid "Upgrade to unlock Video / News Sitemaps, Instant Indexing, Redirect Manager, and more."
 msgstr "Upgrade, um Video-/News-Sitemaps, Instant Indexing, Redirect Manager und mehr freizuschalten."
-
-#: build/admin-dashboard/index.js:1
-#: build/admin-onboarding/index.js:1
-#: build/seo-popup/index.js:1
-msgid "Upgrade now"
-msgstr "Jetzt upgraden"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
@@ -6619,21 +6594,25 @@ msgid "This is your site's default social sharing image (Open Graph). It shows u
 msgstr "Dies ist das Standard-Social-Sharing-Bild Ihrer Website (Open Graph). Es erscheint, wenn Ihre Seiten in sozialen Plattformen geteilt werden – es sei denn, ein benutzerdefiniertes Bild ist auf dieser Seite gesetzt."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "SureRank Schema Disabled"
 msgstr "SureRank Schema deaktiviert"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "We detected that WP Schema Pro is active on your website. To avoid schema conflicts, SureRank Schema functionality has been automatically disabled. Please continue using WP Schema Pro for your schema markup needs."
 msgstr "Wir haben festgestellt, dass WP Schema Pro auf Ihrer Website aktiv ist. Um Schema-Konflikte zu vermeiden, wurde die SureRank Schema-Funktion automatisch deaktiviert. Bitte verwenden Sie weiterhin WP Schema Pro für Ihre Schema-Markup-Bedürfnisse."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Looking for more schemas?"
 msgstr "Suchen Sie nach weiteren Schemas?"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Upgrade to SureRank Pro and let AI help you fix critical SEO issues and warnings, so your website stays fully optimized and ready to perform better in search results."
 msgstr "Upgrade auf SureRank Pro und lassen Sie AI Ihnen helfen, kritische SEO-Probleme und Warnungen zu beheben, damit Ihre Website vollständig optimiert bleibt und in den Suchergebnissen besser abschneidet."
@@ -6947,14 +6926,6 @@ msgid "Stay ahead with Instant Indexing support"
 msgstr "Bleiben Sie mit Instant Indexing-Unterstützung voraus"
 
 #: build/search-console-widget/index.js:1
-msgid "Build smarter Meta Templates for all post content"
-msgstr "Erstellen Sie intelligentere Meta-Vorlagen für alle Beitragsinhalte"
-
-#: build/search-console-widget/index.js:1
-msgid "Detect and Fix Issues before they hurt SEO"
-msgstr "Erkennen und beheben Sie Probleme, bevor sie SEO schaden"
-
-#: build/search-console-widget/index.js:1
 msgid "Redirect old URLs instantly, no setup needed"
 msgstr "Leiten Sie alte URLs sofort um, ohne Einrichtung"
 
@@ -6963,21 +6934,25 @@ msgid "Failed to fetch clicks and impressions"
 msgstr "Fehler beim Abrufen von Klicks und Impressionen"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Generate with AI"
 msgstr "Mit KI generieren"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Free Plan Limit Reached"
 msgstr "Kostenloser Plan erreicht"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "You've used all available AI requests in your Free Plan. Upgrade to SureRank Pro to keep using AI features."
 msgstr "Sie haben alle verfügbaren KI-Anfragen in Ihrem kostenlosen Plan genutzt. Aktualisieren Sie auf SureRank Pro, um die KI-Funktionen weiterhin zu nutzen."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Daily Limit Reached"
 msgstr "Tägliches Limit erreicht"
@@ -7020,17 +6995,19 @@ msgstr "Aktivieren Sie dies, um alle Attachment-Seiten auf ihren Elternbeitrag o
 msgid "Optimize Image SEO without AI"
 msgstr "Bild-SEO ohne KI optimieren"
 
-#: inc/api/analyzer.php:140
-#: inc/api/analyzer.php:177
+#: inc/api/analyzer.php:156
+#: inc/api/analyzer.php:193
+#: inc/api/analyzer.php:235
 msgid "SEO checks retrieved."
 msgstr "SEO-Prüfungen abgerufen."
 
-#: inc/api/analyzer.php:156
+#: inc/api/analyzer.php:172
 msgid "Invalid Term ID."
 msgstr "Ungültige Term-ID."
 
-#: inc/api/analyzer.php:1936
-#: inc/api/analyzer.php:1970
+#: inc/api/analyzer.php:2756
+#: inc/api/analyzer.php:2790
+#: inc/api/analyzer.php:2826
 msgid "No cached checks found."
 msgstr "Keine zwischengespeicherten Prüfungen gefunden."
 
@@ -7243,23 +7220,28 @@ msgstr "Die E-Mail-Zusammenfassung verwendet GSC-Daten, um die Suchleistung Ihre
 msgid "Traffic from last few days"
 msgstr "Verkehr der letzten Tage"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "Enter image URL or %custom_field.field_name%"
 msgstr "Geben Sie eine Bild-URL oder %custom_field.field_name% ein"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Toggle general SEO settings"
 msgstr "Allgemeine SEO-Einstellungen umschalten"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Toggle social media settings"
 msgstr "Soziale-Media-Einstellungen umschalten"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Toggle advanced SEO settings"
 msgstr "Erweiterte SEO-Einstellungen umschalten"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Toggle schema markup settings"
 msgstr "Schema-Markup-Einstellungen umschalten"
@@ -7274,7 +7256,7 @@ msgstr "Test-E-Mail"
 msgid "Sending…"
 msgstr "Senden…"
 
-#: inc/admin/dashboard.php:297
+#: inc/admin/dashboard.php:317
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Link Manager"
@@ -7367,12 +7349,6 @@ msgstr "Geben Sie die Gesamtzahl der Bewertungen an, die das Produkt erhalten ha
 msgid "Give your schema a name to help you identify it later. This title is for internal reference only and won't be included in your site's structured data."
 msgstr "Geben Sie Ihrem Schema einen Namen, um es später zu identifizieren. Dieser Titel dient nur zur internen Referenz und wird nicht in den strukturierten Daten Ihrer Website enthalten sein."
 
-#: inc/schema/types/article.php:153
-msgid ""
-"Enter the total word count of the article's main content. This information is used in structured data to provide search engines with content length details.\n"
-""
-msgstr "Geben Sie die Gesamtanzahl der Wörter im Hauptinhalt des Artikels an. Diese Informationen werden in strukturierten Daten verwendet, um Suchmaschinen Details zur Inhaltslänge bereitzustellen."
-
 #: inc/schema/types/organization.php:145
 msgid "Enter the direct URL to the organization's official logo image. This logo will be used in structured data to visually represent the brand."
 msgstr "Geben Sie die direkte URL zum offiziellen Logo-Bild der Organisation an. Dieses Logo wird in strukturierten Daten verwendet, um die Marke visuell darzustellen."
@@ -7390,21 +7366,25 @@ msgid "Write a brief description of what your website is about. This summary hel
 msgstr "Schreiben Sie eine kurze Beschreibung, worum es auf Ihrer Website geht. Diese Zusammenfassung hilft Suchmaschinen, den Zweck und den Inhalt der Website zu verstehen."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Add Field"
 msgstr "Feld hinzufügen"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Search fields…"
 msgstr "Suchfelder…"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Delete Field"
 msgstr "Feld löschen"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Delete"
 msgstr "Löschen"
@@ -7631,16 +7611,19 @@ msgstr "Dokumentation"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Authentication cancelled. Please try again."
 msgstr "Authentifizierung abgebrochen. Bitte versuchen Sie es erneut."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Edit"
 msgstr "Bearbeiten"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "%1$d/%2$d"
@@ -7670,13 +7653,9 @@ msgstr "Homepage SEO-Beschreibung"
 msgid "Homepage Open Graph Tags"
 msgstr "Homepage Open Graph-Tags"
 
-#: inc/api/analyzer.php:1157
+#: inc/api/analyzer.php:1794
 msgid "No focus keyword set. Add one to analyze title, description, URL, and content."
 msgstr "Kein Fokus-Keyword festgelegt. Fügen Sie eines hinzu, um Titel, Beschreibung, URL und Inhalt zu analysieren."
-
-#: inc/google-search-console/controller.php:513
-msgid "URL parameter is required"
-msgstr "URL-Parameter ist erforderlich"
 
 #: inc/schema/types/organization.php:188
 #: inc/schema/types/organization.php:191
@@ -8030,56 +8009,66 @@ msgstr "Spricht Sprache"
 msgid "Specify languages in which the organization provides services. Use standard IETF BCP 47 language codes (e.g., en, en-US, fr, es)."
 msgstr "Geben Sie die Sprachen an, in denen die Organisation Dienstleistungen anbietet. Verwenden Sie die standardmäßigen IETF BCP 47 Sprachcodes (z. B. en, en-US, fr, es)."
 
-#: loader.php:451
+#: loader.php:459
 msgid "Get SureRank Pro"
 msgstr "Holen Sie sich SureRank Pro"
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Our AI-powered assistant helps you fix SEO issues smartly and quickly. No need to dig through settings or guess what's wrong - we'll do the heavy lifting for you."
 msgstr "Unser KI-gestützter Assistent hilft Ihnen, SEO-Probleme intelligent und schnell zu beheben. Sie müssen nicht durch Einstellungen graben oder raten, was falsch ist - wir übernehmen die schwere Arbeit für Sie."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Here are generated home page titles. Review and apply the one you like."
 msgstr "Hier sind generierte Titel für die Startseite. Überprüfen Sie sie und wenden Sie den an, der Ihnen gefällt."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Here are generated home page descriptions. Review and apply the one you like."
 msgstr "Hier sind generierte Beschreibungen für die Startseite. Überprüfen Sie sie und wenden Sie die an, die Ihnen gefällt."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Here are generated social titles for your home page. Review and apply the one you like."
 msgstr "Hier sind generierte soziale Titel für Ihre Startseite. Überprüfen Sie sie und wenden Sie den an, der Ihnen gefällt."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Here are generated social descriptions for your home page. Review and apply the one you like."
 msgstr "Hier sind generierte soziale Beschreibungen für Ihre Startseite. Überprüfen Sie sie und wenden Sie die an, die Ihnen gefällt."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Here are generated page titles. Review and apply the one you like."
 msgstr "Hier sind generierte Seitentitel. Überprüfen Sie sie und wenden Sie den an, der Ihnen gefällt."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Here are generated page descriptions. Review and apply the one you like."
 msgstr "Hier sind generierte Seitenbeschreibungen. Überprüfen Sie sie und wenden Sie die an, die Ihnen gefällt."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Here are generated social titles. Review and apply the one you like."
 msgstr "Hier sind generierte soziale Titel. Überprüfen Sie sie und wenden Sie den an, der Ihnen gefällt."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Here are generated social descriptions. Review and apply the one you like."
 msgstr "Hier sind generierte soziale Beschreibungen. Überprüfen Sie sie und wenden Sie die an, die Ihnen gefällt."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Here are generated site taglines. Review and apply the one you like."
 msgstr "Hier sind generierte Seiten-Slogans. Überprüfen Sie sie und wenden Sie den an, der Ihnen gefällt."
@@ -8153,18 +8142,10 @@ msgstr "Upgrade auf SureRank Pro, um Suchmaschinen wie Bing und Yandex sofort zu
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
-msgid "Choose how your content will appear when shared on X. This setting determines the card type-either a summary or a summary with a large image-used in the post preview."
-msgstr "Wählen Sie, wie Ihre Inhalte erscheinen, wenn sie auf X geteilt werden. Diese Einstellung bestimmt den Kartentyp - entweder eine Zusammenfassung oder eine Zusammenfassung mit einem großen Bild - die in der Beitragsvorschau verwendet wird."
-
-#: build/admin-dashboard/index.js:1
-#: build/admin-onboarding/index.js:1
 msgid "We've successfully imported some of your SEO settings, but the migration wasn't completed. This may happen if the process was interrupted or exited early. Don't worry - everything imported so far is safely saved, and no duplicate data will be created."
 msgstr "Wir haben einige Ihrer SEO-Einstellungen erfolgreich importiert, aber die Migration wurde nicht abgeschlossen. Dies kann passieren, wenn der Prozess unterbrochen oder vorzeitig beendet wurde. Keine Sorge - alles, was bisher importiert wurde, ist sicher gespeichert, und es werden keine doppelten Daten erstellt."
 
-#: build/admin-onboarding/index.js:1
-msgid "Set up your site’s SEO easily-no advanced skills needed!"
-msgstr "Richten Sie die SEO Ihrer Website ganz einfach ein - keine fortgeschrittenen Fähigkeiten erforderlich!"
-
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Ignored"
 msgstr "Ignoriert"
@@ -8177,28 +8158,33 @@ msgstr "Seiten-SEO-Prüfungen - SureRank hilft Ihnen, die SEO-Qualität Ihrer Wo
 msgid "Toggle SureRank Settings - Control multiple SureRank SEO settings with a single command. Supports author archive (show/hide author post archives), date archive (show/hide date-based archives), no_index (strictly array of existing post types or taxonomies to hide from search), no_follow (strictly array of existing post types or taxonomies with nofollow), no_archive (strictly array of existing post types or taxonomies to prevent caching), enable_xml_sitemap (XML sitemap generation), enable_xml_image_sitemap (include images in sitemap), enable_automatic_indexing (auto-submit to search engines), auto_redirect_enabled (automatic redirects), enable_page_level_seo (per-page SEO controls), enable_google_console (Google Search Console integration), enable_schemas (structured data), enable_migration (import from other SEO plugins), enable_extended_meta_templates (advanced meta templates). Examples: \"enable author archive and XML sitemap\", \"disable date archive and enable image sitemap\", \"set no_index for posts and pages\", \"enable all sitemaps and schemas\", \"turn on Google Console and page level SEO\"."
 msgstr "SureRank-Einstellungen umschalten - Steuern Sie mehrere SureRank-SEO-Einstellungen mit einem einzigen Befehl. Unterstützt Autorenarchiv (zeigen/verstecken von Autorenbeitragsarchiven), Datumsarchiv (zeigen/verstecken von datumsbasierten Archiven), no_index (strikte Liste vorhandener Beitragstypen oder Taxonomien, die von der Suche ausgeschlossen werden sollen), no_follow (strikte Liste vorhandener Beitragstypen oder Taxonomien mit nofollow), no_archive (strikte Liste vorhandener Beitragstypen oder Taxonomien, um das Caching zu verhindern), enable_xml_sitemap (XML-Sitemap-Generierung), enable_xml_image_sitemap (Bilder in die Sitemap einfügen), enable_automatic_indexing (automatische Einreichung bei Suchmaschinen), auto_redirect_enabled (automatische Weiterleitungen), enable_page_level_seo (SEO-Kontrollen auf Seitenebene), enable_google_console (Integration der Google Search Console), enable_schemas (strukturierte Daten), enable_migration (Import von anderen SEO-Plugins), enable_extended_meta_templates (erweiterte Meta-Vorlagen). Beispiele: \"Autorenarchiv und XML-Sitemap aktivieren\", \"Datumsarchiv deaktivieren und Bild-Sitemap aktivieren\", \"no_index für Beiträge und Seiten festlegen\", \"alle Sitemaps und Schemata aktivieren\", \"Google Console und SEO auf Seitenebene aktivieren\"."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "Enter a custom field variable like %custom_field.field_name% or a direct image URL. Type @ to view variable suggestions."
 msgstr "Geben Sie eine benutzerdefinierte Feldvariable wie %custom_field.field_name% oder eine direkte Bild-URL ein. Tippen Sie @, um Vorschläge für Variablen anzuzeigen."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "These settings help search engines understand how to treat your page in search results."
 msgstr "Diese Einstellungen helfen Suchmaschinen zu verstehen, wie sie Ihre Seite in den Suchergebnissen behandeln sollen."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "\"No Index\" will prevent the page from appearing in search results."
 msgstr "„No Index“ verhindert, dass die Seite in den Suchergebnissen erscheint."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "\"No Follow\" tells search engines not to follow any links on the page."
 msgstr "„No Follow“ sagt Suchmaschinen, dass sie keine Links auf der Seite folgen sollen."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "\"No Archive\" prevents search engines from storing a cached version of the page."
 msgstr "„No Archive“ verhindert, dass Suchmaschinen eine zwischengespeicherte Version der Seite speichern."
 
-#: inc/admin/seo-popup.php:114
+#: inc/admin/seo-popup.php:159
 #: build/seo-popup/index.js:1
 msgid "Manage your SEO"
 msgstr "Verwalten Sie Ihr SEO"
@@ -8222,10 +8208,6 @@ msgstr "Nachname des Benutzers."
 #: inc/api/onboarding.php:176
 msgid "Email address of the user."
 msgstr "E-Mail-Adresse des Benutzers."
-
-#: build/admin-dashboard/index.js:1
-msgid "You don't have permission to perform this action. Please contact administrator."
-msgstr "Sie haben keine Berechtigung, diese Aktion auszuführen. Bitte kontaktieren Sie den Administrator."
 
 #: build/admin-dashboard/index.js:1
 msgid "Please contact the administrator to manage the static page SEO, as you do not have the required access rights."
@@ -8312,16 +8294,12 @@ msgstr "Ein SEO-Titel für die Homepage ist die Hauptüberschrift, die für Ihre
 msgid "It is often the first thing people read before deciding whether to click."
 msgstr "Es ist oft das Erste, was die Leute lesen, bevor sie entscheiden, ob sie klicken."
 
-#: inc/analyzer/seo-analyzer.php:139
-msgid "A clear and well written title helps search engines understand your homepage and improves click through rate by setting the right expectation."
-msgstr "Ein klarer und gut geschriebener Titel hilft Suchmaschinen, Ihre Homepage zu verstehen, und verbessert die Klickrate, indem er die richtigen Erwartungen setzt."
-
 #: inc/analyzer/seo-analyzer.php:143
 #: inc/analyzer/seo-analyzer.php:264
 #: inc/analyzer/seo-analyzer.php:386
 #: inc/analyzer/seo-analyzer.php:470
 #: inc/analyzer/seo-analyzer.php:653
-#: inc/api/analyzer.php:644
+#: inc/api/analyzer.php:721
 msgid "Best Practice"
 msgstr "Beste Praxis"
 
@@ -8350,17 +8328,16 @@ msgstr "Ein einfacher, ehrlicher Titel erzielt in der Regel bessere Ergebnisse a
 #: inc/analyzer/seo-analyzer.php:752
 #: inc/analyzer/seo-analyzer.php:827
 #: inc/analyzer/seo-analyzer.php:843
-#: inc/analyzer/seo-analyzer.php:931
+#: inc/analyzer/seo-analyzer.php:936
 #: inc/analyzer/seo-analyzer.php:1008
 #: inc/analyzer/seo-analyzer.php:1079
 #: inc/analyzer/seo-analyzer.php:1204
 #: inc/analyzer/seo-analyzer.php:1707
-#: inc/api/analyzer.php:467
-#: inc/api/analyzer.php:581
-#: inc/api/analyzer.php:657
-#: inc/api/analyzer.php:718
-#: inc/api/analyzer.php:787
-#: inc/api/analyzer.php:877
+#: inc/api/analyzer.php:544
+#: inc/api/analyzer.php:658
+#: inc/api/analyzer.php:734
+#: inc/api/analyzer.php:829
+#: inc/api/analyzer.php:919
 msgid "Where to Update It"
 msgstr "Wo Sie es aktualisieren können"
 
@@ -8396,16 +8373,15 @@ msgstr "Hier können Sie den Titel, die Beschreibung und die sozialen Metadaten 
 #: inc/analyzer/seo-analyzer.php:681
 #: inc/analyzer/seo-analyzer.php:766
 #: inc/analyzer/seo-analyzer.php:860
-#: inc/analyzer/seo-analyzer.php:944
+#: inc/analyzer/seo-analyzer.php:949
 #: inc/analyzer/seo-analyzer.php:1105
 #: inc/analyzer/seo-analyzer.php:1217
 #: inc/analyzer/seo-analyzer.php:1235
 #: inc/analyzer/seo-analyzer.php:1720
-#: inc/api/analyzer.php:484
-#: inc/api/analyzer.php:670
-#: inc/api/analyzer.php:731
-#: inc/api/analyzer.php:807
-#: inc/api/analyzer.php:891
+#: inc/api/analyzer.php:561
+#: inc/api/analyzer.php:747
+#: inc/api/analyzer.php:849
+#: inc/api/analyzer.php:933
 msgid "Update Here"
 msgstr "Hier aktualisieren"
 
@@ -8417,20 +8393,15 @@ msgstr "Hier aktualisieren"
 #: inc/analyzer/seo-analyzer.php:693
 #: inc/analyzer/seo-analyzer.php:779
 #: inc/analyzer/seo-analyzer.php:871
-#: inc/analyzer/seo-analyzer.php:959
+#: inc/analyzer/seo-analyzer.php:964
 #: inc/analyzer/seo-analyzer.php:1027
 #: inc/analyzer/seo-analyzer.php:1125
 #: inc/analyzer/seo-analyzer.php:1696
-#: inc/api/analyzer.php:611
-#: inc/api/analyzer.php:683
-#: inc/api/analyzer.php:741
-#: inc/api/analyzer.php:820
+#: inc/api/analyzer.php:688
+#: inc/api/analyzer.php:760
+#: inc/api/analyzer.php:862
 msgid "Need Help?"
 msgstr "Brauchen Sie Hilfe?"
-
-#: inc/analyzer/seo-analyzer.php:202
-msgid "SureRank Pro helps you generate SEO titles using AI, following best practices for length, clarity, and click through rate."
-msgstr "SureRank Pro hilft Ihnen, SEO-Titel mit KI zu generieren, die den besten Praktiken für Länge, Klarheit und Klickrate folgen."
 
 #: inc/analyzer/seo-analyzer.php:253
 msgid "A homepage SEO description is the short text that appears below your site title in search results."
@@ -8439,10 +8410,6 @@ msgstr "Eine SEO-Beschreibung für die Homepage ist der kurze Text, der unter Ih
 #: inc/analyzer/seo-analyzer.php:259
 msgid "It gives people a quick idea of what your site is about before they decide to click."
 msgstr "Sie gibt den Menschen eine schnelle Vorstellung davon, worum es auf Ihrer Website geht, bevor sie entscheiden, ob sie klicken."
-
-#: inc/analyzer/seo-analyzer.php:260
-msgid "A clear and well written description helps search engines understand your homepage and makes your result more appealing."
-msgstr "Eine klare und gut geschriebene Beschreibung hilft Suchmaschinen, Ihre Homepage zu verstehen, und macht Ihr Ergebnis ansprechender."
 
 #: inc/analyzer/seo-analyzer.php:268
 msgid "Good descriptions are clear and easy to read."
@@ -8529,10 +8496,6 @@ msgstr "Ihre Startseite enthält derzeit mehrere H1-Überschriften."
 msgid "Multiple H1 Headings Found"
 msgstr "Mehrere H1-Überschriften gefunden"
 
-#: inc/analyzer/seo-analyzer.php:442
-msgid "Your homepage currently contains one H1 heading"
-msgstr "Ihre Startseite enthält derzeit eine H1-Überschrift"
-
 #: inc/analyzer/seo-analyzer.php:443
 msgid "Homepage H1 Heading Found"
 msgstr "H1-Überschrift der Startseite gefunden"
@@ -8578,10 +8541,6 @@ msgstr "Fügen Sie Abschnittsüberschriften hinzu oder aktualisieren Sie diese u
 #: inc/analyzer/seo-analyzer.php:517
 msgid "SureRank Pro helps you identify heading structure issues and suggests improvements using AI, so your pages stay clear and well organized."
 msgstr "SureRank Pro hilft Ihnen, Probleme mit der Überschriftenstruktur zu identifizieren und Verbesserungen mithilfe von KI vorzuschlagen, damit Ihre Seiten klar und gut organisiert bleiben."
-
-#: inc/analyzer/seo-analyzer.php:524
-msgid "Your homepage contains at least one H2 heading"
-msgstr "Ihre Startseite enthält mindestens eine H2-Überschrift"
 
 #: inc/analyzer/seo-analyzer.php:525
 msgid "Subheadings Found on the Homepage"
@@ -8710,16 +8669,14 @@ msgstr "Geben Sie die korrekte URL im Feld für das kanonische Tag ein"
 #: inc/analyzer/seo-analyzer.php:760
 #: inc/analyzer/seo-analyzer.php:1212
 #: inc/analyzer/seo-analyzer.php:1230
-#: inc/api/analyzer.php:664
-#: inc/api/analyzer.php:725
-#: inc/api/analyzer.php:800
-#: inc/api/analyzer.php:885
+#: inc/api/analyzer.php:741
+#: inc/api/analyzer.php:842
+#: inc/api/analyzer.php:927
 msgid "Save your changes"
 msgstr "Speichern Sie Ihre Änderungen"
 
 #: inc/analyzer/seo-analyzer.php:781
-#: inc/api/analyzer.php:685
-#: inc/api/analyzer.php:742
+#: inc/api/analyzer.php:762
 msgid "SureRank Pro helps fix SEO issues across your website using AI, without manual effort."
 msgstr "SureRank Pro hilft, SEO-Probleme auf Ihrer gesamten Website mit KI zu beheben, ohne manuellen Aufwand."
 
@@ -8772,72 +8729,59 @@ msgstr "Gehen Sie vom SureRank-Dashboard zu Allgemein ⇾ Startseite ⇾ <a href
 msgid "Here, you can update the Robot Instructions for your Home Page to control how search engines interact with it."
 msgstr "Hier können Sie die Robot-Anweisungen für Ihre Startseite aktualisieren, um zu steuern, wie Suchmaschinen mit ihr interagieren."
 
-#: inc/analyzer/seo-analyzer.php:873
-msgid "SureRank Pro helps you detect and fix indexing issues using AI assistant, so your pages are visible and searchable."
-msgstr "SureRank Pro hilft Ihnen, Indizierungsprobleme mit Hilfe eines KI-Assistenten zu erkennen und zu beheben, damit Ihre Seiten sichtbar und durchsuchbar sind."
-
-#: inc/analyzer/seo-analyzer.php:881
-#: inc/analyzer/seo-analyzer.php:897
-msgid "Your homepage is currently not indexable by search engines. "
-msgstr "Ihre Startseite ist derzeit für Suchmaschinen nicht indexierbar."
-
-#: inc/analyzer/seo-analyzer.php:897
-msgid "Your homepage is currently indexable by search engines. "
-msgstr "Ihre Startseite ist derzeit für Suchmaschinen indexierbar."
-
 #: inc/analyzer/seo-analyzer.php:898
 msgid "Home Page Indexable"
 msgstr "Startseite indexierbar"
 
-#: inc/analyzer/seo-analyzer.php:918
+#: inc/analyzer/seo-analyzer.php:923
 msgid "Home Page is Reachable"
 msgstr "Startseite ist erreichbar"
 
-#: inc/analyzer/seo-analyzer.php:919
+#: inc/analyzer/seo-analyzer.php:924
 msgid "Your homepage is currently accessible and loading correctly."
 msgstr "Ihre Startseite ist derzeit zugänglich und lädt korrekt."
 
-#: inc/analyzer/seo-analyzer.php:921
+#: inc/analyzer/seo-analyzer.php:926
 msgid "Home Page is Not Reachable"
 msgstr "Startseite ist nicht erreichbar"
 
-#: inc/analyzer/seo-analyzer.php:922
+#: inc/analyzer/seo-analyzer.php:927
 msgid "Your homepage is currently not accessible or is returning an error."
 msgstr "Ihre Startseite ist derzeit nicht zugänglich oder gibt einen Fehler zurück."
 
-#: inc/analyzer/seo-analyzer.php:925
+#: inc/analyzer/seo-analyzer.php:930
 msgid "Your homepage is usually the first page visitors see and the main entry point search engines use to understand your site. It acts as the starting point for crawling and navigation."
 msgstr "Ihre Startseite ist normalerweise die erste Seite, die Besucher sehen, und der Hauptzugangspunkt, den Suchmaschinen verwenden, um Ihre Seite zu verstehen. Sie dient als Ausgangspunkt für das Crawlen und die Navigation."
 
-#: inc/analyzer/seo-analyzer.php:926
+#: inc/analyzer/seo-analyzer.php:931
 msgid "When the homepage cannot be reached, visitors may see an error page and leave immediately. Search engines may also struggle to crawl or index your site properly if they cannot access this page."
 msgstr "Wenn die Startseite nicht erreicht werden kann, sehen Besucher möglicherweise eine Fehlerseite und verlassen sofort. Suchmaschinen könnten auch Schwierigkeiten haben, Ihre Seite richtig zu crawlen oder zu indizieren, wenn sie auf diese Seite nicht zugreifen können."
 
-#: inc/analyzer/seo-analyzer.php:927
+#: inc/analyzer/seo-analyzer.php:932
 msgid "This issue can affect the visibility of your entire site, not just the homepage."
 msgstr "Dieses Problem kann die Sichtbarkeit Ihrer gesamten Seite beeinträchtigen, nicht nur die der Startseite."
 
-#: inc/analyzer/seo-analyzer.php:933
+#: inc/analyzer/seo-analyzer.php:938
 msgid "You can review and fix this from your WordPress settings."
 msgstr "Sie können dies in Ihren WordPress-Einstellungen überprüfen und beheben."
 
-#: inc/analyzer/seo-analyzer.php:936
+#: inc/analyzer/seo-analyzer.php:941
 msgid "Go to Settings ⇾ Reading"
 msgstr "Gehen Sie zu Einstellungen ⇾ Lesen"
 
-#: inc/analyzer/seo-analyzer.php:937
+#: inc/analyzer/seo-analyzer.php:942
 msgid "Check which page is set as your homepage"
 msgstr "Überprüfen Sie, welche Seite als Ihre Startseite festgelegt ist"
 
-#: inc/analyzer/seo-analyzer.php:938
+#: inc/analyzer/seo-analyzer.php:943
 msgid "Make sure the selected page exists and is published"
 msgstr "Stellen Sie sicher, dass die ausgewählte Seite existiert und veröffentlicht ist"
 
-#: inc/analyzer/seo-analyzer.php:953
+#: inc/analyzer/seo-analyzer.php:958
 msgid "If you are using a static homepage, open the page directly and confirm it loads without errors. Also check that no redirects, maintenance plugins, or access restrictions are blocking it."
 msgstr "Wenn Sie eine statische Startseite verwenden, öffnen Sie die Seite direkt und bestätigen Sie, dass sie ohne Fehler lädt. Überprüfen Sie auch, ob keine Weiterleitungen, Wartungs-Plugins oder Zugriffsrestriktionen sie blockieren."
 
-#: inc/analyzer/seo-analyzer.php:961
+#: inc/analyzer/seo-analyzer.php:966
 msgid "SureRank Pro users get access to our support team, available 24×7, to help identify homepage access and visibility issues."
 msgstr "SureRank Pro-Nutzer erhalten Zugang zu unserem Support-Team, das 24×7 verfügbar ist, um Probleme mit dem Zugriff auf die Startseite und der Sichtbarkeit zu identifizieren."
 
@@ -9037,10 +8981,6 @@ msgstr "Obwohl beide die gleiche Seite anzeigen, behandeln Suchmaschinen sie als
 msgid "To keep things clean, choose one version as your main address."
 msgstr "Um die Dinge sauber zu halten, wählen Sie eine Version als Ihre Hauptadresse aus."
 
-#: inc/analyzer/seo-analyzer.php:1321
-msgid "Decide whether you want to use www or non www, then set up a redirect so all traffic goes to that version."
-msgstr "Entscheiden Sie, ob Sie www oder non-www verwenden möchten, und richten Sie dann eine Weiterleitung ein, damit der gesamte Verkehr zu dieser Version geht."
-
 #: inc/analyzer/seo-analyzer.php:1325
 msgid "🔧 Where to set it"
 msgstr "🔧 Wo man es einrichtet"
@@ -9057,10 +8997,6 @@ msgstr "Ich benötige Hilfe bei der Festlegung einer bevorzugten Version meiner 
 msgid "Right now, my site loads on both versions:"
 msgstr "Im Moment wird meine Seite auf beiden Versionen geladen:"
 
-#: inc/analyzer/seo-analyzer.php:1336
-msgid "I would like to redirect all traffic from https://www.example.com to https://example.com and use the non WWW version as my main address."
-msgstr "Ich möchte den gesamten Verkehr von https://www.example.com auf https://example.com umleiten und die non-WWW-Version als meine Hauptadresse verwenden."
-
 #: inc/analyzer/seo-analyzer.php:1337
 msgid "Please feel free to set this up for me directly. Thank you for your help."
 msgstr "Bitte richten Sie dies direkt für mich ein. Vielen Dank für Ihre Hilfe."
@@ -9073,17 +9009,9 @@ msgstr "💬 Brauchen Sie Hilfe?"
 msgid "SureRank Pro users get access to our support team, available 24×7, for setup and plugin related questions."
 msgstr "SureRank Pro-Nutzer haben Zugang zu unserem Support-Team, das 24×7 für Einrichtungs- und Plugin-bezogene Fragen verfügbar ist."
 
-#: inc/analyzer/seo-analyzer.php:1349
-msgid "WWW and non-WWW versions are redirecting properly."
-msgstr "WWW- und non-WWW-Versionen leiten korrekt weiter."
-
 #: inc/analyzer/seo-analyzer.php:1350
 msgid "The site correctly redirects between the www and non-www versions."
 msgstr "Die Seite leitet korrekt zwischen den www- und non-www-Versionen weiter."
-
-#: inc/analyzer/seo-analyzer.php:1352
-msgid "WWW and non-WWW versions are not redirecting properly."
-msgstr "WWW- und non-WWW-Versionen leiten nicht korrekt weiter."
 
 #: inc/analyzer/seo-analyzer.php:1353
 msgid "The site does not correctly redirect between the www and non-www versions."
@@ -9133,296 +9061,257 @@ msgstr "Klicken Sie auf den Bildblock"
 msgid "Add a short, clear description in the ALT text field"
 msgstr "Fügen Sie eine kurze, klare Beschreibung im ALT-Text-Feld hinzu"
 
-#: inc/api/analyzer.php:458
+#: inc/api/analyzer.php:535
 msgid "Google Search Console is currently connected to your site."
 msgstr "Google Search Console ist derzeit mit Ihrer Website verbunden."
 
-#: inc/api/analyzer.php:459
+#: inc/api/analyzer.php:536
 msgid "Google Search Console is not currently connected to your site."
 msgstr "Google Search Console ist derzeit nicht mit Ihrer Website verbunden."
 
-#: inc/api/analyzer.php:462
+#: inc/api/analyzer.php:539
 msgid "Search Console helps you understand how your site appears in Google search results. It shows which pages are indexed, how your site is performing, and whether Google is reporting any issues."
 msgstr "Die Search Console hilft Ihnen zu verstehen, wie Ihre Website in den Google-Suchergebnissen erscheint. Sie zeigt, welche Seiten indexiert sind, wie Ihre Website abschneidet und ob Google Probleme meldet."
 
-#: inc/api/analyzer.php:463
+#: inc/api/analyzer.php:540
 msgid "Without it connected, you miss important visibility into how Google sees your site."
 msgstr "Ohne diese Verbindung verpassen Sie wichtige Einblicke, wie Google Ihre Website sieht."
 
-#: inc/api/analyzer.php:469
+#: inc/api/analyzer.php:546
 msgid "You can connect Google Search Console directly from the SureRank Dashboard."
 msgstr "Sie können Google Search Console direkt vom SureRank-Dashboard aus verbinden."
 
 #. translators: %s is the Search Console URL.
-#: inc/api/analyzer.php:474
+#: inc/api/analyzer.php:551
 #, php-format
 msgid "Go to SureRank ⇾ <a href=\"%s\">Search Console</a>"
 msgstr "Gehen Sie zu SureRank ⇾ <a href=\"%s\">Search Console</a>"
 
-#: inc/api/analyzer.php:477
+#: inc/api/analyzer.php:554
 msgid "Sign in with your Google account"
 msgstr "Melden Sie sich mit Ihrem Google-Konto an"
 
-#: inc/api/analyzer.php:478
+#: inc/api/analyzer.php:555
 msgid "Select your site and complete the connection"
 msgstr "Wählen Sie Ihre Website aus und schließen Sie die Verbindung ab"
 
-#: inc/api/analyzer.php:493
+#: inc/api/analyzer.php:570
 msgid "Once connected, SureRank will start using Search Console data to show search performance and indexing insights."
 msgstr "Sobald die Verbindung hergestellt ist, beginnt SureRank, Daten der Search Console zu verwenden, um Suchleistungs- und Indexierungsinformationen anzuzeigen."
 
-#: inc/api/analyzer.php:499
-#: inc/api/analyzer.php:904
+#: inc/api/analyzer.php:576
+#: inc/api/analyzer.php:946
 msgid "Need More?"
 msgstr "Brauchen Sie mehr?"
 
-#: inc/api/analyzer.php:501
+#: inc/api/analyzer.php:578
 msgid "SureRank Pro unlocks advanced insights and recommendations powered by Google Search Console data."
 msgstr "SureRank Pro schaltet erweiterte Einblicke und Empfehlungen frei, die auf Daten der Google Search Console basieren."
 
-#: inc/api/analyzer.php:562
+#: inc/api/analyzer.php:639
 msgid "Other SEO Plugin Detected"
 msgstr "Anderes SEO-Plugin erkannt"
 
-#: inc/api/analyzer.php:562
+#: inc/api/analyzer.php:639
 msgid "No other SEO plugin detected"
 msgstr "Kein anderes SEO-Plugin erkannt"
 
-#: inc/api/analyzer.php:563
+#: inc/api/analyzer.php:640
 msgid "No other SEO plugin detected on your site."
 msgstr "Kein anderes SEO-Plugin auf Ihrer Website erkannt."
 
-#: inc/api/analyzer.php:567
+#: inc/api/analyzer.php:644
 msgid "More than one SEO plugin is currently active on your site."
 msgstr "Mehr als ein SEO-Plugin ist derzeit auf Ihrer Website aktiv."
 
 #. translators: %s is the list of active plugins
-#: inc/api/analyzer.php:570
+#: inc/api/analyzer.php:647
 #, php-format
 msgid "Another SEO plugin, %s, is currently active on your site."
 msgstr "Ein anderes SEO-Plugin, %s, ist derzeit auf Ihrer Website aktiv."
 
-#: inc/api/analyzer.php:575
+#: inc/api/analyzer.php:652
 msgid "SEO plugins manage things like page titles, descriptions, schema, and indexing settings. These signals help search engines understand how your site appears in search results."
 msgstr "SEO-Plugins verwalten Dinge wie Seitentitel, Beschreibungen, Schema und Indexierungseinstellungen. Diese Signale helfen Suchmaschinen zu verstehen, wie Ihre Website in den Suchergebnissen erscheint."
 
-#: inc/api/analyzer.php:576
+#: inc/api/analyzer.php:653
 msgid "When multiple SEO plugins are active, they can create duplicate or conflicting signals. This makes it harder for search engines to understand which information to trust."
 msgstr "Wenn mehrere SEO-Plugins aktiv sind, können sie doppelte oder widersprüchliche Signale erzeugen. Dies erschwert es Suchmaschinen, zu verstehen, welchen Informationen sie vertrauen sollen."
 
-#: inc/api/analyzer.php:577
+#: inc/api/analyzer.php:654
 msgid "Using a single SEO plugin helps keep everything consistent and easier to manage."
 msgstr "Die Verwendung eines einzigen SEO-Plugins hilft, alles konsistent und einfacher zu verwalten."
 
-#: inc/api/analyzer.php:583
+#: inc/api/analyzer.php:660
 msgid "You can manage this from your WordPress plugins list."
 msgstr "Sie können dies aus Ihrer WordPress-Plugin-Liste verwalten."
 
 #. translators: %s is the Plugins menu URL.
-#: inc/api/analyzer.php:588
+#: inc/api/analyzer.php:665
 #, php-format
 msgid "Go to <a href=\"%s\">Plugins ⇾ Installed Plugins</a>"
 msgstr "Gehen Sie zu <a href=\"%s\">Plugins ⇾ Installierte Plugins</a>"
 
-#: inc/api/analyzer.php:591
+#: inc/api/analyzer.php:668
 msgid "Identify any other active SEO plugins"
 msgstr "Identifizieren Sie andere aktive SEO-Plugins"
 
-#: inc/api/analyzer.php:592
+#: inc/api/analyzer.php:669
 msgid "Deactivate the ones you are not using"
 msgstr "Deaktivieren Sie die, die Sie nicht verwenden"
 
-#: inc/api/analyzer.php:598
+#: inc/api/analyzer.php:675
 msgid "Deactivate Here"
 msgstr "Hier deaktivieren"
 
-#: inc/api/analyzer.php:613
-msgid "SureRank Premium users get access to our support team, available 24×7, to help review plugin conflicts and guide you through cleanup."
-msgstr "SureRank Premium-Nutzer erhalten Zugang zu unserem Support-Team, das rund um die Uhr verfügbar ist, um Plugin-Konflikte zu überprüfen und Sie bei der Bereinigung zu unterstützen."
-
-#: inc/api/analyzer.php:635
-msgid "Your site does currently have a tagline set."
-msgstr "Ihre Website hat derzeit einen Slogan festgelegt."
-
-#: inc/api/analyzer.php:635
+#: inc/api/analyzer.php:712
 msgid "Your site does not currently have a tagline set."
 msgstr "Ihre Website hat derzeit keinen Slogan festgelegt."
 
-#: inc/api/analyzer.php:638
+#: inc/api/analyzer.php:715
 msgid "A site tagline is a short line that describes what your website is about."
 msgstr "Ein Website-Slogan ist eine kurze Zeile, die beschreibt, worum es auf Ihrer Website geht."
 
-#: inc/api/analyzer.php:639
+#: inc/api/analyzer.php:716
 msgid "It often appears alongside your site title and helps visitors quickly understand your purpose."
 msgstr "Er erscheint oft neben Ihrem Seitentitel und hilft Besuchern, schnell Ihr Ziel zu verstehen."
 
-#: inc/api/analyzer.php:640
+#: inc/api/analyzer.php:717
 msgid "A clear tagline sets context, supports your brand, and makes your site feel more intentional."
 msgstr "Ein klarer Slogan setzt den Kontext, unterstützt Ihre Marke und lässt Ihre Website absichtlicher erscheinen."
 
-#: inc/api/analyzer.php:648
+#: inc/api/analyzer.php:725
 msgid "A good tagline is simple and easy to understand."
 msgstr "Ein guter Slogan ist einfach und leicht verständlich."
 
-#: inc/api/analyzer.php:649
+#: inc/api/analyzer.php:726
 msgid "It should describe what you do or who your site is for."
 msgstr "Er sollte beschreiben, was Sie tun oder für wen Ihre Website gedacht ist."
 
-#: inc/api/analyzer.php:650
+#: inc/api/analyzer.php:727
 msgid "Aim for a single clear sentence that feels natural and human."
 msgstr "Zielen Sie auf einen einzigen klaren Satz ab, der natürlich und menschlich klingt."
 
-#: inc/api/analyzer.php:653
+#: inc/api/analyzer.php:730
 msgid "Avoid buzzwords or vague phrases that do not say much about your site."
 msgstr "Vermeiden Sie Schlagwörter oder vage Phrasen, die nicht viel über Ihre Website aussagen."
 
-#: inc/api/analyzer.php:659
+#: inc/api/analyzer.php:736
 msgid "You can update your site tagline from the WordPress settings."
 msgstr "Sie können Ihren Website-Slogan in den WordPress-Einstellungen aktualisieren."
 
-#: inc/api/analyzer.php:662
+#: inc/api/analyzer.php:739
 msgid "Go to Settings ⇾ General"
 msgstr "Gehen Sie zu Einstellungen ⇾ Allgemein"
 
-#: inc/api/analyzer.php:663
+#: inc/api/analyzer.php:740
 msgid "Update the Tagline field"
 msgstr "Aktualisieren Sie das Slogan-Feld"
 
-#: inc/api/analyzer.php:705
-msgid "Robots.txt is accessible."
-msgstr "Robots.txt ist zugänglich."
-
-#: inc/api/analyzer.php:706
-msgid "Your site has an accessible robots.txt file."
-msgstr "Ihre Website hat eine zugängliche robots.txt-Datei."
-
-#: inc/api/analyzer.php:708
+#: inc/api/analyzer.php:1693
 msgid "Robots.txt is missing or inaccessible."
 msgstr "Robots.txt fehlt oder ist nicht zugänglich."
 
-#: inc/api/analyzer.php:709
+#: inc/api/analyzer.php:1691
+#: inc/api/analyzer.php:1692
 msgid "Your site does not currently have an accessible robots.txt file."
 msgstr "Ihre Website hat derzeit keine zugängliche robots.txt-Datei."
 
-#: inc/api/analyzer.php:712
-msgid "The robots.txt file tells search engines which parts of your site they are allowed to crawl and index."
-msgstr "Die robots.txt-Datei sagt Suchmaschinen, welche Teile Ihrer Website sie crawlen und indizieren dürfen."
-
-#: inc/api/analyzer.php:713
-msgid "When this file is missing or inaccessible, search engines may have trouble understanding how to properly crawl your site."
-msgstr "Wenn diese Datei fehlt oder nicht zugänglich ist, können Suchmaschinen Schwierigkeiten haben, zu verstehen, wie sie Ihre Website richtig crawlen."
-
-#: inc/api/analyzer.php:714
-msgid "Having a valid robots.txt file helps avoid crawling issues and ensures search engines focus on the right pages."
-msgstr "Eine gültige robots.txt-Datei hilft, Crawling-Probleme zu vermeiden und stellt sicher, dass Suchmaschinen sich auf die richtigen Seiten konzentrieren."
-
-#: inc/api/analyzer.php:720
-msgid "You can create or edit your robots.txt file directly from SureRank."
-msgstr "Sie können Ihre robots.txt-Datei direkt von SureRank aus erstellen oder bearbeiten."
-
-#: inc/api/analyzer.php:723
-msgid "Go to SureRank ⇾ Advanced ⇾ Robots.txt Editor"
-msgstr "Gehen Sie zu SureRank ⇾ Erweitert ⇾ Robots.txt-Editor"
-
-#: inc/api/analyzer.php:724
-msgid "Review or add the required rules"
-msgstr "Überprüfen oder fügen Sie die erforderlichen Regeln hinzu"
-
-#: inc/api/analyzer.php:774
+#: inc/api/analyzer.php:816
 msgid "Search engine visibility is enabled."
 msgstr "Die Sichtbarkeit für Suchmaschinen ist aktiviert."
 
-#: inc/api/analyzer.php:775
+#: inc/api/analyzer.php:817
 msgid "Search engine visibility is currently enabled in your WordPress settings."
 msgstr "Die Sichtbarkeit für Suchmaschinen ist derzeit in Ihren WordPress-Einstellungen aktiviert."
 
-#: inc/api/analyzer.php:777
+#: inc/api/analyzer.php:819
 msgid "Search engine visibility is disabled."
 msgstr "Die Sichtbarkeit für Suchmaschinen ist deaktiviert."
 
-#: inc/api/analyzer.php:778
+#: inc/api/analyzer.php:820
 msgid "Search engine visibility is currently disabled in your WordPress settings."
 msgstr "Die Sichtbarkeit für Suchmaschinen ist derzeit in Ihren WordPress-Einstellungen deaktiviert."
 
-#: inc/api/analyzer.php:781
+#: inc/api/analyzer.php:823
 msgid "WordPress includes a setting that tells search engines whether they are allowed to index your site. Indexing means your pages can appear in search results."
 msgstr "WordPress enthält eine Einstellung, die Suchmaschinen mitteilt, ob sie Ihre Website indizieren dürfen. Indizierung bedeutet, dass Ihre Seiten in den Suchergebnissen erscheinen können."
 
-#: inc/api/analyzer.php:782
+#: inc/api/analyzer.php:824
 msgid "This setting is commonly used while a site is being built or kept private. When enabled, it asks search engines not to index new pages."
 msgstr "Diese Einstellung wird häufig verwendet, während eine Website erstellt oder privat gehalten wird. Wenn sie aktiviert ist, wird Suchmaschinen gesagt, dass sie neue Seiten nicht indizieren sollen."
 
-#: inc/api/analyzer.php:783
+#: inc/api/analyzer.php:825
 msgid "If this setting remains enabled by mistake, your site may not appear in search results even if everything else is set up correctly. It can quietly limit visibility without showing obvious errors."
 msgstr "Wenn diese Einstellung versehentlich aktiviert bleibt, könnte Ihre Website möglicherweise nicht in den Suchergebnissen erscheinen, selbst wenn alles andere korrekt eingerichtet ist. Sie kann die Sichtbarkeit stillschweigend einschränken, ohne offensichtliche Fehler anzuzeigen."
 
-#: inc/api/analyzer.php:789
+#: inc/api/analyzer.php:831
 msgid "You can change this setting from your WordPress dashboard."
 msgstr "Sie können diese Einstellung von Ihrem WordPress-Dashboard aus ändern."
 
 #. translators: %s is the URL of the WordPress Reading settings page
-#: inc/api/analyzer.php:795
+#: inc/api/analyzer.php:837
 #, php-format
 msgid "Go to <a href=\"%s\">Settings ⇾ Reading</a>"
 msgstr "Gehen Sie zu <a href=\"%s\">Einstellungen ⇾ Lesen</a>"
 
-#: inc/api/analyzer.php:798
+#: inc/api/analyzer.php:840
 msgid "Find the option labeled “Search engine visibility”"
 msgstr "Suchen Sie die Option mit der Bezeichnung „Sichtbarkeit der Suchmaschine“"
 
-#: inc/api/analyzer.php:799
+#: inc/api/analyzer.php:841
 msgid "Make sure the checkbox is not selected"
 msgstr "Stellen Sie sicher, dass das Kontrollkästchen nicht ausgewählt ist"
 
-#: inc/api/analyzer.php:822
+#: inc/api/analyzer.php:864
 msgid "SureRank Pro users get access to our support team, available 24×7, to help detect visibility and indexing issues before they affect your site."
 msgstr "SureRank Pro-Nutzer haben Zugang zu unserem Support-Team, das rund um die Uhr verfügbar ist, um Sichtbarkeits- und Indizierungsprobleme zu erkennen, bevor sie Ihre Website beeinträchtigen."
 
-#: inc/api/analyzer.php:863
+#: inc/api/analyzer.php:905
 msgid "XML sitemap is accessible."
 msgstr "XML-Sitemap ist zugänglich."
 
-#: inc/api/analyzer.php:864
+#: inc/api/analyzer.php:906
 msgid "The XML sitemap for this site is accessible to search engines."
 msgstr "Die XML-Sitemap für diese Website ist für Suchmaschinen zugänglich."
 
-#: inc/api/analyzer.php:866
+#: inc/api/analyzer.php:908
 msgid "XML sitemap is missing or inaccessible."
 msgstr "XML-Sitemap fehlt oder ist nicht zugänglich."
 
-#: inc/api/analyzer.php:867
+#: inc/api/analyzer.php:909
 msgid "The XML sitemap for this site is missing or cannot be accessed."
 msgstr "Die XML-Sitemap für diese Website fehlt oder kann nicht aufgerufen werden."
 
-#: inc/api/analyzer.php:870
+#: inc/api/analyzer.php:912
 msgid "An XML sitemap helps search engines discover and understand the pages on your site."
 msgstr "Eine XML-Sitemap hilft Suchmaschinen, die Seiten Ihrer Website zu entdecken und zu verstehen."
 
-#: inc/api/analyzer.php:871
+#: inc/api/analyzer.php:913
 msgid "When the sitemap is missing or cannot be accessed, search engines may take longer to find new or updated pages."
 msgstr "Wenn die Sitemap fehlt oder nicht aufgerufen werden kann, kann es länger dauern, bis Suchmaschinen neue oder aktualisierte Seiten finden."
 
-#: inc/api/analyzer.php:872
+#: inc/api/analyzer.php:914
 msgid "Having a sitemap makes it easier for search engines to crawl your site efficiently."
 msgstr "Eine Sitemap erleichtert es Suchmaschinen, Ihre Website effizient zu durchsuchen."
 
-#: inc/api/analyzer.php:873
+#: inc/api/analyzer.php:915
 msgid "It also helps ensure important pages are not missed during indexing."
 msgstr "Sie hilft auch sicherzustellen, dass wichtige Seiten während der Indizierung nicht übersehen werden."
 
-#: inc/api/analyzer.php:879
+#: inc/api/analyzer.php:921
 msgid "You can enable and manage your XML sitemap directly from SureRank."
 msgstr "Sie können Ihre XML-Sitemap direkt von SureRank aus aktivieren und verwalten."
 
-#: inc/api/analyzer.php:883
+#: inc/api/analyzer.php:925
 msgid "Enable the XML Sitemap toggle"
 msgstr "Aktivieren Sie den Schalter für die XML-Sitemap"
 
-#: inc/api/analyzer.php:884
+#: inc/api/analyzer.php:926
 msgid "Click on Regenerate Button"
 msgstr "Klicken Sie auf die Schaltfläche „Regenerieren“"
 
-#: inc/api/analyzer.php:906
+#: inc/api/analyzer.php:948
 msgid "Upgrade to SureRank Pro to unlock advanced sitemap types like Video, News, HTML, and Author sitemaps for better search visibility."
 msgstr "Upgrade auf SureRank Pro, um erweiterte Sitemap-Typen wie Video-, Nachrichten-, HTML- und Autor-Sitemaps für eine bessere Sichtbarkeit in Suchmaschinen freizuschalten."
 
@@ -9556,12 +9445,14 @@ msgstr "Fehler beim Importieren der Slim SEO-Globaleinstellungen: %s"
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Failed to save settings."
 msgstr "Fehler beim Speichern der Einstellungen."
 
 #: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Please try again."
 msgstr "Bitte versuchen Sie es erneut."
@@ -9621,7 +9512,7 @@ msgstr "Fügt automatisch Alt-Text zu Bildern hinzu, die keinen haben, und verwe
 msgid "Generate SEO-friendly image alt text automatically to improve accessibility and boost image search visibility."
 msgstr "Generieren Sie automatisch SEO-freundlichen Alt-Text für Bilder, um die Barrierefreiheit zu verbessern und die Sichtbarkeit in der Bildersuche zu erhöhen."
 
-#: inc/api/analyzer.php:882
+#: inc/api/analyzer.php:924
 msgid "Go to SureRank ⇾ General ⇾ Sitemaps"
 msgstr "Gehe zu SureRank ⇾ Allgemein ⇾ Sitemaps"
 
@@ -9697,10 +9588,6 @@ msgstr "SureRank hat den Sitemap-Cache seit über zwölf Stunden nicht neu erste
 msgid "Last successful rebuild: %s. This is still within the stale threshold; the next scheduled cron tick should update it."
 msgstr "Letzte erfolgreiche Neuerstellung: %s. Dies liegt noch innerhalb der Stale-Grenze; der nächste geplante Cron-Durchlauf sollte ihn aktualisieren."
 
-#: inc/admin/site-health.php:130
-msgid "SureRank has not rebuilt the sitemap cache in over the stale threshold."
-msgstr "SureRank hat den Sitemap-Cache länger als die Stale-Grenze nicht neu erstellt."
-
 #. translators: %s: human-readable time.
 #: inc/admin/site-health.php:133
 #, php-format
@@ -9723,15 +9610,15 @@ msgstr "SureRank kann admin-ajax.php über eine Loopback-Anfrage nicht erreichen
 msgid "This is usually caused by a security plugin renaming the admin path, a firewall blocking self-requests, or a host that disables loopbacks. SureRank automatically falls back to running rebuilds synchronously; everything still works, but each rebuild takes slightly longer. See the compatibility guide for details."
 msgstr "Dies wird meist durch ein Sicherheits-Plugin verursacht, das den Admin-Pfad umbenennt, eine Firewall, die Selbstanfragen blockiert, oder einen Host, der Loopbacks deaktiviert. SureRank fällt automatisch auf synchrone Neuerstellungen zurück; alles funktioniert weiterhin, aber jede Neuerstellung dauert etwas länger. Details finden Sie im Kompatibilitätsleitfaden."
 
-#: inc/ajax/save-endpoints.php:87
+#: inc/ajax/save-endpoints.php:89
 msgid "Invalid post id."
 msgstr "Ungültige Beitrags-ID."
 
-#: inc/ajax/save-endpoints.php:117
+#: inc/ajax/save-endpoints.php:119
 msgid "Invalid term id."
 msgstr "Ungültige Taxonomie-ID."
 
-#: inc/ajax/save-endpoints.php:185
+#: inc/ajax/save-endpoints.php:217
 msgid "Your session has expired. Please refresh and try again."
 msgstr "Ihre Sitzung ist abgelaufen. Bitte aktualisieren Sie die Seite und versuchen Sie es erneut."
 
@@ -9780,10 +9667,6 @@ msgid "Migration Completed"
 msgstr "Migration abgeschlossen"
 
 #: build/admin-dashboard/index.js:1
-msgid "Either the page does not exist or you don't have permission to access this page please contact your administrator."
-msgstr "Entweder existiert die Seite nicht oder Sie haben keine Berechtigung, auf diese Seite zuzugreifen. Bitte kontaktieren Sie Ihren Administrator."
-
-#: build/admin-dashboard/index.js:1
 #: build/admin-onboarding/index.js:1
 msgid "Your site's search engine visibility is currently set to Hidden in"
 msgstr "Die Sichtbarkeit Ihrer Website in Suchmaschinen ist derzeit auf Versteckt eingestellt in"
@@ -9793,14 +9676,17 @@ msgstr "Die Sichtbarkeit Ihrer Website in Suchmaschinen ist derzeit auf Versteck
 msgid "Site Name:"
 msgstr "Seitenname:"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Switch image input mode"
 msgstr "Bild-Eingabemodus wechseln"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Switch to custom field"
 msgstr "Zum benutzerdefinierten Feld wechseln"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Switch to uploader"
 msgstr "Zum Uploader wechseln"
@@ -9834,16 +9720,17 @@ msgstr "Upgrade durchführen, um Bildgenerierung freizuschalten"
 msgid "Upgrade to SureRank Pro or Business and generate stunning AI-powered Open Graph images with custom branding presets for your posts and pages."
 msgstr "Steigen Sie auf SureRank Pro oder Business um und erstellen Sie beeindruckende, KI-gestützte Open Graph-Bilder mit benutzerdefinierten Branding-Voreinstellungen für Ihre Beiträge und Seiten."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Checks are based on the published page. Refresh to get the latest results."
 msgstr "Die Prüfungen basieren auf der veröffentlichten Seite. Aktualisieren Sie, um die neuesten Ergebnisse zu erhalten."
 
-#: inc/admin/dashboard.php:307
+#: inc/admin/dashboard.php:327
 #: build/admin-dashboard/index.js:1
 msgid "Learn"
 msgstr "Lernen"
 
-#: inc/admin/seo-popup.php:115
+#: inc/admin/seo-popup.php:160
 msgid "Click here"
 msgstr "Hier klicken"
 
@@ -10130,15 +10017,15 @@ msgstr "Support kontaktieren"
 msgid "Set up SureRank end to end with a step-by-step guide to make your site discoverable, shareable, and ready to rank."
 msgstr "Richten Sie SureRank von Anfang bis Ende mit einer Schritt-für-Schritt-Anleitung ein, um Ihre Website auffindbar, teilbar und bereit für Rankings zu machen."
 
-#: inc/abilities/abilities-registrar.php:99
+#: inc/abilities/abilities-registrar.php:131
 msgid "SureRank MCP Server"
 msgstr "SureRank MCP-Server"
 
-#: inc/abilities/abilities-registrar.php:100
+#: inc/abilities/abilities-registrar.php:132
 msgid "SureRank MCP Server for SEO settings, metadata, and analysis workflows."
 msgstr "SureRank MCP-Server für SEO-Einstellungen, Metadaten und Analyse-Workflows."
 
-#: inc/abilities/abilities-registrar.php:127
+#: inc/abilities/abilities-registrar.php:159
 msgid "SEO settings, metadata, and analysis abilities powered by SureRank."
 msgstr "SEO-Einstellungen, Metadaten und Analysefähigkeiten, unterstützt von SureRank."
 
@@ -10460,6 +10347,7 @@ msgid "No public URL available yet (draft or invalid object)."
 msgstr "Noch keine öffentliche URL verfügbar (Entwurf oder ungültiges Objekt)."
 
 #: inc/google-search-console/url-inspection.php:194
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Unable to fetch indexing status."
 msgstr "Indexierungsstatus kann nicht abgerufen werden."
@@ -10511,150 +10399,815 @@ msgid "Manage compatibility with supported third-party tools."
 msgstr "Verwalten Sie die Kompatibilität mit unterstützten Drittanbieter-Tools."
 
 #: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Schema Markup"
 msgstr "Schema-Markup"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Checking…"
 msgstr "Überprüfung…"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Not available"
 msgstr "Nicht verfügbar"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Indexed"
 msgstr "Indexiert"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Crawled, not indexed"
 msgstr "Gecrawlt, nicht indexiert"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Discovered, not indexed"
 msgstr "Entdeckt, nicht indexiert"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Noindex"
 msgstr "Noindex"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Not indexed"
 msgstr "Nicht indexiert"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Checking indexing status…"
 msgstr "Überprüfe den Indexierungsstatus…"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Search Console quota reached. Try again later."
 msgstr "Kontingent der Search Console erreicht. Versuchen Sie es später erneut."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "You do not have permission to view this indexing status."
 msgstr "Sie haben keine Berechtigung, diesen Indexierungsstatus anzuzeigen."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Save the post as published to inspect its URL."
 msgstr "Speichern Sie den Beitrag als veröffentlicht, um seine URL zu überprüfen."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Connect a Search Console property to see indexing status."
 msgstr "Verbinden Sie eine Search Console-Eigenschaft, um den Indexierungsstatus zu sehen."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "Last checked %s"
 msgstr "Zuletzt überprüft %s"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "just now"
 msgstr "gerade eben"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "%d min ago"
 msgstr "%d Minuten zuvor"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "%d h ago"
 msgstr "%d Stunden zuvor"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 #, js-format
 msgid "%d d ago"
 msgstr "%d Tage zuvor"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Refresh indexing status"
 msgstr "Indexierungsstatus aktualisieren"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Open Analyze tab"
 msgstr "Analyse-Tab öffnen"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Please add post title or content first to get schema recommendations."
 msgstr "Bitte fügen Sie zuerst den Beitragstitel oder den Inhalt hinzu, um Schemaempfehlungen zu erhalten."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Unable to recommend schema right now. Please try again."
 msgstr "Derzeit können keine Schemaempfehlungen gegeben werden. Bitte versuchen Sie es erneut."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No relevant schema recommendations found for this content."
 msgstr "Keine relevanten Schemaempfehlungen für diesen Inhalt gefunden."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Schema recommendation timed out. Please try again in a moment."
 msgstr "Schemaempfehlung hat die Zeitüberschreitung erreicht. Bitte versuchen Sie es in einem Moment erneut."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "You have reached your monthly schema recommendation limit."
 msgstr "Sie haben Ihr monatliches Limit für Schemaempfehlungen erreicht."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Schema recommendations are unavailable for your current plan."
 msgstr "Schemaempfehlungen sind für Ihren aktuellen Plan nicht verfügbar."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Recommended for this page"
 msgstr "Für diese Seite empfohlen"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Refresh suggestions"
 msgstr "Vorschläge aktualisieren"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Companion"
 msgstr "Begleiter"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Dismiss"
 msgstr "Ablehnen"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Upgrade to Add"
 msgstr "Upgrade zum Hinzufügen"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "No missing high-relevance schema found. Try adding more content context and refresh suggestions."
 msgstr "Keine fehlenden hochrelevanten Schemata gefunden. Versuchen Sie, mehr Kontext zum Inhalt hinzuzufügen und die Vorschläge zu aktualisieren."
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Recommend Schema Using AI"
 msgstr "Schema mit KI empfehlen"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Recommending…"
 msgstr "Empfehlen…"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Already Added"
 msgstr "Bereits hinzugefügt"
 
+#: build/front-end-meta-box/index.js:1
 #: build/seo-popup/index.js:1
 msgid "Add"
 msgstr "Hinzufügen"
+
+#: inc/admin/dashboard.php:748
+#: inc/meta-variables/user.php:71
+msgid "Author Bio"
+msgstr "Autorenbiografie"
+
+#: inc/admin/dashboard.php:750
+msgid "Biographical info of the author on author archives."
+msgstr "Biografische Informationen des Autors in den Autorenarchiven."
+
+#: inc/admin/delete-data-checkbox.php:104
+msgid "Delete all SureRank data on uninstall"
+msgstr "Alle SureRank-Daten bei der Deinstallation löschen"
+
+#: inc/admin/delete-data-checkbox.php:105
+msgid "Settings, schema, sitemap, post and term meta, custom tables, and scheduled tasks will be permanently removed when you delete the plugin. This cannot be undone."
+msgstr "Einstellungen, Schema, Sitemap, Post- und Term-Meta, benutzerdefinierte Tabellen und geplante Aufgaben werden dauerhaft entfernt, wenn Sie das Plugin löschen. Dies kann nicht rückgängig gemacht werden."
+
+#: inc/admin/delete-data-checkbox.php:211
+msgid "Insufficient permissions."
+msgstr "Unzureichende Berechtigungen."
+
+#: inc/admin/site-health.php:130
+msgid "SureRank has not rebuilt the sitemap cache for longer than the stale threshold."
+msgstr "SureRank hat den Sitemap-Cache länger als die veraltete Schwelle nicht neu aufgebaut."
+
+#: inc/ajax/ajax.php:47
+#: inc/ajax/ajax.php:117
+msgid "Not an AJAX request."
+msgstr "Keine AJAX-Anfrage."
+
+#: inc/ajax/save-endpoints.php:149
+msgid "Invalid user id."
+msgstr "Ungültige Benutzer-ID."
+
+#: inc/analyzer/seo-analyzer.php:139
+msgid "A clear and well-written title helps search engines understand your homepage and improves click-through rate by setting the right expectation."
+msgstr "Ein klarer und gut geschriebener Titel hilft Suchmaschinen, Ihre Startseite zu verstehen, und verbessert die Klickrate, indem er die richtigen Erwartungen setzt."
+
+#: inc/analyzer/seo-analyzer.php:202
+msgid "SureRank Pro helps you generate SEO titles using AI, following best practices for length, clarity, and click-through rate."
+msgstr "SureRank Pro hilft Ihnen, SEO-Titel mit KI zu generieren, die den besten Praktiken für Länge, Klarheit und Klickrate folgen."
+
+#: inc/analyzer/seo-analyzer.php:260
+msgid "A clear and well-written description helps search engines understand your homepage and makes your result more appealing."
+msgstr "Eine klare und gut geschriebene Beschreibung hilft Suchmaschinen, Ihre Startseite zu verstehen, und macht Ihr Ergebnis ansprechender."
+
+#: inc/analyzer/seo-analyzer.php:442
+msgid "Your homepage currently contains one H1 heading."
+msgstr "Ihre Startseite enthält derzeit eine H1-Überschrift."
+
+#: inc/analyzer/seo-analyzer.php:524
+msgid "Your homepage contains at least one H2 heading."
+msgstr "Ihre Startseite enthält mindestens eine H2-Überschrift."
+
+#: inc/analyzer/seo-analyzer.php:873
+msgid "SureRank Pro helps you detect and fix indexing issues using an AI assistant, so your pages are visible and searchable."
+msgstr "SureRank Pro hilft Ihnen, Indexierungsprobleme mit einem KI-Assistenten zu erkennen und zu beheben, damit Ihre Seiten sichtbar und durchsuchbar sind."
+
+#: inc/analyzer/seo-analyzer.php:881
+#: inc/analyzer/seo-analyzer.php:897
+msgid "Your homepage is currently not indexable by search engines."
+msgstr "Ihre Startseite ist derzeit nicht von Suchmaschinen indexierbar."
+
+#: inc/analyzer/seo-analyzer.php:897
+msgid "Your homepage is currently indexable by search engines."
+msgstr "Ihre Startseite ist derzeit von Suchmaschinen indexierbar."
+
+#: inc/analyzer/seo-analyzer.php:1321
+msgid "Decide whether you want to use www or non-www, then set up a redirect so all traffic goes to that version."
+msgstr "Entscheiden Sie, ob Sie www oder non-www verwenden möchten, und richten Sie dann eine Weiterleitung ein, damit der gesamte Verkehr zu dieser Version geht."
+
+#: inc/analyzer/seo-analyzer.php:1336
+msgid "I would like to redirect all traffic from https://www.example.com to https://example.com and use the non-www version as my main address."
+msgstr "Ich möchte den gesamten Verkehr von https://www.example.com auf https://example.com umleiten und die non-www-Version als meine Hauptadresse verwenden."
+
+#: inc/analyzer/seo-analyzer.php:1349
+msgid "WWW and non-www versions are redirecting properly."
+msgstr "WWW- und non-www-Versionen leiten korrekt weiter."
+
+#: inc/analyzer/seo-analyzer.php:1352
+msgid "WWW and non-www versions are not redirecting properly."
+msgstr "WWW- und non-www-Versionen leiten nicht korrekt weiter."
+
+#: inc/analyzer/user-analyzer.php:120
+msgid "Invalid user ID or user object."
+msgstr "Ungültige Benutzer-ID oder Benutzerobjekt."
+
+#: inc/api/admin.php:85
+msgid "Post id, term id or user id is required"
+msgstr "Post-ID, Term-ID oder Benutzer-ID ist erforderlich"
+
+#: inc/api/admin.php:92
+#: inc/api/user-seo.php:73
+#: inc/api/user-seo.php:121
+msgid "You are not allowed to manage SEO settings for this user."
+msgstr "Sie sind nicht berechtigt, SEO-Einstellungen für diesen Benutzer zu verwalten."
+
+#: inc/api/admin.php:265
+#: inc/api/post.php:175
+#: inc/api/term.php:157
+msgid "Invalid schema payload."
+msgstr "Ungültige Schema-Nutzlast."
+
+#: inc/api/analyzer.php:210
+#: inc/api/analyzer.php:1829
+msgid "Invalid User ID."
+msgstr "Ungültige Benutzer-ID."
+
+#: inc/api/analyzer.php:690
+msgid "SureRank Pro users get access to our support team, available 24×7, to help review plugin conflicts and guide you through cleanup."
+msgstr "SureRank Pro-Benutzer erhalten Zugang zu unserem Support-Team, das 24×7 verfügbar ist, um Plugin-Konflikte zu überprüfen und Sie bei der Bereinigung zu unterstützen."
+
+#: inc/api/analyzer.php:712
+msgid "Your site currently has a tagline set."
+msgstr "Ihre Website hat derzeit einen Slogan festgelegt."
+
+#: inc/api/analyzer.php:1022
+msgid "Link is ignored."
+msgstr "Link wird ignoriert."
+
+#: inc/api/analyzer.php:1098
+msgid "Link ignored."
+msgstr "Link ignoriert."
+
+#: inc/api/analyzer.php:1127
+msgid "Link restored."
+msgstr "Link wiederhergestellt."
+
+#: inc/api/analyzer.php:1399
+msgid "You are not allowed to manage SEO checks for this user."
+msgstr "Sie sind nicht berechtigt, SEO-Überprüfungen für diesen Benutzer zu verwalten."
+
+#: inc/api/analyzer.php:1544
+#: inc/api/analyzer.php:1576
+#: inc/api/analyzer.php:1608
+msgid "Robots.txt is not valid for SEO."
+msgstr "Robots.txt ist für SEO nicht gültig."
+
+#: inc/api/analyzer.php:1545
+msgid "Your robots.txt is blocking search engines from crawling your entire site."
+msgstr "Ihre robots.txt blockiert Suchmaschinen daran, Ihre gesamte Website zu durchsuchen."
+
+#: inc/api/analyzer.php:1577
+msgid "Your robots.txt blocks resources (CSS/JS) that search engines need to render your pages."
+msgstr "Ihre robots.txt blockiert Ressourcen (CSS/JS), die Suchmaschinen benötigen, um Ihre Seiten darzustellen."
+
+#: inc/api/analyzer.php:1609
+msgid "Your robots.txt contains rules search engines cannot understand, so those rules are ignored."
+msgstr "Ihre robots.txt enthält Regeln, die von Suchmaschinen nicht verstanden werden können, daher werden diese Regeln ignoriert."
+
+#: inc/api/analyzer.php:1707
+msgid "Your robots.txt is valid and does not contain rules that harm your SEO."
+msgstr "Ihre robots.txt ist gültig und enthält keine Regeln, die Ihrer SEO schaden."
+
+#: inc/api/analyzer.php:1708
+msgid "Your robots.txt is valid for SEO."
+msgstr "Ihre robots.txt ist für SEO gültig."
+
+#: inc/api/analyzer.php:1709
+msgid "Robots.txt is valid."
+msgstr "Robots.txt ist gültig."
+
+#: inc/api/analyzer.php:1838
+msgid "Failed to run user SEO checks."
+msgstr "Benutzer-SEO-Prüfungen konnten nicht durchgeführt werden."
+
+#: inc/api/analyzer.php:2681
+#: inc/api/analyzer.php:2705
+msgid "Type of check to delete. Can be \"post\", \"taxonomy\" or \"user\"."
+msgstr "Art der zu löschenden Prüfung. Kann \"post\", \"taxonomy\" oder \"user\" sein."
+
+#: inc/api/headless-sitemap.php:120
+#: inc/api/headless.php:165
+msgid "The Headless REST API is disabled."
+msgstr "Die Headless REST API ist deaktiviert."
+
+#: inc/api/headless-sitemap.php:245
+msgid "The XML sitemap is disabled, so the JSON sitemap is unavailable."
+msgstr "Die XML-Sitemap ist deaktiviert, daher ist die JSON-Sitemap nicht verfügbar."
+
+#: inc/api/headless-sitemap.php:259
+msgid "No sitemap found for the requested slug."
+msgstr "Keine Sitemap für den angeforderten Slug gefunden."
+
+#: inc/api/headless-sitemap.php:273
+msgid "The sitemap has not been generated yet. Try again shortly."
+msgstr "Die Sitemap wurde noch nicht generiert. Versuchen Sie es in Kürze erneut."
+
+#: inc/api/headless.php:357
+msgid "No public SEO data found for the requested URL."
+msgstr "Keine öffentlichen SEO-Daten für die angeforderte URL gefunden."
+
+#: inc/api/rest-fields.php:294
+msgid "SureRank SEO metadata and schema for this resource."
+msgstr "SureRank SEO-Metadaten und Schema für diese Ressource."
+
+#: inc/api/rest-fields.php:309
+msgid "SureRank SEO head HTML for drop-in server-side rendering."
+msgstr "SureRank SEO-Head-HTML für serverseitiges Rendering zum Einfügen."
+
+#: inc/api/user-seo.php:247
+msgid "No user ID provided."
+msgstr "Keine Benutzer-ID angegeben."
+
+#: inc/api/user-seo.php:253
+msgid "No user found."
+msgstr "Kein Benutzer gefunden."
+
+#: inc/batch-process/sync-archives.php:63
+msgid "No post-type archives found for processing."
+msgstr "Keine Post-Typ-Archive zum Verarbeiten gefunden."
+
+#: inc/batch-process/sync-archives.php:71
+msgid "Failed to encode archive sitemap JSON."
+msgstr "Fehler beim Kodieren der Archiv-Sitemap-JSON."
+
+#. translators: %d: number of archive URLs
+#: inc/batch-process/sync-archives.php:83
+#, php-format
+msgid "Archive sitemap generated for %d post-type archives."
+msgstr "Archiv-Sitemap für %d Post-Typ-Archive generiert."
+
+#. translators: 1: archive type label (e.g. Author), 2: archive label (e.g. author name)
+#: inc/frontend/archives-meta.php:161
+#, php-format
+msgid "%1$s: %2$s"
+msgstr "%1$s: %2$s"
+
+#: inc/google-search-console/controller.php:119
+msgid "No site URL found."
+msgstr "Keine Site-URL gefunden."
+
+#: inc/google-search-console/controller.php:513
+msgid "URL parameter is required."
+msgstr "URL-Parameter ist erforderlich."
+
+#: inc/google-search-console/google-console.php:60
+msgid "Invalid credentials."
+msgstr "Ungültige Anmeldeinformationen."
+
+#: inc/google-search-console/site-verification.php:146
+msgid "No verification token received."
+msgstr "Kein Bestätigungstoken erhalten."
+
+#: inc/google-search-console/site-verification.php:242
+msgid "Site verified successfully."
+msgstr "Site erfolgreich verifiziert."
+
+#. translators: %d: term ID.
+#: inc/importers/rankmath/rank-math.php:78
+#, php-format
+msgid "Rank Math data detected for term %d."
+msgstr "Rank Math-Daten für den Begriff %d erkannt."
+
+#. translators: %d: term ID.
+#: inc/importers/rankmath/rank-math.php:90
+#, php-format
+msgid "No Rank Math data found for term %d."
+msgstr "Keine Rank Math-Daten für den Begriff %d gefunden."
+
+#: inc/importers/rankmath/rank-math.php:166
+msgid "No Rank Math global settings found to import."
+msgstr "Keine globalen Rank Math-Einstellungen zum Importieren gefunden."
+
+#: inc/importers/rankmath/rank-math.php:185
+msgid "Rank Math global settings imported successfully."
+msgstr "Globale Rank Math-Einstellungen erfolgreich importiert."
+
+#. translators: %s: error message.
+#: inc/importers/rankmath/rank-math.php:192
+#, php-format
+msgid "Error importing Rank Math global settings: %s"
+msgstr "Fehler beim Importieren der globalen Rank Math-Einstellungen: %s"
+
+#: inc/meta-variables/post.php:78
+msgid "The permalink of the post."
+msgstr "Der Permalink des Beitrags."
+
+#: inc/meta-variables/post.php:82
+msgid "Publication date of the current post/page OR specified date on date archives."
+msgstr "Veröffentlichungsdatum des aktuellen Beitrags/Seite ODER angegebenes Datum in Datumsarchiven."
+
+#: inc/meta-variables/post.php:86
+msgid "Last modification date of the current post/page."
+msgstr "Datum der letzten Änderung des aktuellen Beitrags/Seite."
+
+#: inc/meta-variables/post.php:90
+msgid "The name of the author of the current post/page."
+msgstr "Der Name des Autors des aktuellen Beitrags/Seite."
+
+#: inc/meta-variables/site.php:61
+msgid "The separator character used in titles."
+msgstr "Das Trennzeichen, das in Titeln verwendet wird."
+
+#: inc/meta-variables/site.php:73
+msgid "The URL of the site."
+msgstr "Die URL der Site."
+
+#: inc/meta-variables/site.php:81
+msgid "Search query (only available on search results page)."
+msgstr "Suchanfrage (nur auf der Suchergebnisseite verfügbar)."
+
+#: inc/meta-variables/user.php:64
+msgid "The unique identifier for a user."
+msgstr "Die eindeutige Kennung für einen Benutzer."
+
+#: inc/meta-variables/user.php:68
+msgid "The display name of the author."
+msgstr "Der Anzeigename des Autors."
+
+#: inc/meta-variables/user.php:72
+msgid "The biographical info of the author."
+msgstr "Die biografischen Informationen des Autors."
+
+#: inc/meta-variables/user.php:76
+msgid "The URL-friendly name of the author."
+msgstr "Der URL-freundliche Name des Autors."
+
+#: inc/meta-variables/user.php:80
+msgid "The author archive URL."
+msgstr "Die Autor-Archiv-URL."
+
+#: inc/schema/types/article.php:125
+msgid "Enter the date and time the article was first published, using the ISO 8601 format. This value is used in your site’s structured data to show when the content was originally made public."
+msgstr "Geben Sie das Datum und die Uhrzeit ein, zu der der Artikel erstmals veröffentlicht wurde, im ISO 8601-Format. Dieser Wert wird in den strukturierten Daten Ihrer Site verwendet, um anzuzeigen, wann der Inhalt ursprünglich veröffentlicht wurde."
+
+#: inc/schema/types/article.php:132
+msgid "The date and time the article was last modified, in ISO 8601 format."
+msgstr "Das Datum und die Uhrzeit, zu der der Artikel zuletzt geändert wurde, im ISO 8601-Format."
+
+#: inc/schema/types/article.php:153
+msgid "Enter the total word count of the article's main content. This information is used in structured data to provide search engines with content length details."
+msgstr "Geben Sie die Gesamtanzahl der Wörter im Hauptinhalt des Artikels ein. Diese Informationen werden in strukturierten Daten verwendet, um Suchmaschinen Details zur Inhaltslänge bereitzustellen."
+
+#: inc/schema/types/offer.php:480
+msgid "Unit code"
+msgstr "Einheitencode"
+
+#: inc/schema/types/offer.php:579
+msgid "The currency of the price, or a price component when attached to PriceSpecification and its subtypes. Use standard formats: ISO 4217 currency format, e.g. \"USD\"; Ticker symbol for cryptocurrencies, e.g. \"BTC\"; well known names for Local Exchange Trading Systems (LETS) and other currency types, e.g. \"Ithaca HOUR\"."
+msgstr "Die Währung des Preises oder eine Preisbestandteil, wenn sie an PriceSpecification und deren Untertypen angehängt ist. Verwenden Sie Standardformate: ISO 4217 Währungsformat, z.B. \"USD\"; Tickersymbol für Kryptowährungen, z.B. \"BTC\"; bekannte Namen für lokale Währungssysteme (LETS) und andere Währungstypen, z.B. \"Ithaca HOUR\"."
+
+#: inc/schema/types/offer.php:632
+msgid "The date after when the item is not valid. For example the end of an offer, salary period, or a period of opening hours."
+msgstr "Das Datum, nach dem der Artikel nicht mehr gültig ist. Zum Beispiel das Ende eines Angebots, eines Gehaltszeitraums oder eines Zeitraums der Öffnungszeiten."
+
+#: inc/schema/types/product.php:299
+msgid "Shows the total number of offers available for the product across all sellers. This information is used in your structured data to indicate offer availability."
+msgstr "Zeigt die Gesamtzahl der verfügbaren Angebote für das Produkt bei allen Verkäufern an. Diese Informationen werden in Ihren strukturierten Daten verwendet, um die Verfügbarkeit von Angeboten anzuzeigen."
+
+#: inc/third-party-integrations/angie.php:322
+msgid "This post is set to noindex by SureRank settings from the SEO popup."
+msgstr "Dieser Beitrag ist durch die SureRank-Einstellungen im SEO-Popup auf noindex gesetzt."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Saving…"
+msgstr "Speichern…"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Add valid JSON-LD markup before saving."
+msgstr "Fügen Sie vor dem Speichern gültige JSON-LD-Markup hinzu."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Each JSON-LD object must include an @type value."
+msgstr "Jedes JSON-LD-Objekt muss einen @type-Wert enthalten."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Include an @context value such as https://schema.org."
+msgstr "Fügen Sie einen @context-Wert wie https://schema.org hinzu."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Provide a JSON-LD object or @graph payload with at least one node."
+msgstr "Stellen Sie ein JSON-LD-Objekt oder eine @graph-Nutzlast mit mindestens einem Knoten bereit."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Smart tags are supported only inside quoted JSON string values."
+msgstr "Smart-Tags werden nur innerhalb von zitierten JSON-Zeichenfolgenwerten unterstützt."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "The JSON-LD markup could not be parsed."
+msgstr "Das JSON-LD-Markup konnte nicht geparst werden."
+
+#: build/admin-dashboard/index.js:1
+msgid "You don't have permission to perform this action. Please contact your administrator."
+msgstr "Sie haben keine Berechtigung, diese Aktion auszuführen. Bitte kontaktieren Sie Ihren Administrator."
+
+#: build/admin-dashboard/index.js:1
+msgid "Headless REST API"
+msgstr "Headless REST API"
+
+#: build/admin-dashboard/index.js:1
+msgid "Expose SureRank SEO metadata and schema for a public URL through the surerank/v1/get_head REST endpoint, for use with headless front-ends."
+msgstr "Stellen Sie SureRank SEO-Metadaten und Schema für eine öffentliche URL über den surerank/v1/get_head REST-Endpunkt zur Verfügung, zur Verwendung mit headless Front-Ends."
+
+#: build/admin-dashboard/index.js:1
+msgid "Delete plugin data on uninstall"
+msgstr "Plugin-Daten bei Deinstallation löschen"
+
+#: build/admin-dashboard/index.js:1
+msgid "When enabled, deleting SureRank from the Plugins screen will permanently remove all of its settings, schema, sitemap data, post and term meta, custom tables, and scheduled tasks. Disabled by default so your data is preserved across reinstalls."
+msgstr "Wenn aktiviert, werden beim Löschen von SureRank im Plugins-Bildschirm alle Einstellungen, Schemata, Sitemap-Daten, Post- und Term-Meta, benutzerdefinierte Tabellen und geplante Aufgaben dauerhaft entfernt. Standardmäßig deaktiviert, damit Ihre Daten bei Neuinstallationen erhalten bleiben."
+
+#: build/admin-dashboard/index.js:1
+msgid "Connect Your AI Client"
+msgstr "Verbinden Sie Ihren KI-Client"
+
+#: build/admin-dashboard/index.js:1
+msgid "Create an Application Password"
+msgstr "Erstellen Sie ein Anwendungskennwort"
+
+#: build/admin-dashboard/index.js:1
+msgid "Open Application Passwords"
+msgstr "Anwendungskennwörter öffnen"
+
+#: build/admin-dashboard/index.js:1
+msgid "Add to your AI client:"
+msgstr "Fügen Sie Ihrem KI-Client hinzu:"
+
+#: build/admin-dashboard/index.js:1
+msgid "Claude Code"
+msgstr "Claude-Code"
+
+#: build/admin-dashboard/index.js:1
+msgid "Claude Desktop"
+msgstr "Claude-Desktop"
+
+#: build/admin-dashboard/index.js:1
+msgid "Cursor"
+msgstr "Cursor"
+
+#: build/admin-dashboard/index.js:1
+msgid "VS Code"
+msgstr "VS Code"
+
+#: build/admin-dashboard/index.js:1
+msgid "ChatGPT"
+msgstr "ChatGPT"
+
+#: build/admin-dashboard/index.js:1
+msgid "go to Settings → Connectors → Add Connector, paste the endpoint URL, and use your WordPress username + Application Password."
+msgstr "Gehen Sie zu Einstellungen → Connectoren → Connector hinzufügen, fügen Sie die Endpunkt-URL ein und verwenden Sie Ihren WordPress-Benutzernamen + Anwendungskennwort."
+
+#: build/admin-dashboard/index.js:1
+msgid "Replace \"your-application-password\" in the JSON with the password from Step 1."
+msgstr "Ersetzen Sie \"your-application-password\" im JSON durch das Passwort aus Schritt 1."
+
+#: build/admin-dashboard/index.js:1
+msgid "SureRank Only"
+msgstr "Nur SureRank"
+
+#: build/admin-dashboard/index.js:1
+msgid "Global"
+msgstr "Global"
+
+#: build/admin-dashboard/index.js:1
+msgid "Copy setup prompt for AI client"
+msgstr "Einrichtungsaufforderung für KI-Client kopieren"
+
+#: build/admin-dashboard/index.js:1
+msgid "Prompt copied! Paste it into your AI client."
+msgstr "Aufforderung kopiert! Fügen Sie sie in Ihren KI-Client ein."
+
+#: build/admin-dashboard/index.js:1
+msgid "Failed to copy prompt to clipboard"
+msgstr "Fehler beim Kopieren der Aufforderung in die Zwischenablage"
+
+#: build/admin-dashboard/index.js:1
+msgid "Copy JSON config"
+msgstr "JSON-Konfiguration kopieren"
+
+#: build/admin-dashboard/index.js:1
+msgid "Copied to clipboard"
+msgstr "In die Zwischenablage kopiert"
+
+#: build/admin-dashboard/index.js:1
+msgid "Failed to copy to clipboard"
+msgstr "Fehler beim Kopieren in die Zwischenablage"
+
+#: build/admin-dashboard/index.js:1
+msgid "Enable MCP"
+msgstr "MCP aktivieren"
+
+#: build/admin-dashboard/index.js:1
+msgid "Allow AI clients like Claude, ChatGPT, and Cursor to read and update your SEO settings, metadata, sitemap, and robots.txt through SureRank. When disabled, no abilities are registered and AI clients cannot connect."
+msgstr "Erlaube KI-Clients wie Claude, ChatGPT und Cursor, deine SEO-Einstellungen, Metadaten, Sitemap und robots.txt über SureRank zu lesen und zu aktualisieren. Wenn deaktiviert, werden keine Funktionen registriert und KI-Clients können sich nicht verbinden."
+
+#: build/admin-dashboard/index.js:1
+msgid "MCP Adapter plugin not detected"
+msgstr "MCP-Adapter-Plugin nicht erkannt"
+
+#: build/admin-dashboard/index.js:1
+#, js-format
+msgid "To connect AI clients to your site, the %s plugin is required. Download the latest release from GitHub, upload it via Plugins > Add New > Upload Plugin, and activate."
+msgstr "Um KI-Clients mit deiner Seite zu verbinden, ist das %s-Plugin erforderlich. Lade die neueste Version von GitHub herunter, lade sie über Plugins > Neu hinzufügen > Plugin hochladen hoch und aktiviere sie."
+
+#: build/admin-dashboard/index.js:1
+msgid "Download from GitHub"
+msgstr "Von GitHub herunterladen"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "MCP"
+msgstr "MCP"
+
+#: build/admin-dashboard/index.js:1
+msgid "Configure AI client access to SureRank through the Model Context Protocol."
+msgstr "Konfiguriere den Zugriff von KI-Clients auf SureRank über das Model Context Protocol."
+
+#: build/admin-dashboard/index.js:1
+msgid "Either the page does not exist or you don't have permission to access it. Please contact your administrator."
+msgstr "Entweder existiert die Seite nicht oder du hast keine Berechtigung, darauf zuzugreifen. Bitte kontaktiere deinen Administrator."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Processing items in batches. This will take some time, so please stay on the page."
+msgstr "Verarbeite Elemente in Chargen. Dies wird einige Zeit in Anspruch nehmen, also bleibe bitte auf der Seite."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Choose how your content will appear when shared on X. This setting determines the card type — either a summary or a summary with a large image — used in the post preview."
+msgstr "Wähle aus, wie dein Inhalt beim Teilen auf X angezeigt wird. Diese Einstellung bestimmt den Kartentyp — entweder eine Zusammenfassung oder eine Zusammenfassung mit einem großen Bild — die in der Beitragsvorschau verwendet wird."
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+#: build/admin-seo-bar/index.js:1
+#: build/breakdance/index.js:1
+#: build/bricks/index.js:1
+#: build/divi/index.js:1
+#: build/elementor/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/search-console-widget/index.js:1
+#: build/seo-popup/index.js:1
+#, js-format
+msgid "%d issue needs attention."
+msgid_plural "%d issues need attention."
+msgstr[0] "%d Probleme benötigen Aufmerksamkeit."
+msgstr[1] ""
+
+#: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Ignore this link"
+msgstr "Diesen Link ignorieren"
+
+#: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Failed to ignore link"
+msgstr "Fehler beim Ignorieren des Links"
+
+#: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Link ignored successfully"
+msgstr "Link erfolgreich ignoriert"
+
+#: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+#, js-format
+msgid "Ignored links (%d)"
+msgstr "Ignorierte Links (%d)"
+
+#: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Failed to restore link"
+msgstr "Fehler beim Wiederherstellen des Links"
+
+#: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Link restored successfully"
+msgstr "Link erfolgreich wiederhergestellt"
+
+#: build/admin-dashboard/index.js:1
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Restore this link"
+msgstr "Diesen Link wiederherstellen"
+
+#: build/admin-dashboard/index.js:1
+#: build/admin-onboarding/index.js:1
+msgid "Want to unlock advanced SEO features?"
+msgstr "Möchtest du erweiterte SEO-Funktionen freischalten?"
+
+#: build/admin-onboarding/index.js:1
+msgid "Set up your site’s SEO easily — no advanced skills needed!"
+msgstr "Richte die SEO deiner Seite einfach ein — keine fortgeschrittenen Fähigkeiten erforderlich!"
+
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Upload an image at least 600×315px. Recommended size is 1200×630px."
+msgstr "Lade ein Bild mit mindestens 600×315px hoch. Empfohlene Größe ist 1200×630px."
+
+#: build/front-end-meta-box/index.js:1
+#: build/seo-popup/index.js:1
+msgid "Checks are based on the published user. Refresh to get the latest results."
+msgstr "Die Überprüfungen basieren auf dem veröffentlichten Benutzer. Aktualisiere, um die neuesten Ergebnisse zu erhalten."
+
+#: build/search-console-widget/index.js:1
+msgid "Build smarter meta templates for all post content"
+msgstr "Erstelle intelligentere Meta-Vorlagen für alle Beitragsinhalte"
+
+#: build/search-console-widget/index.js:1
+msgid "Detect and fix issues before they hurt SEO"
+msgstr "Erkenne und behebe Probleme, bevor sie SEO schädigen"

@@ -22,9 +22,17 @@ const setInitialState = () => {
 	if ( window?.surerank_seo_popup?.term_id ) {
 		queryParams.term_id = window?.surerank_seo_popup.term_id;
 	}
+	// If user profile page.
+	if ( window?.surerank_seo_popup?.user_id ) {
+		queryParams.user_id = window?.surerank_seo_popup.user_id;
+	}
 
-	// If no post or term id, return.
-	if ( ! queryParams?.post_id && ! queryParams?.term_id ) {
+	// If no post, term or user id, return.
+	if (
+		! queryParams?.post_id &&
+		! queryParams?.term_id &&
+		! queryParams?.user_id
+	) {
 		return;
 	}
 

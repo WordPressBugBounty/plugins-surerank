@@ -382,6 +382,9 @@ class Facebook {
 		if ( is_category() || is_tax() || is_tag() ) {
 			return Term::get_instance()->get_permalink();
 		}
+		if ( is_author() ) {
+			return get_author_posts_url( get_queried_object_id() );
+		}
 			return Site::get_instance()->get_site_url();
 	}
 

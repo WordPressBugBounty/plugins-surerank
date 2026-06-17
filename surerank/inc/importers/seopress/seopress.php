@@ -225,6 +225,15 @@ class Seopress extends BaseImporter {
 		];
 
 		$imported = $this->process_meta_mapping( $mapping );
+
+		// SEOPress stores target keywords as a comma-separated list where
+		// the first entry is the primary keyword.
+		$focus_keyword = ImporterUtils::get_primary_keyword( $this->source_meta['_seopress_analysis_target_kw'] ?? '' );
+		if ( '' !== $focus_keyword ) {
+			$this->default_surerank_meta['focus_keyword'] = $focus_keyword;
+			$imported                                     = true;
+		}
+
 		// translators: %d: post ID.
 		$message = $imported ? __( 'General settings imported for post %d.', 'surerank' ) : __( 'No general settings to import for post %d.', 'surerank' );
 

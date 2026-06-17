@@ -82,7 +82,7 @@ const LearnTaskCard = ( {
 								step.title
 							) }
 						>
-							{ __( 'Learn more', 'surerank' ) }
+							{ __( 'Learn More', 'surerank' ) }
 							<ExternalLink
 								aria-hidden="true"
 								className="size-3"

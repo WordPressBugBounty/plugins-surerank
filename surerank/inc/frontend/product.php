@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Traits\Get_Instance;
+use SureRank\Inc\Traits\Reset_Meta_Data;
 
 /**
  * Product SEO
@@ -26,6 +27,7 @@ use SureRank\Inc\Traits\Get_Instance;
 class Product {
 
 	use Get_Instance;
+	use Reset_Meta_Data;
 
 	/**
 	 * Meta Data
@@ -48,6 +50,7 @@ class Product {
 		}
 		// Set product-specific meta data.
 		add_filter( 'surerank_set_meta', [ $this, 'get_meta_data' ], 1 );
+		$this->register_meta_reset();
 	}
 
 	/**

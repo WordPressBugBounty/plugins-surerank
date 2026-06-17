@@ -145,6 +145,28 @@ class Get {
 	}
 
 	/**
+	 * Get all user meta
+	 * This function will get all SureRank user meta
+	 *
+	 * @param int $user_id User ID.
+	 *
+	 * @since 1.9.0
+	 * @return mixed
+	 */
+	public static function all_user_meta( $user_id ) {
+		$keys = Defaults::get_instance()->get_post_meta_keys();
+		$meta = [];
+		foreach ( $keys as $key ) {
+			$option = self::user_meta( $user_id, 'surerank_settings_' . $key, true );
+			if ( ! empty( $option ) ) {
+				$meta[ $key ] = $option;
+			}
+		}
+
+		return Settings::format_array( $meta );
+	}
+
+	/**
 	 * Get option
 	 * This function will get option
 	 *

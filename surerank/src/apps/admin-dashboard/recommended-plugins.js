@@ -20,7 +20,7 @@ export const RecommendedPlugins = ( {
 			<div className="flex items-center justify-stretch gap-2 p-1 mb-2">
 				<div className="flex items-center gap-2">
 					<Text size={ 14 } lineHeight={ 20 } weight={ 600 }>
-						{ __( 'Super Charge Your Workflow', 'surerank' ) }
+						{ __( 'Supercharge Your Workflow', 'surerank' ) }
 					</Text>
 				</div>
 			</div>

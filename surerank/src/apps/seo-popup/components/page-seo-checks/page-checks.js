@@ -11,12 +11,15 @@ import {
 	helpMeFixRedirect,
 } from '@/global/constants';
 import { STORE_NAME } from '@Store/constants';
+import { isUserContext } from '@SeoPopup/components/page-seo-checks/analyzer/utils/page-builder';
 
 const PageChecks = ( {
 	pageSeoChecks = {},
 	onIgnore,
 	onRestore,
 	onFix,
+	onIgnoreBrokenLink,
+	onRestoreBrokenLink,
 	type = 'page',
 } ) => {
 	const {
@@ -58,8 +61,27 @@ const PageChecks = ( {
 		}
 	};
 
+	// Per-URL ignore/restore props, only for the broken links check.
+	const getBrokenLinkProps = ( check ) => {
+		if (
+			check?.id !== 'broken_links' ||
+			typeof onIgnoreBrokenLink !== 'function' ||
+			typeof onRestoreBrokenLink !== 'function'
+		) {
+			return {};
+		}
+
+		return {
+			onIgnoreUrl: onIgnoreBrokenLink,
+			onRestoreUrl: onRestoreBrokenLink,
+			ignoredBrokenLinks: check?.ignoredBrokenLinks || [],
+		};
+	};
+
 	const getFixItButtonProps = ( checkId ) => {
-		if ( hideFixHelpButtons ) {
+		// The fix/generate flows build content from post/term context and have
+		// no user (author archive) support — hide them in user context.
+		if ( hideFixHelpButtons || isUserContext() ) {
 			return { show: false };
 		}
 
@@ -117,6 +139,7 @@ const PageChecks = ( {
 							showIgnoreButton={ true }
 							onFix={ handleFixCheck( check.id ) }
 							fixItButtonProps={ getFixItButtonProps( check.id ) }
+							{ ...getBrokenLinkProps( check ) }
 						/>
 					) ) }
 					{ fairChecks.map( ( check ) => (
@@ -174,6 +197,7 @@ const PageChecks = ( {
 							label={ __( 'Passed', 'surerank' ) }
 							title={ check.title }
 							onIgnore={ () => onIgnore( check.id ) }
+							{ ...getBrokenLinkProps( check ) }
 						/>
 					) ) }
 				</div>

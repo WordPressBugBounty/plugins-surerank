@@ -4,7 +4,11 @@ import { addQueryArgs } from '@wordpress/url';
 import { Button, toast } from '@bsf/force-ui';
 import { formatSeoChecks, cn } from '@/functions/utils';
 import { STORE_NAME } from '@/store/constants';
-import { fetchBrokenLinkStatus } from '../link-checks';
+import {
+	fetchBrokenLinkStatus,
+	getIgnoredUrlSet,
+	normalizeIgnoredUrl,
+} from '../link-checks';
 import { RefreshCcw } from 'lucide-react';
 import { CHECK_TYPES, ENABLE_PAGE_LEVEL_SEO } from '@/global/constants';
 
@@ -18,11 +22,20 @@ export const checkBrokenLinks = async (
 	brokenLinkState,
 	pageSeoChecks
 ) => {
-	const totalLinks = allLinks.length;
+	// Site-wide ignored URLs are skipped during checking and surfaced
+	// separately, so the per-URL ignore/restore UI matches the block editor.
+	const ignoredSet = getIgnoredUrlSet();
+	const linksToCheck = links.filter(
+		( url ) => ! ignoredSet.has( normalizeIgnoredUrl( url ) )
+	);
+	const ignoredBrokenLinks = allLinks.filter( ( url ) =>
+		ignoredSet.has( normalizeIgnoredUrl( url ) )
+	);
+	const totalLinks = linksToCheck.length;
 	const brokenLinksArray = [];
 
-	for ( const url of links ) {
-		let isBroken = false;
+	for ( const url of linksToCheck ) {
+		let brokenItem = null;
 
 		try {
 			const result = await fetchBrokenLinkStatus( {
@@ -33,10 +46,17 @@ export const checkBrokenLinks = async (
 			} );
 
 			if ( ! result.success ) {
-				isBroken = true;
+				const { success, ...rest } = result;
+				brokenItem = { url, broken: true, ...rest };
 			}
-		} catch {
-			isBroken = true;
+		} catch ( error ) {
+			brokenItem = {
+				url,
+				broken: true,
+				status: error?.data?.status ?? error?.code ?? 'error',
+				details: error?.message,
+				message: __( 'Failed to check link', 'surerank' ),
+			};
 		}
 
 		// Update checkedLinks and collect broken links
@@ -45,9 +65,9 @@ export const checkBrokenLinks = async (
 			const updatedBroken = new Set( prev.brokenLinks );
 
 			updatedChecked.add( url );
-			if ( isBroken ) {
+			if ( brokenItem ) {
 				updatedBroken.add( url );
-				brokenLinksArray.push( url ); // Add to array
+				brokenLinksArray.push( brokenItem ); // Add broken-link object
 			}
 
 			// Update linkCheckProgress synchronously
@@ -79,13 +99,19 @@ export const checkBrokenLinks = async (
 				),
 				status: 'error',
 				type: 'page',
-				data: [
-					__(
-						'These broken links were found on the page:',
-						'surerank'
-					),
-					{ list: [ ...brokenLinksArray ] },
-				],
+				data: [ ...brokenLinksArray ],
+				ignoredBrokenLinks,
+			} );
+		} else if ( ignoredBrokenLinks.length > 0 ) {
+			// No active broken links, but ignored ones exist: emit a passing
+			// check so the "Ignored links" restore section stays available.
+			updatedChecks.push( {
+				id: 'broken_links',
+				title: __( 'No broken links found on the page.', 'surerank' ),
+				status: 'success',
+				type: 'page',
+				data: [],
+				ignoredBrokenLinks,
 			} );
 		}
 
@@ -118,20 +144,26 @@ export const refreshPageChecks = async (
 	pageSeoChecks,
 	brokenLinkState
 ) => {
+	const isUser = isUserContext();
+	const isTaxonomyListing = ! isUser && surerank_seo_popup?.is_taxonomy === '1';
 	const dynamicPostId =
 		staticSelect( STORE_NAME ).getVariables()?.post?.ID?.value ||
+		staticSelect( STORE_NAME ).getVariables()?.user?.ID?.value ||
 		staticSelect( STORE_NAME ).getActivePostId() ||
+		( isUser ? surerank_seo_popup?.user_id : 0 ) ||
+		( isTaxonomyListing ? ( surerank_seo_popup?.term_id || 0 ) : 0 ) ||
 		0;
 	setIsRefreshing( true );
-
-	const isTaxonomyListing = surerank_seo_popup?.is_taxonomy === '1';
-	const apiPath = isTaxonomyListing
-		? '/surerank/v1/checks/taxonomy'
-		: '/surerank/v1/checks/page';
 	const timestamp = Date.now();
-	const apiParams = isTaxonomyListing
-		? { term_ids: [ dynamicPostId ], _t: timestamp }
-		: { post_ids: [ dynamicPostId ], _t: timestamp };
+	let apiPath = '/surerank/v1/checks/page';
+	let apiParams = { post_ids: [ dynamicPostId ], _t: timestamp };
+	if ( isUser ) {
+		apiPath = '/surerank/v1/checks/user';
+		apiParams = { user_ids: [ dynamicPostId ], _t: timestamp };
+	} else if ( isTaxonomyListing ) {
+		apiPath = '/surerank/v1/checks/taxonomy';
+		apiParams = { term_ids: [ dynamicPostId ], _t: timestamp };
+	}
 
 	try {
 		const response = await apiFetch( {
@@ -229,11 +261,7 @@ export const refreshPageChecks = async (
  *
  * @return {boolean} True if the page is in frontend
  */
-export const isFrontend = () => {
-	return (
-		!! surerank_seo_popup?.is_frontend && ! surerank_seo_popup?.is_taxonomy
-	);
-};
+export const isFrontend = () => !! surerank_seo_popup?.is_frontend;
 
 export const isElementorBuilder = () => {
 	return (
@@ -266,6 +294,23 @@ export const isListingPage = () => {
 	return surerank_seo_popup?.editor_type === 'listing';
 };
 
+/**
+ * Check if the popup is in a user (author profile) context.
+ *
+ * Covers the user profile edit screens (editor_type 'user') and the
+ * users.php list table (seo bar type 'user').
+ *
+ * @since 1.9.0
+ * @return {boolean} True if user context
+ */
+export const isUserContext = () => {
+	return (
+		surerank_seo_popup?.editor_type === 'user' ||
+		!! surerank_seo_popup?.is_user ||
+		window?.surerank_seo_bar?.type === 'user'
+	);
+};
+
 export const isPageBuilderActive = () => {
 	return (
 		isBricksBuilder() ||
@@ -275,7 +320,9 @@ export const isPageBuilderActive = () => {
 		// Consider frontend as page builder active as page requires refresh.
 		isFrontend() ||
 		// Listing pages use server-side checks — no live editor available.
-		isListingPage()
+		isListingPage() ||
+		// User profile screens have no editable content — live checks unavailable.
+		isUserContext()
 	);
 };
 

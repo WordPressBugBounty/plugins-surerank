@@ -25,7 +25,10 @@ import { usePageChecks } from '@SeoPopup/hooks';
 import { SCREENS } from './screens';
 import { useKeywordChecks } from '@SeoPopup/components/keyword-checks/hooks/use-keyword-checks';
 import { applyFilters } from '@wordpress/hooks';
-import { isListingPage } from '@SeoPopup/components/page-seo-checks/analyzer/utils/page-builder';
+import {
+	isListingPage,
+	isUserContext,
+} from '@SeoPopup/components/page-seo-checks/analyzer/utils/page-builder';
 
 // Define toast globally for PRO plugin.
 if ( window && ! window?.toast ) {
@@ -59,9 +62,9 @@ export const getClassicEditorPermalink = () => {
 export const getEditorData = () => {
 	const selectors = staticSelect( STORE_NAME );
 
-	// On listing pages there is no editor — return empty content so any
-	// consumer that calls this doesn't crash.
-	if ( isListingPage() ) {
+	// On listing pages and user profile screens there is no editor — return
+	// empty content so any consumer that calls this doesn't crash.
+	if ( isListingPage() || isUserContext() ) {
 		return {
 			postContent: '',
 			permalink: surerank_seo_popup?.link || '',

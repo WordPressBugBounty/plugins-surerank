@@ -7,8 +7,8 @@ import { redirectToPricingPage } from '@/functions/nudges';
 const upgradeMessages = [
 	__( 'Create a site index visitors actually use', 'surerank' ),
 	__( 'Stay ahead with Instant Indexing support', 'surerank' ),
-	__( 'Build smarter Meta Templates for all post content', 'surerank' ),
-	__( 'Detect and Fix Issues before they hurt SEO', 'surerank' ),
+	__( 'Build smarter meta templates for all post content', 'surerank' ),
+	__( 'Detect and fix issues before they hurt SEO', 'surerank' ),
 	__( 'Redirect old URLs instantly, no setup needed', 'surerank' ),
 ];
 const currentIndex = Math.floor( Math.random() * upgradeMessages.length );

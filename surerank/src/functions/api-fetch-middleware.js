@@ -28,6 +28,7 @@ const SURERANK_NAMESPACE = '/surerank/';
 const AJAX_FALLBACK_ACTIONS = {
 	'/surerank/v1/post/settings': 'surerank_save_post_settings',
 	'/surerank/v1/term/settings': 'surerank_save_term_settings',
+	'/surerank/v1/user/settings': 'surerank_save_user_settings',
 	'/surerank/v1/admin/global-settings': 'surerank_save_admin_settings',
 };
 

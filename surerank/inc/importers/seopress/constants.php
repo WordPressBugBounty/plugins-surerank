@@ -64,7 +64,6 @@ class Constants {
 	];
 
 	public const EXCLUDED_META_KEYS = [
-		'_seopress_analysis_target_kw',
 		'_seopress_analysis_data',
 		'_seopress_content_analysis',
 	];

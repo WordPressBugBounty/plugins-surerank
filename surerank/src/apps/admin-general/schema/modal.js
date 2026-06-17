@@ -172,7 +172,7 @@ const Modal = ( {
 																	</div>
 																	<UpgradeButton
 																		label={ __(
-																			'Upgrade now',
+																			'Upgrade Now',
 																			'surerank'
 																		) }
 																		variant="link"

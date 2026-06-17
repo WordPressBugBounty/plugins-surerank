@@ -41,3 +41,7 @@ body:has( #surerank-admin-dashboard ) {
 .editor-content > p {
 	direction: inherit;
 }
+
+div[id^="accordion-content-"][role="region"]:empty {
+	display: none;
+}

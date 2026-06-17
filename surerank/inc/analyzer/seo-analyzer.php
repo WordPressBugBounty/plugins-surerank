@@ -136,7 +136,7 @@ class SeoAnalyzer {
 				esc_attr( 'Homepage SEO Title' )
 			),
 			__( 'It is often the first thing people read before deciding whether to click.', 'surerank' ),
-			__( 'A clear and well written title helps search engines understand your homepage and improves click through rate by setting the right expectation.', 'surerank' ),
+			__( 'A clear and well-written title helps search engines understand your homepage and improves click-through rate by setting the right expectation.', 'surerank' ),
 
 			sprintf(
 				'<h6>✅ %s </h6>',
@@ -199,7 +199,7 @@ class SeoAnalyzer {
 				'<h6>💬 %s </h6>',
 				__( 'Need Help?', 'surerank' )
 			);
-			$helptext[] = __( 'SureRank Pro helps you generate SEO titles using AI, following best practices for length, clarity, and click through rate.', 'surerank' );
+			$helptext[] = __( 'SureRank Pro helps you generate SEO titles using AI, following best practices for length, clarity, and click-through rate.', 'surerank' );
 		}
 
 		$titles = $xpath->query( '//title' );
@@ -257,7 +257,7 @@ class SeoAnalyzer {
 				esc_attr( 'Homepage SEO Description' )
 			),
 			__( 'It gives people a quick idea of what your site is about before they decide to click.', 'surerank' ),
-			__( 'A clear and well written description helps search engines understand your homepage and makes your result more appealing.', 'surerank' ),
+			__( 'A clear and well-written description helps search engines understand your homepage and makes your result more appealing.', 'surerank' ),
 
 			sprintf(
 				'<h6>✅ %s </h6>',
@@ -439,7 +439,7 @@ class SeoAnalyzer {
 			$title   = __( 'Your homepage currently contains multiple H1 headings.', 'surerank' );
 			$heading = __( 'Multiple H1 Headings Found', 'surerank' );
 		} else {
-			$title   = __( 'Your homepage currently contains one H1 heading', 'surerank' );
+			$title   = __( 'Your homepage currently contains one H1 heading.', 'surerank' );
 			$heading = __( 'Homepage H1 Heading Found', 'surerank' );
 		}
 
@@ -521,7 +521,7 @@ class SeoAnalyzer {
 
 		$exists  = $h2_analysis['exists'];
 		$status  = 'success';
-		$title   = __( 'Your homepage contains at least one H2 heading', 'surerank' );
+		$title   = __( 'Your homepage contains at least one H2 heading.', 'surerank' );
 		$heading = __( 'Subheadings Found on the Homepage', 'surerank' );
 
 		if ( ! $h2_analysis['exists'] ) {
@@ -870,7 +870,7 @@ class SeoAnalyzer {
 				'<h6>💬 %s </h6>',
 				__( 'Need Help?', 'surerank' )
 			);
-			$description[] = __( 'SureRank Pro helps you detect and fix indexing issues using AI assistant, so your pages are visible and searchable.', 'surerank' );
+			$description[] = __( 'SureRank Pro helps you detect and fix indexing issues using an AI assistant, so your pages are visible and searchable.', 'surerank' );
 		}
 
 		if ( ! $robots instanceof DOMNodeList ) {
@@ -878,7 +878,7 @@ class SeoAnalyzer {
 				'exists'      => false,
 				'status'      => 'warning',
 				'description' => $description,
-				'message'     => __( 'Your homepage is currently not indexable by search engines. ', 'surerank' ),
+				'message'     => __( 'Your homepage is currently not indexable by search engines.', 'surerank' ),
 			];
 		}
 
@@ -894,7 +894,7 @@ class SeoAnalyzer {
 		}
 
 		$is_indexable = $exists ? strpos( $content, 'noindex' ) === false : true;
-		$title        = $is_indexable ? __( 'Your homepage is currently indexable by search engines. ', 'surerank' ) : __( 'Your homepage is currently not indexable by search engines. ', 'surerank' );
+		$title        = $is_indexable ? __( 'Your homepage is currently indexable by search engines.', 'surerank' ) : __( 'Your homepage is currently not indexable by search engines.', 'surerank' );
 		$heading      = __( 'Home Page Indexable', 'surerank' );
 
 		return [
@@ -912,8 +912,13 @@ class SeoAnalyzer {
 	 * @return array<string, mixed>
 	 */
 	public function analyze_reachability() {
-		$home_url     = home_url();
-		$is_reachable = $this->base_url === wp_parse_url( $home_url, PHP_URL_HOST ) && ! is_wp_error( $this->html_content );
+		$home_url = home_url();
+
+		// Reachable means the request completed AND the server answered with
+		// a non-error status. Error pages (404/500/503) complete the request,
+		// so checking for WP_Error alone is not enough.
+		$status_code  = $this->scraper->fetch_status( $home_url );
+		$is_reachable = ! is_wp_error( $status_code ) && $status_code > 0 && $status_code < 400;
 
 		$working_heading = __( 'Home Page is Reachable', 'surerank' );
 		$working_label   = __( 'Your homepage is currently accessible and loading correctly.', 'surerank' );
@@ -959,11 +964,6 @@ class SeoAnalyzer {
 				__( 'Need Help?', 'surerank' )
 			);
 			$description[] = __( 'SureRank Pro users get access to our support team, available 24×7, to help identify homepage access and visibility issues.', 'surerank' );
-		}
-
-		if ( ! $is_reachable ) {
-			$response     = $this->scraper->fetch( $home_url );
-			$is_reachable = ! is_wp_error( $response );
 		}
 
 		$title = $is_reachable ? $working_label : $not_working_label;
@@ -1060,7 +1060,7 @@ class SeoAnalyzer {
 
 			sprintf(
 				"<img class='w-full h-full' src='%s' alt='%s' />",
-				esc_attr( 'https://surerank.com/wp-content/uploads/2026/03/homepage-open-graph-tags-before-img.webp ' ),
+				esc_attr( 'https://surerank.com/wp-content/uploads/2026/03/homepage-open-graph-tags-before-img.webp' ),
 				esc_attr( 'Where to Update Open Graph Tags' )
 			),
 
@@ -1318,7 +1318,7 @@ class SeoAnalyzer {
 
 			__( 'Even though both show the same site, search engines treat them as different versions. This can look like duplicate pages and split your SEO strength across both URLs.', 'surerank' ),
 			__( 'To keep things clean, choose one version as your main address.', 'surerank' ),
-			__( 'Decide whether you want to use www or non www, then set up a redirect so all traffic goes to that version.', 'surerank' ),
+			__( 'Decide whether you want to use www or non-www, then set up a redirect so all traffic goes to that version.', 'surerank' ),
 
 			sprintf(
 				'<h6> %s </h6>',
@@ -1333,7 +1333,7 @@ class SeoAnalyzer {
 				esc_html__( 'Right now, my site loads on both versions:', 'surerank' ) . "\n" .
 				esc_html__( 'https://example.com', 'surerank' ) . "\n" .
 				esc_html__( 'https://www.example.com', 'surerank' ) . "\n" .
-				esc_html__( 'I would like to redirect all traffic from https://www.example.com to https://example.com and use the non WWW version as my main address.', 'surerank' ) . "\n" .
+				esc_html__( 'I would like to redirect all traffic from https://www.example.com to https://example.com and use the non-www version as my main address.', 'surerank' ) . "\n" .
 				esc_html__( 'Please feel free to set this up for me directly. Thank you for your help.', 'surerank' ) .
 			'</pre></div>',
 		];
@@ -1346,10 +1346,10 @@ class SeoAnalyzer {
 			$helptext[] = __( 'SureRank Pro users get access to our support team, available 24×7, for setup and plugin related questions.', 'surerank' );
 		}
 
-		$working_heading = __( 'WWW and non-WWW versions are redirecting properly.', 'surerank' );
+		$working_heading = __( 'WWW and non-www versions are redirecting properly.', 'surerank' );
 		$working_label   = __( 'The site correctly redirects between the www and non-www versions.', 'surerank' );
 
-		$not_working_heading = __( 'WWW and non-WWW versions are not redirecting properly.', 'surerank' );
+		$not_working_heading = __( 'WWW and non-www versions are not redirecting properly.', 'surerank' );
 		$not_working_label   = __( 'The site does not correctly redirect between the www and non-www versions.', 'surerank' );
 
 		if ( ! is_array( $parsed ) || ! isset( $parsed['host'], $parsed['scheme'] ) ) {

@@ -198,6 +198,6 @@ abstract class Api_Base extends WP_REST_Controller {
 	 * @return array<string, mixed>|array<int, string>
 	 */
 	public function sanitize_array_data( $data ) {
-		return Sanitize::array_deep( [ Sanitize::class, 'sanitize_with_placeholders' ], $data );
+		return Sanitize::sanitize_request_data( $data );
 	}
 }

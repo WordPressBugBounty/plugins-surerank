@@ -52,6 +52,31 @@ export const PAGE_CONTENT = [
 							</span>
 						),
 					},
+					{
+						type: 'switch',
+						id: 'enable_headless_rest_api',
+						storeKey: 'enable_headless_rest_api',
+						dataType: 'boolean',
+						label: __( 'Headless REST API', 'surerank' ),
+						description: __(
+							'Expose SureRank SEO metadata and schema for a public URL through the surerank/v1/get_head REST endpoint, for use with headless front-ends.',
+							'surerank'
+						),
+					},
+					{
+						type: 'switch',
+						id: 'surerank_delete_on_uninstall',
+						storeKey: 'surerank_delete_on_uninstall',
+						dataType: 'boolean',
+						label: __(
+							'Delete plugin data on uninstall',
+							'surerank'
+						),
+						description: __(
+							'When enabled, deleting SureRank from the Plugins screen will permanently remove all of its settings, schema, sitemap data, post and term meta, custom tables, and scheduled tasks. Disabled by default so your data is preserved across reinstalls.',
+							'surerank'
+						),
+					},
 				],
 			},
 		],

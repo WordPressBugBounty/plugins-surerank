@@ -23,13 +23,13 @@ class Cli {
 	use Get_Instance;
 
 	/**
-	 * Export thh site.
+	 * Generate the SureRank cache.
 	 *
 	 * ## OPTIONS
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     # Import demo site.
+	 *     # Generate the cache.
 	 *     $ wp surerank generate_cache --force
 	 *
 	 * @since 1.2.0

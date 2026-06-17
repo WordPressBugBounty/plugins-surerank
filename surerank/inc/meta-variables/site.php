@@ -58,7 +58,7 @@ class Site extends Variables {
 		$this->variables = [
 			'separator'    => [
 				'label'       => __( 'Separator', 'surerank' ),
-				'description' => __( 'Separator', 'surerank' ),
+				'description' => __( 'The separator character used in titles.', 'surerank' ),
 			],
 			'tagline'      => [
 				'label'       => __( 'Site Tagline', 'surerank' ),
@@ -66,11 +66,11 @@ class Site extends Variables {
 			],
 			'site_name'    => [
 				'label'       => __( 'Site Name', 'surerank' ),
-				'description' => __( 'The blog info of the site.', 'surerank' ),
+				'description' => __( 'The name of the site.', 'surerank' ),
 			],
 			'site_url'     => [
 				'label'       => __( 'Site Address', 'surerank' ),
-				'description' => __( 'The URL of the Site', 'surerank' ),
+				'description' => __( 'The URL of the site.', 'surerank' ),
 			],
 			'page'         => [
 				'label'       => __( 'Page', 'surerank' ),
@@ -78,7 +78,7 @@ class Site extends Variables {
 			],
 			'search_query' => [
 				'label'       => __( 'Search Query', 'surerank' ),
-				'description' => __( 'Search query (only available on search results page)', 'surerank' ),
+				'description' => __( 'Search query (only available on search results page).', 'surerank' ),
 			],
 			'currentdate'  => [
 				'label'       => __( 'Current Date', 'surerank' ),

@@ -296,7 +296,7 @@ class Product extends Base {
 							'label'   => __( 'Offer count', 'surerank' ),
 							'default' => true,
 							'show'    => true,
-							'tooltip' => __( 'Shows the stock status of the product, such as In Stock or Out of Stock. This information helps search engines show real-time availability.', 'surerank' ),
+							'tooltip' => __( 'Shows the total number of offers available for the product across all sellers. This information is used in your structured data to indicate offer availability.', 'surerank' ),
 							'main'    => 'AggregateOffer',
 							'std'     => '%product.offer_count%',
 						],

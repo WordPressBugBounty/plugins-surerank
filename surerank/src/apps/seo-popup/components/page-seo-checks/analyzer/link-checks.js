@@ -5,6 +5,65 @@ import apiFetch from '@wordpress/api-fetch';
 const cacheBrokenLinksResults = new Map();
 
 /**
+ * Normalize a URL for ignored-list comparison (trailing slash insensitive).
+ *
+ * @param {string} url URL to normalize.
+ * @return {string} Normalized URL.
+ */
+export const normalizeIgnoredUrl = ( url ) =>
+	( url || '' ).trim().replace( /\/+$/, '' );
+
+/**
+ * Get the site-wide ignored broken link URLs as a normalized Set.
+ *
+ * @return {Set<string>} Set of normalized ignored URLs.
+ */
+export const getIgnoredUrlSet = () =>
+	new Set(
+		( window?.surerank_seo_popup?.broken_link_ignored_urls || [] ).map(
+			normalizeIgnoredUrl
+		)
+	);
+
+/**
+ * Mark a URL as ignored for the current session and drop it from the
+ * results cache so it disappears from subsequent check runs.
+ *
+ * @param {string} url URL to ignore.
+ */
+export const markBrokenLinkIgnored = ( url ) => {
+	cacheBrokenLinksResults.delete( url );
+	const globals = window?.surerank_seo_popup;
+	if ( globals ) {
+		globals.broken_link_ignored_urls = [
+			...new Set( [
+				...( globals.broken_link_ignored_urls || [] ),
+				url,
+			] ),
+		];
+	}
+};
+
+/**
+ * Remove a URL from the session ignored list and clear its cache entry so
+ * the next analyze cycle re-checks it truthfully.
+ *
+ * @param {string} url URL to restore.
+ */
+export const markBrokenLinkRestored = ( url ) => {
+	cacheBrokenLinksResults.delete( url );
+	const globals = window?.surerank_seo_popup;
+	if ( globals ) {
+		globals.broken_link_ignored_urls = (
+			globals.broken_link_ignored_urls || []
+		).filter(
+			( ignoredUrl ) =>
+				normalizeIgnoredUrl( ignoredUrl ) !== normalizeIgnoredUrl( url )
+		);
+	}
+};
+
+/**
  * Get broken links from cache.
  * @param {string[]} links
  * @return {string[]} Array of broken links
@@ -218,38 +277,60 @@ export const checkBrokenLinks = async (
 		return;
 	}
 
-	const links = getAllLinks( document );
-	if ( ! links.length ) {
+	const allLinks = getAllLinks( document );
+	if ( ! allLinks.length ) {
 		return;
 	}
 
-	const brokenLinks = await checkLinks( {
-		links,
-		postId,
-		userAgent,
-		onProgress,
-	} );
+	// Site-wide ignored URLs are skipped entirely and surfaced separately.
+	// Build the normalized set once per run instead of per URL.
+	const ignoredSet = getIgnoredUrlSet();
+	const links = allLinks.filter(
+		( url ) => ! ignoredSet.has( normalizeIgnoredUrl( url ) )
+	);
+
+	const brokenLinks = links.length
+		? await checkLinks( {
+				links,
+				postId,
+				userAgent,
+				onProgress,
+		  } )
+		: [];
+
+	// Recompute from the (possibly updated) session list after the slow
+	// link checks, so an ignore/restore made mid-run is reflected.
+	const finalIgnoredSet = getIgnoredUrlSet();
+	const ignoredBrokenLinks = allLinks.filter( ( url ) =>
+		finalIgnoredSet.has( normalizeIgnoredUrl( url ) )
+	);
 
 	if ( brokenLinks.length ) {
-		return createCheck( {
-			id: 'broken_links',
-			title: __(
-				'One or more broken links found on the page.',
-				'surerank'
-			),
-			status: 'error',
-			data: brokenLinks,
-			type: 'page',
-		} );
+		return {
+			...createCheck( {
+				id: 'broken_links',
+				title: __(
+					'One or more broken links found on the page.',
+					'surerank'
+				),
+				status: 'error',
+				data: brokenLinks,
+				type: 'page',
+			} ),
+			ignoredBrokenLinks,
+		};
 	}
 
-	return createCheck( {
-		id: 'broken_links',
-		title: __( 'No broken links found on the page.', 'surerank' ),
-		status: 'success',
-		description: [],
-		type: 'page',
-	} );
+	return {
+		...createCheck( {
+			id: 'broken_links',
+			title: __( 'No broken links found on the page.', 'surerank' ),
+			status: 'success',
+			description: [],
+			type: 'page',
+		} ),
+		ignoredBrokenLinks,
+	};
 };
 
 export const checkCanonicalUrl = ( canonical ) => {

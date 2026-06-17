@@ -18,6 +18,7 @@ use SureRank\Inc\Functions\Update;
 use SureRank\Inc\Meta_Variables\Post;
 use SureRank\Inc\Meta_Variables\Site;
 use SureRank\Inc\Meta_Variables\Term;
+use SureRank\Inc\Meta_Variables\User;
 use SureRank\Inc\Traits\Get_Instance;
 use WP_REST_Request;
 use WP_REST_Server;
@@ -78,13 +79,21 @@ class Admin extends Api_Base {
 
 		$post_id = $request->get_param( 'post_id' );
 		$term_id = $request->get_param( 'term_id' );
+		$user_id = $request->get_param( 'user_id' );
 
-		if ( empty( $post_id ) && empty( $term_id ) ) {
-			Send_Json::error( [ 'message' => __( 'Post id or term id is required', 'surerank' ) ] );
+		if ( empty( $post_id ) && empty( $term_id ) && empty( $user_id ) ) {
+			Send_Json::error( [ 'message' => __( 'Post id, term id or user id is required', 'surerank' ) ] );
+		}
+
+		// Object-level guard: returning a user's variables is gated by the same
+		// per-user capability as the dedicated user SEO routes, so a role with
+		// only route-level access cannot read variables for arbitrary users.
+		if ( ! empty( $user_id ) && ! User_Seo::can_manage_user_seo( (int) $user_id ) ) {
+			Send_Json::error( [ 'message' => __( 'You are not allowed to manage SEO settings for this user.', 'surerank' ) ] );
 		}
 
 		$data = [
-			'variables' => $this->get_variables( $request->get_param( 'post_id' ), $request->get_param( 'term_id' ) ),
+			'variables' => $this->get_variables( $request->get_param( 'post_id' ), $request->get_param( 'term_id' ), $request->get_param( 'user_id' ) ),
 			'other'     => $this->get_other_data(),
 		];
 
@@ -96,10 +105,11 @@ class Admin extends Api_Base {
 	 *
 	 * @param int|null $post_id Post ID.
 	 * @param int|null $term_id Term ID.
+	 * @param int|null $user_id User ID.
 	 * @since 1.0.0
 	 * @return array<string, array<string, mixed>> Array of variable groups keyed by type (e.g., term, post, site).
 	 */
-	public function get_variables( $post_id = null, $term_id = null ) {
+	public function get_variables( $post_id = null, $term_id = null, $user_id = null ) {
 
 		$meta_variable_instances = [];
 		if ( ! empty( $term_id ) ) {
@@ -107,6 +117,9 @@ class Admin extends Api_Base {
 		}
 		if ( ! empty( $post_id ) ) {
 			$meta_variable_instances['post'] = Post::get_instance();
+		}
+		if ( ! empty( $user_id ) ) {
+			$meta_variable_instances['user'] = User::get_instance();
 		}
 		$meta_variable_instances['site'] = Site::get_instance();
 
@@ -117,6 +130,9 @@ class Admin extends Api_Base {
 			}
 			if ( ! empty( $term_id ) && method_exists( $instance, 'set_term' ) ) {
 				$instance->set_term( $term_id );
+			}
+			if ( ! empty( $user_id ) && method_exists( $instance, 'set_user' ) ) {
+				$instance->set_user( $user_id );
 			}
 			$variables[ $key ] = $instance->get_all_values();
 
@@ -155,10 +171,11 @@ class Admin extends Api_Base {
 	 * @return void
 	 */
 	public function get_admin_settings( $request ) {
-		$data                         = Settings::get();
-		$data['surerank_usage_optin'] = Get::option( 'surerank_usage_optin' ) === 'yes' ? true : false;
-		$data                         = apply_filters( 'surerank_get_admin_settings_data', $data );
-		$decode_data                  = Utils::decode_html_entities_recursive( $data ) ?? $data;
+		$data                                 = Settings::get();
+		$data['surerank_usage_optin']         = Get::option( 'surerank_usage_optin' ) === 'yes' ? true : false;
+		$data['surerank_delete_on_uninstall'] = Get::option( SURERANK_DELETE_ON_UNINSTALL ) === 'yes' ? true : false;
+		$data                                 = apply_filters( 'surerank_get_admin_settings_data', $data );
+		$decode_data                          = Utils::decode_html_entities_recursive( $data ) ?? $data;
 		Send_Json::success( [ 'data' => $decode_data ] );
 	}
 
@@ -233,6 +250,23 @@ class Admin extends Api_Base {
 		$data       = apply_filters( 'surerank_update_admin_settings_data', $data );
 		$db_options = Settings::get();
 
+		if ( isset( $data['schemas'] ) ) {
+			$validation = apply_filters(
+				'surerank_validate_schemas_payload',
+				[
+					'valid'   => true,
+					'message' => '',
+				],
+				$data['schemas']
+			);
+			if ( is_array( $validation ) && isset( $validation['valid'] ) && ! $validation['valid'] ) {
+				return [
+					'success' => false,
+					'message' => $validation['message'] ?? __( 'Invalid schema payload.', 'surerank' ),
+				];
+			}
+		}
+
 		$instance        = self::get_instance();
 		$updated_options = $instance->get_updated_options( $data, $db_options );
 
@@ -241,6 +275,7 @@ class Admin extends Api_Base {
 		$data = $instance->process_social_profile_updates( $data, $updated_options );
 		$data = array_merge( $db_options, $data );
 		$data = $instance->process_surerank_usage_optin( $data );
+		$data = $instance->process_surerank_delete_on_uninstall( $data );
 
 		if ( Update::option( SURERANK_SETTINGS, $data ) ) {
 			Update_Timestamp::timestamp_option();
@@ -268,6 +303,29 @@ class Admin extends Api_Base {
 		$surerank_usage_optin = $data['surerank_usage_optin'] ? 'yes' : 'no';
 		Update::option( 'surerank_usage_optin', $surerank_usage_optin );
 		unset( $data['surerank_usage_optin'] );
+
+		return $data;
+	}
+
+	/**
+	 * Process the "delete plugin data on uninstall" toggle.
+	 *
+	 * Mirrors the boolean to its own standalone option so uninstall.php can
+	 * read it cheaply without unserializing the full settings blob.
+	 *
+	 * @param array<string, mixed> $data Data.
+	 * @since 1.9.0
+	 * @return array<string, mixed>
+	 */
+	public function process_surerank_delete_on_uninstall( $data ) {
+
+		if ( ! isset( $data['surerank_delete_on_uninstall'] ) ) {
+			return $data;
+		}
+
+		$value = $data['surerank_delete_on_uninstall'] ? 'yes' : 'no';
+		Update::option( SURERANK_DELETE_ON_UNINSTALL, $value );
+		unset( $data['surerank_delete_on_uninstall'] );
 
 		return $data;
 	}
@@ -443,6 +501,10 @@ class Admin extends Api_Base {
 				'sanitize_callback' => 'absint',
 			],
 			'term_id' => [
+				'type'              => 'integer',
+				'sanitize_callback' => 'absint',
+			],
+			'user_id' => [
 				'type'              => 'integer',
 				'sanitize_callback' => 'absint',
 			],

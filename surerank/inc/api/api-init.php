@@ -44,6 +44,7 @@ class Api_Init {
 			'\SureRank\Inc\API\Post',
 			'\SureRank\Inc\API\Install_Products',
 			'\SureRank\Inc\API\Term',
+			'\SureRank\Inc\API\User_Seo',
 			'\SureRank\Inc\API\Onboarding',
 			'\SureRank\Inc\API\Analyzer',
 			'\SureRank\Inc\API\Migrations',

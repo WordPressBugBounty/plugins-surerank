@@ -1,8 +1,8 @@
 <?php
 /**
- * Bulk Edit class.
+ * Bulk Actions class.
  *
- * Handles bulk editing of SureRank robot settings for posts, pages, and taxonomies.
+ * Handles bulk actions for SureRank robot settings on posts, pages, and taxonomies.
  *
  * @package SureRank\Inc\Admin
  */

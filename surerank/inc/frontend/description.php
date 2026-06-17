@@ -83,6 +83,23 @@ class Description {
 	}
 
 	/**
+	 * Get the user (author archive) description.
+	 *
+	 * @param int $user_id User ID.
+	 * @since 1.9.0
+	 * @return string Description.
+	 */
+	public function user( int $user_id ): string {
+		$content = (string) get_the_author_meta( 'description', $user_id );
+
+		if ( empty( $content ) ) {
+			return '';
+		}
+
+		return self::sanitize_description( $content );
+	}
+
+	/**
 	 * Get the current post ID based on the context.
 	 *
 	 * @return int|null Post ID or null if not found.

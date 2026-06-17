@@ -534,6 +534,30 @@ final class ImporterUtils {
 	}
 
 	/**
+	 * Extract the primary keyword from a comma-separated keywords string.
+	 *
+	 * Most SEO plugins store multiple focus keywords as a comma-separated
+	 * list where the first entry is the primary keyword.
+	 *
+	 * @param mixed $keywords Raw keywords value from the source plugin.
+	 * @return string Primary keyword, or empty string when none.
+	 * @since 1.9.0
+	 */
+	public static function get_primary_keyword( $keywords ): string {
+		if ( ! is_string( $keywords ) ) {
+			return '';
+		}
+
+		$keywords = trim( $keywords );
+
+		if ( '' === $keywords ) {
+			return '';
+		}
+
+		return trim( (string) strtok( $keywords, ',' ) );
+	}
+
+	/**
 	 * Check if a profile URL matches a specific social platform.
 	 *
 	 * @param string $profile The profile URL to check.

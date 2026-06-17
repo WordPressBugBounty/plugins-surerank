@@ -29,7 +29,7 @@ if ( ! class_exists( 'Nps_Notice' ) ) {
 
 		/**
 		 * Array of allowed screens where the NPS survey should be displayed.
-		 * This ensures that the NPS survey is only displayed on SureForms pages.
+		 * This ensures that the NPS survey is only displayed on SureRank pages.
 		 *
 		 * @var array<string>
 		 * @since 1.0.0

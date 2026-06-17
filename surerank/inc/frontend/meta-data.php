@@ -110,6 +110,20 @@ class Meta_Data {
 	}
 
 	/**
+	 * Reset accumulated meta data.
+	 *
+	 * Used by the headless REST renderer to clear singleton state between
+	 * objects rendered within a single request. Has no effect on the normal
+	 * front-end flow, which renders one object per request.
+	 *
+	 * @since 1.9.0
+	 * @return void
+	 */
+	public function reset_meta_data() {
+		$this->meta_data = null;
+	}
+
+	/**
 	 * Set meta data
 	 *
 	 * @since 1.0.0

@@ -63,10 +63,10 @@ class BulkEdit {
 		<fieldset class="inline-edit-col-right">
 			<div class="inline-edit-col">
 				<div class="inline-edit-group wp-clearfix">
-					<span class="title inline-edit-surerank-settings" style="font-weight: bold; margin-bottom: 5px; display: block;"><?php esc_html_e( 'SURERANK SETTINGS', 'surerank' ); ?></span>
+					<span class="title inline-edit-surerank-settings" style="font-weight: bold; margin-bottom: 5px; display: block;"><?php esc_html_e( 'SureRank Settings', 'surerank' ); ?></span>
 					<div style="display: flex; flex-direction: column; gap: 10px;">
 						<label>
-							<span class="title"><?php esc_html_e( 'No Index -', 'surerank' ); ?></span>
+							<span class="title"><?php esc_html_e( 'No Index', 'surerank' ); ?></span>
 							<select name="surerank_no_index">
 								<option value="-1"><?php esc_html_e( '- No Change -', 'surerank' ); ?></option>
 								<option value="yes"><?php esc_html_e( 'Yes', 'surerank' ); ?></option>
@@ -74,7 +74,7 @@ class BulkEdit {
 							</select>
 						</label>
 						<label>
-							<span class="title"><?php esc_html_e( 'No Follow -', 'surerank' ); ?></span>
+							<span class="title"><?php esc_html_e( 'No Follow', 'surerank' ); ?></span>
 							<select name="surerank_no_follow">
 								<option value="-1"><?php esc_html_e( '- No Change -', 'surerank' ); ?></option>
 								<option value="yes"><?php esc_html_e( 'Yes', 'surerank' ); ?></option>
@@ -82,7 +82,7 @@ class BulkEdit {
 							</select>
 						</label>
 						<label>
-							<span class="title"><?php esc_html_e( 'No Archive -', 'surerank' ); ?></span>
+							<span class="title"><?php esc_html_e( 'No Archive', 'surerank' ); ?></span>
 							<select name="surerank_no_archive">
 								<option value="-1"><?php esc_html_e( '- No Change -', 'surerank' ); ?></option>
 								<option value="yes"><?php esc_html_e( 'Yes', 'surerank' ); ?></option>

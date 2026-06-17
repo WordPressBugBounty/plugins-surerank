@@ -161,7 +161,9 @@ class Defaults {
 	 * @since 1.0.0
 	 */
 	private $global_advanced_miscellaneous_defaults = [
-		'surerank_usage_optin' => false,
+		'surerank_usage_optin'         => false,
+		'enable_headless_rest_api'     => false,
+		'surerank_delete_on_uninstall' => false,
 	];
 
 	/**
@@ -177,6 +179,20 @@ class Defaults {
 	private $global_integrations_defaults = [
 		'enable_woocommerce_integration' => true,
 		'enable_angie_integration'       => true,
+	];
+
+	/**
+	 * Default values for the global - MCP.
+	 *
+	 * Controls whether SureRank registers its WordPress abilities and the MCP
+	 * server endpoint for AI clients. Defaults to disabled so the integration is
+	 * opt-in; the actual MCP endpoint also requires the MCP Adapter plugin.
+	 *
+	 * @var array<string, mixed>
+	 * @since 1.9.0
+	 */
+	private $global_mcp_defaults = [
+		'enable_mcp' => false,
 	];
 
 	/**
@@ -280,6 +296,7 @@ class Defaults {
 					$this->get_images_defaults(),
 					$this->get_advanced_miscellaneous_defaults(),
 					$this->get_integrations_defaults(),
+					$this->get_mcp_defaults(),
 					[
 						'schemas' => Utils::get_default_schemas(),
 					],
@@ -512,6 +529,28 @@ class Defaults {
 		return [
 			'enable_woocommerce_integration' => $this->sanitize_boolean_default( $defaults['enable_woocommerce_integration'] ?? $this->global_integrations_defaults['enable_woocommerce_integration'] ),
 			'enable_angie_integration'       => $this->sanitize_boolean_default( $defaults['enable_angie_integration'] ?? $this->global_integrations_defaults['enable_angie_integration'] ),
+		];
+	}
+
+	/**
+	 * Get MCP defaults with filter.
+	 *
+	 * The `surerank_mcp_defaults` filter can be used to override the default
+	 * enabled state for the MCP integration. The returned value is normalized
+	 * to a boolean before it is merged into settings.
+	 *
+	 * @return array<string, mixed>
+	 * @since 1.9.0
+	 */
+	private function get_mcp_defaults() {
+		$defaults = apply_filters( 'surerank_mcp_defaults', $this->global_mcp_defaults );
+
+		if ( ! is_array( $defaults ) ) {
+			$defaults = $this->global_mcp_defaults;
+		}
+
+		return [
+			'enable_mcp' => $this->sanitize_boolean_default( $defaults['enable_mcp'] ?? $this->global_mcp_defaults['enable_mcp'] ),
 		];
 	}
 

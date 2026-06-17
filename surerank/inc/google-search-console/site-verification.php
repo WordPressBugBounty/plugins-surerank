@@ -143,7 +143,7 @@ class SiteVerification {
 		if ( ! isset( $result['token'] ) ) {
 			return [
 				'error'   => true,
-				'message' => __( 'No verification token received', 'surerank' ),
+				'message' => __( 'No verification token received.', 'surerank' ),
 				'code'    => 400,
 			];
 		}
@@ -239,7 +239,7 @@ class SiteVerification {
 
 		return [
 			'success' => true,
-			'message' => __( 'Site verified successfully', 'surerank' ),
+			'message' => __( 'Site verified successfully.', 'surerank' ),
 		];
 	}
 

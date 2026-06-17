@@ -732,6 +732,87 @@ export const isURL = ( string ) => {
 };
 
 /**
+ * Extract the broken-link objects from a broken_links check's data, which can
+ * be either a flat list of objects (block editor) or the server's nested
+ * `[ 'intro string', { list: [ ...objects ] } ]` shape (listing / page builder).
+ *
+ * @param {Array} data Broken_links check data.
+ * @return {Array} Flat array of broken-link objects ( { url, status, details } ).
+ */
+export const getBrokenLinkItems = ( data ) => {
+	if ( ! Array.isArray( data ) ) {
+		return [];
+	}
+	const items = [];
+	data.forEach( ( item ) => {
+		if ( item && typeof item === 'object' && Array.isArray( item.list ) ) {
+			items.push( ...item.list );
+		} else if ( item && typeof item === 'object' && item.url ) {
+			items.push( item );
+		}
+	} );
+	return items.filter(
+		( item ) => item && typeof item === 'object' && item.url
+	);
+};
+
+/**
+ * Normalize a URL for ignored-list comparison (trailing slash insensitive).
+ *
+ * @param {string} url URL to normalize.
+ * @return {string} Normalized URL.
+ */
+const normalizeBrokenLinkUrl = ( url ) => ( url || '' ).trim().replace( /\/+$/, '' );
+
+/**
+ * Reconcile a post's broken_links check against the site-wide ignored URLs so
+ * the ignore / restore UI shows on the listing page without a manual refresh.
+ *
+ * The server returns broken_links with only the active (non-ignored) entries
+ * plus the full all_links list. We move the ignored URLs that appear on the
+ * page into ignoredBrokenLinks and flatten the active list to objects, matching
+ * the block-editor check shape. Untouched when there is nothing to surface.
+ *
+ * @param {Array} checks   Processed checks (each with an id).
+ * @param {Array} allLinks All link URLs found on the page.
+ * @return {Array} The checks array with broken_links reconciled.
+ */
+export const applyIgnoredBrokenLinks = ( checks, allLinks = [] ) => {
+	const index = checks.findIndex( ( check ) => check?.id === 'broken_links' );
+	if ( index === -1 ) {
+		return checks;
+	}
+
+	const ignoredSet = new Set(
+		( window?.surerank_seo_popup?.broken_link_ignored_urls || [] ).map(
+			normalizeBrokenLinkUrl
+		)
+	);
+	const ignoredBrokenLinks = ( allLinks || [] ).filter( ( url ) =>
+		ignoredSet.has( normalizeBrokenLinkUrl( url ) )
+	);
+	const activeItems = getBrokenLinkItems( checks[ index ].data ).filter(
+		( item ) => ! ignoredSet.has( normalizeBrokenLinkUrl( item.url ) )
+	);
+
+	// Nothing broken and nothing ignored on this page: leave as-is.
+	if ( ! activeItems.length && ! ignoredBrokenLinks.length ) {
+		return checks;
+	}
+
+	checks[ index ] = {
+		...checks[ index ],
+		data: activeItems,
+		ignoredBrokenLinks,
+		status: activeItems.length ? 'error' : 'success',
+		title: activeItems.length
+			? __( 'One or more broken links found on the page.', 'surerank' )
+			: __( 'No broken links found on the page.', 'surerank' ),
+	};
+	return checks;
+};
+
+/**
  * Format the bad, fair, and passed checks for the SEO checks.
  *
  * @param {Object} seoScore - The SEO score object containing the checks.
@@ -847,10 +928,14 @@ export const getStatusIndicatorClasses = ( status ) => {
 export const getStatusIndicatorAriaLabel = ( errorAndWarnings ) => {
 	if ( errorAndWarnings > 0 ) {
 		return sprintf(
-			/* translators: 1: number of errors and warnings, 2: singular or plural "issue"/"issues" */
-			__( '%1$d %2$s need attention.', 'surerank' ),
-			errorAndWarnings,
-			_n( 'issue', 'issues', errorAndWarnings, 'surerank' )
+			/* translators: %d: number of errors and warnings */
+			_n(
+				'%d issue needs attention.',
+				'%d issues need attention.',
+				errorAndWarnings,
+				'surerank'
+			),
+			errorAndWarnings
 		);
 	}
 	return __( 'All SEO checks passed.', 'surerank' );

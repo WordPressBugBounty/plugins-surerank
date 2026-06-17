@@ -180,11 +180,16 @@ const dataSettings = {
 
 		// Miscellaneous
 		surerank_usage_optin: false, // true/false
+		surerank_delete_on_uninstall: false, // true/false — wipes all plugin data on uninstall
 
 		// Integrations default to enabled to preserve automatic compatibility
 		// when the corresponding third-party plugin is active.
 		enable_woocommerce_integration: true, // Enables WooCommerce SEO compatibility.
 		enable_angie_integration: true, // Enables Angie integration compatibility.
+
+		// MCP defaults to disabled so the integration is opt-in; the actual MCP
+		// endpoint also requires the MCP Adapter plugin to be installed.
+		enable_mcp: false, // true/false — registers SureRank abilities + MCP server.
 	},
 	/* Title and description End */
 	// Site Settings (Previously known as site variables)

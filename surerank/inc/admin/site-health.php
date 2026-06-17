@@ -127,7 +127,7 @@ class Site_Health {
 
 		return $this->build_result(
 			'critical',
-			__( 'SureRank has not rebuilt the sitemap cache in over the stale threshold.', 'surerank' ),
+			__( 'SureRank has not rebuilt the sitemap cache for longer than the stale threshold.', 'surerank' ),
 			sprintf(
 				/* translators: %s: human-readable time. */
 				__( 'Last successful rebuild: %s. SureRank will attempt a rebuild on the next admin page visit; if the problem persists, WP-Cron or the admin-ajax loopback may be unavailable.', 'surerank' ),

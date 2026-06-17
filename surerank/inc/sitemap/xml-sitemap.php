@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+use SureRank\Inc\BatchProcess\Sync_Archives;
 use SureRank\Inc\Functions\Cache;
 use SureRank\Inc\Functions\Compat;
 use SureRank\Inc\Functions\Cron;
@@ -199,6 +200,8 @@ class Xml_Sitemap extends Sitemap {
 					$this->sitemapindex( $sitemap );
 				}
 			}
+		} elseif ( Sync_Archives::TYPE === $type ) {
+			$this->generate_archive_sitemap();
 		} else {
 			$this->generate_main_sitemap( $type, $page, $threshold );
 		}
@@ -235,6 +238,32 @@ class Xml_Sitemap extends Sitemap {
 		$prefix_param = sanitize_text_field( get_query_var( 'surerank_prefix' ) );
 		$sitemap      = $this->get_sitemap_from_cache( $type, $page, $prefix_param );
 		$this->generate_main_sitemap_xml( $sitemap );
+	}
+
+	/**
+	 * Generate the post-type archive sitemap from its cached chunk.
+	 *
+	 * The archive chunk has no type prefix, so it is served directly here
+	 * rather than through the prefix-based get_sitemap_from_cache() path.
+	 * Returns (without exiting) on a cache miss so the caller can fall
+	 * through to stale/miss handling. Exits on success.
+	 *
+	 * @since 1.9.0
+	 * @return void
+	 */
+	public function generate_archive_sitemap(): void {
+		// Single chunk by design: archive URLs number one per public
+		// has_archive post type, far below the split threshold, so they are
+		// never paginated (see Sync_Archives).
+		$chunk = Cache::get_file( 'sitemap/' . Sync_Archives::TYPE . '-chunk-1.json' );
+		if ( ! $chunk ) {
+			return;
+		}
+
+		$entries = json_decode( $chunk, true );
+		if ( is_array( $entries ) ) {
+			$this->generate_main_sitemap_xml( $entries );
+		}
 	}
 
 	/**
@@ -306,6 +335,24 @@ class Xml_Sitemap extends Sitemap {
 	 */
 	public function get_sitemap_url() {
 		return home_url( self::get_slug() );
+	}
+
+	/**
+	 * Public, read-only accessor for a sub-sitemap's combined entries.
+	 *
+	 * Lets the headless JSON sitemap (Headless_Sitemap) serve the exact same
+	 * cached entries the XML sitemap renders, guaranteeing parity (same items,
+	 * same noindex/exclusion filtering applied at build time). Pure read: does
+	 * not schedule rebuilds or emit any output.
+	 *
+	 * @param string $base Sub-sitemap base token, e.g. "post-type-page" — the
+	 *                     chunk-file prefix shared by "{base}-chunk-{n}.json".
+	 * @param int    $page Page number within the sub-sitemap (1-based).
+	 * @return array<int, mixed> Entry rows (each an array of link, updated, …).
+	 * @since 1.9.0
+	 */
+	public function get_entries_for_base( string $base, int $page ): array {
+		return $this->combine_chunks( $base, max( 1, $page ) );
 	}
 
 	/**
@@ -421,6 +468,19 @@ class Xml_Sitemap extends Sitemap {
 	 * @return array<string, mixed>|array<int, string>
 	 */
 	private function get_sitemap_from_cache( string $type, int $page, string $prefix_param, bool $from_backup = false ) {
+		return $this->combine_chunks( $prefix_param . '-' . $type, $page, $from_backup );
+	}
+
+	/**
+	 * Combine the cached JSON chunks that make up one sub-sitemap page.
+	 *
+	 * @param string $base Chunk-file prefix, e.g. "post-type-page".
+	 * @param int    $page Page number (1-based).
+	 * @param bool   $from_backup Read from the rebuild backup (sitemap.old/).
+	 * @return array<int, array<string, mixed>>|array<int, string>
+	 * @since 1.9.0
+	 */
+	private function combine_chunks( string $base, int $page, bool $from_backup = false ) {
 		// Calculate which chunks belong to this page based on threshold and chunk size.
 		$sitemap_threshold = apply_filters( 'surerank_sitemap_threshold', 200 );
 		$chunk_size        = apply_filters( 'surerank_sitemap_json_chunk_size', 20 );
@@ -431,8 +491,7 @@ class Xml_Sitemap extends Sitemap {
 
 		$combined_sitemap = [];
 		for ( $chunk_number = $start_chunk; $chunk_number <= $end_chunk; $chunk_number++ ) {
-			$chunk_file      = $prefix_param . '-' . $type . '-chunk-' . $chunk_number . '.json';
-			$cache_path      = 'sitemap/' . $chunk_file;
+			$cache_path      = 'sitemap/' . $base . '-chunk-' . $chunk_number . '.json';
 			$cache_file_data = $from_backup
 				? Cache::read_rebuild_backup( $cache_path )
 				: Cache::get_file( $cache_path );

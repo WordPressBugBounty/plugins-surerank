@@ -52,7 +52,7 @@ const RobotsTxtEditorSettings = () => {
 					{ __(
 						"Your site's search engine visibility is currently set to Hidden in",
 						'surerank'
-					) }
+					) }{ ' ' }
 					<a
 						href={ wpReadingSettingsUrl }
 						target="_blank"

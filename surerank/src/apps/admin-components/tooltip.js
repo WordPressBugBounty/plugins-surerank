@@ -1,19 +1,18 @@
 import { cn } from '@/functions/utils';
 import { Tooltip as TooltipComponent } from '@bsf/force-ui';
 import { Info } from 'lucide-react';
+import { getPortalRoot } from '@AdminComponents/portal-root';
 
 const Tooltip = ( props ) => {
 	if ( ! props.content && ! props.title ) {
 		return props.children;
 	}
+	const portalRoot = getPortalRoot();
 	return (
 		<TooltipComponent
 			{ ...props }
-			tooltipPortalId="surerank-root"
-			boundary={
-				document?.querySelector( '#surerank-root' ) ||
-				'clippingAncestors'
-			}
+			tooltipPortalRoot={ portalRoot }
+			boundary={ portalRoot || 'clippingAncestors' }
 		/>
 	);
 };
@@ -36,16 +35,19 @@ const SeoPopupTooltip = ( props ) => {
 	if ( ! props.content && ! props.title ) {
 		return props.children;
 	}
+	// Query the modal container WITHIN the portal root: inside the shadow DOM it
+	// is not reachable from the light-DOM `document`.
+	const portalRoot = getPortalRoot();
+	const boundary =
+		portalRoot?.querySelector?.( '#surerank-seo-popup-modal-container' ) ||
+		portalRoot ||
+		'clippingAncestors';
 	return (
 		<TooltipComponent
 			{ ...props }
 			className={ cn( 'z-[99999] max-w-95', props.className ) }
-			tooltipPortalId="surerank-root"
-			boundary={
-				document?.querySelector(
-					'#surerank-seo-popup-modal-container'
-				) || 'clippingAncestors'
-			}
+			tooltipPortalRoot={ portalRoot }
+			boundary={ boundary }
 		/>
 	);
 };

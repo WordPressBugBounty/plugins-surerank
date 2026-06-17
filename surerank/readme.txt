@@ -5,7 +5,7 @@ Tags: seo, wordpress seo, xml sitemap, schema, google search console
 Requires at least: 6.8
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.8.1
+Stable tag: 1.9.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,7 +31,7 @@ SureRank is a simple, lightweight SEO assistant designed for anyone - whether yo
 We cut the fluff and focused on fundamentals:
 
 - Simple, clutter-free interface
-- Optimized code that don’t slow down your site
+- Optimized code that doesn’t slow down your site
 - Settings that need minimal inputs from you
 - Straightforward meta and social settings
 - Easy-to-understand schema implementation
@@ -122,7 +122,7 @@ Optimize your images with SureRank’s image SEO feature. It automatically gener
 Ensure your RSS feed is optimized for search engines and ready for syndication with SureRank’s automatic RSS feed optimization feature. This helps search engines properly index your RSS content, improving visibility and allowing you to reach a wider audience.
 
 ### SEO Metabox ###
-With the SEO Metabox, you can easily set custom meta titles, descriptions, social sharing settings, and robot instructions for each individual post or page. This gives you full control over how your content appears in search results and on social media platforms.
+With the SEO Metabox, you can easily set custom meta titles, descriptions, social sharing settings, and robots instructions for each individual post or page. This gives you full control over how your content appears in search results and on social media platforms.
 
 ### WooCommerce Integration ###
 SureRank integrates seamlessly with WooCommerce, providing SEO tools specifically designed for your online store. It helps optimize your product pages, categories, and other eCommerce elements to improve search visibility and drive more traffic to your store.
@@ -294,6 +294,22 @@ Brainstorm Force
 
 
 == Changelog ==
+= 1.9.0 - 17-June-2026 =
+* New: AI - Enable or disable MCP with a single toggle, and connect an AI client from a new setup screen.
+* New: Headless REST API - Serve your SEO meta tags, schema, and social previews through a public REST API so headless front-ends can render them without scraping the page.
+* New: Front-end SEO Meta Box - Open and edit the SureRank SEO meta box right from the front end of your site (via the admin bar), including author, date, and taxonomy archive pages.
+* New: Robots.txt Analyzer - See at a glance how your robots.txt rules affect SEO and what they're blocking.
+* New: Author SEO - Set per-author SEO (title, description, social preview) for author archive pages.
+* New: Custom JSON-LD Schema - Add your own JSON-LD schema straight from the schema builder.
+* New: XML Sitemap - Post-type archive pages are now included in the sitemap.
+* New: Migration - Your primary focus keyword now carries over when you migrate from another SEO plugin.
+* New: Broken Links - Ignore specific URLs in the broken-links check so known-good links stop being flagged.
+* New: Schema - Choose a time, not just a date, in the schema date picker.
+* Improvement: Import - Imported settings are sanitized and JSON-LD output hardened for safer migrations.
+* Fix: Archives - Author, date, and post-type archive titles now follow the configured title format and separator.
+* Fix: Site Health - The homepage reachability check now respects HTTP error status codes instead of reporting a healthy page.
+* Fix: SEO Meta Box - The SEO popup now opens on all taxonomies.
+* Fix: Comments - Stripped the ?replytocom parameter from comment reply links to avoid duplicate, low-value URLs.
 = 1.8.1 - 4-June-2026 =
 * Update compatibility with 1.8.0 release.
 = 1.8.0 - 4-June-2026 =
@@ -370,7 +386,7 @@ Brainstorm Force
 * Improvement: UI/UX enhancements.
 * Fix: Onboarding - Fixed an issue where the posts and pages were not searched properly.
 * Fix: Fixed an issue with NewsPaper theme and Event plugin.
-* Fix: Fixed an issue in Sitemap where images column where adding even if the option was disabled.
+* Fix: Fixed an issue in Sitemap where the images column was added even if the option was disabled.
 * Fix: Fixed an issue with metadata not getting applied if homepage is set to a shop page in WooCommerce.
 = 1.6.2 - 14-January-2026 =
 * New: Introduced an option to get Email Reports on Monthly basis.
@@ -380,7 +396,7 @@ Brainstorm Force
 * Improvement: Edit support added for the AI content suggestions in meta & social SEO.
 * Improvement: Generating sitemap as soon as any migration gets completed.
 * Improvement: Displaying an indicator and a notice in the Schema editor if any Display Rule is not being set, to avoid blank schemas without any rulesets.
-* Fix: Resolved a few issues in Rankmath migration like - global image gets set to featured image of every post, validations of search engine title and description for a social title and description.
+* Fix: Resolved a few issues in Rank Math migration like - global image gets set to featured image of every post, validations of search engine title and description for a social title and description.
 = 1.6.1 - 23-December-2025 =
 * Improvement: Removed default title prefixes from taxonomy, archive, and post type archive pages.
 * Fix: Fixed an issue where onboarding settings were not updated correctly in an edge case.

@@ -4,6 +4,7 @@ import { Button } from '@bsf/force-ui';
 import { STORE_NAME } from '@/store/constants';
 import { cn } from '@/functions/utils';
 import { SeoPopupTooltip } from '@AdminComponents/tooltip';
+import { isUserContext } from '@SeoPopup/components/page-seo-checks/analyzer/utils/page-builder';
 
 const MagicButton = ( { fieldKey, onUseThis, tooltip } ) => {
 	const {
@@ -21,6 +22,12 @@ const MagicButton = ( { fieldKey, onUseThis, tooltip } ) => {
 		};
 	}, [] );
 	const { updateAppSettings } = useDispatch( STORE_NAME );
+
+	// The generate-content API builds prompts from post/term context and has
+	// no user (author archive) support — hide the AI button in user context.
+	if ( isUserContext() ) {
+		return null;
+	}
 
 	// Check if content has been generated for this field
 	const hasGeneratedContent =

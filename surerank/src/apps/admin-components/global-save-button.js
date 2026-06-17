@@ -7,6 +7,7 @@ import { STORE_NAME } from '@/admin-store/constants';
 import { useSelect, useDispatch } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
 import { DotIcon } from '@/global/components/icons';
+import { validateCustomJsonLdSchemas } from './schema-utils/custom-json-ld';
 
 /* global toast */
 
@@ -28,7 +29,7 @@ const GlobalSaveButton = ( {
 		}
 		saveCompleted.current = false; // Reset for next save
 		setSaving( true );
-		setButtonText( __( 'Saving..', 'surerank' ) );
+		setButtonText( __( 'Saving…', 'surerank' ) );
 
 		try {
 			const response = await onClick();
@@ -97,6 +98,13 @@ export const SaveSettingsButton = ( { onSuccess } ) => {
 	const { resetUnsavedSettings } = useDispatch( STORE_NAME );
 
 	const handleSave = async () => {
+		const schemaValidation = validateCustomJsonLdSchemas(
+			unsavedSettings?.schemas
+		);
+		if ( ! schemaValidation.valid ) {
+			throw new Error( schemaValidation.message );
+		}
+
 		const queryParams = { data: unsavedSettings };
 
 		const response = await apiFetch( {

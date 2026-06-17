@@ -94,7 +94,7 @@ export const checkOpenGraphTags = () => {
 	const openGraphTags = window?.surerank_globals?.open_graph_tags ?? false;
 
 	if ( ! openGraphTags ) {
-		// if not disbaled.
+		// if not disabled.
 		return createCheck( {
 			id: 'open_graph_tags',
 			title: __( 'Open Graph tags are present on the page.', 'surerank' ),

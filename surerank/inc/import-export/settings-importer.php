@@ -11,6 +11,7 @@
 namespace SureRank\Inc\Import_Export;
 
 use SureRank\Inc\Functions\Get;
+use SureRank\Inc\Functions\Sanitize;
 use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Functions\Update;
 use SureRank\Inc\Traits\Get_Instance;
@@ -185,13 +186,18 @@ class Settings_Importer {
 			return;
 		}
 
+		// Recursively sanitize imported values, matching the normal settings
+		// save path (Api_Base::sanitize_array_data) so malicious markup cannot
+		// be injected via an imported file while placeholders are preserved.
+		$all_new_settings = Sanitize::array_deep( [ Sanitize::class, 'sanitize_with_placeholders' ], $all_new_settings );
+
 		// Merge with existing settings.
 		$final_settings = $overwrite
 			? array_merge( $current_settings, $all_new_settings )
 			: array_merge( $all_new_settings, $current_settings );
 		if ( Update::option( SURERANK_SETTINGS, $final_settings ) ) {
 			foreach ( array_keys( $all_new_settings ) as $key ) {
-				$this->add_import_success( $key );
+				$this->add_import_success( (string) $key );
 			}
 		} else {
 			$this->add_import_error( __( 'Failed to save settings to database.', 'surerank' ) );

@@ -3,8 +3,8 @@ import { UpgradeNotice } from '@/global/components/nudges';
 import { __ } from '@wordpress/i18n';
 
 /**
- * Instant Indexing Settings - Pro Feature Placeholder
- * Displays upgrade nudge for the Instant Indexing Settings feature
+ * Role Manager Settings - Pro Feature Placeholder
+ * Displays upgrade nudge for the Role Manager feature
  */
 const RoleManager = () => {
 	return (

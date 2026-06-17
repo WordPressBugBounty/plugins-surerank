@@ -63,6 +63,42 @@ class Sanitize {
 	}
 
 	/**
+	 * Sanitize request payloads while preserving raw custom JSON-LD values.
+	 *
+	 * @param array<string, mixed>|array<int, string> $data_array Array to sanitize.
+	 * @return array<string, mixed>|array<int, string>
+	 */
+	public static function sanitize_request_data( array $data_array ) {
+		if ( empty( $data_array ) ) {
+			return [];
+		}
+
+		/**
+		 * Request keys that should keep raw string values for downstream validation.
+		 *
+		 * @param array<int, string> $raw_value_keys Raw-preserved request keys.
+		 */
+		$raw_value_keys = array_map( 'strval', apply_filters( 'surerank_preserve_raw_request_value_keys', [] ) );
+
+		$response = [];
+		foreach ( $data_array as $key => $data ) {
+			if ( is_array( $data ) ) {
+				$response[ $key ] = self::sanitize_request_data( $data );
+				continue;
+			}
+
+			if ( in_array( (string) $key, $raw_value_keys, true ) ) {
+				$response[ $key ] = self::sanitize_raw_json_ld( $data );
+				continue;
+			}
+
+			$response[ $key ] = self::sanitize_with_placeholders( $data );
+		}
+
+		return $response;
+	}
+
+	/**
 	 * Custom sanitization function to allow specific placeholders like %term_title%
 	 *
 	 * Sanitize data recursively, while preserving any placeholder patterns in the format %placeholder%.
@@ -92,6 +128,28 @@ class Sanitize {
 			return esc_url_raw( $text );
 		}
 		return sanitize_text_field( $text );
+	}
+
+	/**
+	 * Preserve raw JSON-LD strings so validation can operate on exact input.
+	 *
+	 * @param mixed $text Raw JSON-LD payload.
+	 * @return mixed
+	 */
+	public static function sanitize_raw_json_ld( $text ) {
+		if ( is_bool( $text ) || is_array( $text ) ) {
+			return $text;
+		}
+
+		if ( null === $text ) {
+			return '';
+		}
+
+		if ( ! is_string( $text ) ) {
+			return $text;
+		}
+
+		return trim( $text );
 	}
 
 	/**

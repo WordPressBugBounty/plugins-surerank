@@ -51,7 +51,7 @@ const UpgradeBanner = () => {
 					color="primary"
 					className="inline"
 				>
-					{ __( 'Ready to go beyond free plan?', 'surerank' ) }
+					{ __( 'Ready to go beyond the free plan?', 'surerank' ) }
 				</Text>
 				<Button
 					variant="link"
@@ -61,7 +61,7 @@ const UpgradeBanner = () => {
 						redirectToPricingPage( 'surerank_upgrade_banner' );
 					} }
 				>
-					{ __( 'Upgrade now', 'surerank' ) }
+					{ __( 'Upgrade Now', 'surerank' ) }
 				</Button>
 				<Text
 					size={ 12 }

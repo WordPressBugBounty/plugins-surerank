@@ -1,7 +1,7 @@
 import { Badge, Label, Button, toast } from '@bsf/force-ui';
 import { cn, isURL, sanitizeHTML } from '@/functions/utils';
 import FixButton from '@GlobalComponents/fix-button';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { CircleAlert, CircleCheck, Info, TriangleAlert } from 'lucide-react';
 import {
 	SeoPopupInfoTooltip,
@@ -101,7 +101,7 @@ const formatBrokenLinkTooltip = ( item ) => {
 	);
 };
 
-const renderItem = ( item ) => {
+const renderItem = ( item, opts = {} ) => {
 	const commonLinkProps = {
 		tag: 'a',
 		variant: 'link',
@@ -121,19 +121,43 @@ const renderItem = ( item ) => {
 	} else if ( typeof item === 'object' && item?.url ) {
 		// For broken links or similar objects
 		return (
-			<li className="my-1 first:mt-0 last:mb-0 p-2 flex items-center justify-between gap-1.5 text-sm border border-dashed border-border-subtle rounded-md bg-background-secondary">
-				<Button { ...commonLinkProps } href={ item.url }>
+			<li className="my-1 first:mt-0 last:mb-0 py-1.5 px-2 flex items-center gap-2 text-sm border border-solid border-border-subtle rounded-md bg-background-secondary">
+				<Button
+					{ ...commonLinkProps }
+					className={ cn(
+						commonLinkProps.className,
+						'flex-1 min-w-0 justify-start overflow-hidden break-normal [&>span]:min-w-0 [&>span]:truncate'
+					) }
+					href={ item.url }
+					title={ item.url }
+				>
 					{ item.url }
 				</Button>
-				<SeoPopupInfoTooltip
-					content={ formatBrokenLinkTooltip( item ) }
-					interactive
-					placement="top-start"
-					offset={ {
-						alignmentAxis: -10,
-						mainAxis: 8,
-					} }
-				/>
+				<span className="flex items-center gap-1.5 shrink-0">
+					{ !! opts?.onIgnoreUrl && (
+						<Button
+							variant="link"
+							size="xs"
+							onClick={ () => opts.onIgnoreUrl( item.url ) }
+							aria-label={ __(
+								'Ignore this link',
+								'surerank'
+							) }
+							className="hover:text-text-secondary min-w-fit shrink-0 text-text-secondary leading-4 no-underline hover:underline"
+						>
+							{ __( 'Ignore', 'surerank' ) }
+						</Button>
+					) }
+					<SeoPopupInfoTooltip
+						content={ formatBrokenLinkTooltip( item ) }
+						interactive
+						placement="top-start"
+						offset={ {
+							alignmentAxis: -10,
+							mainAxis: 8,
+						} }
+					/>
+				</span>
 			</li>
 		);
 	}
@@ -156,6 +180,9 @@ export const CheckCard = ( {
 	showIgnoreButton = false,
 	onFix,
 	fixItButtonProps = {},
+	onIgnoreUrl,
+	onRestoreUrl,
+	ignoredBrokenLinks = [],
 } ) => {
 	const { data: descriptionData, listStyleClassName } = getData( data );
 	const handleIgnoreClick = async () => {
@@ -173,6 +200,32 @@ export const CheckCard = ( {
 			toast.success( __( 'Check restored successfully', 'surerank' ) );
 		} catch ( error ) {
 			toast.error( __( 'Failed to restore check', 'surerank' ) );
+		}
+	};
+
+	const handleIgnoreUrlClick = async ( url ) => {
+		try {
+			const result = await onIgnoreUrl( url );
+			if ( result?.success === false ) {
+				toast.error( __( 'Failed to ignore link', 'surerank' ) );
+				return;
+			}
+			toast.success( __( 'Link ignored successfully', 'surerank' ) );
+		} catch ( error ) {
+			toast.error( __( 'Failed to ignore link', 'surerank' ) );
+		}
+	};
+
+	const handleRestoreUrlClick = async ( url ) => {
+		try {
+			const result = await onRestoreUrl( url );
+			if ( result?.success === false ) {
+				toast.error( __( 'Failed to restore link', 'surerank' ) );
+				return;
+			}
+			toast.success( __( 'Link restored successfully', 'surerank' ) );
+		} catch ( error ) {
+			toast.error( __( 'Failed to restore link', 'surerank' ) );
 		}
 	};
 
@@ -278,12 +331,65 @@ export const CheckCard = ( {
 						>
 							{ descriptionData.map( ( item, index ) => (
 								<Fragment key={ `${ item }-${ index }` }>
-									{ renderItem( item ) }
+									{ renderItem(
+										item,
+										onIgnoreUrl
+											? {
+													onIgnoreUrl:
+														handleIgnoreUrlClick,
+											  }
+											: undefined
+									) }
 								</Fragment>
 							) ) }
 						</ul>
 					) }
 				{ showImages && <ImageGrid images={ descriptionData } /> }
+				{ !! onRestoreUrl && ignoredBrokenLinks.length > 0 && (
+					<div className="flex flex-col gap-1 pt-3 border-0 border-t-0.5 border-solid border-border-subtle">
+						<p className="m-0 text-xs font-medium text-text-tertiary uppercase tracking-wide">
+							{ sprintf(
+								/* translators: %d: number of ignored links */
+								__( 'Ignored links (%d)', 'surerank' ),
+								ignoredBrokenLinks.length
+							) }
+						</p>
+						<ul className="list-none m-0 p-0">
+							{ ignoredBrokenLinks.map( ( url ) => (
+								<li
+									key={ url }
+									className="m-0 py-1 px-2 flex items-center gap-2 text-sm rounded-md hover:bg-background-secondary"
+								>
+									<Button
+										tag="a"
+										variant="link"
+										className="flex-1 min-w-0 justify-start overflow-hidden font-normal text-text-tertiary no-underline hover:no-underline focus:outline-none focus:[box-shadow:none] [&>span]:px-0 [&>span]:min-w-0 [&>span]:truncate"
+										target="_blank"
+										rel="noopener noreferrer"
+										href={ url }
+										title={ url }
+									>
+										{ url }
+									</Button>
+									<Button
+										variant="link"
+										size="xs"
+										onClick={ () =>
+											handleRestoreUrlClick( url )
+										}
+										aria-label={ __(
+											'Restore this link',
+											'surerank'
+										) }
+										className="hover:text-text-secondary min-w-fit shrink-0 text-text-secondary leading-4 no-underline hover:underline"
+									>
+										{ __( 'Restore', 'surerank' ) }
+									</Button>
+								</li>
+							) ) }
+						</ul>
+					</div>
+				) }
 			</div>
 		</>
 	);

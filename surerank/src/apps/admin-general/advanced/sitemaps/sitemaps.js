@@ -156,7 +156,7 @@ const SiteMaps = () => {
 						__( 'Sitemap cache generation started…', 'surerank' ),
 						{
 							description: __(
-								'Processing items in batches it will take some time, please stay on the page.',
+								'Processing items in batches. This will take some time, so please stay on the page.',
 								'surerank'
 							),
 							icon: <LoaderCircle className="animate-spin" />,

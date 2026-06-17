@@ -122,14 +122,14 @@ class Article extends Base {
 					'datePublished',
 					[
 						'required' => true,
-						'tooltip'  => __( 'Enter the date and time the article was first published, using the ISO 8601 format.  This value is used in your site’s structured data to show when the content was originally made public.', 'surerank' ),
+						'tooltip'  => __( 'Enter the date and time the article was first published, using the ISO 8601 format. This value is used in your site’s structured data to show when the content was originally made public.', 'surerank' ),
 						'std'      => '%post.date%',
 					]
 				),
 				$this->add_helper_property(
 					'dateModified',
 					[
-						'tooltip' => __( 'The date and time the article was first published, in ISO 8601 format', 'surerank' ),
+						'tooltip' => __( 'The date and time the article was last modified, in ISO 8601 format.', 'surerank' ),
 						'std'     => '%post.modified_date%',
 					]
 				),
@@ -151,8 +151,7 @@ class Article extends Base {
 					'default'  => true,
 					'show'     => true,
 					'tooltip'  => __(
-						'Enter the total word count of the article\'s main content. This information is used in structured data to provide search engines with content length details.
-',
+						'Enter the total word count of the article\'s main content. This information is used in structured data to provide search engines with content length details.',
 						'surerank'
 					),
 					'std'      => '%post.word_count%',

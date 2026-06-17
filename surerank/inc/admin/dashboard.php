@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+use SureRank\Inc\Abilities\Abilities_Registrar;
 use SureRank\Inc\API\Learn;
 use SureRank\Inc\API\Migrations;
 use SureRank\Inc\API\Onboarding;
@@ -127,9 +128,28 @@ class Dashboard {
 					],
 					$this->get_common_variables(),
 					$this->get_disabled_settings(),
+					$this->get_mcp_variables(),
 				)
 			)
 		);
+	}
+
+	/**
+	 * Get MCP localization variables for the MCP tools screen.
+	 *
+	 * @since 1.9.0
+	 * @return array<string, mixed>
+	 */
+	public function get_mcp_variables() {
+		return [
+			'mcp_rest_url'             => esc_url_raw( trailingslashit( rest_url() ) ),
+			'mcp_username'             => wp_get_current_user()->user_login,
+			'mcp_adapter_installed'    => Abilities_Registrar::is_adapter_available(),
+			'mcp_app_password_url'     => esc_url_raw( admin_url( 'profile.php' ) . '#application-passwords-section' ),
+			'mcp_adapter_download_url' => esc_url_raw(
+				apply_filters( 'surerank_mcp_adapter_download_url', 'https://github.com/WordPress/mcp-adapter/releases/latest/download/mcp-adapter.zip' )
+			),
+		];
 	}
 
 	/**
@@ -723,6 +743,11 @@ class Dashboard {
 					'label'       => __( 'Post Author Name', 'surerank' ),
 					'value'       => '%author_name%',
 					'description' => __( "Display author's nicename of the current post, page or author archive.", 'surerank' ),
+				],
+				[
+					'label'       => __( 'Author Bio', 'surerank' ),
+					'value'       => '%author_description%',
+					'description' => __( 'Biographical info of the author on author archives.', 'surerank' ),
 				],
 			]
 		);

@@ -642,6 +642,128 @@ class Settings {
 	}
 
 	/**
+	 * Preparing user meta.
+	 *
+	 * @param int $user_id User ID.
+	 * @return array<string, mixed>
+	 * @since 1.9.0
+	 */
+	public static function prep_user_meta( $user_id = 0 ) {
+		if ( 0 === $user_id ) {
+			return [];
+		}
+
+		$user_meta = Get::all_user_meta( $user_id );
+		$user_meta = is_array( $user_meta ) ? $user_meta : [];
+
+		$default_values = self::format_array( Defaults::get_instance()->get_post_defaults( false ) );
+
+		// Getting the global settings.
+		$global_values = Settings::get();
+
+		// Get user level defaults (extended meta templates) via filter.
+		// This allows pro plugin to conditionally add extended meta templates.
+		$extended_meta_values = apply_filters(
+			'surerank_prep_user_meta_extended_values',
+			[],
+			$global_values,
+			$user_id
+		);
+
+		// remove empty values from $user_meta.
+		$user_meta = array_filter(
+			$user_meta,
+			static function( $value ) {
+				return Validate::empty_string( $value );
+			}
+		);
+
+		// Current user meta to match the defaults with 4-level hierarchy:
+		// 1. Base defaults -> 2. Global settings -> 3. User defaults -> 4. User meta.
+		$meta = array_merge( $default_values, $global_values, $extended_meta_values, $user_meta );
+
+		$meta['page_description']        = str_replace( '%content%', '%author_description%', $meta['page_description'] );
+		$meta['auto_description']        = self::get_description( $user_id, $meta, $global_values, 'user' );
+		$meta['auto_generated_og_image'] = '';
+
+		/**
+		 * Robots values must always be explicit for author archives. The frontend
+		 * robots output falls back to the global no_index/no_follow/no_archive lists
+		 * (which include 'author' by default) only when the per-object values are
+		 * empty — so an empty value here would silently override the per-user choice.
+		 */
+		$robots_map = [
+			'post_no_index'   => 'no_index',
+			'post_no_follow'  => 'no_follow',
+			'post_no_archive' => 'no_archive',
+		];
+		foreach ( $robots_map as $object_key => $global_key ) {
+			if ( empty( $meta[ $object_key ] ) ) {
+				$global_robots       = Validate::array( $global_values[ $global_key ] ?? [] );
+				$meta[ $object_key ] = in_array( 'author', $global_robots, true ) ? 'yes' : 'no';
+			}
+		}
+
+		foreach ( $meta as $key => $value ) {
+			// If value is not empty then continue.
+			$meta[ $key ] = self::replace_user_meta_variables( $value );
+			if ( ! empty( $value ) ) {
+				continue;
+			}
+			$title = ! empty( $meta['page_title'] ) ? $meta['page_title'] : ( $global_values['page_title'] ?? '' );
+
+			switch ( $key ) {
+				case 'facebook_title':
+					$meta['facebook_title'] = $title;
+					break;
+
+				case 'twitter_title':
+					$meta['twitter_title'] = $title;
+					break;
+
+				case 'facebook_description':
+					$meta['facebook_description'] = $meta['page_description'];
+					break;
+
+				case 'twitter_description':
+					$meta['twitter_description'] = $meta['page_description'];
+					break;
+
+				case 'canonical_url':
+					$meta['canonical_url'] = get_author_posts_url( $user_id );
+					break;
+			}
+		}
+
+		return $meta;
+	}
+
+	/**
+	 * Replace meta variables for user (author archive) context.
+	 *
+	 * @param string|array<int|string, mixed>|null $value Value to replace.
+	 * @since 1.9.0
+	 * @return string|array<int|string, mixed>
+	 */
+	public static function replace_user_meta_variables( &$value ) {
+		if ( null === $value ) {
+			return ''; // early bail.
+		}
+
+		if ( is_array( $value ) && ! empty( $value ) ) {
+			foreach ( $value as $key => $val ) {
+				$value[ $key ] = self::replace_user_meta_variables( $val );
+			}
+			return $value;
+		}
+
+		$value = str_replace( '%title%', '%author_name%', $value );
+		$value = str_replace( '%excerpt%', '%author_description%', $value );
+		$value = str_replace( '%content%', '%author_description%', $value );
+		return $value;
+	}
+
+	/**
 	 * Get the term url.
 	 *
 	 * @param int $term_id Term ID.

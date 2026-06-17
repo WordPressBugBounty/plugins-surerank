@@ -1,28 +1,42 @@
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
-import { TERM_SEO_DATA_URL, POST_SEO_DATA_URL } from '@Global/constants/api';
+import {
+	TERM_SEO_DATA_URL,
+	POST_SEO_DATA_URL,
+	USER_SEO_DATA_URL,
+} from '@Global/constants/api';
 import { isCurrentPage } from '@/functions/utils';
 
 export const API_BASE_URL = '/surerank/v1';
 
 export const fetchMetaSettings = async () => {
 	const queryParams = {};
+	const isUser = !! surerank_seo_popup?.is_user;
 	const isTerm =
-		isCurrentPage( 'term.php' ) || !! surerank_seo_popup.is_taxonomy;
-	if ( isTerm ) {
+		! isUser &&
+		( isCurrentPage( 'term.php' ) || !! surerank_seo_popup.is_taxonomy );
+	if ( isUser ) {
+		queryParams.user_id = surerank_seo_popup?.user_id;
+	} else if ( isTerm ) {
 		queryParams.term_id = surerank_seo_popup?.term_id;
 	} else {
 		queryParams.post_id = surerank_seo_popup?.post_id;
 	}
-	queryParams.post_type = surerank_seo_popup?.post_type;
-	queryParams.is_taxonomy = surerank_seo_popup?.is_taxonomy;
+	if ( ! isUser ) {
+		queryParams.post_type = surerank_seo_popup?.post_type;
+		queryParams.is_taxonomy = surerank_seo_popup?.is_taxonomy;
+	}
+
+	let dataUrl = POST_SEO_DATA_URL;
+	if ( isUser ) {
+		dataUrl = USER_SEO_DATA_URL;
+	} else if ( isTerm ) {
+		dataUrl = TERM_SEO_DATA_URL;
+	}
 
 	try {
 		const response = await apiFetch( {
-			path: addQueryArgs(
-				isTerm ? TERM_SEO_DATA_URL : POST_SEO_DATA_URL,
-				queryParams
-			),
+			path: addQueryArgs( dataUrl, queryParams ),
 			method: 'GET',
 		} );
 		if ( ! response.success ) {
@@ -331,7 +345,7 @@ export const sendTestEmailReport = ( recipientEmail ) => {
 /**
  * Improve existing content with AI based on a prompt type.
  *
- * @since x.x.x
+ * @since 1.9.0
  * @param {string}      type             Prompt type (e.g. 'og_image_title').
  * @param {string}      input            Text to improve.
  * @param {Object}      [options]        Optional request options.

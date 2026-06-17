@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use SureRank\Inc\BatchProcess\Cleanup;
 use SureRank\Inc\BatchProcess\Process;
+use SureRank\Inc\BatchProcess\Sync_Archives;
 use SureRank\Inc\BatchProcess\Sync_Posts;
 use SureRank\Inc\BatchProcess\Sync_Taxonomies;
 use SureRank\Inc\Functions\Cache;
@@ -109,9 +110,9 @@ class Sync {
 
 		if ( empty( $force ) && ! $this->should_initiate_batch_process() ) {
 			if ( defined( 'WP_CLI' ) ) {
-				WP_CLI::line( 'Checksum are matching, no data available to sync.' );
+				WP_CLI::line( 'Checksums match; no data available to sync.' );
 			} else {
-				self::log( 'Checksum are matching, no data available to sync.' );
+				self::log( 'Checksums match; no data available to sync.' );
 			}
 			return;
 		}
@@ -199,7 +200,7 @@ class Sync {
 			@set_time_limit( 0 ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- safe_mode hosts silently refuse; we don't want a warning here.
 		}
 
-		$log( 'Batch Process Started..' );
+		$log( 'Batch process started.' );
 
 		try {
 			foreach ( $classes as $class ) {
@@ -231,6 +232,7 @@ class Sync {
 		$chunk_size = apply_filters( 'surerank_sitemap_json_chunk_size', 20 );
 		$classes    = array_merge( $classes, $this->create_post_type_sync_classes( $chunk_size ) );
 		$classes    = array_merge( $classes, $this->create_taxonomy_sync_classes( $chunk_size ) );
+		$classes    = array_merge( $classes, $this->create_archive_sync_class() );
 		$classes    = apply_filters( 'surerank_batch_process_classes', $classes );
 		return array_merge( $classes, $this->create_cleanup_class() );
 	}
@@ -403,6 +405,20 @@ class Sync {
 	 */
 	private function create_cleanup_class() {
 		return [ Cleanup::get_instance() ];
+	}
+
+	/**
+	 * Create the post-type archive sync class for the sitemap rebuild.
+	 *
+	 * @return array<int, object>
+	 * @since 1.9.0
+	 */
+	private function create_archive_sync_class() {
+		if ( apply_filters( 'surerank_exclude_archives_from_sitemap', false ) ) {
+			return [];
+		}
+
+		return [ Sync_Archives::get_instance() ];
 	}
 
 	/**

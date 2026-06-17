@@ -18,6 +18,7 @@ use SureRank\Inc\Admin\Attachment;
 use SureRank\Inc\Admin\BulkActions;
 use SureRank\Inc\Admin\BulkEdit;
 use SureRank\Inc\Admin\Dashboard;
+use SureRank\Inc\Admin\Delete_Data_Checkbox;
 use SureRank\Inc\Admin\Onboarding;
 use SureRank\Inc\Admin\Rest_Site_Health;
 use SureRank\Inc\Admin\Review_Notice;
@@ -32,11 +33,17 @@ use SureRank\Inc\Ajax\Save_Endpoints;
 use SureRank\Inc\Analytics\Analytics;
 use SureRank\Inc\Analyzer\PostAnalyzer;
 use SureRank\Inc\Analyzer\TermAnalyzer;
+use SureRank\Inc\Analyzer\UserAnalyzer;
 use SureRank\Inc\API\Analyzer;
 use SureRank\Inc\API\Api_Init;
+use SureRank\Inc\API\Headless;
+use SureRank\Inc\API\Headless_Sitemap;
+use SureRank\Inc\API\Rest_Fields;
 use SureRank\Inc\BatchProcess\Process;
 use SureRank\Inc\Cli\Cli;
 use SureRank\Inc\Frontend\Archives;
+use SureRank\Inc\Frontend\Archives_Meta;
+use SureRank\Inc\Frontend\Author;
 use SureRank\Inc\Frontend\Canonical;
 use SureRank\Inc\Frontend\Common;
 use SureRank\Inc\Frontend\Content_Seo;
@@ -212,6 +219,7 @@ class Loader {
 		Analytics::get_instance();
 		Admin_Notice::get_instance();
 		Review_Notice::get_instance();
+		Delete_Data_Checkbox::get_instance();
 
 		do_action( 'surerank_after_load_routes' );
 	}
@@ -523,6 +531,9 @@ class Loader {
 			Schemas::class,
 			Crawl_Optimization::class,
 			Api_Init::class,
+			Headless::class,
+			Headless_Sitemap::class,
+			Rest_Fields::class,
 			Compat::class,
 			Modified_Date_Lock::class,
 			Cron::class,
@@ -533,6 +544,7 @@ class Loader {
 			Analyzer::class,
 			PostAnalyzer::class,
 			TermAnalyzer::class,
+			UserAnalyzer::class,
 			Auth::class,
 			Sync::class,
 			Ai_Auth_Init::class,
@@ -612,6 +624,8 @@ class Loader {
 			Single::class,
 			Product::class,
 			Taxonomy::class,
+			Archives_Meta::class,
+			Author::class,
 			Title::class,
 			Canonical::class,
 			Common::class,

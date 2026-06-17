@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use SureRank\Inc\Meta_Variables\Post;
 use SureRank\Inc\Meta_Variables\Site;
 use SureRank\Inc\Meta_Variables\Term;
+use SureRank\Inc\Meta_Variables\User;
 
 /**
  * Variables
@@ -145,6 +146,10 @@ class Variables {
 	 */
 	private static function get_classes() {
 		return [
+			// User goes first: on author archives its variables (e.g. author_name,
+			// also present in Post) must win; on other pages its getters return
+			// false (no user set) so resolution falls through to Post/Site/Term.
+			'user' => User::get_instance(),
 			'post' => Post::get_instance(),
 			'site' => Site::get_instance(),
 			'term' => Term::get_instance(),

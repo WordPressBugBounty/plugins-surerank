@@ -18,6 +18,7 @@ use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Functions\Validate;
 use SureRank\Inc\Functions\Variables;
 use SureRank\Inc\Traits\Get_Instance;
+use SureRank\Inc\Traits\Reset_Meta_Data;
 
 /**
  * Taxonomy SEO
@@ -28,6 +29,7 @@ use SureRank\Inc\Traits\Get_Instance;
 class Taxonomy {
 
 	use Get_Instance;
+	use Reset_Meta_Data;
 
 	/**
 	 * Meta Data
@@ -44,6 +46,7 @@ class Taxonomy {
 	 */
 	public function __construct() {
 		add_filter( 'surerank_set_meta', [ $this, 'get_meta_data' ], 1 );
+		$this->register_meta_reset();
 	}
 
 	/**

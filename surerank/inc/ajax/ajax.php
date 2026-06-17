@@ -44,7 +44,7 @@ class Ajax {
 			wp_send_json_error(
 				[
 					'success' => false,
-					'message' => __( 'Not an ajax request.', 'surerank' ),
+					'message' => __( 'Not an AJAX request.', 'surerank' ),
 				],
 			);
 		}
@@ -114,7 +114,7 @@ class Ajax {
 			wp_send_json_error(
 				[
 					'success' => false,
-					'message' => __( 'Not an ajax request.', 'surerank' ),
+					'message' => __( 'Not an AJAX request.', 'surerank' ),
 				],
 			);
 		}

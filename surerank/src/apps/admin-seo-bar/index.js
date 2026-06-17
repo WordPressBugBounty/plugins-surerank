@@ -22,7 +22,10 @@ const CustomBadge = ( {
 } ) => {
 	const postIdRef = useRef( id );
 
-	const isTaxonomy = window?.surerank_seo_bar?.type === 'taxonomy';
+	const seoBarType = window?.surerank_seo_bar?.type;
+	const isTaxonomy = seoBarType === 'taxonomy';
+	const isUser = seoBarType === 'user';
+	const checksType = seoBarType || 'post';
 	const {
 		checks: seoChecks,
 		error: errorMessage,
@@ -31,11 +34,7 @@ const CustomBadge = ( {
 		( select ) => {
 			const store = select( STORE_NAME );
 			const checksResult =
-				store?.getSeoBarChecks(
-					id,
-					isTaxonomy ? 'taxonomy' : 'post',
-					forceRefresh
-				) || {};
+				store?.getSeoBarChecks( id, checksType, forceRefresh ) || {};
 			const pageSeoChecks = store?.getPageSeoChecks() || {};
 
 			return {
@@ -66,25 +65,37 @@ const CustomBadge = ( {
 
 		const link = spanElement?.getAttribute( 'data-link' ) || '';
 
-		// Update the global context for this post/term.
-		if ( isTaxonomy ) {
+		// Update the global context for this post/term/user.
+		if ( isUser ) {
+			window.surerank_seo_popup.post_id = undefined;
+			window.surerank_seo_popup.term_id = undefined;
+			window.surerank_seo_popup.user_id = id;
+			window.surerank_seo_popup.is_user = '1';
+			window.surerank_seo_popup.is_taxonomy = '';
+		} else if ( isTaxonomy ) {
 			window.surerank_seo_popup.post_id = undefined;
 			window.surerank_seo_popup.term_id = id;
+			window.surerank_seo_popup.user_id = undefined;
+			window.surerank_seo_popup.is_user = '';
 			window.surerank_seo_popup.is_taxonomy = '1';
 		} else {
 			window.surerank_seo_popup.post_id = id;
 			window.surerank_seo_popup.term_id = undefined;
+			window.surerank_seo_popup.user_id = undefined;
+			window.surerank_seo_popup.is_user = '';
 			window.surerank_seo_popup.is_taxonomy = '';
 		}
 		window.surerank_seo_popup.link = link;
 
 		// Reset store state for the new post (synchronously wipes modal state,
 		// then fires an async background fetch for editor template variables).
-		dispatch( STORE_NAME ).resetForNewPost(
-			id,
-			isTaxonomy ? 'taxonomy' : 'post',
-			isTaxonomy
-		);
+		let resetType = 'post';
+		if ( isUser ) {
+			resetType = 'user';
+		} else if ( isTaxonomy ) {
+			resetType = 'taxonomy';
+		}
+		dispatch( STORE_NAME ).resetForNewPost( id, resetType, isTaxonomy );
 
 		// Open the modal immediately — the modal will fetch meta settings once
 		// metaboxInitialized is false (set by resetForNewPost above).
@@ -115,7 +126,7 @@ const CustomBadge = ( {
 	);
 	// Check batch generation status first
 	let batchStatus = null;
-	if ( typeof getBatchGenerationStatus === 'function' ) {
+	if ( ! isUser && typeof getBatchGenerationStatus === 'function' ) {
 		batchStatus = getBatchGenerationStatus(
 			parseInt( postIdRef.current || 0 ),
 			batchGeneration
@@ -218,16 +229,13 @@ const renderBadges = async () => {
 		'span.surerank-page-score[data-id]'
 	);
 
-	const isTaxonomy = window?.surerank_seo_bar?.type === 'taxonomy';
+	const seoBarType = window?.surerank_seo_bar?.type || 'post';
 	const ids = Array.from( spans )
 		.map( ( span ) => span.getAttribute( 'data-id' ) )
 		.filter( Boolean );
 
 	if ( ids.length > 0 ) {
-		await resolveSelect( STORE_NAME ).getSeoBarChecks(
-			ids,
-			isTaxonomy ? 'taxonomy' : 'post'
-		);
+		await resolveSelect( STORE_NAME ).getSeoBarChecks( ids, seoBarType );
 	}
 
 	// Use queue for sequential rendering
@@ -255,7 +263,8 @@ const debounce = ( func, wait ) => {
 document.addEventListener( 'DOMContentLoaded', () => {
 	if (
 		window.location.pathname.includes( 'edit.php' ) ||
-		window.location.pathname.includes( 'edit-tags.php' )
+		window.location.pathname.includes( 'edit-tags.php' ) ||
+		window.location.pathname.includes( 'users.php' )
 	) {
 		renderBadges();
 	}
@@ -285,7 +294,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 				}
 			} );
 
-			const isTaxonomy = window?.surerank_seo_bar?.type === 'taxonomy';
+			const seoBarType = window?.surerank_seo_bar?.type || 'post';
 
 			const processSpans = ( forceRefresh = true ) => {
 				newSpans.forEach( ( span ) => {
@@ -297,7 +306,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 
 			if ( newIds.length > 0 ) {
 				resolveSelect( STORE_NAME )
-					.getSeoBarChecks( newIds, isTaxonomy ? 'taxonomy' : 'post' )
+					.getSeoBarChecks( newIds, seoBarType )
 					.finally( () => processSpans( true ) );
 			}
 		} );
