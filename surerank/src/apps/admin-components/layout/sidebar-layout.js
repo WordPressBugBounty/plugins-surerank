@@ -1,5 +1,4 @@
 import { __ } from '@wordpress/i18n';
-import { useSuspenseSelect } from '@wordpress/data';
 import {
 	Outlet,
 	Link,
@@ -26,7 +25,6 @@ import {
 import withSuspense from '@AdminComponents/hoc/with-suspense';
 import SidebarSkeleton from '../sidebar-skeleton';
 import { cn, getSeoCheckLabel } from '@Functions/utils';
-import { filterHomepageChecks } from '@/functions/homepage-filter';
 import { isProActive } from '@/functions/nudges';
 import useWhatsNewRSS from '../../../../lib/useWhatsNewRSS';
 import {
@@ -45,11 +43,9 @@ import { getSeverityColor } from '@GlobalComponents/seo-checks';
 import Logo from '@AdminComponents/logo';
 import { Tooltip } from '@AdminComponents/tooltip';
 import TanStackRouterDevtools from '@AdminComponents/tanstack-router-dev-tools';
-import { STORE_NAME } from '@AdminStore/constants';
 import '@AdminStore/store';
 import { UpgradeButton } from '@/global/components/nudges';
 import VersionBadge from '../version-badge';
-import { HOME_PAGE_PATH } from '@Global/constants/nav-links';
 
 // Stylesheets
 import '@Global/style.scss';
@@ -77,19 +73,11 @@ const NavLink = ( { path, children } ) => {
 
 const SiteSeoAnalysisBadge = () => {
 	const [ { report } ] = useSuspenseSiteSeoAnalysis();
-	const { siteSettings } = useSuspenseSelect( ( select ) => {
-		const { getSiteSettings } = select( STORE_NAME );
-		return { siteSettings: getSiteSettings() };
-	}, [] );
-	const filteredReport = useMemo(
-		() => filterHomepageChecks( report, siteSettings ) || report,
-		[ report, siteSettings ]
-	);
 
 	// Check counts of error, warning and success
 	const counts = useMemo(
 		() =>
-			Object.values( filteredReport ).reduce(
+			Object.values( report ).reduce(
 				( acc, curr ) => {
 					//if ignore is true, then it is ignored
 					if ( curr.ignore ) {
@@ -101,7 +89,7 @@ const SiteSeoAnalysisBadge = () => {
 				},
 				{ error: 0, warning: 0, success: 0, ignored: 0 }
 			),
-		[ filteredReport ]
+		[ report ]
 	);
 
 	const selectedType =
@@ -371,31 +359,8 @@ const SidebarLayout = ( {
 	routes = [],
 	navbarOnly = false,
 } ) => {
-	const { siteSettings } = useSuspenseSelect( ( select ) => {
-		const { getSiteSettings } = select( STORE_NAME );
-		return { siteSettings: getSiteSettings() };
-	}, [] );
-	const filteredNavLinksForStaticHome = useMemo( () => {
-		if ( siteSettings?.home_page_static !== 'page' ) {
-			return navLinks;
-		}
-
-		return navLinks.map( ( section ) => {
-			if ( section.sectionId !== 'general' ) {
-				return section;
-			}
-
-			return {
-				...section,
-				links: section.links.filter(
-					( link ) => link.path !== HOME_PAGE_PATH
-				),
-			};
-		} );
-	}, [ navLinks, siteSettings?.home_page_static ] );
-	const { activeSection, navbarLinks: topNavbarLinks } = useNavbarLinks(
-		filteredNavLinksForStaticHome
-	);
+	const { activeSection, navbarLinks: topNavbarLinks } =
+		useNavbarLinks( navLinks );
 	const navigate = useNavigate();
 	const location = useLocation();
 	const childMatches = useChildMatches();
@@ -535,9 +500,7 @@ const SidebarLayout = ( {
 					</Topbar.Middle>
 					<Topbar.Right className="min-w-0 shrink p-2 lg:p-5">
 						<Topbar.Item className="hidden xl:flex">
-							<GlobalSearch
-								navLinks={ filteredNavLinksForStaticHome }
-							/>
+							<GlobalSearch navLinks={ navLinks } />
 						</Topbar.Item>
 						<Topbar.Item className="hidden space-x-1 lg:flex lg:space-x-3">
 							<VersionBadge />

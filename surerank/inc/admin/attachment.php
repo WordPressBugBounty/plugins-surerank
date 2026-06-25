@@ -102,11 +102,21 @@ class Attachment {
 			$cpt = get_post_type( $parent ) ? get_post_type( $parent ) : null;
 		}
 
+		/**
+		 * Post types whose uploaded images inherit the PARENT post's title
+		 * instead of the image file name. Empty by default, so every attachment
+		 * uses its own (file-name based) title — consistent with posts, pages,
+		 * and the media library.
+		 *
+		 * @since 1.9.1
+		 */
+		$parent_title_post_types = apply_filters( 'surerank_attachment_parent_title_post_types', [] );
+
 		$title = '';
-		if ( isset( $cpt ) && 'product' === $cpt ) {
+		if ( ! empty( $parent ) && isset( $cpt ) && in_array( $cpt, $parent_title_post_types, true ) ) {
 			$parent_post = get_post( $parent );
 			if ( ! empty( $parent_post ) ) {
-				$title = $parent_post->post_title; // Use the product title for WooCommerce products.
+				$title = $parent_post->post_title; // Inherit the parent post title for the filtered post types.
 			}
 		} else {
 			$title = Post::get_instance()->post->post_title;

@@ -318,8 +318,8 @@ class Controller {
 			<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
 			<style type="text/css">
 				@media screen and (max-width: 840px) {
-					.metric-cell-left, 
-					.metric-cell-right, 
+					.metric-cell-left,
+					.metric-cell-right,
 					.metric-cell-center {
 						display: block;
 						width: 100% !important;
@@ -578,20 +578,43 @@ class Controller {
 
 	/**
 	 * All product promotions.
-	 * 
+	 *
 	 * @since 1.6.0
 	 * @return array<string, array<string, string>> Product promotions.
 	 */
 	private function get_product_promotions() {
 		return [
-			'suredash' => [
+			'suredash'   => [
 				'title'         => __( 'Want to see SEO + traffic + sales in one dashboard?', 'surerank' ),
 				'text'          => __( 'See the data that matters, all in one clean, customizable dashboard. Track your site\'s traffic, sales, and form activity without the clutter.', 'surerank' ),
 				'link_url'      => 'https://suredash.com',
 				'link_text'     => __( 'Explore', 'surerank' ) . ' SureDash →',
 				'logo_url'      => 'https://suremails.com/wp-content/uploads/2025/10/suredash.png',
 				'product_title' => 'SureDash',
-
+			],
+			'surecookie' => [
+				'title'         => __( 'Make your site GDPR & CCPA ready in minutes', 'surerank' ),
+				'text'          => __( 'SureCookie adds a clean, customizable cookie consent banner with automatic cookie scanning and consent logging, so your visitors stay informed and your site stays compliant.', 'surerank' ),
+				'link_url'      => 'https://surecookie.com',
+				'link_text'     => __( 'Explore', 'surerank' ) . ' SureCookie →',
+				'logo_url'      => 'https://ps.w.org/surecookie/assets/icon-256x256.gif',
+				'product_title' => 'SureCookie',
+			],
+			'sureforms'  => [
+				'title'         => __( 'Build modern forms without the complexity', 'surerank' ),
+				'text'          => __( 'SureForms is a simple yet powerful way to create modern, responsive forms for your website, no code required.', 'surerank' ),
+				'link_url'      => 'https://sureforms.com',
+				'link_text'     => __( 'Explore', 'surerank' ) . ' SureForms →',
+				'logo_url'      => 'https://ps.w.org/sureforms/assets/icon-256x256.gif',
+				'product_title' => 'SureForms',
+			],
+			'suremails'  => [
+				'title'         => __( 'Stop your WordPress emails from landing in spam', 'surerank' ),
+				'text'          => __( 'SureMail connects your site to trusted SMTP services so your emails reliably reach inboxes, no more lost messages or frustrated customers.', 'surerank' ),
+				'link_url'      => 'https://suremails.com',
+				'link_text'     => __( 'Explore', 'surerank' ) . ' SureMail →',
+				'logo_url'      => 'https://ps.w.org/suremails/assets/icon-256x256.gif',
+				'product_title' => 'SureMail',
 			],
 		];
 	}
@@ -614,7 +637,10 @@ class Controller {
 		if ( empty( $all_promotions ) ) {
 			return '';
 		}
-		$product       = $all_promotions['suredash'];
+
+		// Randomly promote one product per email so every product gets exposure.
+		$promotion_key = array_rand( $all_promotions );
+		$product       = $all_promotions[ $promotion_key ];
 		$title         = $product['title'];
 		$text          = $product['text'];
 		$link_url      = $product['link_url'];

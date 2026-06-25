@@ -104,31 +104,27 @@ export const getNavLinks = () => {
 						},
 					],
 				},
-				...( window?.surerank_globals?.home_page_static !== 'page'
-					? [
-							{
-								path: HOME_PAGE_PATH,
-								label: __( 'Home Page', 'surerank' ),
-								icon: House,
-								migratable: true,
-								submenu: [
-									{
-										path: HOME_PAGE_PATH,
-										label: __( 'General', 'surerank' ),
-									},
-									{
-										path: '/general/homepage/social',
-										label: __( 'Social', 'surerank' ),
-									},
-									{
-										path: '/general/homepage/advanced',
-										label: __( 'Advanced', 'surerank' ),
-										pageContent: ADVANCED_PAGE_CONTENT,
-									},
-								],
-							},
-					  ]
-					: [] ),
+				{
+					path: HOME_PAGE_PATH,
+					label: __( 'Home Page', 'surerank' ),
+					icon: House,
+					migratable: true,
+					submenu: [
+						{
+							path: HOME_PAGE_PATH,
+							label: __( 'General', 'surerank' ),
+						},
+						{
+							path: '/general/homepage/social',
+							label: __( 'Social', 'surerank' ),
+						},
+						{
+							path: '/general/homepage/advanced',
+							label: __( 'Advanced', 'surerank' ),
+							pageContent: ADVANCED_PAGE_CONTENT,
+						},
+					],
+				},
 				{
 					path: '/general/archive_pages',
 					label: __( 'Archive Pages', 'surerank' ),
