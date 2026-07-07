@@ -465,6 +465,7 @@ class Dashboard {
 				'version'                    => SURERANK_VERSION,
 				'help_link'                  => FunctionsUtils::get_utm_url( 'https://surerank.com/docs/', 'admin_dashboard', 'help_link' ),
 				'support_link'               => FunctionsUtils::get_utm_url( 'https://surerank.com/contact/', 'admin_dashboard', 'support_link' ),
+				'free_vs_pro_link'           => FunctionsUtils::get_utm_url( 'https://surerank.com/surerank-free-vs-pro/', 'admin_dashboard', 'free_vs_pro_link' ),
 				'rating_link'                => esc_url( 'https://wordpress.org/support/plugin/surerank/reviews/#new-post' ),
 				'community_link'             => esc_url( 'https://www.facebook.com/groups/surecrafted' ),
 				'pricing_link'               => Helper::get_marketing_link( 'pricing/', 'pricing_link' ),

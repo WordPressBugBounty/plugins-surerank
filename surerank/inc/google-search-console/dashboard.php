@@ -68,12 +68,14 @@ class Dashboard extends Api_Base {
 				'callback' => [ $this, 'get_clicks_and_impressions' ],
 				'args'     => [
 					'startDate' => [
-						'type'     => 'string',
-						'required' => false,
+						'type'              => 'string',
+						'required'          => false,
+						'sanitize_callback' => 'sanitize_text_field',
 					],
 					'endDate'   => [
-						'type'     => 'string',
-						'required' => false,
+						'type'              => 'string',
+						'required'          => false,
+						'sanitize_callback' => 'sanitize_text_field',
 					],
 				],
 			],
@@ -82,12 +84,14 @@ class Dashboard extends Api_Base {
 				'callback' => [ $this, 'get_site_traffic' ],
 				'args'     => [
 					'startDate' => [
-						'type'     => 'string',
-						'required' => false,
+						'type'              => 'string',
+						'required'          => false,
+						'sanitize_callback' => 'sanitize_text_field',
 					],
 					'endDate'   => [
-						'type'     => 'string',
-						'required' => false,
+						'type'              => 'string',
+						'required'          => false,
+						'sanitize_callback' => 'sanitize_text_field',
 					],
 				],
 			],
@@ -96,12 +100,14 @@ class Dashboard extends Api_Base {
 				'callback' => [ $this, 'get_content_performance' ],
 				'args'     => [
 					'startDate' => [
-						'type'     => 'string',
-						'required' => false,
+						'type'              => 'string',
+						'required'          => false,
+						'sanitize_callback' => 'sanitize_text_field',
 					],
 					'endDate'   => [
-						'type'     => 'string',
-						'required' => false,
+						'type'              => 'string',
+						'required'          => false,
+						'sanitize_callback' => 'sanitize_text_field',
 					],
 				],
 			],
@@ -110,16 +116,19 @@ class Dashboard extends Api_Base {
 				'callback' => [ $this, 'get_keyword_rankings' ],
 				'args'     => [
 					'url'       => [
-						'type'     => 'string',
-						'required' => true,
+						'type'              => 'string',
+						'required'          => true,
+						'sanitize_callback' => 'sanitize_text_field',
 					],
 					'startDate' => [
-						'type'     => 'string',
-						'required' => false,
+						'type'              => 'string',
+						'required'          => false,
+						'sanitize_callback' => 'sanitize_text_field',
 					],
 					'endDate'   => [
-						'type'     => 'string',
-						'required' => false,
+						'type'              => 'string',
+						'required'          => false,
+						'sanitize_callback' => 'sanitize_text_field',
 					],
 				],
 			],
@@ -136,12 +145,14 @@ class Dashboard extends Api_Base {
 				'callback' => [ $this, 'get_url_inspection' ],
 				'args'     => [
 					'post_id' => [
-						'type'     => 'integer',
-						'required' => false,
+						'type'              => 'integer',
+						'required'          => false,
+						'sanitize_callback' => 'absint',
 					],
 					'term_id' => [
-						'type'     => 'integer',
-						'required' => false,
+						'type'              => 'integer',
+						'required'          => false,
+						'sanitize_callback' => 'absint',
 					],
 					'refresh' => [
 						'type'     => 'boolean',
@@ -175,8 +186,9 @@ class Dashboard extends Api_Base {
 				'role_capability'     => 'global_setting',
 				'args'                => [
 					'url' => [
-						'type'     => 'string',
-						'required' => true,
+						'type'              => 'string',
+						'required'          => true,
+						'sanitize_callback' => 'sanitize_text_field',
 					],
 				],
 			]

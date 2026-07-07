@@ -1,8 +1,20 @@
 import { Button, Container, Title } from '@bsf/force-ui';
 import { __ } from '@wordpress/i18n';
 import { CheckCircle2 } from 'lucide-react';
+import { getSurerankUtmUrl } from '@/global/utils/utm';
 
 const LearnAllDoneCard = () => {
+	const docsFallbackUrl = getSurerankUtmUrl(
+		'https://surerank.com/docs/',
+		'admin_learn',
+		'all_done_docs'
+	);
+	const supportFallbackUrl = getSurerankUtmUrl(
+		'https://surerank.com/contact/',
+		'admin_learn',
+		'all_done_support'
+	);
+
 	return (
 		<Container
 			direction="column"
@@ -25,7 +37,7 @@ const LearnAllDoneCard = () => {
 					onClick={ () =>
 						window.open(
 							window?.surerank_globals?.help_link ||
-								'https://surerank.com/docs/',
+								docsFallbackUrl,
 							'_blank',
 							'noopener,noreferrer'
 						)
@@ -39,7 +51,7 @@ const LearnAllDoneCard = () => {
 					onClick={ () =>
 						window.open(
 							window?.surerank_globals?.support_link ||
-								'https://surerank.com/contact/',
+								supportFallbackUrl,
 							'_blank',
 							'noopener,noreferrer'
 						)

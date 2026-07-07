@@ -287,6 +287,17 @@ class Url_Inspection {
 			return $response;
 		}
 
+		// A 2xx with an empty/malformed body decodes to null (or a scalar),
+		// which would fatal in normalize()'s array type-hint. Surface it as a
+		// mapped error instead so the UI shows a failure, not "Checking…".
+		if ( ! is_array( $response ) ) {
+			return [
+				'error'   => true,
+				'message' => __( 'Unexpected response from Search Console.', 'surerank' ),
+				'code'    => 'invalid_response',
+			];
+		}
+
 		return $this->normalize( $response );
 	}
 

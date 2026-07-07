@@ -1,1 +1,1 @@
-<?php return array('dependencies' => array('react', 'react-dom', 'react-jsx-runtime', 'wp-api-fetch', 'wp-data', 'wp-i18n', 'wp-url'), 'version' => 'd1801108120b0abd4393', 'handle' => 'undefined-breakdance/index');
+<?php return array('dependencies' => array('react', 'react-jsx-runtime', 'wp-api-fetch', 'wp-data', 'wp-element', 'wp-i18n', 'wp-url'), 'version' => '21a6429f32b86c19fb2e', 'handle' => 'undefined-breakdance/index');

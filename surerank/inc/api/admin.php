@@ -281,6 +281,20 @@ class Admin extends Api_Base {
 			Update_Timestamp::timestamp_option();
 		}
 
+		/**
+		 * Fires after admin settings are saved.
+		 *
+		 * Lets other features react to specific setting changes — e.g. the Pro
+		 * sitemap module triggers a cache rebuild when the sitemap include/
+		 * exclude settings change, so changes reflect without waiting for cron.
+		 *
+		 * @param array<string, mixed> $data            Full saved settings.
+		 * @param array<string, mixed> $db_options      Settings as they were before the save.
+		 * @param array<int, string>   $updated_options List of top-level keys that changed.
+		 * @since 1.9.2
+		 */
+		do_action( 'surerank_admin_settings_updated', $data, $db_options, $updated_options );
+
 		return [
 			'success' => true,
 			'message' => __( 'Settings updated', 'surerank' ),

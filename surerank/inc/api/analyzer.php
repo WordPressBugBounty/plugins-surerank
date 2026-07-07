@@ -1052,7 +1052,14 @@ class Analyzer extends Api_Base {
 	 * @return void
 	 */
 	public function remove_broken_links( $url, $post_id, $urls ) {
-		$seo_checks   = Get::post_meta( $post_id, SURERANK_SEO_CHECKS, true );
+		$seo_checks = Get::post_meta( $post_id, SURERANK_SEO_CHECKS, true );
+		// Legacy/empty meta can be a string (e.g. unanalysed posts return '' or
+		// older versions stored a non-array). Normalise before the offset write
+		// below, otherwise PHP 8 throws "Cannot access offset of type string on string".
+		if ( ! is_array( $seo_checks ) ) {
+			$seo_checks = [];
+		}
+
 		$broken_links = $seo_checks['broken_links'] ?? [];
 
 		$existing_broken_links = Utils::existing_broken_links( $broken_links, $urls );
@@ -1234,6 +1241,19 @@ class Analyzer extends Api_Base {
 	 */
 	public static function sanitize_ids( $params, $request, $key ) {
 		return array_map( 'intval', $params );
+	}
+
+	/**
+	 * Sanitize an array of URLs.
+	 *
+	 * @param array<int, string>                    $params URLs.
+	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
+	 * @param string                                $key Key.
+	 * @return array<int, string>
+	 * @since 1.9.2
+	 */
+	public static function sanitize_urls( $params, $request, $key ) {
+		return array_map( 'esc_url_raw', $params );
 	}
 
 	/**
@@ -2495,6 +2515,7 @@ class Analyzer extends Api_Base {
 				'validate_callback' => static function ( $param, $request, $key ) {
 					return filter_var( $param, FILTER_VALIDATE_URL );
 				},
+				'sanitize_callback' => 'esc_url_raw',
 				'required'          => true,
 			],
 		];
@@ -2522,12 +2543,14 @@ class Analyzer extends Api_Base {
 	private function get_broken_links_args() {
 		return [
 			'url'        => [
-				'type'     => 'string',
-				'required' => true,
+				'type'              => 'string',
+				'required'          => true,
+				'sanitize_callback' => 'esc_url_raw',
 			],
 			'user_agent' => [
-				'type'     => 'string',
-				'required' => true,
+				'type'              => 'string',
+				'required'          => true,
+				'sanitize_callback' => 'sanitize_text_field',
 			],
 			'post_id'    => [
 				'type'              => 'integer',
@@ -2535,10 +2558,15 @@ class Analyzer extends Api_Base {
 				'validate_callback' => static function ( $param, $request, $key ) {
 					return $param > 0;
 				},
+				'sanitize_callback' => 'absint',
 			],
 			'urls'       => [
-				'type'     => 'array',
-				'required' => true,
+				'type'              => 'array',
+				'required'          => true,
+				'sanitize_callback' => [ self::class, 'sanitize_urls' ],
+				'items'             => [
+					'type' => 'string',
+				],
 			],
 		];
 	}
@@ -2563,9 +2591,13 @@ class Analyzer extends Api_Base {
 				'sanitize_callback' => 'absint',
 			],
 			'urls'    => [
-				'type'     => 'array',
-				'required' => false,
-				'default'  => [],
+				'type'              => 'array',
+				'required'          => false,
+				'default'           => [],
+				'sanitize_callback' => [ self::class, 'sanitize_urls' ],
+				'items'             => [
+					'type' => 'string',
+				],
 			],
 		];
 	}
@@ -2633,8 +2665,9 @@ class Analyzer extends Api_Base {
 	private function get_id_args() {
 		return [
 			'id' => [
-				'type'     => 'string',
-				'required' => true,
+				'type'              => 'string',
+				'required'          => true,
+				'sanitize_callback' => 'sanitize_text_field',
 			],
 		];
 	}
@@ -2667,8 +2700,9 @@ class Analyzer extends Api_Base {
 				'sanitize_callback' => 'sanitize_text_field',
 			],
 			'post_id'    => [
-				'type'     => 'integer',
-				'required' => true,
+				'type'              => 'integer',
+				'required'          => true,
+				'sanitize_callback' => 'absint',
 			],
 			'check_type' => [
 				'type'        => 'string',
@@ -2691,8 +2725,9 @@ class Analyzer extends Api_Base {
 	private function get_post_id_with_check_type_args() {
 		return [
 			'post_id'    => [
-				'type'     => 'integer',
-				'required' => true,
+				'type'              => 'integer',
+				'required'          => true,
+				'sanitize_callback' => 'absint',
 			],
 			'check_type' => [
 				'type'        => 'string',

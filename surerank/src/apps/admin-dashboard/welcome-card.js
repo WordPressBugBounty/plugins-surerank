@@ -3,9 +3,15 @@ import { useState, useEffect } from '@wordpress/element';
 import { X, ArrowRight } from 'lucide-react';
 import { Text, Button } from '@bsf/force-ui';
 import { cn } from '@/functions/utils';
+import { getSurerankUtmUrl } from '@/global/utils/utm';
 
 const WelcomeCard = ( { className = '', isProActive = false } ) => {
 	const [ popupVideo, setPopupVideo ] = useState( null );
+	const learnMoreUrl = getSurerankUtmUrl(
+		'https://surerank.com/docs/',
+		'admin_dashboard',
+		'welcome_card_learn_more'
+	);
 
 	// Get video data from localized script
 	const welcomeVideo = window?.surerank_admin_common?.welcome_video || {};
@@ -65,18 +71,13 @@ const WelcomeCard = ( { className = '', isProActive = false } ) => {
 								size="md"
 								icon={ <ArrowRight className="size-4" /> }
 								iconPosition="right"
-								onClick={ () => {
-									const utmParams = new URLSearchParams( {
-										utm_source: 'plugin',
-										utm_medium: 'dashboard',
-										utm_campaign: 'welcome_card',
-									} );
+								onClick={ () =>
 									window.open(
-										`https://surerank.com/docs/?${ utmParams.toString() }`,
+										learnMoreUrl,
 										'_blank',
 										'noopener,noreferrer'
-									);
-								} }
+									)
+								}
 							>
 								{ __( 'Learn More', 'surerank' ) }
 							</Button>
@@ -152,18 +153,13 @@ const WelcomeCard = ( { className = '', isProActive = false } ) => {
 								size="md"
 								icon={ <ArrowRight className="size-4" /> }
 								iconPosition="right"
-								onClick={ () => {
-									const utmParams = new URLSearchParams( {
-										utm_source: 'plugin',
-										utm_medium: 'dashboard',
-										utm_campaign: 'welcome_card',
-									} );
+								onClick={ () =>
 									window.open(
-										`https://surerank.com/docs/?${ utmParams.toString() }`,
+										learnMoreUrl,
 										'_blank',
 										'noopener,noreferrer'
-									);
-								} }
+									)
+								}
 							>
 								{ __( 'Learn More', 'surerank' ) }
 							</Button>

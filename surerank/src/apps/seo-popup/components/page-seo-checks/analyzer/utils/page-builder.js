@@ -145,13 +145,14 @@ export const refreshPageChecks = async (
 	brokenLinkState
 ) => {
 	const isUser = isUserContext();
-	const isTaxonomyListing = ! isUser && surerank_seo_popup?.is_taxonomy === '1';
+	const isTaxonomyListing =
+		! isUser && surerank_seo_popup?.is_taxonomy === '1';
 	const dynamicPostId =
 		staticSelect( STORE_NAME ).getVariables()?.post?.ID?.value ||
 		staticSelect( STORE_NAME ).getVariables()?.user?.ID?.value ||
 		staticSelect( STORE_NAME ).getActivePostId() ||
 		( isUser ? surerank_seo_popup?.user_id : 0 ) ||
-		( isTaxonomyListing ? ( surerank_seo_popup?.term_id || 0 ) : 0 ) ||
+		( isTaxonomyListing ? surerank_seo_popup?.term_id || 0 : 0 ) ||
 		0;
 	setIsRefreshing( true );
 	const timestamp = Date.now();

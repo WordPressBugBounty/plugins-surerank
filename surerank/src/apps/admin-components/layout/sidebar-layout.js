@@ -34,7 +34,7 @@ import {
 	Fragment,
 	useMemo,
 	useEffect,
-	useState,
+	useRef,
 } from '@wordpress/element';
 import GlobalSearch from '@AdminComponents/global-search';
 import ConfirmationDialog from '@AdminComponents/confirmation-dialog';
@@ -46,6 +46,7 @@ import TanStackRouterDevtools from '@AdminComponents/tanstack-router-dev-tools';
 import '@AdminStore/store';
 import { UpgradeButton } from '@/global/components/nudges';
 import VersionBadge from '../version-badge';
+import useLocalStorageState from '@Global/hooks/use-local-storage-state';
 
 // Stylesheets
 import '@Global/style.scss';
@@ -156,6 +157,13 @@ const SiteSeoAnalysisBadge = () => {
 	);
 };
 
+// Prefix for the per-group localStorage keys holding each sidebar submenu
+// group's collapsed/expanded boolean. One key per group (keyed by the group's
+// stable submenu id) so toggling one group never clobbers another's saved
+// state. Persisted so the state survives top-level tab switches (which remount
+// the accordions) and full page reloads.
+const SIDEBAR_SUBMENU_STATE_KEY_PREFIX = 'surerank_sidebar_submenu_state_';
+
 const SubmenuAccordion = ( { label, icon: Icon, submenu } ) => {
 	const navigate = useNavigate();
 	const matchRoute = useMatchRoute();
@@ -164,11 +172,28 @@ const SubmenuAccordion = ( { label, icon: Icon, submenu } ) => {
 		matchRoute( { to: subPath } )
 	);
 
-	const [ isOpen, setIsOpen ] = useState( isRouteActive );
+	// Stable id per group: the first submenu path (stable) or the translated label.
+	const submenuId = submenu?.[ 0 ]?.path ?? label;
 
-	// Sync with route changes: auto-expand on route match, auto-collapse when leaving
+	// `undefined` means "no explicit user choice stored" -> derive from route.
+	const [ storedOpen, setStoredOpen ] = useLocalStorageState(
+		`${ SIDEBAR_SUBMENU_STATE_KEY_PREFIX }${ submenuId }`,
+		undefined
+	);
+
+	const isOpen = storedOpen !== undefined ? storedOpen : isRouteActive;
+
+	// Auto-expand only when the user newly navigates INTO this group
+	// (false -> true of isRouteActive). Never auto-collapse, so manually
+	// collapsing the currently-active group sticks.
+	const prevActiveRef = useRef( isRouteActive );
 	useEffect( () => {
-		setIsOpen( isRouteActive );
+		const wasActive = prevActiveRef.current;
+		prevActiveRef.current = isRouteActive;
+		if ( isRouteActive && ! wasActive ) {
+			setStoredOpen( true );
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [ isRouteActive ] );
 
 	return (
@@ -189,12 +214,11 @@ const SubmenuAccordion = ( { label, icon: Icon, submenu } ) => {
 						return;
 					}
 
-					if ( isOpen ) {
-						// Collapse if currently expanded
-						setIsOpen( false );
-					} else {
-						// Expand and navigate to first submenu item
-						setIsOpen( true );
+					const next = ! isOpen;
+					setStoredOpen( next );
+
+					// Navigate to first submenu item only when expanding.
+					if ( next ) {
 						navigate( { to: submenu[ 0 ].path } );
 					}
 				} }

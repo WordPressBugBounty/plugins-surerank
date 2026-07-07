@@ -139,10 +139,7 @@ const renderItem = ( item, opts = {} ) => {
 							variant="link"
 							size="xs"
 							onClick={ () => opts.onIgnoreUrl( item.url ) }
-							aria-label={ __(
-								'Ignore this link',
-								'surerank'
-							) }
+							aria-label={ __( 'Ignore this link', 'surerank' ) }
 							className="hover:text-text-secondary min-w-fit shrink-0 text-text-secondary leading-4 no-underline hover:underline"
 						>
 							{ __( 'Ignore', 'surerank' ) }

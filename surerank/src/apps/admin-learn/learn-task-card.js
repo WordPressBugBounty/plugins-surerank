@@ -1,18 +1,14 @@
 import { Badge, Button } from '@bsf/force-ui';
 import { __, sprintf } from '@wordpress/i18n';
-import { ArrowUpRight, Check, ExternalLink } from 'lucide-react';
+import { ArrowUpRight, Check, ExternalLink, Lock } from 'lucide-react';
+import { cn } from '@/functions/utils';
+import { getSurerankUtmUrl } from '@/global/utils/utm';
 
 const buildLearnMoreHref = ( url, stepId ) => {
 	if ( ! url ) {
 		return '';
 	}
-	const params = new URLSearchParams( {
-		utm_source: 'surerank_plugin',
-		utm_medium: 'in_product',
-		utm_campaign: 'learn',
-		utm_content: stepId,
-	} );
-	return `${ url }${ url.includes( '?' ) ? '&' : '?' }${ params.toString() }`;
+	return getSurerankUtmUrl( url, 'admin_learn', stepId );
 };
 
 const LearnTaskCard = ( {
@@ -23,6 +19,18 @@ const LearnTaskCard = ( {
 	onToggle,
 	onCta,
 } ) => {
+	const locked = Boolean( step.locked );
+	const isPro = Boolean( step.pro );
+	// Unlocked Pro cards (active + licensed) get the `proCta` attached by the
+	// Pro plugin via the `surerank-pro.learn-chapter` filter; locked cards get
+	// a default Upgrade to Pro CTA that routes to the pricing page (see the
+	// `step.locked` branch in cta-handler.js).
+	let activeCta = isPro ? step.proCta : step.cta;
+	if ( locked ) {
+		activeCta = { label: __( 'Upgrade to Pro', 'surerank' ) };
+	}
+	const showCta = Boolean( activeCta );
+
 	const handleCheckboxClick = ( e ) => {
 		e.stopPropagation();
 		if ( autoDetected ) {
@@ -32,29 +40,43 @@ const LearnTaskCard = ( {
 	};
 
 	return (
-		<div className="flex items-center gap-4 p-4 bg-background-primary border border-solid border-border-subtle rounded-lg">
-			<button
-				type="button"
-				onClick={ handleCheckboxClick }
-				disabled={ autoDetected }
-				aria-pressed={ completed }
-				aria-label={
-					completed
-						? __( 'Mark step incomplete', 'surerank' )
-						: __( 'Mark step complete', 'surerank' )
-				}
-				className={ [
-					'shrink-0 self-start mt-0.5 flex items-center justify-center size-5 rounded-full border border-solid transition-colors',
-					completed
-						? 'bg-button-primary border-button-primary text-text-on-color'
-						: 'bg-background-primary border-border-strong text-transparent hover:border-button-primary',
-					autoDetected
-						? 'cursor-not-allowed opacity-90'
-						: 'cursor-pointer',
-				].join( ' ' ) }
-			>
-				<Check className="size-3 shrink-0" strokeWidth={ 3 } />
-			</button>
+		<div
+			className={ cn(
+				'flex items-center gap-4 p-4 bg-background-primary border border-solid border-border-subtle rounded-lg',
+				locked && 'opacity-90'
+			) }
+		>
+			{ locked ? (
+				<span
+					aria-hidden="true"
+					className="shrink-0 self-start mt-0.5 flex items-center justify-center size-5 rounded-full border border-solid bg-background-secondary border-border-strong text-icon-secondary cursor-not-allowed"
+				>
+					<Lock className="size-3 shrink-0" />
+				</span>
+			) : (
+				<button
+					type="button"
+					onClick={ handleCheckboxClick }
+					disabled={ autoDetected }
+					aria-pressed={ completed }
+					aria-label={
+						completed
+							? __( 'Mark step incomplete', 'surerank' )
+							: __( 'Mark step complete', 'surerank' )
+					}
+					className={ cn(
+						'shrink-0 self-start mt-0.5 flex items-center justify-center size-5 rounded-full border border-solid transition-colors',
+						completed
+							? 'bg-button-primary border-button-primary text-text-on-color'
+							: 'bg-background-primary border-border-strong text-transparent hover:border-button-primary',
+						autoDetected
+							? 'cursor-not-allowed opacity-90'
+							: 'cursor-pointer'
+					) }
+				>
+					<Check className="size-3 shrink-0" strokeWidth={ 3 } />
+				</button>
+			) }
 			<div className="flex-1 min-w-0 flex flex-col gap-1">
 				<div className="flex items-center gap-2 flex-wrap">
 					<span className="text-sm font-medium text-text-primary leading-5">
@@ -67,7 +89,15 @@ const LearnTaskCard = ( {
 							label={ __( 'Auto-detected', 'surerank' ) }
 						/>
 					) }
-					{ step.learnMoreUrl && (
+					{ isPro && (
+						<Badge
+							size="xs"
+							type="pill"
+							variant="blue"
+							label={ __( 'Pro', 'surerank' ) }
+						/>
+					) }
+					{ step.learnMoreUrl && ! locked && (
 						<a
 							href={ buildLearnMoreHref(
 								step.learnMoreUrl,
@@ -94,18 +124,22 @@ const LearnTaskCard = ( {
 					{ step.description }
 				</span>
 			</div>
-			<div className="shrink-0">
-				<Button
-					variant="primary"
-					size="sm"
-					icon={ <ArrowUpRight /> }
-					iconPosition="right"
-					onClick={ () => onCta( chapterId, step, autoDetected ) }
-				>
-					{ ( autoDetected && step.autoDetectedCta?.label ) ||
-						step.cta?.label }
-				</Button>
-			</div>
+			{ showCta && (
+				<div className="shrink-0">
+					<Button
+						variant="primary"
+						size="sm"
+						icon={ <ArrowUpRight /> }
+						iconPosition="right"
+						onClick={ () =>
+							onCta( chapterId, step, autoDetected )
+						}
+					>
+						{ ( autoDetected && step.autoDetectedCta?.label ) ||
+							activeCta?.label }
+					</Button>
+				</div>
+			) }
 		</div>
 	);
 };

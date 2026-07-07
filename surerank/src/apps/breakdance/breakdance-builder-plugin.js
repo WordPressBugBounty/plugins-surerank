@@ -105,7 +105,9 @@ const __ =
 		button.innerHTML = SURERANK_SVG;
 
 		// Status indicator dot (positioned top-right of the button icon).
+		// The class lets the first-run tour locate the dot (see breakdance/index.js).
 		indicator = document.createElement( 'span' );
+		indicator.className = 'surerank-status-indicator';
 		indicator.style.cssText =
 			'position: absolute;' +
 			'top: 9px;' +
