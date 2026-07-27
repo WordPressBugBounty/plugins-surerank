@@ -101,6 +101,28 @@ class Utils {
 	}
 
 	/**
+	 * Coerce a URL into Search Console property format.
+	 *
+	 * Google identifies URL-prefix properties by their exact string, which
+	 * always ends with a trailing slash (e.g. `https://www.example.com/`).
+	 * A value like `window.location.origin` (`https://www.example.com`) is
+	 * not a valid property identifier and every API call made with it fails
+	 * with 403 PERMISSION_DENIED. Domain properties (`sc-domain:example.com`)
+	 * are returned unchanged.
+	 *
+	 * @param string $url Property URL or `sc-domain:` value.
+	 * @since 1.9.3
+	 * @return string Property-formatted URL.
+	 */
+	public static function ensure_property_format( string $url ) {
+		$url = trim( $url );
+		if ( '' === $url || 0 === strpos( $url, 'sc-domain:' ) ) {
+			return $url;
+		}
+		return rtrim( $url, '/' ) . '/';
+	}
+
+	/**
 	 * Get SureRank SaaS Auth API URL
 	 *
 	 * @return string

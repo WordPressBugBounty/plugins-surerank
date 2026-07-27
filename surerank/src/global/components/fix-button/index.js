@@ -28,6 +28,7 @@ const FixButton = ( {
 	onClick,
 	runBeforeOnClick,
 	runAfterOnClick,
+	utmContent = 'fix_it_button',
 	...props
 } ) => {
 	const handleOnClick = () => {
@@ -61,7 +62,7 @@ const FixButton = ( {
 			title={ title }
 			description={ description }
 			linkLabel={ linkLabel }
-			utmContent="fix_it_button"
+			utmContent={ utmContent }
 			tooltipProps={ tooltipProps }
 		>
 			{ buttonComponent }

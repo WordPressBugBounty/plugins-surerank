@@ -348,7 +348,7 @@ const allChapters = () => [
 const proChapter = () => ( {
 	id: 'pro',
 	isPro: true,
-	title: __( 'Do More with SureRank Pro', 'surerank' ),
+	title: __( 'Do More with SureRank Premium', 'surerank' ),
 	description: __(
 		'Advanced SEO tools that take your site further with SureRank Pro.',
 		'surerank'
@@ -370,10 +370,7 @@ const proChapter = () => ( {
 			id: 'pro_broken_links',
 			pro: true,
 			locked: true,
-			title: __(
-				'Catch and fix broken links automatically',
-				'surerank'
-			),
+			title: __( 'Catch and fix broken links automatically', 'surerank' ),
 			description: __(
 				'Scan every internal and external link on your site and get alerted the moment one breaks.',
 				'surerank'
@@ -385,10 +382,7 @@ const proChapter = () => ( {
 			id: 'pro_link_suggestions',
 			pro: true,
 			locked: true,
-			title: __(
-				'Get AI-powered internal link suggestions',
-				'surerank'
-			),
+			title: __( 'Get AI-powered internal link suggestions', 'surerank' ),
 			description: __(
 				'SureRank reads your content and suggests the most relevant internal links as you write.',
 				'surerank'

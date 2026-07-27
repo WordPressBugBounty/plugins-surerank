@@ -18,9 +18,9 @@ describe( 'getSurerankUtmUrl', () => {
 		const url =
 			'https://surerank.com/docs/?ref=plugin&utm_campaign=existing#overview';
 
-		expect(
-			getSurerankUtmUrl( url, 'admin_dashboard', 'help_link' )
-		).toBe( url );
+		expect( getSurerankUtmUrl( url, 'admin_dashboard', 'help_link' ) ).toBe(
+			url
+		);
 	} );
 
 	it( 'returns uploads asset URLs unchanged', () => {
@@ -35,8 +35,8 @@ describe( 'getSurerankUtmUrl', () => {
 	it( 'returns API endpoints unchanged', () => {
 		const url = 'https://api.surerank.com/v1/auth?foo=bar';
 
-		expect(
-			getSurerankUtmUrl( url, 'admin_dashboard', 'api_auth' )
-		).toBe( url );
+		expect( getSurerankUtmUrl( url, 'admin_dashboard', 'api_auth' ) ).toBe(
+			url
+		);
 	} );
 } );

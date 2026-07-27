@@ -10,6 +10,7 @@
 namespace SureRank\Inc\API;
 
 use SureRank\Inc\Admin\Update_Timestamp;
+use SureRank\Inc\Functions\Cache_Purge;
 use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Functions\Send_Json;
@@ -281,6 +282,10 @@ class Admin extends Api_Base {
 			Update_Timestamp::timestamp_option();
 		}
 
+		// Global SEO defaults affect every page — purge cached output when they change.
+		if ( ! empty( $updated_options ) ) {
+			Cache_Purge::purge_all();
+		}
 		/**
 		 * Fires after admin settings are saved.
 		 *

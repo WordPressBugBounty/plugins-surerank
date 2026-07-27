@@ -155,7 +155,7 @@ const Dashboard = () => {
 	return (
 		<>
 			<Container
-				className="h-full p-4 sm:p-5 pb-6 sm:pb-8 xl:p-8 max-[1920px]:max-w-full mx-auto box-content bg-background-secondary gap-4 sm:gap-6"
+				className="h-full p-4 sm:p-5 pb-6 sm:pb-8 xl:p-8 max-w-[1920px] mx-auto box-content bg-background-secondary gap-4 sm:gap-6"
 				cols={ 12 }
 				containerType="grid"
 				gap="2xl"
@@ -168,7 +168,7 @@ const Dashboard = () => {
 						{ /* Show WelcomeCard above SEO checks when pro is not active */ }
 						{ ! isProActive() && (
 							<WelcomeCard
-								className="max-h-[220px]"
+								className="max-h-fit lg:max-h-[220px]"
 								isProActive={ isProActive() }
 							/>
 						) }

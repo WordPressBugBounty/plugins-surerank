@@ -296,6 +296,18 @@ export const isListingPage = () => {
 };
 
 /**
+ * Whether we're in the block (Gutenberg) editor — the only context where the
+ * AI image-alt grid can reliably read images and write alt back. Classic, page
+ * builders, and server-sourced contexts fall back to "Help Me Fix".
+ *
+ * @since x.x.x
+ * @return {boolean} True in the block editor.
+ */
+export const isBlockEditor = () => {
+	return surerank_seo_popup?.editor_type === 'block';
+};
+
+/**
  * Check if the popup is in a user (author profile) context.
  *
  * Covers the user profile edit screens (editor_type 'user') and the

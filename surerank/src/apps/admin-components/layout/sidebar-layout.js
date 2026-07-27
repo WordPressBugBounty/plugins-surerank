@@ -21,6 +21,8 @@ import {
 	GraduationCap,
 	Megaphone,
 	ChartNoAxesColumnIncreasing,
+	PanelLeftOpen,
+	PanelLeftClose,
 } from 'lucide-react';
 import withSuspense from '@AdminComponents/hoc/with-suspense';
 import SidebarSkeleton from '../sidebar-skeleton';
@@ -35,8 +37,11 @@ import {
 	useMemo,
 	useEffect,
 	useRef,
+	useState,
 } from '@wordpress/element';
-import GlobalSearch from '@AdminComponents/global-search';
+import GlobalSearch, {
+	GlobalSearchCompact,
+} from '@AdminComponents/global-search';
 import ConfirmationDialog from '@AdminComponents/confirmation-dialog';
 import { useSuspenseSiteSeoAnalysis } from '@/apps/admin-dashboard/site-seo-checks/site-seo-checks-main';
 import { getSeverityColor } from '@GlobalComponents/seo-checks';
@@ -397,6 +402,15 @@ const SidebarLayout = ( {
 	// Use only the links of the active section
 	const filteredNavLinks = activeSection ? [ activeSection ] : [];
 
+	// Mobile (<=782px) sidebar drawer open/close state.
+	const [ isMobileSidebarOpen, setIsMobileSidebarOpen ] = useState( false );
+
+	// Auto-close the mobile sidebar drawer whenever the route changes
+	// (covers tapping a sub-section link as well as top-level navigation).
+	useEffect( () => {
+		setIsMobileSidebarOpen( false );
+	}, [ location.pathname ] );
+
 	useWhatsNewRSS( {
 		uniqueKey: 'surerank',
 		rssFeedURL: 'https://surerank.com/whats-new/feed/', // TODO: domain name change to surerank.
@@ -488,7 +502,7 @@ const SidebarLayout = ( {
 						align="left"
 						className="h-full min-w-0 overflow-hidden"
 					>
-						<Topbar.Item className="hidden h-full min-w-0 gap-4 overflow-x-auto md:flex">
+						<Topbar.Item className="hidden h-full min-w-0 gap-4 overflow-x-auto md:flex [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
 							{ topNavbarLinks.map(
 								( { path, label, active } ) => (
 									<Link
@@ -523,8 +537,11 @@ const SidebarLayout = ( {
 						) }
 					</Topbar.Middle>
 					<Topbar.Right className="min-w-0 shrink p-2 lg:p-5">
-						<Topbar.Item className="hidden xl:flex">
+						<Topbar.Item className="hidden min-[1340px]:flex">
 							<GlobalSearch navLinks={ navLinks } />
+						</Topbar.Item>
+						<Topbar.Item className="hidden md:flex min-[1340px]:hidden">
+							<GlobalSearchCompact navLinks={ navLinks } />
 						</Topbar.Item>
 						<Topbar.Item className="hidden space-x-1 lg:flex lg:space-x-3">
 							<VersionBadge />
@@ -603,13 +620,62 @@ const SidebarLayout = ( {
 				{
 					// Sidebar Navigation
 					! isNavbarOnly && ! isNotFound && (
-						<div className="grid h-full w-full overflow-x-hidden max-[782px]:min-h-[calc(100dvh_-_110px)] max-[782px]:grid-cols-1 min-h-[calc(100dvh_-_96px)] grid-cols-[290px_1fr]">
+						<div className="relative grid h-full w-full overflow-x-hidden max-[782px]:min-h-[calc(100dvh_-_110px)] max-[782px]:grid-cols-1 min-h-[calc(100dvh_-_96px)] grid-cols-[290px_1fr]">
 							{ ! isNavbarOnly && (
-								<div className="max-[782px]:hidden">
-									<SuspenseNavbar
-										navLinks={ filteredNavLinks }
-									/>
-								</div>
+								<>
+									{ /* Mobile-only toggle handle (left-center) */ }
+									<button
+										type="button"
+										onClick={ () =>
+											setIsMobileSidebarOpen(
+												( prev ) => ! prev
+											)
+										}
+										aria-expanded={ isMobileSidebarOpen }
+										aria-label={
+											isMobileSidebarOpen
+												? __( 'Close menu', 'surerank' )
+												: __( 'Open menu', 'surerank' )
+										}
+										className={ cn(
+											'hidden max-[782px]:flex items-center justify-center fixed top-1/2 -translate-y-1/2 z-[41] size-9 cursor-pointer border-0 rounded-r-md bg-brand-800 text-white shadow-md transition-[left] duration-300',
+											isMobileSidebarOpen
+												? 'left-[290px]'
+												: 'left-0'
+										) }
+									>
+										{ isMobileSidebarOpen ? (
+											<PanelLeftClose className="size-5" />
+										) : (
+											<PanelLeftOpen className="size-5" />
+										) }
+									</button>
+
+									{ /* Backdrop (mobile, when open) */ }
+									{ isMobileSidebarOpen && (
+										<div
+											role="presentation"
+											onClick={ () =>
+												setIsMobileSidebarOpen( false )
+											}
+											className="hidden max-[782px]:block absolute inset-0 z-[39] bg-black/40"
+										/>
+									) }
+
+									{ /* Sidebar: static column on desktop, slide-in drawer on mobile */ }
+									<div
+										className={ cn(
+											'max-[782px]:absolute max-[782px]:inset-y-0 max-[782px]:left-0 max-[782px]:z-40 max-[782px]:w-[290px] max-[782px]:overflow-y-auto max-[782px]:bg-background-primary max-[782px]:shadow-lg max-[782px]:transition-transform max-[782px]:duration-300',
+											isMobileSidebarOpen
+												? 'max-[782px]:translate-x-0'
+												: 'max-[782px]:-translate-x-full'
+										) }
+									>
+										<SuspenseNavbar
+											navLinks={ filteredNavLinks }
+										/>
+									</div>
+								</>
 							) }
 
 							{ /* Main content */ }

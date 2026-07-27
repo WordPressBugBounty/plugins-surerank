@@ -208,14 +208,39 @@ class Dashboard extends Api_Base {
 	/**
 	 * Update Site saved in credentials
 	 *
+	 * The stored value is used verbatim as the `siteUrl` parameter of every
+	 * Search Console API call, so it must be the exact property string from
+	 * the user's property list — Google rejects anything else (including a
+	 * URL-prefix property without its trailing slash) with 403.
+	 *
 	 * @return void
 	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
 	 * @since 1.0.0
 	 */
 	public function update_site( $request ) {
-		$url                         = $request->get_param( 'url' );
+		$url = (string) $request->get_param( 'url' );
+
+		$sites_response = Controller::get_instance()->get_sites();
+
+		if ( isset( $sites_response['error'] ) && $sites_response['error'] ) {
+			// Property list unavailable (transient API failure) — fall back to
+			// storing a property-formatted value rather than hard-failing.
+			$property = Utils::ensure_property_format( $url );
+		} else {
+			$property = Controller::get_instance()->resolve_property_for_site( $url, $sites_response['siteEntry'] ?? [] );
+			if ( null === $property ) {
+				Send_Json::error(
+					[
+						'message' => __( 'This URL does not match any property on the connected Google account. Please select a property from the list.', 'surerank' ),
+						'code'    => 'property_not_found',
+					]
+				);
+				return;
+			}
+		}
+
 		$all_credentials             = Auth::get_instance()->get_credentials();
-		$all_credentials['site_url'] = $url;
+		$all_credentials['site_url'] = $property;
 		Auth::get_instance()->save_credentials( $all_credentials );
 		Send_Json::success();
 	}

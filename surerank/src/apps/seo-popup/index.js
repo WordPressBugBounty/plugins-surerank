@@ -68,7 +68,10 @@ const RenderTriggerPopupButton = () => {
 					),
 					totalIssues
 			  )
-			: __( 'Your SEO looks good. You are ready to publish.', 'surerank' );
+			: __(
+					'Your SEO looks good. You are ready to publish.',
+					'surerank'
+			  );
 
 	if ( isSidebarVariant ) {
 		return (

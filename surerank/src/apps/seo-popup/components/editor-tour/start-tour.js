@@ -304,6 +304,25 @@ const markTourSeen = () => {
 };
 
 /**
+ * Whether the SureRank SEO metabox is currently open. Source of truth is the
+ * front-end store's `getModalState` selector (state.modalEnabled), the same
+ * value the toolbar button reads. Reads via window.wp.data so this stays usable
+ * from the vanilla page-builder callers too. Wrapped because the store/selector
+ * may be absent in some contexts; on failure we treat it as closed.
+ *
+ * @return {boolean} True when the metabox modal is open.
+ */
+const isMetaboxOpen = () => {
+	try {
+		return !! window.wp?.data
+			?.select?.( STORE_NAME )
+			?.getModalState?.();
+	} catch ( e ) {
+		return false;
+	}
+};
+
+/**
  * Default status-dot locator for the Gutenberg/classic editors: the colored dot
  * rendered inside the trigger's positioning wrapper.
  *
@@ -347,7 +366,10 @@ const computeStagePadding = ( trigger ) => {
 	}
 	const innerInset = ( buttonMin - iconMin ) / 2;
 	// Clamp to a sane range; never exceed driver's default look (10).
-	return Math.max( 2, Math.min( 10, Math.round( ICON_EDGE_GAP - innerInset ) ) );
+	return Math.max(
+		2,
+		Math.min( 10, Math.round( ICON_EDGE_GAP - innerInset ) )
+	);
 };
 
 /**
@@ -372,6 +394,33 @@ export const startEditorTour = ( {
 	tourStarted = true;
 
 	( async () => {
+		// If the user already opened the metabox before the tour could resolve, the
+		// walkthrough would anchor to an already-open trigger — an invalid state. Mark
+		// it seen so it never fires later this session/on rerender, and bail.
+		if ( isMetaboxOpen() ) {
+			markTourSeen();
+			return;
+		}
+
+		// Watch the store during our async wait window (trigger settle + checks +
+		// driver load): if the user opens the metabox while the tour is still pending
+		// but not yet visible, cancel the pending tour and mark it seen. Unsubscribed
+		// once the tour actually drives, so the already-visible case is left entirely
+		// to driver's existing dismiss-on-interaction handling.
+		let metaboxOpened = false;
+		let unsubscribe = () => {};
+		try {
+			if ( window.wp?.data?.subscribe ) {
+				unsubscribe = window.wp.data.subscribe( () => {
+					if ( isMetaboxOpen() ) {
+						metaboxOpened = true;
+						markTourSeen();
+						unsubscribe();
+					}
+				} );
+			}
+		} catch ( e ) {}
+
 		// Resolve the trigger LIVE each time: some builders (e.g. Divi) re-inject
 		// their toolbar button, so a node captured once goes stale. When the caller
 		// passes selectors we re-query; when it passes a node we use it as-is.
@@ -389,7 +438,8 @@ export const startEditorTour = ( {
 		// first step's spotlight is computed against the final button (not a
 		// mid-re-injection one).
 		const triggerEl = await waitForStable( resolveTrigger, 8000 );
-		if ( ! triggerEl ) {
+		if ( ! triggerEl || metaboxOpened ) {
+			unsubscribe();
 			return;
 		}
 
@@ -399,13 +449,30 @@ export const startEditorTour = ( {
 		// Once checks are done the dot's render outcome is final: it's present
 		// (status exists) or it never will be (no status / SEO off).
 		await waitForChecksReady( 20000 );
-		const findStatus = getStatusEl || ( () => defaultFindStatus( triggerEl ) );
+		const findStatus =
+			getStatusEl || ( () => defaultFindStatus( triggerEl ) );
 		// Short DOM wait just to catch React's render tick now that checks are done.
 		const hasStatusDot = !! ( await waitForElement( findStatus, 2000 ) );
+
+		// The metabox may have been opened during any of the waits above; don't
+		// pop the tour over an already-open metabox.
+		if ( metaboxOpened ) {
+			unsubscribe();
+			return;
+		}
 
 		const { driver } = await import(
 			/* webpackChunkName: "editor-tour" */ 'driver.js'
 		);
+
+		// Final gate after the async chunk load: bail if the metabox opened while
+		// driver.js was loading. Past this point the tour is committed, so stop
+		// watching and hand dismissal to driver's own onDestroyed handling.
+		if ( metaboxOpened ) {
+			unsubscribe();
+			return;
+		}
+		unsubscribe();
 
 		const steps = [
 			{
@@ -431,7 +498,10 @@ export const startEditorTour = ( {
 			steps.push( {
 				element: () => findStatus() || freshTrigger() || triggerEl,
 				popover: {
-					title: __( 'Check your SEO health at a glance', 'surerank' ),
+					title: __(
+						'Check your SEO health at a glance',
+						'surerank'
+					),
 					description: __(
 						'This dot reflects the SEO status of your page. Green means all checks pass, while red, yellow, or blue flag errors, warnings, or suggestions to review.',
 						'surerank'

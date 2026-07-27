@@ -35,12 +35,11 @@ const AJAX_FALLBACK_ACTIONS = {
 
 const NETWORK_TIMEOUT_MS = 15000;
 
-const COMPAT_HELP_URL_FALLBACK =
-	getSurerankUtmUrl(
-		'https://surerank.com/docs/security-plugin-firewall-compatibility/',
-		'compatibility_guide',
-		'rest_api_help'
-	);
+const COMPAT_HELP_URL_FALLBACK = getSurerankUtmUrl(
+	'https://surerank.com/docs/security-plugin-firewall-compatibility/',
+	'compatibility_guide',
+	'rest_api_help'
+);
 
 /**
  * Rewrite transport-level failures into actionable messages. Structured

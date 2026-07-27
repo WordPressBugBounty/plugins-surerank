@@ -1,6 +1,5 @@
 import { Accordion, Badge } from '@bsf/force-ui';
 import { __, sprintf } from '@wordpress/i18n';
-import { Check } from 'lucide-react';
 import LearnTaskCard from './learn-task-card';
 
 const LearnChapter = ( {
@@ -67,13 +66,6 @@ const LearnChapter = ( {
 							className="absolute inset-y-0 left-0 bg-brand-200"
 							style={ { width: `${ pct }%` } }
 						/>
-						{ stats.total > 0 && stats.done === stats.total && (
-							<Check
-								aria-hidden="true"
-								className="relative size-3 shrink-0 text-text-primary"
-								strokeWidth={ 3 }
-							/>
-						) }
 						<span className="relative text-xs font-medium text-text-primary leading-none">
 							{ countLabel }
 						</span>

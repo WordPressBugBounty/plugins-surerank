@@ -5,7 +5,7 @@ Tags: seo, wordpress seo, xml sitemap, schema, google search console
 Requires at least: 6.8
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.9.2
+Stable tag: 1.9.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -294,6 +294,19 @@ Brainstorm Force
 
 
 == Changelog ==
+= 1.9.3 - 27-July-2026 =
+* New: Sitemap - Added on-the-fly (default) and scheduled (cron) sitemap generation modes.
+* Improvement: Security - Post and term SEO REST endpoints now enforce object-level permission checks.
+* Improvement: Performance - Page cache is now purged when SEO data is saved, including "Fix It For Me" and Angie updates.
+* Improvement: Image SEO - The image alt check now offers a Pro fix with a free upgrade prompt.
+* Fix: Search Console - Indexing status no longer shows "Access denied" when the connected Google account owns the property.
+* Fix: Display Conditions - "Specific Pages" now requires a page to be selected before saving.
+* Fix: Image SEO - Images without a source are now skipped in the alt-text check.
+* Fix: Site Health - Removed a false "stale sitemap" warning.
+* Fix: Broken Links - Relative URLs are now normalized before being checked.
+* Fix: Schema - Field definitions now resolve correctly for schema sub-types.
+* Fix: Compatibility - Skip content rewriting on Breakdance output and WooCommerce cart/checkout, and render the Breakdance toolbar tooltip above the canvas.
+* Fix: Multilingual - Non-text settings are no longer registered for Polylang translation.
 = 1.9.2 - 7-July-2026 =
 * New: Admin Bar - Added an SEO toolbar that surfaces site and page checks, quick tools, and Pro features right from the admin bar.
 * New: Editor - SEO checks now appear inside the editor through a pre-publish panel and the classic metabox.

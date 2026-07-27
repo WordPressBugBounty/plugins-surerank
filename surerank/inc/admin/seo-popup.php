@@ -13,9 +13,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use SureRank\Inc\API\Migrations;
+use SureRank\Inc\API\Post;
 use SureRank\Inc\Frontend\Crawl_Optimization;
 use SureRank\Inc\Frontend\Image_Seo;
 use SureRank\Inc\Functions\Get;
+use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Functions\Update;
 use SureRank\Inc\GoogleSearchConsole\Auth as GoogleSearchConsoleAuth;
 use SureRank\Inc\GoogleSearchConsole\Controller as GoogleSearchConsoleController;
@@ -385,10 +387,22 @@ class Seo_Popup {
 	 *
 	 * @param \WP_REST_Request<array<string, mixed>> $request Request.
 	 * @since 1.9.2
-	 * @return \WP_REST_Response
+	 * @return \WP_REST_Response|\WP_Error
 	 */
 	public function get_seo_bar_status( $request ) {
-		return rest_ensure_response( Seo_Toolbar::get_instance()->get_status( (int) $request->get_param( 'post_id' ) ) );
+		$post_id = (int) $request->get_param( 'post_id' );
+
+		// Object-level guard: this route is only gated by the content-setting role,
+		// so verify edit access to the requested post before disclosing its checks.
+		if ( ! Post::can_manage_post_seo( $post_id ) ) {
+			return new \WP_Error(
+				'surerank_forbidden',
+				__( 'You are not allowed to view SEO checks for this post.', 'surerank' ),
+				[ 'status' => rest_authorization_required_code() ]
+			);
+		}
+
+		return rest_ensure_response( Seo_Toolbar::get_instance()->get_status( $post_id ) );
 	}
 
 	/**
@@ -778,7 +792,7 @@ class Seo_Popup {
 	 * seo-popup styles, but the seo-popup script must not load because its
 	 * wp-editor dependency breaks WooCommerce block hydration.
 	 *
-	 * @since x.x.x
+	 * @since 1.9.3
 	 * @return void
 	 */
 	private function enqueue_seo_popup_style(): void {
@@ -820,7 +834,7 @@ class Seo_Popup {
 	 *
 	 * @param string                                                                                                                                                                              $editor_type Editor type.
 	 * @param array{post_data: array<string, mixed>, term_data: array<string, mixed>, user_data?: array<string, mixed>, post_type: string, is_taxonomy: bool, is_user?: bool, is_frontend?: bool} $context_data Context data.
-	 * @since x.x.x
+	 * @since 1.9.3
 	 * @return array<string, mixed>
 	 */
 	private function get_localization_data( string $editor_type, array $context_data ): array {
@@ -837,6 +851,7 @@ class Seo_Popup {
 				'keyword_checks'           => $this->keyword_checks(),
 				'page_checks'              => $this->page_checks(),
 				'image_seo'                => Image_Seo::get_instance()->status(),
+				'generate_alt_with_ai'     => (bool) Settings::get( 'generate_alt_with_ai' ),
 				'is_frontend'              => $context_data['is_frontend'] ?? false,
 				'broken_link_ignored_urls' => Get::option( 'surerank_broken_link_ignored_urls', [] ),
 				'active_cache_plugins'     => Migrations::is_cache_plugin_active(),
