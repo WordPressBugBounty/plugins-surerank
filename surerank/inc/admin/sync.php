@@ -340,6 +340,10 @@ class Sync {
 			'fields'              => 'ids',
 			'no_found_rows'       => false,
 			'ignore_sticky_posts' => true,
+			// The index derives its page count from here, so it has to exclude
+			// exactly what the chunk builder excludes or it advertises pages
+			// that render empty. See #2849.
+			'post__not_in'        => Utils::get_excluded_post_ids(),
 			'meta_query'          => Utils::get_indexable_meta_query( $post_type ), //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		];
 

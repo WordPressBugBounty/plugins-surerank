@@ -18,6 +18,7 @@ use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Functions\Update;
 use SureRank\Inc\Import_Export\Utils as ImportExportUtils;
 use SureRank\Inc\Schema\SchemasApi;
+use SureRank\Inc\Schema\Validator;
 use SureRank\Inc\Traits\Get_Instance;
 use WP_Error;
 use WP_REST_Request;
@@ -203,18 +204,12 @@ class Post extends Api_Base {
 		}
 
 		if ( isset( $data['schemas'] ) ) {
-			$validation = apply_filters(
-				'surerank_validate_schemas_payload',
-				[
-					'valid'   => true,
-					'message' => '',
-				],
-				$data['schemas']
-			);
-			if ( is_array( $validation ) && isset( $validation['valid'] ) && ! $validation['valid'] ) {
+			$stored     = Get::post_meta( $post_id, 'surerank_settings_schemas', true );
+			$validation = Validator::validate_schemas_payload( $data['schemas'], $stored['schemas'] ?? [] );
+			if ( ! $validation['valid'] ) {
 				return [
 					'success' => false,
-					'message' => $validation['message'] ?? __( 'Invalid schema payload.', 'surerank' ),
+					'message' => '' !== $validation['message'] ? $validation['message'] : __( 'Invalid schema payload.', 'surerank' ),
 				];
 			}
 		}

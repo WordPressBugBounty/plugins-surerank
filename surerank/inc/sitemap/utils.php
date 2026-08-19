@@ -378,4 +378,31 @@ class Utils {
 		];
 	}
 
+	/**
+	 * Get the post IDs excluded from the sitemap, ready for post__not_in.
+	 *
+	 * Used by both the chunk builder and the index count query so the index
+	 * never advertises a page the chunks do not fill.
+	 *
+	 * @since 1.10.0
+	 * @return array<int> Post IDs to exclude.
+	 */
+	public static function get_excluded_post_ids(): array {
+		/**
+		 * Filter the post IDs excluded from the sitemap.
+		 *
+		 * Applies to every sitemap query, so it covers the cron pre-build and
+		 * the on-the-fly mode alike, and the HTML sitemap inherits it too.
+		 *
+		 * The rebuild checksum is driven by post-save events, not by this
+		 * filter's output, so changing it leaves an already warm cache stale
+		 * and `wp surerank generate_cache` reports matching checksums. Run
+		 * `wp surerank generate_cache --force` after changing it.
+		 *
+		 * @param array<int>|string $ids Post IDs to exclude. A comma-separated string is also accepted.
+		 * @since 1.2.0
+		 */
+		return wp_parse_id_list( apply_filters( 'surerank_exclude_posts_from_sitemap', [] ) );
+	}
+
 }

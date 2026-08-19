@@ -31,8 +31,8 @@ class Controller {
 	 * 
 	 * @param array<string,string> $inputs Inputs for content generation.
 	 * @param string               $type Type of content to generate (e.g., 'page_title').
-	 * 
-	 * @return string|WP_Error Generated content string or error object.
+	 *
+	 * @return string|array<string,mixed>|WP_Error Generated content: a list of variations for a single type, a keyed map of variation lists for 'combined_meta', or an error object.
 	 * @since 1.4.2
 	 */
 	public function generate_content( $inputs, $type = 'page_title' ) {

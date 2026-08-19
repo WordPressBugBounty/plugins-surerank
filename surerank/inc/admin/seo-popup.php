@@ -394,7 +394,10 @@ class Seo_Popup {
 
 		// Object-level guard: this route is only gated by the content-setting role,
 		// so verify edit access to the requested post before disclosing its checks.
-		if ( ! Post::can_manage_post_seo( $post_id ) ) {
+		// post_id 0 is the site-level bar (no post context); it exposes only
+		// aggregate site counts, already gated by the permission_callback, so the
+		// per-post guard applies only when an actual post is requested.
+		if ( $post_id > 0 && ! Post::can_manage_post_seo( $post_id ) ) {
 			return new \WP_Error(
 				'surerank_forbidden',
 				__( 'You are not allowed to view SEO checks for this post.', 'surerank' ),

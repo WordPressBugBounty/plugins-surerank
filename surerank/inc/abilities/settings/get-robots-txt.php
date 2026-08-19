@@ -52,7 +52,9 @@ class Get_Robots_Txt extends Ability_Base {
 		return [
 			'type'                 => 'object',
 			'additionalProperties' => false,
-			'properties'           => [],
+			// Lets null/omitted-input invocations validate (WP_Ability::normalize_input()
+			// substitutes this; mcp-adapter can deliver omitted params as null).
+			'default'              => [],
 		];
 	}
 

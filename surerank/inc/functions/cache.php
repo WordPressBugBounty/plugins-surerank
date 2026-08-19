@@ -495,9 +495,10 @@ class Cache {
 	 *
 	 * @since 1.2.0
 	 * @param string $directory Optional directory name to scan (e.g., 'sitemap', 'metadata').
+	 * @param string $extension File extension to include (default 'json').
 	 * @return array<string> Array of filenames in the cache directory
 	 */
-	public static function get_all_files( string $directory = '' ) {
+	public static function get_all_files( string $directory = '', string $extension = 'json' ) {
 		if ( empty( self::$cache_dir ) ) {
 			self::init();
 		}
@@ -518,14 +519,14 @@ class Cache {
 			return [];
 		}
 
-		$json_files = array_filter(
+		$matching_files = array_filter(
 			$files,
-			static function( $file ) {
-				return $file !== '.' && $file !== '..' && pathinfo( $file, PATHINFO_EXTENSION ) === 'json';
+			static function( $file ) use ( $extension ) {
+				return $file !== '.' && $file !== '..' && pathinfo( $file, PATHINFO_EXTENSION ) === $extension;
 			}
 		);
 
-		return array_values( $json_files );
+		return array_values( $matching_files );
 	}
 
 	/**
@@ -536,14 +537,15 @@ class Cache {
 	 * sequentially and stopping at the first gap.
 	 *
 	 * @param string $base Chunk filename base, e.g. "post-type-post".
+	 * @param string $extension Chunk file extension to enumerate (default 'json').
 	 * @since 1.9.3
 	 * @return array<int, int>
 	 */
-	public static function get_chunk_numbers( string $base ): array {
+	public static function get_chunk_numbers( string $base, string $extension = 'json' ): array {
 		$numbers = [];
-		$pattern = '/^' . preg_quote( $base, '/' ) . '-chunk-(\d+)\.json$/';
+		$pattern = '/^' . preg_quote( $base, '/' ) . '-chunk-(\d+)\.' . preg_quote( $extension, '/' ) . '$/';
 
-		foreach ( self::get_all_files( 'sitemap' ) as $file ) {
+		foreach ( self::get_all_files( 'sitemap', $extension ) as $file ) {
 			if ( preg_match( $pattern, (string) $file, $matches ) ) {
 				$numbers[] = (int) $matches[1];
 			}

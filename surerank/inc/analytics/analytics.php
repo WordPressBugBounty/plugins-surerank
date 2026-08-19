@@ -422,6 +422,11 @@ class Analytics {
 			);
 		}
 
+		// Settings edited (deliberate user settings save — "Active" signal).
+		if ( get_option( 'surerank_settings_edited_at', false ) ) {
+			$events->track( 'settings_edited', 'yes' );
+		}
+
 		// First post optimized (activation event).
 		if ( $this->is_active() ) {
 			$install_time = get_option( 'surerank_usage_installed_time', 0 );
@@ -505,6 +510,47 @@ class Analytics {
 		$bulk_used = get_option( 'surerank_bulk_action_used', false );
 		if ( $bulk_used ) {
 			$events->track( 'first_bulk_action_used', 'yes' );
+		}
+
+		$this->track_feature_enabled_events( $events );
+	}
+
+	/**
+	 * Track FREE feature usage signals as events (the reliable channel — the
+	 * analytics backend does not persist extra payload blocks such as
+	 * boolean_values). Pro features are tracked by SureRank Pro's own analytics
+	 * provider (its own bsf_core_stats hook), so Free never reads Pro setting keys.
+	 *
+	 * Two shapes, by feature default:
+	 * - Default-on features (xml sitemap, page-level SEO, open graph): a forced
+	 *   (retrackable) event carrying the current on/off state, re-sent each cycle
+	 *   so a later disable is captured.
+	 * - Opt-in features (off by default): a one-time deduped adoption event on
+	 *   first use, since turning them on is itself the signal.
+	 *
+	 * @param \BSF_Analytics_Events $events Analytics events instance.
+	 * @since 1.10.0
+	 * @return void
+	 */
+	private function track_feature_enabled_events( $events ) {
+		// Default-on features: current on/off state, re-sent each cycle (forced),
+		// so a later disable is captured.
+		$events->track( 'feature_xml_sitemap', Settings::get( 'enable_xml_sitemap' ) ? 'on' : 'off', [], true );
+		$events->track( 'feature_page_level_seo', Settings::get( 'enable_page_level_seo' ) ? 'on' : 'off', [], true );
+		$events->track( 'feature_open_graph', Settings::get( 'open_graph_tags' ) ? 'on' : 'off', [], true );
+
+		// Opt-in features (off by default): one-time adoption event on first use.
+		$robots_content = defined( 'SURERANK_ROBOTS_TXT_CONTENT' )
+			? (string) get_option( SURERANK_ROBOTS_TXT_CONTENT, '' )
+			: '';
+		if ( '' !== trim( $robots_content ) ) {
+			$events->track( 'feature_robots_customized', 'yes' );
+		}
+		if ( Settings::get( 'enable_mcp' ) ) {
+			$events->track( 'feature_mcp_enabled', 'yes' );
+		}
+		if ( Settings::get( 'enable_headless_rest_api' ) ) {
+			$events->track( 'feature_headless_rest_api_enabled', 'yes' );
 		}
 	}
 

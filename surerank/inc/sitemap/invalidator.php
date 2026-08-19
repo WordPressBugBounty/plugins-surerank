@@ -238,7 +238,24 @@ class Invalidator {
 			// Enumerate what exists rather than probing 1..N: lazy build-on-miss
 			// caches are sparse (a crawler can build page 2 without page 1), so
 			// stopping at the first gap would orphan higher-numbered chunks.
-			foreach ( Cache::get_chunk_numbers( $base ) as $chunk_number ) {
+			// Enumerate .last sidecars independently of .json chunks: a write
+			// racing this flush can land a sidecar after its chunk was deleted,
+			// and an orphan enumerated only via .json would never be reaped.
+			$chunk_numbers = array_unique(
+				array_merge(
+					Cache::get_chunk_numbers( $base ),
+					Cache::get_chunk_numbers( $base, 'last' )
+				)
+			);
+
+			foreach ( $chunk_numbers as $chunk_number ) {
+				// The keyset boundary sidecar records this chunk's last post ID
+				// under the OLD dataset. A rebuild that read it would start the
+				// next chunk from a stale position, so it must die with the chunk.
+				// Sidecar first: a crash between the two deletes then leaves a
+				// chunk without a boundary (harmless offset fallback), never an
+				// orphaned boundary without a chunk.
+				Cache::delete_file( 'sitemap/' . $base . '-chunk-' . $chunk_number . '.last' );
 				Cache::delete_file( 'sitemap/' . $base . '-chunk-' . $chunk_number . '.json' );
 			}
 		}

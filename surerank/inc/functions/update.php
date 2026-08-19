@@ -12,8 +12,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use WP_Error;
-
 /**
  * Update
  *
@@ -45,7 +43,7 @@ class Update {
 	 * @param mixed $meta_value Meta value.
 	 *
 	 * @since 1.0.0
-	 * @return bool|int|WP_Error
+	 * @return bool|int|\WP_Error
 	 */
 	public static function term_meta( $term_id, $meta_key, $meta_value ) {
 		return update_term_meta( $term_id, $meta_key, $meta_value );

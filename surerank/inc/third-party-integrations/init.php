@@ -124,6 +124,10 @@ class Init {
 			Breakdance::get_instance();
 		}
 
+		if ( class_exists( 'td_global_blocks' ) ) {
+			Tagdiv::get_instance();
+		}
+
 		Multilingual::get_instance();
 	}
 

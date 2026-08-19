@@ -14,6 +14,7 @@ use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Traits\Get_Instance;
+use SureRank\Inc\Traits\Logger;
 use WP_Post;
 use WP_Term;
 use WP_User;
@@ -28,6 +29,7 @@ use WP_User;
 class Schemas {
 
 	use Get_Instance;
+	use Logger;
 
 	/**
 	 * Schema Data
@@ -134,6 +136,9 @@ class Schemas {
 					if ( is_array( $schema_output ) ) {
 						$rendered[] = $schema_output;
 					}
+				} else {
+					$title = isset( $schema['title'] ) && is_scalar( $schema['title'] ) ? (string) $schema['title'] : 'unknown';
+					self::log( sprintf( 'SureRank: schema "%s" skipped at render: type is not in the render registry for the active plugins.', $title ) );
 				}
 			}
 		}

@@ -67,6 +67,93 @@ class Validator {
 	}
 
 	/**
+	 * Validate a schemas payload before it is saved.
+	 *
+	 * Runs the render-registry title check first, then applies the
+	 * `surerank_validate_schemas_payload` filter so extensions (e.g. Pro's
+	 * Custom JSON-LD validation) keep participating unchanged.
+	 *
+	 * @param mixed $schemas          Incoming schemas payload (uuid => schema map).
+	 * @param mixed $existing_schemas Currently stored schemas for the same context (post/term/user meta or global settings).
+	 * @return array{valid: bool, message: string}
+	 * @since 1.10.0
+	 */
+	public static function validate_schemas_payload( $schemas, $existing_schemas = [] ) {
+		$result = self::validate_schema_titles( $schemas, is_array( $existing_schemas ) ? $existing_schemas : [] );
+		if ( ! $result['valid'] ) {
+			return $result;
+		}
+
+		$filtered = apply_filters( 'surerank_validate_schemas_payload', $result, $schemas );
+		if ( is_array( $filtered ) && isset( $filtered['valid'] ) ) {
+			return [
+				'valid'   => (bool) $filtered['valid'],
+				'message' => isset( $filtered['message'] ) && is_string( $filtered['message'] ) ? $filtered['message'] : '',
+			];
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Reject newly added schema types that no active plugin can render.
+	 *
+	 * The render registry (Utils::get_schema_types()) is dynamic: Pro,
+	 * WooCommerce and other integrations register their types through the
+	 * `surerank_schema_types` filter, so a type saved while its provider was
+	 * active can become unregistered later (e.g. Pro deactivated). Titles
+	 * already present in the stored data are therefore tolerated as dormant —
+	 * only titles that are both unregistered and new to this save are
+	 * rejected. Without this check such schemas save successfully and are
+	 * then silently dropped at render (see Schemas::print_schema_data()).
+	 *
+	 * @param mixed                $schemas          Incoming schemas payload (uuid => schema map).
+	 * @param array<string, mixed> $existing_schemas Currently stored schemas for the same context.
+	 * @return array{valid: bool, message: string}
+	 * @since 1.10.0
+	 */
+	public static function validate_schema_titles( $schemas, array $existing_schemas = [] ) {
+		$valid = [
+			'valid'   => true,
+			'message' => '',
+		];
+
+		if ( ! is_array( $schemas ) ) {
+			return $valid;
+		}
+
+		$registered      = Utils::get_schema_types();
+		$existing_titles = [];
+		foreach ( $existing_schemas as $schema ) {
+			if ( is_array( $schema ) && isset( $schema['title'] ) && is_string( $schema['title'] ) ) {
+				$existing_titles[ $schema['title'] ] = true;
+			}
+		}
+
+		foreach ( $schemas as $schema ) {
+			if ( ! is_array( $schema ) ) {
+				continue;
+			}
+
+			$title = isset( $schema['title'] ) && is_string( $schema['title'] ) ? $schema['title'] : '';
+			if ( isset( $registered[ $title ] ) || isset( $existing_titles[ $title ] ) ) {
+				continue;
+			}
+
+			return [
+				'valid'   => false,
+				'message' => sprintf(
+					/* translators: %s: schema type name */
+					__( 'The schema type "%s" cannot be saved because no active plugin can render it. It may require SureRank Pro or an integration that is currently inactive.', 'surerank' ),
+					'' !== $title ? $title : __( '(missing title)', 'surerank' )
+				),
+			];
+		}
+
+		return $valid;
+	}
+
+	/**
 	 * Evaluate Rules
 	 *
 	 * Evaluates an array of rules to check if any match the current context.
@@ -512,5 +599,4 @@ class Validator {
 		$queried_object = get_queried_object();
 		return $queried_object instanceof \WP_Term && $term_id === $queried_object->term_id;
 	}
-
 }

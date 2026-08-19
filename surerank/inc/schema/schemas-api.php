@@ -543,6 +543,14 @@ class SchemasApi extends Api_Base {
 			'source'                  => 'openai',
 		];
 
+		// Ask the AI to return the human-readable `reason` in the site language
+		// (schema type names stay in English). Mirrors content generation, which
+		// only sends the locale for non-default (non en-US) sites.
+		$language = get_bloginfo( 'language' );
+		if ( 'en-US' !== $language ) {
+			$request_data['language'] = $language;
+		}
+
 		$response = $content_utils->send_api_request( $request_data, 'surerank/generate/schema-recommendation', 40 );
 
 		if ( is_wp_error( $response ) ) {

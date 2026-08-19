@@ -41,7 +41,7 @@ abstract class API_Utils {
 	 * Get Auth Token.
 	 *
 	 * @since 1.7.2
-	 * @return string|WP_Error
+	 * @return string|\WP_Error
 	 */
 	public function get_auth_token() {
 		$auth_token = $this->get_auth_data( 'user_email' );
@@ -58,7 +58,7 @@ abstract class API_Utils {
 		$token = apply_filters( 'surerank_content_generation_auth_token', $token );
 
 		if ( empty( $token ) || is_wp_error( $token ) ) {
-			return new WP_Error( 'no_auth_token', __( 'No authentication token found. Please connect your account.', 'surerank' ) );
+			return new WP_Error( 'no_auth_token', self::get_missing_auth_token_message() );
 		}
 
 		if ( ! is_string( $token ) ) {
@@ -77,9 +77,49 @@ abstract class API_Utils {
 	public static function get_custom_error_messages() {
 		return [
 			'internal_server_error' => __( 'Something went wrong on our end. Please try again in a moment, or contact support if you need help.', 'surerank' ),
-			'require_pro'           => __( 'You\'ve reached your free usage limit. Upgrade to Pro for additional credits.', 'surerank' ),
+			'require_pro'           => __( 'You\'ve reached your free usage limit. Upgrade to Premium for additional credits.', 'surerank' ),
 			'limit_exceeded'        => __( 'You\'ve used all your AI credits for today. Your credits will refresh automatically tomorrow.', 'surerank' ),
 		];
+	}
+
+	/**
+	 * Message shown when no credit system token could be resolved.
+	 *
+	 * Pro filters this to point at the license instead of the free account, so the
+	 * free plugin does not have to know whether Pro is installed.
+	 *
+	 * @since 1.10.0
+	 * @return string
+	 */
+	public static function get_missing_auth_token_message() {
+		return apply_filters(
+			'surerank_missing_auth_token_message',
+			__( 'No authentication token found. Please connect your account.', 'surerank' )
+		);
+	}
+
+	/**
+	 * Error codes that a plan upgrade resolves.
+	 *
+	 * Callers must branch on these codes rather than matching the wording of a
+	 * message, which is translated and can change server side at any time.
+	 *
+	 * @since 1.10.0
+	 * @return array<int, string> Error codes.
+	 */
+	public static function get_upgrade_required_error_codes() {
+		return apply_filters( 'surerank_upgrade_required_error_codes', [ 'require_pro' ] );
+	}
+
+	/**
+	 * Whether an upgrade would resolve the given error code.
+	 *
+	 * @since 1.10.0
+	 * @param string $code Error code returned by the credit system.
+	 * @return bool
+	 */
+	public static function is_upgrade_required_code( $code ) {
+		return in_array( $code, self::get_upgrade_required_error_codes(), true );
 	}
 
 	/**
@@ -88,13 +128,13 @@ abstract class API_Utils {
 	 * @since 1.7.2
 	 * @param string $route   API route.
 	 * @param int    $timeout Request timeout in seconds.
-	 * @return array<string, mixed>|WP_Error API response or WP_Error.
+	 * @return array<string, mixed>|\WP_Error API response or WP_Error.
 	 */
 	public function send_get_request( $route, $timeout = 30 ) {
 		$auth_token = $this->get_auth_token();
 
 		if ( empty( $auth_token ) || is_wp_error( $auth_token ) ) {
-			return new WP_Error( 'no_auth_token', __( 'No authentication token found. Please connect your account.', 'surerank' ) );
+			return new WP_Error( 'no_auth_token', self::get_missing_auth_token_message() );
 		}
 
 		$url = $this->build_credit_system_url( $route );
@@ -128,13 +168,13 @@ abstract class API_Utils {
 	 * @param array<string, mixed> $request_data Request data to send.
 	 * @param string               $route        API route.
 	 * @param int                  $timeout      Request timeout in seconds.
-	 * @return array<string, mixed>|WP_Error API response or WP_Error.
+	 * @return array<string, mixed>|\WP_Error API response or WP_Error.
 	 */
 	public function send_api_request( $request_data, $route, $timeout = 30 ) {
 		$auth_token = $this->get_auth_token();
 
 		if ( empty( $auth_token ) || is_wp_error( $auth_token ) ) {
-			return new WP_Error( 'no_auth_token', __( 'No authentication token found. Please connect your account.', 'surerank' ) );
+			return new WP_Error( 'no_auth_token', self::get_missing_auth_token_message() );
 		}
 
 		$url = $this->build_credit_system_url( $route );
@@ -154,6 +194,10 @@ abstract class API_Utils {
 				'headers' => [
 					'X-Token'      => $encoded_token,
 					'Content-Type' => 'application/json; charset=utf-8',
+					// Force JSON error responses; without this a SaaS validation
+					// failure can come back as a 302 HTML redirect that masks the
+					// real error from the plugin.
+					'Accept'       => 'application/json',
 				],
 				'body'    => $body,
 				'timeout' => $timeout, // phpcs:ignore WordPressVIPMinimum.Performance.RemoteRequestTimeout.timeout_timeout
@@ -166,7 +210,7 @@ abstract class API_Utils {
 	 *
 	 * @since 1.7.2
 	 * @param string $key Optional. Key to retrieve specific data.
-	 * @return array<string, mixed>|string|WP_Error
+	 * @return array<string, mixed>|string|\WP_Error
 	 */
 	protected function get_auth_data( $key = '' ) {
 		$auth_data = get_option( Ai_Auth_Controller::SETTINGS_KEY, false );

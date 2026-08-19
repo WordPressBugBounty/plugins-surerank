@@ -13,9 +13,10 @@ namespace SureRank\Inc\Modules\Content_Generation;
 use SureRank\Inc\Functions\Send_Json;
 use SureRank\Inc\Traits\Get_Instance;
 use SureRank\Inc\API\Api_Base;
+use WP_Error;
+use WP_Post;
 use WP_REST_Request;
 use WP_REST_Server;
-use WP_Post;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -55,6 +56,10 @@ class Api extends Api_Base {
 	 */
 	public function register_routes() {
 		$this->register_content_generation_route();
+
+		if ( ! Init::bulk_generation_owned_by_pro() ) {
+			$this->register_batch_status_route();
+		}
 	}
 
 	/**
@@ -97,6 +102,46 @@ class Api extends Api_Base {
 				'role_capability'     => 'content_setting',
 			]
 		);
+	}
+
+	/**
+	 * Register bulk generation batch status route.
+	 *
+	 * @since 1.10.0
+	 * @return void
+	 */
+	private function register_batch_status_route() {
+		register_rest_route(
+			$this->get_api_namespace(),
+			'content-generation/batch-status',
+			[
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'get_batch_status' ],
+				'permission_callback' => [ $this, 'validate_permission' ],
+				'role_capability'     => 'content_setting',
+			]
+		);
+	}
+
+	/**
+	 * Get current bulk generation batch status.
+	 *
+	 * @since 1.10.0
+	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
+	 * @return array<string, mixed>|WP_Error
+	 */
+	public function get_batch_status( $request ) {
+		$batch_status = Batch_Status_Manager::get_instance()->get_batch_status();
+
+		if ( ! $batch_status['found'] ) {
+			return new WP_Error(
+				'batch_not_found',
+				__( 'No batch process found.', 'surerank' ),
+				[ 'status' => 404 ]
+			);
+		}
+
+		return $batch_status;
 	}
 
 	/**

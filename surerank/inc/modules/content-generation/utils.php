@@ -12,7 +12,9 @@ namespace SureRank\Inc\Modules\Content_Generation;
 
 use SureRank\Inc\Traits\Get_Instance;
 use SureRank\Inc\Functions\API_Utils;
+use SureRank\Inc\Modules\Fix_Seo_Checks\Page as FixSeoPage;
 use SureRank\Inc\ThirdPartyIntegrations\Multilingual\Post_Language_Resolver;
+use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -46,6 +48,7 @@ class Utils extends API_Utils {
 				'home_page_social_description',
 				'social_title',
 				'social_description',
+				'combined_meta',
 				'site_tag_line',
 				'page_url_slug',
 			]
@@ -135,5 +138,124 @@ class Utils extends API_Utils {
 
 		$post_meta = get_post_meta( $post_id, 'surerank_settings_general', true );
 		return $post_meta['focus_keyword'] ?? '';
+	}
+
+	/**
+	 * Generate content for a single ID
+	 *
+	 * @param int    $id Post or term ID.
+	 * @param string $content_type Type of content to generate.
+	 * @param bool   $is_taxonomy Whether the ID is for a taxonomy term.
+	 * @return string|WP_Error|null Generated content or error on failure.
+	 * @since 1.10.0
+	 */
+	public function generate_content_for_id( $id, $content_type, $is_taxonomy ) {
+		$inputs             = $this->prepare_content_inputs( $id, $is_taxonomy );
+		$content_controller = Controller::get_instance();
+
+		$content = $content_controller->generate_content( $inputs, $content_type );
+
+		if ( is_wp_error( $content ) ) {
+			return $content;
+		}
+
+		/**
+		 * Ensure proper typing for content variable.
+		 *
+		 * @var string|array<mixed> $content
+		 */
+		return is_array( $content ) && isset( $content[0] ) ? $content[0] : $content;
+	}
+
+	/**
+	 * Apply generated content using the fix SEO page functionality
+	 *
+	 * @param int    $id Post or term ID.
+	 * @param string $content_type Type of content.
+	 * @param string $content Generated content.
+	 * @param bool   $is_taxonomy Whether the ID is for a taxonomy term.
+	 * @return true|WP_Error True on success, WP_Error on failure.
+	 * @since 1.10.0
+	 */
+	public function apply_generated_content( $id, $content_type, $content, $is_taxonomy ) {
+		$input_key = $this->get_input_key_for_content_type( $content_type );
+
+		if ( empty( $input_key ) ) {
+			/* translators: %s: content type */
+			return new WP_Error( 'invalid_content_type', sprintf( __( 'Unknown content type: %s', 'surerank' ), $content_type ) );
+		}
+
+		$result = FixSeoPage::get_instance()->use_me( $input_key, $content, $id, $is_taxonomy );
+
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
+
+		if ( ! $result['status'] ) {
+			return new WP_Error( 'apply_failed', $result['message'] );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Validate that an ID exists in the database
+	 *
+	 * @param int  $id Post or term ID.
+	 * @param bool $is_taxonomy Whether the ID is for a taxonomy term.
+	 * @return bool
+	 * @since 1.10.0
+	 */
+	public function validate_id_exists( $id, $is_taxonomy ) {
+		if ( $is_taxonomy ) {
+			$term = get_term( $id );
+			return $term && ! is_wp_error( $term );
+		}
+
+		return get_post( $id ) !== null;
+	}
+
+	/**
+	 * Parse comma-separated IDs into an array
+	 *
+	 * @param string $ids_string Comma-separated IDs.
+	 * @return array<int> Array of integer IDs.
+	 * @since 1.10.0
+	 */
+	public function parse_ids( $ids_string ) {
+		$ids = explode( ',', $ids_string );
+		$ids = array_map( 'trim', $ids );
+		$ids = array_map( 'absint', $ids );
+		$ids = array_filter( $ids );
+		return array_unique( $ids );
+	}
+
+	/**
+	 * Check if action is a valid content generation action
+	 *
+	 * @param string $action The action to check.
+	 * @return bool True if valid content generation action.
+	 * @since 1.10.0
+	 */
+	public static function is_valid_content_generation_action( $action ) {
+		return in_array( $action, [ 'surerank_generate_page_title', 'surerank_generate_page_description' ], true );
+	}
+
+	/**
+	 * Get input key for content type
+	 *
+	 * @param string $content_type Content type.
+	 * @return string Input key or empty string if invalid.
+	 * @since 1.10.0
+	 */
+	private function get_input_key_for_content_type( $content_type ) {
+		switch ( $content_type ) {
+			case 'page_title':
+				return 'search_engine_title';
+			case 'page_description':
+				return 'search_engine_description';
+			default:
+				return '';
+		}
 	}
 }

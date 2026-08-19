@@ -12,6 +12,7 @@ use SureRank\Inc\Admin\Seo_Popup as Admin_Seo_Popup;
 use SureRank\Inc\Frontend\Image_Seo;
 use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Traits\Get_Instance;
+use SureRank\Inc\Traits\Loop_Context;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -36,6 +37,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Divi {
 
 	use Get_Instance;
+	use Loop_Context;
+
+	/**
+	 * Per-request cache of processed builder content.
+	 *
+	 * SureRank resolves multiple meta variables per request (description,
+	 * og/twitter description, schema, …) and each resolution re-runs the
+	 * content filters, re-rendering the same builder content. Every extra
+	 * do_blocks() pass also feeds Divi 5's DynamicAssetsDetection, which
+	 * string-concatenates every rendered block's attributes and can exhaust
+	 * PHP memory on large layouts. Render once per request and reuse.
+	 *
+	 * @since 1.10.0
+	 * @var array<string, string>
+	 */
+	private $processed_content_cache = [];
 
 	/**
 	 * Constructor
@@ -108,17 +125,13 @@ class Divi {
 			return $content;
 		}
 
-		// Divi 5 content always contains the wp:divi/ block namespace.
-		if ( false !== strpos( $content, '<!-- wp:divi/' ) ) {
-			return $this->process_divi5( $content );
+		$cache_key = $post->ID . ':' . md5( $content );
+
+		if ( ! isset( $this->processed_content_cache[ $cache_key ] ) ) {
+			$this->processed_content_cache[ $cache_key ] = $this->render_builder_content( $content, $post );
 		}
 
-		// Divi 4 pages set this meta key when the visual builder is active.
-		if ( 'on' !== get_post_meta( $post->ID, '_et_pb_use_builder', true ) ) {
-			return $content;
-		}
-
-		return $this->process_divi4( $content );
+		return $this->processed_content_cache[ $cache_key ];
 	}
 
 	/**
@@ -316,6 +329,31 @@ class Divi {
 	}
 
 	/**
+	 * Render builder content through the version-appropriate Divi renderer.
+	 *
+	 * Extracted from process_divi_content() so the routing runs at most once
+	 * per post content per request (see $processed_content_cache).
+	 *
+	 * @since 1.10.0
+	 * @param string   $content Raw post_content.
+	 * @param \WP_Post $post    Post being analyzed.
+	 * @return string Rendered HTML, or the raw content for non-Divi posts.
+	 */
+	private function render_builder_content( string $content, \WP_Post $post ): string {
+		// Divi 5 content always contains the wp:divi/ block namespace.
+		if ( false !== strpos( $content, '<!-- wp:divi/' ) ) {
+			return $this->process_divi5( $content );
+		}
+
+		// Divi 4 pages set this meta key when the visual builder is active.
+		if ( 'on' !== get_post_meta( $post->ID, '_et_pb_use_builder', true ) ) {
+			return $content;
+		}
+
+		return $this->process_divi4( $content );
+	}
+
+	/**
 	 * Whether a post is built with the Divi builder.
 	 *
 	 * Mirrors process_divi_content(): Divi 5 stores wp:divi/ block comments in
@@ -351,6 +389,9 @@ class Divi {
 	 * (a sentinel that is impossible for any real WP post) so this render uses
 	 * a separate counter slot from the real page render.
 	 *
+	 * The pass must leave no trace behind, so it also snapshots and restores
+	 * Divi's global static render state and WordPress' loop globals.
+	 *
 	 * @param string $content Raw post_content with divi/* block comments.
 	 * @return string Fully rendered HTML from Divi's own render callbacks.
 	 */
@@ -366,24 +407,185 @@ class Divi {
 		// the first tab and hide it. Temporarily set $post->ID to -1 (a sentinel
 		// impossible for any real WP post) so this render uses a separate counter
 		// slot from the real page render.
-		global $post;
-		$original_id = null;
+		// Divi 5 keeps global static render state that this extra pass mutates:
+		// ordinal class counters (et_pb_text_30, et_pb_column_31, … in
+		// ET_Builder_Module_Order, keyed by layout type and module slug — not by
+		// post ID, so the sentinel below does not protect them) and the style
+		// collector (FrontEnd\Module\Style::$_styles, which Divi prints into the
+		// page later). Snapshot both so the real template render starts from the
+		// exact state it would have had without this pass; otherwise modules get
+		// shifted ordinal classes and/or inline CSS collected during this hidden
+		// render leaks into the visible page (#2880). Taken before the $post->ID
+		// sentinel is applied so a snapshot failure can never leave the global
+		// post mutated. WordPress' own loop globals are guarded separately below.
+		$render_state = $this->get_divi5_render_state();
 
-		if ( $post instanceof \WP_Post ) {
-			$original_id = $post->ID;
-			$post->ID    = -1;
+		// Divi 5 loop modules (Loop Builder, the feature that surfaced #2880) call
+		// the_post()/setup_postdata() while rendering, mutating the whole loop
+		// context, not only $post: $id, $authordata, $pages, $page, $more,
+		// $numpages, $currentday, $currentmonth. Their own wp_reset_postdata()
+		// restores the main query's post, not the state this hidden pass started
+		// from, so snapshot the full context and put it back afterwards.
+		$loop_context = $this->get_loop_context();
+
+		global $post;
+
+		// Hold the post object in its own variable. `global $post` is an alias of
+		// the global slot: WP_Block::render() restores that slot around a block's
+		// own callback, but anything mutating it outside that guard (a render_block
+		// filter, a shortcode inside a module's output) leaves the alias pointing at
+		// a different post. Writing the sentinel back through the alias would then
+		// strand the real post at ID -1 and stamp -1 onto that other post.
+		$sentinel_post = $post instanceof \WP_Post ? $post : null;
+		$original_id   = null !== $sentinel_post ? $sentinel_post->ID : 0;
+
+		if ( null !== $sentinel_post ) {
+			$sentinel_post->ID = -1;
 		}
 
 		$html = '';
 		try {
 			$html = do_blocks( $content );
 		} finally {
-			if ( null !== $original_id ) {
-				$post->ID = $original_id;
+			if ( null !== $sentinel_post ) {
+				$sentinel_post->ID = $original_id;
 			}
+			$this->restore_loop_context( $loop_context );
+			$this->restore_divi5_render_state( $render_state );
 		}
 
 		return $html ? $html : $content;
+	}
+
+	/**
+	 * Map of Divi 5 global static render state mutated by a do_blocks() pass.
+	 *
+	 * ET_Builder_Module_Order holds the ordinal class counters; the FrontEnd
+	 * Module Style class accumulates the inline CSS Divi prints later in the
+	 * request. Neither exposes a public way to snapshot its full state, so the
+	 * properties are read via reflection.
+	 *
+	 * @since 1.10.0
+	 * @return array<string, array<int, string>> Class name => static property names.
+	 */
+	private function divi5_render_state_map(): array {
+		return [
+			'ET_Builder_Module_Order'              => [ '_indices' ],
+			'ET\\Builder\\FrontEnd\\Module\\Style' => [
+				'_styles',
+				'_unique_counter',
+				'_preset_selector_processed',
+				'_detected_module_types_for_inner_content',
+				'_is_theme_builder_context_for_inner_content',
+				'_ancestor_ids_cache',
+				'_style_key_cache',
+				// Not present in Divi 5.0-beta-9.4 / 5.9.0 but included
+				// defensively — properties missing on the installed build are
+				// skipped, so this covers any future Divi version that adds it.
+				'_style_key_cache_context',
+				'_group_style',
+			],
+		];
+	}
+
+	/**
+	 * Resolve a static property of a Divi class for snapshot/restore access.
+	 *
+	 * Returns null for non-static properties. setAccessible() is only needed
+	 * (and only called) below PHP 8.1 — it is a no-op since 8.1 and deprecated
+	 * in 8.5.
+	 *
+	 * @since 1.10.0
+	 * @param string $class_name    Fully qualified class name.
+	 * @param string $property_name Static property name.
+	 * @return \ReflectionProperty|null The accessible property, or null when not static.
+	 * @throws \ReflectionException When the class or property does not exist.
+	 */
+	private function divi5_static_property( string $class_name, string $property_name ): ?\ReflectionProperty {
+		$property = new \ReflectionProperty( $class_name, $property_name );
+
+		if ( ! $property->isStatic() ) {
+			return null;
+		}
+
+		if ( PHP_VERSION_ID < 80100 ) {
+			$property->setAccessible( true );
+		}
+
+		return $property;
+	}
+
+	/**
+	 * Read a snapshot of Divi 5's global render state.
+	 *
+	 * Failure is non-fatal by design: a class or property missing, renamed, or
+	 * reshaped on the installed Divi version is skipped (\Throwable, not just
+	 * ReflectionException — uninitialized typed properties throw Error), and
+	 * without a snapshot the render simply behaves as before this workaround
+	 * existed.
+	 *
+	 * @since 1.10.0
+	 * @return array<string, array<string, mixed>>|null Snapshot, or null when unavailable.
+	 */
+	private function get_divi5_render_state(): ?array {
+		$snapshot = [];
+
+		foreach ( $this->divi5_render_state_map() as $class_name => $properties ) {
+			if ( ! class_exists( $class_name ) ) {
+				continue;
+			}
+
+			foreach ( $properties as $property_name ) {
+				try {
+					$property = $this->divi5_static_property( $class_name, $property_name );
+
+					if ( null === $property ) {
+						continue;
+					}
+
+					$snapshot[ $class_name ][ $property_name ] = $property->getValue();
+				} catch ( \Throwable $e ) {
+					continue;
+				}
+			}
+		}
+
+		return [] !== $snapshot ? $snapshot : null;
+	}
+
+	/**
+	 * Restore Divi 5's global render state captured by get_divi5_render_state().
+	 *
+	 * Called after the hidden do_blocks() pass in process_divi5() so that the
+	 * extra render leaves Divi's ordinal class numbering and collected styles
+	 * untouched for the real page render. Each property restores independently
+	 * and never throws (\Throwable guard), so a single mismatch cannot break
+	 * frontend rendering.
+	 *
+	 * @since 1.10.0
+	 * @param array<string, array<string, mixed>>|null $state Snapshot, or null when none was taken.
+	 * @return void
+	 */
+	private function restore_divi5_render_state( ?array $state ): void {
+		if ( null === $state ) {
+			return;
+		}
+
+		foreach ( $state as $class_name => $properties ) {
+			foreach ( $properties as $property_name => $value ) {
+				try {
+					$property = $this->divi5_static_property( $class_name, $property_name );
+
+					if ( null === $property ) {
+						continue;
+					}
+
+					$property->setValue( null, $value );
+				} catch ( \Throwable $e ) {
+					continue;
+				}
+			}
+		}
 	}
 
 	/**

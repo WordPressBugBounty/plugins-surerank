@@ -251,7 +251,16 @@ class Breadcrumbs {
 	 * @return void
 	 */
 	private function add_singular_crumbs() {
-		global $post;
+		// Resolve the post from the main query instead of the global $post, because
+		// page builders (e.g. Divi 5) replace the global with a placeholder post
+		// (ID -1) during module rendering, which breaks taxonomy/ancestor lookups.
+		// The main query's queried_object_id survives that replacement.
+		$post = get_post( get_queried_object_id() );
+
+		if ( ! ( $post instanceof WP_Post ) ) {
+			$post = $GLOBALS['post'] ?? null;
+		}
+
 		if ( ! ( $post instanceof WP_Post ) || ! $post->post_type ) {
 			return;
 		}

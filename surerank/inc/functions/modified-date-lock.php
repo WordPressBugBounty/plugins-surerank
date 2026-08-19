@@ -43,15 +43,25 @@ class Modified_Date_Lock {
 	 * 3. Clone publish date into modified date.
 	 * 4. Fall back to WordPress defaults.
 	 *
-	 * @param array<string, mixed> $data                Sanitized post data to be inserted.
-	 * @param array<string, mixed> $postarr             Raw and sanitized post data.
-	 * @param array<string, mixed> $unsanitized_postarr Original unchanged post data.
-	 * @param bool                 $update              Whether this is an existing post being updated.
+	 * @param array<string, mixed>        $data                Sanitized post data to be inserted.
+	 * @param array<string, mixed>        $postarr             Raw and sanitized post data.
+	 * @param array<string, mixed>|object $unsanitized_postarr Original unchanged post data. Normalized to an array internally.
+	 * @param bool                        $update              Whether this is an existing post being updated.
 	 * @return array<string, mixed>
 	 */
-	public function maybe_preserve_modified_date( array $data, array $postarr, array $unsanitized_postarr, bool $update ): array {
+	public function maybe_preserve_modified_date( array $data, array $postarr, $unsanitized_postarr, bool $update ): array {
 		if ( ! $update ) {
 			return $data;
+		}
+
+		// WordPress core does not enforce a type on this filter argument, so a
+		// caller may pass an object. Normalize to an array to avoid a fatal.
+		// get_object_vars() keeps only public properties, unlike an (array)
+		// cast which leaks mangled private/protected keys into our filters.
+		if ( is_object( $unsanitized_postarr ) ) {
+			$unsanitized_postarr = get_object_vars( $unsanitized_postarr );
+		} elseif ( ! is_array( $unsanitized_postarr ) ) {
+			$unsanitized_postarr = [];
 		}
 
 		$post_id = isset( $postarr['ID'] ) ? (int) $postarr['ID'] : 0;

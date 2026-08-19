@@ -16,6 +16,7 @@ use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Send_Json;
 use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Functions\Update;
+use SureRank\Inc\Schema\Validator;
 use SureRank\Inc\Traits\Get_Instance;
 use WP_Error;
 use WP_REST_Request;
@@ -193,6 +194,17 @@ class User_Seo extends Api_Base {
 	 * @since 1.9.0
 	 */
 	public static function save_user_seo_meta( int $user_id, array $data ): array {
+		if ( isset( $data['schemas'] ) ) {
+			$stored     = Get::user_meta( $user_id, 'surerank_settings_schemas', true );
+			$validation = Validator::validate_schemas_payload( $data['schemas'], $stored['schemas'] ?? [] );
+			if ( ! $validation['valid'] ) {
+				return [
+					'success' => false,
+					'message' => '' !== $validation['message'] ? $validation['message'] : __( 'Invalid schema payload.', 'surerank' ),
+				];
+			}
+		}
+
 		self::update_user_meta_common( $user_id, $data );
 
 		$check_result = self::get_instance()->run_checks( $user_id );

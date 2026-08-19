@@ -1,15 +1,15 @@
-## SureRank SEO – Smart Assistant with Meta Tags, Social Preview, XML Sitemap, and Schema ##
+## SureRank SEO – Meta Tags, Social Preview, XML Sitemap, Schema & Open Graph ##
 Contributors: brainstormforce
 Donate link: https://www.paypal.me/BrainstormForce
-Tags: seo, wordpress seo, xml sitemap, schema, google search console
+Tags: seo, structured data, xml sitemap, schema, google search console
 Requires at least: 6.8
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.9.3
+Stable tag: 1.10.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-SureRank – SEO Assistant with Meta Tags, Social Preview, XML Sitemap, and Schema
+Lightweight SEO assistant for meta tags, schema and structured data, XML sitemaps, Open Graph previews, robots.txt, and Search Console.
 
 == Description ==
 
@@ -44,23 +44,19 @@ SureRank is not just another SEO plugin. It’s the SEO assistant that strips aw
 
 ## How Does SureRank Work? ##
 
-From installation to optimizing your first piece of content, SureRank is designed to be simple, intuitive, and beginner-friendly. Here’s how it works:
+Once the plugin is active (see the Installation tab), getting to your first optimized page takes two steps.
 
-### Step 1. Install SureRank ###
-
-From your WordPress dashboard, navigate to the Plugins menu and click on the "Add New" button. Search for the SureRank plugin, then click "Install Now" and "Activate".
-
-### Step 2. Complete the Onboarding Setup ###
+### Step 1. Complete the Onboarding Setup ###
 
 After activation, you’ll be guided through a quick onboarding process to configure the essential SEO settings for your website. SureRank keeps it simple, so you can complete the setup in just a few minutes - no technical knowledge required.
 
-### Step 3. Fix Site-Level SEO Issues and Start Writing ###
+### Step 2. Fix Site-Level SEO Issues and Start Writing ###
 
 SureRank will perform a quick SEO checkup and highlight important site-level improvements. Once you’ve addressed these, you can start writing new content and optimizing it with real-time suggestions to boost your rankings and stay ahead of competitors.
 
 ## SureRank Features ##
 
-SureRank is packed with powerful features designed to make SEO accessible, actionable, and effective for everyone - from beginners to advanced users. Here’s what you can expect.
+SureRank is packed with powerful features designed to make SEO accessible, actionable, and effective for everyone - from beginners to advanced users. Here’s what you can expect, and there is a full [feature overview](https://surerank.com/features/?utm_source=wporg&utm_medium=readme&utm_campaign=core_plugin&utm_content=features_overview) on our site.
 
 ### Beginner-Friendly Interface ###
 
@@ -68,11 +64,11 @@ SureRank is built to simplify SEO for users of all skill levels. The clean, clut
 
 ### Meta Title and Description Optimization ###
 
-Easily customize your site’s meta titles and descriptions to ensure they’re optimized for both search engines and users. This feature helps improve your visibility in search results and encourages higher click-through rates.
+Easily customize your site’s meta titles and descriptions to ensure they’re optimized for both search engines and users. This feature helps improve your visibility in search results and encourages higher click-through rates. You can also build reusable [meta templates](https://surerank.com/meta-templates/?utm_source=wporg&utm_medium=readme&utm_campaign=core_plugin&utm_content=meta_templates) so titles and descriptions stay consistent across a whole post type.
 
-### Social Media Integration ###
+### Social Media Integration and Open Graph ###
 
-With the free version, you can configure the title, description, and image that will appear when your content is shared on social media platforms like Facebook and Twitter. This makes it easier to create a strong social presence and drive traffic to your site.
+With the free version, you can configure the title, description, and image that will appear when your content is shared on social media platforms like Facebook and X. SureRank writes the [Open Graph tags and X (Twitter) card tags](https://surerank.com/docs/surerank-open-graph-x-twitter-tags/?utm_source=wporg&utm_medium=readme&utm_campaign=core_plugin&utm_content=open_graph_docs) for you, so your social preview looks right without touching any code.
 
 ### Home Page SEO Settings ###
 
@@ -86,21 +82,25 @@ Gain control over your archive pages by customizing their SEO settings. You can 
 
 Take control of how search engines crawl and index your site with robots instructions. You can easily add "No Index," "No Follow," and "No Archive" tags to specific pages, helping you avoid duplicate content issues and guide search engine bots effectively.
 
+### Robots.txt Editor and Analyzer ###
+
+Edit your [robots.txt file](https://surerank.com/docs/surerank-robots-txt-file/?utm_source=wporg&utm_medium=readme&utm_campaign=core_plugin&utm_content=robots_txt_docs) from the WordPress dashboard, without FTP or a file manager. The built-in robots.txt analyzer explains what your rules actually do, and warns you when a rule is blocking something you probably want crawled.
+
 ### Canonical URL ###
 
 Ensure that search engines know the preferred version of your pages by setting canonical URLs. This feature helps prevent duplicate content issues by signaling to search engines which page should be considered the "main" version. This improves your site’s SEO health.
 
 ### XML Sitemap ###
 
-SureRank automatically generates an XML sitemap for your website, making it easier for search engines to crawl and index your content. With this feature, you can ensure that all your important pages are properly indexed, helping your site rank better in search results.
+SureRank automatically generates an [XML sitemap](https://surerank.com/docs/sitemaps/?utm_source=wporg&utm_medium=readme&utm_campaign=core_plugin&utm_content=sitemaps_docs) for your website, making it easier for search engines to crawl and index your content. With this feature, you can ensure that all your important pages are properly indexed, helping your site rank better in search results.
 
-### Schema Markup ###
+### Schema Markup and Structured Data ###
 
-Add structured data to your content with ease using SureRank’s schema markup feature. By implementing schema, you help search engines understand the context of your content, leading to enhanced search results like rich snippets, which can improve visibility and CTR.
+Add structured data to your content with ease using SureRank’s schema markup feature. Rich snippets, the star ratings, prices, FAQs and breadcrumbs you see in search results, are built from structured data, so getting it right is what makes your listing stand out and lifts CTR. SureRank outputs JSON-LD structured data, including BreadcrumbList schema for your breadcrumb trail, and the [schema builder](https://surerank.com/schema-builder/?utm_source=wporg&utm_medium=readme&utm_campaign=core_plugin&utm_content=schema_builder) lets you add your own custom JSON-LD. See the [schema setup guide](https://surerank.com/docs/schema-setup-in-surerank/?utm_source=wporg&utm_medium=readme&utm_campaign=core_plugin&utm_content=schema_docs) for the full walkthrough.
 
 ### Google Search Console Integration ###
 
-Easily connect SureRank with Google Search Console to monitor your site’s performance directly within your WordPress dashboard. This integration provides insights into content performance, indexing issues, and more, allowing you to make data-driven decisions for your SEO strategy.
+Easily connect SureRank with [Google Search Console](https://surerank.com/search-console/?utm_source=wporg&utm_medium=readme&utm_campaign=core_plugin&utm_content=search_console) to monitor your site’s performance directly within your WordPress dashboard. This integration provides insights into content performance, indexing issues, and more, allowing you to make data-driven decisions for your SEO strategy.
 
 ### Content Performance in Google SERPs ###
 
@@ -108,15 +108,15 @@ Track how your content is performing in Google Search Engine Results Pages (SERP
 
 ### Site-level SEO Checks ###
 
-SureRank performs automatic site-level SEO checks to identify common issues such as missing sitemap, incorrect open graph tags, indexing problems, and more. With clear recommendations, you can easily fix these issues to ensure your site is fully optimized and performs well in search results.
+SureRank performs automatic [site-level SEO checks](https://surerank.com/seo-analysis/?utm_source=wporg&utm_medium=readme&utm_campaign=core_plugin&utm_content=seo_analysis) to identify common issues such as missing sitemap, incorrect open graph tags, indexing problems, and more. With clear recommendations, you can easily fix these issues to ensure your site is fully optimized and performs well in search results.
 
 ### Page-level SEO Checks ###
 
-SureRank performs in-depth SEO checks for each individual page of your website, ensuring that every page is optimized for search engines. This includes evaluating elements like meta tags, canonical URL, broken links, and more to ensure your pages are search-engine friendly.
+SureRank performs in-depth SEO checks for each individual page of your website, ensuring that every page is optimized for search engines. This includes evaluating elements like meta tags, canonical URL, broken links, and more to ensure your pages are search-engine friendly. The [page SEO checks guide](https://surerank.com/docs/surerank-page-seo-checks/?utm_source=wporg&utm_medium=readme&utm_campaign=core_plugin&utm_content=page_checks_docs) explains what each check looks for.
 
 ### Image SEO ###
 
-Optimize your images with SureRank’s image SEO feature. It automatically generates alt text for your images, improving accessibility and helping search engines better understand the content of your images. Additionally, it ensures that attachment pages are redirected, keeping your SEO strategy clean and efficient.
+Optimize your images with SureRank’s [image SEO feature](https://surerank.com/image-seo/?utm_source=wporg&utm_medium=readme&utm_campaign=core_plugin&utm_content=image_seo). It automatically generates alt text for your images, improving accessibility and helping search engines better understand the content of your images. Additionally, it ensures that attachment pages are redirected, keeping your SEO strategy clean and efficient.
 
 ### Automatic RSS Feed Optimization ###
 Ensure your RSS feed is optimized for search engines and ready for syndication with SureRank’s automatic RSS feed optimization feature. This helps search engines properly index your RSS content, improving visibility and allowing you to reach a wider audience.
@@ -125,17 +125,17 @@ Ensure your RSS feed is optimized for search engines and ready for syndication w
 With the SEO Metabox, you can easily set custom meta titles, descriptions, social sharing settings, and robots instructions for each individual post or page. This gives you full control over how your content appears in search results and on social media platforms.
 
 ### WooCommerce Integration ###
-SureRank integrates seamlessly with WooCommerce, providing SEO tools specifically designed for your online store. It helps optimize your product pages, categories, and other eCommerce elements to improve search visibility and drive more traffic to your store.
+SureRank integrates seamlessly with WooCommerce, providing [eCommerce SEO tools](https://surerank.com/ecommerce-seo/?utm_source=wporg&utm_medium=readme&utm_campaign=core_plugin&utm_content=ecommerce_seo) specifically designed for your online store. It helps optimize your product pages, categories, and other eCommerce elements to improve search visibility and drive more traffic to your store.
 
 ### Migrate from Other SEO Plugins ###
-Switching to SureRank is seamless with the built-in Migration Tool. It allows you to easily migrate SEO data and settings from other popular SEO plugins, such as Rank Math, AIOSEO, or Yoast, without losing critical SEO information. This ensures a smooth transition while preserving your existing optimization efforts.
+Switching to SureRank is seamless with the built-in [Migration Tool](https://surerank.com/migration/?utm_source=wporg&utm_medium=readme&utm_campaign=core_plugin&utm_content=migration). It allows you to easily migrate SEO data and settings from other popular SEO plugins, such as Rank Math, AIOSEO, or Yoast, without losing critical SEO information. This ensures a smooth transition while preserving your existing optimization efforts.
 
 ### Import/Export SureRank Settings ###
 Simplify your SEO management with the ability to export and import SureRank settings. Whether you're setting up multiple sites, collaborating with team members, or sharing configurations with clients, this feature makes it easy to transfer SEO settings across websites quickly and accurately.
 
 ## SureRank Pro Version Features ##
 
-For users who want to take their SEO efforts to the next level, SureRank Pro offers powerful, professional-grade tools designed to help you outperform your competitors, optimize content faster, and manage your site's SEO more efficiently. Here’s what you get with SureRank Pro.
+For users who want to take their SEO efforts to the next level, SureRank Pro offers powerful, professional-grade tools designed to help you outperform your competitors, optimize content faster, and manage your site's SEO more efficiently. Compare the two side by side on the [free vs Pro](https://surerank.com/surerank-free-vs-pro/?utm_source=wporg&utm_medium=readme&utm_campaign=core_plugin&utm_content=free_vs_pro) page, or see [plans and pricing](https://surerank.com/pricing/?utm_source=wporg&utm_medium=readme&utm_campaign=core_plugin&utm_content=pricing). Here’s what you get with SureRank Pro.
 
 ### SERP Research ###
 
@@ -159,15 +159,15 @@ SureRank Pro actively scans your website for common SEO problems and helps you f
 
 ### Links Manager ###
 
-Keep track of your internal and external links easily. SureRank Pro’s Links Manager allows you to monitor, organize, and fix broken links, ensuring your site's link structure supports better SEO performance.
+Keep track of your internal and external links easily. SureRank Pro’s [Links Manager](https://surerank.com/link-management/?utm_source=wporg&utm_medium=readme&utm_campaign=core_plugin&utm_content=link_management) allows you to monitor, organize, and fix broken links, ensuring your site's link structure supports better SEO performance.
 
 ### Redirection Manager ###
 
-Set up and manage 301 redirects directly from your WordPress dashboard. The Redirection Manager helps preserve your site’s SEO value when URLs change, preventing broken links and minimizing lost traffic.
+Set up and manage 301 redirects directly from your WordPress dashboard. The [Redirection Manager](https://surerank.com/redirection-manager/?utm_source=wporg&utm_medium=readme&utm_campaign=core_plugin&utm_content=redirection_manager) helps preserve your site’s SEO value when URLs change, preventing broken links and minimizing lost traffic.
 
 ### SEO Role Manager ###
 
-Maintain control over your SEO settings with the SEO Role Manager. This feature allows administrators to assign specific SEO capabilities based on user roles, ensuring that only authorized team members can access or modify SEO settings. It helps protect important SEO configurations and prevents accidental changes that could negatively impact your site's rankings.
+Maintain control over your SEO settings with the [SEO Role Manager](https://surerank.com/role-manager/?utm_source=wporg&utm_medium=readme&utm_campaign=core_plugin&utm_content=role_manager). This feature allows administrators to assign specific SEO capabilities based on user roles, ensuring that only authorized team members can access or modify SEO settings. It helps protect important SEO configurations and prevents accidental changes that could negatively impact your site's rankings.
 
 ## Who Can Benefit from SureRank? ##
 
@@ -239,10 +239,18 @@ SureRank® is a registered trademark. Please use the following format when menti
 
 [Join our Facebook group community](https://www.facebook.com/groups/surecart): Learn the tricks and techniques that other SureRank users are using to optimize their sites and grow their business. Also, get exciting insider information on upcoming feature releases.
 
+== Installation ==
+
+1. In your WordPress dashboard, go to Plugins and click **Add New**.
+2. Search for **SureRank**, then click **Install Now** and **Activate**.
+3. Follow the onboarding wizard to configure your core SEO settings.
+
+To install manually, upload the `surerank` folder to `/wp-content/plugins/` and activate the plugin through the Plugins screen. Step-by-step instructions with screenshots are in the [installation guide](https://surerank.com/docs/installing-surerank/?utm_source=wporg&utm_medium=readme&utm_campaign=core_plugin&utm_content=install_docs).
+
 == Frequently Asked Questions ==
 
 = What makes SureRank different from other SEO plugins? =
-SureRank is built to simplify SEO. It avoids complex jargon and overwhelming settings. With a beginner-friendly interface, lightweight code, smart visual previews, and step-by-step guidance, SureRank feels more like a personal SEO assistant than a traditional SEO plugin.
+SureRank is built to simplify SEO. It avoids complex jargon and overwhelming settings. With a beginner-friendly interface, lightweight code, smart visual previews, and step-by-step guidance, SureRank feels more like a personal SEO assistant than a traditional SEO plugin. For a feature-by-feature comparison, see SureRank vs [Yoast SEO](https://surerank.com/surerank-vs-yoast-seo/?utm_source=wporg&utm_medium=readme&utm_campaign=core_plugin&utm_content=compare_yoast), vs [Rank Math](https://surerank.com/surerank-vs-rankmath/?utm_source=wporg&utm_medium=readme&utm_campaign=core_plugin&utm_content=compare_rankmath), and vs [SEOPress](https://surerank.com/surerank-vs-seopress/?utm_source=wporg&utm_medium=readme&utm_campaign=core_plugin&utm_content=compare_seopress).
 
 = Will SureRank slow down my website? =
 Not at all! SureRank is built to be lightweight and fast. It follows modern WordPress coding standards and has no unnecessary bloat, so your website’s performance remains top-notch.
@@ -259,6 +267,15 @@ Yes! SureRank provides insights into how your content is performing in Google SE
 = Does SureRank support schema and XML sitemaps? =
 Yes, SureRank comes with built-in support for schema markup and XML sitemaps out of the box - helping search engines understand and index your site more effectively.
 
+= Can I edit my robots.txt file with SureRank? =
+Yes. You can edit robots.txt directly from the WordPress dashboard, and the built-in analyzer explains what each rule does and flags rules that block content you probably want crawled.
+
+= Does SureRank add Open Graph tags for Facebook and X? =
+Yes. SureRank outputs Open Graph tags and X (Twitter) card tags in the free version, and you can set the social title, description, and image per page or site-wide.
+
+= Does SureRank output structured data and rich snippets? =
+Yes. SureRank writes JSON-LD structured data, including BreadcrumbList schema, and the schema builder lets you add your own custom JSON-LD. Structured data is what search engines use to build rich snippets.
+
 = Can I optimize my WooCommerce products with SureRank? =
 Yes! SureRank fully supports WooCommerce. You can customize SEO titles, descriptions, social previews, schema, and more for all your product pages to improve visibility in search engine results and drive more traffic to your store.
 
@@ -266,10 +283,10 @@ Yes! SureRank fully supports WooCommerce. You can customize SEO titles, descript
 Definitely. SureRank automatically generates alt text for images and redirects attachment pages to their parent posts. These optimizations help improve your site's accessibility and search engine visibility.
 
 = Does SureRank work with other SEO plugins? =
-We don’t recommend running multiple SEO plugins at the same time to avoid conflicts.
+We don’t recommend running multiple SEO plugins at the same time to avoid conflicts. If you are moving over from another plugin, the [best-practices guide](https://surerank.com/docs/using-surerank-with-other-seo-plugins-best-practices/?utm_source=wporg&utm_medium=readme&utm_campaign=core_plugin&utm_content=other_plugins_docs) covers what to migrate and what to switch off first.
 
 = What if I want more advanced features? =
-SureRank Pro includes advanced tools like SERP research, content gap analysis, an outline builder, and more - all designed to help you create better content and rank higher in search results.
+SureRank Pro includes advanced tools like SERP research, content gap analysis, an outline builder, and more - all designed to help you create better content and rank higher in search results. See [plans and pricing](https://surerank.com/pricing/?utm_source=wporg&utm_medium=readme&utm_campaign=core_plugin&utm_content=faq_pricing).
 
 = How can I report a security bug? =
 We take plugin security extremely seriously. If you discover a security vulnerability, please report it in a safe and responsible manner.
@@ -278,7 +295,7 @@ You can report the issue through our [Bug Bounty Program](https://brainstormforc
 
 == Contributors & Developers ==
 
-"SureRank – SEO Plugin with XML Sitemap, Schema, and Google Search Console Integration" is open source software. The following people have contributed to this plugin.
+"SureRank SEO – Meta Tags, Social Preview, XML Sitemap, Schema & Open Graph" is open source software. The following people have contributed to this plugin.
 Contributors
 Brainstorm Force
 
@@ -294,6 +311,32 @@ Brainstorm Force
 
 
 == Changelog ==
+= 1.10.0 - 19-August-2026 =
+* New: Content Generation - Bulk content generation is now available in the free plugin.
+* New: Migration - Added migration support for The SEO Framework.
+* New: Schema - Custom JSON-LD string values and textarea fields now support smart tags.
+* New: Schema - Added nested field support for Person and schema references.
+* New: Abilities API - Noindex, nofollow, and noarchive can now be set per post and term.
+* New: MCP - SureRank abilities are now available on the shared MCP server.
+* New: Site SEO Audit - Added a "Fix It All For Me" nudge for free users.
+* Improvement: AI - Title, description, and social meta are now generated in a single request.
+* Improvement: Sitemap - Filtered posts are now excluded from the sitemap index count.
+* Improvement: Schema - Schema @id now matches the canonical URL trailing-slash format.
+* Improvement: Schema - Schema types missing from the render registry now report a validation error instead of being dropped silently.
+* Improvement: Analytics - Feature usage is now tracked as analytics events instead of KPI boolean flags.
+* Improvement: Onboarding - Refreshed the upgrade nudge design.
+* Improvement: Translations - The AI schema recommendation reason is now translatable.
+* Improvement: Compatibility - Added TagDiv Composer support for content analysis.
+* Fix: Sitemap - Sitemap generation no longer times out on sites with a large number of posts.
+* Fix: Compatibility - Fixed Divi 5 render-state pollution and an SEO popup CSS leak.
+* Fix: Content Analysis - Elementor-built pages and dynamic blocks are now analyzed correctly.
+* Fix: Search Console - Invalid credentials are now cleared on a definitive token refresh failure.
+* Fix: Breadcrumbs - The singular post is now resolved from the main query instead of the global post.
+* Fix: Modified Date - Fixed a fatal error when another plugin passes post data as an object.
+* Fix: Schema - The AI schema recommendation now works for taxonomies.
+* Fix: Admin Bar - Fixed a 403 error on site-level SEO status requests.
+* Fix: Onboarding - The connection status now shows "Connected" once the auth popup closes.
+* Fix: MCP - No-input abilities no longer fail when unexpected arguments are passed.
 = 1.9.3 - 27-July-2026 =
 * New: Sitemap - Added on-the-fly (default) and scheduled (cron) sitemap generation modes.
 * Improvement: Security - Post and term SEO REST endpoints now enforce object-level permission checks.

@@ -10,6 +10,7 @@
 namespace SureRank\Inc\Admin;
 
 use SureRank\Inc\Functions\Settings;
+use SureRank\Inc\Modules\Content_Generation\Init as Content_Generation_Init;
 use SureRank\Inc\Traits\Enqueue;
 use SureRank\Inc\Traits\Get_Instance;
 
@@ -76,8 +77,9 @@ class Seo_Bar {
 					'hook'        => 'admin-seo-bar',
 					'object_name' => 'seo_bar',
 					'data'        => [
-						'post_type' => $screen->post_type,
-						'type'      => 'post',
+						'post_type'       => $screen->post_type,
+						'type'            => 'post',
+						'bulk_generation' => ! Content_Generation_Init::bulk_generation_owned_by_pro(),
 					],
 				]
 			);
@@ -95,8 +97,9 @@ class Seo_Bar {
 					'hook'        => 'admin-seo-bar',
 					'object_name' => 'seo_bar',
 					'data'        => [
-						'taxonomy' => $screen->taxonomy,
-						'type'     => 'taxonomy',
+						'taxonomy'        => $screen->taxonomy,
+						'type'            => 'taxonomy',
+						'bulk_generation' => ! Content_Generation_Init::bulk_generation_owned_by_pro(),
 					],
 				]
 			);

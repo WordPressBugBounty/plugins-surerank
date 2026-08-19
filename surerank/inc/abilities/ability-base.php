@@ -141,6 +141,41 @@ abstract class Ability_Base {
 	}
 
 	/**
+	 * MCP exposure settings for this ability.
+	 *
+	 * Abilities are exposed on the shared MCP server that the MCP Adapter
+	 * populates, so a site already connected through one global endpoint can
+	 * reach SureRank without adding a second server entry per plugin. This
+	 * does not add tools to that server: its tool list is fixed to the
+	 * adapter's own discover/get-info/execute proxies, and auto-discovery
+	 * there only collects resource and prompt abilities. Marking these public
+	 * simply stops the proxy from hiding and refusing them.
+	 *
+	 * @since 1.10.0
+	 * @return array{public: bool, type: string}
+	 */
+	public function get_mcp() {
+		/**
+		 * Filter whether a SureRank ability is exposed on the shared MCP server.
+		 *
+		 * Return false to keep an ability reachable only through SureRank's own
+		 * MCP server at surerank/v1/mcp.
+		 *
+		 * @since 1.10.0
+		 *
+		 * @param bool   $is_public Whether the ability is public for MCP. Default true.
+		 * @param string $id        The ability ID, e.g. 'surerank/get-post-seo'.
+		 * @param self   $ability   The ability instance.
+		 */
+		$is_public = apply_filters( 'surerank_ability_mcp_public', true, $this->id, $this );
+
+		return [
+			'public' => (bool) $is_public,
+			'type'   => 'tool',
+		];
+	}
+
+	/**
 	 * Wrapper around execute() with action hooks.
 	 *
 	 * @since 1.7.5
@@ -181,9 +216,7 @@ abstract class Ability_Base {
 				'meta'                => [
 					'show_in_rest' => true,
 					'annotations'  => $this->get_annotations(),
-					'mcp'          => [
-						'public' => false,
-					],
+					'mcp'          => $this->get_mcp(),
 				],
 			]
 		);

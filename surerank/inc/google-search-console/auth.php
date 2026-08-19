@@ -293,6 +293,9 @@ class Auth {
 	 */
 	private function refresh_token( $credentials ) {
 		if ( empty( $credentials['refresh_token'] ) ) {
+			// No refresh token means expired credentials can never be renewed;
+			// drop them so auth_check() stops re-entering this dead path.
+			$this->delete_credentials();
 			return false;
 		}
 
@@ -314,6 +317,14 @@ class Auth {
 			$body['expires'] = time() + absint( $body['expires'] );
 			$this->save_credentials( $body );
 			return true;
+		}
+
+		// Only clear credentials on a definitive auth rejection (refresh token
+		// revoked or expired). Transient failures — network errors, timeouts,
+		// 5xx — must not disconnect the user, so their credentials are kept to
+		// retry on the next request.
+		if ( ! is_wp_error( $response ) && in_array( (int) wp_remote_retrieve_response_code( $response ), [ 401, 403 ], true ) ) {
+			$this->delete_credentials();
 		}
 
 		return false;

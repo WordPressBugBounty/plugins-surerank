@@ -21,6 +21,7 @@ use SureRank\Inc\Importers\Aioseo\Aioseo;
 use SureRank\Inc\Importers\Importer;
 use SureRank\Inc\Importers\ImporterUtils;
 use SureRank\Inc\Importers\Rankmath\RankMath;
+use SureRank\Inc\Importers\SeoFramework\SeoFramework;
 use SureRank\Inc\Importers\Seopress\Seopress;
 use SureRank\Inc\Importers\Slimseo;
 use SureRank\Inc\Importers\Squirrly\Squirrly;
@@ -84,12 +85,13 @@ class Migrations extends Api_Base {
 	 * @var array<string, class-string>
 	 */
 	private array $importers = [
-		'rankmath' => RankMath::class,
-		'seopress' => Seopress::class,
-		'yoast'    => Yoast::class,
-		'slimseo'  => Slimseo\SlimSeo::class,
-		'aioseo'   => Aioseo::class,
-		'squirrly' => Squirrly::class,
+		'rankmath'     => RankMath::class,
+		'seopress'     => Seopress::class,
+		'yoast'        => Yoast::class,
+		'slimseo'      => Slimseo\SlimSeo::class,
+		'aioseo'       => Aioseo::class,
+		'squirrly'     => Squirrly::class,
+		'seoframework' => SeoFramework::class,
 	];
 
 	/**

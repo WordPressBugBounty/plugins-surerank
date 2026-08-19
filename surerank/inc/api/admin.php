@@ -20,6 +20,7 @@ use SureRank\Inc\Meta_Variables\Post;
 use SureRank\Inc\Meta_Variables\Site;
 use SureRank\Inc\Meta_Variables\Term;
 use SureRank\Inc\Meta_Variables\User;
+use SureRank\Inc\Schema\Validator;
 use SureRank\Inc\Traits\Get_Instance;
 use WP_REST_Request;
 use WP_REST_Server;
@@ -252,18 +253,11 @@ class Admin extends Api_Base {
 		$db_options = Settings::get();
 
 		if ( isset( $data['schemas'] ) ) {
-			$validation = apply_filters(
-				'surerank_validate_schemas_payload',
-				[
-					'valid'   => true,
-					'message' => '',
-				],
-				$data['schemas']
-			);
-			if ( is_array( $validation ) && isset( $validation['valid'] ) && ! $validation['valid'] ) {
+			$validation = Validator::validate_schemas_payload( $data['schemas'], $db_options['schemas'] ?? [] );
+			if ( ! $validation['valid'] ) {
 				return [
 					'success' => false,
-					'message' => $validation['message'] ?? __( 'Invalid schema payload.', 'surerank' ),
+					'message' => '' !== $validation['message'] ? $validation['message'] : __( 'Invalid schema payload.', 'surerank' ),
 				];
 			}
 		}
@@ -280,6 +274,11 @@ class Admin extends Api_Base {
 
 		if ( Update::option( SURERANK_SETTINGS, $data ) ) {
 			Update_Timestamp::timestamp_option();
+
+			// Record a deliberate user settings edit for analytics ("Active" signal).
+			// Anchored here (not on the generic updated_option hook) so programmatic
+			// writers (onboarding, importers, integrations) do not create false edits.
+			update_option( 'surerank_settings_edited_at', time() );
 		}
 
 		// Global SEO defaults affect every page — purge cached output when they change.

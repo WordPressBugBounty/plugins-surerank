@@ -424,7 +424,8 @@ class Data {
 		}
 
 		return [
-			'url'         => home_url( $wp->request ),
+			// Normalized like canonical.php so the @id base and WebPage.url match the canonical URL.
+			'url'         => user_trailingslashit( home_url( $wp->request ) ),
 			'breadcrumbs' => $breadcrumbs,
 			'title'       => $this->get_title(),
 		];

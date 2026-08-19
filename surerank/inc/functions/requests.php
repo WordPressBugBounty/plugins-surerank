@@ -10,7 +10,6 @@
 namespace SureRank\Inc\Functions;
 
 use SureRank\Inc\Traits\Get_Instance;
-use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -29,7 +28,7 @@ class Requests {
 	 *
 	 * @param string               $url The URL to check. It will behave like wp_safe_remote_head.
 	 * @param array<string, mixed> $args The arguments of the request.
-	 * @return array<string, mixed>|WP_Error
+	 * @return array<string, mixed>|\WP_Error
 	 */
 	public static function head( $url, $args = [] ) {
 		return wp_safe_remote_head(
@@ -49,7 +48,7 @@ class Requests {
 	 *
 	 * @param string               $url The URL to get the body of.
 	 * @param array<string, mixed> $args The arguments of the request.
-	 * @return array<string, mixed>|WP_Error
+	 * @return array<string, mixed>|\WP_Error
 	 */
 	public static function get( $url, $args = [] ) {
 		return wp_safe_remote_get(
@@ -63,7 +62,7 @@ class Requests {
 	 *
 	 * @param string               $url The URL to post to.
 	 * @param array<string, mixed> $args The arguments of the post.
-	 * @return array<string, mixed>|WP_Error
+	 * @return array<string, mixed>|\WP_Error
 	 */
 	public static function post( $url, $args ) {
 		return wp_safe_remote_post(
@@ -77,7 +76,7 @@ class Requests {
 	 *
 	 * @param string               $url The URL to request to.
 	 * @param array<string, mixed> $args The arguments of the request.
-	 * @return array<string, mixed>|WP_Error
+	 * @return array<string, mixed>|\WP_Error
 	 */
 	public static function request( $url, $args ) {
 		return wp_safe_remote_request(

@@ -342,11 +342,15 @@ class Defaults {
 			);
 		}
 
-		foreach ( $this->post_defaults as $option_value ) {
+		foreach ( $this->post_defaults as $option_key => $option_value ) {
 
-			if ( ! empty( $option_value ) ) {
+			if ( is_array( $option_value ) ) {
 				$all_settings = array_merge( $all_settings, $option_value );
+				continue;
 			}
+
+			// Top-level scalar defaults (post_no_index, post_no_follow, post_no_archive) must keep their own key.
+			$all_settings[ $option_key ] = $option_value;
 		}
 
 		return apply_filters(

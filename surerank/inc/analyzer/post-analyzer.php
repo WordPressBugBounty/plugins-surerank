@@ -21,6 +21,7 @@ use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Functions\Update;
 use SureRank\Inc\Traits\Get_Instance;
 use SureRank\Inc\Traits\Logger;
+use SureRank\Inc\Traits\Loop_Context;
 use WP_Http;
 use WP_Post;
 
@@ -30,6 +31,7 @@ use WP_Post;
 class PostAnalyzer {
 	use Get_Instance;
 	use Logger;
+	use Loop_Context;
 
 	/**
 	 * XPath instance.
@@ -150,19 +152,13 @@ class PostAnalyzer {
 		$this->canonical_url    = $meta_data['canonical_url'] ?? '';
 		$this->post_permalink   = $this->get_original_permalink( $post_id, $post );
 		$this->post_content     = apply_filters( 'surerank_post_analyzer_content', $post->post_content, $post );
-		/**
-		 * Parse blocks and render them to get the rendered content.
-		 * Commented out because it's not needed for the analyzer.
-		 *
-		 * Kept here for reference if needed in the future.
-		 *
-		 * $blocks           = parse_blocks( $post_content );
-		 * foreach ( $blocks as $block ) {
-		 *  $rendered_content .= render_block( $block );
-		 * }
-		 */
 
-		$this->xpath = Utils::get_rendered_xpath( $this->post_content );
+		// Render blocks so dynamic blocks (Spectra galleries, sliders, core query
+		// loop, etc.) that emit no markup in the saved post_content are visible to
+		// the content checks. do_blocks() is a no-op on content without block markup.
+		$rendered_content = $this->get_rendered_content( $this->post_content, $post );
+
+		$this->xpath = Utils::get_rendered_xpath( $rendered_content );
 		$result      = $this->analyze( $meta_data );
 
 		if ( $this->update_broken_links_status( $result ) && is_array( $result ) ) {
@@ -214,6 +210,89 @@ class PostAnalyzer {
 		// If parse_url returned null/false, check if it contains a colon early on
 		// (which would indicate a scheme we can't parse). Otherwise treat as relative (allow).
 		return strpos( $href, ':' ) !== false;
+	}
+
+	/**
+	 * Render block markup into HTML for analysis, under the post's context so
+	 * context-aware dynamic blocks resolve correctly.
+	 *
+	 * Swaps the global $post so context-aware blocks resolve, then restores it.
+	 * Deliberately no setup_postdata()/wp_reset_postdata(): with no main query to
+	 * reset (save/REST), reset is a no-op and would leak loop globals ($pages,
+	 * $numpages, $authordata, ...) to later hooks. A throwing block callback is
+	 * logged and falls back to raw content; finally guarantees $post is restored.
+	 *
+	 * @param string  $content     Raw post content.
+	 * @param WP_Post $post_object Post being analyzed.
+	 * @return string Rendered HTML.
+	 * @since 1.10.0
+	 */
+	private function get_rendered_content( string $content, WP_Post $post_object ): string {
+		$builder_content = $this->get_page_builder_content( $post_object );
+		if ( $builder_content !== null ) {
+			return $builder_content;
+		}
+
+		if ( trim( $content ) === '' ) {
+			return $content;
+		}
+
+		global $post;
+
+		// Snapshot every global that setup_postdata()/the_post() can mutate, not just
+		// $post. Query-loop blocks (core/query, core/post-template, etc.) call the_post()
+		// while do_blocks() runs; their wp_reset_postdata() is a no-op in a save request
+		// (the main query has no post), so these globals would otherwise leak into later
+		// wp_after_insert_post hooks. Restored in finally regardless of a throwing block.
+		$loop_context = $this->get_loop_context();
+
+		$post = $post_object; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Temporarily set post context for block rendering; restored in finally.
+
+		try {
+			$rendered = do_blocks( $content );
+		} catch ( \Throwable $e ) {
+			self::log( 'SureRank analyzer: block rendering failed, falling back to raw content. ' . $e->getMessage() );
+			$rendered = $content;
+		} finally {
+			$this->restore_loop_context( $loop_context );
+		}
+
+		return $rendered;
+	}
+
+	/**
+	 * Get the content rendered by a page builder, or null when the post is
+	 * not built with one.
+	 *
+	 * Builder-built posts render from the builder's own data (e.g. Elementor's
+	 * _elementor_data meta), not post_content, so block rendering alone leaves
+	 * the content checks blind to their images, links and headings.
+	 *
+	 * @param WP_Post $post_object Post being analyzed.
+	 * @return string|null Rendered builder HTML, or null to use block rendering.
+	 * @since 1.10.0
+	 */
+	private function get_page_builder_content( WP_Post $post_object ): ?string {
+		if ( ! class_exists( '\Elementor\Plugin' ) ) {
+			return null;
+		}
+
+		try {
+			$document = \Elementor\Plugin::$instance->documents->get( $post_object->ID );
+			if ( ! $document || ! $document->is_built_with_elementor() ) {
+				return null;
+			}
+
+			$rendered = \Elementor\Plugin::$instance->frontend->get_builder_content( $post_object->ID );
+		} catch ( \Throwable $e ) {
+			self::log( 'SureRank analyzer: Elementor rendering failed, falling back to block rendering. ' . $e->getMessage() );
+			return null;
+		}
+
+		$rendered = (string) $rendered;
+
+		// An empty render (e.g. no widgets yet) falls back to block rendering.
+		return trim( $rendered ) !== '' ? $rendered : null;
 	}
 
 	/**
