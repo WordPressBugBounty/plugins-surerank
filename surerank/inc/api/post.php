@@ -17,6 +17,7 @@ use SureRank\Inc\Functions\Send_Json;
 use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Functions\Update;
 use SureRank\Inc\Import_Export\Utils as ImportExportUtils;
+use SureRank\Inc\Schema\Meta_Resolver;
 use SureRank\Inc\Schema\SchemasApi;
 use SureRank\Inc\Schema\Validator;
 use SureRank\Inc\Traits\Get_Instance;
@@ -113,8 +114,14 @@ class Post extends Api_Base {
 		// Merge extended meta templates into global defaults for preview fallback.
 		$global_with_emt = array_merge( $global_values, $extended_meta );
 
+		// overridden_schemas is transport-only provenance, deliberately absent
+		// from the defaults map (defaults drive persistence) — allow it through
+		// the response filter explicitly.
 		return [
-			'data'           => array_intersect_key( Settings::prep_post_meta( $post_id, $post_type, $is_taxonomy ), $all_options ),
+			'data'           => array_intersect_key(
+				Settings::prep_post_meta( $post_id, $post_type, $is_taxonomy ),
+				array_merge( $all_options, [ 'overridden_schemas' => true ] )
+			),
 			'global_default' => $global_with_emt,
 		];
 	}
@@ -212,6 +219,34 @@ class Post extends Api_Base {
 					'message' => '' !== $validation['message'] ? $validation['message'] : __( 'Invalid schema payload.', 'surerank' ),
 				];
 			}
+
+			/**
+			 * The client edits the full effective schema set (inherited globals
+			 * plus page-level entries). Persist only the diff against global —
+			 * overrides, page-added schemas, and exclusions — so global schema
+			 * changes keep reaching this post. Always overwrite excluded_schemas;
+			 * a client-sent value must not leak through.
+			 */
+			$post_type_for_diff = get_post_type( $post_id );
+			$global_schemas     = Settings::get( 'schemas' );
+
+			// Globals snapshot the client session was seeded with — transport-only,
+			// consumed by the diff and never persisted. Key presence matters:
+			// an empty map means "session saw zero globals", absence means the
+			// caller sent no baseline at all.
+			$baseline = isset( $data['schemas_baseline'] ) && is_array( $data['schemas_baseline'] ) ? $data['schemas_baseline'] : null;
+			unset( $data['schemas_baseline'] );
+
+			$diff                     = Meta_Resolver::diff(
+				is_array( $data['schemas'] ) ? $data['schemas'] : [],
+				is_array( $global_schemas ) ? $global_schemas : [],
+				Meta_Resolver::CONTEXT_POST,
+				is_string( $post_type_for_diff ) ? $post_type_for_diff : '',
+				$post_id,
+				$baseline
+			);
+			$data['schemas']          = $diff['schemas'];
+			$data['excluded_schemas'] = $diff[ Meta_Resolver::EXCLUDED_KEY ];
 		}
 
 		self::update_feature_image_data( $post_id, $data );
@@ -314,6 +349,20 @@ class Post extends Api_Base {
 	 * @return void
 	 */
 	public static function update_post_meta_common( int $post_id, array $data ): void {
+		/**
+		 * The excluded_schemas key is only valid alongside a sibling `schemas` value
+		 * produced by Meta_Resolver::diff(). Callers that build $data from
+		 * prep_post_meta() output (importers) carry the key without schemas —
+		 * persisting it alone would stamp the new-format marker onto legacy
+		 * snapshot rows and break their title-based reconciliation.
+		 */
+		if ( isset( $data['excluded_schemas'] ) && ! isset( $data['schemas'] ) ) {
+			unset( $data['excluded_schemas'] );
+		}
+
+		// Transport-only keys; must never reach stored meta.
+		unset( $data['schemas_baseline'], $data['overridden_schemas'] );
+
 		$all_options = Defaults::get_instance()->get_post_defaults( false );
 
 		/** Getting post meta if exists, otherwise getting all options(defaults) */

@@ -263,7 +263,8 @@ class Defaults {
 				]
 			),
 			'schemas'         => [
-				'schemas' => Utils::get_default_schemas(),
+				'schemas'          => Utils::get_default_schemas(),
+				'excluded_schemas' => [],
 			],
 		];
 	}

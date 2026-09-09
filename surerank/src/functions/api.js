@@ -212,6 +212,25 @@ export const saveAuthAccessToken = ( accessKey ) => {
 };
 
 /**
+ * Disconnect SureRank AI
+ * @return {Promise<Object>} The response from the API
+ */
+export const disconnectAuth = () => {
+	return apiFetch( {
+		path: `${ API_BASE_URL }/ai/auth`,
+		method: 'DELETE',
+	} );
+};
+
+/**
+ * Get combined SureRank AI usage
+ * @return {Promise<Object>} The usage payload { usage: { percent, features } }
+ */
+export const getAIUsage = () => {
+	return apiFetch( { path: `${ API_BASE_URL }/ai/usage` } );
+};
+
+/**
  * Generate content
  * @param {string} type         - The type of content to generate.
  * @param {string} [postId]     - The optional post ID.

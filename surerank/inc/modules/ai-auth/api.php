@@ -10,9 +10,9 @@
 
 namespace SureRank\Inc\Modules\Ai_Auth;
 
+use SureRank\Inc\API\Api_Base;
 use SureRank\Inc\Functions\Send_Json;
 use SureRank\Inc\Traits\Get_Instance;
-use SureRank\Inc\API\Api_Base;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Server;
@@ -40,25 +40,37 @@ class Api extends Api_Base {
 			$this->get_api_namespace(),
 			'/ai/auth',
 			[
-				'methods'             => WP_REST_Server::CREATABLE,
-				'callback'            => [ $this, 'verify_auth' ],
-				'permission_callback' => [ $this, 'validate_permission' ],
-				'args'                => [
-					'accessKey' => [
-						'required'          => true,
-						'type'              => 'string',
-						'sanitize_callback' => 'sanitize_text_field',
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'verify_auth' ],
+					'permission_callback' => [ $this, 'validate_permission' ],
+					'args'                => [
+						'accessKey' => [
+							'required'          => true,
+							'type'              => 'string',
+							'sanitize_callback' => 'sanitize_text_field',
+						],
 					],
+				],
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_auth_url' ],
+					'permission_callback' => [ $this, 'validate_permission' ],
+				],
+				[
+					'methods'             => WP_REST_Server::DELETABLE,
+					'callback'            => [ $this, 'disconnect_auth' ],
+					'permission_callback' => [ $this, 'validate_permission' ],
 				],
 			]
 		);
 
 		register_rest_route(
 			$this->get_api_namespace(),
-			'/ai/auth',
+			'/ai/usage',
 			[
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => [ $this, 'get_auth_url' ],
+				'callback'            => [ $this, 'get_usage' ],
 				'permission_callback' => [ $this, 'validate_permission' ],
 			]
 		);
@@ -77,7 +89,7 @@ class Api extends Api_Base {
 		if ( empty( $access_key ) ) {
 			Send_Json::error( [ 'message' => __( 'No access key provided.', 'surerank' ) ] );
 		}
-		
+
 		$saved = Controller::get_instance()->save_auth( $access_key, Controller::get_instance()->key );
 
 		if ( is_wp_error( $saved ) && $saved instanceof WP_Error ) {
@@ -87,7 +99,7 @@ class Api extends Api_Base {
 		if ( $saved === false ) {
 			Send_Json::error( [ 'message' => __( 'Failed to save authentication data.', 'surerank' ) ] );
 		}
-		
+
 		Send_Json::success( [ 'message' => __( 'Authentication data saved.', 'surerank' ) ] );
 	}
 
@@ -99,8 +111,15 @@ class Api extends Api_Base {
 	 * @return void
 	 */
 	public function get_auth_url( $request ) {
-		if ( Controller::get_instance()->get_auth_status() ) {
-			Send_Json::success( [ 'message' => __( 'Authentication is already completed.', 'surerank' ) ] );
+		$controller = Controller::get_instance();
+		if ( $controller->get_auth_status() ) {
+			Send_Json::success(
+				[
+					'message' => __( 'Authentication is already completed.', 'surerank' ),
+					'account' => $controller->get_account(),
+					'source'  => $controller->get_auth_source(),
+				]
+			);
 		}
 
 		$auth = Controller::get_instance()->get_auth_url();
@@ -110,6 +129,37 @@ class Api extends Api_Base {
 		} else {
 			Send_Json::success( [ 'auth_url' => $auth ] );
 		}
+	}
 
+	/**
+	 * Disconnect SureRank AI (delete stored auth data).
+	 *
+	 * @since 1.10.1
+	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
+	 * @return void
+	 */
+	public function disconnect_auth( $request ) {
+		$controller = Controller::get_instance();
+		$controller->delete_auth();
+
+		// Disconnect removes the local account only. Confirm success against
+		// the account (not get_auth_status(), which stays true for active Pro
+		// licenses) so a license-only user is never reported as a failure.
+		if ( $controller->has_connected_account() ) {
+			Send_Json::error( [ 'message' => __( 'Failed to disconnect SureRank AI. Please try again.', 'surerank' ) ] );
+		}
+
+		Send_Json::success( [ 'message' => __( 'SureRank AI has been disconnected.', 'surerank' ) ] );
+	}
+
+	/**
+	 * Get combined SureRank AI usage.
+	 *
+	 * @since 1.10.1
+	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
+	 * @return void
+	 */
+	public function get_usage( $request ) {
+		Send_Json::success( [ 'usage' => Usage::get_instance()->get_usage() ] );
 	}
 }

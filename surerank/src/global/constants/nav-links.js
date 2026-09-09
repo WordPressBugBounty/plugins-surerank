@@ -20,6 +20,7 @@ import {
 	Ellipsis,
 	File,
 	Plug,
+	Sparkles,
 } from 'lucide-react';
 import { applyFilters } from '@wordpress/hooks';
 import { __ } from '@wordpress/i18n';
@@ -68,6 +69,12 @@ export const getNavLinks = () => {
 			section: __( 'General', 'surerank' ),
 			sectionId: 'general',
 			links: [
+				{
+					path: '/surerank-ai',
+					label: __( 'SureRank AI', 'surerank' ),
+					icon: Sparkles,
+					migratable: false,
+				},
 				{
 					// This is the root path for the settings page
 					path: '/general',

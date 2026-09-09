@@ -60,6 +60,7 @@ import EmailReportsRoute from '@AdminGeneral/advanced/email-reports';
 import GoogleIndexingSettings from '@AdminDashboard/google-indexing/settings';
 import GoogleIndexingLogs from '@AdminDashboard/google-indexing/logs';
 import ImageGenerationUpgrade from '@AdminDashboard/image-generation';
+import SureRankAI from '@AdminDashboard/surerank-ai';
 import LearnPage from '@/apps/admin-learn';
 import currentUserCan from '@/functions/role-capabilities';
 import { isProActive } from '@/functions/nudges';
@@ -99,6 +100,14 @@ const dashboardRoutes = [
 ];
 
 const generalAndAdvancedRoutes = [
+	// SureRank AI screen (lives under the General section). Admin-only: the
+	// /ai/auth and /ai/usage REST routes require manage_options (account
+	// binding is a site-owner action), so the screen must not be offered to
+	// delegated global_setting users who could not use it.
+	createRoute( '/surerank-ai', SureRankAI, [], {
+		fullWidth: true,
+		capability: 'manage_options',
+	} ),
 	// General routes
 	createRoute(
 		'/general',

@@ -1,4 +1,6 @@
 import { useDispatch, useSelect, select as selectStore } from '@wordpress/data';
+import { toast } from '@bsf/force-ui';
+import { __ } from '@wordpress/i18n';
 import { STORE_NAME } from '@AdminStore/constants';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
@@ -45,6 +47,7 @@ export const useRunSeoChecks = ( options = {} ) => {
 		let settingsResponse = {};
 		let otherResponse = {};
 		let generalResponse = {};
+		const failed = [];
 
 		// Fetch only the requested categories
 		if ( categories.includes( 'settings' ) ) {
@@ -59,7 +62,9 @@ export const useRunSeoChecks = ( options = {} ) => {
 					settingsResponse,
 					'settings'
 				);
-			} catch ( error ) {}
+			} catch ( error ) {
+				failed.push( 'settings' );
+			}
 		}
 
 		if ( categories.includes( 'other' ) ) {
@@ -74,7 +79,9 @@ export const useRunSeoChecks = ( options = {} ) => {
 					otherResponse,
 					'other'
 				);
-			} catch ( error ) {}
+			} catch ( error ) {
+				failed.push( 'other' );
+			}
 		}
 
 		if ( categories.includes( 'general' ) ) {
@@ -89,7 +96,9 @@ export const useRunSeoChecks = ( options = {} ) => {
 					generalResponse,
 					'general'
 				);
-			} catch ( error ) {}
+			} catch ( error ) {
+				failed.push( 'general' );
+			}
 		}
 
 		const hasAnyData =
@@ -103,6 +112,20 @@ export const useRunSeoChecks = ( options = {} ) => {
 			selectStore( STORE_NAME ).getSiteSeoAnalysis()?.report ||
 			report ||
 			{};
+
+		// A failed request leaves the previous rows in place, which is indistinguishable from
+		// "checks ran and nothing changed" unless it is reported.
+		if ( failed.length && ! silent ) {
+			toast.error(
+				__( 'Some checks could not be run', 'surerank' ),
+				{
+					description: __(
+						'We could not read your site just now. Please try again in a moment.',
+						'surerank'
+					),
+				}
+			);
+		}
 
 		const payload = {
 			runningChecks: false,

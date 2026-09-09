@@ -10,7 +10,6 @@
 
 namespace SureRank\Inc\Schema;
 
-use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Traits\Get_Instance;
@@ -182,19 +181,13 @@ class Schemas {
 	 * @since 1.0.0
 	 */
 	public function get_active_schemas() {
-
-		$post_schema   = $this->get_post_schema(); // Get post schema.
-		$global_schema = $this->get_global_schema(); // Get global schema.
-
-		if ( ! empty( $post_schema ) ) {
-			return $post_schema;
-		}
-
-		if ( ! empty( $global_schema ) ) {
-			return $global_schema;
-		}
-
-		return [];
+		/**
+		 * Global schemas are the inherited baseline; object-level meta only
+		 * contributes overrides, additions, and exclusions on top of it.
+		 * Inherited globals keep their display-condition rules (validated at
+		 * render), overrides carry parent => true and render unconditionally.
+		 */
+		return Meta_Resolver::resolve( $this->get_global_schema(), $this->get_post_schema_meta() );
 	}
 
 	/**
@@ -218,25 +211,37 @@ class Schemas {
 	 * @since 1.0.0
 	 */
 	public function get_post_schema() {
-
-		$object      = get_queried_object();
-		$schema_data = [];
-
-		if ( $object instanceof WP_Post ) {
-			$post_id     = $object->ID;
-			$schema_data = Get::post_meta( $post_id, 'surerank_settings_schemas', true );
-		} elseif ( $object instanceof WP_Term ) {
-			$post_id     = $object->term_id;
-			$schema_data = Get::term_meta( $post_id, 'surerank_settings_schemas', true );
-		} elseif ( $object instanceof WP_User ) {
-			$post_id     = $object->ID;
-			$schema_data = Get::user_meta( $post_id, 'surerank_settings_schemas', true );
-		} else {
-			return [];
-		}
+		$schema_data = $this->get_post_schema_meta();
 
 		$post_schema = $schema_data['schemas'] ?? [];
-		return ! empty( $post_schema ) ? $post_schema : [];
+		return is_array( $post_schema ) ? $post_schema : [];
+	}
+
+	/**
+	 * Get Post Schema Meta
+	 *
+	 * Retrieves the raw schemas meta row for the queried object, including the
+	 * excluded_schemas list that get_post_schema() strips away.
+	 *
+	 * @return array<string, mixed> Raw schemas meta row.
+	 * @since 1.10.1
+	 */
+	public function get_post_schema_meta() {
+		$object = get_queried_object();
+
+		if ( $object instanceof WP_Post ) {
+			return Meta_Resolver::get_raw_meta( Meta_Resolver::CONTEXT_POST, $object->ID );
+		}
+
+		if ( $object instanceof WP_Term ) {
+			return Meta_Resolver::get_raw_meta( Meta_Resolver::CONTEXT_TERM, $object->term_id );
+		}
+
+		if ( $object instanceof WP_User ) {
+			return Meta_Resolver::get_raw_meta( Meta_Resolver::CONTEXT_USER, $object->ID );
+		}
+
+		return [];
 	}
 
 	/**
@@ -252,7 +257,9 @@ class Schemas {
 		$global_schema = Settings::get();
 		$global_schema = $global_schema['schemas'] ?? Utils::get_default_schemas();
 
-		if ( ! empty( $global_schema ) ) {
+		// A corrupted/translated option row can hold a non-array here; the
+		// resolver requires an array, so degrade to empty instead of fataling.
+		if ( is_array( $global_schema ) && ! empty( $global_schema ) ) {
 			return $global_schema;
 		}
 

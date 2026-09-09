@@ -15,6 +15,7 @@ use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Send_Json;
 use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Functions\Update;
+use SureRank\Inc\Schema\Meta_Resolver;
 use SureRank\Inc\Schema\Validator;
 use SureRank\Inc\Traits\Get_Instance;
 use WP_Error;
@@ -94,8 +95,11 @@ class Term extends Api_Base {
 	 * @return array<string, mixed>
 	 */
 	public static function get_term_data_by_id( $term_id, $post_type, $is_taxonomy ) {
-		$all_options            = Settings::format_array( Defaults::get_instance()->get_post_defaults( false ) );
-		$data                   = array_intersect_key( Settings::prep_term_meta( $term_id, $post_type, $is_taxonomy ), $all_options );
+		$all_options = Settings::format_array( Defaults::get_instance()->get_post_defaults( false ) );
+		// overridden_schemas is transport-only provenance, deliberately absent
+		// from the defaults map (defaults drive persistence) — allow it through
+		// the response filter explicitly.
+		$data                   = array_intersect_key( Settings::prep_term_meta( $term_id, $post_type, $is_taxonomy ), array_merge( $all_options, [ 'overridden_schemas' => true ] ) );
 		$decode_data            = Utils::decode_html_entities_recursive( $data ) ?? $data;
 		$global_values          = Settings::get();
 		$extended_meta          = Utils::get_extended_meta_values( $term_id, $post_type, $is_taxonomy );
@@ -208,6 +212,34 @@ class Term extends Api_Base {
 					'message' => '' !== $validation['message'] ? $validation['message'] : __( 'Invalid schema payload.', 'surerank' ),
 				];
 			}
+
+			/**
+			 * The client edits the full effective schema set (inherited globals
+			 * plus term-level entries). Persist only the diff against global —
+			 * overrides, term-added schemas, and exclusions — so global schema
+			 * changes keep reaching this term. Always overwrite excluded_schemas;
+			 * a client-sent value must not leak through.
+			 */
+			$term_for_diff  = get_term( $term_id );
+			$global_schemas = Settings::get( 'schemas' );
+
+			// Globals snapshot the client session was seeded with — transport-only,
+			// consumed by the diff and never persisted. Key presence matters:
+			// an empty map means "session saw zero globals", absence means the
+			// caller sent no baseline at all.
+			$baseline = isset( $data['schemas_baseline'] ) && is_array( $data['schemas_baseline'] ) ? $data['schemas_baseline'] : null;
+			unset( $data['schemas_baseline'] );
+
+			$diff                     = Meta_Resolver::diff(
+				is_array( $data['schemas'] ) ? $data['schemas'] : [],
+				is_array( $global_schemas ) ? $global_schemas : [],
+				Meta_Resolver::CONTEXT_TERM,
+				$term_for_diff instanceof \WP_Term ? $term_for_diff->taxonomy : '',
+				$term_id,
+				$baseline
+			);
+			$data['schemas']          = $diff['schemas'];
+			$data['excluded_schemas'] = $diff[ Meta_Resolver::EXCLUDED_KEY ];
 		}
 
 		self::update_term_meta_common( $term_id, $data );
@@ -247,6 +279,19 @@ class Term extends Api_Base {
 	 * @return void
 	 */
 	public static function update_term_meta_common( int $term_id, array $data ) {
+		/**
+		 * The excluded_schemas key is only valid alongside a sibling `schemas` value
+		 * produced by Meta_Resolver::diff(); prep-derived data (importers)
+		 * carries the key alone and must not stamp the new-format marker onto
+		 * legacy snapshot rows.
+		 */
+		if ( isset( $data['excluded_schemas'] ) && ! isset( $data['schemas'] ) ) {
+			unset( $data['excluded_schemas'] );
+		}
+
+		// Transport-only keys; must never reach stored meta.
+		unset( $data['schemas_baseline'], $data['overridden_schemas'] );
+
 		$all_options = Defaults::get_instance()->get_post_defaults( false );
 		/** Getting post meta if exists, otherwise getting all options(defaults) */
 		$term_meta = Get::all_term_meta( $term_id );

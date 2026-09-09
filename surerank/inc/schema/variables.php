@@ -198,6 +198,9 @@ class Variables {
 		$active_schemas = Schemas::get_instance()->get_active_schemas();
 		$data           = [];
 		foreach ( $active_schemas as $schema ) {
+			if ( ! is_array( $schema ) || ! isset( $schema['type'] ) || ! is_string( $schema['type'] ) ) {
+				continue;
+			}
 			$type                        = strtolower( $schema['type'] );
 			$data[ "%schemas.{$type}%" ] = sprintf(
 				/* translators: %s is replaced with the schema type (e.g., "Product", "Article"). */

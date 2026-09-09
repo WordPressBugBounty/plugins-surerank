@@ -16,6 +16,7 @@ use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Send_Json;
 use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Functions\Update;
+use SureRank\Inc\Schema\Meta_Resolver;
 use SureRank\Inc\Schema\Validator;
 use SureRank\Inc\Traits\Get_Instance;
 use WP_Error;
@@ -88,8 +89,11 @@ class User_Seo extends Api_Base {
 	 * @return array<string, mixed>
 	 */
 	public static function get_user_data_by_id( $user_id ) {
-		$all_options            = Settings::format_array( Defaults::get_instance()->get_post_defaults( false ) );
-		$data                   = array_intersect_key( Settings::prep_user_meta( $user_id ), $all_options );
+		$all_options = Settings::format_array( Defaults::get_instance()->get_post_defaults( false ) );
+		// overridden_schemas is transport-only provenance, deliberately absent
+		// from the defaults map (defaults drive persistence) — allow it through
+		// the response filter explicitly.
+		$data                   = array_intersect_key( Settings::prep_user_meta( $user_id ), array_merge( $all_options, [ 'overridden_schemas' => true ] ) );
 		$decode_data            = Utils::decode_html_entities_recursive( $data ) ?? $data;
 		$global_values          = Settings::get();
 		$extended_meta          = apply_filters( 'surerank_prep_user_meta_extended_values', [], $global_values, $user_id );
@@ -203,6 +207,33 @@ class User_Seo extends Api_Base {
 					'message' => '' !== $validation['message'] ? $validation['message'] : __( 'Invalid schema payload.', 'surerank' ),
 				];
 			}
+
+			/**
+			 * The client edits the full effective schema set (inherited globals
+			 * plus user-level entries). Persist only the diff against global —
+			 * overrides, user-added schemas, and exclusions — so global schema
+			 * changes keep reaching this author archive. Always overwrite
+			 * excluded_schemas; a client-sent value must not leak through.
+			 */
+			$global_schemas = Settings::get( 'schemas' );
+
+			// Globals snapshot the client session was seeded with — transport-only,
+			// consumed by the diff and never persisted. Key presence matters:
+			// an empty map means "session saw zero globals", absence means the
+			// caller sent no baseline at all.
+			$baseline = isset( $data['schemas_baseline'] ) && is_array( $data['schemas_baseline'] ) ? $data['schemas_baseline'] : null;
+			unset( $data['schemas_baseline'] );
+
+			$diff                     = Meta_Resolver::diff(
+				is_array( $data['schemas'] ) ? $data['schemas'] : [],
+				is_array( $global_schemas ) ? $global_schemas : [],
+				Meta_Resolver::CONTEXT_USER,
+				'',
+				$user_id,
+				$baseline
+			);
+			$data['schemas']          = $diff['schemas'];
+			$data['excluded_schemas'] = $diff[ Meta_Resolver::EXCLUDED_KEY ];
 		}
 
 		self::update_user_meta_common( $user_id, $data );
@@ -237,6 +268,18 @@ class User_Seo extends Api_Base {
 	 * @return void
 	 */
 	public static function update_user_meta_common( int $user_id, array $data ) {
+		/**
+		 * The excluded_schemas key is only valid alongside a sibling `schemas` value
+		 * produced by Meta_Resolver::diff(); prep-derived data carries the key
+		 * alone and must not stamp the new-format marker onto legacy rows.
+		 */
+		if ( isset( $data['excluded_schemas'] ) && ! isset( $data['schemas'] ) ) {
+			unset( $data['excluded_schemas'] );
+		}
+
+		// Transport-only keys; must never reach stored meta.
+		unset( $data['schemas_baseline'], $data['overridden_schemas'] );
+
 		$all_options = Defaults::get_instance()->get_post_defaults( false );
 		/** Getting user meta if exists, otherwise getting all options(defaults) */
 		$user_meta = Get::all_user_meta( $user_id );

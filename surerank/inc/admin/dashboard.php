@@ -488,6 +488,7 @@ class Dashboard {
 				'wp_schema_pro_active'       => Helper::is_wp_schema_pro_active(),
 				'home_page_static'           => get_option( 'show_on_front', 'posts' ),
 				'page_on_front'              => (int) get_option( 'page_on_front', 0 ),
+				'author_email_notice'        => (bool) get_option( \SureRank\Inc\Upgrades\Author_Email_Cleanup::NOTICE_OPTION ),
 			]
 		);
 	}

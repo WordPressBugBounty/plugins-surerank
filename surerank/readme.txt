@@ -2,10 +2,10 @@
 Contributors: brainstormforce
 Donate link: https://www.paypal.me/BrainstormForce
 Tags: seo, structured data, xml sitemap, schema, google search console
-Requires at least: 6.8
+Requires at least: 6.7
 Tested up to: 7.1
-Requires PHP: 8.0
-Stable tag: 1.10.0
+Requires PHP: 7.4
+Stable tag: 1.10.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,7 +26,7 @@ We wanted to change that.
 
 SureRank is a simple, lightweight SEO assistant designed for anyone - whether you're launching your first website or managing dozens of sites. No more intimidating dashboards or features you’ll never use. Just clean, clear guidance focused on what really moves the needle.
 
-<a href="https://bsf.io/surerank-demo" target="_blank" rel="">Try the live demo of SureRank</a>
+<a href="https://bsf.io/surerank-demo" target="_blank" rel="">Try the live demo of SureRank.</a>
 
 We cut the fluff and focused on fundamentals:
 
@@ -311,6 +311,16 @@ Brainstorm Force
 
 
 == Changelog ==
+= 1.10.1 - 09-September-2026 =
+* New: SureRank AI - Added a dedicated SureRank AI screen to connect your account, view monthly usage, and manage AI features, with Learn More links per feature.
+* Fix: Schema - The Person schema no longer fills in the post author's email address by default. Sites that saved this setting on an earlier version have the saved value cleared automatically on update, and see a note on the Schema screen explaining the change. Props Vaibhav Narkhede via WPScan for the responsible disclosure.
+* Fix: Schema - Saving a page's Schema tab no longer freezes a copy of your site-wide schema onto that page, so later changes to global schema apply to it as expected.
+* Fix: Compatibility - Admin screens no longer render blank on sites running React 19 (e.g. WordPress.com).
+* Fix: Social - article:modified_time now uses the site timezone, matching article:published_time instead of reporting GMT.
+* Fix: Sitemap - hreflang alternates are no longer emitted for missing translations, and the translated home page now uses the correct URL.
+* Fix: Site SEO Audit - A CDN serving a stale copy of the homepage is now reported as a stale copy instead of missing meta tags.
+* Fix: Schema - Word count now handles Arabic and other multibyte content correctly.
+* Fix: Copy - Added missing space before 'Learn More' in the Contribute to SureRank description.
 = 1.10.0 - 19-August-2026 =
 * New: Content Generation - Bulk content generation is now available in the free plugin.
 * New: Migration - Added migration support for The SEO Framework.

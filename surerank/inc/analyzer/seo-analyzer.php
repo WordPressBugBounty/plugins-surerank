@@ -15,6 +15,7 @@ use DOMElement;
 use DOMNodeList;
 use DOMXPath;
 use SureRank\Inc\API\Analyzer;
+use SureRank\Inc\Frontend\Meta_Data;
 use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Modules\Nudges\Utils;
 use WP_Error;
@@ -74,6 +75,20 @@ class SeoAnalyzer {
 	 * @var string|WP_Error
 	 */
 	private $html_content = '';
+
+	/**
+	 * Full URL being analyzed.
+	 *
+	 * @var string
+	 */
+	private $analyzed_url = '';
+
+	/**
+	 * Memoized result of the stale-copy probe.
+	 *
+	 * @var bool|null
+	 */
+	private $public_copy_stale = null;
 
 	/**
 	 * Constructor.
@@ -353,6 +368,16 @@ class SeoAnalyzer {
 			$status = 'warning';
 		} else {
 			$status = 'success';
+		}
+
+		if ( ! $exists && $this->public_copy_is_stale() ) {
+			return [
+				'exists'      => $exists,
+				'status'      => $status,
+				'description' => $this->get_stale_cache_helptext(),
+				'message'     => __( 'Search engine description is saved but is not appearing on your published homepage.', 'surerank' ),
+				'heading'     => __( 'Homepage Is Serving An Outdated Copy', 'surerank' ),
+			];
 		}
 
 		return [
@@ -762,27 +787,34 @@ class SeoAnalyzer {
 				'<h6>🛠️ %s </h6>',
 				__( 'Where to Update It', 'surerank' )
 			),
-			__( 'You can set the canonical URL directly from the SureRank meta box.', 'surerank' ),
-			[
+		];
+
+		// A posts home page has no post to edit, so the meta box route does not exist for it and
+		// Special_Page::get_canonical_url() always resolves the home URL.
+		if ( get_option( 'show_on_front' ) === 'page' ) {
+			$helptext[] = __( 'You can set the canonical URL directly from the SureRank meta box.', 'surerank' );
+			$helptext[] = [
 				'list' => [
 					__( 'Edit your homepage', 'surerank' ),
 					__( 'Open the Advanced tab in the SureRank meta box', 'surerank' ),
-					__( 'Enter the correct URL in the Canonical Tag field', 'surerank' ),
+					__( 'Enter the correct URL in the Canonical URL field, or leave it blank to let SureRank set it for you', 'surerank' ),
 					__( 'Save your changes', 'surerank' ),
 				],
-			],
+			];
 
-			sprintf(
+			$helptext[] = sprintf(
 				'<h6>✏️ %s </h6>',
 				__( 'Update Here', 'surerank' )
-			),
+			);
 
-			sprintf(
+			$helptext[] = sprintf(
 				"<img class='w-full h-full' src='%s' alt='%s' />",
 				esc_attr( 'https://surerank.com/wp-content/uploads/2026/03/no-canonical-url-set-for-homepage-visual.webp' ),
 				esc_attr( 'No Canonical URL Set for Homepage' )
-			),
-		];
+			);
+		} else {
+			$helptext[] = __( 'Your homepage is set to show your latest posts, so SureRank sets its canonical URL to your site address automatically. There is no field to fill in.', 'surerank' );
+		}
 
 		if ( ! Utils::get_instance()->is_pro_active() ) {
 			$helptext[] = sprintf(
@@ -802,7 +834,18 @@ class SeoAnalyzer {
 			);
 		}
 
-		$exists  = $canonical->length > 0;
+		$exists = $canonical->length > 0;
+
+		if ( ! $exists && $this->public_copy_is_stale() ) {
+			return [
+				'exists'      => $exists,
+				'status'      => 'warning',
+				'description' => $this->get_stale_cache_helptext(),
+				'message'     => __( 'A canonical URL is set but is not appearing on your published homepage.', 'surerank' ),
+				'heading'     => __( 'Homepage Is Serving An Outdated Copy', 'surerank' ),
+			];
+		}
+
 		$heading = $exists ? __( 'Canonical URL Set for Homepage', 'surerank' ) : __( 'No Canonical URL Set for Homepage', 'surerank' );
 		$title   = $exists ? __( 'Your homepage currently has a canonical URL set.', 'surerank' ) : __( 'Your homepage does not currently have a canonical URL set.', 'surerank' );
 		return [
@@ -1494,6 +1537,7 @@ class SeoAnalyzer {
 
 		$parsed_url         = wp_parse_url( $url, PHP_URL_HOST );
 		$this->base_url     = is_string( $parsed_url ) ? $parsed_url : '';
+		$this->analyzed_url = $url;
 		$this->html_content = $this->scraper->fetch( $url );
 
 		if ( is_wp_error( $this->html_content ) ) {
@@ -1784,6 +1828,55 @@ class SeoAnalyzer {
 	 *
 	 * @param string $target_page Optional. Specific target page within the settings (e.g., 'homepage/social'). Defaults to ''.
 	 * @return string URL to the home page settings or specific section within it.
+	 */
+	/**
+	 * Whether the copy of the page we read predates SureRank's own output.
+	 *
+	 * A shared cache in front of the site can answer with markup captured before the user saved
+	 * their SEO settings. That is indistinguishable from a genuinely missing tag unless the origin
+	 * is asked directly, so probe it only once a tag has already come up missing.
+	 *
+	 * @return bool
+	 * @since 1.10.1
+	 */
+	private function public_copy_is_stale() {
+		if ( $this->public_copy_stale !== null ) {
+			return $this->public_copy_stale;
+		}
+
+		$this->public_copy_stale = false;
+
+		// The marker is printed on every SureRank-rendered page, so its absence means the copy we
+		// read was not produced by a request that ran SureRank at all.
+		if ( ! is_string( $this->html_content ) || strpos( $this->html_content, Meta_Data::META_MARKER ) !== false ) {
+			return $this->public_copy_stale;
+		}
+
+		$origin                  = $this->scraper->fetch_from_origin( $this->analyzed_url );
+		$this->public_copy_stale = is_string( $origin ) && strpos( $origin, Meta_Data::META_MARKER ) !== false;
+
+		return $this->public_copy_stale;
+	}
+
+	/**
+	 * Help text explaining that the published page is a stale cached copy.
+	 *
+	 * @return array<int, string>
+	 * @since 1.10.1
+	 */
+	private function get_stale_cache_helptext() {
+		return [
+			__( 'Your setting is saved correctly, but the copy of your homepage being served to visitors and search engines is an older one that does not contain it yet.', 'surerank' ),
+			__( 'This happens when a caching layer in front of your site, such as a CDN or your host\'s page cache, still holds a version of the page from before you saved your changes.', 'surerank' ),
+			__( 'Clear the cache for your homepage at your host or CDN, then run these checks again. If your host offers it, purging the single URL is enough.', 'surerank' ),
+		];
+	}
+
+	/**
+	 * Get the URL of the homepage settings screen.
+	 *
+	 * @param string $target_page Target page.
+	 * @return string
 	 */
 	private function get_homepage_settings_url( string $target_page = '' ) {
 		$page_on_front = intval( Get::option( 'page_on_front' ) );

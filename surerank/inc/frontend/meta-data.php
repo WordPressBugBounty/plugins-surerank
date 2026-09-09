@@ -32,6 +32,12 @@ class Meta_Data {
 	use Get_Instance;
 
 	/**
+	 * Comment that opens SureRank's meta output. Also used by the analyzer to tell a cached copy
+	 * of a page apart from one rendered without SureRank.
+	 */
+	public const META_MARKER = '<!-- SureRank Meta Data -->';
+
+	/**
 	 * Meta Data
 	 *
 	 * @var array<string, mixed>|null $meta_data Post meta data.
@@ -155,7 +161,7 @@ class Meta_Data {
 	 * @return void
 	 */
 	private function print_meta() {
-		echo '<!-- SureRank Meta Data -->' . PHP_EOL;
+		echo self::META_MARKER . PHP_EOL; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Compile-time constant holding a static HTML comment.
 
 		do_action( 'surerank_print_meta', $this->meta_data );
 

@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use SureRank\Inc\Frontend\Description;
 use SureRank\Inc\Frontend\Image;
 use SureRank\Inc\Meta_Variables\Post;
+use SureRank\Inc\Schema\Meta_Resolver;
 use SureRank\Inc\Schema\Utils;
 use SureRank\Inc\Schema\Validator;
 
@@ -481,9 +482,16 @@ class Settings {
 
 		$meta = apply_filters( 'surerank_prep_post_meta', $meta, $post_id, $post_type, $is_taxonomy );
 
-		// Prepare schemas for the current post.
+		// Prepare schemas for the current post: inherited globals merged with
+		// this post's overrides/exclusions, then filtered by display rules.
+		// overridden_schemas is transport-only provenance for the client (which
+		// global keys carry page-level values) — never persisted on save.
 		if ( ! empty( $post_type ) ) {
-			$meta['schemas'] = self::prepare_schemas( $meta, $post_type, $post_id, $is_taxonomy );
+			$global_schemas             = isset( $global_values['schemas'] ) && is_array( $global_values['schemas'] ) ? $global_values['schemas'] : [];
+			$raw_schema_meta            = Meta_Resolver::get_raw_meta( Meta_Resolver::CONTEXT_POST, $post_id );
+			$effective                  = Meta_Resolver::resolve( $global_schemas, $raw_schema_meta );
+			$meta['schemas']            = self::prepare_schemas( [ 'schemas' => $effective ], $post_type, $post_id, $is_taxonomy );
+			$meta['overridden_schemas'] = array_values( array_intersect( Meta_Resolver::overridden_keys( $global_schemas, $raw_schema_meta ), array_map( 'strval', array_keys( $meta['schemas'] ) ) ) );
 		}
 
 		$meta['auto_generated_og_image'] = self::auto_generated_og_image( $post_id, false );
@@ -602,9 +610,16 @@ class Settings {
 		$meta['auto_description']        = self::get_description( $term_id, $meta, $global_values, 'taxonomy' );
 		$meta['auto_generated_og_image'] = self::auto_generated_og_image( $term_id, true );
 
-		// Prepare schemas for the current term.
+		// Prepare schemas for the current term: inherited globals merged with
+		// this term's overrides/exclusions, then filtered by display rules.
+		// overridden_schemas is transport-only provenance for the client (which
+		// global keys carry term-level values) — never persisted on save.
 		if ( ! empty( $post_type ) ) {
-			$meta['schemas'] = self::prepare_schemas( $meta, $post_type, $term_id, $is_taxonomy );
+			$global_schemas             = isset( $global_values['schemas'] ) && is_array( $global_values['schemas'] ) ? $global_values['schemas'] : [];
+			$raw_schema_meta            = Meta_Resolver::get_raw_meta( Meta_Resolver::CONTEXT_TERM, $term_id );
+			$effective                  = Meta_Resolver::resolve( $global_schemas, $raw_schema_meta );
+			$meta['schemas']            = self::prepare_schemas( [ 'schemas' => $effective ], $post_type, $term_id, $is_taxonomy );
+			$meta['overridden_schemas'] = array_values( array_intersect( Meta_Resolver::overridden_keys( $global_schemas, $raw_schema_meta ), array_map( 'strval', array_keys( $meta['schemas'] ) ) ) );
 		}
 
 		foreach ( $meta as $key => $value ) {
@@ -685,6 +700,15 @@ class Settings {
 		$meta['page_description']        = str_replace( '%content%', '%author_description%', $meta['page_description'] );
 		$meta['auto_description']        = self::get_description( $user_id, $meta, $global_values, 'user' );
 		$meta['auto_generated_og_image'] = '';
+
+		// Schemas for the author archive: inherited globals merged with this
+		// user's overrides/exclusions. No display-rule filtering here, matching
+		// the previous behavior for user context. overridden_schemas is
+		// transport-only provenance for the client — never persisted on save.
+		$global_schemas             = isset( $global_values['schemas'] ) && is_array( $global_values['schemas'] ) ? $global_values['schemas'] : [];
+		$raw_schema_meta            = Meta_Resolver::get_raw_meta( Meta_Resolver::CONTEXT_USER, $user_id );
+		$meta['schemas']            = Meta_Resolver::resolve( $global_schemas, $raw_schema_meta );
+		$meta['overridden_schemas'] = Meta_Resolver::overridden_keys( $global_schemas, $raw_schema_meta );
 
 		/**
 		 * Robots values must always be explicit for author archives. The frontend

@@ -236,6 +236,7 @@ export const renderCloneableGroupField = ( {
 	fieldItemIds,
 	setFieldItemIds,
 	renderHelpTextFunction = null,
+	remountVersion = 0,
 } ) => {
 	let existingValues = getFieldValue( field.id ) || [];
 
@@ -491,6 +492,7 @@ export const renderCloneableGroupField = ( {
 																			index,
 																		parentFieldId:
 																			field.id,
+																		remountVersion,
 																	}
 																) }
 															</div>
@@ -540,6 +542,7 @@ export const renderCloneableGroupField = ( {
 											renderAsGroupComponent: false,
 											itemIndex: index,
 											parentFieldId: field.id,
+											remountVersion,
 										} ) }
 									</div>
 									{ renderHelpTextFunction &&
@@ -571,6 +574,7 @@ export const GroupFieldRenderer = ( {
 	getFieldValue,
 	onFieldChange,
 	variableSuggestions,
+	remountVersion = 0,
 } ) => {
 	const groupType = field.fields?.find( ( f ) => f.id === '@type' )
 		? getFieldValue( '@type', field.id )
@@ -634,6 +638,7 @@ export const GroupFieldRenderer = ( {
 										),
 									variableSuggestions,
 									renderAsGroupComponent: false,
+									remountVersion,
 								} ) }
 							</div>
 						</div>
@@ -650,6 +655,7 @@ export const renderCloneableField = ( {
 	onFieldChange,
 	variableSuggestions,
 	placeholder = '',
+	remountVersion = 0,
 } ) => {
 	const existingValues = getFieldValue( field.id ) || {};
 
@@ -688,6 +694,7 @@ export const renderCloneableField = ( {
 						variableSuggestions,
 						placeholder,
 						renderAsGroupComponent: false,
+						remountVersion,
 					} ) }
 					<Button
 						variant="ghost"
@@ -728,6 +735,7 @@ export function renderFieldCommon( {
 	renderAsGroupComponent = false,
 	itemIndex = null,
 	parentFieldId = null,
+	remountVersion = 0,
 } ) {
 	if ( ! field ) {
 		return null;
@@ -736,9 +744,14 @@ export function renderFieldCommon( {
 	const currentFieldValue = getFieldValue( field.id ) || field.std || '';
 	const isCustomJsonLdField = field?.id === 'custom_json_ld';
 
-	const uniqueKey = parentFieldId
+	const baseKey = parentFieldId
 		? `${ parentFieldId }-${ itemIndex }-${ field.id }`
 		: field.id; // PREVENT KEY COLLISIONS IN NESTED RENDERING
+
+	// Uncontrolled widgets (EditorInput, Title Input) read defaultValue only
+	// on mount; bumping remountVersion remounts just those leaf inputs when
+	// their store value changes externally (e.g. Reset to Global).
+	const uniqueKey = `${ baseKey }-v${ remountVersion }`;
 
 	switch ( field.type ) {
 		case 'Select': {
@@ -831,6 +844,7 @@ export function renderFieldCommon( {
 						getFieldValue={ getFieldValue }
 						onFieldChange={ onFieldChange }
 						variableSuggestions={ variableSuggestions }
+						remountVersion={ remountVersion }
 					/>
 				);
 			}
@@ -917,7 +931,7 @@ export function renderFieldCommon( {
 			return (
 				<div className="w-full">
 					<Input
-						key={ field.id }
+						key={ uniqueKey }
 						by="label"
 						placeholder={ placeholder }
 						defaultValue={ currentFieldValue }
@@ -1078,6 +1092,7 @@ export const renderFieldSwitch = ( field, options ) => {
 		fieldItemIds,
 		setFieldItemIds,
 		renderAsGroupComponent = true,
+		remountVersion = 0,
 	} = options;
 
 	if ( field.type === 'Group' && field.cloneable ) {
@@ -1091,6 +1106,7 @@ export const renderFieldSwitch = ( field, options ) => {
 					variableSuggestions,
 					fieldItemIds,
 					setFieldItemIds,
+					remountVersion,
 				} ) }
 			</div>
 		);
@@ -1104,6 +1120,7 @@ export const renderFieldSwitch = ( field, options ) => {
 				getFieldValue={ getFieldValue }
 				onFieldChange={ onFieldChange }
 				variableSuggestions={ variableSuggestions }
+				remountVersion={ remountVersion }
 			/>
 		);
 	}
@@ -1118,6 +1135,7 @@ export const renderFieldSwitch = ( field, options ) => {
 					onFieldChange,
 					variableSuggestions,
 					renderAsGroupComponent,
+					remountVersion,
 				} ) }
 			</div>
 		);
@@ -1132,6 +1150,7 @@ export const renderFieldSwitch = ( field, options ) => {
 				onFieldChange,
 				variableSuggestions,
 				renderAsGroupComponent,
+				remountVersion,
 			} ) }
 		</div>
 	);

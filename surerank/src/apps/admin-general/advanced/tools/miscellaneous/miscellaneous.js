@@ -30,7 +30,7 @@ export const PAGE_CONTENT = [
 										'Help shape the future of SureRank. Share how you use the plugin so we can build features that matter, fix issues faster, and make smarter decisions.',
 										'surerank'
 									) }
-								</span>
+								</span>{ ' ' }
 								<a
 									href={ getSurerankUtmUrl(
 										'https://surerank.com/share-usage-data/',

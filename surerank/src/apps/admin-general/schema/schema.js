@@ -16,6 +16,7 @@ import { SaveSettingsButton } from '@/apps/admin-components/global-save-button';
 import { createLazyRoute } from '@tanstack/react-router';
 import { UpgradeNotice } from '@/global/components/nudges';
 import WpSchemaProNotice from '@/global/components/wp-schema-pro-notice';
+import AuthorEmailNotice from './author-email-notice';
 
 // Schema categories
 const SCHEMA_CATEGORIES = {
@@ -340,6 +341,7 @@ const Schema = () => {
 				'surerank'
 			) }
 		>
+			<AuthorEmailNotice />
 			<div className="flex flex-col items-start p-4 gap-6 bg-white shadow-sm rounded-xl">
 				{ renderSchemaTable(
 					categorizedSchemas[ SCHEMA_CATEGORIES.global.value ],

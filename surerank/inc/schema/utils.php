@@ -89,7 +89,8 @@ class Utils {
 	public static function build_final_schemas( $schemas ) {
 		$result = [];
 		foreach ( $schemas as $key => $schema ) {
-			$unique_id            = self::generate_unique_id();
+			$title                = is_array( $schema ) && isset( $schema['title'] ) && is_scalar( $schema['title'] ) ? (string) $schema['title'] : (string) $key;
+			$unique_id            = self::generate_stable_id( $title, $result );
 			$result[ $unique_id ] = $schema;
 		}
 
@@ -227,14 +228,29 @@ class Utils {
 	}
 
 	/**
-	 * Generate Unique ID
+	 * Generate a deterministic key for a default schema.
 	 *
-	 * Generates a unique ID for a given schema type.
+	 * Default schema keys must be stable across requests: page-level meta
+	 * stores overrides and exclusions by key, and on installs where the
+	 * settings option was never persisted these defaults are rebuilt on every
+	 * request — random keys there could never match stored meta.
 	 *
-	 * @return string The unique ID.
+	 * @param string               $seed     Schema title (or positional key) to derive the ID from.
+	 * @param array<string, mixed> $existing Already-assigned IDs, to suffix duplicate titles.
+	 * @return string The deterministic ID.
+	 * @since 1.10.1
 	 */
-	private static function generate_unique_id(): string {
-		return sprintf( '%s', wp_generate_uuid4() );
+	private static function generate_stable_id( string $seed, array $existing ): string {
+		$base = 'srdef-' . substr( md5( 'surerank-default-schema-' . strtolower( trim( $seed ) ) ), 0, 16 );
+
+		$unique_id = $base;
+		$suffix    = 2;
+		while ( isset( $existing[ $unique_id ] ) ) {
+			$unique_id = $base . '-' . $suffix;
+			$suffix++;
+		}
+
+		return $unique_id;
 	}
 
 	/**

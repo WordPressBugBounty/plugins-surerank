@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { useEffect, useMemo, useState } from '@wordpress/element';
+import { useEffect, useMemo, useRef, useState } from '@wordpress/element';
 import {
 	select as staticSelect,
 	dispatch as staticDispatch,
@@ -190,9 +190,17 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 	);
 
 	const globalSchemas = globalDefaults.schemas || {};
-	const postMetaSchemas = postMetaData?.schemas || {};
-	const hasPostMetaSchemas = Object.keys( postMetaSchemas ).length > 0;
-	const schemas = hasPostMetaSchemas ? postMetaSchemas : globalSchemas || {};
+	// postMetaData.schemas is the server-resolved effective set: inherited
+	// globals merged with this page's overrides and exclusions. An empty map
+	// legitimately means every schema is excluded on this page, so only fall
+	// back to globals while the settings fetch has not resolved yet.
+	const schemas = postMetaData?.schemas ?? globalSchemas ?? {};
+	const excludedSchemas = postMetaData?.excluded_schemas || [];
+	// Server-owned provenance: global keys whose effective entry carries
+	// page-level values. Refreshed on every save round-trip.
+	const overriddenSchemas = Array.isArray( postMetaData?.overridden_schemas )
+		? postMetaData.overridden_schemas
+		: [];
 
 	const validSchemas = useMemo(
 		() =>
@@ -304,6 +312,7 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 	}, [ schemas ] );
 
 	const handleAddField = ( schemaId, fieldId ) => {
+		cancelPendingReset( schemaId );
 		const schemaTitle = schemas[ schemaId ]?.title;
 		const allFields = schemaTypeData[ schemaTitle ] || [];
 		const fieldToAdd = allFields.find( ( f ) => f.id === fieldId );
@@ -330,12 +339,11 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 		};
 
 		const cleanedSchemas = cleanSchemas( updatedSchemas );
-		updatePostMetaData( {
-			schemas: cleanedSchemas,
-		} );
+		commitSchemas( cleanedSchemas );
 	};
 
 	const handleDeleteField = ( schemaId, fieldId ) => {
+		cancelPendingReset( schemaId );
 		const updatedFields = { ...schemas[ schemaId ].fields };
 		delete updatedFields[ fieldId ];
 
@@ -348,9 +356,7 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 		};
 
 		const cleanedSchemas = cleanSchemas( updatedSchemas );
-		updatePostMetaData( {
-			schemas: cleanedSchemas,
-		} );
+		commitSchemas( cleanedSchemas );
 	};
 
 	const cleanSchemas = ( schemasData ) => {
@@ -366,53 +372,167 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 		return cleanedSchemas;
 	};
 
+	// Global keys whose state this session actually knows: the server-resolved
+	// effective set it was seeded with plus the exclusions already stored.
+	// Rule-hidden globals are in neither — they were never shown, so their
+	// absence from a save payload must not read as a deletion, even if a rule
+	// change makes them visible while the popup is open.
+	const seenSchemaKeysRef = useRef( null );
 	useEffect( () => {
-		const updatedSchemas = {};
-		Object.entries( schemas ).forEach( ( [ schemaId, schema ] ) => {
-			const schemaFields = schemaTypeData[ schema.title ] || [];
-			const existingFields = schema.fields || {};
+		if (
+			seenSchemaKeysRef.current === null &&
+			postMetaData?.schemas !== undefined
+		) {
+			seenSchemaKeysRef.current = [
+				...Object.keys( postMetaData.schemas ),
+				...( postMetaData.excluded_schemas || [] ),
+			];
+		}
+	}, [ postMetaData?.schemas, postMetaData?.excluded_schemas ] );
 
-			// Only initialize with default=true or required=true fields
-			const defaultFields = processFields( schemaFields, true );
-			const mergedFields = { ...defaultFields, ...existingFields };
+	// globalDefaults lands in a separate store dispatch after postSeoMeta. The
+	// whole object is the loaded signal (a site can legitimately have zero
+	// global schemas); schemas must also have resolved so the effective set is
+	// real. Until both land, provenance cannot be judged and a mutation would
+	// ship an empty baseline — the server would read "session saw zero
+	// globals" and silently drop deletions.
+	const globalsLoaded = Object.keys( globalDefaults ).length > 0;
+	const schemasReady = globalsLoaded && postMetaData?.schemas !== undefined;
 
-			if ( Object.keys( existingFields ).length === 0 ) {
-				mergedFields[ '@type' ] = schema?.type || '';
-				updatedSchemas[ schemaId ] = {
-					...schema,
-					fields: mergedFields,
-				};
+	// Every schema mutation ships with a snapshot of the globals this session
+	// was seeded with, scoped to the keys it displayed. The server diffs
+	// payload entries against it to tell "stale but untouched" (a global
+	// edited in another tab keeps inheriting the live value) from real
+	// page-level edits, and only tombstones globals this session actually
+	// saw. Transport-only — never persisted.
+	const commitSchemas = ( updatedSchemas ) => {
+		// Mutations are UI-gated on schemasReady; this is the safety net for
+		// filter-injected callers (Pro extensions).
+		if ( ! schemasReady ) {
+			return;
+		}
+		const seenKeys = seenSchemaKeysRef.current;
+		const baseline = {};
+		Object.entries( cleanSchemas( globalSchemas ) ).forEach(
+			( [ key, entry ] ) => {
+				if ( seenKeys === null || seenKeys.includes( key ) ) {
+					baseline[ key ] = entry;
+				}
 			}
+		);
+		updatePostMetaData( {
+			schemas: updatedSchemas,
+			schemas_baseline: baseline,
+		} );
+	};
+
+	// Some field widgets are uncontrolled (EditorInput and the Title Input
+	// take defaultValue), so a store update alone does not repaint them. A
+	// reset bumps the nonce of each affected schema; the nonce flows into
+	// renderFieldCommon as remountVersion, remounting only the uncontrolled
+	// leaf inputs in place — layout, group state, and other schemas stay
+	// untouched.
+	const [ resetNonces, setResetNonces ] = useState( {} );
+	const bumpResetNonces = ( schemaIds ) =>
+		setResetNonces( ( nonces ) => {
+			const next = { ...nonces };
+			schemaIds.forEach( ( id ) => {
+				next[ id ] = ( next[ id ] || 0 ) + 1;
+			} );
+			return next;
 		} );
 
-		if ( Object.keys( updatedSchemas ).length > 0 ) {
-			const cleanedSchemas = cleanSchemas( {
-				...schemas,
-				...updatedSchemas,
-			} );
+	// Optimistic provenance: the rest of the popup shows draft state, so a
+	// reset flips the badge back to Global and hides the reset affordances
+	// immediately, even though the override stays in saved meta until Save.
+	// Editing the schema again cancels its pending reset (it is an override
+	// again); a save round-trip replaces everything with server truth.
+	const [ pendingResets, setPendingResets ] = useState( () => new Set() );
 
-			if (
-				JSON.stringify( cleanedSchemas ) !== JSON.stringify( schemas )
-			) {
-				updatePostMetaData( {
-					schemas: cleanedSchemas,
-				} );
+	useEffect( () => {
+		setPendingResets( new Set() );
+	}, [ postMetaData?.overridden_schemas ] );
+
+	const cancelPendingReset = ( schemaId ) =>
+		setPendingResets( ( previous ) => {
+			if ( ! previous.has( schemaId ) ) {
+				return previous;
 			}
+			const next = new Set( previous );
+			next.delete( schemaId );
+			return next;
+		} );
+
+	// Draft provenance the UI renders: server-reported overrides minus the
+	// ones reset in this session.
+	const effectiveOverridden = overriddenSchemas.filter(
+		( key ) => ! pendingResets.has( key )
+	);
+
+	// Exclusions and page-added schemas are detectable client-side; value-level
+	// overrides come from the server-owned overridden_schemas provenance list,
+	// refreshed on every save round-trip.
+	const hasPageLevelChanges =
+		schemasReady &&
+		( excludedSchemas.length > 0 ||
+			effectiveOverridden.length > 0 ||
+			Object.keys( schemas ).some(
+				( schemaId ) => ! ( schemaId in globalSchemas )
+			) );
+
+	// Round-trip the untouched global set: the server diffs it to empty
+	// overrides and no exclusions, returning this page to full inheritance.
+	// Entries stale against a global edited in another tab are protected by
+	// the baseline (they equal it, so the live global wins server-side).
+	// Scoped to the keys this session saw: globalDefaults holds the raw
+	// global map, but the effective set is rule-filtered server-side, so an
+	// unscoped reset would surface globals whose display rules exclude this
+	// page (and the next save would silently drop them again).
+	const handleResetToGlobal = () => {
+		const seenKeys = seenSchemaKeysRef.current;
+		const visibleGlobalSchemas = Object.fromEntries(
+			Object.entries( globalSchemas ).filter(
+				( [ key ] ) => seenKeys === null || seenKeys.includes( key )
+			)
+		);
+		commitSchemas( cleanSchemas( visibleGlobalSchemas ) );
+		// Draft exclusions clear too so the Reset affordance hides; the save
+		// path always recomputes excluded_schemas from the payload, so a
+		// client-sent value cannot leak into stored meta.
+		updatePostMetaData( { excluded_schemas: [] } );
+		setPendingResets( new Set( overriddenSchemas ) );
+		bumpResetNonces( Object.keys( visibleGlobalSchemas ) );
+	};
+
+	// Reset one overridden schema to its global values while preserving every
+	// other page-level change: swap the live global copy back into the
+	// effective set; the server diff then drops the override for this key.
+	const handleResetSchemaToGlobal = ( schemaId ) => {
+		if ( ! ( schemaId in globalSchemas ) ) {
+			return;
 		}
-	}, [ schemas, schemaTypeData, updatePostMetaData ] );
+		commitSchemas(
+			cleanSchemas( {
+				...schemas,
+				[ schemaId ]: globalSchemas[ schemaId ],
+			} )
+		);
+		setPendingResets( ( previous ) => new Set( previous ).add( schemaId ) );
+		bumpResetNonces( [ schemaId ] );
+	};
 
 	const handleDeleteSchema = ( schemaId ) => {
 		const updatedSchemas = { ...schemas };
 		delete updatedSchemas[ schemaId ];
 
 		const cleanedSchemas = cleanSchemas( updatedSchemas );
-		updatePostMetaData( {
-			schemas: cleanedSchemas,
-		} );
+		commitSchemas( cleanedSchemas );
 	};
 
 	const handleAddSchema = () => {
 		const schemaUniqueId = generateUUID();
+		// Fill default/required fields at creation — new schemas must be
+		// complete when saved; nothing back-fills them afterwards.
 		const newSchema = {
 			title: selectedSchema,
 			type: selectedType,
@@ -421,15 +541,16 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 				specific: [],
 				specificText: [],
 			},
-			fields: {},
+			fields: {
+				...processFields( schemaTypeData[ selectedSchema ] || [], true ),
+				'@type': selectedType,
+			},
 		};
 
 		const updatedSchemas = { ...schemas, [ schemaUniqueId ]: newSchema };
 		const cleanedSchemas = cleanSchemas( updatedSchemas );
 
-		updatePostMetaData( {
-			schemas: cleanedSchemas,
-		} );
+		commitSchemas( cleanedSchemas );
 
 		setExpandedSchemaId( schemaUniqueId );
 		setIsModalOpen( false );
@@ -700,9 +821,7 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 
 		const cleanedSchemas = cleanSchemas( updatedSchemas );
 
-		updatePostMetaData( {
-			schemas: cleanedSchemas,
-		} );
+		commitSchemas( cleanedSchemas );
 		setExpandedSchemaId( targetSchemaId );
 		trackSchemaRecommendationEvent( 'recommendation_added' ).catch(
 			() => {}
@@ -740,9 +859,7 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 			},
 		};
 		const cleanedSchemas = cleanSchemas( updatedSchemas );
-		updatePostMetaData( {
-			schemas: cleanedSchemas,
-		} );
+		commitSchemas( cleanedSchemas );
 	};
 
 	const getFieldValue = ( schemaId, fieldId ) => {
@@ -750,15 +867,14 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 	};
 
 	const onFieldChange = ( schemaId, fieldId, newValue ) => {
+		cancelPendingReset( schemaId ); // Edited again — it's an override again.
 		handleFieldUpdate( schemaId, fieldId, newValue );
 		if ( fieldId === '@type' ) {
 			const updatedSchemas = { ...schemas };
 			updatedSchemas[ schemaId ].type =
 				updatedSchemas[ schemaId ]?.title || ''; // added for backward compatibility.
 			updatedSchemas[ schemaId ].fields[ '@type' ] = newValue;
-			updatePostMetaData( {
-				schemas: updatedSchemas,
-			} );
+			commitSchemas( updatedSchemas );
 		}
 	};
 
@@ -830,6 +946,7 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 						onFieldChange: handleSubFieldChange,
 						variableSuggestions,
 						renderAsGroupComponent: false,
+						remountVersion: resetNonces[ schemaId ] || 0,
 					} ) }
 				</div>
 			</div>
@@ -864,6 +981,7 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 			fieldItemIds,
 			setFieldItemIds,
 			renderAsGroupComponent: true,
+			remountVersion: resetNonces[ schemaId ] || 0,
 		} );
 	};
 
@@ -992,7 +1110,7 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 					currentSchema: schemas[ schemaId ] || {},
 					setMetaSetting: ( key, value ) => {
 						if ( key === 'schemas' ) {
-							updatePostMetaData( { schemas: value } );
+							commitSchemas( value );
 						}
 					},
 					variableSuggestions,
@@ -1016,7 +1134,7 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 						currentSchema: schemas[ schemaId ] || {},
 						setMetaSetting: ( key, value ) => {
 							if ( key === 'schemas' ) {
-								updatePostMetaData( { schemas: value } );
+								commitSchemas( value );
 							}
 						},
 					} }
@@ -1039,17 +1157,36 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 				<Text size={ 14 } weight={ 500 } color="label">
 					{ __( 'Schemas in Use', 'surerank' ) }
 				</Text>
-				<Button
-					variant="outline"
-					size="sm"
-					icon={ <Sparkles className="size-3.5" /> }
-					onClick={ handleRecommendSchemas }
-					disabled={ isGeneratingRecommendations }
-				>
-					{ isGeneratingRecommendations
-						? recommendingText
-						: recommendText }
-				</Button>
+				<div className="flex items-center gap-2">
+					{ hasPageLevelChanges && (
+						<ConfirmationPopover
+							onConfirm={ handleResetToGlobal }
+							confirmText={ __( 'Reset', 'surerank' ) }
+							placement="bottom"
+						>
+							<Button
+								variant="link"
+								size="sm"
+								icon={ <RefreshCw className="size-3.5" /> }
+							>
+								{ __( 'Reset to Global', 'surerank' ) }
+							</Button>
+						</ConfirmationPopover>
+					) }
+					<Button
+						variant="outline"
+						size="sm"
+						icon={ <Sparkles className="size-3.5" /> }
+						onClick={ handleRecommendSchemas }
+						disabled={
+							! schemasReady || isGeneratingRecommendations
+						}
+					>
+						{ isGeneratingRecommendations
+							? recommendingText
+							: recommendText }
+					</Button>
+				</div>
 			</div>
 
 			{ recommendationsError && (
@@ -1245,7 +1382,18 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 					'w-full bg-background-secondary flex flex-col items-center justify-center rounded p-1'
 				) }
 			>
-				{ validSchemas.length > 0 ? (
+				{ /* Global defaults and the resolved effective set arrive in
+				separate store updates; mutating before both land would ship an
+				empty baseline (deletions silently dropped), so the whole list
+				stays a read-only skeleton until ready. */ }
+				{ ! schemasReady && (
+					<div className="w-full p-2 space-y-2">
+						<div className="h-10 w-full rounded bg-background-primary animate-pulse" />
+						<div className="h-10 w-full rounded bg-background-primary animate-pulse" />
+						<div className="h-10 w-full rounded bg-background-primary animate-pulse" />
+					</div>
+				) }
+				{ schemasReady && validSchemas.length > 0 && (
 					<Accordion
 						type="simple"
 						iconType="arrow"
@@ -1253,6 +1401,14 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 						autoClose={ false }
 					>
 						{ validSchemas.map( ( [ schemaId, schema ] ) => {
+							// Provenance: a key outside the global map is
+							// page-added; a global key listed in the server's
+							// overridden_schemas carries page-level values.
+							// Only an unmodified global key is inherited.
+							const isGlobalKey = schemaId in globalSchemas;
+							const isOverridden =
+								effectiveOverridden.includes( schemaId );
+							const isInherited = isGlobalKey && ! isOverridden;
 							return (
 								<Accordion.Item
 									key={ schemaId }
@@ -1266,27 +1422,103 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 										iconType="arrow"
 										className="hover:bg-background-primary rounded-md flex justify-between items-center [&>div]:w-full p-2 gap-2 [&>svg]:size-4 cursor-pointer"
 									>
-										<span className="text-base font-normal text-text-primary leading-6 ml-1">
+										<span className="text-base font-normal text-text-primary leading-6 ml-1 inline-flex items-center gap-1.5">
 											{ schema.title }
+											{ schemasReady && (
+												<Badge
+													label={
+														isInherited
+															? __(
+																	'Global',
+																	'surerank'
+															  )
+															: __(
+																	'Page',
+																	'surerank'
+															  )
+													}
+													size="xs"
+													variant={
+														isInherited
+															? 'neutral'
+															: 'blue'
+													}
+												/>
+											) }
 										</span>
-										<ConfirmationPopover
-											onConfirm={ () =>
-												handleDeleteSchema( schemaId )
-											}
-											placement="bottom"
-											offset={ {
-												mainAxis: 8,
-												crossAxis: -28,
-											} }
-										>
-											<div
-												className="inline-flex ml-auto"
-												role="button"
-												tabIndex={ 0 }
+										<span className="inline-flex ml-auto items-center gap-2">
+											{ isOverridden && (
+												<ConfirmationPopover
+													onConfirm={ () =>
+														handleResetSchemaToGlobal(
+															schemaId
+														)
+													}
+													confirmText={ __(
+														'Reset',
+														'surerank'
+													) }
+													placement="bottom"
+													offset={ {
+														mainAxis: 8,
+														crossAxis: -28,
+													} }
+												>
+													<div
+														className="inline-flex"
+														role="button"
+														tabIndex={ 0 }
+														aria-label={ __(
+															'Reset this schema to Global',
+															'surerank'
+														) }
+													>
+														<SeoPopupTooltip
+															content={ __(
+																'Reset this schema to Global',
+																'surerank'
+															) }
+															placement="top"
+															arrow
+															className="z-[99999]"
+														>
+															<RefreshCw className="size-3.5 text-icon-secondary cursor-pointer" />
+														</SeoPopupTooltip>
+													</div>
+												</ConfirmationPopover>
+											) }
+											<ConfirmationPopover
+												onConfirm={ () =>
+													handleDeleteSchema(
+														schemaId
+													)
+												}
+												confirmText={
+													isGlobalKey
+														? __(
+																'Remove from page',
+																'surerank'
+														  )
+														: __(
+																'Remove',
+																'surerank'
+														  )
+												}
+												placement="bottom"
+												offset={ {
+													mainAxis: 8,
+													crossAxis: -28,
+												} }
 											>
-												<Trash className="size-3.5 text-icon-secondary cursor-pointer" />
-											</div>
-										</ConfirmationPopover>
+												<div
+													className="inline-flex"
+													role="button"
+													tabIndex={ 0 }
+												>
+													<Trash className="size-3.5 text-icon-secondary cursor-pointer" />
+												</div>
+											</ConfirmationPopover>
+										</span>
 									</Accordion.Trigger>
 									<Accordion.Content>
 										<div className="mt-3 space-y-4">
@@ -1297,7 +1529,8 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 							);
 						} ) }
 					</Accordion>
-				) : (
+				) }
+				{ schemasReady && 0 === validSchemas.length && (
 					<Alert
 						className="w-full shadow-none"
 						content={ __( 'No schemas configured.', 'surerank' ) }
@@ -1305,19 +1538,21 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 					/>
 				) }
 			</div>
-			<div className="w-full mt-6 rounded">
-				<Modal
-					selectedSchema={ selectedSchema }
-					setSelectedSchema={ setSelectedSchema }
-					selectedType={ selectedType }
-					setSelectedType={ setSelectedType }
-					schemaTypeOptions={ schemaTypeOptions }
-					defaultSchemas={ defaultSchemas }
-					handleAddSchema={ handleAddSchema }
-					isModalOpen={ isModalOpen }
-					closeModal={ closeModal }
-				/>
-			</div>
+			{ schemasReady && (
+				<div className="w-full mt-6 rounded">
+					<Modal
+						selectedSchema={ selectedSchema }
+						setSelectedSchema={ setSelectedSchema }
+						selectedType={ selectedType }
+						setSelectedType={ setSelectedType }
+						schemaTypeOptions={ schemaTypeOptions }
+						defaultSchemas={ defaultSchemas }
+						handleAddSchema={ handleAddSchema }
+						isModalOpen={ isModalOpen }
+						closeModal={ closeModal }
+					/>
+				</div>
+			) }
 		</div>
 	);
 };

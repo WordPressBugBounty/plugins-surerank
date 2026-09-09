@@ -53,7 +53,12 @@ class Requests {
 	public static function get( $url, $args = [] ) {
 		return wp_safe_remote_get(
 			$url,
-			$args
+			array_merge(
+				[
+					'timeout' => 15, // phpcs:ignore WordPressVIPMinimum.Performance.RemoteRequestTimeout.timeout_timeout -- Rendering a full page takes longer than the 5 second core default.
+				],
+				$args
+			)
 		);
 	}
 

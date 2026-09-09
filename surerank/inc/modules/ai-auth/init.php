@@ -53,7 +53,14 @@ class Init {
 		return array_merge(
 			$variables,
 			[
-				'ai_authenticated' => Controller::get_instance()->get_auth_status(),
+				// The account (email) is deliberately NOT localized here. These
+				// common vars print on every wp-admin page for every logged-in
+				// user, and the email doubles as the credit-service API token.
+				// Screens that need it must use the permission-gated /ai/auth
+				// REST route instead.
+				'ai_authenticated'  => Controller::get_instance()->get_auth_status(),
+				'ai_auth_source'    => Controller::get_instance()->get_auth_source(),
+				'ai_billing_portal' => SURERANK_BILLING_PORTAL,
 			]
 		);
 	}

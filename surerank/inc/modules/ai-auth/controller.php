@@ -10,8 +10,9 @@
 
 namespace SureRank\Inc\Modules\Ai_Auth;
 
+use SureRank\Inc\Functions\Get;
+use SureRank\Inc\Functions\Update;
 use SureRank\Inc\Traits\Get_Instance;
-use WP;
 use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -31,7 +32,6 @@ class Controller {
 	 * Module settings key.
 	 *
 	 * @since 1.4.2
-	 * @var string
 	 */
 	public const SETTINGS_KEY = 'surerank_auth';
 
@@ -77,8 +77,45 @@ class Controller {
 	 * @return bool
 	 */
 	public function get_auth_status() {
-		$auth_status = get_option( self::SETTINGS_KEY, false );
-		return ! empty( $auth_status );
+		return '' !== $this->get_auth_source();
+	}
+
+	/**
+	 * Whether a SureRank AI account is connected locally (freemium auth).
+	 *
+	 * This is intentionally NOT license-aware: it reflects only the local
+	 * account so the disconnect flow can confirm the account was removed.
+	 *
+	 * @since 1.10.1
+	 * @return bool
+	 */
+	public function has_connected_account() {
+		return ! empty( get_option( self::SETTINGS_KEY, false ) );
+	}
+
+	/**
+	 * Resolve how the user is authenticated with SureRank AI.
+	 *
+	 * @since 1.10.1
+	 * @return string 'license' (active Pro license), 'account' (connected
+	 *                account), or '' when not connected.
+	 */
+	public function get_auth_source() {
+		// Check the Pro license authoritatively via its own class rather than a
+		// spoofable public filter, so arbitrary code cannot flip the state.
+		// The license wins over a connected account: disconnecting the account
+		// would not disconnect AI for a licensed user, so the UI offers
+		// "Manage License" instead of a misleading "Disconnect".
+		$licensing = '\SureRankPro\Inc\Licensing\Licensing';
+		if ( is_callable( [ $licensing, 'is_license_active' ] ) && $licensing::is_license_active() ) {
+			return 'license';
+		}
+
+		if ( $this->has_connected_account() ) {
+			return 'account';
+		}
+
+		return '';
 	}
 
 	/**
@@ -138,10 +175,8 @@ class Controller {
 				$is_subscribed = (bool) $decrypted_data_array['is_subscribed'];
 			}
 
-			// Update the analytics option based on the preference.
-			// Set 'yes' if opted in, empty string if not.
-			$enable_contribution = $is_subscribed ? 'yes' : '';
-			update_option( 'surerank_usage_optin', $enable_contribution );
+			// Record the usage-tracking consent captured at signup.
+			$this->maybe_set_usage_optin( $is_subscribed );
 
 			// Remove is_subscribed from the decrypted data.
 			unset( $decrypted_data_array['is_subscribed'] );
@@ -154,5 +189,65 @@ class Controller {
 		update_option( self::SETTINGS_KEY, $decrypted_data_array );
 
 		return true;
+	}
+
+	/**
+	 * Delete stored auth data (disconnect SureRank AI).
+	 *
+	 * @since 1.10.1
+	 * @return bool True on success, false otherwise.
+	 */
+	public function delete_auth() {
+		return delete_option( self::SETTINGS_KEY );
+	}
+
+	/**
+	 * Get stored account details.
+	 *
+	 * Only a minimal, explicitly whitelisted subset is returned. The stored
+	 * option holds the full decrypted auth payload, so exposing it wholesale
+	 * (via localization/REST) could leak fields the frontend never needs.
+	 *
+	 * @since 1.10.1
+	 * @return array<string, mixed> Whitelisted account data (user_email, plan) or empty array.
+	 */
+	public function get_account() {
+		$account = get_option( self::SETTINGS_KEY, [] );
+
+		if ( ! is_array( $account ) ) {
+			return [];
+		}
+
+		return array_intersect_key( $account, array_flip( [ 'user_email', 'plan' ] ) );
+	}
+
+	/**
+	 * Persist the usage-tracking consent captured at AI/account signup.
+	 *
+	 * The `is_subscribed` flag from the server reflects a real consent choice the
+	 * user made at signup, so it is only honored to FILL an empty state — it must
+	 * never silently override an explicit choice the user already made through
+	 * onboarding, the settings toggle, or the BSF admin notice. An existing
+	 * 'yes'/'no' is therefore left untouched; a legacy '' (written by older
+	 * builds) and an absent option both count as "no choice yet" and are writable.
+	 *
+	 * Opt-out is always stored as 'no', never '' (keeps every writer consistent —
+	 * see issue #2314). Site-local option semantics are intentional here; aligning
+	 * all consent writers with the library's network-level `get_site_option`
+	 * reader on multisite is tracked separately (issue #2316, M1).
+	 *
+	 * @param bool $is_subscribed Whether the user opted into usage sharing at signup.
+	 * @since 1.10.1
+	 * @return void
+	 */
+	protected function maybe_set_usage_optin( $is_subscribed ) {
+		$existing = Get::option( 'surerank_usage_optin', false );
+
+		// Respect an explicit choice the user has already made.
+		if ( 'yes' === $existing || 'no' === $existing ) {
+			return;
+		}
+
+		Update::option( 'surerank_usage_optin', $is_subscribed ? 'yes' : 'no' );
 	}
 }

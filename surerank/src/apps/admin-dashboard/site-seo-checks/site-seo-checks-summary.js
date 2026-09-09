@@ -25,7 +25,6 @@ const SiteSeoChecksTitle = ( { isLoading, handleRunChecksAgain } ) => {
 
 	return (
 		<Container align="center" justify="between" className="p-2">
-			<SaveAuthToken />
 			<Title
 				tag="h4"
 				title={ __( 'Site SEO Audit', 'surerank' ) }
@@ -117,6 +116,12 @@ const SiteSeoChecksSummary = ( { limit = 5, showViewAll = true } ) => {
 				/>
 				<SiteSeoChecksDrawer />
 			</Suspense>
+			{ /*
+			 * Outside the Suspense boundary (like site-seo-checks-main.js):
+			 * the auth popup redirects back to this page, and the token save
+			 * must not wait for the site SEO analysis to resolve.
+			 */ }
+			<SaveAuthToken />
 		</div>
 	);
 };

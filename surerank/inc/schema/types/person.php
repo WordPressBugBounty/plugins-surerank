@@ -141,10 +141,8 @@ class Person extends Base {
 				[
 					'id'      => 'email',
 					'label'   => __( 'Email', 'surerank' ),
-					'default' => true,
 					'show'    => true,
 					'tooltip' => __( 'The email address of the person', 'surerank' ),
-					'std'     => '%author.email%',
 					'type'    => 'Text',
 				],
 				[

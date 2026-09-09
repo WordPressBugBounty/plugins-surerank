@@ -15,6 +15,7 @@ use SureRank\Inc\Functions\Requests;
 use SureRank\Inc\Functions\Send_Json;
 use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Functions\Update;
+use SureRank\Inc\Schema\Meta_Resolver;
 use SureRank\Inc\Traits\Get_Instance;
 use WP_REST_Request;
 use WP_REST_Server;
@@ -403,15 +404,7 @@ class Onboarding extends Api_Base {
 			return false;
 		}
 
-		$default_schemas                               = Settings::prepare_schemas( $settings, 'page', $about_page, true );
-		$schema                                        = $this->find_schema_by_type( $settings, 'WebPage' );
-		$default_schemas[ $schema ]['fields']['@type'] = 'AboutPage';
-		$default_schemas[ $schema ]['type']            = 'AboutPage';
-		$schemas                                       = [
-			'schemas' => $default_schemas,
-		];
-
-		return Update::post_meta( $about_page, 'surerank_settings_schemas', $schemas );
+		return $this->set_webpage_override( $about_page, $settings, 'AboutPage' );
 	}
 
 	/**
@@ -429,15 +422,7 @@ class Onboarding extends Api_Base {
 			return false;
 		}
 
-		$default_schemas                               = Settings::prepare_schemas( $settings, 'page', $contact_page, true );
-		$schema                                        = $this->find_schema_by_type( $settings, 'WebPage' );
-		$default_schemas[ $schema ]['fields']['@type'] = 'ContactPage';
-		$default_schemas[ $schema ]['type']            = 'ContactPage';
-		$schemas                                       = [
-			'schemas' => $default_schemas,
-		];
-
-		return Update::post_meta( $contact_page, 'surerank_settings_schemas', $schemas );
+		return $this->set_webpage_override( $contact_page, $settings, 'ContactPage' );
 	}
 
 	/**
@@ -664,6 +649,42 @@ class Onboarding extends Api_Base {
 		$existing     = get_option( 'surerank_onboarding_user_details', self::DEFAULT_USER_DETAILS );
 		$user_details = wp_parse_args( $data, $existing );
 		return update_option( 'surerank_onboarding_user_details', $user_details );
+	}
+
+	/**
+	 * Set a page-level WebPage schema override.
+	 *
+	 * Stores only the mutated WebPage entry as an override (new override-only
+	 * meta format) instead of snapshotting the whole global schema set, so the
+	 * page keeps inheriting every other global schema.
+	 *
+	 * @since 1.10.1
+	 * @param int                  $page_id  Page ID.
+	 * @param array<string, mixed> $settings Global settings (with persisted schema keys).
+	 * @param string               $type     WebPage subtype (AboutPage / ContactPage).
+	 * @return bool|int
+	 */
+	private function set_webpage_override( $page_id, &$settings, $type ) {
+		$schema_key = $this->find_schema_by_type( $settings, 'WebPage' );
+
+		if ( null === $schema_key || ! isset( $settings['schemas'][ $schema_key ] ) || ! is_array( $settings['schemas'][ $schema_key ] ) ) {
+			return false;
+		}
+
+		$entry                    = $settings['schemas'][ $schema_key ];
+		$entry['fields']['@type'] = $type;
+		$entry['type']            = $type;
+		$entry['parent']          = true;
+		unset( $entry['show_on'], $entry['not_show_on'] );
+
+		return Update::post_meta(
+			$page_id,
+			'surerank_settings_schemas',
+			[
+				'schemas'                   => [ $schema_key => $entry ],
+				Meta_Resolver::EXCLUDED_KEY => [],
+			]
+		);
 	}
 
 	/**

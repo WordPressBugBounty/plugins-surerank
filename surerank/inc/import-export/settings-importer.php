@@ -15,6 +15,7 @@ use SureRank\Inc\Functions\Sanitize;
 use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Functions\Update;
 use SureRank\Inc\Traits\Get_Instance;
+use SureRank\Inc\Upgrades\Author_Email_Cleanup;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -190,6 +191,25 @@ class Settings_Importer {
 		// save path (Api_Base::sanitize_array_data) so malicious markup cannot
 		// be injected via an imported file while placeholders are preserved.
 		$all_new_settings = Sanitize::array_deep( [ Sanitize::class, 'sanitize_with_placeholders' ], $all_new_settings );
+
+		/*
+		 * A file exported before the default was removed carries the author
+		 * email the Person schema used to fill in, and the merge below replaces
+		 * the saved schemas wholesale. The one-time cleanup is gated on its own
+		 * option and will not run again, so clear the value here rather than
+		 * letting an import undo it.
+		 *
+		 * Gated on the exporting version: the variable is still supported, so a
+		 * newer file holding it was configured on purpose and has to import
+		 * unchanged. Without that gate, exporting and importing a deliberate
+		 * setting would silently drop it.
+		 */
+		if (
+			isset( $all_new_settings['schemas'] ) && is_array( $all_new_settings['schemas'] )
+			&& Author_Email_Cleanup::export_carries_default( $settings_data['version'] ?? null )
+		) {
+			$all_new_settings['schemas'] = Author_Email_Cleanup::clear_person_email( $all_new_settings['schemas'] );
+		}
 
 		// Merge with existing settings.
 		$final_settings = $overwrite

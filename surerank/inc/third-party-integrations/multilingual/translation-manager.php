@@ -118,11 +118,19 @@ class Translation_Manager {
 			return $post_data;
 		}
 
+		// A single language means no real alternates, so skip hreflang data
+		// entirely instead of emitting a self-referencing annotation.
+		if ( count( $translations ) <= 1 ) {
+			return $post_data;
+		}
+
 		$post_data['translations']     = $translations;
 		$post_data['default_language'] = $default_lang;
 
-		if ( count( $translations ) <= 1 ) {
-			return $post_data;
+		// Keep <loc> consistent with the language-resolved hreflang URL for the
+		// entry's own language, in case the batch runs outside that language context.
+		if ( $post_language && isset( $translations[ $post_language ]['url'] ) ) {
+			$post_data['link'] = $translations[ $post_language ]['url'];
 		}
 
 		$entries = [ $post_data ];
@@ -186,7 +194,12 @@ class Translation_Manager {
 
 		if ( $term_language && $default_lang && $term_language !== $default_lang ) {
 			// Check if a default-language counterpart exists via term translations.
-			$term_translations = $this->provider->get_term_translations( $term->term_id, $term->taxonomy );
+			// Cache the result so the lookup below does not resolve the URLs twice.
+			if ( ! isset( self::$term_translation_cache[ $term->term_id ] ) ) {
+				self::$term_translation_cache[ $term->term_id ] = $this->provider->get_term_translations( $term->term_id, $term->taxonomy );
+			}
+
+			$term_translations = self::$term_translation_cache[ $term->term_id ];
 
 			if ( isset( $term_translations[ $default_lang ] ) ) {
 				// Default-language term exists and will carry the translations.
@@ -206,11 +219,19 @@ class Translation_Manager {
 			return $term_data;
 		}
 
+		// A single language means no real alternates, so skip hreflang data
+		// entirely instead of emitting a self-referencing annotation.
+		if ( count( $translations ) <= 1 ) {
+			return $term_data;
+		}
+
 		$term_data['translations']     = $translations;
 		$term_data['default_language'] = $default_lang;
 
-		if ( count( $translations ) <= 1 ) {
-			return $term_data;
+		// Keep <loc> consistent with the language-resolved hreflang URL for the
+		// entry's own language, in case the batch runs outside that language context.
+		if ( $term_language && isset( $translations[ $term_language ]['url'] ) ) {
+			$term_data['link'] = $translations[ $term_language ]['url'];
 		}
 
 		$entries = [ $term_data ];

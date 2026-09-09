@@ -439,7 +439,8 @@ class Facebook {
 		}
 
 		if ( empty( $global_meta['facebook_modified_time'] ) ) {
-			$global_meta['facebook_modified_time'] = get_post_modified_time( 'c', true, $post );
+			// Site timezone, matching get_the_date() above, so both article times carry the same offset.
+			$global_meta['facebook_modified_time'] = get_post_modified_time( 'c', false, $post );
 		}
 
 		return $global_meta;

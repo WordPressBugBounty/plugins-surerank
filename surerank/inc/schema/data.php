@@ -62,9 +62,9 @@ class Data {
 
 		// Normalize post content and calculate word count.
 		if ( isset( $this->data['post']['content'] ) ) {
-			$post_content                     = esc_html( (string) $this->data['post']['content'] );
-			$this->data['post']['content']    = $post_content;
-			$this->data['post']['word_count'] = str_word_count( $post_content );
+			$post_content                     = (string) $this->data['post']['content'];
+			$this->data['post']['content']    = esc_html( $post_content );
+			$this->data['post']['word_count'] = $this->get_word_count( $post_content );
 		}
 
 		return $this->data;
@@ -182,6 +182,25 @@ class Data {
 		}
 
 		return $fields;
+	}
+
+	/**
+	 * Counts words in content using Unicode-aware character properties.
+	 *
+	 * Apostrophes and hyphens are treated as part of a word only when they
+	 * occur between letters, matching the expected behaviour for phrases such
+	 * as "SureRank's" and "word-count".
+	 *
+	 * @since 1.10.1
+	 * @param string $content Content to count.
+	 * @return int Word count.
+	 */
+	private function get_word_count( string $content ): int {
+		$content = wp_strip_all_tags( html_entity_decode( $content, ENT_QUOTES | ENT_HTML5, 'UTF-8' ) );
+		$matches = [];
+		$count   = preg_match_all( '/\p{L}[\p{L}\p{M}]*(?:[\'’\-]\p{L}[\p{L}\p{M}]*)*/u', $content, $matches );
+
+		return false === $count ? 0 : $count;
 	}
 
 	/**

@@ -6,7 +6,7 @@ import {
 	startOfYesterday,
 } from 'date-fns';
 import clsx from 'clsx';
-import { createRoot } from '@wordpress/element';
+import { createRoot, isValidElement } from '@wordpress/element';
 import { twMerge } from 'tailwind-merge';
 import { CHECK_TYPES } from '@/global/constants';
 
@@ -108,8 +108,10 @@ export const mountComponent = ( selector, Component, timeout = 100 ) => {
 
 // Example of checking if a variable is a React component
 export const isReactComponent = ( variable ) => {
-	// Check by verifying the presence of the `$$typeof` property Symbol(react.element) in the variable.
-	return variable && variable?.$$typeof === Symbol.for( 'react.element' );
+	// Delegated to React so the check survives changes to the internal element
+	// symbol, which React 19 renamed from `react.element` to
+	// `react.transitional.element`.
+	return isValidElement( variable );
 };
 
 /**

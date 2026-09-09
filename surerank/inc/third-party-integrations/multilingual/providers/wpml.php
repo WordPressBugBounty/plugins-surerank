@@ -33,24 +33,43 @@ class Wpml implements Provider {
 	 * @return array<string, array{url: string, locale: string}>
 	 */
 	public function get_translations( int $post_id, string $post_type ): array {
+		// Non-translatable post types bypass wpml_object_id's missing-translation
+		// logic and would report every language as translated, so skip them.
+		if ( ! apply_filters( 'wpml_is_translated_post_type', null, $post_type ) ) {
+			return [];
+		}
+
 		$languages    = $this->get_active_languages();
 		$translations = [];
 
+		// WPML does not translate the page_on_front option inside a language
+		// switch, so front-page translations must resolve to the language home
+		// URL directly (same special case WPML core uses in get_ls_languages()).
+		$front_page_id = 'page' === get_option( 'show_on_front' ) ? (int) get_option( 'page_on_front' ) : 0;
+
 		foreach ( $languages as $lang_code => $language_data ) {
-			$translated_id = apply_filters( 'wpml_object_id', $post_id, $post_type, true, $lang_code );
+			// $return_original_if_missing must be false: with true, WPML returns the
+			// original post when no translation exists, so missing languages would be
+			// annotated with the original URL.
+			$translated_id = apply_filters( 'wpml_object_id', $post_id, $post_type, false, $lang_code );
 
 			if ( ! $translated_id ) {
 				continue;
 			}
 
-			$url = get_permalink( $translated_id );
+			$url = $front_page_id && $post_id === $front_page_id
+				? $this->resolve_in_language( $lang_code, static fn() => home_url( '/' ) )
+				: $this->resolve_in_language( $lang_code, static fn() => get_permalink( $translated_id ) );
 
 			if ( ! $url ) {
 				continue;
 			}
 
 			$translations[ $lang_code ] = [
-				'url'    => apply_filters( 'wpml_permalink', $url, $lang_code, true ),
+				// The language switch resolves directory prefix and translated
+				// slug; wpml_permalink (non-absolute) additionally maps the host
+				// on domain-per-language setups and is a no-op otherwise.
+				'url'    => apply_filters( 'wpml_permalink', $url, $lang_code ),
 				'locale' => Locale_Formatter::to_bcp47( $language_data['default_locale'] ?? $lang_code ),
 			];
 		}
@@ -95,6 +114,8 @@ class Wpml implements Provider {
 	 * @return bool
 	 */
 	public function is_translation_available( int $post_id, string $language ): bool {
+		// $return_original_if_missing = true is intentional here: the
+		// $translated_id !== $post_id check below detects the fallback.
 		$translated_id = apply_filters( 'wpml_object_id', $post_id, get_post_type( $post_id ), true, $language );
 		return ! empty( $translated_id ) && $translated_id !== $post_id;
 	}
@@ -108,6 +129,8 @@ class Wpml implements Provider {
 	 * @return int|null
 	 */
 	public function get_translated_post_id( int $post_id, string $language ): ?int {
+		// $return_original_if_missing = true is intentional here: callers
+		// (Translation_Manager) compare the result against the original ID.
 		$translated_id = apply_filters( 'wpml_object_id', $post_id, get_post_type( $post_id ), true, $language );
 		return $translated_id ? (int) $translated_id : null;
 	}
@@ -138,24 +161,38 @@ class Wpml implements Provider {
 	 * @return array<string, array{url: string, locale: string}>
 	 */
 	public function get_term_translations( int $term_id, string $taxonomy ): array {
+		// Non-translatable taxonomies bypass wpml_object_id's missing-translation
+		// logic and would report every language as translated, so skip them.
+		if ( ! apply_filters( 'wpml_is_translated_taxonomy', null, $taxonomy ) ) {
+			return [];
+		}
+
 		$languages    = $this->get_active_languages();
 		$translations = [];
 
 		foreach ( $languages as $lang_code => $language_data ) {
-			$translated_id = apply_filters( 'wpml_object_id', $term_id, $taxonomy, true, $lang_code );
+			// $return_original_if_missing must be false: with true, WPML returns the
+			// original term when no translation exists, so missing languages would be
+			// annotated with the original URL. It also guarantees the language switch
+			// below only happens for a confirmed translation, since WPML remaps term
+			// IDs by the current language.
+			$translated_id = apply_filters( 'wpml_object_id', $term_id, $taxonomy, false, $lang_code );
 
 			if ( ! $translated_id ) {
 				continue;
 			}
 
-			$url = get_term_link( (int) $translated_id, $taxonomy );
+			$url = $this->resolve_in_language( $lang_code, static fn() => get_term_link( (int) $translated_id, $taxonomy ) );
 
 			if ( is_wp_error( $url ) || ! $url ) {
 				continue;
 			}
 
 			$translations[ $lang_code ] = [
-				'url'    => apply_filters( 'wpml_permalink', $url, $lang_code, true ),
+				// The language switch resolves directory prefix and translated
+				// slug; wpml_permalink (non-absolute) additionally maps the host
+				// on domain-per-language setups and is a no-op otherwise.
+				'url'    => apply_filters( 'wpml_permalink', $url, $lang_code ),
 				'locale' => Locale_Formatter::to_bcp47( $language_data['default_locale'] ?? $lang_code ),
 			];
 		}
@@ -202,6 +239,37 @@ class Wpml implements Provider {
 	 */
 	private function get_active_languages(): array {
 		return apply_filters( 'wpml_active_languages', [], [ 'skip_missing' => true ] );
+	}
+
+	/**
+	 * Run a callback with WPML switched to the given language.
+	 *
+	 * Permalink and term-link functions resolve URLs in the current request
+	 * language, not the language of the object. The wpml_permalink filter
+	 * cannot repair the site root, so the translated front page would keep
+	 * the default-language URL without this switch.
+	 *
+	 * @since 1.10.1
+	 * @param string   $lang_code Target language code.
+	 * @param callable $callback Callback that resolves the URL.
+	 * @return mixed Whatever the callback returns.
+	 */
+	private function resolve_in_language( string $lang_code, callable $callback ) {
+		$current_language = apply_filters( 'wpml_current_language', null );
+
+		if ( $current_language === $lang_code ) {
+			return $callback();
+		}
+
+		do_action( 'wpml_switch_language', $lang_code );
+
+		try {
+			return $callback();
+		} finally {
+			// Restore even if a permalink filter throws, so the rest of the
+			// request does not run in the wrong language.
+			do_action( 'wpml_switch_language', $current_language );
+		}
 	}
 
 }

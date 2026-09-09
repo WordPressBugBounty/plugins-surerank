@@ -121,6 +121,7 @@ class Loader {
 
 		add_action( 'wp_loaded', [ $this, 'track_cron_run' ], 0 );
 		add_action( 'wp_loaded', [ \SureRank\Inc\Functions\Cache::class, 'maybe_upgrade' ], 0 );
+		add_action( 'wp_loaded', [ \SureRank\Inc\Upgrades\Author_Email_Cleanup::class, 'maybe_run' ], 0 );
 
 		register_activation_hook( SURERANK_FILE, [ $this, 'activation' ] );
 		register_deactivation_hook( SURERANK_FILE, [ $this, 'deactivation' ] );

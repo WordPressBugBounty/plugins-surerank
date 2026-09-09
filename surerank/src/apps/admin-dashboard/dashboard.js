@@ -8,6 +8,7 @@ import { useNavigate } from '@tanstack/react-router';
 import UpgradeToPro from '@AdminDashboard/upgrade-to-pro';
 import WelcomeCard from './welcome-card';
 import LearnProgressCard from './learn-progress-card';
+import SureRankAiCard from './surerank-ai-card';
 import { isProActive } from '@/functions/nudges';
 import currentUserCan from '@/functions/role-capabilities';
 
@@ -180,13 +181,15 @@ const Dashboard = () => {
 					</Container>
 				</Container.Item>
 				<Container.Item className="col-span-12 lg:col-span-4 flex flex-col gap-4 sm:gap-6">
+					{ /* Show UpgradeToPro when pro is not active */ }
+					{ ! isProActive() && <UpgradeToPro /> }
+
+					<SureRankAiCard />
+
 					{ /* Show WelcomeCard in sidebar when pro is active */ }
 					{ isProActive() && (
 						<WelcomeCard isProActive={ isProActive() } />
 					) }
-
-					{ /* Show UpgradeToPro when pro is not active */ }
-					{ ! isProActive() && <UpgradeToPro /> }
 
 					<LearnProgressCard />
 

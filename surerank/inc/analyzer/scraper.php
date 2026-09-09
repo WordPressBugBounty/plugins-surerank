@@ -58,6 +58,20 @@ class Scraper {
 			return $this->last_response;
 		}
 
+		// An error page parses as valid HTML with no meta tags in it, which would otherwise be
+		// reported as "tag missing" rather than as a failure to read the page at all.
+		$this->response_code = (int) wp_remote_retrieve_response_code( $this->last_response );
+		if ( $this->response_code >= 400 ) {
+			return new WP_Error(
+				'unexpected_status',
+				sprintf(
+					/* translators: %d: HTTP status code returned by the page. */
+					__( 'The page could not be read. It returned HTTP status %d.', 'surerank' ),
+					$this->response_code
+				)
+			);
+		}
+
 		$this->last_body = wp_remote_retrieve_body( $this->last_response );
 		if ( empty( $this->last_body ) ) {
 			$this->last_body = new WP_Error(
@@ -110,7 +124,45 @@ class Scraper {
 	 * @return array<string,mixed>|WP_Error HTTP response or WP_Error on failure.
 	 */
 	public function call_request( string $url ) {
-		return Requests::get( $url, apply_filters( 'surerank_scraper_headers', [] ) );
+		// The filter result is the header list, not the whole request args, so that a value
+		// returned by it actually reaches the request.
+		$args = [
+			'headers' => (array) apply_filters( 'surerank_scraper_headers', [] ),
+		];
+
+		return Requests::get( $url, $args );
+	}
+
+	/**
+	 * Fetch HTML content from a URL, bypassing any shared cache in front of it.
+	 *
+	 * Audits read the URL as the public sees it, cache and all. This is for telling a stale
+	 * cached copy apart from markup the site genuinely is not producing. Request headers do not
+	 * defeat every edge cache, so the cache key is varied instead.
+	 *
+	 * @param string $url The URL to scrape.
+	 * @return string|WP_Error HTML content or error on failure.
+	 * @since 1.10.1
+	 */
+	public function fetch_from_origin( string $url ) {
+		// Deliberately does not store the response: callers read headers off the audited request,
+		// and this is a side probe that must not become "the last response".
+		$response = $this->call_request(
+			add_query_arg( 'surerank_check', (int) floor( time() / MINUTE_IN_SECONDS ), $url )
+		);
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		if ( (int) wp_remote_retrieve_response_code( $response ) >= 400 ) {
+			return new WP_Error(
+				'unexpected_status',
+				__( 'The page could not be read.', 'surerank' )
+			);
+		}
+
+		return wp_remote_retrieve_body( $response );
 	}
 
 	/**
