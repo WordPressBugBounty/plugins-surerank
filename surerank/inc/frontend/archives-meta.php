@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Functions\Variables;
 use SureRank\Inc\Traits\Get_Instance;
@@ -59,6 +60,14 @@ class Archives_Meta {
 	 * @return array<string, mixed>|null $meta_data
 	 */
 	public function get_meta_data( $meta_data ) {
+		// The WooCommerce shop page is a product archive but carries its own
+		// stored SEO meta, which Single applies from the shop page's ID. Step
+		// aside only when that ID actually resolves, otherwise a site with no
+		// shop page configured would get no meta from either provider.
+		if ( Helper::get_shop_page_id() ) {
+			return $meta_data;
+		}
+
 		if ( ! is_author() && ! is_date() && ! is_post_type_archive() ) {
 			return $meta_data;
 		}

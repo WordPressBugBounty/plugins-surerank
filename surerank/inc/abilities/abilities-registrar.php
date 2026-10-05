@@ -23,6 +23,7 @@ use SureRank\Inc\Abilities\Settings\Update_Robots_Txt;
 use SureRank\Inc\Abilities\Settings\Update_Sitemap_Settings;
 use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Traits\Get_Instance;
+use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -35,15 +36,24 @@ class Abilities_Registrar {
 	use Get_Instance;
 
 	/**
+	 * Outcome of this request's MCP server registration attempt.
+	 *
+	 * Request scoped on purpose. An adapter only announces itself during a REST
+	 * request, so a stored value would be read back on admin page loads that never
+	 * attempted a registration, describing some earlier request instead of the
+	 * current state. The status route reads this in the request that produced it.
+	 *
+	 * @var WP_Error|bool|null Null until an adapter has announced itself.
+	 * @since 1.10.2
+	 */
+	private static $registration_result = null;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 1.7.5
 	 */
 	public function __construct() {
-		if ( ! function_exists( 'wp_register_ability' ) ) {
-			return;
-		}
-
 		// Single admin toggle (enable_mcp) gates both the abilities and the MCP server.
 		add_filter( 'surerank_abilities_api_enabled', [ $this, 'is_mcp_enabled' ] );
 		add_filter( 'surerank_mcp_server_enabled', [ $this, 'is_mcp_enabled' ] );
@@ -51,9 +61,14 @@ class Abilities_Registrar {
 		add_action( 'wp_abilities_api_categories_init', [ $this, 'register_category' ] );
 		add_action( 'wp_abilities_api_init', [ $this, 'register_abilities' ] );
 
-		if ( self::mcp_adapter_enabled() ) {
-			add_action( 'mcp_adapter_init', [ $this, 'register_mcp_server' ] );
-		}
+		/*
+		 * Subscribed without asking first whether an adapter is present. This runs on
+		 * plugins_loaded, while the adapter announces itself much later, on init or
+		 * rest_api_init, so a check here decides on a state that is not final yet and
+		 * a miss is permanent for the request. The callback re-checks instead, and the
+		 * abilities hooks above only fire when the Abilities API is there at all.
+		 */
+		add_action( 'mcp_adapter_init', [ $this, 'register_mcp_server' ] );
 	}
 
 	/**
@@ -107,6 +122,10 @@ class Abilities_Registrar {
 			return;
 		}
 
+		if ( ! self::mcp_adapter_enabled() ) {
+			return;
+		}
+
 		$abilities = function_exists( 'wp_get_abilities' ) ? wp_get_abilities() : [];
 		$tools     = [];
 
@@ -124,7 +143,7 @@ class Abilities_Registrar {
 			? '\\WP\\MCP\\Transport\\HttpTransport'
 			: '\\WP\\MCP\\Transport\\Http\\RestTransport';
 
-		$adapter->create_server(
+		$created = $adapter->create_server(
 			'surerank',
 			'surerank/v1',
 			'mcp',
@@ -138,6 +157,46 @@ class Abilities_Registrar {
 			[],
 			[]
 		);
+
+		if ( is_wp_error( $created ) ) {
+			self::$registration_result = $created;
+			return;
+		}
+
+		/* Ask the adapter whether the server is really there, rather than trusting a return shape. */
+		if ( method_exists( $adapter, 'get_server' ) && null === $adapter->get_server( 'surerank' ) ) {
+			self::$registration_result = new WP_Error(
+				'surerank_mcp_server_missing',
+				__( 'The adapter reported no server named "surerank" after creating one.', 'surerank' )
+			);
+			return;
+		}
+
+		self::$registration_result = true;
+	}
+
+	/**
+	 * MCP server status for the current request.
+	 *
+	 * Only meaningful inside a REST request, which is the one place an adapter
+	 * announces itself and a registration is attempted at all.
+	 *
+	 * `registration_expected` is the same condition the registration itself runs
+	 * on, so every reason to skip it (the admin toggle, a missing Abilities API,
+	 * a third party filtering the server off) reads as "nothing to report" rather
+	 * than as a failure.
+	 *
+	 * @since 1.10.2
+	 * @return array<string, bool|string>
+	 */
+	public static function get_server_status() {
+		$result = self::$registration_result;
+
+		return [
+			'registration_expected' => self::mcp_adapter_enabled(),
+			'server_registered'     => true === $result,
+			'message'               => $result instanceof WP_Error ? $result->get_error_message() : '',
+		];
 	}
 
 	/**

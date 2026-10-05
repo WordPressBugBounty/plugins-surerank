@@ -301,4 +301,24 @@ class Get {
 	public static function url_length() {
 		return (int) apply_filters( 'surerank_url_length', self::URL_LENGTH );
 	}
+
+	/**
+	 * Post the main query resolved for this request.
+	 *
+	 * Never the global $post: a secondary loop that skips wp_reset_postdata()
+	 * leaves it on its own last item.
+	 *
+	 * The queried object is taken whole rather than looking its id up again.
+	 * On an archive that id belongs to a term or a user, and feeding it to
+	 * get_post() reads it in the posts table, where it can land on a completely
+	 * unrelated post that happens to share the number.
+	 *
+	 * @since 1.10.2
+	 * @return \WP_Post|null
+	 */
+	public static function queried_post() {
+		$object = get_queried_object();
+
+		return $object instanceof \WP_Post ? $object : null;
+	}
 }

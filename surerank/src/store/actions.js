@@ -314,6 +314,7 @@ function* updateBrokenLinkIgnoreState( url, actionType ) {
 			const stillBroken =
 				recheckResult &&
 				recheckResult?.success !== true &&
+				recheckResult?.verified !== false &&
 				! existingData.some( ( item ) => item?.url === url );
 			const data = stillBroken
 				? [

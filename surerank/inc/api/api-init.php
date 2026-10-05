@@ -54,6 +54,7 @@ class Api_Init {
 			'\SureRank\Inc\API\Stock_Images',
 			'\SureRank\Inc\API\Learn',
 			'\SureRank\Inc\API\Author_Email_Notice',
+			'\SureRank\Inc\API\Mcp_Status',
 		];
 
 		$controllers = apply_filters( 'surerank_api_controllers', $controllers );

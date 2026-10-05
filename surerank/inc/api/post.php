@@ -40,7 +40,14 @@ class Post extends Api_Base {
 	/**
 	 * Route Get Post Seo Data
 	 */
-	protected const POST_SEO_DATA = '/post/settings';
+	protected const POST_SEO_DATA = '/post/seo-settings';
+
+	/**
+	 * Legacy post SEO data route, kept as a working alias. See #2878.
+	 *
+	 * @since 1.10.2
+	 */
+	protected const POST_SEO_DATA_LEGACY = '/post/settings';
 
 	/**
 	 * Route Get Post Content
@@ -477,7 +484,7 @@ class Post extends Api_Base {
 	 * @return void
 	 */
 	private function register_get_post_seo_data_route( $namespace ) {
-		register_rest_route(
+		$this->register_route_with_aliases(
 			$namespace,
 			self::POST_SEO_DATA,
 			[
@@ -486,7 +493,8 @@ class Post extends Api_Base {
 				'permission_callback' => [ $this, 'validate_permission' ],
 				'args'                => $this->get_post_seo_data_args(),
 				'role_capability'     => 'content_setting',
-			]
+			],
+			[ self::POST_SEO_DATA_LEGACY ]
 		);
 	}
 
@@ -497,7 +505,7 @@ class Post extends Api_Base {
 	 * @return void
 	 */
 	private function register_update_post_seo_data_route( $namespace ) {
-		register_rest_route(
+		$this->register_route_with_aliases(
 			$namespace,
 			self::POST_SEO_DATA,
 			[
@@ -506,7 +514,8 @@ class Post extends Api_Base {
 				'permission_callback' => [ $this, 'validate_permission' ],
 				'args'                => $this->get_update_post_seo_data_args(),
 				'role_capability'     => 'content_setting',
-			]
+			],
+			[ self::POST_SEO_DATA_LEGACY ]
 		);
 	}
 

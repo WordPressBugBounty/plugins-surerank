@@ -22,7 +22,6 @@ use SureRank\Inc\Functions\Update;
 use SureRank\Inc\Traits\Get_Instance;
 use SureRank\Inc\Traits\Logger;
 use SureRank\Inc\Traits\Loop_Context;
-use WP_Http;
 use WP_Post;
 
 /**
@@ -150,7 +149,7 @@ class PostAnalyzer {
 		$this->page_title       = $meta_data['page_title'] ?? '';
 		$this->page_description = $meta_data['page_description'] ?? '';
 		$this->canonical_url    = $meta_data['canonical_url'] ?? '';
-		$this->post_permalink   = $this->get_original_permalink( $post_id, $post );
+		$this->post_permalink   = Utils::get_post_base_url( (int) $post_id );
 		$this->post_content     = apply_filters( 'surerank_post_analyzer_content', $post->post_content, $post );
 
 		// Render blocks so dynamic blocks (Spectra galleries, sliders, core query
@@ -161,9 +160,7 @@ class PostAnalyzer {
 		$this->xpath = Utils::get_rendered_xpath( $rendered_content );
 		$result      = $this->analyze( $meta_data );
 
-		if ( $this->update_broken_links_status( $result ) && is_array( $result ) ) {
-			$result['broken_links'] = $this->update_broken_links_status( $result );
-		}
+		$result['broken_links'] = $this->update_broken_links_status( $result );
 
 		$success = Update::post_seo_checks( $post_id, $result );
 
@@ -641,7 +638,7 @@ class PostAnalyzer {
 	 * Update broken links status.
 	 *
 	 * @param array<string, mixed> $result Result.
-	 * @return array<string, mixed>|false
+	 * @return array<string, mixed>
 	 */
 	private function update_broken_links_status( $result ) {
 		$links = $this->xpath ? $this->xpath->query( '//a[@href]' ) : new DOMNodeList();
@@ -671,7 +668,15 @@ class PostAnalyzer {
 			return $empty_message;
 		}
 
-		return false;
+		return [
+			'status'      => 'error',
+			'type'        => 'page',
+			'description' => [
+				__( 'These broken links were found on the page:', 'surerank' ),
+				[ 'list' => array_values( $existing_broken_links ) ],
+			],
+			'message'     => __( 'One or more broken links found on the page.', 'surerank' ),
+		];
 	}
 
 	/**
@@ -727,55 +732,7 @@ class PostAnalyzer {
 	 * @return string
 	 */
 	private function normalize_link_url( string $href ): string {
-		$base = $this->post_permalink ? $this->post_permalink : home_url( '/' );
-		$url  = WP_Http::make_absolute_url( trim( $href ), $base );
-
-		// Core resolves "../" segments but leaves single-dot "./" segments in the path.
-		$parts = preg_split( '/(?=[?#])/', $url, 2 );
-
-		if ( ! is_array( $parts ) ) {
-			return $url;
-		}
-
-		$path = $parts[0];
-
-		while ( false !== strpos( $path, '/./' ) ) {
-			$path = str_replace( '/./', '/', $path );
-		}
-
-		return $path . ( $parts[1] ?? '' );
-	}
-
-	/**
-	 * Get the original permalink for a post, even if it's set as homepage.
-	 *
-	 * @param int     $post_id Post ID.
-	 * @param WP_Post $post    Post object.
-	 * @return string Original permalink or empty string.
-	 */
-	private function get_original_permalink( $post_id, $post ) {
-		$homepage_id = (int) get_option( 'page_on_front' );
-
-		if ( $homepage_id === $post_id ) {
-			return $this->generate_original_page_url( $post );
-		}
-
-		$permalink = get_permalink( $post_id );
-		return $permalink !== false ? $permalink : '';
-	}
-
-	/**
-	 * Generate original page URL for a post that's set as homepage.
-	 *
-	 * @param WP_Post $post Post object.
-	 * @return string Original page URL.
-	 */
-	private function generate_original_page_url( $post ) {
-		if ( empty( $post->post_name ) ) {
-			return '';
-		}
-
-		return trailingslashit( home_url() ) . $post->post_name . '/';
+		return Utils::normalize_link_url( $href, $this->post_permalink );
 	}
 
 }

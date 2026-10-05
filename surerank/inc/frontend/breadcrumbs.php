@@ -9,6 +9,7 @@
 
 namespace SureRank\Inc\Frontend;
 
+use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Traits\Get_Instance;
 use WP_Post;
 use WP_Term;
@@ -104,9 +105,12 @@ class Breadcrumbs {
 			return;
 		}
 
+		// Crumb names reach JSON-LD, where an HTML entity is literal text rather
+		// than the character it stands for. get_the_title() is texturized, so
+		// decode before storing and let each consumer escape for its own context.
 		$this->crumbs[] = [
-			'name' => esc_html( $name ),
-			'link' => esc_url( $link ),
+			'name' => wp_strip_all_tags( html_entity_decode( $name, ENT_QUOTES | ENT_HTML5, 'UTF-8' ) ),
+			'link' => esc_url_raw( $link ),
 		];
 	}
 
@@ -251,17 +255,9 @@ class Breadcrumbs {
 	 * @return void
 	 */
 	private function add_singular_crumbs() {
-		// Resolve the post from the main query instead of the global $post, because
-		// page builders (e.g. Divi 5) replace the global with a placeholder post
-		// (ID -1) during module rendering, which breaks taxonomy/ancestor lookups.
-		// The main query's queried_object_id survives that replacement.
-		$post = get_post( get_queried_object_id() );
+		$post = Get::queried_post();
 
-		if ( ! ( $post instanceof WP_Post ) ) {
-			$post = $GLOBALS['post'] ?? null;
-		}
-
-		if ( ! ( $post instanceof WP_Post ) || ! $post->post_type ) {
+		if ( ! $post || ! $post->post_type ) {
 			return;
 		}
 
@@ -369,7 +365,13 @@ class Breadcrumbs {
 			return;
 		}
 
-		$primary_term = $terms[0];
+		// Plugins filtering get_the_terms can return a non-zero-keyed array
+		// (array_filter keeps keys), so [0] may not exist and a null would
+		// fatal against the WP_Term type below.
+		$primary_term = reset( $terms );
+		if ( ! $primary_term instanceof WP_Term ) {
+			return;
+		}
 		$this->add_term_hierarchy_crumbs( $primary_term, $taxonomy );
 	}
 
@@ -458,7 +460,12 @@ class Breadcrumbs {
 		$categories = get_the_terms( $post->ID, $term_name );
 
 		if ( is_array( $categories ) && ! empty( $categories ) ) {
-			$primary_category = $categories[0];
+			// Same guard as add_primary_taxonomy_crumbs: a filtered term list
+			// may be non-zero-keyed, and the hierarchy walk needs a WP_Term.
+			$primary_category = reset( $categories );
+			if ( ! $primary_category instanceof WP_Term ) {
+				return;
+			}
 			$this->add_term_hierarchy_crumbs( $primary_category, $term_name );
 		}
 	}

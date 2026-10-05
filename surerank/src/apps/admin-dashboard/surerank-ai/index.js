@@ -558,7 +558,10 @@ const SureRankAI = () => {
 
 		return () => {
 			window.removeEventListener( 'focus', handleFocus );
-			document.removeEventListener( 'visibilitychange', handleVisibility );
+			document.removeEventListener(
+				'visibilitychange',
+				handleVisibility
+			);
 		};
 	}, [ authenticated, syncAuth ] );
 
@@ -686,7 +689,10 @@ const SureRankAI = () => {
 												}
 											>
 												<Unplug className="size-4" />
-												{ __( 'Disconnect', 'surerank' ) }
+												{ __(
+													'Disconnect',
+													'surerank'
+												) }
 											</DropdownMenu.Item>
 										</>
 									) }
@@ -695,7 +701,9 @@ const SureRankAI = () => {
 											<>
 												<DropdownMenu.Separator />
 												<DropdownMenu.Item
-													onClick={ openManageLicense }
+													onClick={
+														openManageLicense
+													}
 												>
 													<ExternalLink className="size-4" />
 													{ __(

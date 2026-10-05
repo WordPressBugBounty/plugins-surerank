@@ -50,6 +50,29 @@ abstract class Api_Base extends WP_REST_Controller {
 	}
 
 	/**
+	 * Register a REST route under its primary path plus legacy alias paths.
+	 *
+	 * Some host WAFs (e.g. 20i StackProtect) challenge any wp-json URL whose
+	 * final path segment is exactly `settings`, so those routes were renamed.
+	 * The old paths stay registered with identical arguments (same callbacks,
+	 * same permission chain) so existing clients keep working on hosts without
+	 * that WAF. On an affected host the WAF challenges the old path before
+	 * WordPress routing runs, so only the new path works there. See #2878.
+	 *
+	 * @param string                   $namespace The API namespace.
+	 * @param string                   $route     Primary route path.
+	 * @param array<int|string, mixed> $args      Route arguments passed to register_rest_route().
+	 * @param array<int, string>       $aliases   Legacy route paths kept as working aliases.
+	 * @since 1.10.2
+	 * @return void
+	 */
+	public function register_route_with_aliases( $namespace, $route, $args, $aliases = [] ) {
+		foreach ( array_merge( [ $route ], $aliases ) as $path ) {
+			register_rest_route( $namespace, $path, $args );
+		}
+	}
+
+	/**
 	 * Validate the nonce for REST API requests, then apply the
 	 * capability + Pro filter chain via check_permission_for_action().
 	 *

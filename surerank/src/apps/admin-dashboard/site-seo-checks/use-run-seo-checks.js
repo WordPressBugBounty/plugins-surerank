@@ -53,7 +53,7 @@ export const useRunSeoChecks = ( options = {} ) => {
 		if ( categories.includes( 'settings' ) ) {
 			try {
 				settingsResponse = await apiFetch( {
-					path: addQueryArgs( '/surerank/v1/checks/settings', {
+					path: addQueryArgs( '/surerank/v1/checks/settings-checks', {
 						url,
 						force,
 					} ),
@@ -116,15 +116,12 @@ export const useRunSeoChecks = ( options = {} ) => {
 		// A failed request leaves the previous rows in place, which is indistinguishable from
 		// "checks ran and nothing changed" unless it is reported.
 		if ( failed.length && ! silent ) {
-			toast.error(
-				__( 'Some checks could not be run', 'surerank' ),
-				{
-					description: __(
-						'We could not read your site just now. Please try again in a moment.',
-						'surerank'
-					),
-				}
-			);
+			toast.error( __( 'Some checks could not be run', 'surerank' ), {
+				description: __(
+					'We could not read your site just now. Please try again in a moment.',
+					'surerank'
+				),
+			} );
 		}
 
 		const payload = {

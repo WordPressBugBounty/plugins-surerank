@@ -542,7 +542,10 @@ const SchemaTab = ( { postMetaData, globalDefaults, updatePostMetaData } ) => {
 				specificText: [],
 			},
 			fields: {
-				...processFields( schemaTypeData[ selectedSchema ] || [], true ),
+				...processFields(
+					schemaTypeData[ selectedSchema ] || [],
+					true
+				),
 				'@type': selectedType,
 			},
 		};

@@ -38,6 +38,14 @@ class Process extends Wp_Background_Process {
 	protected $start_time;
 
 	/**
+	 * Unix time of the last queue persist, used to throttle progress writes.
+	 *
+	 * @since 1.10.2
+	 * @var int
+	 */
+	protected $last_persist = 0;
+
+	/**
 	 * Constructor
 	 *
 	 * @since 1.2.0
@@ -52,6 +60,61 @@ class Process extends Wp_Background_Process {
 
 		/** Ensure adequate memory. */
 		wp_raise_memory_limit( 'admin' );
+	}
+
+	/**
+	 * Persist the queue, throttled.
+	 *
+	 * The parent runner saves the whole queue back to a single option after
+	 * every processed item. On a large sitemap rebuild that is thousands of
+	 * writes to one option row in quick succession, which managed hosts flag
+	 * and block as excessive option updates. Writing at most once per interval
+	 * removes the churn; the queue is still flushed immediately whenever the
+	 * run is about to stop, so a resumed run picks up from the true position.
+	 *
+	 * @param string                   $key  Option key.
+	 * @param array<int|string, mixed> $data Remaining queue items.
+	 * @since 1.10.2
+	 * @return $this
+	 */
+	public function update( $key, $data ) {
+		$now = time();
+
+		/**
+		 * Minimum seconds between queue-progress writes.
+		 *
+		 * @param int $seconds Default 5.
+		 * @since 1.10.2
+		 */
+		$interval = (int) apply_filters( 'surerank_sitemap_process_persist_interval', 5 );
+
+		// Flush immediately when the run is ending (time/memory/limit/pause/
+		// cancel) so the persisted queue matches what is actually left;
+		// otherwise throttle to avoid hammering the option row.
+		if ( ! $this->should_continue() || ( $now - $this->last_persist ) >= $interval ) {
+			$this->last_persist = $now;
+			return parent::update( $key, $data );
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Drop every queued batch, the status row and the healthcheck cron.
+	 *
+	 * Not delete_all(): its cancelled() hook reaches check_ajax_referer(),
+	 * which kills any ajax request that lacks this process's nonce.
+	 *
+	 * @since 1.10.2
+	 * @return void
+	 */
+	public function clear_queue(): void {
+		foreach ( $this->get_batches() as $batch ) {
+			$this->delete( $batch->key );
+		}
+
+		delete_site_option( $this->get_status_key() );
+		$this->clear_scheduled_event();
 	}
 
 	/**

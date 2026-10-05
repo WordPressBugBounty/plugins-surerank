@@ -127,8 +127,7 @@ const OnboardingLayout = () => {
 										{ __(
 											'Get automatic SEO fixes, advanced schema and instant indexing with',
 											'surerank'
-										) }
-										{ ' ' }
+										) }{ ' ' }
 										<span className="font-semibold text-text-primary">
 											{ __(
 												'SureRank Premium',
@@ -149,7 +148,10 @@ const OnboardingLayout = () => {
 											)
 										}
 									>
-										{ __( 'Upgrade to Premium', 'surerank' ) }
+										{ __(
+											'Upgrade to Premium',
+											'surerank'
+										) }
 									</Button>
 								</div>
 							) }

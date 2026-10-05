@@ -128,6 +128,10 @@ class Init {
 			Tagdiv::get_instance();
 		}
 
+		if ( defined( 'ETCH_PLUGIN_DIR' ) ) {
+			Etch::get_instance();
+		}
+
 		Multilingual::get_instance();
 	}
 

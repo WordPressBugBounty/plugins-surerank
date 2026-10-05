@@ -53,7 +53,15 @@ class Analyzer extends Api_Base {
 	 *
 	 * @var string
 	 */
-	private $settings_checks = '/checks/settings';
+	private $settings_checks = '/checks/settings-checks';
+
+	/**
+	 * Legacy settings checks route, kept as a working alias. See #2878.
+	 *
+	 * @since 1.10.2
+	 * @var string
+	 */
+	private $settings_checks_legacy = '/checks/settings';
 
 	/**
 	 * Route for other SEO checks.
@@ -227,7 +235,7 @@ class Analyzer extends Api_Base {
 
 		$data = [];
 		foreach ( $user_ids as $u_id ) {
-			// Object-level guard (parity with /user/settings): the route-level
+			// Object-level guard (parity with /user/seo-settings): the route-level
 			// permission gates the endpoint, this prevents reading another
 			// user's data (e.g. focus keyword) without the edit_user capability.
 			if ( ! User_Seo::can_manage_user_seo( (int) $u_id ) ) {
@@ -1040,6 +1048,38 @@ class Analyzer extends Api_Base {
 			return $this->create_broken_link_error_response( __( 'You are not allowed to manage SEO checks for this post.', 'surerank' ) );
 		}
 
+		// Normalize incoming URLs to absolute, then escape. Pre-1.9.3 scans
+		// stored relative hrefs (e.g. "/page-slug", "contact") in post meta, and
+		// clients replay them here; checking them raw always fails ("A valid URL
+		// was not provided"), which re-persists the stale broken-link records on
+		// every Analyze run. The route's sanitize callbacks deliberately preserve
+		// the raw href shape (esc_url_raw() there would turn "contact" into
+		// "http://contact" and destroy its relative semantics), so resolution
+		// against the post base URL happens first and esc_url_raw() runs on the
+		// resulting absolute URL. The base comes from Utils::get_post_base_url()
+		// so a static front page resolves path-relative hrefs against the same
+		// original page slug URL PostAnalyzer scans with.
+		$base = Utils::get_post_base_url( (int) $post_id );
+		if ( ! is_array( $urls ) ) {
+			return $this->create_broken_link_error_response( __( 'Invalid links list.', 'surerank' ) );
+		}
+
+		$url  = self::normalize_broken_link_request_url( (string) $url, $base );
+		$urls = array_values(
+			array_filter(
+				array_map(
+					static function ( $u ) use ( $base ) {
+						return self::normalize_broken_link_request_url( (string) $u, $base );
+					},
+					$urls
+				)
+			)
+		);
+
+		if ( $url === '' || ! in_array( $url, $urls, true ) ) {
+			return $this->create_broken_link_error_response( __( 'Invalid link URL.', 'surerank' ) );
+		}
+
 		if ( $this->is_broken_link_ignored( $url ) ) {
 			$this->remove_broken_links( $url, $post_id, $urls );
 			return rest_ensure_response(
@@ -1051,7 +1091,21 @@ class Analyzer extends Api_Base {
 			);
 		}
 
-		$response = $this->fetch_url_status( $url );
+		// Confirm same-site links against the database before falling back to an
+		// HTTP request. Hosts that cannot request themselves report their own
+		// URLs as transport failures, which leaves every internal link stuck as
+		// unverifiable; resolving locally is both accurate and instant there.
+		if ( $this->internal_link_exists_locally( $url ) ) {
+			$this->remove_broken_links( $url, $post_id, $urls );
+			return rest_ensure_response(
+				[
+					'success' => true,
+					'message' => __( 'Link is not broken', 'surerank' ),
+				]
+			);
+		}
+
+		$response = $this->fetch_url_status( $url, (string) $request->get_param( 'user_agent' ) );
 
 		if ( is_wp_error( $response ) ) {
 			return $this->handle_broken_link_error( $url, $post_id, $urls, $response );
@@ -1060,6 +1114,14 @@ class Analyzer extends Api_Base {
 		$status_code = (int) wp_remote_retrieve_response_code( $response );
 		if ( $status_code === 404 || $status_code === 410 ) {
 			return $this->handle_broken_link_status_error( $url, $post_id, $urls, $status_code, $response );
+		}
+
+		if ( $status_code < 200 || $status_code >= 400 ) {
+			return $this->create_broken_link_unverified_response(
+				__( 'Could not verify the link.', 'surerank' ),
+				$status_code,
+				wp_remote_retrieve_response_message( $response )
+			);
 		}
 		$this->remove_broken_links( $url, $post_id, $urls );
 		return rest_ensure_response(
@@ -1089,15 +1151,16 @@ class Analyzer extends Api_Base {
 
 		$broken_links = $seo_checks['broken_links'] ?? [];
 
-		$existing_broken_links = Utils::existing_broken_links( $broken_links, $urls );
+		$base                  = Utils::get_post_base_url( (int) $post_id );
+		$existing_broken_links = $this->reconcile_broken_links( $broken_links, $urls, $base );
 
 		foreach ( $existing_broken_links as $key => $existing_link ) {
-			if ( is_array( $existing_link ) && isset( $existing_link['url'] ) && $existing_link['url'] === $url ) {
+			if ( $this->stored_broken_link_matches_url( $existing_link, $url, $base ) ) {
 				unset( $existing_broken_links[ $key ] );
 			}
 		}
 
-		$seo_checks['broken_links'] = $existing_broken_links;
+		$seo_checks['broken_links'] = $this->build_broken_links_check( array_values( $existing_broken_links ) );
 		Update::post_meta( $post_id, SURERANK_SEO_CHECKS, $seo_checks );
 	}
 
@@ -1279,14 +1342,288 @@ class Analyzer extends Api_Base {
 	/**
 	 * Sanitize an array of URLs.
 	 *
-	 * @param array<int, string>                    $params URLs.
+	 * @param mixed                                 $params URLs as sent by the client; scalars are coerced to an array.
 	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
 	 * @param string                                $key Key.
 	 * @return array<int, string>
 	 * @since 1.9.2
 	 */
 	public static function sanitize_urls( $params, $request, $key ) {
+		// A scalar reaches this callback when a client sends a non-array value:
+		// the schema's own array coercion is skipped once a custom
+		// sanitize_callback is set, and array_map() on a string is fatal.
+		if ( ! is_array( $params ) ) {
+			$params = $params === null || $params === '' ? [] : [ $params ];
+		}
+
 		return array_map( 'esc_url_raw', $params );
+	}
+
+	/**
+	 * Sanitize a single link href while preserving its relative shape.
+	 *
+	 * The broken-link status route defers esc_url_raw() to the handler:
+	 * escaping first would prepend a scheme to path-relative hrefs
+	 * ("contact" becomes "http://contact"), so the handler could no longer
+	 * resolve them against the post base URL. The handler escapes the
+	 * resolved absolute URL instead.
+	 *
+	 * @param mixed                                 $param Raw href value.
+	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
+	 * @param string                                $key Key.
+	 * @return string
+	 * @since 1.10.2
+	 */
+	public static function sanitize_link_href( $param, $request, $key ) {
+		return is_scalar( $param ) ? trim( wp_check_invalid_utf8( (string) $param ) ) : '';
+	}
+
+	/**
+	 * Sanitize an array of link hrefs while preserving relative shapes.
+	 *
+	 * Companion to sanitize_link_href() for array params; scalars are
+	 * coerced to a one-item array the same way core's rest_is_array() /
+	 * rest_sanitize_array() treat scalar values for `type: array` params.
+	 *
+	 * @param mixed                                 $params Hrefs as sent by the client.
+	 * @param WP_REST_Request<array<string, mixed>> $request Request object.
+	 * @param string                                $key Key.
+	 * @return array<int, string>
+	 * @since 1.10.2
+	 */
+	public static function sanitize_link_hrefs( $params, $request, $key ) {
+		if ( ! is_array( $params ) ) {
+			return [];
+		}
+
+		$params = array_filter( $params, 'is_scalar' );
+
+		return array_values(
+			array_map(
+				static function ( $param ) {
+					return trim( wp_check_invalid_utf8( (string) $param ) );
+				},
+				$params
+			)
+		);
+	}
+
+	/**
+	 * Keep stored broken links that still occur in the current page link set.
+	 *
+	 * @param array<string, mixed> $broken_links Broken links check data.
+	 * @param array<string>        $urls Normalized current page URLs.
+	 * @param string               $base Post URL used for legacy relative entries.
+	 * @return array<int|string, mixed>
+	 * @since 1.10.2
+	 */
+	private function reconcile_broken_links( $broken_links, array $urls, string $base ) {
+		$reconciled = [];
+
+		foreach ( Utils::get_broken_links_list( $broken_links ) as $key => $stored_link ) {
+			$stored_url = is_array( $stored_link ) ? ( $stored_link['url'] ?? '' ) : $stored_link;
+			if ( ! is_string( $stored_url ) ) {
+				continue;
+			}
+
+			$normalized_url = self::normalize_broken_link_request_url( $stored_url, $base );
+			if ( ! in_array( $normalized_url, $urls, true ) ) {
+				continue;
+			}
+
+			$reconciled[ $key ] = is_array( $stored_link ) ? $stored_link : [
+				'url'     => $stored_link,
+				'status'  => 'error',
+				'details' => __( 'The link is broken.', 'surerank' ),
+				'type'    => 'page',
+			];
+		}
+
+		return $reconciled;
+	}
+
+	/**
+	 * Build the canonical stored broken-links check shape.
+	 *
+	 * @param array<int|string, mixed> $broken_links Broken-link records.
+	 * @return array<string, mixed>
+	 * @since 1.10.2
+	 */
+	private function build_broken_links_check( array $broken_links ) {
+		if ( empty( $broken_links ) ) {
+			return [
+				'status'  => 'success',
+				'type'    => 'page',
+				'message' => __( 'No broken links found on the page.', 'surerank' ),
+			];
+		}
+
+		return [
+			'status'      => 'error',
+			'type'        => 'page',
+			'description' => [
+				__( 'These broken links were found on the page:', 'surerank' ),
+				[ 'list' => $broken_links ],
+			],
+			'message'     => __( 'One or more broken links found on the page.', 'surerank' ),
+		];
+	}
+
+	/**
+	 * Resolve and validate a client-supplied href for a broken-link check.
+	 *
+	 * @param string $href Raw href value.
+	 * @param string $base Post URL used to resolve relative hrefs.
+	 * @return string Absolute HTTP(S) URL, or an empty string when unusable.
+	 * @since 1.10.2
+	 */
+	private static function normalize_broken_link_request_url( $href, $base ) {
+		$href = trim( $href );
+		if ( $href === '' || 0 === strpos( $href, '#' ) ) {
+			return '';
+		}
+
+		$url   = esc_url_raw( Utils::normalize_link_url( $href, $base ) );
+		$parts = wp_parse_url( $url );
+
+		if (
+			! is_array( $parts ) ||
+			empty( $parts['host'] ) ||
+			empty( $parts['scheme'] ) ||
+			! in_array( strtolower( $parts['scheme'] ), [ 'http', 'https' ], true )
+		) {
+			return '';
+		}
+
+		return $url;
+	}
+
+	/**
+	 * Check whether a stored legacy or canonical entry represents a URL.
+	 *
+	 * @param mixed  $stored_link Stored list item.
+	 * @param string $url Canonical URL being checked.
+	 * @param string $base Post URL used to resolve legacy relative entries.
+	 * @return bool
+	 * @since 1.10.2
+	 */
+	private function stored_broken_link_matches_url( $stored_link, $url, $base ) {
+		$stored_url = is_array( $stored_link ) ? ( $stored_link['url'] ?? '' ) : $stored_link;
+
+		if ( ! is_string( $stored_url ) || $stored_url === '' ) {
+			return false;
+		}
+
+		return self::normalize_broken_link_request_url( $stored_url, $base ) === $url;
+	}
+
+	/**
+	 * Whether a link points at this site.
+	 *
+	 * Host and port must match exactly. A www/non-www or port mismatch falls
+	 * through to the HTTP check rather than being resolved locally, because
+	 * only the request itself can prove such a variant is served.
+	 *
+	 * @param string $url Absolute URL to test.
+	 * @return bool
+	 * @since 1.10.2
+	 */
+	private function is_same_site_url( $url ) {
+		$home = home_url();
+		$host = strtolower( (string) wp_parse_url( $url, PHP_URL_HOST ) );
+		$base = strtolower( (string) wp_parse_url( $home, PHP_URL_HOST ) );
+
+		if ( $host === '' || $base === '' || $host !== $base ) {
+			return false;
+		}
+
+		return wp_parse_url( $url, PHP_URL_PORT ) === wp_parse_url( $home, PHP_URL_PORT );
+	}
+
+	/**
+	 * Whether a link points at a file that exists in the uploads directory.
+	 *
+	 * Scoped to the uploads directory because that is where content-linked
+	 * media lives, and every path under it is served directly. Paths are
+	 * confined with realpath() so an encoded traversal cannot escape it.
+	 *
+	 * @param string $url Absolute URL to test.
+	 * @return bool
+	 * @since 1.10.2
+	 */
+	private function uploaded_file_exists( $url ) {
+		$uploads = wp_get_upload_dir();
+
+		if ( ! empty( $uploads['error'] ) || empty( $uploads['baseurl'] ) || empty( $uploads['basedir'] ) ) {
+			return false;
+		}
+
+		$path = (string) wp_parse_url( $url, PHP_URL_PATH );
+		$base = (string) wp_parse_url( $uploads['baseurl'], PHP_URL_PATH );
+
+		if ( $path === '' || $base === '' || strpos( $path, $base . '/' ) !== 0 ) {
+			return false;
+		}
+
+		$relative = rawurldecode( substr( $path, strlen( $base ) + 1 ) );
+
+		if ( $relative === '' || strpos( $relative, '..' ) !== false ) {
+			return false;
+		}
+
+		$root = realpath( $uploads['basedir'] );
+		$file = realpath( $uploads['basedir'] . '/' . $relative );
+
+		if ( $root === false || $file === false ) {
+			return false;
+		}
+
+		return strpos( $file, $root . DIRECTORY_SEPARATOR ) === 0 && is_file( $file );
+	}
+
+	/**
+	 * Whether a same-site link can be confirmed present without an HTTP request.
+	 *
+	 * Resolving locally removes the dependency on the site being able to request
+	 * itself. Hosts that block loopback requests answer their own URLs with a
+	 * transport error, which leaves every internal link permanently unverifiable.
+	 *
+	 * This can only ever confirm that a link is fine. A miss means "not resolved
+	 * here", never "broken", so the caller falls through to the HTTP check and
+	 * behaviour is unchanged for everything this does not understand: term and
+	 * date archives, feeds, sitemaps, paged URLs and custom rewrites.
+	 *
+	 * @param string $url Absolute URL to test.
+	 * @return bool
+	 * @since 1.10.2
+	 */
+	private function internal_link_exists_locally( $url ) {
+		$resolved = false;
+
+		if ( $this->is_same_site_url( $url ) ) {
+			$post_id = url_to_postid( $url ); // @phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.url_to_postid_url_to_postid
+
+			// url_to_postid() maps any "/?<query>" URL to the static front page,
+			// so a front-page match on a URL carrying a query string is not proof
+			// the target exists. Those go to the HTTP check instead.
+			$front_id    = (int) get_option( 'page_on_front' );
+			$is_front    = $front_id > 0 && $post_id === $front_id;
+			$has_query   = (string) wp_parse_url( $url, PHP_URL_QUERY ) !== '';
+			$trustworthy = $post_id > 0 && ! ( $is_front && $has_query );
+
+			// A draft resolves through url_to_postid() but 404s for visitors, so
+			// the status has to be checked as well as the ID.
+			$resolved = ( $trustworthy && is_post_publicly_viewable( $post_id ) ) || $this->uploaded_file_exists( $url );
+		}
+
+		/**
+		 * Filters whether a same-site link was confirmed present without an HTTP request.
+		 *
+		 * @param bool   $resolved Whether the link was confirmed locally.
+		 * @param string $url      Absolute URL that was tested.
+		 * @since 1.10.2
+		 */
+		return (bool) apply_filters( 'surerank_broken_link_resolved_locally', $resolved, $url );
 	}
 
 	/**
@@ -2052,7 +2389,7 @@ class Analyzer extends Api_Base {
 	 * @return void
 	 */
 	private function register_settings_checks_route( $namespace ) {
-		register_rest_route(
+		$this->register_route_with_aliases(
 			$namespace,
 			$this->settings_checks,
 			[
@@ -2061,7 +2398,8 @@ class Analyzer extends Api_Base {
 				'permission_callback' => [ $this, 'validate_permission' ],
 				'args'                => $this->get_force_args(),
 				'role_capability'     => 'global_setting',
-			]
+			],
+			[ $this->settings_checks_legacy ]
 		);
 	}
 
@@ -2440,10 +2778,14 @@ class Analyzer extends Api_Base {
 	 * @return bool
 	 */
 	private function save_broken_links( string $url, int $post_id, array $urls, $status_code = null, $error_message = null ) {
-		$seo_checks   = Get::post_meta( $post_id, SURERANK_SEO_CHECKS, true );
+		$seo_checks = Get::post_meta( $post_id, SURERANK_SEO_CHECKS, true );
+		if ( ! is_array( $seo_checks ) ) {
+			$seo_checks = [];
+		}
 		$broken_links = $seo_checks['broken_links'] ?? [];
 
-		$existing_broken_links = Utils::existing_broken_links( $broken_links, $urls );
+		$base                  = Utils::get_post_base_url( $post_id );
+		$existing_broken_links = $this->reconcile_broken_links( $broken_links, $urls, $base );
 
 		$broken_link_details = [
 			'url'     => $url,
@@ -2453,7 +2795,7 @@ class Analyzer extends Api_Base {
 
 		$url_found = false;
 		foreach ( $existing_broken_links as $key => $existing_link ) {
-			if ( is_array( $existing_link ) && isset( $existing_link['url'] ) && $existing_link['url'] === $url ) {
+			if ( $this->stored_broken_link_matches_url( $existing_link, $url, $base ) ) {
 				$existing_broken_links[ $key ] = $broken_link_details;
 				$url_found                     = true;
 				break;
@@ -2465,17 +2807,7 @@ class Analyzer extends Api_Base {
 		}
 
 		$final_array                 = [];
-		$final_array['broken_links'] = [
-			'status'      => 'error',
-			'type'        => 'page',
-			'description' => [
-				__( 'These broken links were found on the page:', 'surerank' ),
-				[
-					'list' => $existing_broken_links,
-				],
-			],
-			'message'     => __( 'One or more broken links found on the page.', 'surerank' ),
-		];
+		$final_array['broken_links'] = $this->build_broken_links_check( array_values( $existing_broken_links ) );
 
 		return Update::post_seo_checks( $post_id, $final_array );
 	}
@@ -2589,7 +2921,7 @@ class Analyzer extends Api_Base {
 			'url'        => [
 				'type'              => 'string',
 				'required'          => true,
-				'sanitize_callback' => 'esc_url_raw',
+				'sanitize_callback' => [ self::class, 'sanitize_link_href' ],
 			],
 			'user_agent' => [
 				'type'              => 'string',
@@ -2607,7 +2939,10 @@ class Analyzer extends Api_Base {
 			'urls'       => [
 				'type'              => 'array',
 				'required'          => true,
-				'sanitize_callback' => [ self::class, 'sanitize_urls' ],
+				'validate_callback' => static function ( $param, $request, $key ) {
+					return is_array( $param ) && $param !== [];
+				},
+				'sanitize_callback' => [ self::class, 'sanitize_link_hrefs' ],
 				'items'             => [
 					'type' => 'string',
 				],
@@ -2809,6 +3144,10 @@ class Analyzer extends Api_Base {
 	 * @return bool
 	 */
 	private function is_post_cache_valid( $post, $post_id ) {
+		if ( $this->post_checks_contain_legacy_relative_links( $post_id ) ) {
+			return false;
+		}
+
 		$post_modified_time  = $post->post_modified_gmt ? strtotime( $post->post_modified_gmt ) : 0;
 		$checks_last_updated = Get::post_meta( $post_id, SURERANK_SEO_CHECKS_LAST_UPDATED, true );
 		$settings_updated    = Get::option( SURERANK_SEO_LAST_UPDATED );
@@ -2819,6 +3158,27 @@ class Analyzer extends Api_Base {
 		return $checks_last_updated !== 0 &&
 			$post_modified_time <= $checks_last_updated &&
 			( $settings_updated === 0 || $checks_last_updated >= $settings_updated );
+	}
+
+	/**
+	 * Detect pre-normalization relative broken-link records in cached checks.
+	 *
+	 * @param int $post_id Post ID.
+	 * @return bool
+	 * @since 1.10.2
+	 */
+	private function post_checks_contain_legacy_relative_links( int $post_id ) {
+		$checks = Get::post_meta( $post_id, SURERANK_SEO_CHECKS, true );
+		$list   = Utils::get_broken_links_list( is_array( $checks ) ? ( $checks['broken_links'] ?? [] ) : [] );
+
+		foreach ( $list as $item ) {
+			$url = is_array( $item ) ? ( $item['url'] ?? '' ) : $item;
+			if ( is_string( $url ) && $url !== '' && ! preg_match( '#^https?://#i', trim( $url ) ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -2908,18 +3268,30 @@ class Analyzer extends Api_Base {
 	/**
 	 * Fetch URL status
 	 *
+	 * The client supplies the editor's browser user agent so the check is made
+	 * with the same identity a visitor would use. Hosts and WAFs commonly answer
+	 * the default WordPress user agent with a 403 or a challenge page, which
+	 * would otherwise read as an unverifiable link.
+	 *
 	 * @param string $url URL to check.
+	 * @param string $user_agent User agent for the outbound request. Empty keeps the WordPress default.
 	 * @return array<string, mixed>|WP_Error
 	 */
-	private function fetch_url_status( $url ) {
+	private function fetch_url_status( $url, string $user_agent = '' ) {
+		$args = [
+			'limit_response_size' => 1,
+			'timeout'             => 30, // phpcs:ignore WordPressVIPMinimum.Performance.RemoteRequestTimeout.timeout_timeout
+		];
+
+		if ( $user_agent !== '' ) {
+			$args['user-agent'] = $user_agent;
+		}
+
 		return Requests::get(
 			$url,
 			apply_filters(
 				'surerank_broken_link_request_args',
-				[
-					'limit_response_size' => 1,
-					'timeout'             => 30, // phpcs:ignore WordPressVIPMinimum.Performance.RemoteRequestTimeout.timeout_timeout
-				]
+				$args
 			)
 		);
 	}
@@ -2933,8 +3305,9 @@ class Analyzer extends Api_Base {
 	private function create_broken_link_error_response( $message ) {
 		return rest_ensure_response(
 			[
-				'success' => false,
-				'message' => $message,
+				'success'  => false,
+				'verified' => false,
+				'message'  => $message,
 			]
 		);
 	}
@@ -2949,14 +3322,31 @@ class Analyzer extends Api_Base {
 	 * @return WP_REST_Response
 	 */
 	private function handle_broken_link_error( $url, $post_id, $urls, $response ) {
-		$this->save_broken_links( $url, $post_id, $urls, 500, $response->get_error_message() );
-		self::log( 'Link is broken: ' . $url . ' with Error: ' . $response->get_error_message() );
+		self::log( 'Could not verify link: ' . $url . ' with Error: ' . $response->get_error_message() );
+		return $this->create_broken_link_unverified_response(
+			__( 'Could not verify the link.', 'surerank' ),
+			$response->get_error_code(),
+			$response->get_error_message()
+		);
+	}
+
+	/**
+	 * Return a result for a link that could not be checked conclusively.
+	 *
+	 * @param string     $message User-facing message.
+	 * @param int|string $status Request or HTTP status.
+	 * @param string     $details Technical details.
+	 * @return WP_REST_Response
+	 * @since 1.10.2
+	 */
+	private function create_broken_link_unverified_response( $message, $status, $details ) {
 		return rest_ensure_response(
 			[
-				'success' => false,
-				'message' => __( 'Link is broken', 'surerank' ),
-				'status'  => $response->get_error_code(),
-				'details' => $response->get_error_message(),
+				'success'  => false,
+				'verified' => false,
+				'message'  => $message,
+				'status'   => $status,
+				'details'  => $details,
 			]
 		);
 	}
@@ -2976,10 +3366,11 @@ class Analyzer extends Api_Base {
 		self::log( 'Link is broken: ' . $url . ' with status code: ' . $status_code );
 		return rest_ensure_response(
 			[
-				'success' => false,
-				'message' => __( 'Link is broken', 'surerank' ),
-				'details' => wp_remote_retrieve_response_message( $response ),
-				'status'  => $status_code,
+				'success'  => false,
+				'verified' => true,
+				'message'  => __( 'Link is broken', 'surerank' ),
+				'details'  => wp_remote_retrieve_response_message( $response ),
+				'status'   => $status_code,
 			]
 		);
 	}

@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Functions\Validate;
@@ -428,9 +429,9 @@ class Facebook {
 			return $global_meta; // bailed.
 		}
 
-		global $post;
+		$post = Get::queried_post();
 
-		if ( empty( $post ) || ! is_a( $post, 'WP_Post' ) ) {
+		if ( ! $post ) {
 			return $global_meta;
 		}
 

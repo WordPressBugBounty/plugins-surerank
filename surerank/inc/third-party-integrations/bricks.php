@@ -12,6 +12,7 @@ namespace SureRank\Inc\ThirdPartyIntegrations;
 use SureRank\Inc\Admin\Dashboard;
 use SureRank\Inc\Admin\Seo_Popup;
 use SureRank\Inc\Traits\Get_Instance;
+use SureRank\Inc\Traits\Loop_Context;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -24,6 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Bricks {
 	use Get_Instance;
+	use Loop_Context;
 
 	/**
 	 * Constructor
@@ -74,7 +76,7 @@ class Bricks {
 			return $content;
 		}
 
-		return $this->extract_bricks_html( $elements );
+		return $this->extract_bricks_html( $elements, $post );
 	}
 
 	/**
@@ -144,15 +146,32 @@ class Bricks {
 	 * buffering is needed. Database::$page_data defaults to ['preview_or_post_id' => 0],
 	 * so calling this in admin/save context is safe — no fatal errors occur.
 	 *
+	 * Bricks query loops call the_post() while rendering, and in a request with no
+	 * current post (e.g. a translation webhook saving the post) their reset does
+	 * not put the loop globals back. The analyzer runs on wp_after_insert_post, so
+	 * a leaked global post would be seen by every later save hook. Set the global
+	 * post to the analysed post for the render and restore the full loop context
+	 * afterwards, the same guard the block render and Divi paths use.
+	 *
 	 * @param array<int, array<string, mixed>> $elements Flat Bricks elements array.
+	 * @param \WP_Post                         $post     Post being analysed.
 	 * @return string Rendered HTML string.
 	 * @since 1.7.0
 	 */
-	private function extract_bricks_html( array $elements ): string {
+	private function extract_bricks_html( array $elements, \WP_Post $post ): string {
 		if ( ! class_exists( '\Bricks\Frontend' ) || ! method_exists( '\Bricks\Frontend', 'render_data' ) ) {
 			return '';
 		}
-		return \Bricks\Frontend::render_data( $elements, 'content' ) ?? '';
+
+		$loop_context = $this->get_loop_context();
+
+		$GLOBALS['post'] = $post; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Temporarily set post context for the Bricks render; restored in finally.
+
+		try {
+			return \Bricks\Frontend::render_data( $elements, 'content' ) ?? '';
+		} finally {
+			$this->restore_loop_context( $loop_context );
+		}
 	}
 
 	/**

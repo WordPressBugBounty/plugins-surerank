@@ -12,6 +12,8 @@ namespace SureRank\Inc\Analyzer;
 use DOMDocument;
 use DOMXPath;
 use SureRank\Inc\Functions\Get;
+use WP_Http;
+use WP_Post;
 
 /**
  * Abstract Analyzer class.
@@ -19,7 +21,21 @@ use SureRank\Inc\Functions\Get;
 class Utils {
 
 	/**
+	 * Charset declaration prepended before parsing so libxml treats the fragment
+	 * as UTF-8 instead of falling back to ISO-8859-1.
+	 */
+	private const UTF8_CONTENT_TYPE = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">';
+
+	/**
 	 * Get rendered XPath.
+	 *
+	 * The rendered content is an HTML fragment with no charset declaration, so
+	 * libxml falls back to ISO-8859-1 and mangles every non-ASCII character.
+	 * That used to be avoided by converting each code point above 0x7F to a
+	 * numeric entity with mb_encode_numericentity(), but mbstring is an optional
+	 * PHP extension and WordPress core does not polyfill that function, so the
+	 * call raised a fatal error on hosts without it. Declaring the charset gives
+	 * the same parsed result with no extension dependency.
 	 *
 	 * @param string $rendered_content Rendered content.
 	 * @return DOMXPath|null
@@ -32,27 +48,25 @@ class Utils {
 		$dom = new DOMDocument();
 		libxml_use_internal_errors( true );
 
-		$encoded_content = mb_encode_numericentity(
-			htmlspecialchars_decode(
-				htmlentities( $rendered_content, ENT_NOQUOTES, 'UTF-8', false ),
-				ENT_NOQUOTES
-			),
-			[ 0x80, 0x10FFFF, 0, ~0 ],
-			/**
-			 * Conversion map for mb_encode_numericentity:
-			 * 0x80 (128) is the first non-ASCII Unicode code point.
-			 * 0x10FFFF (1,114,111) is the highest valid Unicode code point.
-			 * 0 is the bitmask for the first byte (no filtering).
-			 * ~0 is the bitmask to include all characters in the range.
-			 */
-			'UTF-8'
+		$encoded_content = htmlspecialchars_decode(
+			htmlentities( $rendered_content, ENT_NOQUOTES, 'UTF-8', false ),
+			ENT_NOQUOTES
 		);
 
 		if ( empty( $encoded_content ) ) {
 			return null;
 		}
 
-		$dom->loadHTML( $encoded_content );
+		/**
+		 * Prepended rather than appended because libxml honours the first charset
+		 * declaration it meets in the byte stream, so this wins over any
+		 * conflicting declaration the content carries itself.
+		 *
+		 * Note: the fragment is parsed against libxml's HTML4 DTD, so HTML5
+		 * sectioning elements land under <head> instead of <body>. Keep queries
+		 * against this document anchored with // rather than /html/body.
+		 */
+		$dom->loadHTML( self::UTF8_CONTENT_TYPE . $encoded_content );
 		libxml_clear_errors();
 		return new DOMXPath( $dom );
 	}
@@ -231,19 +245,7 @@ class Utils {
 	 * @return array<string, array<string, mixed>>
 	 */
 	public static function existing_broken_links( $broken_links, $urls ) {
-		$description           = $broken_links['description'] ?? [];
-		$existing_broken_links = [];
-		// Malformed/legacy metadata may store description as a string; guard so
-		// the foreach below never iterates a non-iterable value.
-		if ( ! is_array( $description ) ) {
-			$description = [];
-		}
-		foreach ( $description as $item ) {
-			if ( is_array( $item ) && isset( $item['list'] ) ) {
-				$existing_broken_links = $item['list'];
-				break;
-			}
-		}
+		$existing_broken_links = self::get_broken_links_list( $broken_links );
 
 		$filtered_broken_links = [];
 
@@ -267,6 +269,110 @@ class Utils {
 		}
 
 		return $filtered_broken_links;
+	}
+
+	/**
+	 * Extract the stored broken-link list without reconciling it against
+	 * client-provided data.
+	 *
+	 * @param mixed $broken_links Broken links check data as stored in post meta.
+	 * @return array<int|string, mixed>
+	 * @since 1.10.2
+	 */
+	public static function get_broken_links_list( $broken_links ) {
+		if ( ! is_array( $broken_links ) ) {
+			return [];
+		}
+
+		if ( array_key_exists( 'description', $broken_links ) ) {
+			$description = $broken_links['description'];
+
+			if ( ! is_array( $description ) ) {
+				return [];
+			}
+
+			foreach ( $description as $item ) {
+				if ( is_array( $item ) && isset( $item['list'] ) && is_array( $item['list'] ) ) {
+					return $item['list'];
+				}
+			}
+
+			return [];
+		}
+
+		// Older versions wrote the record list straight into broken_links, so a
+		// numerically indexed array is a legacy list. A check array keyed by
+		// status/type/message (the success shape) must not be read as records,
+		// otherwise its own strings look like relative URLs to callers.
+		if ( ! wp_is_numeric_array( $broken_links ) ) {
+			return [];
+		}
+
+		return array_filter(
+			$broken_links,
+			static function ( $item ) {
+				return is_string( $item ) || ( is_array( $item ) && isset( $item['url'] ) );
+			}
+		);
+	}
+
+	/**
+	 * Normalize a link URL to an absolute URL.
+	 *
+	 * Resolves scheme-relative, root-relative, and path-relative hrefs
+	 * (including dot segments) against the given base URL using the
+	 * WordPress core resolver.
+	 *
+	 * @param string $href URL or href attribute value.
+	 * @param string $base Base URL to resolve relative hrefs against. Falls back to the home URL.
+	 * @since 1.10.2
+	 * @return string
+	 */
+	public static function normalize_link_url( string $href, string $base = '' ): string {
+		$base = $base ? $base : home_url( '/' );
+		$url  = WP_Http::make_absolute_url( trim( $href ), $base );
+
+		// Core resolves "../" segments but leaves single-dot "./" segments in the path.
+		$parts = preg_split( '/(?=[?#])/', $url, 2 );
+
+		if ( ! is_array( $parts ) ) {
+			return $url;
+		}
+
+		$path = $parts[0];
+
+		while ( false !== strpos( $path, '/./' ) ) {
+			$path = str_replace( '/./', '/', $path );
+		}
+
+		return $path . ( $parts[1] ?? '' );
+	}
+
+	/**
+	 * Get the base URL used to resolve a post's relative link hrefs.
+	 *
+	 * A post set as the static front page resolves to its original page slug
+	 * URL rather than the site home URL, matching the base PostAnalyzer scans
+	 * with, so scan and recheck paths resolve path-relative hrefs identically.
+	 *
+	 * @param int $post_id Post ID.
+	 * @since 1.10.2
+	 * @return string Base URL, or empty string when none can be determined.
+	 */
+	public static function get_post_base_url( int $post_id ): string {
+		$post = get_post( $post_id );
+
+		if ( ! $post instanceof WP_Post ) {
+			return '';
+		}
+
+		if ( (int) get_option( 'page_on_front' ) === $post_id ) {
+			return empty( $post->post_name ) ? '' : trailingslashit( home_url() ) . $post->post_name . '/';
+		}
+
+		$permalink = get_permalink( $post_id );
+
+		return $permalink !== false ? $permalink : '';
 	}
 
 	/**

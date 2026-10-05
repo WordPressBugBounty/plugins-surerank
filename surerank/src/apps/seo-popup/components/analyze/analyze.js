@@ -22,6 +22,7 @@ import {
 	isSeoAnalysisDisabled,
 	isBricksBuilder,
 	isTagDivBuilder,
+	isEtchBuilder,
 	isAvadaBuilder,
 	isFrontend,
 	isListingPage,
@@ -221,7 +222,8 @@ const Analyze = () => {
 			{ ( isElementorBuilder() ||
 				isBricksBuilder() ||
 				isBreakdanceBuilder() ||
-				isTagDivBuilder() ) && (
+				isTagDivBuilder() ||
+				isEtchBuilder() ) && (
 				<RefreshAlert
 					message={ __(
 						'Please save changes in the editor before refreshing the checks.',
@@ -230,7 +232,9 @@ const Analyze = () => {
 				/>
 			) }
 			{ /* Frontend viewer and listing pages: checks reflect the published page */ }
-			{ ( ( isFrontend() && ! isTaxonomyFrontend ) ||
+			{ /* Etch is excluded: it is a frontend builder, so it already shows the
+			     save-first message above and would otherwise stack two alerts. */ }
+			{ ( ( isFrontend() && ! isTaxonomyFrontend && ! isEtchBuilder() ) ||
 				isListingPage() ) && (
 				<RefreshAlert
 					message={ __(

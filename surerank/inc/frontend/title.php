@@ -98,7 +98,14 @@ class Title {
 			$title = $this->search_title( $meta_title );
 		} elseif ( is_404() && apply_filters( 'surerank_enable_404_auto_title', true ) ) {
 			$title = $this->not_found_title( $meta_title );
-		} elseif ( is_singular() || is_home() || is_front_page() ) {
+		} elseif (
+			is_singular() ||
+			is_home() ||
+			is_front_page() ||
+			Helper::get_shop_page_id()
+		) {
+			// The shop page is resolved as a singular page (its stored meta box
+			// title lives in $meta_title), so apply it like any singular page.
 			$title = $meta_title;
 			$title = $this->add_pagination_title( $title );
 		}

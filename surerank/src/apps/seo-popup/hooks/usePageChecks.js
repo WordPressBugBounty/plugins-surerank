@@ -128,7 +128,8 @@ const usePageChecks = () => {
 					doc,
 					variables?.post?.ID?.value || 0,
 					undefined,
-					setPageSeoCheck
+					setPageSeoCheck,
+					snapshot.permalink
 				);
 
 				// Filter out falsy values and add broken links check

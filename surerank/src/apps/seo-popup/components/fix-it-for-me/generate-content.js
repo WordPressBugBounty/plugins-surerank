@@ -130,7 +130,9 @@ const GenerateContent = ( props ) => {
 			// dropping anything that is not a usable non-empty string.
 			const toItems = ( list, seed ) =>
 				( Array.isArray( list ) ? list : [] )
-					.filter( ( item ) => typeof item === 'string' && item.trim() )
+					.filter(
+						( item ) => typeof item === 'string' && item.trim()
+					)
 					.map( ( item, index ) => ( {
 						id: seed + index,
 						text: item,
@@ -153,9 +155,7 @@ const GenerateContent = ( props ) => {
 					// Every other error (credit limits, auth, network, malformed
 					// output) is preserved as-is, so the right screen shows and we
 					// do not spend a second request on a genuine failure.
-					if (
-						combinedError?.code !== 'content_generation_error'
-					) {
+					if ( combinedError?.code !== 'content_generation_error' ) {
 						throw combinedError;
 					}
 					// Remember for the session so other fields skip the combined
@@ -211,8 +211,7 @@ const GenerateContent = ( props ) => {
 					( key ) =>
 						Array.isArray( combined[ key ] ) &&
 						combined[ key ].some(
-							( item ) =>
-								typeof item === 'string' && item.trim()
+							( item ) => typeof item === 'string' && item.trim()
 						)
 				);
 				if ( ! isValidCombined ) {

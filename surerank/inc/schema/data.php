@@ -12,6 +12,7 @@ namespace SureRank\Inc\Schema;
 
 use SureRank\Inc\Frontend\Breadcrumbs;
 use SureRank\Inc\Frontend\Description;
+use SureRank\Inc\Frontend\Meta_Data;
 use SureRank\Inc\ThirdPartyIntegrations\Multilingual\Translation_Manager;
 use SureRank\Inc\Traits\Get_Instance;
 use WP_Post;
@@ -185,6 +186,38 @@ class Data {
 	}
 
 	/**
+	 * Shape a crumb trail into schema.org ListItem nodes.
+	 *
+	 * Shared with SureRank Pro, which swaps its own trail in over this one.
+	 * Linkless crumbs (search, 404) are dropped rather than emitted with an
+	 * empty @id.
+	 *
+	 * @param array<int, array<string, mixed>> $crumbs Crumb trail.
+	 * @return array<int, array<string, mixed>>
+	 * @since 1.10.2
+	 */
+	public static function breadcrumb_items( array $crumbs ) {
+		$items = [];
+
+		foreach ( $crumbs as $crumb ) {
+			if ( empty( $crumb['link'] ) || ! empty( $crumb['hide_in_schema'] ) ) {
+				continue;
+			}
+
+			$items[] = [
+				'@type'    => 'ListItem',
+				'position' => count( $items ) + 1,
+				'item'     => [
+					'@id'  => $crumb['link'],
+					'name' => $crumb['name'],
+				],
+			];
+		}
+
+		return $items;
+	}
+
+	/**
 	 * Counts words in content using Unicode-aware character properties.
 	 *
 	 * Apostrophes and hyphens are treated as part of a word only when they
@@ -239,23 +272,43 @@ class Data {
 		}
 
 		return [
-			'ID'            => (int) $post->ID,
-			'title'         => sanitize_text_field( $post->post_title ),
-			'excerpt'       => Description::get_instance()->post( $post->ID ),
-			'content'       => sanitize_text_field( $post->post_content ),
-			'url'           => get_permalink( $post ),
-			'slug'          => sanitize_title( $post->post_name ),
-			'date'          => get_the_date( 'c', $post ),
-			'modified_date' => get_the_modified_date( 'c', $post ),
-			'created_date'  => get_the_date( 'c', $post ),
-			'thumbnail'     => get_the_post_thumbnail_url( $post->ID, 'full' ),
-			'comment_count' => (int) $post->comment_count,
-			'tags'          => sanitize_text_field( $this->get_terms( $post->ID, 'post_tag' ) ),
-			'categories'    => sanitize_text_field( $this->get_terms( $post->ID, 'category' ) ),
-			'custom_field'  => array_map( 'sanitize_text_field', $this->get_custom_field_data( $post->ID ) ),
-			'taxonomies'    => array_map( 'sanitize_text_field', $this->get_taxonomies_for_post( $post->ID ) ),
-			'tax'           => $taxonomies_data,
+			'ID'               => (int) $post->ID,
+			'title'            => sanitize_text_field( $post->post_title ),
+			'excerpt'          => Description::get_instance()->post( $post->ID ),
+			'meta_title'       => $this->get_meta_value( 'page_title' ),
+			'meta_description' => $this->get_meta_value( 'page_description' ),
+			'content'          => sanitize_text_field( $post->post_content ),
+			'url'              => get_permalink( $post ),
+			'slug'             => sanitize_title( $post->post_name ),
+			'date'             => get_the_date( 'c', $post ),
+			'modified_date'    => get_the_modified_date( 'c', $post ),
+			'created_date'     => get_the_date( 'c', $post ),
+			'thumbnail'        => get_the_post_thumbnail_url( $post->ID, 'full' ),
+			'comment_count'    => (int) $post->comment_count,
+			'tags'             => sanitize_text_field( $this->get_terms( $post->ID, 'post_tag' ) ),
+			'categories'       => sanitize_text_field( $this->get_terms( $post->ID, 'category' ) ),
+			'custom_field'     => array_map( 'sanitize_text_field', $this->get_custom_field_data( $post->ID ) ),
+			'taxonomies'       => array_map( 'sanitize_text_field', $this->get_taxonomies_for_post( $post->ID ) ),
+			'tax'              => $taxonomies_data,
 		];
+	}
+
+	/**
+	 * Retrieves a resolved SEO meta value for the current request.
+	 *
+	 * Reuses the values Meta_Data prepares on the `wp` hook so schema fields can
+	 * match the SEO title and description meta tags.
+	 *
+	 * @param string $key Meta data key, such as `page_title` or `page_description`.
+	 * @since 1.10.2
+	 * @return string Meta value, or an empty string when none is set.
+	 */
+	private function get_meta_value( string $key ) {
+		$meta_data = Meta_Data::get_instance()->get_meta_data();
+
+		$value = $meta_data[ $key ] ?? '';
+
+		return is_string( $value ) ? $value : '';
 	}
 
 	/**
@@ -429,23 +482,10 @@ class Data {
 	private function get_current_data() {
 		global $wp;
 
-		$bread       = Breadcrumbs::get_instance()->get_crumbs();
-		$breadcrumbs = [];
-		foreach ( $bread as $index => $crumb ) {
-			$breadcrumbs[] = [
-				'@type'    => 'ListItem',
-				'position' => $index + 1,
-				'item'     => [
-					'@id'  => $crumb['link'],
-					'name' => $crumb['name'],
-				],
-			];
-		}
-
 		return [
 			// Normalized like canonical.php so the @id base and WebPage.url match the canonical URL.
 			'url'         => user_trailingslashit( home_url( $wp->request ) ),
-			'breadcrumbs' => $breadcrumbs,
+			'breadcrumbs' => self::breadcrumb_items( Breadcrumbs::get_instance()->get_crumbs() ),
 			'title'       => $this->get_title(),
 		];
 	}
@@ -456,7 +496,7 @@ class Data {
 	 * @return string The title.
 	 */
 	private function get_title(): string {
-		$post = ! is_singular() ? $this->get_queried_object() : get_post();
+		$post = $this->get_queried_object();
 
 		if ( $post instanceof WP_Post ) {
 			return $post->post_title;

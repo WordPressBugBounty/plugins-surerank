@@ -75,6 +75,12 @@ class Robots {
 		$robots_meta_keys  = [ 'noindex', 'nofollow', 'noarchive' ];
 		$robots_meta_array = [];
 
+		// A 404 response carries no meta data, so the index/follow defaults
+		// below would otherwise advertise the error page as indexable.
+		if ( is_404() ) {
+			$robots_meta_array[] = 'noindex';
+		}
+
 		// If robots_meta general exists, use it.
 		if ( ! empty( $noindex ) || ! empty( $nofollow ) || ! empty( $noarchive ) ) {
 			if ( $noindex === 'yes' ) {

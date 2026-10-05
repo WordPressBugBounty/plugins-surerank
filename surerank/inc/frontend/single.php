@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Functions\Validate;
 use SureRank\Inc\Functions\Variables;
@@ -57,11 +58,17 @@ class Single {
 	 * @return array<string, mixed> $meta_data
 	 */
 	public function get_meta_data( $meta_data ) {
-		if ( ! is_singular() ) {
+		$shop_page_id = Helper::get_shop_page_id();
+
+		if ( ! is_singular() && ! $shop_page_id ) {
 			return $meta_data;
 		}
 
-		$post_id = get_the_ID();
+		// The WooCommerce shop page renders as a product archive, so
+		// is_singular() is false and get_the_ID() returns a product from the
+		// archive loop. Use the shop page's own ID instead so its stored SEO
+		// meta (title/description edited in the meta box) applies on the front end.
+		$post_id = $shop_page_id ? $shop_page_id : get_the_ID();
 
 		if ( empty( $post_id ) ) {
 			return $meta_data;

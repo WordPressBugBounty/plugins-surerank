@@ -50,9 +50,9 @@ describe( 'jsonLdToEditorState', () => {
 		const state = JSON.parse( jsonLdToEditorState( raw, OPTIONS ) );
 		const children = state.root.children[ 0 ].children;
 
-		expect(
-			children.some( ( node ) => node.type === 'mention' )
-		).toBe( false );
+		expect( children.some( ( node ) => node.type === 'mention' ) ).toBe(
+			false
+		);
 		expect( roundTrip( raw ) ).toBe( raw );
 	} );
 

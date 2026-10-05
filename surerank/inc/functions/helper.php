@@ -225,6 +225,26 @@ class Helper {
 	}
 
 	/**
+	 * Get the WooCommerce shop page ID when the shop page is being viewed.
+	 *
+	 * Note that is_shop() is true for any product archive, including sites where
+	 * no shop page is configured, so callers that need the page's own stored
+	 * meta must check the resolved ID rather than is_shop() alone.
+	 *
+	 * @since 1.10.2
+	 * @return int Shop page ID, or 0 when not on the shop page, WooCommerce is
+	 *             inactive, or no shop page is configured.
+	 */
+	public static function get_shop_page_id() {
+		if ( ! function_exists( 'is_shop' ) || ! function_exists( 'wc_get_page_id' ) || ! is_shop() ) {
+			return 0;
+		}
+
+		$shop_page_id = (int) wc_get_page_id( 'shop' );
+		return $shop_page_id > 0 ? $shop_page_id : 0;
+	}
+
+	/**
 	 * Get public custom post types.
 	 *
 	 * @since 0.0.1

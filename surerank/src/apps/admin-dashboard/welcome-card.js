@@ -44,7 +44,9 @@ const WelcomeCard = ( { className = '', isProActive = false } ) => {
 			<div
 				className={ cn(
 					'w-full h-fit bg-background-primary border-0.5 border-solid border-border-subtle rounded-xl p-5 shadow-sm flex overflow-hidden',
-					isProActive ? 'flex-col gap-3' : 'flex-col sm:flex-row gap-4',
+					isProActive
+						? 'flex-col gap-3'
+						: 'flex-col sm:flex-row gap-4',
 					! isProActive && className
 				) }
 			>

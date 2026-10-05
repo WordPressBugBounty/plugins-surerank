@@ -38,10 +38,10 @@ class Api extends Api_Base {
 	 * @return void
 	 */
 	public function register_routes() {
-		// Register routes for email reports settings.
-		register_rest_route(
+		// Register routes for email reports settings ('/email-reports/settings' stays as a working alias, see #2878).
+		$this->register_route_with_aliases(
 			$this->get_api_namespace(),
-			'/email-reports/settings',
+			'/email-reports/report-settings',
 			[
 				[
 					'methods'             => WP_REST_Server::READABLE,
@@ -91,7 +91,8 @@ class Api extends Api_Base {
 						]
 					),
 				],
-			]
+			],
+			[ '/email-reports/settings' ]
 		);
 
 		// Register route for sending test email.

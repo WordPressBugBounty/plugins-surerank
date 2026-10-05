@@ -5,7 +5,7 @@ Tags: seo, structured data, xml sitemap, schema, google search console
 Requires at least: 6.7
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.10.1
+Stable tag: 1.10.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -311,6 +311,21 @@ Brainstorm Force
 
 
 == Changelog ==
+= 1.10.2 - 05-October-2026 =
+* New: Compatibility - Added Etch page builder support with the SEO analyzer available inside the builder.
+* New: Schema - Added %post.meta_title% and %post.meta_description% variables so schema fields can reuse the SEO meta values.
+* Improvement: Sitemap - Background queue progress writes are throttled to reduce database load on large sites.
+* Fix: Meta Box - The SEO meta box failed to load or save on hosts whose firewall challenges REST URLs ending in "settings".
+* Fix: WooCommerce - The shop page's saved SEO meta is now applied on the front end.
+* Fix: Analyzer - Stale broken-link records saved before 1.9.3 are now cleared from post meta.
+* Fix: Analyzer - Rendered content is parsed as UTF-8 without requiring the mbstring extension.
+* Fix: MCP - The MCP route now keeps registering reliably, and the dashboard surfaces it when it does not.
+* Fix: Frontend - Meta output now resolves the queried post from the main query instead of the global post.
+* Fix: Frontend - 404 pages no longer output a canonical tag and now emit noindex.
+* Fix: Breadcrumbs - Product and WooCommerce pages no longer break when a plugin changes how the product category list is ordered.
+* Fix: Compatibility - Bricks pages with a query loop no longer save empty when translated via WPML with Page Level Checks enabled.
+* Fix: Sitemap - Removed a leftover background sitemap queue entry that could cause some hosts to repeatedly warn about excessive database updates.
+* Fix: Sitemap - Image entries with empty or relative URLs are now skipped or made absolute, so the sitemap no longer reports invalid image URLs.
 = 1.10.1 - 09-September-2026 =
 * New: SureRank AI - Added a dedicated SureRank AI screen to connect your account, view monthly usage, and manage AI features, with Learn More links per feature.
 * Fix: Schema - The Person schema no longer fills in the post author's email address by default. Sites that saved this setting on an earlier version have the saved value cleared automatically on update, and see a note on the Schema screen explaining the change. Props Vaibhav Narkhede via WPScan for the responsible disclosure.

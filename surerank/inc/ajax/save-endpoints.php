@@ -70,13 +70,13 @@ class Save_Endpoints {
 	}
 
 	/**
-	 * AJAX handler for POST /wp-json/surerank/v1/post/settings parity.
+	 * AJAX handler for POST /wp-json/surerank/v1/post/seo-settings parity.
 	 *
 	 * @since 1.7.2
 	 * @return void
 	 */
 	public function save_post_settings(): void {
-		if ( ! $this->guard_request( 'POST', '/surerank/v1/post/settings' ) ) {
+		if ( ! $this->guard_request( 'POST', '/surerank/v1/post/seo-settings' ) ) {
 			return;
 		}
 
@@ -110,13 +110,13 @@ class Save_Endpoints {
 	}
 
 	/**
-	 * AJAX handler for POST /wp-json/surerank/v1/term/settings parity.
+	 * AJAX handler for POST /wp-json/surerank/v1/term/seo-settings parity.
 	 *
 	 * @since 1.7.2
 	 * @return void
 	 */
 	public function save_term_settings(): void {
-		if ( ! $this->guard_request( 'POST', '/surerank/v1/term/settings' ) ) {
+		if ( ! $this->guard_request( 'POST', '/surerank/v1/term/seo-settings' ) ) {
 			return;
 		}
 
@@ -150,13 +150,13 @@ class Save_Endpoints {
 	}
 
 	/**
-	 * AJAX handler for POST /wp-json/surerank/v1/user/settings parity.
+	 * AJAX handler for POST /wp-json/surerank/v1/user/seo-settings parity.
 	 *
 	 * @since 1.9.0
 	 * @return void
 	 */
 	public function save_user_settings(): void {
-		if ( ! $this->guard_request( 'POST', '/surerank/v1/user/settings' ) ) {
+		if ( ! $this->guard_request( 'POST', '/surerank/v1/user/seo-settings' ) ) {
 			return;
 		}
 
@@ -218,10 +218,11 @@ class Save_Endpoints {
 	 *
 	 * A synthetic WP_REST_Request is built so Pro plugins hooking
 	 * `surerank_rest_api_permission` / `surerank_rest_api_permission_check`
-	 * get the same route context they see on the REST side.
+	 * get the same route context they see on the REST side, including the
+	 * route's handler attributes such as `role_capability`.
 	 *
 	 * @param string $method       HTTP method the mirrored REST route uses (e.g., 'POST').
-	 * @param string $rest_route   REST route path, including namespace, e.g. '/surerank/v1/post/settings'.
+	 * @param string $rest_route   REST route path, including namespace, e.g. '/surerank/v1/post/seo-settings'.
 	 * @since 1.7.2
 	 * @return bool True on success, false on failure (with response already sent).
 	 */
@@ -243,6 +244,7 @@ class Save_Endpoints {
 		$request = new WP_REST_Request( $method, $rest_route );
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
 		$request->set_body_params( wp_unslash( $_POST ) );
+		$this->apply_route_attributes( $request, $method, $rest_route );
 
 		$permission = Api_Base::check_permission_for_action( $request );
 		if ( is_wp_error( $permission ) ) {
@@ -264,6 +266,28 @@ class Save_Endpoints {
 		Rest_Observation::mark_blocked();
 
 		return true;
+	}
+
+	/**
+	 * Copy the mirrored REST route's handler attributes onto the synthetic
+	 * request, so permission filters that read them (e.g. Pro Role Manager's
+	 * `role_capability`) see the same values they get on the REST side.
+	 *
+	 * @param WP_REST_Request<array<string, mixed>> $request    Synthetic request.
+	 * @param string                                $method     HTTP method the mirrored REST route uses.
+	 * @param string                                $rest_route REST route path, including namespace.
+	 * @since 1.10.2
+	 * @return void
+	 */
+	private function apply_route_attributes( $request, string $method, string $rest_route ): void {
+		$handlers = rest_get_server()->get_routes()[ $rest_route ] ?? [];
+
+		foreach ( $handlers as $handler ) {
+			if ( ! empty( $handler['methods'][ $method ] ) ) {
+				$request->set_attributes( $handler );
+				return;
+			}
+		}
 	}
 
 	/**

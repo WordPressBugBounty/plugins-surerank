@@ -78,6 +78,7 @@ const PageChecks = ( {
 			onIgnoreUrl: onIgnoreBrokenLink,
 			onRestoreUrl: onRestoreBrokenLink,
 			ignoredBrokenLinks: check?.ignoredBrokenLinks || [],
+			unverifiedBrokenLinks: check?.unverifiedBrokenLinks || [],
 		};
 	};
 
@@ -173,6 +174,7 @@ const PageChecks = ( {
 							onFix={ handleFixCheck( check.id ) }
 							showIgnoreButton={ true }
 							fixItButtonProps={ getFixItButtonProps( check.id ) }
+							{ ...getBrokenLinkProps( check ) }
 						/>
 					) ) }
 					{ suggestionChecks.map( ( check ) => (

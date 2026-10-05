@@ -248,10 +248,7 @@ const BulkContentGenerationTracker = () => {
 		} catch ( error ) {
 			toast.error(
 				error?.message ||
-					__(
-						'An error occurred during authentication',
-						'surerank'
-					)
+					__( 'An error occurred during authentication', 'surerank' )
 			);
 		}
 	};

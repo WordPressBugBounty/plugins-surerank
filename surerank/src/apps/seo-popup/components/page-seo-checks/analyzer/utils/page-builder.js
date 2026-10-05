@@ -7,6 +7,7 @@ import { STORE_NAME } from '@/store/constants';
 import {
 	fetchBrokenLinkStatus,
 	getIgnoredUrlSet,
+	getPassingLinksTitle,
 	normalizeIgnoredUrl,
 } from '../link-checks';
 import { RefreshCcw } from 'lucide-react';
@@ -33,6 +34,7 @@ export const checkBrokenLinks = async (
 	);
 	const totalLinks = linksToCheck.length;
 	const brokenLinksArray = [];
+	const unverifiedBrokenLinks = [];
 
 	for ( const url of linksToCheck ) {
 		let brokenItem = null;
@@ -45,18 +47,24 @@ export const checkBrokenLinks = async (
 				allLinks,
 			} );
 
-			if ( ! result.success ) {
+			if ( result.verified === false ) {
+				unverifiedBrokenLinks.push( {
+					url,
+					status: result.status,
+					details: result.details,
+				} );
+			} else if ( ! result.success ) {
 				const { success, ...rest } = result;
 				brokenItem = { url, broken: true, ...rest };
 			}
 		} catch ( error ) {
-			brokenItem = {
+			// A request failure is inconclusive, not a broken-link result.
+			unverifiedBrokenLinks.push( {
 				url,
-				broken: true,
 				status: error?.data?.status ?? error?.code ?? 'error',
 				details: error?.message,
-				message: __( 'Failed to check link', 'surerank' ),
-			};
+			} );
+			brokenItem = null;
 		}
 
 		// Update checkedLinks and collect broken links
@@ -101,17 +109,23 @@ export const checkBrokenLinks = async (
 				type: 'page',
 				data: [ ...brokenLinksArray ],
 				ignoredBrokenLinks,
+				unverifiedBrokenLinks,
 			} );
-		} else if ( ignoredBrokenLinks.length > 0 ) {
-			// No active broken links, but ignored ones exist: emit a passing
-			// check so the "Ignored links" restore section stays available.
+		} else if (
+			ignoredBrokenLinks.length > 0 ||
+			unverifiedBrokenLinks.length > 0
+		) {
+			// No active broken links, but ignored or unverifiable ones exist:
+			// emit a passing check so the "Ignored links" restore section and
+			// the unverified note stay available.
 			updatedChecks.push( {
 				id: 'broken_links',
-				title: __( 'No broken links found on the page.', 'surerank' ),
+				title: getPassingLinksTitle( unverifiedBrokenLinks.length ),
 				status: 'success',
 				type: 'page',
 				data: [],
 				ignoredBrokenLinks,
+				unverifiedBrokenLinks,
 			} );
 		}
 
@@ -284,6 +298,10 @@ export const isTagDivBuilder = () => {
 	return !! surerank_globals?.is_tagdiv;
 };
 
+export const isEtchBuilder = () => {
+	return !! surerank_globals?.is_etch;
+};
+
 export const isAvadaBuilder = () => {
 	// Check for Fusion Builder frontend context
 	if (
@@ -333,6 +351,7 @@ export const isPageBuilderActive = () => {
 		isBricksBuilder() ||
 		isBreakdanceBuilder() ||
 		isTagDivBuilder() ||
+		isEtchBuilder() ||
 		isElementorBuilder() ||
 		isAvadaBuilder() ||
 		// Consider frontend as page builder active as page requires refresh.

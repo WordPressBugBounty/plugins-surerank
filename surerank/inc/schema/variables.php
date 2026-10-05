@@ -80,19 +80,21 @@ class Variables {
 	 */
 	private function get_post_variables() {
 		return [
-			'%post.title%'         => __( 'Post Title', 'surerank' ),
-			'%post.ID%'            => __( 'Post ID', 'surerank' ),
-			'%post.excerpt%'       => __( 'Post Excerpt', 'surerank' ),
-			'%post.content%'       => __( 'Post Content', 'surerank' ),
-			'%post.url%'           => __( 'Post URL', 'surerank' ),
-			'%post.slug%'          => __( 'Post Slug', 'surerank' ),
-			'%post.date%'          => __( 'Post Date', 'surerank' ),
-			'%post.modified_date%' => __( 'Post Modified Date', 'surerank' ),
-			'%post.thumbnail%'     => __( 'Post Thumbnail', 'surerank' ),
-			'%post.comment_count%' => __( 'Post Comment Count', 'surerank' ),
-			'%post.word_count%'    => __( 'Post Word Count', 'surerank' ),
-			'%post.tags%'          => __( 'Post Tags', 'surerank' ),
-			'%post.categories%'    => __( 'Post Categories', 'surerank' ),
+			'%post.title%'            => __( 'Post Title', 'surerank' ),
+			'%post.ID%'               => __( 'Post ID', 'surerank' ),
+			'%post.excerpt%'          => __( 'Post Excerpt', 'surerank' ),
+			'%post.meta_title%'       => __( 'Meta Title', 'surerank' ),
+			'%post.meta_description%' => __( 'Meta Description', 'surerank' ),
+			'%post.content%'          => __( 'Post Content', 'surerank' ),
+			'%post.url%'              => __( 'Post URL', 'surerank' ),
+			'%post.slug%'             => __( 'Post Slug', 'surerank' ),
+			'%post.date%'             => __( 'Post Date', 'surerank' ),
+			'%post.modified_date%'    => __( 'Post Modified Date', 'surerank' ),
+			'%post.thumbnail%'        => __( 'Post Thumbnail', 'surerank' ),
+			'%post.comment_count%'    => __( 'Post Comment Count', 'surerank' ),
+			'%post.word_count%'       => __( 'Post Word Count', 'surerank' ),
+			'%post.tags%'             => __( 'Post Tags', 'surerank' ),
+			'%post.categories%'       => __( 'Post Categories', 'surerank' ),
 		];
 	}
 

@@ -111,7 +111,7 @@ const resolvers = {
 		// Fetch settings report
 		try {
 			const settingsReportResponse = yield actions.fetchFromAPI(
-				addQueryArgs( '/surerank/v1/checks/settings', {
+				addQueryArgs( '/surerank/v1/checks/settings-checks', {
 					url,
 				} )
 			);
@@ -207,7 +207,7 @@ const resolvers = {
 
 	*getEmailReportsSettings() {
 		const response = yield actions.fetchFromAPI(
-			'/surerank/v1/email-reports/settings'
+			'/surerank/v1/email-reports/report-settings'
 		);
 		if ( response.success ) {
 			return yield actions.setEmailReportsSettings( response.data );

@@ -104,12 +104,20 @@ class Utils {
 
 			$url_element = apply_filters( 'surerank_sitemap_url_element', $url_element, $url, $dom );
 
-			// Add each image if available.
+			// Add each image if available. Normalized here as well as at
+			// collection time, so rows cached before the normalizer existed
+			// (empty locs from data: placeholders, protocol-relative URLs)
+			// render valid without waiting for a sitemap rebuild.
 			if ( isset( $url['images_data'] ) ) {
 				foreach ( $url['images_data'] as $image ) {
+					$image_link = self::normalize_image_url( (string) $image['link'] );
+					if ( '' === $image_link ) {
+						continue;
+					}
+
 					$image_element = $dom->createElement( 'image:image' );
 
-					$image_loc = $dom->createElement( 'image:loc', esc_url( (string) $image['link'] ) );
+					$image_loc = $dom->createElement( 'image:loc', esc_url( $image_link ) );
 					$image_element->appendChild( $image_loc );
 
 					$url_element->appendChild( $image_element );
@@ -214,7 +222,7 @@ class Utils {
 	 * Retrieves all images associated with a specific post.
 	 *
 	 * @param int $post_id The ID of the post.
-	 * @return array<string, mixed> Array of image URLs.
+	 * @return array<int, string> Array of image URLs.
 	 */
 	public static function get_images_from_post( int $post_id ) {
 		$images        = [];
@@ -232,7 +240,50 @@ class Utils {
 			$images[] = $attachment_image;
 		}
 
-		return $images;
+		// Content srcs are not always usable sitemap URLs: lazy-load data:
+		// placeholders become empty strings through esc_url, and protocol- or
+		// root-relative srcs are rejected by Google as invalid URLs.
+		$images = array_map( [ self::class, 'normalize_image_url' ], $images );
+		$images = array_filter( $images );
+
+		return array_values( array_unique( $images ) );
+	}
+
+	/**
+	 * Normalize an image URL into a fully qualified URL the sitemap spec accepts.
+	 *
+	 * Protocol-relative (//host/path) and root-relative (/path) URLs are made
+	 * absolute against the site's home URL. Anything that cannot become a valid
+	 * http(s) URL (data: placeholders, empty or malformed values) returns ''.
+	 *
+	 * @param string $url Raw image URL, as found in content or attachments.
+	 * @since x.x.x
+	 * @return string Fully qualified URL, or '' when the value is not usable.
+	 */
+	public static function normalize_image_url( string $url ): string {
+		$url = trim( $url );
+		if ( '' === $url ) {
+			return '';
+		}
+
+		$home   = wp_parse_url( home_url() );
+		$scheme = is_array( $home ) && ! empty( $home['scheme'] ) ? $home['scheme'] : 'https';
+
+		if ( str_starts_with( $url, '//' ) ) {
+			$url = $scheme . ':' . $url;
+		} elseif ( str_starts_with( $url, '/' ) ) {
+			$host = is_array( $home ) && ! empty( $home['host'] ) ? $home['host'] : '';
+			if ( '' === $host ) {
+				return '';
+			}
+			$url = $scheme . '://' . $host . $url;
+		}
+
+		if ( ! in_array( wp_parse_url( $url, PHP_URL_SCHEME ), [ 'http', 'https' ], true ) ) {
+			return '';
+		}
+
+		return esc_url_raw( $url );
 	}
 
 	/**

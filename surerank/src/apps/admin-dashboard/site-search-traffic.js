@@ -82,7 +82,10 @@ const ClicksAndImpressions = ( { item, isLoading } ) => {
 				className="p-1"
 			>
 				{ isLoading ? (
-					<Skeleton variant="rectangular" className="h-10 w-full max-w-[96px]" />
+					<Skeleton
+						variant="rectangular"
+						className="h-10 w-full max-w-[96px]"
+					/>
 				) : (
 					<Label
 						tag="p"
@@ -96,7 +99,10 @@ const ClicksAndImpressions = ( { item, isLoading } ) => {
 					</Label>
 				) }
 				{ isLoading ? (
-					<Skeleton variant="rectangular" className="h-6 w-full max-w-[64px]" />
+					<Skeleton
+						variant="rectangular"
+						className="h-6 w-full max-w-[64px]"
+					/>
 				) : (
 					<Tooltip
 						content={ sprintf(

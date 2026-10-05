@@ -40,7 +40,14 @@ class User_Seo extends Api_Base {
 	/**
 	 * Route Get User Seo Data
 	 */
-	protected const USER_SEO_DATA = '/user/settings';
+	protected const USER_SEO_DATA = '/user/seo-settings';
+
+	/**
+	 * Legacy user SEO data route, kept as a working alias. See #2878.
+	 *
+	 * @since 1.10.2
+	 */
+	protected const USER_SEO_DATA_LEGACY = '/user/settings';
 
 	/**
 	 * Constructor
@@ -335,7 +342,7 @@ class User_Seo extends Api_Base {
 	 * @return void
 	 */
 	private function register_get_user_seo_data_route( $namespace ) {
-		register_rest_route(
+		$this->register_route_with_aliases(
 			$namespace,
 			self::USER_SEO_DATA,
 			[
@@ -344,7 +351,8 @@ class User_Seo extends Api_Base {
 				'permission_callback' => [ $this, 'validate_permission' ],
 				'args'                => $this->get_user_seo_data_args(),
 				'role_capability'     => 'content_setting',
-			]
+			],
+			[ self::USER_SEO_DATA_LEGACY ]
 		);
 	}
 
@@ -356,7 +364,7 @@ class User_Seo extends Api_Base {
 	 * @return void
 	 */
 	private function register_update_user_seo_data_route( $namespace ) {
-		register_rest_route(
+		$this->register_route_with_aliases(
 			$namespace,
 			self::USER_SEO_DATA,
 			[
@@ -365,7 +373,8 @@ class User_Seo extends Api_Base {
 				'permission_callback' => [ $this, 'validate_permission' ],
 				'args'                => $this->get_update_user_seo_data_args(),
 				'role_capability'     => 'content_setting',
-			]
+			],
+			[ self::USER_SEO_DATA_LEGACY ]
 		);
 	}
 

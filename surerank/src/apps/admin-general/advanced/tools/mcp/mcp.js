@@ -1,6 +1,8 @@
 import PageContentWrapper from '@AdminComponents/page-content-wrapper';
 import { __, sprintf } from '@wordpress/i18n';
 import { useSelect } from '@wordpress/data';
+import { useEffect, useState } from '@wordpress/element';
+import apiFetch from '@wordpress/api-fetch';
 import withSuspense from '@AdminComponents/hoc/with-suspense';
 import GeneratePageContent from '@Functions/page-content-generator';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -81,6 +83,32 @@ const AdapterMissingAlert = () => {
 	);
 };
 
+// Warning shown when an adapter is active but it refused SureRank's server.
+const ServerMissingAlert = ( { message } ) => {
+	const summary = __(
+		'An MCP adapter is active, but SureRank could not register its own server, so the SureRank MCP endpoint will not respond.',
+		'surerank'
+	);
+
+	return (
+		<Alert
+			variant="warning"
+			design="stack"
+			title={ __( 'SureRank MCP server is not registered', 'surerank' ) }
+			content={
+				message
+					? sprintf(
+							/* translators: 1: what went wrong, 2: the reason reported by the MCP adapter. */
+							__( '%1$s The adapter reported: %2$s', 'surerank' ),
+							summary,
+							message
+					  )
+					: summary
+			}
+		/>
+	);
+};
+
 const Mcp = () => {
 	// Read the live toggle value (saved + unsaved) so the connect guide only
 	// appears while MCP is enabled.
@@ -93,6 +121,41 @@ const Mcp = () => {
 	const globals =
 		( typeof window !== 'undefined' && window.surerank_globals ) || {};
 	const isAdapterActive = !! globals.mcp_adapter_installed;
+
+	// Only a REST request reaches the adapter, so the registration outcome has to
+	// be asked for rather than read off the page.
+	const [ serverStatus, setServerStatus ] = useState( null );
+
+	useEffect( () => {
+		if ( ! isAdapterActive || ! isEnabled ) {
+			return;
+		}
+
+		let ignore = false;
+
+		apiFetch( { path: '/surerank/v1/mcp-status' } )
+			.then( ( result ) => {
+				if ( ! ignore ) {
+					setServerStatus( result );
+				}
+			} )
+			.catch( () => {
+				// A status check that never answered says nothing about the
+				// server, so stay quiet rather than warn on a guess.
+				if ( ! ignore ) {
+					setServerStatus( null );
+				}
+			} );
+
+		return () => {
+			ignore = true;
+		};
+	}, [ isAdapterActive, isEnabled ] );
+
+	const isServerMissing =
+		!! serverStatus &&
+		serverStatus.registration_expected &&
+		! serverStatus.server_registered;
 
 	return (
 		<PageContentWrapper
@@ -107,6 +170,11 @@ const Mcp = () => {
 				{ isEnabled && (
 					<div className="p-6 bg-white shadow-sm rounded-xl flex flex-col gap-6">
 						{ ! isAdapterActive && <AdapterMissingAlert /> }
+						{ isServerMissing && (
+							<ServerMissingAlert
+								message={ serverStatus.message }
+							/>
+						) }
 						<McpConnectionConfig />
 					</div>
 				) }

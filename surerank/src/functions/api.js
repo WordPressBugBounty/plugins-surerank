@@ -341,7 +341,7 @@ export const trackSchemaRecommendationEvent = ( eventKey ) =>
  */
 export const saveEmailReportsSettings = ( settings ) => {
 	return apiFetch( {
-		path: `${ API_BASE_URL }/email-reports/settings`,
+		path: `${ API_BASE_URL }/email-reports/report-settings`,
 		method: 'POST',
 		data: settings,
 	} );
@@ -353,7 +353,7 @@ export const saveEmailReportsSettings = ( settings ) => {
  */
 export const getEmailReportsSettings = () => {
 	return apiFetch( {
-		path: `${ API_BASE_URL }/email-reports/settings`,
+		path: `${ API_BASE_URL }/email-reports/report-settings`,
 		method: 'GET',
 	} );
 };

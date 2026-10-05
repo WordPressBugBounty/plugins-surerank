@@ -26,7 +26,14 @@ import { getSurerankUtmUrl } from '@/global/utils/utm';
 
 const SURERANK_NAMESPACE = '/surerank/';
 
+// Legacy `/settings` paths stay mapped so a cached bundle can still fall back to AJAX on save.
+// Only POST/PUT/PATCH fall back (see isStateChanging below), so a stale bundle doing GET on a
+// legacy path is still blocked by the WAF. Script versions come from the build hash, so new
+// releases load the new routes. See #2878.
 const AJAX_FALLBACK_ACTIONS = {
+	'/surerank/v1/post/seo-settings': 'surerank_save_post_settings',
+	'/surerank/v1/term/seo-settings': 'surerank_save_term_settings',
+	'/surerank/v1/user/seo-settings': 'surerank_save_user_settings',
 	'/surerank/v1/post/settings': 'surerank_save_post_settings',
 	'/surerank/v1/term/settings': 'surerank_save_term_settings',
 	'/surerank/v1/user/settings': 'surerank_save_user_settings',

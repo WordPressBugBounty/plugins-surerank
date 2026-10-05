@@ -314,9 +314,7 @@ const markTourSeen = () => {
  */
 const isMetaboxOpen = () => {
 	try {
-		return !! window.wp?.data
-			?.select?.( STORE_NAME )
-			?.getModalState?.();
+		return !! window.wp?.data?.select?.( STORE_NAME )?.getModalState?.();
 	} catch ( e ) {
 		return false;
 	}

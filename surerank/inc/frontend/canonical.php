@@ -46,6 +46,13 @@ class Canonical {
 	 * @return void
 	 */
 	public function print_canonical_url( $meta_data ) {
+		// A 404 response has no canonical URL. Printing the tag with an empty
+		// href resolves against the current URL, making the error page
+		// canonical for itself, so the tag is skipped entirely.
+		if ( is_404() ) {
+			return;
+		}
+
 		$url = '';
 		if ( is_singular() ) {
 			$url = $meta_data['canonical_url'] ?? get_the_permalink();
@@ -64,25 +71,23 @@ class Canonical {
 
 		global $wp;
 
-		if ( ! is_404() ) {
-			if ( is_search() ) {
-				$url = get_search_link();
-			} elseif ( is_paged() && is_singular() ) {
-				$url = $meta_data['canonical_url'] ?? get_permalink();
-			} elseif ( is_paged() ) {
-				$url = $meta_data['canonical_url'] ?? get_pagenum_link( get_query_var( 'paged' ) );
-			} elseif ( is_tax() || is_category() || is_tag() ) {
-				$queried_object = get_queried_object();
-				$url            = isset( $meta_data['canonical_url'] ) && ! empty( $meta_data['canonical_url'] )
-					? $meta_data['canonical_url']
-					: ( $queried_object instanceof WP_Term ? get_term_link( $queried_object ) : '' );
-			} elseif ( ! is_home() && ! is_front_page() ) {
-				$url = $meta_data['canonical_url'] ?? user_trailingslashit( home_url( add_query_arg( [], $wp->request ) ) );
-			}
+		if ( is_search() ) {
+			$url = get_search_link();
+		} elseif ( is_paged() && is_singular() ) {
+			$url = $meta_data['canonical_url'] ?? get_permalink();
+		} elseif ( is_paged() ) {
+			$url = $meta_data['canonical_url'] ?? get_pagenum_link( get_query_var( 'paged' ) );
+		} elseif ( is_tax() || is_category() || is_tag() ) {
+			$queried_object = get_queried_object();
+			$url            = isset( $meta_data['canonical_url'] ) && ! empty( $meta_data['canonical_url'] )
+				? $meta_data['canonical_url']
+				: ( $queried_object instanceof WP_Term ? get_term_link( $queried_object ) : '' );
+		} elseif ( ! is_home() && ! is_front_page() ) {
+			$url = $meta_data['canonical_url'] ?? user_trailingslashit( home_url( add_query_arg( [], $wp->request ) ) );
+		}
 
-			if ( empty( $url ) ) {
-				$url = user_trailingslashit( home_url( add_query_arg( [], $wp->request ) ) );
-			}
+		if ( empty( $url ) ) {
+			$url = user_trailingslashit( home_url( add_query_arg( [], $wp->request ) ) );
 		}
 
 		/**

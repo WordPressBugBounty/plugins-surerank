@@ -37,7 +37,14 @@ class Term extends Api_Base {
 	/**
 	 * Route Get Term Seo Data
 	 */
-	protected const TERM_SEO_DATA = '/term/settings';
+	protected const TERM_SEO_DATA = '/term/seo-settings';
+
+	/**
+	 * Legacy term SEO data route, kept as a working alias. See #2878.
+	 *
+	 * @since 1.10.2
+	 */
+	protected const TERM_SEO_DATA_LEGACY = '/term/settings';
 
 	/**
 	 * Constructor
@@ -346,7 +353,7 @@ class Term extends Api_Base {
 	 * @return void
 	 */
 	private function register_get_term_seo_data_route( $namespace ) {
-		register_rest_route(
+		$this->register_route_with_aliases(
 			$namespace,
 			self::TERM_SEO_DATA,
 			[
@@ -355,7 +362,8 @@ class Term extends Api_Base {
 				'permission_callback' => [ $this, 'validate_permission' ],
 				'args'                => $this->get_term_seo_data_args(),
 				'role_capability'     => 'content_setting',
-			]
+			],
+			[ self::TERM_SEO_DATA_LEGACY ]
 		);
 	}
 
@@ -366,7 +374,7 @@ class Term extends Api_Base {
 	 * @return void
 	 */
 	private function register_update_term_seo_data_route( $namespace ) {
-		register_rest_route(
+		$this->register_route_with_aliases(
 			$namespace,
 			self::TERM_SEO_DATA,
 			[
@@ -375,7 +383,8 @@ class Term extends Api_Base {
 				'permission_callback' => [ $this, 'validate_permission' ],
 				'args'                => $this->get_update_term_seo_data_args(),
 				'role_capability'     => 'content_setting',
-			]
+			],
+			[ self::TERM_SEO_DATA_LEGACY ]
 		);
 	}
 

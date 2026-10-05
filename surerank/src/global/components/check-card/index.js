@@ -1,7 +1,7 @@
 import { Badge, Label, Button, toast } from '@bsf/force-ui';
 import { cn, isURL, sanitizeHTML } from '@/functions/utils';
 import FixButton from '@GlobalComponents/fix-button';
-import { __, sprintf } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 import { CircleAlert, CircleCheck, Info, TriangleAlert } from 'lucide-react';
 import {
 	SeoPopupInfoTooltip,
@@ -183,8 +183,13 @@ export const CheckCard = ( {
 	onIgnoreUrl,
 	onRestoreUrl,
 	ignoredBrokenLinks = [],
+	unverifiedBrokenLinks = [],
 } ) => {
 	const { data: descriptionData, listStyleClassName } = getData( data );
+	// An older cached bundle passed a count here; only a list can be rendered.
+	const unverifiedLinks = Array.isArray( unverifiedBrokenLinks )
+		? unverifiedBrokenLinks
+		: [];
 	const handleIgnoreClick = async () => {
 		try {
 			await onIgnore();
@@ -417,6 +422,53 @@ export const CheckCard = ( {
 									>
 										{ __( 'Restore', 'surerank' ) }
 									</Button>
+								</li>
+							) ) }
+						</ul>
+					</div>
+				) }
+				{ unverifiedLinks.length > 0 && (
+					<div className="flex flex-col gap-1 pt-3 border-0 border-t-0.5 border-solid border-border-subtle">
+						<p className="m-0 text-xs font-medium text-text-tertiary uppercase tracking-wide">
+							{ sprintf(
+								/* translators: %d: number of links that could not be checked */
+								__( 'Could not verify (%d)', 'surerank' ),
+								unverifiedLinks.length
+							) }
+						</p>
+						<p className="m-0 text-xs text-text-tertiary">
+							{ _n(
+								'This link could not be checked, so it is not reported as broken.',
+								'These links could not be checked, so they are not reported as broken.',
+								unverifiedLinks.length,
+								'surerank'
+							) }
+						</p>
+						<ul className="list-none m-0 p-0">
+							{ unverifiedLinks.map( ( item ) => (
+								<li
+									key={ item.url }
+									className="m-0 py-1 px-2 flex items-center gap-2 text-sm rounded-md hover:bg-background-secondary"
+								>
+									<Button
+										tag="a"
+										variant="link"
+										className="flex-1 min-w-0 justify-start overflow-hidden font-normal text-text-tertiary no-underline hover:no-underline focus:outline-none focus:[box-shadow:none] [&>span]:px-0 [&>span]:min-w-0 [&>span]:truncate"
+										target="_blank"
+										rel="noopener noreferrer"
+										href={ item.url }
+										title={ item.url }
+									>
+										{ item.url }
+									</Button>
+									{ !! item.status && (
+										<span
+											className="min-w-fit shrink-0 text-xs text-text-tertiary"
+											title={ item.details || '' }
+										>
+											{ item.status }
+										</span>
+									) }
 								</li>
 							) ) }
 						</ul>

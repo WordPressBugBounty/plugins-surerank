@@ -100,7 +100,7 @@ class Page {
 			if ( is_wp_error( $term ) || empty( $term ) ) {
 				return Utils::get_instance()->send_response( false, __( 'Term not found.', 'surerank' ), $response_type );
 			}
-			// Object-level authorization: this route shares the 'content_setting' role gate with /term/settings, so
+			// Object-level authorization: this route shares the 'content_setting' role gate with /term/seo-settings, so
 			// enforce the same per-term guard before writing meta via the lower-level update_term_meta_common() primitive.
 			if ( ! Term::can_manage_term_seo( $id ) ) {
 				return Utils::get_instance()->send_response( false, __( 'You are not allowed to manage SEO settings for this term.', 'surerank' ), $response_type );
@@ -117,7 +117,7 @@ class Page {
 			if ( empty( $post ) ) {
 				return Utils::get_instance()->send_response( false, __( 'Post not found or not published.', 'surerank' ), $response_type );
 			}
-			// Object-level authorization: this route shares the 'content_setting' role gate with /post/settings, so
+			// Object-level authorization: this route shares the 'content_setting' role gate with /post/seo-settings, so
 			// enforce the same per-post guard before writing meta via the lower-level update_post_meta_common() primitive.
 			if ( ! Post::can_manage_post_seo( $id ) ) {
 				return Utils::get_instance()->send_response( false, __( 'You are not allowed to manage SEO settings for this post.', 'surerank' ), $response_type );

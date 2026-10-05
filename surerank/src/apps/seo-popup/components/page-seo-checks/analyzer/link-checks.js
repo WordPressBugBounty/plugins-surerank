@@ -1,4 +1,4 @@
-import { __ } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 import { createCheck } from './content-checks';
 import apiFetch from '@wordpress/api-fetch';
 
@@ -131,18 +131,20 @@ const shouldSkipUrl = ( href ) => {
 			.toLowerCase();
 		return ! ( protocol === 'http' || protocol === 'https' );
 	} catch ( error ) {
-		// If URL parsing fails, treat as relative (allow) if it doesn't contain a colon
-		// early on (which would indicate a scheme). Otherwise skip.
-		return trimmed.includes( ':' );
+		// An href that does not parse (a malformed host such as "//my site/x")
+		// cannot be checked, and the REST endpoint rejects it as well, so skip
+		// it rather than resolve it into a bogus URL.
+		return true;
 	}
 };
 
 /**
  * Get all unique links (href/src) from <a> and <img> tags in the document.
  * @param {Document} document
+ * @param {string}   permalink Current post permalink used as the URL base.
  * @return {string[]} Array of unique URLs
  */
-export const getAllLinks = ( document ) => {
+export const getAllLinks = ( document, permalink = '' ) => {
 	if ( ! document ) {
 		return [];
 	}
@@ -161,11 +163,19 @@ export const getAllLinks = ( document ) => {
 				return null;
 			}
 
-			// Append base URL if the URL is relative
+			// Resolve relative hrefs against the post permalink, the same base
+			// the REST endpoint and PostAnalyzer resolve against.
 			if ( ! trimmed.startsWith( 'http' ) ) {
-				const baseUrl =
-					( trimmed.startsWith( '/' ) ? '' : '/' ) + trimmed;
-				return `${ surerank_globals.site_url }${ baseUrl }`;
+				try {
+					return new URL(
+						trimmed,
+						permalink || surerank_globals.site_url
+					).href;
+				} catch ( error ) {
+					// Unresolvable against this base: skip it instead of
+					// failing the whole link check.
+					return null;
+				}
 			}
 
 			return trimmed;
@@ -229,13 +239,15 @@ export const checkLinks = async ( {
 			} );
 			const { success, ...rest } = result;
 			cacheBrokenLinksResults.set( url, {
-				broken: ! success,
+				broken: result.verified !== false && ! success,
+				unverified: result.verified === false,
 				...rest,
 			} );
 		} catch ( error ) {
-			// If API fails, consider as broken
+			// An API failure does not prove that the destination is broken.
 			cacheBrokenLinksResults.set( url, {
-				broken: true,
+				broken: false,
+				unverified: true,
 				status: error?.data?.status ?? error?.code ?? 'error',
 				details: error.message,
 				message: __( 'Failed to check link', 'surerank' ),
@@ -260,24 +272,68 @@ export const checkLinks = async ( {
 };
 
 /**
+ * Collect the links whose check did not complete, with the reason.
+ *
+ * @param {string[]} links URLs that were checked.
+ * @return {Array<Object>} Unverified links.
+ */
+const getUnverifiedLinks = ( links ) =>
+	links
+		.filter( ( url ) => cacheBrokenLinksResults.get( url )?.unverified )
+		.map( ( url ) => {
+			const cached = cacheBrokenLinksResults.get( url );
+			return {
+				url,
+				status: cached?.status,
+				details: cached?.details,
+			};
+		} );
+
+/**
+ * Build the passing broken-links check, noting any link we could not verify.
+ *
+ * @param {number} unverifiedCount Number of links that could not be verified.
+ * @return {string} Check title.
+ */
+export const getPassingLinksTitle = ( unverifiedCount ) => {
+	if ( unverifiedCount > 0 ) {
+		return sprintf(
+			/* translators: %d: number of links that could not be verified. */
+			_n(
+				'No broken links found. Could not verify %d link.',
+				'No broken links found. Could not verify %d links.',
+				unverifiedCount,
+				'surerank'
+			),
+			unverifiedCount
+		);
+	}
+
+	return __( 'No broken links found on the page.', 'surerank' );
+};
+
+/**
  * Check for broken links in the document and report results.
- * @param {Document} document
- * @param {number}   postId
- * @param {string}   userAgent
- * @param {Function} onProgress
+ *
+ * @param {Document} document   Document to scan.
+ * @param {number}   postId     Post ID.
+ * @param {string}   userAgent  User agent used for the checks.
+ * @param {Function} onProgress Progress callback.
+ * @param {string}   permalink  Current post permalink used as the URL base.
  * @return {Promise<Object>} createCheck result
  */
 export const checkBrokenLinks = async (
 	document,
 	postId,
 	userAgent = window.navigator.userAgent,
-	onProgress
+	onProgress,
+	permalink = ''
 ) => {
 	if ( ! document || ! postId ) {
 		return;
 	}
 
-	const allLinks = getAllLinks( document );
+	const allLinks = getAllLinks( document, permalink );
 	if ( ! allLinks.length ) {
 		return;
 	}
@@ -304,6 +360,7 @@ export const checkBrokenLinks = async (
 	const ignoredBrokenLinks = allLinks.filter( ( url ) =>
 		finalIgnoredSet.has( normalizeIgnoredUrl( url ) )
 	);
+	const unverifiedBrokenLinks = getUnverifiedLinks( links );
 
 	if ( brokenLinks.length ) {
 		return {
@@ -318,18 +375,20 @@ export const checkBrokenLinks = async (
 				type: 'page',
 			} ),
 			ignoredBrokenLinks,
+			unverifiedBrokenLinks,
 		};
 	}
 
 	return {
 		...createCheck( {
 			id: 'broken_links',
-			title: __( 'No broken links found on the page.', 'surerank' ),
+			title: getPassingLinksTitle( unverifiedBrokenLinks.length ),
 			status: 'success',
 			description: [],
 			type: 'page',
 		} ),
 		ignoredBrokenLinks,
+		unverifiedBrokenLinks,
 	};
 };
 
