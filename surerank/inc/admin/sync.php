@@ -360,19 +360,25 @@ class Sync {
 	 */
 	public function get_indexable_terms_count( string $taxonomy ) {
 		$args = [
-			'taxonomy'   => $taxonomy,
-			'hide_empty' => true,
-			'number'     => 0,
-			'fields'     => 'count',
-			'meta_query' => Utils::get_indexable_meta_query( $taxonomy ), //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+			'taxonomy'               => $taxonomy,
+			'hide_empty'             => true,
+			'number'                 => 0,
+			// 'count' with a meta_query returns SELECT DISTINCT COUNT(*) over the
+			// termmeta joins, so duplicate meta rows on a term are each counted. It
+			// also forces hierarchical off, dropping empty parents the chunks keep.
+			'fields'                 => 'ids',
+			// Match the chunk builder's ordering and skip a filesort we never read.
+			'orderby'                => 'term_id',
+			'update_term_meta_cache' => false,
+			'meta_query'             => Utils::get_indexable_meta_query( $taxonomy ), //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		];
 
-		$count = get_terms( $args );
-		if ( is_wp_error( $count ) ) {
+		$term_ids = get_terms( $args );
+		if ( is_wp_error( $term_ids ) || ! is_array( $term_ids ) ) {
 			return 0;
 		}
 
-		return (int) $count;
+		return count( $term_ids );
 	}
 
 	/**

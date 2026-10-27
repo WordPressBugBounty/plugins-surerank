@@ -139,10 +139,19 @@ class Meta_Resolver {
 	 * never touched by the user and keeps inheriting the live global; and only
 	 * globals present in the baseline may be excluded — a global added (or
 	 * rule-revealed) after the session loaded is missing from the payload
-	 * because the client never saw it, not because the user deleted it. Null
-	 * means no baseline was sent (legacy client, Pro seam) and keeps the plain
-	 * current-global diff; an EMPTY baseline is meaningful — the session saw
-	 * zero globals, so nothing may be excluded.
+	 * because the client never saw it, not because the user deleted it. An
+	 * EMPTY baseline is meaningful: the session saw zero globals, so nothing
+	 * may be excluded.
+	 *
+	 * Null means no baseline was sent at all (REST, MCP, or any other
+	 * non-editor caller), and no new exclusion may be made. A caller that
+	 * never told us which globals it saw cannot be read as having deleted the
+	 * ones it left out: inferring deletion from silence let a partial payload
+	 * silently strip every global schema from the object. Such callers add and
+	 * override only; removing an inherited global is an editor operation.
+	 * Exclusions the object already stores are kept, including ones for globals
+	 * its display rules hide right now, unless the payload sends that global
+	 * back, so such a save never restores a removed schema.
 	 *
 	 * @param array<string, mixed>      $payload        Full schema map sent by the client.
 	 * @param array<string, mixed>      $global         Global schema map.
@@ -177,14 +186,25 @@ class Meta_Resolver {
 		}
 
 		$excluded = [];
-		foreach ( self::visible_global_keys( $global, $context, $object_subtype, $object_id ) as $global_key ) {
-			if ( array_key_exists( $global_key, $payload ) ) {
-				continue;
+		if ( null === $baseline ) {
+			// Keep every stored exclusion, visible here or not: a display rule that
+			// hides the global today may match this object again later.
+			foreach ( self::stored_excluded_keys( $context, $object_id ) as $stored_key ) {
+				if ( isset( $payload[ $stored_key ] ) && is_array( $payload[ $stored_key ] ) ) {
+					continue; // Sent back on purpose; restore it.
+				}
+				$excluded[] = $stored_key;
 			}
-			if ( null !== $baseline && ! array_key_exists( $global_key, $baseline ) ) {
-				continue; // The client never saw this global; absence is not a deletion.
+		} else {
+			foreach ( self::visible_global_keys( $global, $context, $object_subtype, $object_id ) as $global_key ) {
+				if ( array_key_exists( $global_key, $payload ) ) {
+					continue;
+				}
+				if ( ! array_key_exists( $global_key, $baseline ) ) {
+					continue; // The client never saw this global; absence is not a deletion.
+				}
+				$excluded[] = (string) $global_key;
 			}
-			$excluded[] = (string) $global_key;
 		}
 
 		return [
@@ -446,6 +466,27 @@ class Meta_Resolver {
 		}
 
 		return $keys;
+	}
+
+	/**
+	 * Excluded global schema keys the object already stores.
+	 *
+	 * Legacy full-snapshot rows carry no exclusion list and never hide a
+	 * global (resolve() restores missing ones), so they return none.
+	 *
+	 * @param string $context   'post' | 'term' | 'user'.
+	 * @param int    $object_id Object ID.
+	 * @return array<int, string>
+	 * @since 1.10.3
+	 */
+	private static function stored_excluded_keys( string $context, int $object_id ) {
+		if ( $object_id <= 0 ) {
+			return [];
+		}
+
+		$meta = self::get_raw_meta( $context, $object_id );
+
+		return array_key_exists( self::EXCLUDED_KEY, $meta ) ? self::sanitize_excluded( $meta[ self::EXCLUDED_KEY ] ) : [];
 	}
 
 	/**

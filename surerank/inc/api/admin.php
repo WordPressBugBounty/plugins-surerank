@@ -94,6 +94,15 @@ class Admin extends Api_Base {
 			Send_Json::error( [ 'message' => __( 'You are not allowed to manage SEO settings for this user.', 'surerank' ) ] );
 		}
 
+		// Post and Term are imported from Meta_Variables in this file, so the API guards are fully qualified.
+		if ( ! empty( $post_id ) && ! \SureRank\Inc\API\Post::can_manage_post_seo( (int) $post_id ) ) {
+			Send_Json::error( [ 'message' => __( 'You are not allowed to manage SEO settings for this post.', 'surerank' ) ] );
+		}
+
+		if ( ! empty( $term_id ) && ! \SureRank\Inc\API\Term::can_manage_term_seo( (int) $term_id ) ) {
+			Send_Json::error( [ 'message' => __( 'You are not allowed to manage SEO settings for this term.', 'surerank' ) ] );
+		}
+
 		$data = [
 			'variables' => $this->get_variables( $request->get_param( 'post_id' ), $request->get_param( 'term_id' ), $request->get_param( 'user_id' ) ),
 			'other'     => $this->get_other_data(),

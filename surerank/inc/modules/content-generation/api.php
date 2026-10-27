@@ -13,6 +13,8 @@ namespace SureRank\Inc\Modules\Content_Generation;
 use SureRank\Inc\Functions\Send_Json;
 use SureRank\Inc\Traits\Get_Instance;
 use SureRank\Inc\API\Api_Base;
+use SureRank\Inc\API\Post;
+use SureRank\Inc\API\Term;
 use WP_Error;
 use WP_Post;
 use WP_REST_Request;
@@ -181,6 +183,16 @@ class Api extends Api_Base {
 						]
 					);
 				}
+
+				if ( ! Term::can_manage_term_seo( (int) $post_id ) ) {
+					Send_Json::error(
+						[
+							'message'     => __( 'You are not allowed to manage SEO settings for this term.', 'surerank' ),
+							'description' => __( 'You are not allowed to manage SEO settings for this term.', 'surerank' ),
+							'code'        => 'forbidden_object',
+						]
+					);
+				}
 			} else {
 				$post = get_post( $post_id );
 
@@ -190,6 +202,16 @@ class Api extends Api_Base {
 							'message'     => __( 'Invalid post ID', 'surerank' ),
 							'description' => __( 'Invalid post ID', 'surerank' ),
 							'code'        => 'invalid_post_id',
+						]
+					);
+				}
+
+				if ( ! Post::can_manage_post_seo( (int) $post_id ) ) {
+					Send_Json::error(
+						[
+							'message'     => __( 'You are not allowed to manage SEO settings for this post.', 'surerank' ),
+							'description' => __( 'You are not allowed to manage SEO settings for this post.', 'surerank' ),
+							'code'        => 'forbidden_object',
 						]
 					);
 				}

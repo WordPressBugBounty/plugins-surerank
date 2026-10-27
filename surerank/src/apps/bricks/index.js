@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { select } from '@wordpress/data';
+import { select, subscribe } from '@wordpress/data';
 import { cn, getStatusIndicatorClasses } from '@/functions/utils';
 import { getTooltipText } from '@/apps/seo-popup/utils/page-checks-status-tooltip-text';
 import { ENABLE_PAGE_LEVEL_SEO } from '@/global/constants';
@@ -13,134 +13,121 @@ import {
 	handleRefreshWithBrokenLinks,
 } from '../elementor/page-checks';
 import { startEditorTour } from '@SeoPopup/components/editor-tour/start-tour';
+import { mountBricksToolbar } from './toolbar';
 
-/* global jQuery */
-/* eslint-disable */
+const updateStatusIndicator = ( button ) => {
+	// Reading status may dispatch an initialization update. Resolve it before
+	// replacing the dot so a nested subscription cannot leave duplicate dots.
+	const { status, counts } = getPageCheckStatus();
+	button.querySelector( '.surerank-status-indicator' )?.remove();
+	button.setAttribute( 'data-balloon', getTooltipText( counts ) );
 
-// eslint-disable-next-line wrap-iife
-( function ( $ ) {
-	const createStatusIndicator = () => {
-		const { status } = getPageCheckStatus();
-
-		if ( ! status || ! ENABLE_PAGE_LEVEL_SEO ) {
-			return null;
-		}
-
-		const indicator = $( '<div></div>' );
-		const statusClasses = getStatusIndicatorClasses( status );
-
-		indicator.addClass(
-			cn(
-				'surerank-status-indicator absolute top-1.5 right-2.5 size-1.5 rounded-full z-10 duration-200',
-				statusClasses
-			)
+	if ( status && ENABLE_PAGE_LEVEL_SEO ) {
+		const indicator = document.createElement( 'div' );
+		indicator.className = cn(
+			'surerank-status-indicator absolute top-1.5 right-2.5 size-1.5 rounded-full z-10 duration-200',
+			getStatusIndicatorClasses( status )
 		);
+		button.appendChild( indicator );
+	}
+};
 
-		// aria and title removed per design.
-		return indicator;
-	};
+const createButton = () => {
+	const button = document.createElement( 'li' );
+	button.id = 'surerank-bricks-toolbar-button';
+	button.className = 'surerank-root';
+	// SureRank utilities target descendants of .surerank-root, not the root
+	// itself. Anchor the dot here without depending on Bricks' group styles.
+	button.style.position = 'relative';
+	button.style.flexShrink = '0';
+	button.setAttribute( 'role', 'button' );
+	button.setAttribute( 'aria-label', __( 'Open SureRank SEO', 'surerank' ) );
+	button.setAttribute( 'data-balloon-pos', 'bottom' );
+	button.tabIndex = 0;
 
-	const updateStatusIndicator = ( button ) => {
-		button.find( '.surerank-status-indicator' ).remove();
+	const logo = document.createElement( 'span' );
+	logo.className = 'bricks-svg-wrapper';
+	logo.innerHTML = sureRankLogoForBuilder( 'surerank' );
+	button.appendChild( logo );
 
-		// also refresh tooltip text
-		button.attr( 'data-balloon', getBalloonText() );
-
-		const indicator = createStatusIndicator();
-		if ( indicator ) {
-			button.append( indicator );
-		}
-	};
-
-	/**
-	 * Get balloon text for the Bricks button. Relies on page-checks util.
-	 *
-	 * @return {string}
-	 */
-	const getBalloonText = () => {
-		const { counts } = getPageCheckStatus();
-		return getTooltipText( counts );
-	};
-
-	const isStoreReady = () => {
-		const storeSelectors = wp?.data?.select?.( STORE_NAME );
-
-		return Boolean(
-			storeSelectors &&
-				typeof storeSelectors.getPageSeoChecks === 'function'
-		);
-	};
-
-	document.addEventListener( 'DOMContentLoaded', function () {
-		let unsubscribeStatus;
-		let unsubscribeRefresh;
-
-		const setupBricksButton = ( toolbar ) => {
-			if ( $( '#surerank-bricks-toolbar-button' ).length ) {
-				return;
-			}
-
-			const button =
-				$( `<li class="surerank-root" id="surerank-bricks-toolbar-button" aria-label="${ __(
-					'Open SureRank SEO',
-					'surerank'
-				) }" data-balloon-pos="bottom" data-balloon="${ getBalloonText() }" tabindex="0" class="relative">
-							<span class="bricks-svg-wrapper">${ sureRankLogoForBuilder(
-								'surerank'
-							) }</span>
-						</li>` );
-
-			button.on( 'click', handleOpenSureRankDrawer );
-
-			const insertionTarget = toolbar.children().eq( 3 );
-			if ( insertionTarget.length ) {
-				insertionTarget.after( button );
-			} else {
-				toolbar.append( button );
-			}
-
-			updateStatusIndicator( button );
-
-			// First-run guided tour, anchored to the button we just injected.
-			startEditorTour( {
-				trigger: button[ 0 ],
-				getStatusEl: () =>
-					button[ 0 ].querySelector( '.surerank-status-indicator' ),
-			} );
-
-			unsubscribeStatus = wp?.data?.subscribe?.( () => {
-				updateStatusIndicator( button );
-			} );
-
-			// Trigger page checks refresh on load, but only once post variables are ready.
-			unsubscribeRefresh = wp?.data?.subscribe?.( () => {
-				const postId =
-					select( STORE_NAME )?.getVariables()?.post?.ID?.value;
-				if ( postId ) {
-					handleRefreshWithBrokenLinks();
-					unsubscribeRefresh?.();
-					unsubscribeRefresh = null;
-				}
-			} );
-		};
-
-		const bootBricksIntegration = ( attempt = 0 ) => {
-			const toolbar = $( '#bricks-toolbar .right, #bricks-toolbar .end' );
-
-			if ( toolbar.length && isStoreReady() ) {
-				setupBricksButton( toolbar );
-				return;
-			}
-
-			if ( attempt >= 50 ) {
-				unsubscribeStatus?.();
-				unsubscribeRefresh?.();
-				return;
-			}
-
-			setTimeout( () => bootBricksIntegration( attempt + 1 ), 100 );
-		};
-
-		bootBricksIntegration();
+	button.addEventListener( 'click', ( event ) => {
+		event.stopPropagation();
+		handleOpenSureRankDrawer();
 	} );
-} )( jQuery );
+	button.addEventListener( 'keydown', ( event ) => {
+		if ( event.key === 'Enter' || event.key === ' ' ) {
+			event.preventDefault();
+			event.stopPropagation();
+			handleOpenSureRankDrawer();
+		}
+	} );
+	return button;
+};
+
+let stopIntegration;
+
+const initializeBricksIntegration = () => {
+	if ( stopIntegration ) {
+		return;
+	}
+	let unsubscribeStatus;
+	let unsubscribeRefresh;
+
+	const setupBricksButton = ( button ) => {
+		updateStatusIndicator( button );
+
+		// Reconnecting the same trigger does not restart the tour or subscriptions.
+		startEditorTour( {
+			trigger: button,
+			getStatusEl: () =>
+				button.querySelector( '.surerank-status-indicator' ),
+		} );
+		unsubscribeStatus = subscribe( () => updateStatusIndicator( button ) );
+
+		const refreshWhenReady = () => {
+			const postId =
+				select( STORE_NAME )?.getVariables()?.post?.ID?.value;
+			if ( postId ) {
+				// Refresh dispatches store updates synchronously. Unsubscribe first.
+				unsubscribeRefresh?.();
+				unsubscribeRefresh = null;
+				handleRefreshWithBrokenLinks();
+			}
+		};
+		unsubscribeRefresh = subscribe( refreshWhenReady );
+		refreshWhenReady();
+	};
+
+	const stopToolbar = mountBricksToolbar( {
+		isReady: () =>
+			typeof select( STORE_NAME )?.getPageSeoChecks === 'function',
+		createButton,
+		onMount: setupBricksButton,
+	} );
+	stopIntegration = () => {
+		stopToolbar();
+		unsubscribeStatus?.();
+		unsubscribeRefresh?.();
+		stopIntegration = null;
+	};
+	window.addEventListener( 'pagehide', stopIntegration, { once: true } );
+};
+
+if ( document.readyState === 'loading' ) {
+	document.addEventListener(
+		'DOMContentLoaded',
+		initializeBricksIntegration,
+		{
+			once: true,
+		}
+	);
+} else {
+	initializeBricksIntegration();
+}
+
+// A builder restored from the browser's back/forward cache needs its listeners again.
+window.addEventListener( 'pageshow', ( event ) => {
+	if ( event.persisted ) {
+		initializeBricksIntegration();
+	}
+} );

@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import * as actionTypes from './actionTypes';
-import { getSettingsPageName } from '../functions/utils';
+import { getSettingsPageName, omitSavedValues } from '../functions/utils';
 import { applyFilters } from '@wordpress/hooks';
 
 /**
@@ -458,6 +458,14 @@ function reducer(
 			return {
 				...state,
 				unsavedSettings: {},
+			};
+		case actionTypes.CLEAR_SAVED_SETTINGS:
+			return {
+				...state,
+				unsavedSettings: omitSavedValues(
+					state.unsavedSettings,
+					action.payload
+				),
 			};
 		case actionTypes.SET_EMAIL_REPORTS_SETTINGS:
 			return {

@@ -7,11 +7,13 @@ import {
 	useMemo,
 	memo,
 	Suspense,
+	useState,
 } from '@wordpress/element';
 import {
 	withSelect,
 	withDispatch,
 	useSelect,
+	useDispatch,
 	select as staticSelect,
 } from '@wordpress/data';
 import { STORE_NAME } from '@Store/constants';
@@ -21,10 +23,13 @@ import { Toaster, toast } from '@bsf/force-ui';
 import { GutenbergData, ClassicEditorData } from './dynamic-data-provider';
 import { Header, Footer } from '@SeoPopup/components';
 import { fetchMetaSettings } from '@/functions/api';
+import { startRequest, isLatestRequest } from '@/functions/request-sequence';
 import { usePageChecks } from '@SeoPopup/hooks';
 import { SCREENS } from './screens';
 import { useKeywordChecks } from '@SeoPopup/components/keyword-checks/hooks/use-keyword-checks';
 import { applyFilters } from '@wordpress/hooks';
+import { __ } from '@wordpress/i18n';
+import { ConfirmationDialog } from '@/global/components/confirmation-dialog';
 import {
 	isListingPage,
 	isUserContext,
@@ -145,17 +150,32 @@ const SeoModal = ( props ) => {
 			return;
 		}
 
+		// The listing page can switch rows, or reopen the same row, while this request is
+		// pending, so only the newest request for the row that started it may apply.
+		const requestedPostId = staticSelect( STORE_NAME ).getActivePostId();
+		const requestId = startRequest( 'seo-meta' );
+		const isStaleResponse = () =>
+			! isLatestRequest( 'seo-meta', requestId ) ||
+			staticSelect( STORE_NAME ).getActivePostId() !== requestedPostId;
+
 		try {
 			const response = await fetchMetaSettings();
+			if ( isStaleResponse() ) {
+				return;
+			}
 			toast.success( response.message );
 			setMetaDataAndDefaults( {
 				postSeoMeta: response.data,
 				globalDefaults: response.global_default,
 			} );
 		} catch ( error ) {
-			toast.error( error.message );
+			if ( ! isStaleResponse() ) {
+				toast.error( error.message );
+			}
 		} finally {
-			setInitialized( true );
+			if ( ! isStaleResponse() ) {
+				setInitialized( true );
+			}
 		}
 	}, [ initialized ] );
 
@@ -227,13 +247,53 @@ const SeoModal = ( props ) => {
 		);
 	}, [ initialized, updateModalState ] );
 
-	const closeModal = useCallback( () => {
+	const hasUnsavedSettings = useSelect(
+		( select ) =>
+			Object.keys( select( STORE_NAME ).getUnsavedMetaSettings() ?? {} )
+				.length > 0,
+		[]
+	);
+	const { resetUnsavedMetaSettings } = useDispatch( STORE_NAME );
+	const [ confirmDiscardOpen, setConfirmDiscardOpen ] = useState( false );
+
+	// Warn before leaving the page while SEO edits are unsaved. This component stays
+	// mounted after the popup closes, so the warning lasts as long as the edits do.
+	useEffect( () => {
+		if ( ! hasUnsavedSettings ) {
+			return;
+		}
+		const handleBeforeUnload = ( e ) => {
+			e.preventDefault();
+			e.returnValue = null;
+		};
+		window.addEventListener( 'beforeunload', handleBeforeUnload );
+		return () => {
+			window.removeEventListener( 'beforeunload', handleBeforeUnload );
+		};
+	}, [ hasUnsavedSettings ] );
+
+	const closeWithoutConfirm = useCallback( () => {
 		// Reset the AI suggestion cache on close so a reopened popup regenerates
 		// against the current content instead of serving suggestions built from
 		// stale inputs (content/focus keyword edited between sessions).
 		updateAppSettings( { generatedContents: {} } );
 		updateModalState( false );
 	}, [ updateAppSettings, updateModalState ] );
+
+	const closeModal = useCallback( () => {
+		// On listing pages reopening a row resets its state, so closing with unsaved
+		// edits would drop them without a save option. Ask before discarding.
+		if ( isListingPage() && hasUnsavedSettings ) {
+			setConfirmDiscardOpen( true );
+			return;
+		}
+		closeWithoutConfirm();
+	}, [ hasUnsavedSettings, closeWithoutConfirm ] );
+
+	const discardAndClose = useCallback( () => {
+		resetUnsavedMetaSettings();
+		closeWithoutConfirm();
+	}, [ resetUnsavedMetaSettings, closeWithoutConfirm ] );
 
 	const RenderScreen = useMemo( () => {
 		if ( appSettings?.currentScreen ) {
@@ -256,6 +316,19 @@ const SeoModal = ( props ) => {
 				<IsolatePageChecksHook />
 			</Suspense>
 			<Toaster className="z-[100000]" />
+			<ConfirmationDialog
+				open={ confirmDiscardOpen }
+				setOpen={ setConfirmDiscardOpen }
+				title={ __( 'Discard unsaved changes?', 'surerank' ) }
+				description={ __(
+					'You have unsaved SEO changes. If you close now, they will be lost.',
+					'surerank'
+				) }
+				confirmLabel={ __( 'Discard', 'surerank' ) }
+				cancelLabel={ __( 'Keep editing', 'surerank' ) }
+				confirmDestructive
+				onConfirm={ discardAndClose }
+			/>
 			<AnimatePresence>
 				{ modalState && (
 					<motion.div

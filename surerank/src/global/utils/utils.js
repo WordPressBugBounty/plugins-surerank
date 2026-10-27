@@ -40,6 +40,34 @@ export const ensureMediaButtonText = ( mediaFrame, buttonText ) => {
 	mediaFrame.on( 'content:render', setButtonText );
 };
 
+/**
+ * Keeps the media modal above the front-end metabox while the frame is open.
+ * The metabox shadow host sits at z-index 9999999 to beat theme headers, which
+ * also covers the media modal (160000), so drop it for as long as the frame is open.
+ *
+ * @since x.x.x
+ * @param {Object} mediaFrame - The WordPress media frame object
+ */
+const keepMediaFrameAboveShadowHost = ( mediaFrame ) => {
+	mediaFrame.on( 'open', () => {
+		const host = document.getElementById( 'surerank-shadow-host' );
+		if ( ! host || undefined !== host.dataset.surerankZIndex ) {
+			return;
+		}
+		host.dataset.surerankZIndex = host.style.zIndex;
+		host.style.zIndex = 'auto';
+	} );
+
+	mediaFrame.on( 'close', () => {
+		const host = document.getElementById( 'surerank-shadow-host' );
+		if ( ! host || undefined === host.dataset.surerankZIndex ) {
+			return;
+		}
+		host.style.zIndex = host.dataset.surerankZIndex;
+		delete host.dataset.surerankZIndex;
+	} );
+};
+
 // Creates a WordPress media frame with consistent button text handling.
 // This is a wrapper around wp.media() that automatically applies the button text fix.
 export const createMediaFrame = ( options ) => {
@@ -55,6 +83,8 @@ export const createMediaFrame = ( options ) => {
 	if ( options.button && options.button.text ) {
 		ensureMediaButtonText( frame, options.button.text );
 	}
+
+	keepMediaFrameAboveShadowHost( frame );
 
 	return frame;
 };

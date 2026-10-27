@@ -5,7 +5,7 @@ Tags: seo, structured data, xml sitemap, schema, google search console
 Requires at least: 6.7
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.10.2
+Stable tag: 1.10.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -311,6 +311,18 @@ Brainstorm Force
 
 
 == Changelog ==
+= 1.10.3 - 27-October-2026 =
+* Fix: Compatibility - Restored the SureRank toolbar button and side panel in Bricks 2.4.
+* Fix: Compatibility - The media picker for the social image now opens above the SureRank panel in Etch.
+* Fix: Security - Editor variables and AI generation now check permissions for the specific post or term.
+* Fix: Schema - Saving schemas no longer turns off global schemas that were left out of the request.
+* Fix: SEO Popup - Switching rows no longer lets a late response overwrite the selected post's data.
+* Fix: SEO Popup - Saving no longer clears newer edits, and the unsaved changes warning now shows for new edits.
+* Fix: Sitemap - The taxonomy sitemap index no longer lists empty pages.
+* Fix: Sitemap - Changing a term's noindex setting now refreshes its taxonomy sitemap.
+* Fix: Sitemap - During a background rebuild, the last complete sitemap is served instead of a partial one.
+* Fix: Sitemap - Legacy sitemap redirects now keep the site's subdirectory.
+* Fix: Uninstall - On multisite, deleting the plugin only removes data from sites that opted in.
 = 1.10.2 - 05-October-2026 =
 * New: Compatibility - Added Etch page builder support with the SEO analyzer available inside the builder.
 * New: Schema - Added %post.meta_title% and %post.meta_description% variables so schema fields can reuse the SEO meta values.

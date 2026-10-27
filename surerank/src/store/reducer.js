@@ -1,5 +1,6 @@
 import * as actionTypes from './action-types';
 import { applyFilters } from '@wordpress/hooks';
+import { omitSavedValues } from '@/functions/utils';
 /**
  * Reducer returning the viewport state, as keys of breakpoint queries with
  * boolean value representing whether query is matched.
@@ -181,6 +182,14 @@ function reducer( state = DEFAULT_STATE, action ) {
 			return {
 				...state,
 				unsavedPostSeoMeta: {},
+			};
+		case actionTypes.CLEAR_SAVED_META_SETTINGS:
+			return {
+				...state,
+				unsavedPostSeoMeta: omitSavedValues(
+					state.unsavedPostSeoMeta,
+					action.payload
+				),
 			};
 		case actionTypes.SET_REFRESH_CALLED:
 			return {

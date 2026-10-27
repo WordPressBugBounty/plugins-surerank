@@ -14,6 +14,7 @@ import {
 	mergeAllCheckTypes,
 } from '@/functions/utils';
 import { CHECK_TYPES } from '@/global/constants';
+import { startRequest, isLatestRequest } from '@/functions/request-sequence';
 /**
  * Returns an action object used in signalling that viewport queries have been
  * updated. Values are specified as an object of breakpoint query keys where
@@ -149,6 +150,20 @@ export const setUnsavedMetaSettings = ( payload ) => {
 export const resetUnsavedMetaSettings = () => {
 	return {
 		type: actionTypes.RESET_UNSAVED_META_SETTINGS,
+	};
+};
+
+/**
+ * Marks the submitted meta values as saved, keeping newer edits unsaved.
+ *
+ * @since x.x.x
+ *
+ * @param {Object} savedMetaSettings Snapshot of the meta values that were submitted.
+ */
+export const clearSavedMetaSettings = ( savedMetaSettings ) => {
+	return {
+		type: actionTypes.CLEAR_SAVED_META_SETTINGS,
+		payload: savedMetaSettings,
 	};
 };
 
@@ -602,11 +617,21 @@ export function* resetForNewPost( postId, postType, isTaxonomy ) {
 		queryParams = { term_id: postId };
 	}
 
+	const requestId = startRequest( 'editor-variables' );
 	try {
 		const response = yield fetchFromAPI( {
 			path: addQueryArgs( EDITOR_URL, queryParams ),
 			method: 'GET',
 		} );
+
+		// Ignore the response when the listing page switched to another row or reopened
+		// this one meanwhile.
+		if (
+			! isLatestRequest( 'editor-variables', requestId ) ||
+			select( STORE_NAME ).getActivePostId() !== postId
+		) {
+			return;
+		}
 
 		if ( response?.success ) {
 			let initialState = { variables: response.variables };

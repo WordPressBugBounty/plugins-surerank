@@ -317,7 +317,10 @@ class Cache {
 		// create a fresh one without touching the backup.
 		if ( file_exists( $backup ) ) {
 			$live_index = $current . '/sitemap_index.json';
-			if ( file_exists( $live_index ) ) {
+			// A rebuild writes the live index chunk by chunk, so a live index from a rebuild
+			// that is still marked running (one that outlasted its lock) is partial: keep
+			// the backup for it as in (b).
+			if ( file_exists( $live_index ) && false === get_option( 'surerank_rebuild_running_' . $prefix, false ) ) {
 				// (a) Previous rebuild completed — remove the now-superseded backup.
 				if ( ! self::recursive_remove( $backup ) ) {
 					delete_transient( $lock_key );
@@ -330,6 +333,7 @@ class Cache {
 					self::recursive_remove( $current );
 				}
 				wp_mkdir_p( $current );
+				update_option( 'surerank_rebuild_running_' . $prefix, time(), false );
 				return true;
 			}
 		}
@@ -349,6 +353,10 @@ class Cache {
 
 		// Create an empty live directory for the rebuild to populate.
 		wp_mkdir_p( $current );
+
+		// Unlike the lock, this marker does not expire, so a rebuild that outlasts the lock
+		// still counts as running until commit or abort clears it.
+		update_option( 'surerank_rebuild_running_' . $prefix, time(), false );
 
 		return true;
 	}
@@ -374,6 +382,7 @@ class Cache {
 		}
 
 		delete_transient( 'surerank_rebuild_lock_' . $prefix );
+		delete_option( 'surerank_rebuild_running_' . $prefix );
 
 		$backup = self::$cache_dir . $prefix . '.old';
 
@@ -407,6 +416,7 @@ class Cache {
 		}
 
 		delete_transient( 'surerank_rebuild_lock_' . $prefix );
+		delete_option( 'surerank_rebuild_running_' . $prefix );
 
 		$current = self::$cache_dir . $prefix;
 		$backup  = self::$cache_dir . $prefix . '.old';
@@ -449,6 +459,27 @@ class Cache {
 		}
 
 		return file_exists( self::$cache_dir . $prefix . '.old' );
+	}
+
+	/**
+	 * Whether an atomic rebuild is currently running for a prefix.
+	 *
+	 * The running marker is set by begin_atomic_rebuild() and removed by commit or abort
+	 * before the backup is deleted, so a backup left behind by a failed cleanup after a
+	 * completed rebuild does not count as a running rebuild. The marker is an option, not
+	 * the expiring concurrency lock, so a rebuild that outlasts the lock still counts.
+	 *
+	 * @param string $prefix Top-level cache prefix (e.g. "sitemap").
+	 * @since 1.10.3
+	 * @return bool
+	 */
+	public static function is_rebuild_in_progress( string $prefix ): bool {
+		$prefix = self::sanitize_prefix( $prefix );
+		if ( '' === $prefix ) {
+			return false;
+		}
+
+		return false !== get_option( 'surerank_rebuild_running_' . $prefix, false );
 	}
 
 	/**

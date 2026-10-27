@@ -30,6 +30,7 @@ use SureRank\Inc\Functions\Cron;
 use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Traits\Get_Instance;
 use WP_Post;
+use WP_Term;
 
 /**
  * Invalidator
@@ -74,6 +75,35 @@ class Invalidator {
 		add_action( 'added_post_meta', [ $this, 'queue_post_noindex_meta' ], 10, 3 );
 		add_action( 'updated_post_meta', [ $this, 'queue_post_noindex_meta' ], 10, 3 );
 		add_action( 'deleted_post_meta', [ $this, 'queue_post_noindex_meta' ], 10, 3 );
+
+		// Same for terms: the term SEO save writes the noindex via update_term_meta,
+		// which does not fire edited_term.
+		add_action( 'added_term_meta', [ $this, 'queue_term_noindex_meta' ], 10, 3 );
+		add_action( 'updated_term_meta', [ $this, 'queue_term_noindex_meta' ], 10, 3 );
+		add_action( 'deleted_term_meta', [ $this, 'queue_term_noindex_meta' ], 10, 3 );
+	}
+
+	/**
+	 * Queue a term's taxonomy when its sitemap-indexability meta changes.
+	 *
+	 * Term counterpart of queue_post_noindex_meta(): only the per-term noindex
+	 * key decides whether the term belongs in its taxonomy sitemap.
+	 *
+	 * @param int|array<int, int> $meta_id   Meta row ID(s) (unused).
+	 * @param int                 $object_id Term ID.
+	 * @param string              $meta_key  Meta key.
+	 * @since 1.10.3
+	 * @return void
+	 */
+	public function queue_term_noindex_meta( $meta_id, $object_id = 0, $meta_key = '' ) {
+		if ( 'surerank_settings_post_no_index' !== $meta_key ) {
+			return;
+		}
+
+		$term = get_term( (int) $object_id );
+		if ( $term instanceof WP_Term ) {
+			$this->queue_term( (int) $term->term_id, (int) $term->term_taxonomy_id, (string) $term->taxonomy );
+		}
 	}
 
 	/**

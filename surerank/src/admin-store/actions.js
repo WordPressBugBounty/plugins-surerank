@@ -149,6 +149,20 @@ export const resetUnsavedSettings = () => {
 	};
 };
 
+/**
+ * Marks the submitted settings as saved, keeping newer edits unsaved.
+ *
+ * @since x.x.x
+ *
+ * @param {Object} savedSettings Snapshot of the settings that were submitted.
+ */
+export const clearSavedSettings = ( savedSettings ) => {
+	return {
+		type: actionTypes.CLEAR_SAVED_SETTINGS,
+		payload: savedSettings,
+	};
+};
+
 export const setEmailReportsSettings = ( payload ) => {
 	return {
 		type: actionTypes.SET_EMAIL_REPORTS_SETTINGS,

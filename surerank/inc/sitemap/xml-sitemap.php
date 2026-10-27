@@ -144,7 +144,7 @@ class Xml_Sitemap extends Sitemap {
 		];
 
 		if ( in_array( $last_url, $sitemap, true ) ) {
-			wp_safe_redirect( '/' . self::get_slug(), 302 );
+			wp_safe_redirect( $this->get_sitemap_url(), 302 );
 			exit;
 		}
 	}
@@ -190,6 +190,9 @@ class Xml_Sitemap extends Sitemap {
 	 *   2. Stale-while-revalidate from the rebuild backup (sitemap.old/)
 	 *   3. Miss response (503 + valid empty <sitemapindex/>)
 	 *
+	 * In background (cron) mode, while a rebuild is running, the rebuild backup is tried
+	 * before the live cache, because the live cache stays partial until the rebuild commits.
+	 *
 	 * Stale-while-revalidate ensures Googlebot and other crawlers see the
 	 * last known-good sitemap with HTTP 200 during a rebuild window rather
 	 * than 503. That materially reduces the chance of a rebuild triggering
@@ -216,6 +219,13 @@ class Xml_Sitemap extends Sitemap {
 			// count queries. The chunk files its entries point to are built
 			// lazily as each sub-sitemap page is requested (below).
 			Registry::get_instance()->build_index();
+		}
+
+		// A running background rebuild writes the live cache chunk by chunk, so the live index
+		// and chunks can be partial until it commits. Serve the complete backup first, but only
+		// while the rebuild is running: a backup left over after a completed rebuild is stale.
+		if ( ! $this->chunk_on_the_fly && Cache::is_rebuild_in_progress( 'sitemap' ) && Cache::has_rebuild_backup( 'sitemap' ) ) {
+			$this->serve_from_backup( $type, $page );
 		}
 
 		// 1. Live cache — exits on success, falls through on miss.

@@ -1,15 +1,23 @@
-import { useSelect, useDispatch } from '@wordpress/data';
+import {
+	useSelect,
+	useDispatch,
+	select as staticSelect,
+} from '@wordpress/data';
 import { STORE_NAME } from '@/store/constants';
 import apiFetch from '@wordpress/api-fetch';
 import GlobalSaveButton from '@/apps/admin-components/global-save-button';
-import { isCurrentPage } from '@/functions/utils';
+import { isCurrentPage, omitSavedValues } from '@/functions/utils';
 import {
 	POST_SEO_DATA_URL,
 	TERM_SEO_DATA_URL,
 	USER_SEO_DATA_URL,
 } from '@/global/constants/api';
-import { useCallback, useEffect } from '@wordpress/element';
 import { fetchMetaSettings } from '@/functions/api';
+import {
+	startRequest,
+	getLatestRequest,
+	isLatestRequest,
+} from '@/functions/request-sequence';
 import { DotIcon } from '@/global/components/icons';
 import { validateCustomJsonLdSchemas } from '@/apps/admin-components/schema-utils/custom-json-ld';
 
@@ -18,22 +26,50 @@ const SaveButton = () => {
 		( select ) => select( STORE_NAME ).getUnsavedMetaSettings(),
 		[]
 	);
-	const { resetUnsavedMetaSettings, initMetaDataAndDefaults } =
-		useDispatch( STORE_NAME );
+	const {
+		clearSavedMetaSettings,
+		initMetaDataAndDefaults,
+		updateMetaboxState,
+	} = useDispatch( STORE_NAME );
 
-	const updateMetaSettings = async () => {
+	const updateMetaSettings = async (
+		savedMetaSettings,
+		savedPostId,
+		requestId
+	) => {
 		try {
 			const response = await fetchMetaSettings();
+			const store = staticSelect( STORE_NAME );
+			// The listing page may have switched rows, or reopened this one, meanwhile.
+			if (
+				! isLatestRequest( 'seo-meta', requestId ) ||
+				store.getActivePostId() !== savedPostId
+			) {
+				return;
+			}
+			// Keep edits made after the save was submitted on top of the server data.
+			const newerEdits = omitSavedValues(
+				store.getUnsavedMetaSettings(),
+				savedMetaSettings
+			);
 			initMetaDataAndDefaults( {
-				postSeoMeta: response.data,
+				postSeoMeta: Object.keys( newerEdits ).length
+					? { ...response.data, ...newerEdits }
+					: response.data,
 				globalDefaults: response.global_default,
 			} );
+			// A popup load superseded by this refresh will not mark the popup as loaded.
+			updateMetaboxState( true );
 		} catch ( error ) {
 			// Do nothing
 		}
 	};
 
 	const save = async () => {
+		// Detects a popup load (a reopened row) started between this save and its refresh.
+		const saveStartRequestId = getLatestRequest( 'seo-meta' );
+		const savedMetaSettings = unsavedMetaSettings;
+		const savedPostId = staticSelect( STORE_NAME ).getActivePostId();
 		const schemaValidation = validateCustomJsonLdSchemas(
 			unsavedMetaSettings?.schemas
 		);
@@ -61,7 +97,7 @@ const SaveButton = () => {
 		}
 
 		const queryParams = {
-			metaData: unsavedMetaSettings,
+			metaData: savedMetaSettings,
 			...idParam,
 		};
 
@@ -73,11 +109,30 @@ const SaveButton = () => {
 		if ( ! response.success ) {
 			throw response;
 		}
-		// Update the store with the latest data
-		updateMetaSettings();
-		setTimeout( () => {
-			resetUnsavedMetaSettings();
-		}, 1000 );
+		// Update the store with the latest data. The refresh starts after the save landed, so
+		// its response is the newest data and supersedes any popup load still in flight.
+		// Skip it when the listing page has switched to another row, so the save never
+		// supersedes that row's own load.
+		if ( staticSelect( STORE_NAME ).getActivePostId() === savedPostId ) {
+			const refreshRequestId = startRequest( 'seo-meta' );
+			updateMetaSettings(
+				savedMetaSettings,
+				savedPostId,
+				refreshRequestId
+			);
+			setTimeout( () => {
+				// Skip when the listing page has switched rows, or reopened this one, meanwhile.
+				if (
+					! isLatestRequest( 'seo-meta', refreshRequestId ) ||
+					refreshRequestId !== saveStartRequestId + 1 ||
+					staticSelect( STORE_NAME ).getActivePostId() !== savedPostId
+				) {
+					return;
+				}
+				// Only the submitted values are saved, edits made meanwhile stay unsaved.
+				clearSavedMetaSettings( savedMetaSettings );
+			}, 1000 );
+		}
 
 		// Notify the seo-bar (listing page) to refresh the badge for this post.
 		const savedId =
@@ -95,25 +150,6 @@ const SaveButton = () => {
 
 		return response;
 	};
-
-	const handleBeforeUnload = useCallback( ( e ) => {
-		e.preventDefault();
-		e.returnValue = null;
-	}, [] );
-
-	// Alert user when they try to leave the page without saving
-	useEffect( () => {
-		if (
-			! unsavedMetaSettings ||
-			! Object.keys( unsavedMetaSettings ?? {} ).length
-		) {
-			return;
-		}
-		window.addEventListener( 'beforeunload', handleBeforeUnload );
-		return () => {
-			window.removeEventListener( 'beforeunload', handleBeforeUnload );
-		};
-	}, [ handleBeforeUnload ] );
 
 	const hasUnsavedSettings =
 		Object.keys( unsavedMetaSettings ?? {} ).length > 0;

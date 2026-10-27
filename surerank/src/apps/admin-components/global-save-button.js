@@ -96,7 +96,7 @@ export const SaveSettingsButton = ( { onSuccess } ) => {
 			unsavedSettings: getUnsavedSettings() || {},
 		};
 	}, [] );
-	const { resetUnsavedSettings } = useDispatch( STORE_NAME );
+	const { clearSavedSettings } = useDispatch( STORE_NAME );
 
 	const handleSave = async () => {
 		const schemaValidation = validateCustomJsonLdSchemas(
@@ -122,7 +122,8 @@ export const SaveSettingsButton = ( { onSuccess } ) => {
 		} );
 
 		if ( response.success ) {
-			resetUnsavedSettings();
+			// Only the submitted values are saved, edits made meanwhile stay unsaved.
+			clearSavedSettings( unsavedSettings );
 		}
 
 		return response;

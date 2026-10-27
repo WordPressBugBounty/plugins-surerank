@@ -257,7 +257,7 @@ class Utils {
 	 * http(s) URL (data: placeholders, empty or malformed values) returns ''.
 	 *
 	 * @param string $url Raw image URL, as found in content or attachments.
-	 * @since x.x.x
+	 * @since 1.10.3
 	 * @return string Fully qualified URL, or '' when the value is not usable.
 	 */
 	public static function normalize_image_url( string $url ): string {

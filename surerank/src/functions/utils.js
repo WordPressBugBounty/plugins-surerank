@@ -332,6 +332,28 @@ export const deepClone = ( obj ) => {
 };
 
 /**
+ * Removes the unsaved entries that still hold the value that was saved.
+ * Entries edited again while the save request was pending stay unsaved.
+ *
+ * @since x.x.x
+ *
+ * @param {Object} unsaved - Current unsaved values keyed by setting name.
+ * @param {Object} saved   - Snapshot of the values that were submitted.
+ * @return {Object} The unsaved values that the save did not cover.
+ */
+export const omitSavedValues = ( unsaved, saved ) => {
+	const savedValues = saved ?? {};
+
+	return Object.fromEntries(
+		Object.entries( unsaved ?? {} ).filter(
+			( [ key, value ] ) =>
+				! Object.prototype.hasOwnProperty.call( savedValues, key ) ||
+				savedValues[ key ] !== value
+		)
+	);
+};
+
+/**
  * Scrolls to an element with highlighting.
  *
  * @param {string} elementId          - The ID of the element to scroll to.
