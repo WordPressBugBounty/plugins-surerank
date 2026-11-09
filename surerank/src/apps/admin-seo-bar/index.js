@@ -9,6 +9,7 @@ import { cn } from '@/functions/utils';
 import initBulkContentGenerationTracker from './bulk-content-generation';
 import getBatchGenerationStatusProps from './bulk-content-generation/badge-prop-getter';
 import BatchFailureTooltip from './bulk-content-generation/failure-tooltip';
+import MetaSummary from './meta-summary';
 import '@Store/store';
 import './style.scss';
 
@@ -36,6 +37,7 @@ const CustomBadge = ( {
 	const {
 		checks: seoChecks,
 		error: errorMessage,
+		adminMeta,
 		batchGeneration,
 	} = useSuspenseSelect(
 		( select ) => {
@@ -167,27 +169,34 @@ const CustomBadge = ( {
 	}
 
 	return (
-		<BatchFailureTooltip
-			message={ batchFailureMessage }
-			upgradeRequired={ batchUpgradeRequired }
-		>
-			<div
-				onClick={ handleBadgeClick }
-				role="button"
-				tabIndex={ batchStatus ? -1 : 0 }
-				className={ cn(
-					'inline-block',
-					batchStatus ? 'cursor-default' : 'cursor-pointer'
-				) }
-				onKeyDown={ ( e ) => {
-					if ( e.key === 'Enter' || e.key === ' ' ) {
-						handleBadgeClick( e );
-					}
-				} }
+		<>
+			<BatchFailureTooltip
+				message={ batchFailureMessage }
+				upgradeRequired={ batchUpgradeRequired }
 			>
-				<Badge { ...badgeProps } />
-			</div>
-		</BatchFailureTooltip>
+				<div
+					onClick={ handleBadgeClick }
+					role="button"
+					tabIndex={ batchStatus ? -1 : 0 }
+					className={ cn(
+						'inline-block',
+						batchStatus ? 'cursor-default' : 'cursor-pointer'
+					) }
+					onKeyDown={ ( e ) => {
+						if ( e.key === 'Enter' || e.key === ' ' ) {
+							handleBadgeClick( e );
+						}
+					} }
+				>
+					<Badge { ...badgeProps } />
+				</div>
+			</BatchFailureTooltip>
+			{ ! isTaxonomy &&
+				! isUser &&
+				window?.surerank_seo_bar?.show_meta && (
+					<MetaSummary meta={ adminMeta } />
+				) }
+		</>
 	);
 };
 

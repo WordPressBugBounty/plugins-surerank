@@ -37,6 +37,8 @@ import { PAGE_CONTENT as SOCIAL_ACCOUNTS_PAGE_CONTENT } from '@AdminGeneral/soci
 import { PAGE_CONTENT as TITLE_AND_DESCRIPTION_PAGE_CONTENT } from '@AdminGeneral/general/title-and-description/title-and-description';
 import { PAGE_CONTENT as ROBOTS_TXT_PAGE_CONTENT } from '@AdminGeneral/advanced/tools/robots-txt-editor/robots-txt-editor';
 import { PAGE_CONTENT as EMAIL_REPORTS_PAGE_CONTENT } from '@AdminGeneral/advanced/email-reports/email-reports';
+import { isGeoReady } from '@AdminDashboard/geo/get-geo-cta';
+import { GEO_COMING_SOON } from '@AdminDashboard/geo/features';
 import {
 	ENABLE_GOOGLE_CONSOLE,
 	ENABLE_SCHEMAS,
@@ -350,6 +352,28 @@ export const getNavLinks = () => {
 					migratable: false,
 				},
 			],
+		},
+		{
+			section: __( 'AI Ready', 'surerank' ),
+			sectionId: 'geo',
+			// Until GEO is ready the section is one full-screen opt-in page.
+			// After that Pro adds Markdown on top of these coming soon items.
+			links: isGeoReady()
+				? GEO_COMING_SOON.map( ( feature ) => ( {
+						path: `/geo${ feature.path }`,
+						label: feature.title,
+						icon: feature.icon,
+						badge: __( 'Soon', 'surerank' ),
+						migratable: false,
+				  } ) )
+				: [
+						{
+							path: '/geo',
+							label: __( 'Overview', 'surerank' ),
+							icon: Sparkles,
+							migratable: false,
+						},
+				  ],
 		},
 	];
 

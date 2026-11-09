@@ -384,6 +384,14 @@ class Utils {
 			);
 		}
 
+		// Sideloading adds files to the media library, so it needs the same
+		// capability as a regular upload. Callers keep the external URL on error.
+		if ( ! current_user_can( 'upload_files' ) ) {
+			return self::error_response(
+				__( 'You do not have permission to upload files.', 'surerank' )
+			);
+		}
+
 		// Include required WordPress functions.
 		require_once ABSPATH . 'wp-admin/includes/media.php';
 		require_once ABSPATH . 'wp-admin/includes/file.php';
@@ -403,6 +411,21 @@ class Utils {
 			return self::error_response(
 			/* translators: %s: Error message from download_url */
 				sprintf( __( 'Failed to download image: %s', 'surerank' ), $file_array['tmp_name']->get_error_message() )
+			);
+		}
+
+		// Every caller stores the result in an image field, so accept image types only.
+		$image_mimes = array_filter(
+			get_allowed_mime_types(),
+			static function ( $mime ) {
+				return 0 === strpos( $mime, 'image/' );
+			}
+		);
+		$file_type   = wp_check_filetype_and_ext( $file_array['tmp_name'], $file_array['name'], $image_mimes );
+		if ( empty( $file_type['type'] ) ) {
+			@unlink( $file_array['tmp_name'] ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_unlink
+			return self::error_response(
+				__( 'The URL does not point to a supported image file.', 'surerank' )
 			);
 		}
 

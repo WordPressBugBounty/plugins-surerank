@@ -225,8 +225,14 @@ class Dashboard {
 			return;
 		}
 
-		if ( isset( $_GET['skip_onboarding'] ) && 'true' === $_GET['skip_onboarding'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			update_option( 'surerank_onboarding_skipped', true );
+		if ( isset( $_GET['skip_onboarding'] ) && 'true' === $_GET['skip_onboarding'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce is verified before the option is written.
+			$nonce = isset( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : '';
+
+			// Only the Exit link from the onboarding screen, used by an administrator, may mark onboarding as skipped.
+			if ( current_user_can( 'manage_options' ) && wp_verify_nonce( $nonce, 'surerank_skip_onboarding' ) ) {
+				update_option( 'surerank_onboarding_skipped', true );
+			}
+
 			$this->redirect_to_page( 'surerank', '#/dashboard' );
 		}
 
@@ -324,6 +330,12 @@ class Dashboard {
 		];
 
 		$submenus[] = [
+			'id'         => 'surerank#/geo',
+			'page_title' => __( 'AI Ready', 'surerank' ),
+			'menu_title' => __( 'AI Ready', 'surerank' ) . ' <span class="surerank-menu-new-badge">' . esc_html__( 'New', 'surerank' ) . '</span>',
+		];
+
+		$submenus[] = [
 			'id'         => 'surerank#/learn',
 			'page_title' => __( 'Learn', 'surerank' ),
 		];
@@ -351,7 +363,7 @@ class Dashboard {
 			add_submenu_page(
 				$menu_slug,
 				$submenu['page_title'],
-				$submenu['page_title'],
+				$submenu['menu_title'] ?? $submenu['page_title'],
 				$capability,
 				$submenu['id'],
 				[ $this, 'render_dashboard' ]
@@ -463,6 +475,7 @@ class Dashboard {
 			'surerank_common_localization_vars',
 			[
 				'_ajax_nonce'                => current_user_can( 'manage_options' ) ? wp_create_nonce( 'surerank_plugin' ) : '',
+				'skip_onboarding_nonce'      => current_user_can( 'manage_options' ) ? wp_create_nonce( 'surerank_skip_onboarding' ) : '',
 				'admin_assets_url'           => SURERANK_URL . 'inc/admin/assets',
 				'version'                    => SURERANK_VERSION,
 				'help_link'                  => FunctionsUtils::get_utm_url( 'https://surerank.com/docs/', 'admin_dashboard', 'help_link' ),
@@ -568,6 +581,20 @@ class Dashboard {
 
 			#toplevel_page_surerank .wp-submenu li a[href*="surerank#/upgrade"]:hover {
 				color: #fff !important;
+			}
+
+			#toplevel_page_surerank .surerank-menu-new-badge {
+				display: inline-block;
+				margin-left: 4px;
+				padding: 0 6px;
+				border-radius: 4px;
+				background-color: #4f46e5;
+				color: #fff;
+				font-size: 10px;
+				font-weight: 600;
+				line-height: 16px;
+				text-transform: uppercase;
+				vertical-align: middle;
 			}
 		</style>
 		<?php

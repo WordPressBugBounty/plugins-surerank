@@ -110,8 +110,9 @@ class Title {
 			$title = $this->add_pagination_title( $title );
 		}
 
-		// Apply global title filter.
-		return apply_filters( 'surerank_final_title', $title, $meta_title );
+		// Apply global title filter. Core prints this value inside <title> as-is,
+		// so escape it here; esc_html() does not double-encode existing entities.
+		return esc_html( apply_filters( 'surerank_final_title', $title, $meta_title ) );
 	}
 
 	/**

@@ -91,6 +91,16 @@ abstract class Api_Base extends WP_REST_Controller {
 	 * @since 1.9.0
 	 */
 	public function validate_permission( $request ) {
+		/*
+		 * Protected responses must never sit in a shared cache. Most of our
+		 * callbacks answer through wp_send_json(), which exits before the REST
+		 * server sends its own no-cache headers, so a logged-in answer went out
+		 * cacheable. Sent here, the 401 an anonymous request gets is covered too.
+		 */
+		if ( ! headers_sent() ) {
+			nocache_headers();
+		}
+
 		// Whether this request was authenticated with an Application Password.
 		$app_password_uuid = function_exists( 'rest_get_authenticated_app_password' )
 			? rest_get_authenticated_app_password()

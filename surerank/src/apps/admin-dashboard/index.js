@@ -61,6 +61,11 @@ import GoogleIndexingSettings from '@AdminDashboard/google-indexing/settings';
 import GoogleIndexingLogs from '@AdminDashboard/google-indexing/logs';
 import ImageGenerationUpgrade from '@AdminDashboard/image-generation';
 import SureRankAI from '@AdminDashboard/surerank-ai';
+import GeoOverview from '@AdminDashboard/geo';
+import createComingSoonScreen from '@AdminDashboard/geo/coming-soon';
+import RedirectToGeo from '@AdminDashboard/geo/redirect-to-geo';
+import { isGeoReady } from '@AdminDashboard/geo/get-geo-cta';
+import { GEO_FEATURES, GEO_COMING_SOON } from '@AdminDashboard/geo/features';
 import LearnPage from '@/apps/admin-learn';
 import currentUserCan from '@/functions/role-capabilities';
 import { isProActive } from '@/functions/nudges';
@@ -322,6 +327,57 @@ const toolsRoutes = [
 		} ),
 	] ),
 ];
+
+// GEO routes. Until GEO is ready, /geo is a full-screen opt-in page with no
+// sidebar (set on both routes: the layout can match it as `/geo` or `/geo/`).
+// After that the coming soon screens sit under /geo, Pro adds Markdown first,
+// and /geo opens the first child.
+const geoRoutes = [
+	isGeoReady()
+		? createRoute(
+				'/geo',
+				null,
+				GEO_COMING_SOON.map( ( feature ) =>
+					createChildRoute(
+						feature.path,
+						createComingSoonScreen( feature ),
+						[],
+						{ fullWidth: true }
+					)
+				),
+				{
+					capability: 'surerank_global_setting',
+				}
+		  )
+		: createRoute(
+				'/geo',
+				null,
+				[
+					createChildRoute( '/', GeoOverview, [], {
+						navbarOnly: true,
+					} ),
+					// An old link to a GEO screen lands on the opt-in page.
+					...GEO_COMING_SOON.map( ( feature ) =>
+						createChildRoute( feature.path, RedirectToGeo )
+					),
+					// Pro's screens (Markdown) are routed by Pro once GEO is ready.
+					// Until then, keep the opt-in page on their path, so the move
+					// there just before a reload does not flash Not Found.
+					...GEO_FEATURES.filter(
+						( feature ) => feature.available
+					).map( ( feature ) =>
+						createChildRoute( feature.path, GeoOverview, [], {
+							navbarOnly: true,
+						} )
+					),
+				],
+				{
+					navbarOnly: true,
+					capability: 'surerank_global_setting',
+				}
+		  ),
+];
+
 // Register a HOC that provides TanStack Router utilities (navigate + location) as props.
 // Used by the Pro plugin to inject router context into its separately-bundled components.
 addFilter( 'surerank.router.with-router-props', 'surerank/router-props', () => {
@@ -349,6 +405,7 @@ const baseRoutes = filterFalsyRoutes( [
 	...googleIndexingRoutes,
 	...linkManagerRoutes,
 	...toolsRoutes,
+	...geoRoutes,
 	...siteSeoAnalysisRoutes,
 	// Conditionally include search console routes
 	...( ENABLE_GOOGLE_CONSOLE ? searchConsoleRoutes : [] ),

@@ -425,7 +425,8 @@ export const setBatchPageSeoChecks = ( data, type = 'post' ) => {
 			postType: type,
 			checks: categorizedChecks,
 			sequence,
-			error: null,
+			error: itemData.error || null,
+			adminMeta: itemData.admin_meta || null,
 		};
 	} );
 

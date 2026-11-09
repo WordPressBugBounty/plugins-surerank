@@ -30,6 +30,7 @@ class Render {
 	 */
 	public function __construct( Data $data ) {
 		$this->data = $data->collect();
+		$this->resolve_schema_links();
 	}
 
 	/**
@@ -53,19 +54,44 @@ class Render {
 		// Match variables like %post.title% or %schemas.article%.
 		preg_match_all( '/%([^%\s]+)%/', $value, $matches );
 
-		foreach ( $matches[1] as $match ) {
-			$keys        = explode( '.', $match );
-			$replacement = $this->resolve_variable( $keys, $this->data );
+		if ( empty( $matches[1] ) ) {
+			return;
+		}
 
+		// A value that is exactly one variable may resolve to a structure, e.g. %schemas.person%.
+		if ( 1 === count( $matches[0] ) && trim( $value ) === $matches[0][0] ) {
+			$replacement = $this->resolve_variable( explode( '.', $matches[1][0] ), $this->data );
 			if ( is_array( $replacement ) ) {
 				$value = $replacement;
-			} else {
-				$value = str_replace( "%{$match}%", $replacement ?? '', $value );
+				return;
 			}
-
-			// Check for additional variables introduced in the replacement and resolve recursively.
-			$this->render( $value );
 		}
+
+		// Single pass: resolved values (post titles, tags, meta) are inserted as text and never parsed for variables again.
+		$replacements = [];
+		foreach ( array_unique( $matches[1] ) as $match ) {
+			$replacement                  = $this->resolve_variable( explode( '.', $match ), $this->data );
+			$replacements[ "%{$match}%" ] = is_scalar( $replacement ) ? (string) $replacement : '';
+		}
+
+		$value = strtr( $value, $replacements );
+	}
+
+	/**
+	 * Resolve the @id templates held in schema links (e.g. `%current.url%#article`,
+	 * see Data::get_id_value()) once, so %schemas.*% variables need no second pass.
+	 *
+	 * @return void
+	 * @since 1.11.0
+	 */
+	private function resolve_schema_links() {
+		if ( empty( $this->data['schemas'] ) || ! is_array( $this->data['schemas'] ) ) {
+			return;
+		}
+
+		$links = $this->data['schemas'];
+		$this->render( $links );
+		$this->data['schemas'] = $links;
 	}
 
 	/**

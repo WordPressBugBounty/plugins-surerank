@@ -23,6 +23,9 @@ import UpgradeButton from './upgrade-button';
  * @param {string}   props.plan             - Plan name (default: 'starter')
  * @param {string}   props.utmMedium        - UTM medium parameter for tracking (e.g., 'surerank_instant_indexing')
  * @param {string}   props.utmContent       - UTM content parameter for tracking
+ * @param {string}   props.badgeLabel       - Badge text next to the title (default: "Pro")
+ * @param {string}   props.badgeVariant     - Badge variant (default: "blue")
+ * @param {boolean}  props.showButton       - Whether to show the upgrade button (default: true)
  * @return {JSX.Element} UpgradeFeatureCard component
  */
 const UpgradeFeatureCard = ( {
@@ -46,6 +49,9 @@ const UpgradeFeatureCard = ( {
 	utmMedium,
 	utmContent,
 	plan,
+	badgeLabel = __( 'Pro', 'surerank' ),
+	badgeVariant = 'blue',
+	showButton = true,
 	...props
 } ) => {
 	const [ isImageLoaded, setIsImageLoaded ] = useState( false );
@@ -140,8 +146,8 @@ const UpgradeFeatureCard = ( {
 									{ title }
 								</Text>
 								<Badge
-									label={ __( 'Pro', 'surerank' ) }
-									variant="blue"
+									label={ badgeLabel }
+									variant={ badgeVariant }
 									size="sm"
 									type="pill"
 								/>
@@ -190,19 +196,21 @@ const UpgradeFeatureCard = ( {
 						</div>
 
 						{ /* Footer Actions */ }
-						<div className="flex flex-row justify-end items-center gap-3 p-2">
-							<div className="flex flex-row items-center gap-3 w-full">
-								<UpgradeButton
-									label={ buttonLabel }
-									variant="primary"
-									size="md"
-									showIcon={ false }
-									onClick={ onButtonClick }
-									utmMedium={ utmMedium }
-									utmContent={ utmContent }
-								/>
+						{ showButton && (
+							<div className="flex flex-row justify-end items-center gap-3 p-2">
+								<div className="flex flex-row items-center gap-3 w-full">
+									<UpgradeButton
+										label={ buttonLabel }
+										variant="primary"
+										size="md"
+										showIcon={ false }
+										onClick={ onButtonClick }
+										utmMedium={ utmMedium }
+										utmContent={ utmContent }
+									/>
+								</div>
 							</div>
-						</div>
+						) }
 					</div>
 				</div>
 			</div>

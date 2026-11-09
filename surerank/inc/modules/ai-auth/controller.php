@@ -36,6 +36,13 @@ class Controller {
 	public const SETTINGS_KEY = 'surerank_auth';
 
 	/**
+	 * Fields of the auth payload that are stored.
+	 *
+	 * @since 1.11.0
+	 */
+	public const ALLOWED_AUTH_FIELDS = [ 'user_email', 'account_ref', 'plan' ];
+
+	/**
 	 * Encryption key.
 	 *
 	 * @since 1.4.2
@@ -155,8 +162,8 @@ class Controller {
 			return new WP_Error( 'failed_to_json_decode', __( 'Failed to json decode the decrypted data.', 'surerank' ) );
 		}
 
-		// verify the nonce that comes in $encrypted_email_array.
-		if ( ! empty( $decrypted_data_array['nonce'] ) && ! wp_verify_nonce( $decrypted_data_array['nonce'], 'surerank_ai_auth_nonce' ) ) {
+		// The nonce is required: the payload key is chosen by the sender, so it proves nothing on its own.
+		if ( empty( $decrypted_data_array['nonce'] ) || ! is_string( $decrypted_data_array['nonce'] ) || ! wp_verify_nonce( $decrypted_data_array['nonce'], 'surerank_ai_auth_nonce' ) ) {
 			return new WP_Error( 'nonce_verification_failed', __( 'Nonce verification failed.', 'surerank' ) );
 		}
 
@@ -182,8 +189,8 @@ class Controller {
 			unset( $decrypted_data_array['is_subscribed'] );
 		}
 
-		// remove the nonce from the decrypted data before saving it to the options.
-		unset( $decrypted_data_array['nonce'] );
+		// Store only the known account fields.
+		$decrypted_data_array = array_intersect_key( $decrypted_data_array, array_flip( self::ALLOWED_AUTH_FIELDS ) );
 
 		// save the user email to the options.
 		update_option( self::SETTINGS_KEY, $decrypted_data_array );

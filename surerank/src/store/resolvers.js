@@ -115,6 +115,9 @@ export function* fetchSeoBarChecks( ids, type, forceRefresh = false ) {
 			path:
 				addQueryArgs( endpoint, {
 					[ queryArg ]: ids,
+					...( type === 'post' && window?.surerank_seo_bar?.show_meta
+						? { include_admin_meta: true }
+						: {} ),
 				} ) + cacheBuster,
 			method: 'GET',
 		} );

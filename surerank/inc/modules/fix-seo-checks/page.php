@@ -57,6 +57,18 @@ class Page {
 	public function use_me( $input_key, $input_value, $id, $is_taxonomy = false ) {
 		$method = Utils::create_use_me_method( $input_key );
 
+		// Object-level authorization for every use_* fixer, including the ones Pro registers (e.g. use_url_length),
+		// so a 'content_setting' role cannot change posts or terms it cannot edit. Unknown IDs get the same denial,
+		// so the response does not reveal which private posts or terms exist.
+		if ( ! empty( $id ) ) {
+			if ( $is_taxonomy && ! Term::can_manage_term_seo( (int) $id ) ) {
+				return Utils::get_instance()->send_response( false, __( 'You are not allowed to manage SEO settings for this term.', 'surerank' ), 'content_generation' );
+			}
+			if ( ! $is_taxonomy && ! Post::can_manage_post_seo( (int) $id ) ) {
+				return Utils::get_instance()->send_response( false, __( 'You are not allowed to manage SEO settings for this post.', 'surerank' ), 'content_generation' );
+			}
+		}
+
 		$classes = Utils::get_use_classes();
 
 		if ( empty( $classes ) || ! is_array( $classes ) ) {

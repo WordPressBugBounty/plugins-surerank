@@ -3,7 +3,7 @@ import { Button } from '@bsf/force-ui';
 import { useOnboardingState } from '@Onboarding/store';
 import { X } from 'lucide-react';
 
-export const exitURL = `${ surerank_globals.wp_dashboard_url }?page=surerank&skip_onboarding=true`;
+export const exitURL = `${ surerank_globals.wp_dashboard_url }?page=surerank&skip_onboarding=true&_wpnonce=${ surerank_globals.skip_onboarding_nonce }`;
 
 const ExitButton = () => {
 	const [ , dispatch ] = useOnboardingState();

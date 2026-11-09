@@ -321,8 +321,9 @@ class Post extends Api_Base {
 	/**
 	 * Download external image and save to WordPress media library
 	 *
-	 * Uses the centralized download_and_save_image() utility which includes
-	 * SSRF protection and redirect blocking for security.
+	 * Uses the centralized download_and_save_image() utility, which fetches the
+	 * file with download_url() (core's wp_safe_remote_get()) and accepts image
+	 * types only.
 	 *
 	 * @param string $image_url Image URL to download.
 	 * @param int    $post_id Post ID to associate the image with (unused, kept for compatibility).

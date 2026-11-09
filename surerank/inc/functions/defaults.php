@@ -55,6 +55,7 @@ class Defaults {
 		'enable_google_console' => true,
 		'enable_schemas'        => true,
 		'enable_migration'      => true,
+		'enable_geo_features'   => false,
 	];
 
 	/**

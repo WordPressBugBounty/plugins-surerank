@@ -267,7 +267,7 @@ const SidebarSection = ( { section, links } ) => {
 			open={ true }
 			className="space-y-0.5"
 		>
-			{ links.map( ( { path, label, icon: Icon, submenu } ) =>
+			{ links.map( ( { path, label, icon: Icon, submenu, badge } ) =>
 				submenu ? (
 					<SubmenuAccordion
 						key={ path || label }
@@ -279,6 +279,14 @@ const SidebarSection = ( { section, links } ) => {
 					<NavLink key={ path } path={ path }>
 						{ Icon && <Icon className="size-4" /> }
 						{ label }
+						{ badge && (
+							<Badge
+								size="xs"
+								variant="neutral"
+								label={ badge }
+								className="ml-auto"
+							/>
+						) }
 					</NavLink>
 				)
 			) }

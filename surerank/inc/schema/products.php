@@ -132,6 +132,15 @@ class Products {
 				return $data;
 		}
 
+		// A password-protected product shows only the password form, so its descriptions stay out of the schema too.
+		if ( post_password_required( $post ) ) {
+			foreach ( [ 'description', 'short_description', 'variant_description' ] as $text_key ) {
+				if ( isset( $product_data[ $text_key ] ) ) {
+					$product_data[ $text_key ] = '';
+				}
+			}
+		}
+
 		// Merge product data into schema.
 		$data['product'] = $product_data;
 

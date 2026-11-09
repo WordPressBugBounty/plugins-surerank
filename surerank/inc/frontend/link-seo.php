@@ -98,52 +98,18 @@ class Link_Seo {
 			return [];
 		}
 
-		/**
-		 * Extract all anchor tags with href attributes from content
-		 *
-		 * Regex pattern breakdown:
-		 * <a                           : Matches literal "<a"
-		 * [^>]*                        : Match any characters except ">" (stay within opening tag)
-		 * href=                        : Match literal "href="
-		 * ["\']                        : Match opening quote (single or double)
-		 * ([^"\']*)                    : Capture group 1 - Match and capture href value (any chars except quotes)
-		 * ["\']                        : Match closing quote (single or double)
-		 * [^>]*                        : Match remaining tag attributes until closing ">"
-		 * >                            : Match closing bracket of opening tag
-		 * i                            : Case-insensitive flag
-		 *
-		 * Examples of what this WILL match:
-		 * - <a href="https://example.com">Link</a>
-		 * - <A HREF='http://site.org' class="external">Link</A>
-		 * - <a class="btn" href="mailto:test@example.com" id="contact">Email</a>
-		 * - <a target="_blank" href="https://google.com" rel="noopener">Google</a>
-		 *
-		 * Captured groups:
-		 * [0] => Full anchor tag: <a href="https://example.com" class="link">
-		 * [1] => href value: https://example.com
-		 *
-		 * @param string $content The HTML content to search for anchor tags
-		 * @param array $matches Output array containing matched anchor tags and href values
-		 * @return int Number of matches found
-		 *
-		 * @see https://www.php.net/manual/en/reference.pcre.pattern.syntax.php
-		 * @since 1.5.0
-		 */
-		preg_match_all( '/<a[^>]*href=["\']([^"\']*)["\'][^>]*>/i', $content, $matches, PREG_SET_ORDER );
-
 		$external_links   = [];
 		$site_domain      = $this->get_site_domain();
 		$excluded_domains = $this->get_excluded_domains();
 
-		foreach ( $matches as $match ) {
-			$full_tag = $match[0];
-			$url      = $match[1];
+		foreach ( $this->extract_html_tags( $content, 'A' ) as $full_tag ) {
+			$attributes = $this->parse_link_attributes( $full_tag );
+			$url        = $attributes['href'] ?? '';
 
 			if ( ! $this->is_external_link( $url, $site_domain ) || $this->is_excluded_domain( $url, $excluded_domains ) ) {
 				continue;
 			}
 
-			$attributes = $this->parse_link_attributes( $full_tag );
 			if ( $this->needs_any_enhancement( $attributes ) ) {
 				$external_links[] = $full_tag;
 			}
@@ -251,15 +217,12 @@ class Link_Seo {
 	 * @since 1.5.0
 	 */
 	private function enhance_link_tags( $content, $links, $context ): string {
+		$replacements = [];
 		foreach ( $links as $original_tag ) {
-			$enhanced_tag = $this->enhance_single_link( $original_tag, $context );
-
-			if ( $enhanced_tag !== $original_tag ) {
-				$content = str_replace( $original_tag, $enhanced_tag, $content );
-			}
+			$replacements[ $original_tag ] = $this->enhance_single_link( $original_tag, $context );
 		}
 
-		return $content;
+		return $this->replace_html_tags( $content, 'A', $replacements );
 	}
 
 	/**
@@ -295,58 +258,7 @@ class Link_Seo {
 	 * @since 1.5.0
 	 */
 	private function parse_link_attributes( $tag ): array {
-		$attributes = [];
-
-		/**
-		 * Parse all attributes from an HTML anchor tag
-		 *
-		 * Regex pattern breakdown:
-		 * ([a-zA-Z_:][a-zA-Z0-9\-_.:]*)   : Capture group 1 - Attribute name
-		 *   [a-zA-Z_:]                     : First char: letter, underscore, or colon
-		 *   [a-zA-Z0-9\-_.]*               : Remaining chars: alphanumeric, hyphen, dot, underscore, colon
-		 * =                                : Literal equals sign
-		 * ["\']                            : Opening quote (single or double)
-		 * ([^"\']*)                        : Capture group 2 - Attribute value (any chars except quotes)
-		 * ["\']                            : Closing quote (single or double)
-		 *
-		 * Examples of what this WILL match:
-		 * - href="https://example.com"
-		 * - class='btn external'
-		 * - target="_blank"
-		 * - rel="nofollow noopener"
-		 * - data-toggle="modal"
-		 * - xml:lang="en"                  (namespaced attributes)
-		 *
-		 * Examples of what this will NOT match:
-		 * - href=https://example.com       (no quotes)
-		 * - disabled                       (boolean attribute without value)
-		 * - 123invalid="value"             (attribute name starts with number)
-		 *
-		 * Captured groups per match:
-		 * [0] => Full match: href="https://example.com"
-		 * [1] => Attribute name: href
-		 * [2] => Attribute value: https://example.com
-		 *
-		 * @param string $tag The anchor tag to parse
-		 * @param array $matches Output array containing all matched attributes
-		 * @return int Number of matches found
-		 *
-		 * @see https://www.php.net/manual/en/reference.pcre.pattern.syntax.php
-		 * @since 1.5.0
-		 */
-		if ( preg_match_all( '/([a-zA-Z_:][a-zA-Z0-9\-_.:]*)=["\']([^"\']*)["\']/', $tag, $matches, PREG_SET_ORDER ) ) {
-			/**
-			 * Process matches to build attribute array:
-			 * [0] => href="https://example.com"  // Full match
-			 * [1] => href                         // Attribute name
-			 * [2] => https://example.com          // Attribute value
-			 */
-			foreach ( $matches as $match ) {
-				$attributes[ $match[1] ] = $match[2];
-			}
-		}
-
-		return $attributes;
+		return $this->parse_tag_attributes( $tag );
 	}
 
 	/**
@@ -407,9 +319,8 @@ class Link_Seo {
 	/**
 	 * Apply rel enhancements to the original tag in place.
 	 *
-	 * Mirrors Image_Seo::apply_enhancements — writes only the attributes that
-	 * changed, leaving boolean attributes (download, inert, hidden) and
-	 * data-* attrs the regex parser does not capture exactly as authored.
+	 * Mirrors Image_Seo::apply_enhancements: writes only the attributes that
+	 * changed, leaving unrelated boolean and data-* attributes as authored.
 	 *
 	 * @param string                $tag        Original anchor tag.
 	 * @param array<string, string> $attributes Parsed attributes.
@@ -437,7 +348,7 @@ class Link_Seo {
 		/**
 		 * Filter the post-enhancement attribute set. Mutations are diffed
 		 * against the pre-filter snapshot and written back to the original
-		 * tag in place — booleans/data-* attrs are not stripped.
+		 * tag in place. Unrelated booleans/data-* attrs are not stripped.
 		 *
 		 * @var array<string, string> $attributes
 		 */

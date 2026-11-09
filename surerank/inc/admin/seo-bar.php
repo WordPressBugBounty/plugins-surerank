@@ -9,7 +9,9 @@
 
 namespace SureRank\Inc\Admin;
 
+use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Settings;
+use SureRank\Inc\Functions\Variables;
 use SureRank\Inc\Modules\Content_Generation\Init as Content_Generation_Init;
 use SureRank\Inc\Traits\Enqueue;
 use SureRank\Inc\Traits\Get_Instance;
@@ -79,6 +81,7 @@ class Seo_Bar {
 					'data'        => [
 						'post_type'       => $screen->post_type,
 						'type'            => 'post',
+						'show_meta'       => self::show_meta_in_admin_list( $screen->post_type ),
 						'bulk_generation' => ! Content_Generation_Init::bulk_generation_owned_by_pro(),
 					],
 				]
@@ -334,6 +337,65 @@ class Seo_Bar {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Whether metadata summaries are enabled for a supported admin content list.
+	 *
+	 * @param string $post_type Actual post type.
+	 * @return bool
+	 * @since 1.11.0
+	 */
+	public static function show_meta_in_admin_list( string $post_type ): bool {
+		$post_type_object = get_post_type_object( $post_type );
+		if ( ! $post_type_object || ! $post_type_object->public ||
+			! Settings::get( 'enable_page_level_seo' ) ||
+			! apply_filters( 'surerank_content_setting_access', current_user_can( 'manage_options' ) ) ||
+			! self::display_metabox( $post_type, 'wp_posts' ) ) {
+			return false;
+		}
+
+		/**
+		 * Show meta title and description below the admin SEO Checks badge.
+		 *
+		 * Runs after themes and snippet plugins load. Controls admin display only.
+		 *
+		 * @since 1.11.0
+		 * @param bool   $show      Whether metadata should be shown. Default false.
+		 * @param string $post_type Current post type.
+		 */
+		return (bool) apply_filters( 'surerank_show_meta_in_admin_list', false, $post_type );
+	}
+
+	/**
+	 * Resolve metadata for an authorized row without fetching its frontend URL.
+	 *
+	 * Call only after checking the display filter and per-post SEO authorization.
+	 *
+	 * @param int $post_id Post ID.
+	 * @return array<string, array<string, string>>
+	 * @since 1.11.0
+	 */
+	public static function get_meta_summary( int $post_id ): array {
+		$post_type = (string) get_post_type( $post_id );
+		$meta      = Settings::prep_post_meta( $post_id, $post_type );
+		$fields    = array_intersect_key( $meta, array_flip( [ 'page_title', 'page_description' ] ) );
+		$resolved  = Variables::replace( $fields, $post_id );
+		$stored    = Get::all_post_meta( $post_id );
+		$summary   = [];
+
+		foreach ( [ 'page_title', 'page_description' ] as $key ) {
+			$value = $resolved[ $key ] ?? '';
+			$value = is_string( $value ) ? trim( wp_strip_all_tags( html_entity_decode( $value, ENT_QUOTES, 'UTF-8' ) ) ) : '';
+			$raw   = $stored[ $key ] ?? '';
+
+			$summary[ $key ] = [
+				'value'  => $value,
+				'source' => '' === $value ? 'missing' : ( ! empty( $raw ) ? 'custom' : 'template' ),
+			];
+		}
+
+		return $summary;
 	}
 
 	/**

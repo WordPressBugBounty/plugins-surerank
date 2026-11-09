@@ -137,6 +137,10 @@ class Post extends Variables {
 	 */
 	public function get_excerpt() {
 		if ( ! empty( $this->post ) ) {
+			// A password-protected post shows only the password form, so its excerpt stays hidden too.
+			if ( post_password_required( $this->post ) ) {
+				return '';
+			}
 			if ( ! empty( $this->post->post_excerpt ) ) {
 				return Description::get_instance()->sanitize_description( $this->post->post_excerpt );
 			}
@@ -160,6 +164,10 @@ class Post extends Variables {
 	 */
 	public function get_content() {
 		if ( ! empty( $this->post ) ) {
+			// Builder filters (Bricks, Breakdance) rebuild the body from post meta, so the password form alone does not hide it.
+			if ( post_password_required( $this->post ) ) {
+				return '';
+			}
 			$content = get_the_content( null, false, $this->post );
 			$content = apply_filters( 'surerank_meta_variable_post_content', $content, $this->post );
 			return Description::get_instance()->sanitize_description( $content );

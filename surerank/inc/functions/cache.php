@@ -32,9 +32,12 @@ class Cache {
 	 * Version 2 switched chunk queries from ID DESC to ID ASC for stable
 	 * pagination.
 	 *
+	 * Version 3 drops the images of password-protected posts, so cached chunks
+	 * built before that no longer list them.
+	 *
 	 * @since 1.9.3
 	 */
-	public const SITEMAP_CACHE_SCHEMA_VERSION = 2;
+	public const SITEMAP_CACHE_SCHEMA_VERSION = 3;
 
 	/**
 	 * Option storing the schema version the current cache was built with.

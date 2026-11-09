@@ -56,14 +56,15 @@ class Image_Seo {
 	 * @since 1.5.0
 	 */
 	public function extract_processable_images( $content ): array {
-		$missing_alt_images   = $this->extract_images_missing_alt( $content );
-		$missing_title_images = $this->extract_images_missing_title( $content );
-
-		if ( empty( $missing_alt_images ) && empty( $missing_title_images ) ) {
-			return [];
+		$images = [];
+		foreach ( $this->extract_html_tags( $content, 'IMG' ) as $tag ) {
+			$attributes = $this->parse_image_attributes( $tag );
+			if ( '' === trim( $attributes['alt'] ?? '' ) || '' === trim( $attributes['title'] ?? '' ) ) {
+				$images[] = $tag;
+			}
 		}
 
-		return array_unique( array_merge( $missing_alt_images, $missing_title_images ) );
+		return array_values( array_unique( $images ) );
 	}
 
 	/**
@@ -78,96 +79,6 @@ class Image_Seo {
 	public function process_images( $content, $image_tags, $post_id ): string {
 		$context = $this->build_processing_context( $post_id );
 		return $this->enhance_image_tags( $content, $image_tags, $context );
-	}
-
-	/**
-	 * Extract images missing alt attributes
-	 *
-	 * @param string $content Content to search.
-	 * @return array<string> Image tags missing alt
-	 * @since 1.5.0
-	 */
-	private function extract_images_missing_alt( $content ): array {
-		/**
-		 * Finds all <img> tags that are missing proper alt attributes for accessibility compliance.
-		 *
-		 * Regex breakdown:
-		 * <img                                    : Matches literal "<img"
-		 * (?!                                     : Start negative lookahead (ensure pattern does NOT exist)
-		 *   [^>]*                                 : Match any chars except ">" (stay within tag)
-		 *   alt\s*=\s*                            : Match "alt" + optional whitespace + "=" + optional whitespace
-		 *   ["\']                                 : Match opening quote (single or double)
-		 *   [^"\'\s]                              : Match at least one non-quote, non-whitespace character
-		 *   [^"\']*                               : Match remaining non-quote characters
-		 *   ["\']                                 : Match closing quote
-		 * )                                       : End negative lookahead
-		 * [^>]*>                                  : Match remaining tag content until closing ">"
-		 * i                                       : Case-insensitive flag
-		 *
-		 * Examples of what this WILL match (accessibility violations):
-		 * - <img src="photo.jpg">                 (no alt attribute)
-		 * - <img src="photo.jpg" alt="">          (empty alt)
-		 * - <img src="photo.jpg" alt=" ">         (whitespace-only alt)
-		 * - <IMG SRC="photo.jpg" ALT="">          (case variations)
-		 *
-		 * Examples of what this will NOT match (valid alt attributes):
-		 * - <img src="photo.jpg" alt="A photo">   (valid alt text)
-		 * - <img src="photo.jpg" alt="User avatar"> (descriptive alt text)
-		 *
-		 * @param string $content The HTML content to search for non-compliant img tags
-		 * @param array $matches Output array that will contain all matched img tags
-		 * @return int Number of matches found
-		 *
-		 * @see https://www.php.net/manual/en/reference.pcre.pattern.syntax.php
-		 * @since 1.0.0
-		 */
-		preg_match_all( '/<img(?![^>]*alt\s*=\s*["\'][^"\'\s][^"\']*["\'])[^>]*>/i', $content, $matches );
-		return $matches[0];
-	}
-
-	/**
-	 * Extract images missing title attributes
-	 *
-	 * @param string $content Content to search.
-	 * @return array<string> Image tags missing title
-	 * @since 1.5.0
-	 */
-	private function extract_images_missing_title( $content ): array {
-		/**
-		 * Finds all <img> tags that are missing proper title attributes for accessibility compliance.
-		 *
-		 * Regex breakdown:
-		 * <img                                    : Matches literal "<img"
-		 * (?!                                     : Start negative lookahead (ensure pattern does NOT exist)
-		 *   [^>]*                                 : Match any chars except ">" (stay within tag)
-		 *   title\s*=\s*                            : Match "title" + optional whitespace + "=" + optional whitespace
-		 *   ["\']                                 : Match opening quote (single or double)
-		 *   [^"\'\s]                              : Match at least one non-quote, non-whitespace character
-		 *   [^"\']*                               : Match remaining non-quote characters
-		 *   ["\']                                 : Match closing quote
-		 * )                                       : End negative lookahead
-		 * [^>]*>                                  : Match remaining tag content until closing ">"
-		 * i                                       : Case-insensitive flag
-		 *
-		 * Examples of what this WILL match (accessibility violations):
-		 * - <img src="photo.jpg">                 (no title attribute)
-		 * - <img src="photo.jpg" title="">          (empty title)
-		 * - <img src="photo.jpg" title=" ">         (whitespace-only title)
-		 * - <IMG SRC="photo.jpg" TITLE="">          (case variations)
-		 *
-		 * Examples of what this will NOT match (valid title attributes):
-		 * - <img src="photo.jpg" title="A photo">   (valid title text)
-		 * - <img src="photo.jpg" title="User avatar"> (descriptive title text)
-		 *
-		 * @param string $content The HTML content to search for non-compliant img tags
-		 * @param array $matches Output array that will contain all matched img tags
-		 * @return int Number of matches found
-		 *
-		 * @see https://www.php.net/manual/en/reference.pcre.pattern.syntax.php
-		 * @since 1.0.0
-		 */
-		preg_match_all( '/<img(?![^>]*title\s*=\s*["\'][^"\'\s][^"\']*["\'])[^>]*>/i', $content, $matches );
-		return $matches[0];
 	}
 
 	/**
@@ -197,15 +108,12 @@ class Image_Seo {
 	 * @since 1.5.0
 	 */
 	private function enhance_image_tags( $content, $images, $context ): string {
+		$replacements = [];
 		foreach ( $images as $original_tag ) {
-			$enhanced_tag = $this->enhance_single_image( $original_tag, $context );
-
-			if ( $enhanced_tag !== $original_tag ) {
-				$content = str_replace( $original_tag, $enhanced_tag, $content );
-			}
+			$replacements[ $original_tag ] = $this->enhance_single_image( $original_tag, $context );
 		}
 
-		return $content;
+		return $this->replace_html_tags( $content, 'IMG', $replacements );
 	}
 
 	/**
@@ -247,43 +155,7 @@ class Image_Seo {
 	 * @since 1.5.0
 	 */
 	private function parse_image_attributes( $tag ): array {
-		$attributes = [];
-
-		/**
-		 * Using regex to parse image attributes
-		 *
-		 * Regex pattern breakdown:
-		 *  ([a-zA-Z_:][a-zA-Z0-9\-_.:]*)        : Check for the attribute name.
-		 *   [a-zA-Z_:]                         : First char: letter, underscore, or colon
-		 *   [a-zA-Z0-9\-_.]*                   : Remaining chars: alphanumeric, hyphen, dot, underscore, colon
-		 * =                                    : Literal equals sign
-		 * ["\']                                : Opening quote (single or double)
-		 * ([^"\']*)                            : Capture group 2 - Attribute value (any chars except quotes)
-		 * ["\']                                : Closing quote (single or double)
-		 * i                                    : Case-insensitive flag
-		 *
-		 * Examples of what this WILL match (accessibility violations):
-		 * - <img src="photo.jpg">                 (no alt attribute)
-		 * - <img src="photo.jpg" alt="">          (empty alt)
-		 * - <img src="photo.jpg" alt=" ">         (whitespace-only alt)
-		 * - <IMG SRC="photo.jpg" ALT="">          (case variations)
-		 *
-		 * Examples of what this will NOT match (valid alt attributes):
-		 * - <img src="photo.jpg" alt="A photo">   (valid alt text)
-		 * - <img src="photo.jpg" alt="User avatar"> (descriptive alt text)
-		 */
-		if ( preg_match_all( '/([a-zA-Z_:][a-zA-Z0-9\-_.:]*)=["\']([^"\']*)["\']/', $tag, $matches, PREG_SET_ORDER ) ) {
-			/**
-			 * [0] => src="photo.jpg"      // Full match
-			 * [1] => src                  // Attribute name
-			 * [2] => photo.jpg            // Attribute value
-			 */
-			foreach ( $matches as $match ) {
-				$attributes[ $match[1] ] = $match[2];
-			}
-		}
-
-		return $attributes;
+		return $this->parse_tag_attributes( $tag );
 	}
 
 	/**
@@ -329,9 +201,9 @@ class Image_Seo {
 	}
 
 	/**
-	 * Apply enhancements directly to the original tag string. Injecting (rather
-	 * than rebuilding from parsed attributes) preserves boolean attributes
-	 * (loading, decoding, etc.) and any data-* attrs the regex parser misses.
+	 * Apply enhancements directly to the original tag string. Updating only
+	 * the selected attributes with the HTML parser preserves unrelated boolean
+	 * and data-* attributes exactly as authored.
 	 *
 	 * @param string                                                 $tag Original image tag.
 	 * @param array<string, string>                                  $attributes Parsed attributes.
@@ -346,7 +218,8 @@ class Image_Seo {
 		$result   = $tag;
 
 		foreach ( $enhancements as $attr => $template ) {
-			$value  = $this->resolve_template( $template, $context, $filename );
+			// Post titles and the site name are stored HTML-encoded (`&amp;`); decode so set_attribute() does not double-encode them.
+			$value  = \WP_HTML_Decoder::decode_attribute( $this->resolve_template( $template, $context, $filename ) );
 			$result = array_key_exists( $attr, $attributes )
 				? $this->replace_attribute_value( $result, $attr, $value )
 				: $this->inject_attribute( $result, $attr, $value );

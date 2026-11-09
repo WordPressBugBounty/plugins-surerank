@@ -67,6 +67,7 @@ use SureRank\Inc\Functions\Defaults;
 use SureRank\Inc\Functions\Get;
 use SureRank\Inc\Functions\Helper;
 use SureRank\Inc\Functions\Modified_Date_Lock;
+use SureRank\Inc\Functions\Protected_Meta;
 use SureRank\Inc\Functions\Update;
 use SureRank\Inc\GoogleSearchConsole\Auth;
 use SureRank\Inc\GoogleSearchConsole\Url_Inspection;
@@ -549,6 +550,7 @@ class Loader {
 			Rest_Fields::class,
 			Compat::class,
 			Modified_Date_Lock::class,
+			Protected_Meta::class,
 			Cron::class,
 			Checksum::class,
 			Integrations_Init::class,

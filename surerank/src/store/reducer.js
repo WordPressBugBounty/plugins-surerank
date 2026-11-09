@@ -213,6 +213,8 @@ function reducer( state = DEFAULT_STATE, action ) {
 				pageSeoChecks: {
 					...state.pageSeoChecks,
 					[ action.payload.postId ]: {
+						// Keep fields set by the batch request, such as adminMeta.
+						...state.pageSeoChecks[ action.payload.postId ],
 						checks: {
 							...state.pageSeoChecks[ action.payload.postId ]
 								?.checks,

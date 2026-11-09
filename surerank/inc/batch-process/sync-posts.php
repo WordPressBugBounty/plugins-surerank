@@ -354,7 +354,8 @@ class Sync_Posts extends Sitemap {
 				'images_data' => [],
 			];
 
-			if ( Settings::get( 'enable_xml_image_sitemap' ) ) {
+			// A password-protected post keeps its URL entry, but its images stay out like the rest of its content.
+			if ( Settings::get( 'enable_xml_image_sitemap' ) && '' === $post->post_password ) {
 				$images = Utils::get_images_from_post( $post->ID );
 
 				if ( is_array( $images ) && ! empty( $images ) ) {

@@ -76,6 +76,23 @@ const PERFORMANCE_INSIGHTS_FEATURES = [
 	},
 ];
 
+// The opt-in for Pro's GEO features. Without a Pro that has them there is
+// nothing for it to switch, so it is only offered then.
+const GEO_FEATURES = [
+	{
+		type: 'switch',
+		id: 'enable_geo_features',
+		storeKey: 'enable_geo_features',
+		shouldReload: true,
+		dataType: 'boolean',
+		label: __( 'AI Ready Features (Experimental)', 'surerank' ),
+		description: __(
+			'Tools that help AI assistants read your site, starting with Markdown. Turning this off stops them and keeps their settings.',
+			'surerank'
+		),
+	},
+];
+
 const getBaseToggles = () => [
 	...( currentUserCan( 'surerank_global_setting' )
 		? CONTENT_PERFORMANCE_FEATURES
@@ -88,6 +105,10 @@ const getBaseToggles = () => [
 		: [] ),
 	...( currentUserCan( 'surerank_global_setting' )
 		? TECHNICAL_CONTROLS_FEATURES
+		: [] ),
+	...( surerank_globals?.geo_supported &&
+	currentUserCan( 'surerank_global_setting' )
+		? GEO_FEATURES
 		: [] ),
 ];
 

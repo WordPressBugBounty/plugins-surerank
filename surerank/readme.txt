@@ -5,7 +5,7 @@ Tags: seo, structured data, xml sitemap, schema, google search console
 Requires at least: 6.7
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.10.3
+Stable tag: 1.11.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -311,6 +311,10 @@ Brainstorm Force
 
 
 == Changelog ==
+= 1.11.0 - 09-November-2026 =
+* New: AI Ready - Added the AI Ready menu with an opt-in, Markdown as the first feature, and LLMs.txt, Site Checks and Content Signals marked as coming soon.
+* New: Admin - Show the meta title and description in post lists, enabled with the surerank_show_meta_in_admin_list filter.
+* Improvement: Hardened the security of the plugin.
 = 1.10.3 - 27-October-2026 =
 * Fix: Compatibility - Restored the SureRank toolbar button and side panel in Bricks 2.4.
 * Fix: Compatibility - The media picker for the social image now opens above the SureRank panel in Etch.

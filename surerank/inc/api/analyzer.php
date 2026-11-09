@@ -10,6 +10,7 @@
 namespace SureRank\Inc\API;
 
 use DOMXPath;
+use SureRank\Inc\Admin\Seo_Bar;
 use SureRank\Inc\Analyzer\Scraper;
 use SureRank\Inc\Analyzer\SeoAnalyzer;
 use SureRank\Inc\Analyzer\Utils;
@@ -153,8 +154,21 @@ class Analyzer extends Api_Base {
 				continue;
 			}
 
+			$admin_meta = null;
+			if ( rest_sanitize_boolean( (string) $request->get_param( 'include_admin_meta' ) ) &&
+				Seo_Bar::show_meta_in_admin_list( (string) get_post_type( $p_id ) ) ) {
+				$admin_meta = Seo_Bar::get_meta_summary( (int) $p_id );
+			}
+
 			$checks = $this->get_post_checks_data( $p_id );
 			if ( is_wp_error( $checks ) ) {
+				if ( null !== $admin_meta ) {
+					$data[ $p_id ] = [
+						'checks'     => [],
+						'admin_meta' => $admin_meta,
+						'error'      => $checks->get_error_message(),
+					];
+				}
 				continue;
 			}
 			$checks = $this->consolidate_keyword_checks( $checks );
@@ -164,6 +178,9 @@ class Analyzer extends Api_Base {
 			$data[ $p_id ] = [
 				'checks' => $checks,
 			];
+			if ( null !== $admin_meta ) {
+				$data[ $p_id ]['admin_meta'] = $admin_meta;
+			}
 		}
 
 		return rest_ensure_response(
@@ -1184,6 +1201,11 @@ class Analyzer extends Api_Base {
 			return $this->create_broken_link_error_response( __( 'You are not allowed to manage SEO checks for this post.', 'surerank' ) );
 		}
 
+		$permission_error = $this->get_broken_link_ignore_permission_error();
+		if ( $permission_error ) {
+			return $permission_error;
+		}
+
 		$ignored_urls = $this->get_broken_link_ignored_urls();
 
 		if ( ! $this->is_broken_link_ignored( $url ) ) {
@@ -1212,6 +1234,11 @@ class Analyzer extends Api_Base {
 	 * @since 1.9.0
 	 */
 	public function restore_broken_link( $request ) {
+		$permission_error = $this->get_broken_link_ignore_permission_error();
+		if ( $permission_error ) {
+			return $permission_error;
+		}
+
 		$url    = (string) $request->get_param( 'url' );
 		$needle = $this->normalize_broken_link_url( $url );
 
@@ -2297,6 +2324,26 @@ class Analyzer extends Api_Base {
 	}
 
 	/**
+	 * Deny changes to the site-wide ignored broken links list without global settings access.
+	 *
+	 * The list applies to every post, so the post-level content setting access is not enough.
+	 *
+	 * @return WP_Error|null Error when the current user cannot change the list, null otherwise.
+	 * @since 1.11.0
+	 */
+	private function get_broken_link_ignore_permission_error() {
+		if ( apply_filters( 'surerank_global_setting_access', current_user_can( 'manage_options' ) ) ) {
+			return null;
+		}
+
+		return new WP_Error(
+			'surerank_broken_link_ignore_forbidden',
+			__( 'You are not allowed to change the site-wide ignored links.', 'surerank' ),
+			[ 'status' => rest_authorization_required_code() ]
+		);
+	}
+
+	/**
 	 * Normalize a URL for ignored-list comparison.
 	 *
 	 * Trailing slashes are stripped so cosmetic permalink variants match;
@@ -2988,7 +3035,12 @@ class Analyzer extends Api_Base {
 	 */
 	private function get_post_id_args() {
 		return [
-			'post_ids' => [
+			'include_admin_meta' => [
+				'type'              => 'boolean',
+				'default'           => false,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			'post_ids'           => [
 				'type'              => 'array',
 				'required'          => true,
 				'sanitize_callback' => [ self::class, 'sanitize_ids' ],
@@ -3323,10 +3375,12 @@ class Analyzer extends Api_Base {
 	 */
 	private function handle_broken_link_error( $url, $post_id, $urls, $response ) {
 		self::log( 'Could not verify link: ' . $url . ' with Error: ' . $response->get_error_message() );
+		// The raw transport error stays server-side (error log with SURERANK_DEBUG, console under
+		// WP_CLI): returning it would tell the caller how a host or port responded (refused, timed out, not resolved).
 		return $this->create_broken_link_unverified_response(
 			__( 'Could not verify the link.', 'surerank' ),
 			$response->get_error_code(),
-			$response->get_error_message()
+			__( 'The link could not be reached.', 'surerank' )
 		);
 	}
 

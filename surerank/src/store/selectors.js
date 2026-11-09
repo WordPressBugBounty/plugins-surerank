@@ -82,5 +82,6 @@ export const getSeoBarChecks = ( state, postId, checkType ) => {
 		checks,
 		sequence,
 		error,
+		adminMeta: state.pageSeoChecks[ postId ]?.adminMeta || null,
 	};
 };

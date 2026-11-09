@@ -10,6 +10,7 @@
 
 namespace SureRank\Inc\Modules\Nudges;
 
+use SureRank\Inc\Functions\Settings;
 use SureRank\Inc\Traits\Get_Instance;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -46,7 +47,12 @@ class Init {
 		return array_merge(
 			$vars,
 			[
-				'is_pro_active' => Utils::get_instance()->is_pro_active(),
+				'is_pro_active'        => Utils::get_instance()->is_pro_active(),
+				'is_pro_installed'     => '' !== Utils::get_instance()->get_pro_plugin_file(),
+				'can_activate_pro'     => Utils::get_instance()->can_activate_pro(),
+				'geo_features_enabled' => (bool) Settings::get( 'enable_geo_features' ),
+				'can_update_plugins'   => current_user_can( 'update_plugins' ),
+				'plugins_admin_url'    => self_admin_url( 'plugins.php' ),
 			]
 		);
 	}

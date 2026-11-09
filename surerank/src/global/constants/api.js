@@ -12,3 +12,5 @@ export const GET_INSTALLED_PLUGINS_AND_THEMES_URL =
 export const ROBOTS_TXT_URL = '/surerank/v1/robots-txt';
 export const EMAIL_REPORTS_SETTINGS_URL =
 	'/surerank/v1/email-reports/report-settings';
+export const ACTIVATE_PRO_URL = '/surerank/v1/nudges/activate-pro';
+export const GEO_STATUS_URL = '/surerank/v1/nudges/geo-status';

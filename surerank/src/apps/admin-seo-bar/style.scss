@@ -19,6 +19,43 @@ th.column-surerank-data {
 	width: 160px !important;
 }
 
+[class~="surerank-meta-summary"] {
+	margin-top: 10px;
+	font-size: 12px;
+	line-height: 1.5;
+
+	details + details {
+		margin-top: 8px;
+	}
+
+	summary {
+		cursor: pointer;
+	}
+
+	[class~="surerank-meta-label"] {
+		font-weight: 600;
+	}
+
+	[class~="surerank-meta-source"] {
+		margin-inline-start: 5px;
+		color: #646970;
+		font-size: 10px;
+		font-weight: 400;
+	}
+
+	[class~="surerank-meta-value"] {
+		display: -webkit-box;
+		overflow: hidden;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow-wrap: anywhere;
+	}
+
+	details[open] [class~="surerank-meta-value"] {
+		display: block;
+	}
+}
+
 #surerank-root {
 	@apply relative z-[99999];
 }

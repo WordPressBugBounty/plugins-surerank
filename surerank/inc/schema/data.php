@@ -271,13 +271,16 @@ class Data {
 			$taxonomies_data[ $taxonomy['slug'] ] = $this->get_terms( $post->ID, $taxonomy['slug'] );
 		}
 
+		// A password-protected post shows only the password form, so its text and word count stay out of the schema too.
+		$content = post_password_required( $post ) ? '' : sanitize_text_field( $post->post_content );
+
 		return [
 			'ID'               => (int) $post->ID,
 			'title'            => sanitize_text_field( $post->post_title ),
 			'excerpt'          => Description::get_instance()->post( $post->ID ),
 			'meta_title'       => $this->get_meta_value( 'page_title' ),
 			'meta_description' => $this->get_meta_value( 'page_description' ),
-			'content'          => sanitize_text_field( $post->post_content ),
+			'content'          => $content,
 			'url'              => get_permalink( $post ),
 			'slug'             => sanitize_title( $post->post_name ),
 			'date'             => get_the_date( 'c', $post ),
