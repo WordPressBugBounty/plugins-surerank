@@ -83,9 +83,7 @@ jest.mock(
 const {
 	handleOpenSureRankDrawer,
 } = require( '@SeoPopup/utils/page-builder-functions' );
-const {
-	handleRefreshWithBrokenLinks,
-} = require( '../elementor/page-checks' );
+const { handleRefreshWithBrokenLinks } = require( '../elementor/page-checks' );
 const {
 	startEditorTour,
 } = require( '@SeoPopup/components/editor-tour/start-tour' );

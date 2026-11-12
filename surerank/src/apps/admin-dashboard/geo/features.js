@@ -1,9 +1,11 @@
 import { __ } from '@wordpress/i18n';
 import { FileText, ListTree, ScanSearch, Signal } from 'lucide-react';
 
+const globals = window?.surerank_globals || {};
+
 /**
- * Every GEO feature, in menu order. Only Markdown ships today, from Pro. The
- * rest are listed so users can see where GEO is going, and open a coming soon
+ * Every GEO feature, in menu order. Markdown and LLMs.txt ship today, from
+ * Pro. The rest are listed so users can see where GEO is going, and open a coming soon
  * screen until they ship. `points` and `image` fill that screen.
  *
  * @since x.x.x
@@ -46,6 +48,9 @@ export const GEO_FEATURES = [
 				'surerank'
 			),
 		],
+		// A Pro with AI Ready but without LLMs.txt has no screen for it, so it stays coming soon there.
+		available:
+			! globals.geo_supported || !! globals.geo_llms_txt_supported,
 	},
 	{
 		id: 'site-checks',

@@ -46,6 +46,10 @@ const sendStatusToToolbar = () => {
  *   immediately (e.g. after Breakdance preview mode remounts the toolbar).
  */
 window.addEventListener( 'message', ( event ) => {
+	// Only trust messages posted by this window (the toolbar button), not by other sites.
+	if ( event.origin !== window.location.origin ) {
+		return;
+	}
 	if ( ! event.data ) {
 		return;
 	}

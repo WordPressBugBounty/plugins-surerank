@@ -201,6 +201,10 @@ const __ =
 	 * Listen for status update messages from the editor integration script.
 	 */
 	window.addEventListener( 'message', function ( event ) {
+		// Only trust messages posted by this window (index.js), not by other sites.
+		if ( event.origin !== window.location.origin ) {
+			return;
+		}
 		if ( ! event.data || event.data.type !== 'surerank-status-update' ) {
 			return;
 		}

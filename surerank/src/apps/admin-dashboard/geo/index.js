@@ -268,10 +268,7 @@ const GeoOverview = () => {
 				<Title
 					tag="h3"
 					size="md"
-					title={ __(
-						'How AI Ready Works',
-						'surerank'
-					) }
+					title={ __( 'How AI Ready Works', 'surerank' ) }
 				/>
 				<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
 					{ GEO_FEATURES.map( ( feature ) => (

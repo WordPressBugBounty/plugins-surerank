@@ -104,7 +104,9 @@ const getGeoCta = () => {
 		const canEnable = currentUserCan( 'surerank_global_setting' );
 		return {
 			step: 'enable',
-			label: canEnable ? __( 'Enable AI Ready Features', 'surerank' ) : '',
+			label: canEnable
+				? __( 'Enable AI Ready Features', 'surerank' )
+				: '',
 			href: '',
 			external: false,
 			heading: __( 'One Step Left:', 'surerank' ),

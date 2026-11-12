@@ -120,7 +120,7 @@ class Ajax {
 		}
 
 		// Check user capabilities.
-		if ( ! current_user_can( 'customize' ) ) {
+		if ( ! current_user_can( 'switch_themes' ) ) {
 			wp_send_json_error(
 				[
 					'success' => false,
@@ -141,8 +141,20 @@ class Ajax {
 			);
 		}
 
+		// Only activate an installed theme this site is allowed to use (network-enabled on multisite).
+		$theme = wp_get_theme( $theme_stylesheet );
+
+		if ( ! $theme->exists() || ! $theme->is_allowed() ) {
+			wp_send_json_error(
+				[
+					'success' => false,
+					'message' => __( 'The requested theme does not exist.', 'surerank' ),
+				],
+			);
+		}
+
 		// Activate the theme.
-		switch_theme( $theme_stylesheet );
+		switch_theme( $theme->get_stylesheet() );
 
 		// Send success response.
 		wp_send_json_success(

@@ -103,6 +103,13 @@ class Loader {
 	private static $instance;
 
 	/**
+	 * Tracks whether the incompatible Pro version notice hooks were registered.
+	 *
+	 * @var bool
+	 */
+	private $incompatible_pro_notice_registered = false;
+
+	/**
 	 * Constructor
 	 *
 	 * @since 1.0.0
@@ -152,6 +159,11 @@ class Loader {
 	 * @return void
 	 */
 	public function setup(): void {
+		if ( $this->should_block_pro_bootstrap() ) {
+			$this->register_incompatible_pro_notice_hooks();
+			return;
+		}
+
 		do_action( 'surerank_before_load_components' );
 
 		$this->load_core_components();
@@ -218,6 +230,11 @@ class Loader {
 	 * @return void
 	 */
 	public function load_routes() {
+		if ( $this->should_block_pro_bootstrap() ) {
+			$this->register_incompatible_pro_notice_hooks();
+			return;
+		}
+
 		do_action( 'surerank_before_load_routes' );
 
 		Abilities_Registrar::get_instance();
@@ -242,6 +259,38 @@ class Loader {
 			self::$instance = new self();
 		}
 		return self::$instance;
+	}
+
+	/**
+	 * Render an admin notice when the installed Pro plugin requires a newer core version.
+	 *
+	 * @return void
+	 */
+	public function incompatible_pro_version_notice(): void {
+		if ( ! current_user_can( 'update_plugins' ) ) {
+			return;
+		}
+
+		echo '<div class="notice notice-error"><p>' .
+			esc_html__( 'SureRank Pro or SureRank Business is outdated for this SureRank version. Please update the premium plugin to continue using premium features safely.', 'surerank' ) .
+			'</p></div>';
+	}
+
+	/**
+	 * Show an inline plugins-page notice under the Pro plugin row.
+	 *
+	 * @param string               $plugin_file Path to the plugin file relative to the plugins directory.
+	 * @param array<string, mixed> $plugin_data An array of plugin data.
+	 * @return void
+	 */
+	public function incompatible_pro_plugin_row_notice( $plugin_file, $plugin_data ): void {
+		$message = esc_html__( 'This SureRank Pro or SureRank Business install is older than the active SureRank version. Update the premium plugin before opening SureRank screens.', 'surerank' );
+
+		printf(
+			'<tr class="plugin-update-tr active"><td colspan="%d" class="plugin-update colspanchange"><div class="update-message notice inline notice-warning notice-alt"><p>%s</p></div></td></tr>',
+			4,
+			esc_html( $message )
+		);
 	}
 
 	/**
@@ -531,6 +580,58 @@ class Loader {
 		}
 
 		return $caps;
+	}
+
+	/**
+	 * Register the admin notices that explain why Pro was not bootstrapped.
+	 *
+	 * @return void
+	 */
+	private function register_incompatible_pro_notice_hooks(): void {
+		if ( $this->incompatible_pro_notice_registered ) {
+			return;
+		}
+
+		add_action( 'admin_notices', [ $this, 'incompatible_pro_version_notice' ] );
+		add_action( 'network_admin_notices', [ $this, 'incompatible_pro_version_notice' ] );
+
+		if ( defined( 'SURERANK_PRO_BASE' ) ) {
+			/**
+			 * The Pro plugin basename used for its plugin row hook.
+			 *
+			 * @var string $pro_base
+			 */
+			$pro_base = SURERANK_PRO_BASE;
+
+			if ( '' !== $pro_base ) {
+				add_action( 'after_plugin_row_' . $pro_base, [ $this, 'incompatible_pro_plugin_row_notice' ], 10, 2 );
+			}
+		}
+
+		$this->incompatible_pro_notice_registered = true;
+	}
+
+	/**
+	 * Check whether the active Pro plugin requires a newer core version.
+	 *
+	 * @return bool
+	 */
+	private function should_block_pro_bootstrap(): bool {
+		if ( ! defined( 'SURERANK_PRO_CORE_RQD_VER' ) || ! is_string( SURERANK_PRO_CORE_RQD_VER ) || '' === SURERANK_PRO_CORE_RQD_VER ) {
+			return false;
+		}
+
+		return $this->should_block_pro_bootstrap_for_required_core_version( SURERANK_PRO_CORE_RQD_VER );
+	}
+
+	/**
+	 * Compare the active core version against Pro's declared minimum core requirement.
+	 *
+	 * @param string $required_core_version Minimum free-plugin version required by Pro.
+	 * @return bool
+	 */
+	private function should_block_pro_bootstrap_for_required_core_version( string $required_core_version ): bool {
+		return version_compare( SURERANK_VERSION, $required_core_version, '<' );
 	}
 
 	/**
